@@ -4,7 +4,7 @@ dss_python: Unofficial bindings for EPRI's OpenDSS
 
 Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simulator). Based on CFFI and `dss_capi`, aiming for full COM compatibility on Windows and Linux.
 
-If you are looking for the C API library, see [`dss_capi`](http://github.com/PMeira/dss-capi/).
+If you are looking for the C API library, see [`dss_capi`](http://github.com/PMeira/dss_capi/).
 
 Version 0.9.2, based on [OpenDSS revision 2134](https://sourceforge.net/p/electricdss/code/2123/tree/). 
 This is a work-in-progress but it's deemed stable enough to be made public.
@@ -61,7 +61,7 @@ Get this repository:
     git clone https://github.com/PMeira/dss_python.git
 ```    
     
-Assuming you successfully built or downloaded the `dss_capi` (check [its repository](http://github.com/PMeira/dss-capi/) for instructions), keep the folder organization as follows:
+Assuming you successfully built or downloaded the `dss_capi` (check [its repository](http://github.com/PMeira/dss_capi/) for instructions), keep the folder organization as follows:
 
 ```
 dss_capi/
@@ -198,7 +198,7 @@ Please allow me a few days to respond.
 
 Credits / Acknowlegement
 ========================
-`dss_python` is based on EPRI's OpenDSS via the [`dss_capi`](http://github.com/PMeira/dss-capi/) project, check its licensing information.
+`dss_python` is based on EPRI's OpenDSS via the [`dss_capi`](http://github.com/PMeira/dss_capi/) project, check its licensing information.
 
 This project is licensed under the (new) BSD, available in the `LICENSE` file. It's the same license OpenDSS uses (`OPENDSS_LICENSE`).
 
