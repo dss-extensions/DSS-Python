@@ -472,8 +472,8 @@ class ValidatingTest:
                 assert all(x[0] == x[1] for x in zip(fA, fB)), field
 
             
-            # NOTE: CalcCurrent removed since it seemed to contain (maybe?) uninitialized values in certain situations
-            for field in 'AllocFactors,AvgRepairTime,Peakcurrent,RegisterValues,Totals'.split(','):
+            # NOTE: CalcCurrent and AllocFactors removed since it seemed to contain (maybe?) uninitialized values in certain situations
+            for field in 'AvgRepairTime,Peakcurrent,RegisterValues,Totals'.split(','):
                 fA = getattr(A, field)
                 fB = getattr(B, field)
                 assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Meters("{}").{}'.format(A.Name, field), fA, fB)
