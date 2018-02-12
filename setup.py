@@ -10,7 +10,7 @@ if sys.platform == 'win32':
     # Copy the DLLs on Windows
     base_dll_path_in = '../dss_capi/lib/'
     base_dll_path_out = 'dss'
-    for fn in ('dss_capi.dll', 'libklusolve.dll'):
+    for fn in ('dss_capi.dll', 'dsspm_capi.dll', 'libklusolve.dll'):
         shutil.copy(
             os.path.join(base_dll_path_in, fn), 
             os.path.join(base_dll_path_out, fn)
@@ -23,7 +23,7 @@ else:
     # Copy the DLLs on unix
     base_dll_path_in = '../dss_capi/lib/'
     base_dll_path_out = 'dss'
-    for fn in ('libdss_capi.so', 'libklusolve.so'):
+    for fn in ('libdss_capi.so', 'libdsspm_capi.so', 'libklusolve.so'):
         shutil.copy(
             os.path.join(base_dll_path_in, fn), 
             os.path.join(base_dll_path_out, fn)
@@ -40,9 +40,9 @@ setup(
     author_email="pmeira@ieee.org",
     version=version,
     license="BSD",
-    packages=['dss'],
+    packages=['dss', 'dss.pm'],
     setup_requires=["cffi>=1.11.2"],
-    cffi_modules=["dss_build.py:ffi_builder"],
+    cffi_modules=["dss_build.py:ffi_builder_dss", "dss_build.py:ffi_builder_dsspm"],
     ext_package="dss",
     install_requires=["cffi>=1.11.2", "numpy>=1.0"],
     zip_safe=False,

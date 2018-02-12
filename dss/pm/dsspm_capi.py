@@ -1,10 +1,10 @@
 '''
-A compatibility layer for DSS_CAPI that mimics the official OpenDSS COM interface.
+A compatibility layer for DSSPM_CAPI that mimics the official OpenDSS COM interface.
 
 Copyright (c) 2016-2018 Paulo Meira
 '''
 from __future__ import absolute_import
-from ._dss_capi import lib, ffi
+from .._dsspm_capi import lib, ffi
 from ._cffi_api_util import * # one for each version (parallel, classic), already bound to the cffi module
 import numpy as np
 
@@ -2083,6 +2083,68 @@ class IMonitors(FrozenClass):
         return get_float64_array(lib.Monitors_Get_dblHour)
 
 
+class IParallel(FrozenClass):
+    _isfrozen = freeze
+
+    def CreateActor(self):
+        lib.Parallel_CreateActor()
+
+    def Wait(self):
+        lib.Parallel_Wait()
+
+    @property
+    def ActiveActor(self):
+        return lib.Parallel_Get_ActiveActor()
+
+    @ActiveActor.setter
+    def ActiveActor(self, Value):
+        lib.Parallel_Set_ActiveActor(Value)
+
+    @property
+    def ActiveParallel(self):
+        return lib.Parallel_Get_ActiveParallel()
+
+    @ActiveParallel.setter
+    def ActiveParallel(self, Value):
+        lib.Parallel_Set_ActiveParallel(Value)
+
+    @property
+    def ActorCPU(self):
+        return lib.Parallel_Get_ActorCPU()
+
+    @ActorCPU.setter
+    def ActorCPU(self, Value):
+        lib.Parallel_Set_ActorCPU(Value)
+
+    @property
+    def ActorProgress(self):
+        return get_int32_array(lib.Parallel_Get_ActorProgress)
+
+    @property
+    def ActorStatus(self):
+        return get_int32_array(lib.Parallel_Get_ActorStatus)
+
+    @property
+    def ConcatenateReports(self):
+        return lib.Parallel_Get_ConcatenateReports()
+
+    @ConcatenateReports.setter
+    def ConcatenateReports(self, Value):
+        lib.Parallel_Set_ConcatenateReports(Value)
+
+    @property
+    def NumCPUs(self):
+        return lib.Parallel_Get_NumCPUs()
+
+    @property
+    def NumCores(self):
+        return lib.Parallel_Get_NumCores()
+
+    @property
+    def NumOfActors(self):
+        return lib.Parallel_Get_NumOfActors()
+
+
 class IParser(FrozenClass):
     _isfrozen = freeze
 
@@ -3078,6 +3140,9 @@ class ISolution(FrozenClass):
     def Solve(self):
         lib.Solution_Solve()
 
+    def SolveAll(self):
+        lib.Solution_SolveAll()
+
     def SolveDirect(self):
         lib.Solution_SolveDirect()
 
@@ -3108,6 +3173,10 @@ class ISolution(FrozenClass):
     @Algorithm.setter
     def Algorithm(self, Value):
         lib.Solution_Set_Algorithm(Value)
+
+    @property
+    def BusLevels(self):
+        return get_int32_array(lib.Solution_Get_BusLevels)
 
     @property
     def Capkvar(self):
@@ -3214,6 +3283,18 @@ class ISolution(FrozenClass):
     @Hour.setter
     def Hour(self, Value):
         lib.Solution_Set_Hour(Value)
+
+    @property
+    def IncMatrix(self):
+        return get_int32_array(lib.Solution_Get_IncMatrix)
+
+    @property
+    def IncMatrixCols(self):
+        return get_string_array(lib.Solution_Get_IncMatrixCols)
+
+    @property
+    def IncMatrixRows(self):
+        return get_string_array(lib.Solution_Get_IncMatrixRows)
 
     @property
     def IntervalHrs(self):
@@ -4180,6 +4261,7 @@ class ICircuit(FrozenClass):
     DSSim_Coms = IDSSimComs()
     PVSystems = IPVSystems()
     Vsources = IVsources()
+    Parallel = IParallel()
     LineCodes = ILineCodes()
 
     def Capacity(self, Start, Increment):

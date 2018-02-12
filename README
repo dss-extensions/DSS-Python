@@ -6,13 +6,19 @@ Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simul
 
 If you are looking for the C API library, see [`dss_capi`](http://github.com/PMeira/dss-capi/).
 
-Version 0.9.1, based on [OpenDSS revision 2123](https://sourceforge.net/p/electricdss/code/2123/tree/). 
+Version 0.9.2, based on [OpenDSS revision 2134](https://sourceforge.net/p/electricdss/code/2123/tree/). 
 This is a work-in-progress but it's deemed stable enough to be made public.
+*Note that, while the interface with OpenDSS is stable (classic version), the OpenDSS-PM (actor-based parallel machine version) interface was integrated recently and is experimental.*
 
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level.
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange. 
 
 This module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the sparse system admittance matrix.
+
+Recent changes
+==============
+- 2018-02-08: First public release (OpenDSS revision 2123)
+- 2018-02-10: Experimental support for OpenDSS-PM (at the moment, a custom patch is provided for FreePascal support) and port COM interface fixes (OpenDSS revision 2134)
 
 
 Missing features and limitations
@@ -111,6 +117,14 @@ for i in range(len(voltages) // 2):
 
 If you do not need the mixed-cased handling, you can omit the call to `use_com_compat()` and use the casing used in this project.
 
+
+If you want to play with the experimental OpenDSS-PM interface, it is installed side-by-side and you can import it as:
+
+```
+import dss.pm
+dss.pm.use_com_compat()
+dss_engine = dss.pm.DSS
+```
 
 Testing
 =======
