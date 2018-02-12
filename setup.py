@@ -1,5 +1,22 @@
 from setuptools import setup
 import re, sys, shutil, os
+import subprocess
+
+# Convert README.md to RST for PyPi -- copied from (CC0) https://github.com/dhimmel/hetio
+# Thank you, Daniel Himmelstein (dhimmel)!
+
+# Try to create an rst long_description from README.md
+try:
+    args = 'pandoc', '--to', 'rst', 'README.md'
+    long_description = subprocess.check_output(args)
+    long_description = long_description.decode()
+except Exception as error:
+    print('README.md conversion to reStructuredText failed. Error:')
+    print(error)
+    print('Setting long_description to None.')
+    long_description = None
+
+
 
 with open('dss/__init__.py', 'r') as f:
     match = re.search("__version__ = '(.*?)'", f.read())
@@ -46,6 +63,7 @@ setup(
     ext_package="dss",
     install_requires=["cffi>=1.11.2", "numpy>=1.0"],
     zip_safe=False,
+    long_description=long_description,
     classifiers=[
         'Intended Audience :: Science/Research',
         'Intended Audience :: Education',
