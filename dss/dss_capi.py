@@ -4,9 +4,20 @@ A compatibility layer for DSS_CAPI that mimics the official OpenDSS COM interfac
 Copyright (c) 2016-2018 Paulo Meira
 '''
 from __future__ import absolute_import
-from ._dss_capi import lib, ffi
-from ._cffi_api_util import * # one for each version (parallel, classic), already bound to the cffi module
+from ._dss_capi import ffi, lib
+from ._cffi_api_util import *
 import numpy as np
+
+# Bind to the FFI module instance for OpenDSS-Classic
+api_util = CffiApiUtil(ffi, lib)
+get_string = api_util.get_string
+get_float64_array = api_util.get_float64_array
+get_int32_array = api_util.get_int32_array
+get_int8_array = api_util.get_int8_array
+get_string_array = api_util.get_string_array
+prepare_float64_array = api_util.prepare_float64_array
+prepare_int32_array = api_util.prepare_int32_array
+prepare_string_array = api_util.prepare_string_array
 
 if not freeze:
     FrozenClass = object
