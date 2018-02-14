@@ -1,5 +1,5 @@
 from __future__ import print_function
-import os
+import os, sys
 import numpy as np
 
 cd = os.getcwd()
@@ -48,7 +48,7 @@ class ValidatingTest:
                     while True:
                         input_line = next(iter_f).strip()
                         if input_line.startswith('/*'):
-                            print('Skipping input:', repr(input_line))
+                            #print('Skipping input:', repr(input_line))
                             while True:
                                 input_line = next(iter_f).strip()    
                                 if '*/' in input_line:
@@ -58,7 +58,7 @@ class ValidatingTest:
                         if not input_line: continue
                         lc_input_line = input_line.lower()
                         if any(lc_input_line.startswith(x) for x in ['show', 'plot', 'visualize', 'dump', 'export']) or ord(input_line[0]) > 127:
-                            print('Skipping input:', repr(input_line))
+                            #print('Skipping input:', repr(input_line))
                             continue
                         else:
                             input_line = input_line.replace('C:\\Users\\prdu001\\OpenDSS\\Test\\', '')
@@ -201,7 +201,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in ('States',):
                 assert np.allclose(getattr(A, field), getattr(B, field), atol=self.atol, rtol=self.rtol), field
         
@@ -214,6 +216,7 @@ class ValidatingTest:
             nB = B.Next
             assert nA == nB
         
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
     def validate_LineCodes(self):
         A = self.com.ActiveCircuit.LineCodes
@@ -225,7 +228,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'Cmatrix,Rmatrix,Xmatrix'.split(','):
                 assert np.allclose(getattr(A, field), getattr(B, field), atol=self.atol, rtol=self.rtol), field
         
@@ -236,6 +241,7 @@ class ValidatingTest:
             nB = B.Next
             assert nA == nB    
         
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
     def validate_Lines(self):
         A = self.com.ActiveCircuit.Lines
@@ -247,7 +253,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'Cmatrix,Rmatrix,Xmatrix,Yprim'.split(','):
                 assert np.allclose(getattr(A, field), getattr(B, field), atol=self.atol, rtol=self.rtol), field
         
@@ -263,6 +271,8 @@ class ValidatingTest:
             nB = B.Next
             assert nA == nB        
                     
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        
 
     def validate_Loads(self):
         A = self.com.ActiveCircuit.Loads
@@ -273,7 +283,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'AllocationFactor,CVRcurve,CVRvars,CVRwatts,Cfactor,Class,Growth,IsDelta,Model,Name,NumCust,PF,PctMean,PctStdDev,RelWeight,Rneut,Spectrum,Status,Vmaxpu,Vminemerg,Vminnorm,Vminpu,Xneut,Yearly,daily,duty,idx,kV,kW,kva,kvar,kwh,kwhdays,pctSeriesRL,xfkVA'.split(','): #TODO: ZIPV
                 fA = getattr(A, field)
                 fB = getattr(B, field)
@@ -287,7 +299,10 @@ class ValidatingTest:
             nA = A.Next
             nB = B.Next
             assert nA == nB          
-            
+        
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        
+        
     def validate_Loadshapes(self):
         A = self.com.ActiveCircuit.Loadshapes
         B = self.capi.ActiveCircuit.Loadshapes
@@ -297,7 +312,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'Pmult,Qmult,TimeArray'.split(','):
                 assert np.allclose(getattr(A, field), getattr(B, field), atol=self.atol, rtol=self.rtol), field
         
@@ -309,7 +326,9 @@ class ValidatingTest:
             nA = A.Next
             nB = B.Next
             assert nA == nB
-            
+        
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        
     def validate_Transformers(self):
         A = self.com.ActiveCircuit.Transformers
         B = self.capi.ActiveCircuit.Transformers
@@ -319,7 +338,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'IsDelta,MaxTap,MinTap,Name,NumTaps,NumWindings,R,Rneut,Tap,Wdg,XfmrCode,Xhl,Xht,Xlt,Xneut,kV,kVA'.split(','):
                 fA = getattr(A, field)
                 fB = getattr(B, field)
@@ -330,7 +351,9 @@ class ValidatingTest:
             nA = A.Next
             nB = B.Next
             assert nA == nB
-
+        
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+            
             
     def validate_Generators(self):
         A = self.com.ActiveCircuit.Generators
@@ -341,7 +364,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             
             for field in 'RegisterNames'.split(','):
                 fA = getattr(A, field)
@@ -372,7 +397,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'Amps,AngleDeg,Frequency,Name'.split(','):
                 fA = getattr(A, field)
                 fB = getattr(B, field)
@@ -381,6 +408,8 @@ class ValidatingTest:
             nA = A.Next
             nB = B.Next
             assert nA == nB
+            
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
     def validate_Vsources(self):
         A = self.com.ActiveCircuit.Vsources
@@ -391,7 +420,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'AngleDeg,BasekV,Frequency,Name,Phases,pu'.split(','):
                 fA = getattr(A, field)
                 fB = getattr(B, field)
@@ -401,7 +432,40 @@ class ValidatingTest:
             nB = B.Next
             assert nA == nB          
             
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+
+
+    def validate_Reclosers(self):
+        A = self.com.ActiveCircuit.Reclosers
+        B = self.capi.ActiveCircuit.Reclosers
+        assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+        assert A.Count == B.Count
+        
+        nA = A.First
+        nB = B.First
+        assert nA == nB
+        count = 0
+        while nA != 0:
+            count += 1
+            for field in 'RecloseIntervals,'.split(','):
+                fA = getattr(A, field)
+                fB = getattr(B, field)
+                fA = np.array(fA, dtype=fB.dtype)
+                assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+        
+            for field in 'GroundInst,GroundTrip,MonitoredObj,MonitoredTerm,Name,NumFast,PhaseInst,PhaseTrip,Shots,SwitchedObj,SwitchedTerm,idx'.split(','): 
+                fA = getattr(A, field)
+                fB = getattr(B, field)
+                assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+
+            nA = A.Next
+            nB = B.Next
+            assert nA == nB
             
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+
+
+        
     def validate_XYCurves(self):
         A = self.com.ActiveCircuit.XYCurves
         B = self.capi.ActiveCircuit.XYCurves
@@ -411,7 +475,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'Xarray,Yarray'.split(','):
                 assert np.allclose(getattr(A, field), getattr(B, field), atol=self.atol, rtol=self.rtol), field
         
@@ -422,7 +488,9 @@ class ValidatingTest:
                 
             nA = A.Next
             nB = B.Next
-            assert nA == nB          
+            assert nA == nB    
+        
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
             
     def validate_Monitors(self):
         A = self.com.ActiveCircuit.Monitors
@@ -433,7 +501,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'dblFreq,dblHour'.split(','): # Skipped ByteStream since it's indirectly compared through Channel()
                 fA = getattr(A, field)
                 fB = getattr(B, field)
@@ -454,6 +524,9 @@ class ValidatingTest:
             nA = A.Next
             nB = B.Next
             assert nA == nB
+            
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        
            
     def validate_Meters(self):
         A = self.com.ActiveCircuit.Meters
@@ -464,7 +537,9 @@ class ValidatingTest:
         nA = A.First
         nB = B.First
         assert nA == nB
+        count = 0
         while nA != 0:
+            count += 1
             for field in 'AllBranchesInZone,AllEndElements,RegisterNames'.split(','):
                 fA = getattr(A, field)
                 fB = getattr(B, field)
@@ -488,6 +563,7 @@ class ValidatingTest:
             nB = B.Next
             assert nA == nB        
            
+        if count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
            
     def validate_Settings(self):
         A = self.com.ActiveCircuit.Settings
@@ -551,39 +627,41 @@ class ValidatingTest:
     def validate_all(self):
         self.rtol = 1e-5
         
-        print('LineCodes')
+        # print('LineCodes')
         self.validate_LineCodes()
-        print('Buses')
-        self.validate_Buses()
-        print('Capacitors')
+        # print('Capacitors')
         self.validate_Capacitors()
-        print('Lines')
+        # print('Lines')
         self.validate_Lines()
-        print('Loads')
+        # print('Loads')
         self.validate_Loads()
-        print('Loadshapes')
+        # print('Loadshapes')
         self.validate_Loadshapes()
-        print('Transformers')
+        # print('Transformers')
         self.validate_Transformers()
-        print('Settings')
+        # print('Settings')
         self.validate_Settings()
-        print('Solution')
+        # print('Solution')
         self.validate_Solution()
-        print('Isources')
+        # print('Isources')
         self.validate_Isources()
-        print('Vsources')
+        # print('Vsources')
         self.validate_Vsources()
-        print('Generators')
+        # print('Generators')
         self.validate_Generators()
-        print('XYCurves')
+        # print('XYCurves')
         self.validate_XYCurves()
-        print('Monitors')
+        # print('Monitors')
         self.validate_Monitors()
-        print('Meters')
+        # print('Meters')
         self.validate_Meters()
+        # print('Reclosers')
+        self.validate_Reclosers()
 
         #self.atol = 1e-5
-        print('Circuit')
+        # print('Buses')
+        self.validate_Buses()
+        # print('Circuit')
         self.validate_Circuit()
 
         print('Done')
