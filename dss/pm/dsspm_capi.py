@@ -39,22 +39,27 @@ class IActiveClass(FrozenClass):
 
     @property
     def ActiveClassName(self):
+        '''Returns name of active class.'''
         return get_string(lib.ActiveClass_Get_ActiveClassName())
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.ActiveClass_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.ActiveClass_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.ActiveClass_Get_First()
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.ActiveClass_Get_Name())
 
     @Name.setter
@@ -66,10 +71,12 @@ class IActiveClass(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.ActiveClass_Get_Next()
 
     @property
     def NumElements(self):
+        '''Number of elements in this class. Same as Count property.'''
         return lib.ActiveClass_Get_NumElements()
 
 
@@ -84,6 +91,7 @@ class IBus(FrozenClass):
 
     @property
     def Coorddefined(self):
+        '''False=0 else True. Indicates whether a coordinate has been defined for this bus'''
         return lib.Bus_Get_Coorddefined() != 0
 
     @property
@@ -100,6 +108,7 @@ class IBus(FrozenClass):
 
     @property
     def Distance(self):
+        '''Distance from energymeter (if non-zero)'''
         return lib.Bus_Get_Distance()
 
     @property
@@ -108,6 +117,7 @@ class IBus(FrozenClass):
 
     @property
     def Isc(self):
+        '''Short circuit currents at bus; Complex Array.'''
         return get_float64_array(lib.Bus_Get_Isc)
 
     @property
@@ -124,6 +134,7 @@ class IBus(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Bus_Get_Name())
 
     @property
@@ -132,6 +143,7 @@ class IBus(FrozenClass):
 
     @property
     def NumNodes(self):
+        '''Number of Nodes this bus.'''
         return lib.Bus_Get_NumNodes()
 
     @property
@@ -140,6 +152,7 @@ class IBus(FrozenClass):
 
     @property
     def SeqVoltages(self):
+        '''Double Array of sequence voltages at this bus.'''
         return get_float64_array(lib.Bus_Get_SeqVoltages)
 
     @property
@@ -156,30 +169,37 @@ class IBus(FrozenClass):
 
     @property
     def Voc(self):
+        '''Open circuit voltage; Complex array.'''
         return get_float64_array(lib.Bus_Get_Voc)
 
     @property
     def Voltages(self):
+        '''Complex array of voltages at this bus.'''
         return get_float64_array(lib.Bus_Get_Voltages)
 
     @property
     def YscMatrix(self):
+        '''Complex array of Ysc matrix at bus. Column by column.'''
         return get_float64_array(lib.Bus_Get_YscMatrix)
 
     @property
     def Zsc0(self):
+        '''Complex Zero-Sequence short circuit impedance at bus.'''
         return get_float64_array(lib.Bus_Get_Zsc0)
 
     @property
     def Zsc1(self):
+        '''Complex Positive-Sequence short circuit impedance at bus..'''
         return get_float64_array(lib.Bus_Get_Zsc1)
 
     @property
     def ZscMatrix(self):
+        '''Complex array of Zsc matrix at bus. Column by column.'''
         return get_float64_array(lib.Bus_Get_ZscMatrix)
 
     @property
     def kVBase(self):
+        '''Base voltage at bus in kV'''
         return lib.Bus_Get_kVBase()
 
     @property
@@ -192,10 +212,12 @@ class IBus(FrozenClass):
 
     @property
     def puVoltages(self):
+        '''Complex Array of pu voltages at the bus.'''
         return get_float64_array(lib.Bus_Get_puVoltages)
 
     @property
     def x(self):
+        '''X Coordinate for bus (double)'''
         return lib.Bus_Get_x()
 
     @x.setter
@@ -204,6 +226,7 @@ class IBus(FrozenClass):
 
     @property
     def y(self):
+        '''Y coordinate for bus(double)'''
         return lib.Bus_Get_y()
 
     @y.setter
@@ -228,6 +251,7 @@ class ICapacitors(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Capacitors_Get_AllNames)
 
     @property
@@ -236,14 +260,17 @@ class ICapacitors(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Capacitors_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Capacitors_Get_First()
 
     @property
     def IsDelta(self):
+        '''Active Winding delta or wye connection?'''
         return lib.Capacitors_Get_IsDelta() != 0
 
     @IsDelta.setter
@@ -252,6 +279,7 @@ class ICapacitors(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Capacitors_Get_Name())
 
     @Name.setter
@@ -263,10 +291,12 @@ class ICapacitors(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Capacitors_Get_Next()
 
     @property
     def NumSteps(self):
+        '''Number of steps (default 1) for distributing and switching the total bank kVAR.'''
         return lib.Capacitors_Get_NumSteps()
 
     @NumSteps.setter
@@ -284,6 +314,7 @@ class ICapacitors(FrozenClass):
 
     @property
     def kV(self):
+        '''Active Winding kV rating.  Phase-phase for 2 or 3 phases, actual winding kV for 1 phase transformer.'''
         return lib.Capacitors_Get_kV()
 
     @kV.setter
@@ -292,6 +323,7 @@ class ICapacitors(FrozenClass):
 
     @property
     def kvar(self):
+        '''Total bank KVAR, distributed equally among phases and steps.'''
         return lib.Capacitors_Get_kvar()
 
     @kvar.setter
@@ -302,15 +334,14 @@ class ICapacitors(FrozenClass):
 class ICapControls(FrozenClass):
     _isfrozen = freeze
 
-    def Reset(self):
-        lib.CapControls_Reset()
-
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.CapControls_Get_AllNames)
 
     @property
     def CTratio(self):
+        '''Transducer ratio from pirmary current to control current.'''
         return lib.CapControls_Get_CTratio()
 
     @CTratio.setter
@@ -319,6 +350,7 @@ class ICapControls(FrozenClass):
 
     @property
     def Capacitor(self):
+        '''Name of the Capacitor that is controlled.'''
         return get_string(lib.CapControls_Get_Capacitor())
 
     @Capacitor.setter
@@ -330,6 +362,7 @@ class ICapControls(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.CapControls_Get_Count()
 
     @property
@@ -342,6 +375,7 @@ class ICapControls(FrozenClass):
 
     @property
     def Delay(self):
+        '''Time delay [s] after arming before the first tap change. Control may reset before actually changing taps.'''
         return lib.CapControls_Get_Delay()
 
     @Delay.setter
@@ -350,6 +384,7 @@ class ICapControls(FrozenClass):
 
     @property
     def DelayOff(self):
+        '''Time delay [s] before swithcing off a step. Control may reset before actually switching.'''
         return lib.CapControls_Get_DelayOff()
 
     @DelayOff.setter
@@ -358,10 +393,12 @@ class ICapControls(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.CapControls_Get_First()
 
     @property
     def Mode(self):
+        '''Type of automatic controller.'''
         return lib.CapControls_Get_Mode()
 
     @Mode.setter
@@ -370,6 +407,7 @@ class ICapControls(FrozenClass):
 
     @property
     def MonitoredObj(self):
+        '''Full name of the element that PT and CT are connected to.'''
         return get_string(lib.CapControls_Get_MonitoredObj())
 
     @MonitoredObj.setter
@@ -381,6 +419,7 @@ class ICapControls(FrozenClass):
 
     @property
     def MonitoredTerm(self):
+        '''Terminal number on the element that PT and CT are connected to.'''
         return lib.CapControls_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
@@ -389,6 +428,7 @@ class ICapControls(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.CapControls_Get_Name())
 
     @Name.setter
@@ -400,10 +440,12 @@ class ICapControls(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.CapControls_Get_Next()
 
     @property
     def OFFSetting(self):
+        '''Threshold to switch off a step. See Mode for units.'''
         return lib.CapControls_Get_OFFSetting()
 
     @OFFSetting.setter
@@ -412,6 +454,7 @@ class ICapControls(FrozenClass):
 
     @property
     def ONSetting(self):
+        '''Threshold to arm or switch on a step.  See Mode for units.'''
         return lib.CapControls_Get_ONSetting()
 
     @ONSetting.setter
@@ -420,6 +463,7 @@ class ICapControls(FrozenClass):
 
     @property
     def PTratio(self):
+        '''PT ratio for voltage control settings'''
         return lib.CapControls_Get_PTratio()
 
     @PTratio.setter
@@ -428,6 +472,7 @@ class ICapControls(FrozenClass):
 
     @property
     def UseVoltOverride(self):
+        '''Enables Vmin and Vmax to override the control Mode'''
         return lib.CapControls_Get_UseVoltOverride() != 0
 
     @UseVoltOverride.setter
@@ -436,6 +481,7 @@ class ICapControls(FrozenClass):
 
     @property
     def Vmax(self):
+        '''With VoltOverride, swtich off whenever PT voltage exceeds this level.'''
         return lib.CapControls_Get_Vmax()
 
     @Vmax.setter
@@ -444,6 +490,7 @@ class ICapControls(FrozenClass):
 
     @property
     def Vmin(self):
+        '''With VoltOverride, switch ON whenever PT voltage drops below this level.'''
         return lib.CapControls_Get_Vmin()
 
     @Vmin.setter
@@ -496,14 +543,17 @@ class ICtrlQueue(FrozenClass):
 
     @property
     def ActionCode(self):
+        '''Code for the active action. Long integer code to tell the control device what to do'''
         return lib.CtrlQueue_Get_ActionCode()
 
     @property
     def DeviceHandle(self):
+        '''Handle (User defined) to device that must act on the pending action.'''
         return lib.CtrlQueue_Get_DeviceHandle()
 
     @property
     def NumActions(self):
+        '''Number of Actions on the current actionlist (that have been popped off the control queue by CheckControlActions)'''
         return lib.CtrlQueue_Get_NumActions()
 
     @property
@@ -571,10 +621,12 @@ class IDSSProperty(FrozenClass):
 
     @property
     def Description(self):
+        '''Description of error for last operation'''
         return get_string(lib.DSSProperty_Get_Description())
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.DSSProperty_Get_Name())
 
     @property
@@ -593,26 +645,33 @@ class IDSS_Executive(FrozenClass):
     _isfrozen = freeze
 
     def Command(self, i):
+        '''Get i-th command'''
         return get_string(lib.DSS_Executive_Get_Command(i))
 
     def CommandHelp(self, i):
+        '''Get help string for i-th command'''
         return get_string(lib.DSS_Executive_Get_CommandHelp(i))
 
     def Option(self, i):
+        '''Get i-th option'''
         return get_string(lib.DSS_Executive_Get_Option(i))
 
     def OptionHelp(self, i):
+        '''Get help string for i-th option'''
         return get_string(lib.DSS_Executive_Get_OptionHelp(i))
 
     def OptionValue(self, i):
+        '''Get present value of i-th option'''
         return get_string(lib.DSS_Executive_Get_OptionValue(i))
 
     @property
     def NumCommands(self):
+        '''Number of DSS Executive Commands'''
         return lib.DSS_Executive_Get_NumCommands()
 
     @property
     def NumOptions(self):
+        '''Number of DSS Executive Options'''
         return lib.DSS_Executive_Get_NumOptions()
 
 
@@ -621,10 +680,12 @@ class IError(FrozenClass):
 
     @property
     def Description(self):
+        '''Description of error for last operation'''
         return get_string(lib.Error_Get_Description())
 
     @property
     def Number(self):
+        '''Number of solutions to perform for Monte Carlo and time series simulations'''
         return lib.Error_Get_Number()
 
 
@@ -641,14 +702,17 @@ class IFuses(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Fuses_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Fuses_Get_Count()
 
     @property
     def Delay(self):
+        '''Time delay [s] after arming before the first tap change. Control may reset before actually changing taps.'''
         return lib.Fuses_Get_Delay()
 
     @Delay.setter
@@ -657,10 +721,12 @@ class IFuses(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Fuses_Get_First()
 
     @property
     def MonitoredObj(self):
+        '''Full name of the element that PT and CT are connected to.'''
         return get_string(lib.Fuses_Get_MonitoredObj())
 
     @MonitoredObj.setter
@@ -672,6 +738,7 @@ class IFuses(FrozenClass):
 
     @property
     def MonitoredTerm(self):
+        '''Terminal number on the element that PT and CT are connected to.'''
         return lib.Fuses_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
@@ -680,6 +747,7 @@ class IFuses(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Fuses_Get_Name())
 
     @Name.setter
@@ -691,10 +759,12 @@ class IFuses(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Fuses_Get_Next()
 
     @property
     def NumPhases(self):
+        '''Number of Phases'''
         return lib.Fuses_Get_NumPhases()
 
     @property
@@ -707,6 +777,7 @@ class IFuses(FrozenClass):
 
     @property
     def SwitchedObj(self):
+        '''Full name of the switched element.'''
         return get_string(lib.Fuses_Get_SwitchedObj())
 
     @SwitchedObj.setter
@@ -718,6 +789,7 @@ class IFuses(FrozenClass):
 
     @property
     def SwitchedTerm(self):
+        '''Terminal number where the switch is located on the SwitchedObj'''
         return lib.Fuses_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
@@ -749,18 +821,22 @@ class IGenerators(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Generators_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Generators_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Generators_Get_First()
 
     @property
     def ForcedON(self):
+        '''Indicates whether the generator is forced ON regardles of other dispatch criteria.'''
         return lib.Generators_Get_ForcedON() != 0
 
     @ForcedON.setter
@@ -777,6 +853,7 @@ class IGenerators(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Generators_Get_Name())
 
     @Name.setter
@@ -788,6 +865,7 @@ class IGenerators(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Generators_Get_Next()
 
     @property
@@ -800,6 +878,7 @@ class IGenerators(FrozenClass):
 
     @property
     def Phases(self):
+        '''Number of Phases, this Line element.'''
         return lib.Generators_Get_Phases()
 
     @Phases.setter
@@ -808,10 +887,12 @@ class IGenerators(FrozenClass):
 
     @property
     def RegisterNames(self):
+        '''Array of Names of all generator energy meter registers'''
         return get_string_array(lib.Generators_Get_RegisterNames)
 
     @property
     def RegisterValues(self):
+        '''Array of valus in generator energy meter registers.'''
         return get_float64_array(lib.Generators_Get_RegisterValues)
 
     @property
@@ -840,6 +921,7 @@ class IGenerators(FrozenClass):
 
     @property
     def kV(self):
+        '''Active Winding kV rating.  Phase-phase for 2 or 3 phases, actual winding kV for 1 phase transformer.'''
         return lib.Generators_Get_kV()
 
     @kV.setter
@@ -864,6 +946,7 @@ class IGenerators(FrozenClass):
 
     @property
     def kvar(self):
+        '''Total bank KVAR, distributed equally among phases and steps.'''
         return lib.Generators_Get_kvar()
 
     @kvar.setter
@@ -876,6 +959,7 @@ class IISources(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.ISources_Get_AllNames)
 
     @property
@@ -896,14 +980,17 @@ class IISources(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.ISources_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.ISources_Get_First()
 
     @property
     def Frequency(self):
+        '''Set the Frequency for next solution'''
         return lib.ISources_Get_Frequency()
 
     @Frequency.setter
@@ -912,6 +999,7 @@ class IISources(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.ISources_Get_Name())
 
     @Name.setter
@@ -923,6 +1011,7 @@ class IISources(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.ISources_Get_Next()
 
 
@@ -931,10 +1020,12 @@ class ILineCodes(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.LineCodes_Get_AllNames)
 
     @property
     def C0(self):
+        '''Zero Sequence capacitance, nanofarads per unit length.'''
         return lib.LineCodes_Get_C0()
 
     @C0.setter
@@ -943,6 +1034,7 @@ class ILineCodes(FrozenClass):
 
     @property
     def C1(self):
+        '''Positive Sequence capacitance, nanofarads per unit length.'''
         return lib.LineCodes_Get_C1()
 
     @C1.setter
@@ -960,10 +1052,12 @@ class ILineCodes(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.LineCodes_Get_Count()
 
     @property
     def EmergAmps(self):
+        '''Emergency (maximum) ampere rating of Line.'''
         return lib.LineCodes_Get_EmergAmps()
 
     @EmergAmps.setter
@@ -972,6 +1066,7 @@ class ILineCodes(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.LineCodes_Get_First()
 
     @property
@@ -980,6 +1075,7 @@ class ILineCodes(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.LineCodes_Get_Name())
 
     @Name.setter
@@ -991,10 +1087,12 @@ class ILineCodes(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.LineCodes_Get_Next()
 
     @property
     def NormAmps(self):
+        '''Normal ampere rating of Line.'''
         return lib.LineCodes_Get_NormAmps()
 
     @NormAmps.setter
@@ -1003,6 +1101,7 @@ class ILineCodes(FrozenClass):
 
     @property
     def Phases(self):
+        '''Number of Phases, this Line element.'''
         return lib.LineCodes_Get_Phases()
 
     @Phases.setter
@@ -1011,6 +1110,7 @@ class ILineCodes(FrozenClass):
 
     @property
     def R0(self):
+        '''Zero Sequence resistance, ohms per unit length.'''
         return lib.LineCodes_Get_R0()
 
     @R0.setter
@@ -1019,6 +1119,7 @@ class ILineCodes(FrozenClass):
 
     @property
     def R1(self):
+        '''Positive Sequence resistance, ohms per unit length.'''
         return lib.LineCodes_Get_R1()
 
     @R1.setter
@@ -1027,6 +1128,7 @@ class ILineCodes(FrozenClass):
 
     @property
     def Rmatrix(self):
+        '''Resistance matrix (full), ohms per unit length. Array of doubles.'''
         return get_float64_array(lib.LineCodes_Get_Rmatrix)
 
     @Rmatrix.setter
@@ -1044,6 +1146,7 @@ class ILineCodes(FrozenClass):
 
     @property
     def X0(self):
+        '''Zero Sequence reactance ohms per unit length.'''
         return lib.LineCodes_Get_X0()
 
     @X0.setter
@@ -1052,6 +1155,7 @@ class ILineCodes(FrozenClass):
 
     @property
     def X1(self):
+        '''Positive Sequence reactance, ohms per unit length.'''
         return lib.LineCodes_Get_X1()
 
     @X1.setter
@@ -1079,10 +1183,12 @@ class ILines(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Lines_Get_AllNames)
 
     @property
     def Bus1(self):
+        '''Name of bus for terminal 1.'''
         return get_string(lib.Lines_Get_Bus1())
 
     @Bus1.setter
@@ -1094,6 +1200,7 @@ class ILines(FrozenClass):
 
     @property
     def Bus2(self):
+        '''Name of bus for terminal 2.'''
         return get_string(lib.Lines_Get_Bus2())
 
     @Bus2.setter
@@ -1105,6 +1212,7 @@ class ILines(FrozenClass):
 
     @property
     def C0(self):
+        '''Zero Sequence capacitance, nanofarads per unit length.'''
         return lib.Lines_Get_C0()
 
     @C0.setter
@@ -1113,6 +1221,7 @@ class ILines(FrozenClass):
 
     @property
     def C1(self):
+        '''Positive Sequence capacitance, nanofarads per unit length.'''
         return lib.Lines_Get_C1()
 
     @C1.setter
@@ -1130,10 +1239,12 @@ class ILines(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Lines_Get_Count()
 
     @property
     def EmergAmps(self):
+        '''Emergency (maximum) ampere rating of Line.'''
         return lib.Lines_Get_EmergAmps()
 
     @EmergAmps.setter
@@ -1142,10 +1253,12 @@ class ILines(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Lines_Get_First()
 
     @property
     def Geometry(self):
+        '''Line geometry code'''
         return get_string(lib.Lines_Get_Geometry())
 
     @Geometry.setter
@@ -1157,6 +1270,7 @@ class ILines(FrozenClass):
 
     @property
     def Length(self):
+        '''Length of line section in units compatible with the LineCode definition.'''
         return lib.Lines_Get_Length()
 
     @Length.setter
@@ -1165,6 +1279,7 @@ class ILines(FrozenClass):
 
     @property
     def LineCode(self):
+        '''Name of LineCode object that defines the impedances.'''
         return get_string(lib.Lines_Get_LineCode())
 
     @LineCode.setter
@@ -1176,6 +1291,7 @@ class ILines(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Lines_Get_Name())
 
     @Name.setter
@@ -1187,10 +1303,12 @@ class ILines(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Lines_Get_Next()
 
     @property
     def NormAmps(self):
+        '''Normal ampere rating of Line.'''
         return lib.Lines_Get_NormAmps()
 
     @NormAmps.setter
@@ -1199,14 +1317,17 @@ class ILines(FrozenClass):
 
     @property
     def NumCust(self):
+        '''Number of customers on this line section.'''
         return lib.Lines_Get_NumCust()
 
     @property
     def Parent(self):
+        '''Sets Parent of the active Line to be the active line. Returns 0 if no parent or action fails.'''
         return lib.Lines_Get_Parent()
 
     @property
     def Phases(self):
+        '''Number of Phases, this Line element.'''
         return lib.Lines_Get_Phases()
 
     @Phases.setter
@@ -1215,6 +1336,7 @@ class ILines(FrozenClass):
 
     @property
     def R0(self):
+        '''Zero Sequence resistance, ohms per unit length.'''
         return lib.Lines_Get_R0()
 
     @R0.setter
@@ -1223,6 +1345,7 @@ class ILines(FrozenClass):
 
     @property
     def R1(self):
+        '''Positive Sequence resistance, ohms per unit length.'''
         return lib.Lines_Get_R1()
 
     @R1.setter
@@ -1231,6 +1354,7 @@ class ILines(FrozenClass):
 
     @property
     def Rg(self):
+        '''Earth return resistance value used to compute line impedances at power frequency'''
         return lib.Lines_Get_Rg()
 
     @Rg.setter
@@ -1239,6 +1363,7 @@ class ILines(FrozenClass):
 
     @property
     def Rho(self):
+        '''Earth Resistivity, m-ohms'''
         return lib.Lines_Get_Rho()
 
     @Rho.setter
@@ -1247,6 +1372,7 @@ class ILines(FrozenClass):
 
     @property
     def Rmatrix(self):
+        '''Resistance matrix (full), ohms per unit length. Array of doubles.'''
         return get_float64_array(lib.Lines_Get_Rmatrix)
 
     @Rmatrix.setter
@@ -1267,6 +1393,7 @@ class ILines(FrozenClass):
 
     @property
     def TotalCust(self):
+        '''Total Number of customers served from this line section.'''
         return lib.Lines_Get_TotalCust()
 
     @property
@@ -1279,6 +1406,7 @@ class ILines(FrozenClass):
 
     @property
     def X0(self):
+        '''Zero Sequence reactance ohms per unit length.'''
         return lib.Lines_Get_X0()
 
     @X0.setter
@@ -1287,6 +1415,7 @@ class ILines(FrozenClass):
 
     @property
     def X1(self):
+        '''Positive Sequence reactance, ohms per unit length.'''
         return lib.Lines_Get_X1()
 
     @X1.setter
@@ -1295,6 +1424,7 @@ class ILines(FrozenClass):
 
     @property
     def Xg(self):
+        '''Earth return reactance value used to compute line impedances at power frequency'''
         return lib.Lines_Get_Xg()
 
     @Xg.setter
@@ -1312,6 +1442,7 @@ class ILines(FrozenClass):
 
     @property
     def Yprim(self):
+        '''Yprimitive: Does Nothing at present on Put; Dangerous'''
         return get_float64_array(lib.Lines_Get_Yprim)
 
     @Yprim.setter
@@ -1325,6 +1456,7 @@ class ILoads(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Loads_Get_AllNames)
 
     @property
@@ -1380,10 +1512,12 @@ class ILoads(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Loads_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Loads_Get_First()
 
     @property
@@ -1399,6 +1533,7 @@ class ILoads(FrozenClass):
 
     @property
     def IsDelta(self):
+        '''Active Winding delta or wye connection?'''
         return lib.Loads_Get_IsDelta() != 0
 
     @IsDelta.setter
@@ -1415,6 +1550,7 @@ class ILoads(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Loads_Get_Name())
 
     @Name.setter
@@ -1426,10 +1562,12 @@ class ILoads(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Loads_Get_Next()
 
     @property
     def NumCust(self):
+        '''Number of customers on this line section.'''
         return lib.Loads_Get_NumCust()
 
     @NumCust.setter
@@ -1466,6 +1604,7 @@ class ILoads(FrozenClass):
 
     @property
     def Rneut(self):
+        '''Active Winding neutral resistance [ohms] for wye connections. Set less than zero for ungrounded wye.'''
         return lib.Loads_Get_Rneut()
 
     @Rneut.setter
@@ -1525,6 +1664,7 @@ class ILoads(FrozenClass):
 
     @property
     def Xneut(self):
+        '''Active Winding neutral reactance [ohms] for wye connections.'''
         return lib.Loads_Get_Xneut()
 
     @Xneut.setter
@@ -1583,6 +1723,7 @@ class ILoads(FrozenClass):
 
     @property
     def kV(self):
+        '''Active Winding kV rating.  Phase-phase for 2 or 3 phases, actual winding kV for 1 phase transformer.'''
         return lib.Loads_Get_kV()
 
     @kV.setter
@@ -1607,6 +1748,7 @@ class ILoads(FrozenClass):
 
     @property
     def kvar(self):
+        '''Total bank KVAR, distributed equally among phases and steps.'''
         return lib.Loads_Get_kvar()
 
     @kvar.setter
@@ -1654,14 +1796,17 @@ class ILoadShapes(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.LoadShapes_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.LoadShapes_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.LoadShapes_Get_First()
 
     @property
@@ -1682,6 +1827,7 @@ class ILoadShapes(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.LoadShapes_Get_Name())
 
     @Name.setter
@@ -1693,6 +1839,7 @@ class ILoadShapes(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.LoadShapes_Get_Next()
 
     @property
@@ -1798,18 +1945,22 @@ class IMeters(FrozenClass):
 
     @property
     def AllBranchesInZone(self):
+        '''Wide string list of all branches in zone of the active energymeter object.'''
         return get_string_array(lib.Meters_Get_AllBranchesInZone)
 
     @property
     def AllEndElements(self):
+        '''Array of names of all zone end elements.'''
         return get_string_array(lib.Meters_Get_AllEndElements)
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Meters_Get_AllNames)
 
     @property
     def AllocFactors(self):
+        '''Array of doubles: set the phase allocation factors for the active meter.'''
         return get_float64_array(lib.Meters_Get_AllocFactors)
 
     @AllocFactors.setter
@@ -1823,6 +1974,7 @@ class IMeters(FrozenClass):
 
     @property
     def CalcCurrent(self):
+        '''Set the magnitude of the real part of the Calculated Current (normally determined by solution) for the Meter to force some behavior on Load Allocation'''
         return get_float64_array(lib.Meters_Get_CalcCurrent)
 
     @CalcCurrent.setter
@@ -1832,6 +1984,7 @@ class IMeters(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Meters_Get_Count()
 
     @property
@@ -1840,6 +1993,7 @@ class IMeters(FrozenClass):
 
     @property
     def CountEndElements(self):
+        '''Number of zone end elements in the active meter zone.'''
         return lib.Meters_Get_CountEndElements()
 
     @property
@@ -1848,6 +2002,7 @@ class IMeters(FrozenClass):
 
     @property
     def DIFilesAreOpen(self):
+        '''Global Flag in the DSS to indicate if Demand Interval (DI) files have been properly opened.'''
         return lib.Meters_Get_DIFilesAreOpen() != 0
 
     @property
@@ -1856,10 +2011,12 @@ class IMeters(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Meters_Get_First()
 
     @property
     def MeteredElement(self):
+        '''Set Name of metered element'''
         return get_string(lib.Meters_Get_MeteredElement())
 
     @MeteredElement.setter
@@ -1871,6 +2028,7 @@ class IMeters(FrozenClass):
 
     @property
     def MeteredTerminal(self):
+        '''set Number of Metered Terminal'''
         return lib.Meters_Get_MeteredTerminal()
 
     @MeteredTerminal.setter
@@ -1879,6 +2037,7 @@ class IMeters(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Meters_Get_Name())
 
     @Name.setter
@@ -1890,6 +2049,7 @@ class IMeters(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Meters_Get_Next()
 
     @property
@@ -1910,6 +2070,7 @@ class IMeters(FrozenClass):
 
     @property
     def Peakcurrent(self):
+        '''Array of doubles to set values of Peak Current property'''
         return get_float64_array(lib.Meters_Get_Peakcurrent)
 
     @Peakcurrent.setter
@@ -1919,10 +2080,12 @@ class IMeters(FrozenClass):
 
     @property
     def RegisterNames(self):
+        '''Array of Names of all generator energy meter registers'''
         return get_string_array(lib.Meters_Get_RegisterNames)
 
     @property
     def RegisterValues(self):
+        '''Array of valus in generator energy meter registers.'''
         return get_float64_array(lib.Meters_Get_RegisterValues)
 
     @property
@@ -1967,6 +2130,7 @@ class IMeters(FrozenClass):
 
     @property
     def Totals(self):
+        '''Totals of all registers of all meters'''
         return get_float64_array(lib.Meters_Get_Totals)
 
 
@@ -2005,6 +2169,7 @@ class IMonitors(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Monitors_Get_AllNames)
 
     @property
@@ -2013,6 +2178,7 @@ class IMonitors(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Monitors_Get_Count()
 
     @property
@@ -2028,6 +2194,7 @@ class IMonitors(FrozenClass):
 
     @property
     def FileName(self):
+        '''Name of CSV file associated with active Monitor.'''
         return get_string(lib.Monitors_Get_FileName())
 
     @property
@@ -2036,6 +2203,7 @@ class IMonitors(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Monitors_Get_First()
 
     @property
@@ -2044,6 +2212,7 @@ class IMonitors(FrozenClass):
 
     @property
     def Mode(self):
+        '''Type of automatic controller.'''
         return lib.Monitors_Get_Mode()
 
     @Mode.setter
@@ -2052,6 +2221,7 @@ class IMonitors(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Monitors_Get_Name())
 
     @Name.setter
@@ -2063,6 +2233,7 @@ class IMonitors(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Monitors_Get_Next()
 
     @property
@@ -2075,6 +2246,7 @@ class IMonitors(FrozenClass):
 
     @property
     def SampleCount(self):
+        '''Number of Samples in Monitor at Present'''
         return lib.Monitors_Get_SampleCount()
 
     @property
@@ -2091,6 +2263,7 @@ class IMonitors(FrozenClass):
 
     @property
     def dblHour(self):
+        '''Hour as a double, including fractional part'''
         return get_float64_array(lib.Monitors_Get_dblHour)
 
 
@@ -2260,6 +2433,7 @@ class IPDElements(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.PDElements_Get_Count()
 
     @property
@@ -2272,6 +2446,7 @@ class IPDElements(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.PDElements_Get_First()
 
     @property
@@ -2288,6 +2463,7 @@ class IPDElements(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.PDElements_Get_Name())
 
     @Name.setter
@@ -2299,6 +2475,7 @@ class IPDElements(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.PDElements_Get_Next()
 
     @property
@@ -2343,14 +2520,17 @@ class IPVSystems(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.PVSystems_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.PVSystems_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.PVSystems_Get_First()
 
     @property
@@ -2363,6 +2543,7 @@ class IPVSystems(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.PVSystems_Get_Name())
 
     @Name.setter
@@ -2374,6 +2555,7 @@ class IPVSystems(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.PVSystems_Get_Next()
 
     @property
@@ -2382,10 +2564,12 @@ class IPVSystems(FrozenClass):
 
     @property
     def RegisterNames(self):
+        '''Array of Names of all generator energy meter registers'''
         return get_string_array(lib.PVSystems_Get_RegisterNames)
 
     @property
     def RegisterValues(self):
+        '''Array of valus in generator energy meter registers.'''
         return get_float64_array(lib.PVSystems_Get_RegisterValues)
 
     @property
@@ -2406,6 +2590,7 @@ class IPVSystems(FrozenClass):
 
     @property
     def kvar(self):
+        '''Total bank KVAR, distributed equally among phases and steps.'''
         return lib.PVSystems_Get_kvar()
 
 
@@ -2420,14 +2605,17 @@ class IReclosers(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Reclosers_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Reclosers_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Reclosers_Get_First()
 
     @property
@@ -2448,6 +2636,7 @@ class IReclosers(FrozenClass):
 
     @property
     def MonitoredObj(self):
+        '''Full name of the element that PT and CT are connected to.'''
         return get_string(lib.Reclosers_Get_MonitoredObj())
 
     @MonitoredObj.setter
@@ -2459,6 +2648,7 @@ class IReclosers(FrozenClass):
 
     @property
     def MonitoredTerm(self):
+        '''Terminal number on the element that PT and CT are connected to.'''
         return lib.Reclosers_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
@@ -2467,6 +2657,7 @@ class IReclosers(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Reclosers_Get_Name())
 
     @Name.setter
@@ -2478,6 +2669,7 @@ class IReclosers(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Reclosers_Get_Next()
 
     @property
@@ -2518,6 +2710,7 @@ class IReclosers(FrozenClass):
 
     @property
     def SwitchedObj(self):
+        '''Full name of the switched element.'''
         return get_string(lib.Reclosers_Get_SwitchedObj())
 
     @SwitchedObj.setter
@@ -2529,6 +2722,7 @@ class IReclosers(FrozenClass):
 
     @property
     def SwitchedTerm(self):
+        '''Terminal number where the switch is located on the SwitchedObj'''
         return lib.Reclosers_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
@@ -2552,10 +2746,12 @@ class IRegControls(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.RegControls_Get_AllNames)
 
     @property
     def CTPrimary(self):
+        '''CT primary ampere rating (secondary is 0.2 amperes)'''
         return lib.RegControls_Get_CTPrimary()
 
     @CTPrimary.setter
@@ -2564,10 +2760,12 @@ class IRegControls(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.RegControls_Get_Count()
 
     @property
     def Delay(self):
+        '''Time delay [s] after arming before the first tap change. Control may reset before actually changing taps.'''
         return lib.RegControls_Get_Delay()
 
     @Delay.setter
@@ -2576,10 +2774,12 @@ class IRegControls(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.RegControls_Get_First()
 
     @property
     def ForwardBand(self):
+        '''Regulation bandwidth in forward direciton, centered on Vreg'''
         return lib.RegControls_Get_ForwardBand()
 
     @ForwardBand.setter
@@ -2588,6 +2788,7 @@ class IRegControls(FrozenClass):
 
     @property
     def ForwardR(self):
+        '''LDC R setting in Volts'''
         return lib.RegControls_Get_ForwardR()
 
     @ForwardR.setter
@@ -2596,6 +2797,7 @@ class IRegControls(FrozenClass):
 
     @property
     def ForwardVreg(self):
+        '''Target voltage in the forward direction, on PT secondary base.'''
         return lib.RegControls_Get_ForwardVreg()
 
     @ForwardVreg.setter
@@ -2604,6 +2806,7 @@ class IRegControls(FrozenClass):
 
     @property
     def ForwardX(self):
+        '''LDC X setting in Volts'''
         return lib.RegControls_Get_ForwardX()
 
     @ForwardX.setter
@@ -2612,6 +2815,7 @@ class IRegControls(FrozenClass):
 
     @property
     def IsInverseTime(self):
+        '''Time delay is inversely adjsuted, proportinal to the amount of voltage outside the regulating band.'''
         return lib.RegControls_Get_IsInverseTime() != 0
 
     @IsInverseTime.setter
@@ -2620,6 +2824,7 @@ class IRegControls(FrozenClass):
 
     @property
     def IsReversible(self):
+        '''Regulator can use different settings in the reverse direction.  Usually not applicable to substation transformers.'''
         return lib.RegControls_Get_IsReversible() != 0
 
     @IsReversible.setter
@@ -2628,6 +2833,7 @@ class IRegControls(FrozenClass):
 
     @property
     def MaxTapChange(self):
+        '''Maximum tap change per iteration in STATIC solution mode. 1 is more realistic, 16 is the default for a faster soluiton.'''
         return lib.RegControls_Get_MaxTapChange()
 
     @MaxTapChange.setter
@@ -2636,6 +2842,7 @@ class IRegControls(FrozenClass):
 
     @property
     def MonitoredBus(self):
+        '''Name of a remote regulated bus, in lieu of LDC settings'''
         return get_string(lib.RegControls_Get_MonitoredBus())
 
     @MonitoredBus.setter
@@ -2647,6 +2854,7 @@ class IRegControls(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.RegControls_Get_Name())
 
     @Name.setter
@@ -2658,10 +2866,12 @@ class IRegControls(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.RegControls_Get_Next()
 
     @property
     def PTratio(self):
+        '''PT ratio for voltage control settings'''
         return lib.RegControls_Get_PTratio()
 
     @PTratio.setter
@@ -2670,6 +2880,7 @@ class IRegControls(FrozenClass):
 
     @property
     def ReverseBand(self):
+        '''Bandwidth in reverse direction, centered on reverse Vreg.'''
         return lib.RegControls_Get_ReverseBand()
 
     @ReverseBand.setter
@@ -2678,6 +2889,7 @@ class IRegControls(FrozenClass):
 
     @property
     def ReverseR(self):
+        '''Reverse LDC R setting in Volts.'''
         return lib.RegControls_Get_ReverseR()
 
     @ReverseR.setter
@@ -2686,6 +2898,7 @@ class IRegControls(FrozenClass):
 
     @property
     def ReverseVreg(self):
+        '''Target voltage in the revese direction, on PT secondary base.'''
         return lib.RegControls_Get_ReverseVreg()
 
     @ReverseVreg.setter
@@ -2694,6 +2907,7 @@ class IRegControls(FrozenClass):
 
     @property
     def ReverseX(self):
+        '''Reverse LDC X setting in volts.'''
         return lib.RegControls_Get_ReverseX()
 
     @ReverseX.setter
@@ -2702,6 +2916,7 @@ class IRegControls(FrozenClass):
 
     @property
     def TapDelay(self):
+        '''Time delay [s] for subsequent tap changes in a set. Control may reset before actually changing taps.'''
         return lib.RegControls_Get_TapDelay()
 
     @TapDelay.setter
@@ -2718,6 +2933,7 @@ class IRegControls(FrozenClass):
 
     @property
     def TapWinding(self):
+        '''Tapped winding number'''
         return lib.RegControls_Get_TapWinding()
 
     @TapWinding.setter
@@ -2726,6 +2942,7 @@ class IRegControls(FrozenClass):
 
     @property
     def Transformer(self):
+        '''Name of the transformer this regulator controls'''
         return get_string(lib.RegControls_Get_Transformer())
 
     @Transformer.setter
@@ -2737,6 +2954,7 @@ class IRegControls(FrozenClass):
 
     @property
     def VoltageLimit(self):
+        '''First house voltage limit on PT secondary base.  Setting to 0 disables this function.'''
         return lib.RegControls_Get_VoltageLimit()
 
     @VoltageLimit.setter
@@ -2745,6 +2963,7 @@ class IRegControls(FrozenClass):
 
     @property
     def Winding(self):
+        '''Winding number for PT and CT connections'''
         return lib.RegControls_Get_Winding()
 
     @Winding.setter
@@ -2757,18 +2976,22 @@ class IRelays(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Relays_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Relays_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Relays_Get_First()
 
     @property
     def MonitoredObj(self):
+        '''Full name of the element that PT and CT are connected to.'''
         return get_string(lib.Relays_Get_MonitoredObj())
 
     @MonitoredObj.setter
@@ -2780,6 +3003,7 @@ class IRelays(FrozenClass):
 
     @property
     def MonitoredTerm(self):
+        '''Terminal number on the element that PT and CT are connected to.'''
         return lib.Relays_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
@@ -2788,6 +3012,7 @@ class IRelays(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Relays_Get_Name())
 
     @Name.setter
@@ -2799,10 +3024,12 @@ class IRelays(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Relays_Get_Next()
 
     @property
     def SwitchedObj(self):
+        '''Full name of the switched element.'''
         return get_string(lib.Relays_Get_SwitchedObj())
 
     @SwitchedObj.setter
@@ -2814,6 +3041,7 @@ class IRelays(FrozenClass):
 
     @property
     def SwitchedTerm(self):
+        '''Terminal number where the switch is located on the SwitchedObj'''
         return lib.Relays_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
@@ -2840,14 +3068,17 @@ class ISensors(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Sensors_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Sensors_Get_Count()
 
     @property
     def Currents(self):
+        '''Complex array of currents into each conductor of each terminal'''
         return get_float64_array(lib.Sensors_Get_Currents)
 
     @Currents.setter
@@ -2857,10 +3088,12 @@ class ISensors(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Sensors_Get_First()
 
     @property
     def IsDelta(self):
+        '''Active Winding delta or wye connection?'''
         return lib.Sensors_Get_IsDelta() != 0
 
     @IsDelta.setter
@@ -2869,6 +3102,7 @@ class ISensors(FrozenClass):
 
     @property
     def MeteredElement(self):
+        '''Set Name of metered element'''
         return get_string(lib.Sensors_Get_MeteredElement())
 
     @MeteredElement.setter
@@ -2880,6 +3114,7 @@ class ISensors(FrozenClass):
 
     @property
     def MeteredTerminal(self):
+        '''set Number of Metered Terminal'''
         return lib.Sensors_Get_MeteredTerminal()
 
     @MeteredTerminal.setter
@@ -2888,6 +3123,7 @@ class ISensors(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Sensors_Get_Name())
 
     @Name.setter
@@ -2899,6 +3135,7 @@ class ISensors(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Sensors_Get_Next()
 
     @property
@@ -2966,6 +3203,7 @@ class ISettings(FrozenClass):
 
     @property
     def AllowDuplicates(self):
+        '''{True | False*} Designates whether to allow duplicate names of objects'''
         return lib.Settings_Get_AllowDuplicates() != 0
 
     @AllowDuplicates.setter
@@ -2974,6 +3212,7 @@ class ISettings(FrozenClass):
 
     @property
     def AutoBusList(self):
+        '''List of Buses or (File=xxxx) syntax for the AutoAdd solution mode.'''
         return get_string(lib.Settings_Get_AutoBusList())
 
     @AutoBusList.setter
@@ -2985,6 +3224,7 @@ class ISettings(FrozenClass):
 
     @property
     def CktModel(self):
+        '''{dssMultiphase * | dssPositiveSeq} IIndicate if the circuit model is positive sequence.'''
         return lib.Settings_Get_CktModel()
 
     @CktModel.setter
@@ -2993,6 +3233,7 @@ class ISettings(FrozenClass):
 
     @property
     def ControlTrace(self):
+        '''{True | False*} Denotes whether to trace the control actions to a file.'''
         return lib.Settings_Get_ControlTrace() != 0
 
     @ControlTrace.setter
@@ -3001,6 +3242,7 @@ class ISettings(FrozenClass):
 
     @property
     def EmergVmaxpu(self):
+        '''Per Unit maximum voltage for Emergency conditions.'''
         return lib.Settings_Get_EmergVmaxpu()
 
     @EmergVmaxpu.setter
@@ -3009,6 +3251,7 @@ class ISettings(FrozenClass):
 
     @property
     def EmergVminpu(self):
+        '''Per Unit minimum voltage for Emergency conditions.'''
         return lib.Settings_Get_EmergVminpu()
 
     @EmergVminpu.setter
@@ -3017,6 +3260,7 @@ class ISettings(FrozenClass):
 
     @property
     def LossRegs(self):
+        '''Integer array defining which energy meter registers to use for computing losses'''
         return get_int32_array(lib.Settings_Get_LossRegs)
 
     @LossRegs.setter
@@ -3026,6 +3270,7 @@ class ISettings(FrozenClass):
 
     @property
     def LossWeight(self):
+        '''Weighting factor applied to Loss register values.'''
         return lib.Settings_Get_LossWeight()
 
     @LossWeight.setter
@@ -3034,6 +3279,7 @@ class ISettings(FrozenClass):
 
     @property
     def NormVmaxpu(self):
+        '''Per Unit maximum voltage for Normal conditions.'''
         return lib.Settings_Get_NormVmaxpu()
 
     @NormVmaxpu.setter
@@ -3042,6 +3288,7 @@ class ISettings(FrozenClass):
 
     @property
     def NormVminpu(self):
+        '''Per Unit minimum voltage for Normal conditions.'''
         return lib.Settings_Get_NormVminpu()
 
     @NormVminpu.setter
@@ -3050,6 +3297,7 @@ class ISettings(FrozenClass):
 
     @property
     def PriceCurve(self):
+        '''Name of LoadShape object that serves as the source of price signal data for yearly simulations, etc.'''
         return get_string(lib.Settings_Get_PriceCurve())
 
     @PriceCurve.setter
@@ -3061,6 +3309,7 @@ class ISettings(FrozenClass):
 
     @property
     def PriceSignal(self):
+        '''Price Signal for the Circuit'''
         return lib.Settings_Get_PriceSignal()
 
     @PriceSignal.setter
@@ -3069,6 +3318,7 @@ class ISettings(FrozenClass):
 
     @property
     def Trapezoidal(self):
+        '''{True | False *} Gets value of trapezoidal integration flag in energy meters.'''
         return lib.Settings_Get_Trapezoidal() != 0
 
     @Trapezoidal.setter
@@ -3077,6 +3327,7 @@ class ISettings(FrozenClass):
 
     @property
     def UEregs(self):
+        '''Array of Integers defining energy meter registers to use for computing UE'''
         return get_int32_array(lib.Settings_Get_UEregs)
 
     @UEregs.setter
@@ -3086,6 +3337,7 @@ class ISettings(FrozenClass):
 
     @property
     def UEweight(self):
+        '''Weighting factor applied to UE register values.'''
         return lib.Settings_Get_UEweight()
 
     @UEweight.setter
@@ -3094,6 +3346,7 @@ class ISettings(FrozenClass):
 
     @property
     def VoltageBases(self):
+        '''Array of doubles defining the legal voltage bases in kV L-L'''
         return get_float64_array(lib.Settings_Get_VoltageBases)
 
     @VoltageBases.setter
@@ -3103,6 +3356,7 @@ class ISettings(FrozenClass):
 
     @property
     def ZoneLock(self):
+        '''{True | False*}  Locks Zones on energy meters to prevent rebuilding if a circuit change occurs.'''
         return lib.Settings_Get_ZoneLock() != 0
 
     @ZoneLock.setter
@@ -3171,6 +3425,7 @@ class ISolution(FrozenClass):
 
     @property
     def AddType(self):
+        '''Type of device to add in AutoAdd Mode: {dssGen (Default) | dssCap}'''
         return lib.Solution_Get_AddType()
 
     @AddType.setter
@@ -3179,6 +3434,7 @@ class ISolution(FrozenClass):
 
     @property
     def Algorithm(self):
+        '''Base Solution algorithm: {dssNormalSolve | dssNewtonSolve}'''
         return lib.Solution_Get_Algorithm()
 
     @Algorithm.setter
@@ -3191,6 +3447,7 @@ class ISolution(FrozenClass):
 
     @property
     def Capkvar(self):
+        '''Capacitor kvar for adding capacitors in AutoAdd mode'''
         return lib.Solution_Get_Capkvar()
 
     @Capkvar.setter
@@ -3207,6 +3464,7 @@ class ISolution(FrozenClass):
 
     @property
     def ControlIterations(self):
+        '''Value of the control iteration counter'''
         return lib.Solution_Get_ControlIterations()
 
     @ControlIterations.setter
@@ -3215,6 +3473,7 @@ class ISolution(FrozenClass):
 
     @property
     def ControlMode(self):
+        '''{dssStatic* | dssEvent | dssTime}  Modes for control devices'''
         return lib.Solution_Get_ControlMode()
 
     @ControlMode.setter
@@ -3223,6 +3482,7 @@ class ISolution(FrozenClass):
 
     @property
     def Converged(self):
+        '''Flag to indicate whether the circuit solution converged'''
         return lib.Solution_Get_Converged() != 0
 
     @Converged.setter
@@ -3231,6 +3491,7 @@ class ISolution(FrozenClass):
 
     @property
     def DefaultDaily(self):
+        '''Default daily load shape (defaults to "Default")'''
         return get_string(lib.Solution_Get_DefaultDaily())
 
     @DefaultDaily.setter
@@ -3242,6 +3503,7 @@ class ISolution(FrozenClass):
 
     @property
     def DefaultYearly(self):
+        '''Default Yearly load shape (defaults to "Default")'''
         return get_string(lib.Solution_Get_DefaultYearly())
 
     @DefaultYearly.setter
@@ -3253,10 +3515,12 @@ class ISolution(FrozenClass):
 
     @property
     def EventLog(self):
+        '''Array of strings containing the Event Log'''
         return get_string_array(lib.Solution_Get_EventLog)
 
     @property
     def Frequency(self):
+        '''Set the Frequency for next solution'''
         return lib.Solution_Get_Frequency()
 
     @Frequency.setter
@@ -3265,6 +3529,7 @@ class ISolution(FrozenClass):
 
     @property
     def GenMult(self):
+        '''Default Multiplier applied to generators (like LoadMult)'''
         return lib.Solution_Get_GenMult()
 
     @GenMult.setter
@@ -3273,6 +3538,7 @@ class ISolution(FrozenClass):
 
     @property
     def GenPF(self):
+        '''PF for generators in AutoAdd mode'''
         return lib.Solution_Get_GenPF()
 
     @GenPF.setter
@@ -3281,6 +3547,7 @@ class ISolution(FrozenClass):
 
     @property
     def GenkW(self):
+        '''Generator kW for AutoAdd mode'''
         return lib.Solution_Get_GenkW()
 
     @GenkW.setter
@@ -3289,6 +3556,7 @@ class ISolution(FrozenClass):
 
     @property
     def Hour(self):
+        '''Set Hour for time series solutions.'''
         return lib.Solution_Get_Hour()
 
     @Hour.setter
@@ -3317,10 +3585,12 @@ class ISolution(FrozenClass):
 
     @property
     def Iterations(self):
+        '''Number of iterations taken for last solution. (Same as TotalIterations)'''
         return lib.Solution_Get_Iterations()
 
     @property
     def LDCurve(self):
+        '''Load-Duration Curve name for LD modes'''
         return get_string(lib.Solution_Get_LDCurve())
 
     @LDCurve.setter
@@ -3332,6 +3602,7 @@ class ISolution(FrozenClass):
 
     @property
     def LoadModel(self):
+        '''Load Model: {dssPowerFlow (default) | dssAdmittance}'''
         return lib.Solution_Get_LoadModel()
 
     @LoadModel.setter
@@ -3340,6 +3611,7 @@ class ISolution(FrozenClass):
 
     @property
     def LoadMult(self):
+        '''Default load multiplier applied to all non-fixed loads'''
         return lib.Solution_Get_LoadMult()
 
     @LoadMult.setter
@@ -3348,6 +3620,7 @@ class ISolution(FrozenClass):
 
     @property
     def MaxControlIterations(self):
+        '''Maximum allowable control iterations'''
         return lib.Solution_Get_MaxControlIterations()
 
     @MaxControlIterations.setter
@@ -3356,6 +3629,7 @@ class ISolution(FrozenClass):
 
     @property
     def MaxIterations(self):
+        '''Max allowable iterations.'''
         return lib.Solution_Get_MaxIterations()
 
     @MaxIterations.setter
@@ -3372,6 +3646,7 @@ class ISolution(FrozenClass):
 
     @property
     def Mode(self):
+        '''Type of automatic controller.'''
         return lib.Solution_Get_Mode()
 
     @Mode.setter
@@ -3380,14 +3655,17 @@ class ISolution(FrozenClass):
 
     @property
     def ModeID(self):
+        '''ID (text) of the present solution mode'''
         return get_string(lib.Solution_Get_ModeID())
 
     @property
     def MostIterationsDone(self):
+        '''Max number of iterations required to converge at any control iteration of the most recent solution.'''
         return lib.Solution_Get_MostIterationsDone()
 
     @property
     def Number(self):
+        '''Number of solutions to perform for Monte Carlo and time series simulations'''
         return lib.Solution_Get_Number()
 
     @Number.setter
@@ -3400,6 +3678,7 @@ class ISolution(FrozenClass):
 
     @property
     def Random(self):
+        '''Randomization mode for random variables "Gaussian" or "Uniform"'''
         return lib.Solution_Get_Random()
 
     @Random.setter
@@ -3408,6 +3687,7 @@ class ISolution(FrozenClass):
 
     @property
     def Seconds(self):
+        '''Seconds from top of the hour.'''
         return lib.Solution_Get_Seconds()
 
     @Seconds.setter
@@ -3416,6 +3696,7 @@ class ISolution(FrozenClass):
 
     @property
     def StepSize(self):
+        '''Time step size in sec'''
         return lib.Solution_Get_StepSize()
 
     @StepSize.setter
@@ -3424,6 +3705,7 @@ class ISolution(FrozenClass):
 
     @property
     def SystemYChanged(self):
+        '''Flag that indicates if elements of the System Y have been changed by recent activity.'''
         return lib.Solution_Get_SystemYChanged() != 0
 
     @property
@@ -3432,6 +3714,7 @@ class ISolution(FrozenClass):
 
     @property
     def Tolerance(self):
+        '''Solution convergence tolerance.'''
         return lib.Solution_Get_Tolerance()
 
     @Tolerance.setter
@@ -3448,10 +3731,12 @@ class ISolution(FrozenClass):
 
     @property
     def Totaliterations(self):
+        '''Total iterations including control iterations for most recent solution.'''
         return lib.Solution_Get_Totaliterations()
 
     @property
     def Year(self):
+        '''Set year for planning studies'''
         return lib.Solution_Get_Year()
 
     @Year.setter
@@ -3460,6 +3745,7 @@ class ISolution(FrozenClass):
 
     @property
     def dblHour(self):
+        '''Hour as a double, including fractional part'''
         return lib.Solution_Get_dblHour()
 
     @dblHour.setter
@@ -3468,6 +3754,7 @@ class ISolution(FrozenClass):
 
     @property
     def pctGrowth(self):
+        '''Percent default  annual load growth rate'''
         return lib.Solution_Get_pctGrowth()
 
     @pctGrowth.setter
@@ -3499,6 +3786,7 @@ class ISwtControls(FrozenClass):
 
     @property
     def Action(self):
+        '''Open or Close the switch. No effect if switch is locked.  However, Reset removes any lock and then closes the switch (shelf state).'''
         return lib.SwtControls_Get_Action()
 
     @Action.setter
@@ -3507,14 +3795,17 @@ class ISwtControls(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.SwtControls_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.SwtControls_Get_Count()
 
     @property
     def Delay(self):
+        '''Time delay [s] after arming before the first tap change. Control may reset before actually changing taps.'''
         return lib.SwtControls_Get_Delay()
 
     @Delay.setter
@@ -3523,10 +3814,12 @@ class ISwtControls(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.SwtControls_Get_First()
 
     @property
     def IsLocked(self):
+        '''The lock prevents both manual and automatic switch operation.'''
         return lib.SwtControls_Get_IsLocked() != 0
 
     @IsLocked.setter
@@ -3535,6 +3828,7 @@ class ISwtControls(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.SwtControls_Get_Name())
 
     @Name.setter
@@ -3546,6 +3840,7 @@ class ISwtControls(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.SwtControls_Get_Next()
 
     @property
@@ -3566,6 +3861,7 @@ class ISwtControls(FrozenClass):
 
     @property
     def SwitchedObj(self):
+        '''Full name of the switched element.'''
         return get_string(lib.SwtControls_Get_SwitchedObj())
 
     @SwitchedObj.setter
@@ -3577,6 +3873,7 @@ class ISwtControls(FrozenClass):
 
     @property
     def SwitchedTerm(self):
+        '''Terminal number where the switch is located on the SwitchedObj'''
         return lib.SwtControls_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
@@ -3589,6 +3886,7 @@ class IText(FrozenClass):
 
     @property
     def Command(self):
+        '''Get i-th command'''
         return get_string(lib.Text_Get_Command())
 
     @Command.setter
@@ -3601,6 +3899,7 @@ class IText(FrozenClass):
 
     @property
     def Result(self):
+        '''Result string for the last command.'''
         return get_string(lib.Text_Get_Result())
 
 
@@ -3655,6 +3954,7 @@ class ITopology(FrozenClass):
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Topology_Get_First()
 
     @property
@@ -3671,6 +3971,7 @@ class ITopology(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Topology_Get_Next()
 
     @property
@@ -3687,6 +3988,7 @@ class ITopology(FrozenClass):
 
     @property
     def NumLoops(self):
+        '''Number of loops'''
         return lib.Topology_Get_NumLoops()
 
     @property
@@ -3699,18 +4001,22 @@ class ITransformers(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Transformers_Get_AllNames)
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Transformers_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Transformers_Get_First()
 
     @property
     def IsDelta(self):
+        '''Active Winding delta or wye connection?'''
         return lib.Transformers_Get_IsDelta() != 0
 
     @IsDelta.setter
@@ -3719,6 +4025,7 @@ class ITransformers(FrozenClass):
 
     @property
     def MaxTap(self):
+        '''Active Winding maximum tap in per-unit.'''
         return lib.Transformers_Get_MaxTap()
 
     @MaxTap.setter
@@ -3727,6 +4034,7 @@ class ITransformers(FrozenClass):
 
     @property
     def MinTap(self):
+        '''Active Winding minimum tap in per-unit.'''
         return lib.Transformers_Get_MinTap()
 
     @MinTap.setter
@@ -3735,6 +4043,7 @@ class ITransformers(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Transformers_Get_Name())
 
     @Name.setter
@@ -3746,10 +4055,12 @@ class ITransformers(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Transformers_Get_Next()
 
     @property
     def NumTaps(self):
+        '''Active Winding number of tap steps betwein MinTap and MaxTap.'''
         return lib.Transformers_Get_NumTaps()
 
     @NumTaps.setter
@@ -3758,6 +4069,7 @@ class ITransformers(FrozenClass):
 
     @property
     def NumWindings(self):
+        '''Number of windings on this transformer. Allocates memory; set or change this property first.'''
         return lib.Transformers_Get_NumWindings()
 
     @NumWindings.setter
@@ -3766,6 +4078,7 @@ class ITransformers(FrozenClass):
 
     @property
     def R(self):
+        '''Active Winding resistance in %'''
         return lib.Transformers_Get_R()
 
     @R.setter
@@ -3774,6 +4087,7 @@ class ITransformers(FrozenClass):
 
     @property
     def Rneut(self):
+        '''Active Winding neutral resistance [ohms] for wye connections. Set less than zero for ungrounded wye.'''
         return lib.Transformers_Get_Rneut()
 
     @Rneut.setter
@@ -3782,6 +4096,7 @@ class ITransformers(FrozenClass):
 
     @property
     def Tap(self):
+        '''Active Winding tap in per-unit.'''
         return lib.Transformers_Get_Tap()
 
     @Tap.setter
@@ -3790,6 +4105,7 @@ class ITransformers(FrozenClass):
 
     @property
     def Wdg(self):
+        '''Active Winding Number from 1..NumWindings. Update this before reading or setting a sequence of winding properties (R, Tap, kV, kVA, etc.)'''
         return lib.Transformers_Get_Wdg()
 
     @Wdg.setter
@@ -3798,6 +4114,7 @@ class ITransformers(FrozenClass):
 
     @property
     def XfmrCode(self):
+        '''Name of an XfrmCode that supplies electircal parameters for this Transformer.'''
         return get_string(lib.Transformers_Get_XfmrCode())
 
     @XfmrCode.setter
@@ -3809,6 +4126,7 @@ class ITransformers(FrozenClass):
 
     @property
     def Xhl(self):
+        '''Percent reactance between windings 1 and 2, on winding 1 kVA base. Use for 2-winding or 3-winding transformers.'''
         return lib.Transformers_Get_Xhl()
 
     @Xhl.setter
@@ -3817,6 +4135,7 @@ class ITransformers(FrozenClass):
 
     @property
     def Xht(self):
+        '''Percent reactance between windigns 1 and 3, on winding 1 kVA base.  Use for 3-winding transformers only.'''
         return lib.Transformers_Get_Xht()
 
     @Xht.setter
@@ -3833,6 +4152,7 @@ class ITransformers(FrozenClass):
 
     @property
     def Xneut(self):
+        '''Active Winding neutral reactance [ohms] for wye connections.'''
         return lib.Transformers_Get_Xneut()
 
     @Xneut.setter
@@ -3841,6 +4161,7 @@ class ITransformers(FrozenClass):
 
     @property
     def kV(self):
+        '''Active Winding kV rating.  Phase-phase for 2 or 3 phases, actual winding kV for 1 phase transformer.'''
         return lib.Transformers_Get_kV()
 
     @kV.setter
@@ -3849,6 +4170,7 @@ class ITransformers(FrozenClass):
 
     @property
     def kVA(self):
+        '''Active Winding kVA rating. On winding 1, this also determines normal and emergency current ratings for all windings.'''
         return lib.Transformers_Get_kVA()
 
     @kVA.setter
@@ -3861,6 +4183,7 @@ class IVsources(FrozenClass):
 
     @property
     def AllNames(self):
+        '''Array of strings containing all RegControl names'''
         return get_string_array(lib.Vsources_Get_AllNames)
 
     @property
@@ -3881,14 +4204,17 @@ class IVsources(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.Vsources_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.Vsources_Get_First()
 
     @property
     def Frequency(self):
+        '''Set the Frequency for next solution'''
         return lib.Vsources_Get_Frequency()
 
     @Frequency.setter
@@ -3897,6 +4223,7 @@ class IVsources(FrozenClass):
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Vsources_Get_Name())
 
     @Name.setter
@@ -3908,10 +4235,12 @@ class IVsources(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.Vsources_Get_Next()
 
     @property
     def Phases(self):
+        '''Number of Phases, this Line element.'''
         return lib.Vsources_Get_Phases()
 
     @Phases.setter
@@ -3932,14 +4261,17 @@ class IXYCurves(FrozenClass):
 
     @property
     def Count(self):
+        '''Number of RegControl objects in Active Circuit'''
         return lib.XYCurves_Get_Count()
 
     @property
     def First(self):
+        '''Sets the first RegControl active. Returns 0 if none.'''
         return lib.XYCurves_Get_First()
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.XYCurves_Get_Name())
 
     @Name.setter
@@ -3951,6 +4283,7 @@ class IXYCurves(FrozenClass):
 
     @property
     def Next(self):
+        '''Sets the next RegControl active. Returns 0 if none.'''
         return lib.XYCurves_Get_Next()
 
     @property
@@ -4008,6 +4341,7 @@ class IXYCurves(FrozenClass):
 
     @property
     def x(self):
+        '''X Coordinate for bus (double)'''
         return lib.XYCurves_Get_x()
 
     @x.setter
@@ -4016,6 +4350,7 @@ class IXYCurves(FrozenClass):
 
     @property
     def y(self):
+        '''Y coordinate for bus(double)'''
         return lib.XYCurves_Get_y()
 
     @y.setter
@@ -4050,6 +4385,7 @@ class ICktElement(FrozenClass):
 
     @property
     def AllPropertyNames(self):
+        '''Array of strings containing the names of all properties for the active DSS object.'''
         return get_string_array(lib.CktElement_Get_AllPropertyNames)
 
     @property
@@ -4079,6 +4415,7 @@ class ICktElement(FrozenClass):
 
     @property
     def Currents(self):
+        '''Complex array of currents into each conductor of each terminal'''
         return get_float64_array(lib.CktElement_Get_Currents)
 
     @property
@@ -4087,6 +4424,7 @@ class ICktElement(FrozenClass):
 
     @property
     def DisplayName(self):
+        '''Display name of the object (not necessarily unique)'''
         return get_string(lib.CktElement_Get_DisplayName())
 
     @DisplayName.setter
@@ -4098,6 +4436,7 @@ class ICktElement(FrozenClass):
 
     @property
     def EmergAmps(self):
+        '''Emergency (maximum) ampere rating of Line.'''
         return lib.CktElement_Get_EmergAmps()
 
     @EmergAmps.setter
@@ -4106,6 +4445,7 @@ class ICktElement(FrozenClass):
 
     @property
     def Enabled(self):
+        '''Boolean indicating that element is currently in the circuit.'''
         return lib.CktElement_Get_Enabled() != 0
 
     @Enabled.setter
@@ -4114,14 +4454,17 @@ class ICktElement(FrozenClass):
 
     @property
     def EnergyMeter(self):
+        '''Name of the Energy Meter this element is assigned to.'''
         return get_string(lib.CktElement_Get_EnergyMeter())
 
     @property
     def GUID(self):
+        '''globally unique identifier for this object'''
         return get_string(lib.CktElement_Get_GUID())
 
     @property
     def Handle(self):
+        '''Pointer to this object'''
         return lib.CktElement_Get_Handle()
 
     @property
@@ -4130,18 +4473,22 @@ class ICktElement(FrozenClass):
 
     @property
     def HasSwitchControl(self):
+        '''This element has a SwtControl attached.'''
         return lib.CktElement_Get_HasSwitchControl() != 0
 
     @property
     def HasVoltControl(self):
+        '''This element has a CapControl or RegControl attached.'''
         return lib.CktElement_Get_HasVoltControl() != 0
 
     @property
     def Losses(self):
+        '''Total losses in active circuit, complex number (two-element array of double).'''
         return get_float64_array(lib.CktElement_Get_Losses)
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.CktElement_Get_Name())
 
     @property
@@ -4158,6 +4505,7 @@ class ICktElement(FrozenClass):
 
     @property
     def NumConductors(self):
+        '''Number of Conductors per Terminal'''
         return lib.CktElement_Get_NumConductors()
 
     @property
@@ -4166,14 +4514,17 @@ class ICktElement(FrozenClass):
 
     @property
     def NumPhases(self):
+        '''Number of Phases'''
         return lib.CktElement_Get_NumPhases()
 
     @property
     def NumProperties(self):
+        '''Number of Properties for the active DSS object.'''
         return lib.CktElement_Get_NumProperties()
 
     @property
     def NumTerminals(self):
+        '''Number of Terminals this Circuit Element'''
         return lib.CktElement_Get_NumTerminals()
 
     @property
@@ -4186,30 +4537,37 @@ class ICktElement(FrozenClass):
 
     @property
     def PhaseLosses(self):
+        '''Complex array of losses by phase'''
         return get_float64_array(lib.CktElement_Get_PhaseLosses)
 
     @property
     def Powers(self):
+        '''Complex array of powers into each conductor of each terminal'''
         return get_float64_array(lib.CktElement_Get_Powers)
 
     @property
     def Residuals(self):
+        '''Residual currents for each terminal: (mag, angle)'''
         return get_float64_array(lib.CktElement_Get_Residuals)
 
     @property
     def SeqCurrents(self):
+        '''Double array of symmetrical component currents into each 3-phase terminal'''
         return get_float64_array(lib.CktElement_Get_SeqCurrents)
 
     @property
     def SeqPowers(self):
+        '''Double array of sequence powers into each 3-phase teminal'''
         return get_float64_array(lib.CktElement_Get_SeqPowers)
 
     @property
     def SeqVoltages(self):
+        '''Double Array of sequence voltages at this bus.'''
         return get_float64_array(lib.CktElement_Get_SeqVoltages)
 
     @property
     def Voltages(self):
+        '''Complex array of voltages at this bus.'''
         return get_float64_array(lib.CktElement_Get_Voltages)
 
     @property
@@ -4218,6 +4576,7 @@ class ICktElement(FrozenClass):
 
     @property
     def Yprim(self):
+        '''Yprimitive: Does Nothing at present on Put; Dangerous'''
         return get_float64_array(lib.CktElement_Get_Yprim)
 
 
@@ -4227,14 +4586,17 @@ class IDSSElement(FrozenClass):
 
     @property
     def AllPropertyNames(self):
+        '''Array of strings containing the names of all properties for the active DSS object.'''
         return get_string_array(lib.DSSElement_Get_AllPropertyNames)
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.DSSElement_Get_Name())
 
     @property
     def NumProperties(self):
+        '''Number of Properties for the active DSS object.'''
         return lib.DSSElement_Get_NumProperties()
 
 
@@ -4303,15 +4665,19 @@ class ICircuit(FrozenClass):
         return lib.Circuit_FirstPDElement()
 
     def AllNodeDistancesByPhase(self, Phase):
+        '''Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.'''
         return get_float64_array(lib.Circuit_Get_AllNodeDistancesByPhase, Phase)
 
     def AllNodeNamesByPhase(self, Phase):
+        '''Return array of strings of the node names for the By Phase criteria. Sequence corresponds to other ByPhase properties.'''
         return get_string_array(lib.Circuit_Get_AllNodeNamesByPhase, Phase)
 
     def AllNodeVmagByPhase(self, Phase):
+        '''Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.'''
         return get_float64_array(lib.Circuit_Get_AllNodeVmagByPhase, Phase)
 
     def AllNodeVmagPUByPhase(self, Phase):
+        '''Returns array of per unit voltage magnitudes for each node by phase'''
         return get_float64_array(lib.Circuit_Get_AllNodeVmagPUByPhase, Phase)
 
     def NextElement(self):
@@ -4355,62 +4721,77 @@ class ICircuit(FrozenClass):
 
     @property
     def AllBusDistances(self):
+        '''Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.'''
         return get_float64_array(lib.Circuit_Get_AllBusDistances)
 
     @property
     def AllBusNames(self):
+        '''Array of strings containing names of all buses in circuit (see AllNodeNames).'''
         return get_string_array(lib.Circuit_Get_AllBusNames)
 
     @property
     def AllBusVmag(self):
+        '''Array of magnitudes (doubles) of voltages at all buses'''
         return get_float64_array(lib.Circuit_Get_AllBusVmag)
 
     @property
     def AllBusVmagPu(self):
+        '''Double Array of all bus voltages (each node) magnitudes in Per unit'''
         return get_float64_array(lib.Circuit_Get_AllBusVmagPu)
 
     @property
     def AllBusVolts(self):
+        '''Complex array of all bus, node voltages from most recent solution'''
         return get_float64_array(lib.Circuit_Get_AllBusVolts)
 
     @property
     def AllElementLosses(self):
+        '''Array of total losses (complex) in each circuit element'''
         return get_float64_array(lib.Circuit_Get_AllElementLosses)
 
     @property
     def AllElementNames(self):
+        '''Vaiant array of strings containing Full Name of all elements.'''
         return get_string_array(lib.Circuit_Get_AllElementNames)
 
     @property
     def AllNodeDistances(self):
+        '''Returns an array of distances from parent EnergyMeter for each Node. Corresponds to AllBusVMag sequence.'''
         return get_float64_array(lib.Circuit_Get_AllNodeDistances)
 
     @property
     def AllNodeNames(self):
+        '''Array of strings containing full name of each node in system in same order as returned by AllBusVolts, etc.'''
         return get_string_array(lib.Circuit_Get_AllNodeNames)
 
     @property
     def LineLosses(self):
+        '''Complex total line losses in the circuit'''
         return get_float64_array(lib.Circuit_Get_LineLosses)
 
     @property
     def Losses(self):
+        '''Total losses in active circuit, complex number (two-element array of double).'''
         return get_float64_array(lib.Circuit_Get_Losses)
 
     @property
     def Name(self):
+        '''Sets a CapControl active by name.'''
         return get_string(lib.Circuit_Get_Name())
 
     @property
     def NumBuses(self):
+        '''Total number of Buses in the circuit.'''
         return lib.Circuit_Get_NumBuses()
 
     @property
     def NumCktElements(self):
+        '''Number of CktElements in the circuit.'''
         return lib.Circuit_Get_NumCktElements()
 
     @property
     def NumNodes(self):
+        '''Number of Nodes this bus.'''
         return lib.Circuit_Get_NumNodes()
 
     @property
@@ -4419,14 +4800,17 @@ class ICircuit(FrozenClass):
 
     @property
     def SubstationLosses(self):
+        '''Complex losses in all transformers designated to substations.'''
         return get_float64_array(lib.Circuit_Get_SubstationLosses)
 
     @property
     def SystemY(self):
+        '''System Y matrix (after a solution has been performed)'''
         return get_float64_array(lib.Circuit_Get_SystemY)
 
     @property
     def TotalPower(self):
+        '''Total power, watts delivered to the circuit'''
         return get_float64_array(lib.Circuit_Get_TotalPower)
 
     @property
@@ -4558,10 +4942,12 @@ class IDSS(FrozenClass):
 
     @property
     def Classes(self):
+        '''List of DSS intrinsic classes (names of the classes)'''
         return get_string_array(lib.DSS_Get_Classes)
 
     @property
     def DataPath(self):
+        '''DSS Data File Path.  Default path for reports, etc. from DSS'''
         return get_string(lib.DSS_Get_DataPath())
 
     @DataPath.setter
@@ -4573,26 +4959,32 @@ class IDSS(FrozenClass):
 
     @property
     def DefaultEditor(self):
+        '''Returns the path name for the default text editor.'''
         return get_string(lib.DSS_Get_DefaultEditor())
 
     @property
     def NumCircuits(self):
+        '''Number of Circuits currently defined'''
         return lib.DSS_Get_NumCircuits()
 
     @property
     def NumClasses(self):
+        '''Number of DSS intrinsic classes'''
         return lib.DSS_Get_NumClasses()
 
     @property
     def NumUserClasses(self):
+        '''Number of user-defined classes'''
         return lib.DSS_Get_NumUserClasses()
 
     @property
     def UserClasses(self):
+        '''List of user-defined classes'''
         return get_string_array(lib.DSS_Get_UserClasses)
 
     @property
     def Version(self):
+        '''Get version string for the DSS.'''
         return get_string(lib.DSS_Get_Version())
 
 
