@@ -334,6 +334,9 @@ class ICapacitors(FrozenClass):
 class ICapControls(FrozenClass):
     _isfrozen = freeze
 
+    def Reset(self):
+        lib.CapControls_Reset()
+
     @property
     def AllNames(self):
         '''Array of strings containing all RegControl names'''

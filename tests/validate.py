@@ -447,7 +447,7 @@ class ValidatingTest:
         count = 0
         while nA != 0:
             count += 1
-            for field in 'RecloseIntervals,'.split(','):
+            for field in 'RecloseIntervals'.split(','):
                 fA = getattr(A, field)
                 fB = getattr(B, field)
                 fA = np.array(fA, dtype=fB.dtype)
