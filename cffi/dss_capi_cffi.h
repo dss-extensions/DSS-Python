@@ -237,10 +237,12 @@ void DSSimComs_BusVoltage(double** ResultPtr, int32_t* ResultCount, size_t Index
 // void DSSProgress_Set_Caption(char* Value);
 // void DSSProgress_Set_PctProgress(int32_t Value);
 // void DSSProgress_Show(void);
-// char* DSSProperty_Get_Description(void);
-// char* DSSProperty_Get_Name(void);
-// char* DSSProperty_Get_Val(void);
-// void DSSProperty_Set_Val(char* Value);
+char* DSSProperty_Get_Description(void);
+char* DSSProperty_Get_Name(void);
+char* DSSProperty_Get_Val(void);
+void DSSProperty_Set_Val(char* Value);
+void DSSProperty_Set_Name(char* Value);
+void DSSProperty_Set_Index(int32_t Value);
 char* DSS_Executive_Get_Command(int32_t i);
 int32_t DSS_Executive_Get_NumCommands(void);
 int32_t DSS_Executive_Get_NumOptions(void);
