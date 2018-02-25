@@ -52,6 +52,9 @@ class IActiveClass(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.ActiveClass_Get_Count()
 
+    def __len__(self):
+        return lib.ActiveClass_Get_Count()
+
     @property
     def First(self):
         '''Sets the first RegControl active. Returns 0 if none.'''
@@ -263,6 +266,9 @@ class ICapacitors(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.Capacitors_Get_Count()
 
+    def __len__(self):
+        return lib.Capacitors_Get_Count()
+
     @property
     def First(self):
         '''Sets the first RegControl active. Returns 0 if none.'''
@@ -366,6 +372,9 @@ class ICapControls(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.CapControls_Get_Count()
+
+    def __len__(self):
         return lib.CapControls_Get_Count()
 
     @property
@@ -643,6 +652,21 @@ class IDSSProperty(FrozenClass):
 
         lib.DSSProperty_Set_Val(Value)
 
+    def __getitem__(self, propname_index):
+        if isinstance(propname_index, int):
+            lib.DSSProperty_Set_Index(propname_index)
+        else:
+            if type(propname_index) is not bytes:
+                propname_index = propname_index.encode(codec)
+                
+            lib.DSSProperty_Set_Name(propname_index)
+    
+        return self
+    
+    def __call__(self, propname_index):
+        return self.__getitem__(propname_index)
+
+
 
 class IDSS_Executive(FrozenClass):
     _isfrozen = freeze
@@ -711,6 +735,9 @@ class IFuses(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.Fuses_Get_Count()
+
+    def __len__(self):
         return lib.Fuses_Get_Count()
 
     @property
@@ -830,6 +857,9 @@ class IGenerators(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.Generators_Get_Count()
+
+    def __len__(self):
         return lib.Generators_Get_Count()
 
     @property
@@ -986,6 +1016,9 @@ class IISources(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.ISources_Get_Count()
 
+    def __len__(self):
+        return lib.ISources_Get_Count()
+
     @property
     def First(self):
         '''Sets the first RegControl active. Returns 0 if none.'''
@@ -1056,6 +1089,9 @@ class ILineCodes(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.LineCodes_Get_Count()
+
+    def __len__(self):
         return lib.LineCodes_Get_Count()
 
     @property
@@ -1243,6 +1279,9 @@ class ILines(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.Lines_Get_Count()
+
+    def __len__(self):
         return lib.Lines_Get_Count()
 
     @property
@@ -1516,6 +1555,9 @@ class ILoads(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.Loads_Get_Count()
+
+    def __len__(self):
         return lib.Loads_Get_Count()
 
     @property
@@ -1807,6 +1849,9 @@ class ILoadShapes(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.LoadShapes_Get_Count()
 
+    def __len__(self):
+        return lib.LoadShapes_Get_Count()
+
     @property
     def First(self):
         '''Sets the first RegControl active. Returns 0 if none.'''
@@ -1988,6 +2033,9 @@ class IMeters(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.Meters_Get_Count()
+
+    def __len__(self):
         return lib.Meters_Get_Count()
 
     @property
@@ -2182,6 +2230,9 @@ class IMonitors(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.Monitors_Get_Count()
+
+    def __len__(self):
         return lib.Monitors_Get_Count()
 
     @property
@@ -2439,6 +2490,9 @@ class IPDElements(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.PDElements_Get_Count()
 
+    def __len__(self):
+        return lib.PDElements_Get_Count()
+
     @property
     def FaultRate(self):
         return lib.PDElements_Get_FaultRate()
@@ -2531,6 +2585,9 @@ class IPVSystems(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.PVSystems_Get_Count()
 
+    def __len__(self):
+        return lib.PVSystems_Get_Count()
+
     @property
     def First(self):
         '''Sets the first RegControl active. Returns 0 if none.'''
@@ -2614,6 +2671,9 @@ class IReclosers(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.Reclosers_Get_Count()
+
+    def __len__(self):
         return lib.Reclosers_Get_Count()
 
     @property
@@ -2764,6 +2824,9 @@ class IRegControls(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.RegControls_Get_Count()
+
+    def __len__(self):
         return lib.RegControls_Get_Count()
 
     @property
@@ -2987,6 +3050,9 @@ class IRelays(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.Relays_Get_Count()
 
+    def __len__(self):
+        return lib.Relays_Get_Count()
+
     @property
     def First(self):
         '''Sets the first RegControl active. Returns 0 if none.'''
@@ -3077,6 +3143,9 @@ class ISensors(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.Sensors_Get_Count()
+
+    def __len__(self):
         return lib.Sensors_Get_Count()
 
     @property
@@ -3806,6 +3875,9 @@ class ISwtControls(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.SwtControls_Get_Count()
 
+    def __len__(self):
+        return lib.SwtControls_Get_Count()
+
     @property
     def Delay(self):
         '''Time delay [s] after arming before the first tap change. Control may reset before actually changing taps.'''
@@ -4012,6 +4084,9 @@ class ITransformers(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.Transformers_Get_Count()
 
+    def __len__(self):
+        return lib.Transformers_Get_Count()
+
     @property
     def First(self):
         '''Sets the first RegControl active. Returns 0 if none.'''
@@ -4210,6 +4285,9 @@ class IVsources(FrozenClass):
         '''Number of RegControl objects in Active Circuit'''
         return lib.Vsources_Get_Count()
 
+    def __len__(self):
+        return lib.Vsources_Get_Count()
+
     @property
     def First(self):
         '''Sets the first RegControl active. Returns 0 if none.'''
@@ -4265,6 +4343,9 @@ class IXYCurves(FrozenClass):
     @property
     def Count(self):
         '''Number of RegControl objects in Active Circuit'''
+        return lib.XYCurves_Get_Count()
+
+    def __len__(self):
         return lib.XYCurves_Get_Count()
 
     @property
