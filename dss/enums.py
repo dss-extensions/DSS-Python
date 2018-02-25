@@ -1,4 +1,11 @@
-class MonitorModes:
+import sys
+if (sys.version_info.major, sys.version_info.minor) >= (3, 4):
+    import enum
+    Base = enum.IntEnum
+else:
+    Base = object
+
+class MonitorModes(Base):
     VI = 0x00000000
     Power = 0x00000001
     Sequence = 0x00000010
@@ -7,7 +14,7 @@ class MonitorModes:
     Taps = 0x00000002
     States = 0x00000003
 
-class SolveModes:
+class SolveModes(Base):
     SnapShot = 0x00000000
     DutyCycle = 0x00000006
     Direct = 0x00000007
@@ -25,7 +32,7 @@ class SolveModes:
     Harmonic = 0x0000000F
     Dynamic = 0x0000000E
 
-class Options:
+class Options(Base):
     PowerFlow = 0x00000001
     Admittance = 0x00000002
     NormalSolve = 0x00000000
@@ -42,7 +49,7 @@ class Options:
     AddCap = 0x00000002
     ControlOFF = 0xFFFFFFFF
 
-class CapControlModes:
+class CapControlModes(Base):
     Voltage = 0x00000001
     KVAR = 0x00000002
     Current = 0x00000000
@@ -59,12 +66,12 @@ class ActionCodes:
     TapUp = 0x00000006
     TapDown = 0x00000007
 
-class LoadStatus:
+class LoadStatus(Base):
     Variable = 0x00000000
     Fixed = 0x00000001
     Exempt = 0x00000002
 
-class LoadModels:
+class LoadModels(Base):
     ConstPQ = 0x00000001
     ConstZ = 0x00000002
     Motor = 0x00000003
@@ -74,7 +81,7 @@ class LoadModels:
     ConstPFixedX = 0x00000007
     ZIPV = 0x00000008
 
-class LineUnits:
+class LineUnits(Base):
     none = 0x00000000
     Miles = 0x00000001
     kFt = 0x00000002
