@@ -7,6 +7,7 @@ from __future__ import absolute_import
 from .._dsspm_capi import ffi, lib
 from .._cffi_api_util import *
 import numpy as np
+import warnings
 
 # Bind to the FFI module instance for OpenDSS-PM
 api_util = CffiApiUtil(ffi, lib)
@@ -5070,6 +5071,18 @@ class IDSS(FrozenClass):
     def Version(self):
         '''Get version string for the DSS.'''
         return get_string(lib.DSS_Get_Version())
+
+    @property
+    def AllowForms(self):
+        warnings.warn('AllowForms is not implemented.')
+
+    @AllowForms.setter
+    def AllowForms(self, value):
+        warnings.warn('AllowForms is not implemented.')
+    
+    def ShowPanel(self):
+        warnings.warn('ShowPanel is not implemented.')
+
 
 
 
