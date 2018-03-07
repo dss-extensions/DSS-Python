@@ -6,7 +6,7 @@ Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simul
 
 If you are looking for the C API library, see [`dss_capi`](http://github.com/PMeira/dss_capi/).
 
-Version 0.9.3, based on [OpenDSS revision 2136](https://sourceforge.net/p/electricdss/code/2136/tree/). 
+Version 0.9.4, based on [OpenDSS revision 2152](https://sourceforge.net/p/electricdss/code/2152/tree/). 
 This is a work-in-progress but it's deemed stable enough to be made public.
 *Note that, while the interface with OpenDSS is stable (classic version), the OpenDSS-PM (actor-based parallel machine version) interface was integrated recently and is experimental.*
 
@@ -17,9 +17,10 @@ This module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the
 
 Recent changes
 ==============
-- 2018-02-08 / version 0.9.1: First public release (OpenDSS revision 2123)
-- 2018-02-12 / version 0.9.2: Experimental support for OpenDSS-PM (at the moment, a custom patch is provided for FreePascal support) and port COM interface fixes (OpenDSS revision 2134)
+- 2018-03-07 / version 0.9.4: Allows using `len` on several classes, fixes DSSProperty, and includes COM helpstrings as docstrings. Contains changes up to OpenDSS revision 2152.
 - 2018-02-16 / version 0.9.3: Integrate COM interface fixes from revision 2136 (`First` `Next` iteration on some elements)
+- 2018-02-12 / version 0.9.2: Experimental support for OpenDSS-PM (at the moment, a custom patch is provided for FreePascal support) and port COM interface fixes (OpenDSS revision 2134)
+- 2018-02-08 / version 0.9.1: First public release (OpenDSS revision 2123)
 
 
 Missing features and limitations
@@ -186,7 +187,7 @@ Roadmap
 =======
 Besides bug fixes, the main funcionality of this library is mostly done. Notable desirable features that may be implemented are:
 
-- More and better documentation, including the integration of the help strings from the IDL/COM definition files.
+- More and better documentation
 - Create wheels for Linux distributions, maybe using the Anaconda stack.
 - Create a more "Pythonic" API. This would break compatibility with COM, but may result in a more pleasant environment for using OpenDSS in Python.
 
