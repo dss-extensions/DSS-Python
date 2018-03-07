@@ -3768,7 +3768,7 @@ class ISolution(FrozenClass):
 
     @property
     def DefaultDaily(self):
-        '''Default daily load shape (defaults to "Default\'''
+        '''Default daily load shape (defaults to "Default")'''
         return get_string(lib.Solution_Get_DefaultDaily())
 
     @DefaultDaily.setter
@@ -3780,7 +3780,7 @@ class ISolution(FrozenClass):
 
     @property
     def DefaultYearly(self):
-        '''Default Yearly load shape (defaults to "Default\'''
+        '''Default Yearly load shape (defaults to "Default")'''
         return get_string(lib.Solution_Get_DefaultYearly())
 
     @DefaultYearly.setter
