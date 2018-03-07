@@ -130,17 +130,18 @@ class CffiApiUtil(object):
         return value, ptr, cnt
 
     def prepare_string_array(self, value):
-        raise NotImplementedError
+        if value is None:
+            raise ValueError("Value cannot be None!")
+
+        ptrs = []
+        for v in value:
+            if type(v) is not bytes:
+                v = v.encode(codec)
+        
+            ptrs.append(self.ffi.new("char[]", v))
+        
+        # Need to keep reference to every pointer to they don't get
+        # garbage collected too early
+        return value, ptrs, len(ptrs)
    
-
-# This might be useful for methods like Get_Channel that are exposed as Channel[] and Channel()
-# def arrayfunc(func):
-    # class ArrayFuncWrapper:
-        # def __call__(self, v):
-            # return func(self, v)
-            
-        # def __getitem__(self, v):
-            # return func(self, v)
-
-    # return ArrayFuncWrapper()
 

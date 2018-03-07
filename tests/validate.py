@@ -131,7 +131,21 @@ class ValidatingTest:
             fB = getattr(B, field)
             if fA == ('',) and fB == [None]: continue # comtypes and win32com results are a bit different here
             assert all(x[0] == x[1] for x in zip(fA, fB)), field
+            
+          
+        # Check if setting bus names works
+        BusNames = list(A.BusNames)
+        A.BusNames = BusNames
+        B.BusNames = BusNames
 
+        # Check if they match again
+        field = 'BusNames'
+        fA = getattr(A, field)
+        fB = getattr(B, field)
+        if not (fA == ('',) and fB == [None]): # comtypes and win32com results are a bit different here
+            assert all(x[0] == x[1] for x in zip(fA, fB)), field
+          
+          
         if no_properties: return
             
         all_props = list(A.AllPropertyNames)
