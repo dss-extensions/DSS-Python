@@ -6,7 +6,7 @@ Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simul
 
 If you are looking for the C API library, see [`dss_capi`](http://github.com/PMeira/dss_capi/).
 
-Version 0.9.5, based on [OpenDSS revision 2152](https://sourceforge.net/p/electricdss/code/2152/tree/). 
+Version 0.9.6, based on [OpenDSS revision 2152](https://sourceforge.net/p/electricdss/code/2152/tree/). 
 This is a work-in-progress but it's deemed stable enough to be made public.
 *Note that, while the interface with OpenDSS is stable (classic version), the OpenDSS-PM (actor-based parallel machine version) interface was integrated recently and is experimental.*
 
@@ -17,7 +17,7 @@ This module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the
 
 Recent changes
 ==============
-- 2018-04-05 / version 0.9.5: Adds missing `ActiveCircuit.CktElements[index]` (or `...CktElements(index)`) and `ActiveCircuit.Buses[index]` (or `...Buses(index)`).
+- 2018-04-05 / version 0.9.6: Adds missing `ActiveCircuit.CktElements[index]` (or `...CktElements(index)`) and `ActiveCircuit.Buses[index]` (or `...Buses(index)`).
 - 2018-03-07 / version 0.9.4: Allows using `len` on several classes, fixes DSSProperty, and includes COM helpstrings as docstrings. Contains changes up to OpenDSS revision 2152.
 - 2018-02-16 / version 0.9.3: Integrates COM interface fixes from revision 2136 (`First` `Next` iteration on some elements)
 - 2018-02-12 / version 0.9.2: Experimental support for OpenDSS-PM (at the moment, a custom patch is provided for FreePascal support) and port COM interface fixes (OpenDSS revision 2134)
