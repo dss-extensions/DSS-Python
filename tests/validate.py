@@ -151,9 +151,9 @@ class ValidatingTest:
         all_props = list(A.AllPropertyNames)
         for prop_name in all_props:
             is_equal = False
-            if A.Properties(prop_name).val != B.Properties(prop_name).val:
-                val_A = A.Properties(prop_name).val
-                val_B = B.Properties(prop_name).val
+            if A.Properties(prop_name).Val != B.Properties(prop_name).Val:
+                val_A = A.Properties(prop_name).Val
+                val_B = B.Properties(prop_name).Val
                 # Try as floats
                 try:
                     val_A = float(val_A)
@@ -164,8 +164,8 @@ class ValidatingTest:
                     val_B = 1
                     
                 if val_A != val_B:
-                    val_A = A.Properties(prop_name).val
-                    val_B = B.Properties(prop_name).val
+                    val_A = A.Properties(prop_name).Val
+                    val_B = B.Properties(prop_name).Val
 
                     # Try as matrices of floats                    
                     if val_A.startswith('[') and val_A.endswith(']'):
@@ -179,18 +179,29 @@ class ValidatingTest:
                                     break
                     
                 
-                if not (is_equal or val_A == val_B or A.Properties(prop_name).val == B.Properties(prop_name).val):
-                    print('ERROR: CktElement.Properties({}).val'.format(prop_name), A.Properties(prop_name).val, B.Properties(prop_name).val)
+                if not (is_equal or val_A == val_B or A.Properties(prop_name).Val == B.Properties(prop_name).Val):
+                    print('ERROR: CktElement.Properties({}).Val'.format(prop_name), A.Properties(prop_name).Val, B.Properties(prop_name).Val)
             
-            assert (A.Properties(prop_name).description == B.Properties(prop_name).description), ('Properties({}).description'.format(prop_name), A.Properties(prop_name).description, B.Properties(prop_name).description)
+            assert (A.Properties(prop_name).Description == B.Properties(prop_name).Description), ('Properties({}).Description'.format(prop_name), A.Properties(prop_name).Description, B.Properties(prop_name).Description)
             assert (A.Properties(prop_name).name == B.Properties(prop_name).name), ('Properties({}).name'.format(prop_name), A.Properties(prop_name).name, B.Properties(prop_name).name)
 
-            assert (B.Properties(prop_name).val == B.Properties[prop_name].val)
-            assert (B.Properties(prop_name).description == B.Properties[prop_name].description)
+            assert (B.Properties(prop_name).Val == B.Properties[prop_name].Val)
+            assert (B.Properties(prop_name).Description == B.Properties[prop_name].Description)
             assert (B.Properties(prop_name).name == B.Properties[prop_name].name)
 
 
     def validate_Buses(self):
+        for idx in range(len(self.AllBusNames)):
+            A = self.com.ActiveCircuit.Buses(idx)
+            B = self.capi.ActiveCircuit.Buses(idx)
+            assert A.Name == B.Name
+            
+        for name in self.AllBusNames[-1]:
+            A = self.com.ActiveCircuit.Buses(name)
+            B = self.capi.ActiveCircuit.Buses(name)
+            assert A.Name == B.Name
+
+            
         A = self.com.ActiveCircuit.ActiveBus
         B = self.capi.ActiveCircuit.ActiveBus
         for name in self.AllBusNames[-1]:
@@ -693,6 +704,37 @@ class ValidatingTest:
             "YNodeVarray" : self.YNodeVarray,
         }
 
+        # Get all line names
+        lines_names = []
+        LA = self.com.ActiveCircuit.Lines
+        nA = LA.First
+        while nA != 0:
+            lines_names.append(LA.Name)
+            nA = LA.Next
+            
+        # Test Circuit_SetCktElementName with line names
+        for name in lines_names:
+            A = self.capi.ActiveCircuit.CktElements('Line.' + name)
+            B = self.com.ActiveCircuit.CktElements('Line.' + name)
+            assert A.Name == B.Name
+            
+        # Test Circuit_SetCktElementIndex
+        for idx in range(len(self.AllBusNames[-1])):
+            # Note: idx is not the bus index but it is a valid CktElement index 
+            A = self.capi.ActiveCircuit.CktElements(idx)
+            B = self.com.ActiveCircuit.CktElements(idx)
+            assert A.Name == B.Name
+
+        # Try to use an invalid index
+        A = self.capi.ActiveCircuit.CktElements(999999)
+        B = self.com.ActiveCircuit.CktElements(999999)
+        assert A.Name == B.Name
+
+        # Try to use an invalid name
+        A = self.capi.ActiveCircuit.CktElements('NONEXISTENT_123456789')
+        B = self.com.ActiveCircuit.CktElements('NONEXISTENT_123456789')
+        assert A.Name == B.Name
+        
         for k, v in all_fields.items():
             if type(v[1]) == np.ndarray:
                 print(k, max(abs(v[1] - v[0])))
@@ -755,6 +797,7 @@ def run_tests(fns):
 
     import win32com.client
     com = win32com.client.Dispatch("OpenDSSEngine.DSS")
+    #com = win32com.client.gencache.EnsureDispatch("OpenDSSEngine.DSS")
 
     #import comtypes.client
     #com = comtypes.client.CreateObject("OpenDSSEngine.DSS")
@@ -783,12 +826,11 @@ def run_tests(fns):
 
 if __name__ == '__main__':
     fns = [
-        
+        "../../electricdss/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
         "../../electricdss/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss",
          "../../electricdss/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss",
          "../../electricdss/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss",
         "../../electricdss/Distrib/IEEETestCases/8500-Node/Master-unbal.dss",
-        "../../electricdss/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
         "../../electricdss/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS",
         "../../electricdss/Distrib/IEEETestCases/37Bus/ieee37.dss",
         "../../electricdss/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS",
@@ -840,4 +882,7 @@ if __name__ == '__main__':
 
     ]
 
+    from time import time
+    t0_global = time()
     run_tests(fns)
+    print(time() - t0_global, 'seconds')

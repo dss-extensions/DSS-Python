@@ -251,6 +251,23 @@ class IBus(FrozenClass):
     def y(self, Value):
         lib.Bus_Set_y(Value)
 
+    def __getitem__(self, index):
+        if isinstance(index, int):
+            # bus index is zero based, pass it directly
+            lib.Circuit_SetActiveBusi(index)
+        else:
+            if type(index) is not bytes:
+                index = index.encode(codec)
+                
+            lib.Circuit_SetActiveBus(index)
+    
+        return self
+        
+    def __call__(self, index):
+        return self.__getitem__(index)
+        
+
+
 
 class ICapacitors(FrozenClass):
     _isfrozen = freeze
@@ -5044,6 +5061,23 @@ class ICktElement(FrozenClass):
     def Yprim(self):
         '''(read-only) YPrim matrix, column order, complex numbers (paired)'''
         return get_float64_array(lib.CktElement_Get_Yprim)
+
+    def __getitem__(self, index):
+        if isinstance(index, int):
+            # index is zero based, pass it directly
+            lib.Circuit_SetCktElementIndex(index)
+        else:
+            if type(index) is not bytes:
+                index = index.encode(codec)
+                
+            lib.Circuit_SetCktElementName(index)
+    
+        return self
+        
+    def __call__(self, index):
+        return self.__getitem__(index)
+        
+
 
 
 class IDSSElement(FrozenClass):

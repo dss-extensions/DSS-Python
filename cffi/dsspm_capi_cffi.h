@@ -145,6 +145,8 @@ void Circuit_EndOfTimeStepUpdate(void);
 void Circuit_Get_YNodeOrder(char*** ResultPtr, int32_t* ResultCount);
 void Circuit_Get_YCurrents(double** ResultPtr, int32_t* ResultCount);
 void Circuit_Get_YNodeVarray(double** ResultPtr, int32_t* ResultCount);
+void Circuit_SetCktElementIndex(int32_t Value);
+void Circuit_SetCktElementName(char* Value);
 void CktElement_Get_BusNames(char*** ResultPtr, int32_t* ResultCount);
 char* CktElement_Get_Name(void);
 int32_t CktElement_Get_NumConductors(void);
