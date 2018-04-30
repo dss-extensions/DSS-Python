@@ -117,16 +117,16 @@ class CffiApiUtil(object):
         if type(value) is not np.ndarray or value.dtype != np.float64:
             value = np.array(value, dtype=np.float64)
         
-        ptr = self.ffi.cast('double*', self.ffi.from_buffer(data.data))
-        cnt = data.size
+        ptr = self.ffi.cast('double*', self.ffi.from_buffer(value.data))
+        cnt = value.size
         return value, ptr, cnt
        
     def prepare_int32_array(self, value):
         if type(value) is not np.ndarray or value.dtype != np.int32:
             value = np.array(value, dtype=np.int32)
         
-        ptr = self.ffi.cast('int32_t*', self.ffi.from_buffer(data.data))
-        cnt = data.size
+        ptr = self.ffi.cast('int32_t*', self.ffi.from_buffer(value.data))
+        cnt = value.size
         return value, ptr, cnt
 
     def prepare_string_array(self, value):
