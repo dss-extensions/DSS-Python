@@ -774,6 +774,9 @@ class IFuses(FrozenClass):
     def Close(self):
         lib.Fuses_Close()
 
+    def IsBlown(self):
+        return lib.Fuses_IsBlown() != 0
+
     def Open(self):
         lib.Fuses_Open()
 
@@ -1754,6 +1757,10 @@ class ILoads(FrozenClass):
         '''Relative Weighting factor for the active LOAD'''
         return lib.Loads_Get_RelWeight()
 
+    @RelWeight.setter
+    def RelWeight(self, Value):
+        lib.Loads_Set_RelWeight(Value)
+
     @property
     def Rneut(self):
         '''(read-only) Neutral resistance for wye-connected loads.'''
@@ -1961,6 +1968,12 @@ class ILoads(FrozenClass):
 
 class ILoadShapes(FrozenClass):
     _isfrozen = freeze
+
+    def New(self, Name):
+        if type(Name) is not bytes:
+            Name = Name.encode(codec)
+
+        return lib.LoadShapes_New(Name)
 
     def Normalize(self):
         lib.LoadShapes_Normalize()
@@ -2863,6 +2876,10 @@ class IPVSystems(FrozenClass):
         '''
         return lib.PVSystems_Get_PF()
 
+    @PF.setter
+    def PF(self, Value):
+        lib.PVSystems_Set_PF(Value)
+
     @property
     def RegisterNames(self):
         '''(read-only) Variant Array of PVSYSTEM energy meter register names'''
@@ -2893,6 +2910,10 @@ class IPVSystems(FrozenClass):
         '''
         return lib.PVSystems_Get_kVArated()
 
+    @kVArated.setter
+    def kVArated(self, Value):
+        lib.PVSystems_Set_kVArated(Value)
+
     @property
     def kW(self):
         '''(read-only) get kW output'''
@@ -2905,6 +2926,10 @@ class IPVSystems(FrozenClass):
         (write) Set kvar output value
         '''
         return lib.PVSystems_Get_kvar()
+
+    @kvar.setter
+    def kvar(self, Value):
+        lib.PVSystems_Set_kvar(Value)
 
 
 class IReclosers(FrozenClass):
@@ -4773,6 +4798,11 @@ class IXYCurves(FrozenClass):
         '''Get/Set Y values in curve; Set Npts to max number expected if setting'''
         return get_float64_array(lib.XYCurves_Get_Yarray)
 
+    @Yarray.setter
+    def Yarray(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.XYCurves_Set_Yarray(ValuePtr, ValueCount)
+
     @property
     def Yscale(self):
         '''
@@ -5501,6 +5531,15 @@ class IDSS(FrozenClass):
     
     def ShowPanel(self):
         warnings.warn('ShowPanel is not implemented.')
+        
+    def NewCircuit(self, name):
+        if type(name) is not bytes:
+            name = name.encode(codec)
+
+        lib.DSS_NewCircuit(name)
+        CheckForError()
+        
+        return self.ActiveCircuit
 
 
 
