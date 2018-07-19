@@ -94,6 +94,6 @@ def ParallelBranch():
 
 
 
-_columns = ['ActiveBranch', 'ActiveLevel', 'AllIsolatedBranches', 'AllIsolatedLoads', 'AllLoopedPairs', 'BackwardBranch', 'BranchName', 'BusName', 'FirstLoad', 'ForwardBranch', 'LoopedBranch', 'NextLoad', 'NumIsolatedBranches', 'NumIsolatedLoads', 'NumLoops', 'ParallelBranch']
+_columns = ['ActiveBranch', 'ActiveLevel', 'AllIsolatedBranches', 'AllIsolatedLoads', 'AllLoopedPairs', 'BackwardBranch', 'BranchName', 'BusName', 'ForwardBranch', 'LoopedBranch', 'NumIsolatedBranches', 'NumIsolatedLoads', 'NumLoops', 'ParallelBranch']
 __all__ = ['ActiveBranch', 'ActiveLevel', 'AllIsolatedBranches', 'AllIsolatedLoads', 'AllLoopedPairs', 'BackwardBranch', 'BranchName', 'BusName', 'First', 'FirstLoad', 'ForwardBranch', 'LoopedBranch', 'Next', 'NextLoad', 'NumIsolatedBranches', 'NumIsolatedLoads', 'NumLoops', 'ParallelBranch']
 

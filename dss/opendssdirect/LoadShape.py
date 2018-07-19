@@ -152,6 +152,6 @@ def SInterval(*args):
 
 
 
-_columns = ['Normalize', 'HrInterval', 'MinInterval', 'Name', 'Npts', 'PBase', 'PMult', 'QBase', 'QMult', 'TimeArray', 'UseActual', 'SInterval']
+_columns = ['HrInterval', 'MinInterval', 'Name', 'Npts', 'PBase', 'PMult', 'QBase', 'QMult', 'TimeArray', 'UseActual', 'SInterval']
 __all__ = ['New', 'Normalize', 'AllNames', 'Count', 'First', 'HrInterval', 'MinInterval', 'Name', 'Next', 'Npts', 'PBase', 'PMult', 'QBase', 'QMult', 'TimeArray', 'UseActual', 'SInterval']
 

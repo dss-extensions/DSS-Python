@@ -22,6 +22,6 @@ def PctProgress(Value):
 
 
 
-_columns = ['Show']
+_columns = []
 __all__ = ['Close', 'Show', 'Caption', 'PctProgress']
 

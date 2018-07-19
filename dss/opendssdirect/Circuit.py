@@ -178,6 +178,6 @@ def YNodeVArray():
 
 
 
-_columns = ['EndOfTimeStepUpdate', 'FirstElement', 'FirstPCElement', 'FirstPDElement', 'NextElement', 'NextPCElement', 'NextPDElement', 'SaveSample', 'UpdateStorage', 'AllBusDistances', 'AllBusNames', 'AllBusVMag', 'AllBusMagPu', 'AllBusVolts', 'AllElementLosses', 'AllElementNames', 'AllNodeDistances', 'AllNodeNames', 'LineLosses', 'Losses', 'Name', 'NumBuses', 'NumCktElements', 'NumNodes', 'ParentPDElement', 'SubstationLosses', 'SystemY', 'TotalPower', 'YCurrents', 'YNodeOrder', 'YNodeVArray']
+_columns = ['AllBusDistances', 'AllBusNames', 'AllBusVMag', 'AllBusMagPu', 'AllBusVolts', 'AllElementLosses', 'AllElementNames', 'AllNodeDistances', 'AllNodeNames', 'LineLosses', 'Losses', 'Name', 'NumBuses', 'NumCktElements', 'NumNodes', 'SubstationLosses', 'SystemY', 'TotalPower', 'YCurrents', 'YNodeOrder', 'YNodeVArray']
 __all__ = ['Capacity', 'Disable', 'Enable', 'EndOfTimeStepUpdate', 'FirstElement', 'FirstPCElement', 'FirstPDElement', 'AllNodeDistancesByPhase', 'AllNodeNamesByPhase', 'AllNodeVmagByPhase', 'AllNodeVmagPUByPhase', 'NextElement', 'NextPCElement', 'NextPDElement', 'Sample', 'SaveSample', 'SetActiveBus', 'SetActiveBusi', 'SetActiveClass', 'SetActiveElement', 'UpdateStorage', 'AllBusDistances', 'AllBusNames', 'AllBusVMag', 'AllBusMagPu', 'AllBusVolts', 'AllElementLosses', 'AllElementNames', 'AllNodeDistances', 'AllNodeNames', 'LineLosses', 'Losses', 'Name', 'NumBuses', 'NumCktElements', 'NumNodes', 'ParentPDElement', 'SubstationLosses', 'SystemY', 'TotalPower', 'YCurrents', 'YNodeOrder', 'YNodeVArray']
 

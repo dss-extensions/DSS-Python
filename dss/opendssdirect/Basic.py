@@ -80,6 +80,6 @@ def NewCircuit(name):
     
 
 
-_columns = ['ClearAll', 'Classes', 'DataPath', 'DefaultEditor', 'NumCircuits', 'NumClasses', 'NumUserClasses', 'UserClasses', 'Version']
+_columns = ['Classes', 'DataPath', 'DefaultEditor', 'NumCircuits', 'NumClasses', 'NumUserClasses', 'UserClasses', 'Version']
 __all__ = ['ClearAll', 'Reset', 'SetActiveClass', 'Start', 'Classes', 'DataPath', 'DefaultEditor', 'NumCircuits', 'NumClasses', 'NumUserClasses', 'UserClasses', 'Version', 'AllowForms', 'ShowPanel', 'NewCircuit']
 

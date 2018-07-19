@@ -50,6 +50,6 @@ def Action(Param1):
 
 
 
-_columns = ['ClearActions', 'ClearQueue', 'DoAllQueue', 'Show', 'ActionCode', 'DeviceHandle', 'NumActions', 'PopAction', 'Queue', 'QueueSize']
+_columns = ['ActionCode', 'DeviceHandle', 'NumActions', 'Queue', 'QueueSize']
 __all__ = ['ClearActions', 'ClearQueue', 'Delete', 'DoAllQueue', 'Show', 'ActionCode', 'DeviceHandle', 'NumActions', 'PopAction', 'Queue', 'QueueSize', 'Action']
 

@@ -148,6 +148,6 @@ def dblHour():
 
 
 
-_columns = ['Process', 'ProcessAll', 'Show', 'ByteStream', 'Element', 'FileName', 'FileVersion', 'Header', 'Mode', 'Name', 'NumChannels', 'RecordSize', 'SampleCount', 'Terminal', 'dblFreq', 'dblHour']
+_columns = ['Element', 'FileName', 'FileVersion', 'Header', 'Mode', 'Name', 'NumChannels', 'RecordSize', 'SampleCount', 'Terminal', 'dblFreq', 'dblHour']
 __all__ = ['Channel', 'Process', 'ProcessAll', 'Reset', 'ResetAll', 'Sample', 'SampleAll', 'Save', 'SaveAll', 'Show', 'AllNames', 'ByteStream', 'Count', 'Element', 'FileName', 'FileVersion', 'First', 'Header', 'Mode', 'Name', 'Next', 'NumChannels', 'RecordSize', 'SampleCount', 'Terminal', 'dblFreq', 'dblHour']
 

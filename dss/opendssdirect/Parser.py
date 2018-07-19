@@ -120,6 +120,6 @@ def WhiteSpace(*args):
 
 
 
-_columns = ['ResetDelimiters', 'AutoIncrement', 'BeginQuote', 'CmdString', 'DblValue', 'Delimiters', 'EndQuote', 'IntValue', 'NextParam', 'StrValue', 'WhiteSpace']
+_columns = ['AutoIncrement', 'BeginQuote', 'CmdString', 'Delimiters', 'EndQuote', 'WhiteSpace']
 __all__ = ['Matrix', 'SymMatrix', 'Vector', 'ResetDelimiters', 'AutoIncrement', 'BeginQuote', 'CmdString', 'DblValue', 'Delimiters', 'EndQuote', 'IntValue', 'NextParam', 'StrValue', 'WhiteSpace']
 
