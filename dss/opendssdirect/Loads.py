@@ -5,7 +5,7 @@ def AllNames():
     return get_string_array(lib.Loads_Get_AllNames)
 
 def AllocationFactor(*args):
-    '''(read-only) Factor for allocating loads by connected xfkva'''
+    '''Factor for allocating loads by connected xfkva'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_AllocationFactor()
@@ -15,7 +15,7 @@ def AllocationFactor(*args):
     lib.Loads_Set_AllocationFactor(Value)
 
 def CVRCurve(*args):
-    '''(read-only) Name of a loadshape with both Mult and Qmult, for CVR factors as a function of time.'''
+    '''Name of a loadshape with both Mult and Qmult, for CVR factors as a function of time.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Loads_Get_CVRcurve())
@@ -29,7 +29,7 @@ def CVRCurve(*args):
     return '0'
 
 def CVRvars(*args):
-    '''(read-only) Percent reduction in Q for percent reduction in V. Must be used with dssLoadModelCVR.'''
+    '''Percent reduction in Q for percent reduction in V. Must be used with dssLoadModelCVR.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_CVRvars()
@@ -39,7 +39,7 @@ def CVRvars(*args):
     lib.Loads_Set_CVRvars(Value)
 
 def CVRwatts(*args):
-    '''(read-only) Percent reduction in P for percent reduction in V. Must be used with dssLoadModelCVR.'''
+    '''Percent reduction in P for percent reduction in V. Must be used with dssLoadModelCVR.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_CVRwatts()
@@ -49,7 +49,7 @@ def CVRwatts(*args):
     lib.Loads_Set_CVRwatts(Value)
 
 def CFactor(*args):
-    '''(read-only) Factor relates average to peak kw.  Used for allocation with kwh and kwhdays/'''
+    '''Factor relates average to peak kw.  Used for allocation with kwh and kwhdays/'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_Cfactor()
@@ -76,7 +76,7 @@ def First():
     return lib.Loads_Get_First()
 
 def Growth(*args):
-    '''(read-only) Name of the growthshape curve for yearly load growth factors.'''
+    '''Name of the growthshape curve for yearly load growth factors.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Loads_Get_Growth())
@@ -90,7 +90,7 @@ def Growth(*args):
     return '0'
 
 def IsDelta(*args):
-    '''(read-only) Delta loads are connected line-to-line.'''
+    '''Delta loads are connected line-to-line.'''
     # Getter
     if len(args) == 0:
         return 1 if lib.Loads_Get_IsDelta() else 0
@@ -100,7 +100,7 @@ def IsDelta(*args):
     lib.Loads_Set_IsDelta(Value)
 
 def Model(*args):
-    '''(read-only) The Load Model defines variation of P and Q with voltage.'''
+    '''The Load Model defines variation of P and Q with voltage.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_Model()
@@ -128,7 +128,7 @@ def Next():
     return lib.Loads_Get_Next()
 
 def NumCust(*args):
-    '''(read-only) Number of customers in this load, defaults to one.'''
+    '''Number of customers in this load, defaults to one.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_NumCust()
@@ -151,7 +151,7 @@ def PF(*args):
     lib.Loads_Set_PF(Value)
 
 def PctMean(*args):
-    '''(read-only) Average percent of nominal load in Monte Carlo studies; only if no loadshape defined for this load.'''
+    '''Average percent of nominal load in Monte Carlo studies; only if no loadshape defined for this load.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_PctMean()
@@ -161,7 +161,7 @@ def PctMean(*args):
     lib.Loads_Set_PctMean(Value)
 
 def PctStdDev(*args):
-    '''(read-only) Percent standard deviation for Monte Carlo load studies; if there is no loadshape assigned to this load.'''
+    '''Percent standard deviation for Monte Carlo load studies; if there is no loadshape assigned to this load.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_PctStdDev()
@@ -181,7 +181,7 @@ def RelWeighting(*args):
     lib.Loads_Set_RelWeight(Value)
 
 def Rneut(*args):
-    '''(read-only) Neutral resistance for wye-connected loads.'''
+    '''Neutral resistance for wye-connected loads.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_Rneut()
@@ -191,7 +191,7 @@ def Rneut(*args):
     lib.Loads_Set_Rneut(Value)
 
 def Spectrum(*args):
-    '''(read-only) Name of harmonic current spectrrum shape.'''
+    '''Name of harmonic current spectrrum shape.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Loads_Get_Spectrum())
@@ -205,7 +205,7 @@ def Spectrum(*args):
     return '0'
 
 def Status(*args):
-    '''(read-only) Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).'''
+    '''Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_Status()
@@ -215,7 +215,7 @@ def Status(*args):
     lib.Loads_Set_Status(Value)
 
 def Vmaxpu(*args):
-    '''(read-only) Maximum per-unit voltage to use the load model. Above this, constant Z applies.'''
+    '''Maximum per-unit voltage to use the load model. Above this, constant Z applies.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_Vmaxpu()
@@ -225,7 +225,7 @@ def Vmaxpu(*args):
     lib.Loads_Set_Vmaxpu(Value)
 
 def VminEmerg(*args):
-    '''(read-only) Minimum voltage for unserved energy (UE) evaluation.'''
+    '''Minimum voltage for unserved energy (UE) evaluation.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_Vminemerg()
@@ -235,7 +235,7 @@ def VminEmerg(*args):
     lib.Loads_Set_Vminemerg(Value)
 
 def VminNorm(*args):
-    '''(read-only) Minimum voltage for energy exceeding normal (EEN) evaluations.'''
+    '''Minimum voltage for energy exceeding normal (EEN) evaluations.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_Vminnorm()
@@ -245,7 +245,7 @@ def VminNorm(*args):
     lib.Loads_Set_Vminnorm(Value)
 
 def Vminpu(*args):
-    '''(read-only) Minimum voltage to apply the load model. Below this, constant Z is used.'''
+    '''Minimum voltage to apply the load model. Below this, constant Z is used.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_Vminpu()
@@ -255,7 +255,7 @@ def Vminpu(*args):
     lib.Loads_Set_Vminpu(Value)
 
 def Xneut(*args):
-    '''(read-only) Neutral reactance for wye-connected loads.'''
+    '''Neutral reactance for wye-connected loads.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_Xneut()
@@ -265,7 +265,7 @@ def Xneut(*args):
     lib.Loads_Set_Xneut(Value)
 
 def Yearly(*args):
-    '''(read-only) Name of yearly duration loadshape'''
+    '''Name of yearly duration loadshape'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Loads_Get_Yearly())
@@ -279,7 +279,7 @@ def Yearly(*args):
     return '0'
 
 def ZipV(*args):
-    '''(read-only) Array of 7  doubles with values for ZIPV property of the LOAD object'''
+    '''Array of 7  doubles with values for ZIPV property of the LOAD object'''
     # Getter
     if len(args) == 0:
         return get_float64_array(lib.Loads_Get_ZIPV)
@@ -290,7 +290,7 @@ def ZipV(*args):
     lib.Loads_Set_ZIPV(ValuePtr, ValueCount)
 
 def Daily(*args):
-    '''(read-only) Name of the loadshape for a daily load profile.'''
+    '''Name of the loadshape for a daily load profile.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Loads_Get_daily())
@@ -304,7 +304,7 @@ def Daily(*args):
     return '0'
 
 def Duty(*args):
-    '''(read-only) Name of the loadshape for a duty cycle simulation.'''
+    '''Name of the loadshape for a duty cycle simulation.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Loads_Get_duty())
@@ -347,7 +347,7 @@ def kW(*args):
     lib.Loads_Set_kW(Value)
 
 def kVABase(*args):
-    '''(read-only) Base load kva. Also defined kw and kvar or pf input, or load allocation by kwh or xfkva.'''
+    '''Base load kva. Also defined kw and kvar or pf input, or load allocation by kwh or xfkva.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_kva()
@@ -358,8 +358,7 @@ def kVABase(*args):
 
 def kvar(*args):
     '''
-    (read) Set kvar for active Load. Updates PF based in present kW.
-    (write) Set kvar for active Load. Updates PF based on present kW.
+    Set kvar for active Load. Updates PF based on present kW.
     '''
     # Getter
     if len(args) == 0:
@@ -370,7 +369,7 @@ def kvar(*args):
     lib.Loads_Set_kvar(Value)
 
 def kWh(*args):
-    '''(read-only) kwh billed for this period. Can be used with Cfactor for load allocation.'''
+    '''kwh billed for this period. Can be used with Cfactor for load allocation.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_kwh()
@@ -380,7 +379,7 @@ def kWh(*args):
     lib.Loads_Set_kwh(Value)
 
 def kWhDays(*args):
-    '''(read-only) Length of kwh billing period for average demand calculation. Default 30.'''
+    '''Length of kwh billing period for average demand calculation. Default 30.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_kwhdays()
@@ -390,7 +389,7 @@ def kWhDays(*args):
     lib.Loads_Set_kwhdays(Value)
 
 def puSeriesRL(*args):
-    '''(write-only) Percent of Load that is modeled as series R-L for harmonics studies'''
+    '''Percent of Load that is modeled as series R-L for harmonics studies'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_pctSeriesRL()
@@ -400,7 +399,7 @@ def puSeriesRL(*args):
     lib.Loads_Set_pctSeriesRL(Value)
 
 def XfkVA(*args):
-    '''(read-only) Rated service transformer kVA for load allocation, using AllocationFactor. Affects kW, kvar, and pf.'''
+    '''Rated service transformer kVA for load allocation, using AllocationFactor. Affects kW, kvar, and pf.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_xfkVA()

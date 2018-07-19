@@ -79,10 +79,7 @@ def RegisterValues():
     return get_float64_array(lib.Generators_Get_RegisterValues)
 
 def Vmaxpu(*args):
-    '''
-    (read) vmaxpu for Generator model
-    (write) Vmaxpu for generator model
-    '''
+    '''Vmaxpu for generator model'''
     # Getter
     if len(args) == 0:
         return lib.Generators_Get_Vmaxpu()
@@ -122,10 +119,7 @@ def kV(*args):
     lib.Generators_Set_kV(Value)
 
 def kVARated(*args):
-    '''
-    (read) kVA rating of the generator
-    (write) KVA Rating of the generator
-    '''
+    '''kVA rating of the generator'''
     # Getter
     if len(args) == 0:
         return lib.Generators_Get_kVArated()
@@ -145,10 +139,7 @@ def kW(*args):
     lib.Generators_Set_kW(Value)
 
 def kvar(*args):
-    '''
-    (read) kvar output for the active generator. Updates power factor based on present kW value.
-    (write) kvar output for the active generator. Updates power factor based on present kW.
-    '''
+    '''kvar output for the active generator. Updates power factor based on present kW value.'''
     # Getter
     if len(args) == 0:
         return lib.Generators_Get_kvar()

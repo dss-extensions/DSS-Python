@@ -6,8 +6,7 @@ def AllNames():
 
 def Amps(*args):
     '''
-    (read) Get the magnitude of the ISOURCE in amps
-    (write) Set the magnitude of the ISOURCE, amps
+    Magnitude of the ISOURCE in amps
     '''
     # Getter
     if len(args) == 0:
@@ -36,10 +35,7 @@ def First():
     return lib.ISources_Get_First()
 
 def Frequency(*args):
-    '''
-    (read) The present frequency of the ISOURCE, Hz
-    (write) Set the present frequency for the ISOURCE
-    '''
+    '''The present frequency of the ISOURCE, Hz'''
     # Getter
     if len(args) == 0:
         return lib.ISources_Get_Frequency()

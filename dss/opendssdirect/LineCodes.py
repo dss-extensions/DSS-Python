@@ -5,7 +5,7 @@ def AllNames():
     return get_string_array(lib.LineCodes_Get_AllNames)
 
 def C0(*args):
-    '''(read-only) Zero-sequence capacitance, nF per unit length'''
+    '''Zero-sequence capacitance, nF per unit length'''
     # Getter
     if len(args) == 0:
         return lib.LineCodes_Get_C0()
@@ -15,7 +15,7 @@ def C0(*args):
     lib.LineCodes_Set_C0(Value)
 
 def C1(*args):
-    '''(read-only) Positive-sequence capacitance, nF per unit length'''
+    '''Positive-sequence capacitance, nF per unit length'''
     # Getter
     if len(args) == 0:
         return lib.LineCodes_Get_C1()
@@ -25,7 +25,7 @@ def C1(*args):
     lib.LineCodes_Set_C1(Value)
 
 def Cmatrix(*args):
-    '''(read-only) Capacitance matrix, nF per unit length'''
+    '''Capacitance matrix, nF per unit length'''
     # Getter
     if len(args) == 0:
         return get_float64_array(lib.LineCodes_Get_Cmatrix)
@@ -40,7 +40,7 @@ def Count():
     return lib.LineCodes_Get_Count()
 
 def EmergAmps(*args):
-    '''(read-only) Emergency ampere rating'''
+    '''Emergency ampere rating'''
     # Getter
     if len(args) == 0:
         return lib.LineCodes_Get_EmergAmps()
@@ -57,7 +57,7 @@ def IsZ1Z0():
     return 1 if lib.LineCodes_Get_IsZ1Z0() else 0
 
 def Name(*args):
-    '''(read-only) Name of active LineCode'''
+    '''Name of active LineCode'''
     # Getter
     if len(args) == 0:
         return get_string(lib.LineCodes_Get_Name())
@@ -74,7 +74,7 @@ def Next():
     return lib.LineCodes_Get_Next()
 
 def NormAmps(*args):
-    '''(read-only) Normal Ampere rating'''
+    '''Normal Ampere rating'''
     # Getter
     if len(args) == 0:
         return lib.LineCodes_Get_NormAmps()
@@ -94,7 +94,7 @@ def Phases(*args):
     lib.LineCodes_Set_Phases(Value)
 
 def R0(*args):
-    '''(read-only) Zero-Sequence Resistance, ohms per unit length'''
+    '''Zero-Sequence Resistance, ohms per unit length'''
     # Getter
     if len(args) == 0:
         return lib.LineCodes_Get_R0()
@@ -104,7 +104,7 @@ def R0(*args):
     lib.LineCodes_Set_R0(Value)
 
 def R1(*args):
-    '''(read-only) Positive-sequence resistance ohms per unit length'''
+    '''Positive-sequence resistance ohms per unit length'''
     # Getter
     if len(args) == 0:
         return lib.LineCodes_Get_R1()
@@ -114,7 +114,7 @@ def R1(*args):
     lib.LineCodes_Set_R1(Value)
 
 def Rmatrix(*args):
-    '''(read-only) Resistance matrix, ohms per unit length'''
+    '''Resistance matrix, ohms per unit length'''
     # Getter
     if len(args) == 0:
         return get_float64_array(lib.LineCodes_Get_Rmatrix)
@@ -134,7 +134,7 @@ def Units(*args):
     lib.LineCodes_Set_Units(Value)
 
 def X0(*args):
-    '''(read-only) Zero Sequence Reactance, Ohms per unit length'''
+    '''Zero Sequence Reactance, Ohms per unit length'''
     # Getter
     if len(args) == 0:
         return lib.LineCodes_Get_X0()
@@ -144,7 +144,7 @@ def X0(*args):
     lib.LineCodes_Set_X0(Value)
 
 def X1(*args):
-    '''(read-only) Posiive-sequence reactance, ohms per unit length'''
+    '''Posiive-sequence reactance, ohms per unit length'''
     # Getter
     if len(args) == 0:
         return lib.LineCodes_Get_X1()
@@ -154,7 +154,7 @@ def X1(*args):
     lib.LineCodes_Set_X1(Value)
 
 def Xmatrix(*args):
-    '''(read-only) Reactance matrix, ohms per unit length'''
+    '''Reactance matrix, ohms per unit length'''
     # Getter
     if len(args) == 0:
         return get_float64_array(lib.LineCodes_Get_Xmatrix)

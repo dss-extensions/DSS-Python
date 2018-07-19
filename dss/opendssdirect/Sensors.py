@@ -97,7 +97,7 @@ def PctError(*args):
     lib.Sensors_Set_PctError(Value)
 
 def ReverseDelta(*args):
-    '''(read-only) True if voltage measurements are 1-3, 3-2, 2-1.'''
+    '''True if voltage measurements are 1-3, 3-2, 2-1.'''
     # Getter
     if len(args) == 0:
         return 1 if lib.Sensors_Get_ReverseDelta() else 0
