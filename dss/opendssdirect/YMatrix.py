@@ -84,5 +84,5 @@ def UseAuxCurrents(*args):
 
 
 _columns = []
-__all__ = ['GetCompressedYMatrix', 'ZeroInjCurr', 'GetSourceInjCurrents', 'GetPCInjCurr', 'BuildYMatrixD', 'AddInAuxCurrents', 'IVector', 'VVector', 'SolveSystem', 'SystemYChanged', 'UseAuxCurrents']
+__all__ = ['CompressedYMatrix', 'ZeroInjCurr', 'GetSourceInjCurrents', 'GetPCInjCurr', 'BuildYMatrixD', 'AddInAuxCurrents', 'IVector', 'VVector', 'SolveSystem', 'SystemYChanged', 'UseAuxCurrents']
 
