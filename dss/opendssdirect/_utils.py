@@ -1,10 +1,13 @@
 from __future__ import absolute_import
-from .._dss_capi import ffi, lib
-from .._cffi_api_util import *
+from dss._dss_capi import ffi, lib
+from dss._cffi_api_util import *
 import numpy as np
 import warnings
 
 # Bind to the FFI module instance
+# Currently, we prefer list to keep higher compatibility with previous 
+# versions of OpenDSSDirect.py. 
+
 api_util = CffiApiUtil(ffi, lib)
 get_string = api_util.get_string
 get_float64_array = api_util.get_float64_array2
