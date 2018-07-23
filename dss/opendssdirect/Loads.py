@@ -277,7 +277,11 @@ def ZipV(*args):
     '''Array of 7  doubles with values for ZIPV property of the LOAD object'''
     # Getter
     if len(args) == 0:
-        return get_float64_array(lib.Loads_Get_ZIPV)
+        result = get_float64_array(lib.Loads_Get_ZIPV)
+        if result == [0]:
+            return []
+
+        return result
     
     # Setter
     Value, = args
