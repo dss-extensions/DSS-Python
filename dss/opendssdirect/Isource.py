@@ -5,9 +5,7 @@ def AllNames():
     return get_string_array(lib.ISources_Get_AllNames)
 
 def Amps(*args):
-    '''
-    Magnitude of the ISOURCE in amps
-    '''
+    '''Magnitude of the ISOURCE in amps'''
     # Getter
     if len(args) == 0:
         return lib.ISources_Get_Amps()

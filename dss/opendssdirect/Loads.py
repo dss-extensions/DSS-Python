@@ -357,9 +357,7 @@ def kVABase(*args):
     lib.Loads_Set_kva(Value)
 
 def kvar(*args):
-    '''
-    Set kvar for active Load. Updates PF based on present kW.
-    '''
+    '''Set kvar for active Load. Updates PF based on present kW.'''
     # Getter
     if len(args) == 0:
         return lib.Loads_Get_kvar()
