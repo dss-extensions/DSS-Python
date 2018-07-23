@@ -34,7 +34,7 @@ def GroundInst(*args):
     lib.Reclosers_Set_GroundInst(Value)
 
 def GroundTrip(*args):
-    '''(read-only) Ground (3I0) trip multiplier or actual amps'''
+    '''Ground (3I0) trip multiplier or actual amps'''
     # Getter
     if len(args) == 0:
         return lib.Reclosers_Get_GroundTrip()
@@ -61,7 +61,7 @@ def MonitoredObj(*args):
     return '0'
 
 def MonitoredTerm(*args):
-    '''(read-only) Terminal number of Monitored object for the Recloser '''
+    '''Terminal number of Monitored object for the Recloser '''
     # Getter
     if len(args) == 0:
         return lib.Reclosers_Get_MonitoredTerm()
@@ -71,7 +71,7 @@ def MonitoredTerm(*args):
     lib.Reclosers_Set_MonitoredTerm(Value)
 
 def Name(*args):
-    '''(read-only) Get Name of active Recloser or set the active Recloser by name.'''
+    '''Get Name of active Recloser or set the active Recloser by name.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Reclosers_Get_Name())
@@ -89,7 +89,7 @@ def Next():
     return lib.Reclosers_Get_Next()
 
 def NumFast(*args):
-    '''(read-only) Number of fast shots'''
+    '''Number of fast shots'''
     # Getter
     if len(args) == 0:
         return lib.Reclosers_Get_NumFast()
@@ -99,7 +99,7 @@ def NumFast(*args):
     lib.Reclosers_Set_NumFast(Value)
 
 def PhaseInst(*args):
-    '''(read-only) Phase instantaneous curve multipler or actual amps'''
+    '''Phase instantaneous curve multipler or actual amps'''
     # Getter
     if len(args) == 0:
         return lib.Reclosers_Get_PhaseInst()
@@ -126,7 +126,7 @@ def RecloseIntervals():
     return get_float64_array(lib.Reclosers_Get_RecloseIntervals)
 
 def Shots(*args):
-    '''(read-only) Number of shots to lockout (fast + delayed)'''
+    '''Number of shots to lockout (fast + delayed)'''
     # Getter
     if len(args) == 0:
         return lib.Reclosers_Get_Shots()
@@ -136,7 +136,7 @@ def Shots(*args):
     lib.Reclosers_Set_Shots(Value)
 
 def SwitchedObj(*args):
-    '''(read-only) Full name of the circuit element that is being switched by the Recloser.'''
+    '''Full name of the circuit element that is being switched by the Recloser.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Reclosers_Get_SwitchedObj())
@@ -150,7 +150,7 @@ def SwitchedObj(*args):
     return '0'
 
 def SwitchedTerm(*args):
-    '''(read-only) Terminal number of the controlled device being switched by the Recloser'''
+    '''Terminal number of the controlled device being switched by the Recloser'''
     # Getter
     if len(args) == 0:
         return lib.Reclosers_Get_SwitchedTerm()
@@ -160,10 +160,7 @@ def SwitchedTerm(*args):
     lib.Reclosers_Set_SwitchedTerm(Value)
 
 def Idx(*args):
-    '''
-    (read) Get/Set the active Recloser by index into the recloser list.  1..Count
-    (write) Get/Set the Active Recloser by index into the recloser list. 1..Count
-    '''
+    '''Get/Set the active Recloser by index into the recloser list.  1..Count'''
     # Getter
     if len(args) == 0:
         return lib.Reclosers_Get_idx()

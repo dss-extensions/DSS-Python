@@ -25,7 +25,7 @@ def BackwardBranch():
     return lib.Topology_Get_BackwardBranch()
 
 def BranchName(*args):
-    '''(read-only) Name of the active branch.'''
+    '''Name of the active branch.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Topology_Get_BranchName())
@@ -39,7 +39,7 @@ def BranchName(*args):
     return '0'
 
 def BusName(*args):
-    '''(write-only) Set the active branch to one containing this bus, return index or 0 if not found'''
+    '''Set the active branch to one containing this bus, return index or 0 if not found'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Topology_Get_BusName())

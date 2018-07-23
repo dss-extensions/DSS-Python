@@ -202,7 +202,7 @@ def TapDelay(*args):
     lib.RegControls_Set_TapDelay(Value)
 
 def TapNumber(*args):
-    '''(write-only) Integer number of the tap that the controlled transformer winding is currentliy on.'''
+    '''Integer number of the tap that the controlled transformer winding is currentliy on.'''
     # Getter
     if len(args) == 0:
         return lib.RegControls_Get_TapNumber()

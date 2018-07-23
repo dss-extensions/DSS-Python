@@ -13,7 +13,7 @@ def First():
     return lib.Relays_Get_First()
 
 def MonitoredObj(*args):
-    '''(read-only) Full name of object this Relay is monitoring.'''
+    '''Full name of object this Relay is monitoring.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Relays_Get_MonitoredObj())
@@ -27,7 +27,7 @@ def MonitoredObj(*args):
     return '0'
 
 def MonitoredTerm(*args):
-    '''(read-only) Number of terminal of monitored element that this Relay is monitoring.'''
+    '''Number of terminal of monitored element that this Relay is monitoring.'''
     # Getter
     if len(args) == 0:
         return lib.Relays_Get_MonitoredTerm()
@@ -58,7 +58,7 @@ def Next():
     return lib.Relays_Get_Next()
 
 def SwitchedObj(*args):
-    '''(read-only) Full name of element that will be switched when relay trips.'''
+    '''Full name of element that will be switched when relay trips.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Relays_Get_SwitchedObj())
@@ -72,7 +72,7 @@ def SwitchedObj(*args):
     return '0'
 
 def SwitchedTerm(*args):
-    '''(write-only) Terminal number of the switched object that will be opened when the relay trips.'''
+    '''Terminal number of the switched object that will be opened when the relay trips.'''
     # Getter
     if len(args) == 0:
         return lib.Relays_Get_SwitchedTerm()

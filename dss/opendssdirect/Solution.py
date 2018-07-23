@@ -91,7 +91,7 @@ def Capkvar(*args):
     lib.Solution_Set_Capkvar(Value)
 
 def ControlActionsDone(*args):
-    '''(read-only) Flag indicating the control actions are done.'''
+    '''Flag indicating the control actions are done.'''
     # Getter
     if len(args) == 0:
         return 1 if lib.Solution_Get_ControlActionsDone() else 0

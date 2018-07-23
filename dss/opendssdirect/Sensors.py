@@ -17,7 +17,7 @@ def Count():
     return lib.Sensors_Get_Count()
 
 def Currents(*args):
-    '''(read-only) Array of doubles for the line current measurements; don't use with kWS and kVARS.'''
+    '''Array of doubles for the line current measurements; don't use with kWS and kVARS.'''
     # Getter
     if len(args) == 0:
         return get_float64_array(lib.Sensors_Get_Currents)
@@ -32,7 +32,7 @@ def First():
     return lib.Sensors_Get_First()
 
 def IsDelta(*args):
-    '''(read-only) True if measured voltages are line-line. Currents are always line currents.'''
+    '''True if measured voltages are line-line. Currents are always line currents.'''
     # Getter
     if len(args) == 0:
         return 1 if lib.Sensors_Get_IsDelta() else 0
@@ -42,7 +42,7 @@ def IsDelta(*args):
     lib.Sensors_Set_IsDelta(Value)
 
 def MeteredElement(*args):
-    '''(read-only) Full Name of the measured element'''
+    '''Full Name of the measured element'''
     # Getter
     if len(args) == 0:
         return get_string(lib.Sensors_Get_MeteredElement())
@@ -56,7 +56,7 @@ def MeteredElement(*args):
     return '0'
 
 def MeteredTerminal(*args):
-    '''(read-only) Number of the measured terminal in the measured element.'''
+    '''Number of the measured terminal in the measured element.'''
     # Getter
     if len(args) == 0:
         return lib.Sensors_Get_MeteredTerminal()
@@ -87,7 +87,7 @@ def Next():
     return lib.Sensors_Get_Next()
 
 def PctError(*args):
-    '''(read-only) Assumed percent error in the Sensor measurement. Default is 1.'''
+    '''Assumed percent error in the Sensor measurement. Default is 1.'''
     # Getter
     if len(args) == 0:
         return lib.Sensors_Get_PctError()
@@ -107,7 +107,7 @@ def ReverseDelta(*args):
     lib.Sensors_Set_ReverseDelta(Value)
 
 def Weight(*args):
-    '''(read-only) Weighting factor for this Sensor measurement with respect to other Sensors. Default is 1.'''
+    '''Weighting factor for this Sensor measurement with respect to other Sensors. Default is 1.'''
     # Getter
     if len(args) == 0:
         return lib.Sensors_Get_Weight()
@@ -117,7 +117,7 @@ def Weight(*args):
     lib.Sensors_Set_Weight(Value)
 
 def kvar(*args):
-    '''(read-only) Array of doubles for Q measurements. Overwrites Currents with a new estimate using kWS.'''
+    '''Array of doubles for Q measurements. Overwrites Currents with a new estimate using kWS.'''
     # Getter
     if len(args) == 0:
         return get_float64_array(lib.Sensors_Get_kVARS)
@@ -128,7 +128,7 @@ def kvar(*args):
     lib.Sensors_Set_kVARS(ValuePtr, ValueCount)
 
 def kVS(*args):
-    '''(read-only) Array of doubles for the LL or LN (depending on Delta connection) voltage measurements.'''
+    '''Array of doubles for the LL or LN (depending on Delta connection) voltage measurements.'''
     # Getter
     if len(args) == 0:
         return get_float64_array(lib.Sensors_Get_kVS)
@@ -139,7 +139,7 @@ def kVS(*args):
     lib.Sensors_Set_kVS(ValuePtr, ValueCount)
 
 def kVBase(*args):
-    '''(read-only) Voltage base for the sensor measurements. LL for 2 and 3-phase sensors, LN for 1-phase sensors.'''
+    '''Voltage base for the sensor measurements. LL for 2 and 3-phase sensors, LN for 1-phase sensors.'''
     # Getter
     if len(args) == 0:
         return lib.Sensors_Get_kVbase()
@@ -149,7 +149,7 @@ def kVBase(*args):
     lib.Sensors_Set_kVbase(Value)
 
 def kW(*args):
-    '''(read-only) Array of doubles for P measurements. Overwrites Currents with a new estimate using kVARS.'''
+    '''Array of doubles for P measurements. Overwrites Currents with a new estimate using kVARS.'''
     # Getter
     if len(args) == 0:
         return get_float64_array(lib.Sensors_Get_kWS)

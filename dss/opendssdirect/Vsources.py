@@ -18,10 +18,7 @@ def AngleDeg(*args):
     lib.Vsources_Set_AngleDeg(Value)
 
 def BasekV(*args):
-    '''
-    (read) Source Voltage in kV
-    (write) Source voltage in kV
-    '''
+    '''Source voltage in kV'''
     # Getter
     if len(args) == 0:
         return lib.Vsources_Get_BasekV()
@@ -39,10 +36,7 @@ def First():
     return lib.Vsources_Get_First()
 
 def Frequency(*args):
-    '''
-    (read) Source Frequency in Hz
-    (write) Source frequency in Hz
-    '''
+    '''Source frequency in Hz'''
     # Getter
     if len(args) == 0:
         return lib.Vsources_Get_Frequency()
@@ -73,10 +67,7 @@ def Next():
     return lib.Vsources_Get_Next()
 
 def Phases(*args):
-    '''
-    (read) Number of Phases
-    (write) Number of phases
-    '''
+    '''Number of phases'''
     # Getter
     if len(args) == 0:
         return lib.Vsources_Get_Phases()

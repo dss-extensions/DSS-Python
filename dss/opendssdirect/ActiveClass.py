@@ -17,7 +17,7 @@ def First():
     return lib.ActiveClass_Get_First()
 
 def Name(*args):
-    '''(read-only) Name of the Active Element of the Active Class'''
+    '''Name of the Active Element of the Active Class'''
     # Getter
     if len(args) == 0:
         return get_string(lib.ActiveClass_Get_Name())

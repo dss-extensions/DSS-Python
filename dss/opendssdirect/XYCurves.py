@@ -30,10 +30,7 @@ def Next():
     return lib.XYCurves_Get_Next()
 
 def Npts(*args):
-    '''
-    (read) Get/Set Number of points in X-Y curve
-    (write) Get/Set Number of Points in X-Y curve
-    '''
+    '''Get/Set Number of points in X-Y curve'''
     # Getter
     if len(args) == 0:
         return lib.XYCurves_Get_Npts()
@@ -64,7 +61,7 @@ def XScale(*args):
     lib.XYCurves_Set_Xscale(Value)
 
 def XShift(*args):
-    '''(read-only) Amount to shift X value from original curve'''
+    '''Amount to shift X value from original curve'''
     # Getter
     if len(args) == 0:
         return lib.XYCurves_Get_Xshift()
@@ -98,7 +95,7 @@ def YScale(*args):
     lib.XYCurves_Set_Yscale(Value)
 
 def YShift(*args):
-    '''(read-only) amount to shift Y valiue from original curve'''
+    '''amount to shift Y valiue from original curve'''
     # Getter
     if len(args) == 0:
         return lib.XYCurves_Get_Yshift()
@@ -108,7 +105,7 @@ def YShift(*args):
     lib.XYCurves_Set_Yshift(Value)
 
 def X(*args):
-    '''(read-only) Set X value or get interpolated value after setting Y'''
+    '''Set X value or get interpolated value after setting Y'''
     # Getter
     if len(args) == 0:
         return lib.XYCurves_Get_x()

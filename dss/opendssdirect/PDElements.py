@@ -9,7 +9,7 @@ def Count():
     return lib.PDElements_Get_Count()
 
 def FaultRate(*args):
-    '''(read-only) Get/Set Number of failures per year. For LINE elements: Number of failures per unit length per year. '''
+    '''Get/Set Number of failures per year. For LINE elements: Number of failures per unit length per year. '''
     # Getter
     if len(args) == 0:
         return lib.PDElements_Get_FaultRate()
@@ -35,7 +35,7 @@ def Lambda():
     return lib.PDElements_Get_Lambda()
 
 def Name(*args):
-    '''(read-only) Get/Set name of active PD Element. Returns null string if active element is not PDElement type.'''
+    '''Get/Set name of active PD Element. Returns null string if active element is not PDElement type.'''
     # Getter
     if len(args) == 0:
         return get_string(lib.PDElements_Get_Name())
@@ -83,7 +83,7 @@ def TotalCustomers():
     return lib.PDElements_Get_Totalcustomers()
 
 def PctPermanent(*args):
-    '''(read-only) Get/Set percent of faults that are permanent (require repair). Otherwise, fault is assumed to be transient/temporary.'''
+    '''Get/Set percent of faults that are permanent (require repair). Otherwise, fault is assumed to be transient/temporary.'''
     # Getter
     if len(args) == 0:
         return lib.PDElements_Get_pctPermanent()
