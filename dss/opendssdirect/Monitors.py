@@ -50,6 +50,8 @@ def ByteStream():
     if result == [0]:
         return []
 
+    return result
+
 def Count():
     '''(read-only) Number of Monitors'''
     return lib.Monitors_Get_Count()
@@ -61,7 +63,7 @@ def Element(*args):
         result = get_string(lib.Monitors_Get_Element())
         if result == '':
             return '0'
-            
+
         return result
     
     # Setter

@@ -140,6 +140,7 @@ def Name(*args):
         result = get_string(lib.Meters_Get_Name())
         if result == '':
             return '0'
+
         return result
     
     # Setter
