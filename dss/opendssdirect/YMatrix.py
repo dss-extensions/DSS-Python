@@ -1,6 +1,6 @@
 from ._utils import *
 
-def CompressedYMatrix(factor=False):
+def CompressedYMatrix(factor=True):
     '''Return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix'''
     nBus = ffi.new('uint32_t*')
     nBus[0] = 0
