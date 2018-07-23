@@ -2,11 +2,9 @@ from ._utils import *
 
 def ClearAll():
     lib.DSS_ClearAll()
-    return 0
 
 def Reset():
     lib.DSS_Reset()
-    return 0
 
 def SetActiveClass(ClassName):
     if type(ClassName) is not bytes:
@@ -33,7 +31,6 @@ def DataPath(*args):
         Value = Value.encode(codec)
 
     lib.DSS_Set_DataPath(Value)
-    return '0'
 
 def DefaultEditor():
     '''(read-only) Returns the path name for the default text editor.'''

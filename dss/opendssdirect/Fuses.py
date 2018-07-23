@@ -2,14 +2,12 @@ from ._utils import *
 
 def Close():
     lib.Fuses_Close()
-    return 0
 
 def IsBlown():
     return 1 if lib.Fuses_IsBlown() else 0
 
 def Open():
     lib.Fuses_Open()
-    return 0
 
 def AllNames():
     '''(read-only) Array of strings containing names of all Fuses in the circuit'''
@@ -48,7 +46,6 @@ def MonitoredObj(*args):
         Value = Value.encode(codec)
 
     lib.Fuses_Set_MonitoredObj(Value)
-    return '0'
 
 def MonitoredTerm(*args):
     '''
@@ -78,7 +75,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Fuses_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Advance the active Fuse element pointer to the next fuse. Returns 0 if no more fuses.'''
@@ -116,7 +112,6 @@ def SwitchedObj(*args):
         Value = Value.encode(codec)
 
     lib.Fuses_Set_SwitchedObj(Value)
-    return '0'
 
 def SwitchedTerm(*args):
     '''
@@ -143,7 +138,6 @@ def TCCCurve(*args):
         Value = Value.encode(codec)
 
     lib.Fuses_Set_TCCcurve(Value)
-    return '0'
 
 def Idx(*args):
     '''

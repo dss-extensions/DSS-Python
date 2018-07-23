@@ -36,7 +36,6 @@ def BranchName(*args):
         Value = Value.encode(codec)
 
     lib.Topology_Set_BranchName(Value)
-    return '0'
 
 def BusName(*args):
     '''Set the active branch to one containing this bus, return index or 0 if not found'''
@@ -50,7 +49,6 @@ def BusName(*args):
         Value = Value.encode(codec)
 
     lib.Topology_Set_BusName(Value)
-    return '0'
 
 def First():
     '''(read-only) Sets the first branch active, returns 0 if none.'''

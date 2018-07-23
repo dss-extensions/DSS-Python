@@ -6,39 +6,30 @@ def Channel(Index):
 
 def Process():
     lib.Monitors_Process()
-    return 0
 
 def ProcessAll():
     lib.Monitors_ProcessAll()
-    return 0
 
 def Reset():
     lib.Monitors_Reset()
-    return 0
 
 def ResetAll():
     lib.Monitors_ResetAll()
-    return 0
 
 def Sample():
     lib.Monitors_Sample()
-    return 0
 
 def SampleAll():
     lib.Monitors_SampleAll()
-    return 0
 
 def Save():
     lib.Monitors_Save()
-    return 0
 
 def SaveAll():
     lib.Monitors_SaveAll()
-    return 0
 
 def Show():
     lib.Monitors_Show()
-    return 0
 
 def AllNames():
     '''(read-only) Array of all Monitor Names'''
@@ -72,7 +63,6 @@ def Element(*args):
         Value = Value.encode(codec)
 
     lib.Monitors_Set_Element(Value)
-    return '0'
 
 def FileName():
     '''(read-only) Name of CSV file associated with active Monitor.'''
@@ -112,7 +102,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Monitors_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets next monitor active.  Returns 0 if no more.'''

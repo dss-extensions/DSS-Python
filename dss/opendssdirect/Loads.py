@@ -26,7 +26,6 @@ def CVRCurve(*args):
         Value = Value.encode(codec)
 
     lib.Loads_Set_CVRcurve(Value)
-    return '0'
 
 def CVRvars(*args):
     '''Percent reduction in Q for percent reduction in V. Must be used with dssLoadModelCVR.'''
@@ -87,7 +86,6 @@ def Growth(*args):
         Value = Value.encode(codec)
 
     lib.Loads_Set_Growth(Value)
-    return '0'
 
 def IsDelta(*args):
     '''Delta loads are connected line-to-line.'''
@@ -121,7 +119,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Loads_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets next Load element to be active; returns 0 of none else index of active load.'''
@@ -202,7 +199,6 @@ def Spectrum(*args):
         Value = Value.encode(codec)
 
     lib.Loads_Set_Spectrum(Value)
-    return '0'
 
 def Status(*args):
     '''Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).'''
@@ -276,7 +272,6 @@ def Yearly(*args):
         Value = Value.encode(codec)
 
     lib.Loads_Set_Yearly(Value)
-    return '0'
 
 def ZipV(*args):
     '''Array of 7  doubles with values for ZIPV property of the LOAD object'''
@@ -301,7 +296,6 @@ def Daily(*args):
         Value = Value.encode(codec)
 
     lib.Loads_Set_daily(Value)
-    return '0'
 
 def Duty(*args):
     '''Name of the loadshape for a duty cycle simulation.'''
@@ -315,7 +309,6 @@ def Duty(*args):
         Value = Value.encode(codec)
 
     lib.Loads_Set_duty(Value)
-    return '0'
 
 def Idx(*args):
     # Getter

@@ -12,7 +12,6 @@ def Command(*args):
         Value = Value.encode(codec)
 
     lib.Text_Set_Command(Value)
-    return '0'
     CheckForError()
 
 def Result():

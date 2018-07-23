@@ -60,7 +60,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Vsources_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets the next VSOURCE object to be active; returns zero if no more'''

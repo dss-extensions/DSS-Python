@@ -23,7 +23,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.XYCurves_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Advances to next XYCurve object; returns 0 if no more objects of this class'''

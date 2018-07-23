@@ -40,7 +40,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.PVSystems_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets next PVSystem active; returns 0 if no more.'''

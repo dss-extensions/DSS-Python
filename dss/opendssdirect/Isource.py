@@ -57,7 +57,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.ISources_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets the next ISOURCE element to be the active one. Returns Zero if no more.'''

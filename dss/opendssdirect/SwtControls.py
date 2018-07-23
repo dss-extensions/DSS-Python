@@ -2,7 +2,6 @@ from ._utils import *
 
 def Reset():
     lib.SwtControls_Reset()
-    return 0
 
 def Action(*args):
     '''Open or Close the switch. No effect if switch is locked.  However, Reset removes any lock and then closes the switch (shelf state).'''
@@ -57,7 +56,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.SwtControls_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets the next SwtControl active. Returns 0 if no more.'''
@@ -101,7 +99,6 @@ def SwitchedObj(*args):
         Value = Value.encode(codec)
 
     lib.SwtControls_Set_SwitchedObj(Value)
-    return '0'
 
 def SwitchedTerm(*args):
     '''Terminal number where the switch is located on the SwitchedObj'''

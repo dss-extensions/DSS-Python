@@ -5,11 +5,9 @@ def AddStep():
 
 def Close():
     lib.Capacitors_Close()
-    return 0
 
 def Open():
     lib.Capacitors_Open()
-    return 0
 
 def SubtractStep():
     return 1 if lib.Capacitors_SubtractStep() else 0
@@ -52,7 +50,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Capacitors_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets the next Capacitor active. Returns 0 if no more.'''

@@ -8,18 +8,15 @@ def Disable(Name):
         Name = Name.encode(codec)
 
     lib.Circuit_Disable(Name)
-    return ''
 
 def Enable(Name):
     if type(Name) is not bytes:
         Name = Name.encode(codec)
 
     lib.Circuit_Enable(Name)
-    return ''
 
 def EndOfTimeStepUpdate():
     lib.Circuit_EndOfTimeStepUpdate()
-    return 0
 
 def FirstElement():
     return lib.Circuit_FirstElement()
@@ -57,11 +54,9 @@ def NextPDElement():
 
 def Sample():
     lib.Circuit_Sample()
-    return 0
 
 def SaveSample():
     lib.Circuit_SaveSample()
-    return 0
 
 def SetActiveBus(BusName):
     if type(BusName) is not bytes:
@@ -86,7 +81,6 @@ def SetActiveElement(FullName):
 
 def UpdateStorage():
     lib.Circuit_UpdateStorage()
-    return 0
 
 def AllBusDistances():
     '''(read-only) Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.'''

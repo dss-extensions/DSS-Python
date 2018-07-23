@@ -28,7 +28,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.ActiveClass_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets next element in active class to be the active DSS object. If object is a CktElement, ActiveCktElement also points to this element.  Returns 0 if no more.'''

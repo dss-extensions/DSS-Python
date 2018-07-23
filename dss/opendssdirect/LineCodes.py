@@ -68,7 +68,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.LineCodes_Set_Name(Value)
-    return '0'
 
 def Next():
     return lib.LineCodes_Get_Next()

@@ -2,11 +2,9 @@ from ._utils import *
 
 def Reset():
     lib.Sensors_Reset()
-    return 0
 
 def ResetAll():
     lib.Sensors_ResetAll()
-    return 0
 
 def AllNames():
     '''(read-only) Array of Sensor names.'''
@@ -53,7 +51,6 @@ def MeteredElement(*args):
         Value = Value.encode(codec)
 
     lib.Sensors_Set_MeteredElement(Value)
-    return '0'
 
 def MeteredTerminal(*args):
     '''Number of the measured terminal in the measured element.'''
@@ -80,7 +77,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Sensors_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets the next Sensor active. Returns 0 if no more.'''

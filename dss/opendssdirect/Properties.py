@@ -24,7 +24,6 @@ def Value(*args):
 
     lib.DSSProperty_Set_Index(int(args[0]))
     lib.DSSProperty_Set_Val(Value)
-    return '0'
 
 
 

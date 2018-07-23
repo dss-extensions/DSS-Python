@@ -22,7 +22,6 @@ def AutoBusList(*args):
         Value = Value.encode(codec)
 
     lib.Settings_Set_AutoBusList(Value)
-    return '0'
 
 def CktModel(*args):
     '''{dssMultiphase * | dssPositiveSeq} IIndicate if the circuit model is positive sequence.'''
@@ -117,7 +116,6 @@ def PriceCurve(*args):
         Value = Value.encode(codec)
 
     lib.Settings_Set_PriceCurve(Value)
-    return '0'
 
 def PriceSignal(*args):
     '''Price Signal for the Circuit'''

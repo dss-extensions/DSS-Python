@@ -8,7 +8,6 @@ def New(Name):
 
 def Normalize():
     lib.LoadShapes_Normalize()
-    return 0
 
 def AllNames():
     '''(read-only) Array of strings containing names of all Loadshape objects currently defined.'''
@@ -57,7 +56,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.LoadShapes_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Advance active Loadshape to the next on in the collection. Returns 0 if no more loadshapes.'''

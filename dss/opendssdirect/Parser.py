@@ -14,7 +14,6 @@ def Vector(ExpectedSize):
 
 def ResetDelimiters():
     lib.Parser_ResetDelimiters()
-    return 0
 
 def AutoIncrement(*args):
     '''Default is FALSE. If TRUE parser automatically advances to next token after DblValue, IntValue, or StrValue. Simpler when you don't need to check for parameter names.'''
@@ -41,7 +40,6 @@ def BeginQuote(*args):
         Value = Value.encode(codec)
 
     lib.Parser_Set_BeginQuote(Value)
-    return '0'
 
 def CmdString(*args):
     '''String to be parsed. Loading this string resets the Parser to the beginning of the line. Then parse off the tokens in sequence.'''
@@ -55,7 +53,6 @@ def CmdString(*args):
         Value = Value.encode(codec)
 
     lib.Parser_Set_CmdString(Value)
-    return '0'
 
 def DblValue():
     '''(read-only) Return next parameter as a double.'''
@@ -73,7 +70,6 @@ def Delimiters(*args):
         Value = Value.encode(codec)
 
     lib.Parser_Set_Delimiters(Value)
-    return '0'
 
 def EndQuote(*args):
     '''String containing characters, in order, that match the beginning quote characters in BeginQuote. Default is "')]}'''
@@ -87,7 +83,6 @@ def EndQuote(*args):
         Value = Value.encode(codec)
 
     lib.Parser_Set_EndQuote(Value)
-    return '0'
 
 def IntValue():
     '''(read-only) Return next parameter as a long integer.'''
@@ -116,7 +111,6 @@ def WhiteSpace(*args):
         Value = Value.encode(codec)
 
     lib.Parser_Set_WhiteSpace(Value)
-    return '0'
 
 
 

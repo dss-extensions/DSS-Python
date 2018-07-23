@@ -2,11 +2,9 @@ from ._utils import *
 
 def Close():
     lib.Reclosers_Close()
-    return 0
 
 def Open():
     lib.Reclosers_Open()
-    return 0
 
 def AllNames():
     '''(read-only) Array of strings with names of all Reclosers in Active Circuit'''
@@ -58,7 +56,6 @@ def MonitoredObj(*args):
         Value = Value.encode(codec)
 
     lib.Reclosers_Set_MonitoredObj(Value)
-    return '0'
 
 def MonitoredTerm(*args):
     '''Terminal number of Monitored object for the Recloser '''
@@ -82,7 +79,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Reclosers_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Iterate to the next recloser in the circuit. Returns zero if no more.'''
@@ -147,7 +143,6 @@ def SwitchedObj(*args):
         Value = Value.encode(codec)
 
     lib.Reclosers_Set_SwitchedObj(Value)
-    return '0'
 
 def SwitchedTerm(*args):
     '''Terminal number of the controlled device being switched by the Recloser'''

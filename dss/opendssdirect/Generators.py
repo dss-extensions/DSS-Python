@@ -44,7 +44,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Generators_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets next Generator to be active.  Returns 0 if no more.'''

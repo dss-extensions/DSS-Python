@@ -2,7 +2,6 @@ from ._utils import *
 
 def Reset():
     lib.CapControls_Reset()
-    return 0
 
 def AllNames():
     '''(read-only) Array of strings with all CapControl names.'''
@@ -30,7 +29,6 @@ def Capacitor(*args):
         Value = Value.encode(codec)
 
     lib.CapControls_Set_Capacitor(Value)
-    return '0'
 
 def Count():
     '''(read-only) Number of CapControls in Active Circuit'''
@@ -91,7 +89,6 @@ def MonitoredObj(*args):
         Value = Value.encode(codec)
 
     lib.CapControls_Set_MonitoredObj(Value)
-    return '0'
 
 def MonitoredTerm(*args):
     '''Terminal number on the element that PT and CT are connected to.'''
@@ -115,7 +112,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.CapControls_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Gets the next CapControl in the circut. Returns 0 if none.'''

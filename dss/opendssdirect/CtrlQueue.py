@@ -2,23 +2,18 @@ from ._utils import *
 
 def ClearActions():
     lib.CtrlQueue_ClearActions()
-    return 0
 
 def ClearQueue():
     lib.CtrlQueue_ClearQueue()
-    return 0
 
 def Delete(ActionHandle):
     lib.CtrlQueue_Delete(ActionHandle)
-    return 0
 
 def DoAllQueue():
     lib.CtrlQueue_DoAllQueue()
-    return 0
 
 def Show():
     lib.CtrlQueue_Show()
-    return 0
 
 def ActionCode():
     '''(read-only) Code for the active action. Long integer code to tell the control device what to do'''

@@ -2,7 +2,6 @@ from ._utils import *
 
 def Reset():
     lib.RegControls_Reset()
-    return 0
 
 def AllNames():
     '''(read-only) Array of strings containing all RegControl names'''
@@ -118,7 +117,6 @@ def MonitoredBus(*args):
         Value = Value.encode(codec)
 
     lib.RegControls_Set_MonitoredBus(Value)
-    return '0'
 
 def Name(*args):
     '''
@@ -135,7 +133,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.RegControls_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets the next RegControl active. Returns 0 if none.'''
@@ -233,7 +230,6 @@ def Transformer(*args):
         Value = Value.encode(codec)
 
     lib.RegControls_Set_Transformer(Value)
-    return '0'
 
 def VoltageLimit(*args):
     '''First house voltage limit on PT secondary base.  Setting to 0 disables this function.'''

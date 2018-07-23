@@ -2,7 +2,6 @@ from ._utils import *
 
 def Close(Term, Phs):
     lib.CktElement_Close(Term, Phs)
-    return 0
 
 def Controller(idx):
     '''(read-only) Full name of the i-th controller attached to this element. Ex: str = Controller(2).  See NumControls to determine valid index range'''
@@ -24,7 +23,6 @@ def IsOpen(Term, Phs):
 
 def Open(Term, Phs):
     lib.CktElement_Open(Term, Phs)
-    return 0
 
 def AllPropertyNames():
     '''(read-only) Array containing all property names of the active device.'''
@@ -80,7 +78,6 @@ def DisplayName(*args):
         Value = Value.encode(codec)
 
     lib.CktElement_Set_DisplayName(Value)
-    return '0'
 
 def EmergAmps(*args):
     '''

@@ -2,43 +2,33 @@ from ._utils import *
 
 def CloseAllDIFiles():
     lib.Meters_CloseAllDIFiles()
-    return 0
 
 def DoReliabilityCalc(AssumeRestoration):
     lib.Meters_DoReliabilityCalc(AssumeRestoration)
-    return 0
 
 def OpenAllDIFiles():
     lib.Meters_OpenAllDIFiles()
-    return 0
 
 def Reset():
     lib.Meters_Reset()
-    return 0
 
 def ResetAll():
     lib.Meters_ResetAll()
-    return 0
 
 def Sample():
     lib.Meters_Sample()
-    return 0
 
 def SampleAll():
     lib.Meters_SampleAll()
-    return 0
 
 def Save():
     lib.Meters_Save()
-    return 0
 
 def SaveAll():
     lib.Meters_SaveAll()
-    return 0
 
 def SetActiveSection(SectIdx):
     lib.Meters_SetActiveSection(SectIdx)
-    return 0
 
 def AllBranchesInZone():
     '''(read-only) Wide string list of all branches in zone of the active energymeter object.'''
@@ -118,7 +108,6 @@ def MeteredElement(*args):
         Value = Value.encode(codec)
 
     lib.Meters_Set_MeteredElement(Value)
-    return '0'
 
 def MeteredTerminal(*args):
     '''set Number of Metered Terminal'''
@@ -149,7 +138,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Meters_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets the next energy Meter active.  Returns 0 if no more.'''

@@ -24,7 +24,6 @@ def MonitoredObj(*args):
         Value = Value.encode(codec)
 
     lib.Relays_Set_MonitoredObj(Value)
-    return '0'
 
 def MonitoredTerm(*args):
     '''Number of terminal of monitored element that this Relay is monitoring.'''
@@ -51,7 +50,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Relays_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Advance to next Relay object. Returns 0 when no more relays.'''
@@ -69,7 +67,6 @@ def SwitchedObj(*args):
         Value = Value.encode(codec)
 
     lib.Relays_Set_SwitchedObj(Value)
-    return '0'
 
 def SwitchedTerm(*args):
     '''Terminal number of the switched object that will be opened when the relay trips.'''

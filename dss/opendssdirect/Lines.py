@@ -22,7 +22,6 @@ def Bus1(*args):
         Value = Value.encode(codec)
 
     lib.Lines_Set_Bus1(Value)
-    return '0'
 
 def Bus2(*args):
     '''Name of bus for terminal 2.'''
@@ -36,7 +35,6 @@ def Bus2(*args):
         Value = Value.encode(codec)
 
     lib.Lines_Set_Bus2(Value)
-    return '0'
 
 def C0(*args):
     '''Zero Sequence capacitance, nanofarads per unit length.'''
@@ -98,7 +96,6 @@ def Geometry(*args):
         Value = Value.encode(codec)
 
     lib.Lines_Set_Geometry(Value)
-    return '0'
 
 def Length(*args):
     '''Length of line section in units compatible with the LineCode definition.'''
@@ -122,7 +119,6 @@ def LineCode(*args):
         Value = Value.encode(codec)
 
     lib.Lines_Set_LineCode(Value)
-    return '0'
 
 def Name(*args):
     '''Specify the name of the Line element to set it active.'''
@@ -136,7 +132,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Lines_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Invoking this property advances to the next Line element active.  Returns 0 if no more lines.  Otherwise, index of the line element.'''
@@ -233,7 +228,6 @@ def Spacing(*args):
         Value = Value.encode(codec)
 
     lib.Lines_Set_Spacing(Value)
-    return '0'
 
 def TotalCust():
     '''(read-only) Total Number of customers served from this line section.'''

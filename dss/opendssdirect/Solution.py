@@ -2,63 +2,48 @@ from ._utils import *
 
 def BuildYMatrix(BuildOption, AllocateVI):
     lib.Solution_BuildYMatrix(BuildOption, AllocateVI)
-    return 0
 
 def CheckControls():
     lib.Solution_CheckControls()
-    return 0
 
 def CheckFaultStatus():
     lib.Solution_CheckFaultStatus()
-    return 0
 
 def Cleanup():
     lib.Solution_Cleanup()
-    return 0
 
 def DoControlActions():
     lib.Solution_DoControlActions()
-    return 0
 
 def FinishTimeStep():
     lib.Solution_FinishTimeStep()
-    return 0
 
 def InitSnap():
     lib.Solution_InitSnap()
-    return 0
 
 def SampleControlDevices():
     lib.Solution_SampleControlDevices()
-    return 0
 
 def SampleDoControlActions():
     lib.Solution_Sample_DoControlActions()
-    return 0
 
 def Solve():
     lib.Solution_Solve()
-    return 0
 
 def SolveDirect():
     lib.Solution_SolveDirect()
-    return 0
 
 def SolveNoControl():
     lib.Solution_SolveNoControl()
-    return 0
 
 def SolvePFlow():
     lib.Solution_SolvePflow()
-    return 0
 
 def SolvePlusControl():
     lib.Solution_SolvePlusControl()
-    return 0
 
 def SolveSnap():
     lib.Solution_SolveSnap()
-    return 0
 
 def AddType(*args):
     '''Type of device to add in AutoAdd Mode: {dssGen (Default) | dssCap}'''
@@ -142,7 +127,6 @@ def DefaultDaily(*args):
         Value = Value.encode(codec)
 
     lib.Solution_Set_DefaultDaily(Value)
-    return '0'
 
 def DefaultYearly(*args):
     '''Default Yearly load shape (defaults to "Default")'''
@@ -156,7 +140,6 @@ def DefaultYearly(*args):
         Value = Value.encode(codec)
 
     lib.Solution_Set_DefaultYearly(Value)
-    return '0'
 
 def EventLog():
     '''(read-only) Array of strings containing the Event Log'''
@@ -241,7 +224,6 @@ def LDCurve(*args):
         Value = Value.encode(codec)
 
     lib.Solution_Set_LDCurve(Value)
-    return '0'
 
 def LoadModel(*args):
     '''Load Model: {dssPowerFlow (default) | dssAdmittance}'''

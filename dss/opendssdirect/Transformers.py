@@ -53,7 +53,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.Transformers_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Sets the next Transformer active. Returns 0 if no more.'''
@@ -131,7 +130,6 @@ def XfmrCode(*args):
         Value = Value.encode(codec)
 
     lib.Transformers_Set_XfmrCode(Value)
-    return '0'
 
 def Xhl(*args):
     '''Percent reactance between windings 1 and 2, on winding 1 kVA base. Use for 2-winding or 3-winding transformers.'''

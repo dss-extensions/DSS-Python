@@ -46,7 +46,6 @@ def Name(*args):
         Value = Value.encode(codec)
 
     lib.PDElements_Set_Name(Value)
-    return '0'
 
 def Next():
     '''(read-only) Advance to the next PD element in the circuit. Enabled elements only. Returns 0 when no more elements.'''
