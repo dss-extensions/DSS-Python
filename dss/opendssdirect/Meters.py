@@ -86,7 +86,7 @@ def CustInterrupts():
 
 def DIFilesAreOpen():
     '''(read-only) Global Flag in the DSS to indicate if Demand Interval (DI) files have been properly opened.'''
-    return 1 if lib.Meters_Get_DIFilesAreOpen() else 0
+    return lib.Meters_Get_DIFilesAreOpen() != 0
 
 def FaultRateXRepairHrs():
     '''(read-only) Sum of Fault Rate time Repair Hrs in this section of the meter zone'''

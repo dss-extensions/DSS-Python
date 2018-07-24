@@ -19,7 +19,7 @@ def Variablei(Idx, Code):
     return lib.CktElement_Get_Variablei(Idx, Code)
 
 def IsOpen(Term, Phs):
-    return 1 if lib.CktElement_IsOpen(Term, Phs) else 0
+    return lib.CktElement_IsOpen(Term, Phs) != 0
 
 def Open(Term, Phs):
     lib.CktElement_Open(Term, Phs)
@@ -96,7 +96,7 @@ def Enabled(*args):
     '''Boolean indicating that element is currently in the circuit.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.CktElement_Get_Enabled() else 0
+        return lib.CktElement_Get_Enabled() != 0
     
     # Setter
     Value, = args
@@ -116,15 +116,15 @@ def Handle():
 
 def HasOCPDevice():
     '''(read-only) True if a recloser, relay, or fuse controlling this ckt element. OCP = Overcurrent Protection '''
-    return 1 if lib.CktElement_Get_HasOCPDevice() else 0
+    return lib.CktElement_Get_HasOCPDevice() != 0
 
 def HasSwitchControl():
     '''(read-only) This element has a SwtControl attached.'''
-    return 1 if lib.CktElement_Get_HasSwitchControl() else 0
+    return lib.CktElement_Get_HasSwitchControl() != 0
 
 def HasVoltControl():
     '''(read-only) This element has a CapControl or RegControl attached.'''
-    return 1 if lib.CktElement_Get_HasVoltControl() else 0
+    return lib.CktElement_Get_HasVoltControl() != 0
 
 def Losses():
     '''(read-only) Total losses in the element: two-element complex array'''

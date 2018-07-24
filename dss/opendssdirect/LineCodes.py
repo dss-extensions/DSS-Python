@@ -54,7 +54,7 @@ def First():
 
 def IsZ1Z0():
     '''(read-only) Flag denoting whether impedance data were entered in symmetrical components'''
-    return 1 if lib.LineCodes_Get_IsZ1Z0() else 0
+    return lib.LineCodes_Get_IsZ1Z0() != 0
 
 def Name(*args):
     '''Name of active LineCode'''

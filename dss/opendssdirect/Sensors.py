@@ -33,7 +33,7 @@ def IsDelta(*args):
     '''True if measured voltages are line-line. Currents are always line currents.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Sensors_Get_IsDelta() else 0
+        return lib.Sensors_Get_IsDelta() != 0
     
     # Setter
     Value, = args
@@ -96,7 +96,7 @@ def ReverseDelta(*args):
     '''True if voltage measurements are 1-3, 3-2, 2-1.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Sensors_Get_ReverseDelta() else 0
+        return lib.Sensors_Get_ReverseDelta() != 0
     
     # Setter
     Value, = args

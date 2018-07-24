@@ -1,7 +1,7 @@
 from ._utils import *
 
 def AddStep():
-    return 1 if lib.Capacitors_AddStep() else 0
+    return lib.Capacitors_AddStep() != 0
 
 def Close():
     lib.Capacitors_Close()
@@ -10,7 +10,7 @@ def Open():
     lib.Capacitors_Open()
 
 def SubtractStep():
-    return 1 if lib.Capacitors_SubtractStep() else 0
+    return lib.Capacitors_SubtractStep() != 0
 
 def AllNames():
     '''(read-only) Array of strings with all Capacitor names in the circuit.'''
@@ -32,7 +32,7 @@ def IsDelta(*args):
     '''Delta connection or wye?'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Capacitors_Get_IsDelta() else 0
+        return lib.Capacitors_Get_IsDelta() != 0
     
     # Setter
     Value, = args

@@ -4,7 +4,7 @@ def Close():
     lib.Fuses_Close()
 
 def IsBlown():
-    return 1 if lib.Fuses_IsBlown() else 0
+    return lib.Fuses_IsBlown() != 0
 
 def Open():
     lib.Fuses_Open()

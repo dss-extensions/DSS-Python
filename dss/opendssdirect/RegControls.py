@@ -79,7 +79,7 @@ def IsInverseTime(*args):
     '''Time delay is inversely adjsuted, proportinal to the amount of voltage outside the regulating band.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.RegControls_Get_IsInverseTime() else 0
+        return lib.RegControls_Get_IsInverseTime() != 0
     
     # Setter
     Value, = args
@@ -89,7 +89,7 @@ def IsReversible(*args):
     '''Regulator can use different settings in the reverse direction.  Usually not applicable to substation transformers.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.RegControls_Get_IsReversible() else 0
+        return lib.RegControls_Get_IsReversible() != 0
     
     # Setter
     Value, = args

@@ -4,7 +4,7 @@ def AllowDuplicates(*args):
     '''{True | False*} Designates whether to allow duplicate names of objects'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Settings_Get_AllowDuplicates() else 0
+        return lib.Settings_Get_AllowDuplicates() != 0
     
     # Setter
     Value, = args
@@ -37,7 +37,7 @@ def ControlTrace(*args):
     '''{True | False*} Denotes whether to trace the control actions to a file.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Settings_Get_ControlTrace() else 0
+        return lib.Settings_Get_ControlTrace() != 0
     
     # Setter
     Value, = args
@@ -131,7 +131,7 @@ def Trapezoidal(*args):
     '''{True | False *} Gets value of trapezoidal integration flag in energy meters.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Settings_Get_Trapezoidal() else 0
+        return lib.Settings_Get_Trapezoidal() != 0
     
     # Setter
     Value, = args
@@ -173,7 +173,7 @@ def ZoneLock(*args):
     '''{True | False*}  Locks Zones on energy meters to prevent rebuilding if a circuit change occurs.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Settings_Get_ZoneLock() else 0
+        return lib.Settings_Get_ZoneLock() != 0
     
     # Setter
     Value, = args

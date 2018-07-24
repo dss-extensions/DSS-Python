@@ -28,7 +28,7 @@ def FromTerminal():
 
 def IsShunt():
     '''(read-only) Variant boolean indicating of PD element should be treated as a shunt element rather than a series element. Applies to Capacitor and Reactor elements in particular.'''
-    return 1 if lib.PDElements_Get_IsShunt() else 0
+    return lib.PDElements_Get_IsShunt() != 0
 
 def Lambda():
     '''(read-only) Failure rate for this branch. Faults per year including length of line.'''

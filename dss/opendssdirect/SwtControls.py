@@ -38,7 +38,7 @@ def IsLocked(*args):
     '''The lock prevents both manual and automatic switch operation.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.SwtControls_Get_IsLocked() else 0
+        return lib.SwtControls_Get_IsLocked() != 0
     
     # Setter
     Value, = args

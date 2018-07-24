@@ -16,7 +16,7 @@ def ForcedON(*args):
     '''Indicates whether the generator is forced ON regardles of other dispatch criteria.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Generators_Get_ForcedON() else 0
+        return lib.Generators_Get_ForcedON() != 0
     
     # Setter
     Value, = args

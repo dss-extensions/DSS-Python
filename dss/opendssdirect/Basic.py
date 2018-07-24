@@ -13,7 +13,7 @@ def SetActiveClass(ClassName):
     return lib.DSS_SetActiveClass(ClassName)
 
 def Start(code):
-    return 1 if lib.DSS_Start(code) else 0
+    return lib.DSS_Start(code) != 0
 
 def Classes():
     '''(read-only) List of DSS intrinsic classes (names of the classes)'''

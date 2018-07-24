@@ -15,7 +15,7 @@ def IsDelta(*args):
     '''Active Winding delta or wye connection?'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Transformers_Get_IsDelta() else 0
+        return lib.Transformers_Get_IsDelta() != 0
     
     # Setter
     Value, = args

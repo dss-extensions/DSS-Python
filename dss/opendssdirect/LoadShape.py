@@ -133,7 +133,7 @@ def UseActual(*args):
     '''T/F flag to let Loads know to use the actual value in the curve rather than use the value as a multiplier.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.LoadShapes_Get_UseActual() else 0
+        return lib.LoadShapes_Get_UseActual() != 0
     
     # Setter
     Value, = args

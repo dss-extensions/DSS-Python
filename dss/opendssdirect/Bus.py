@@ -4,11 +4,11 @@ def GetUniqueNodeNumber(StartNumber):
     return lib.Bus_GetUniqueNodeNumber(StartNumber)
 
 def ZscRefresh():
-    return 1 if lib.Bus_ZscRefresh() else 0
+    return lib.Bus_ZscRefresh() != 0
 
 def Coorddefined():
     '''(read-only) False=0 else True. Indicates whether a coordinate has been defined for this bus'''
-    return 1 if lib.Bus_Get_Coorddefined() else 0
+    return lib.Bus_Get_Coorddefined() != 0
 
 def CplxSeqVoltages():
     '''(read-only) Complex Double array of Sequence Voltages (0, 1, 2) at this Bus.'''

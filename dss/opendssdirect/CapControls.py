@@ -151,7 +151,7 @@ def UseVoltOverride(*args):
     '''Enables Vmin and Vmax to override the control Mode'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.CapControls_Get_UseVoltOverride() else 0
+        return lib.CapControls_Get_UseVoltOverride() != 0
     
     # Setter
     Value, = args

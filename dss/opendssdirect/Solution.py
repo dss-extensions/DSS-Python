@@ -79,7 +79,7 @@ def ControlActionsDone(*args):
     '''Flag indicating the control actions are done.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Solution_Get_ControlActionsDone() else 0
+        return lib.Solution_Get_ControlActionsDone() != 0
     
     # Setter
     Value, = args
@@ -109,7 +109,7 @@ def Converged(*args):
     '''Flag to indicate whether the circuit solution converged'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Solution_Get_Converged() else 0
+        return lib.Solution_Get_Converged() != 0
     
     # Setter
     Value, = args
@@ -342,7 +342,7 @@ def StepSize(*args):
 
 def SystemYChanged():
     '''(read-only) Flag that indicates if elements of the System Y have been changed by recent activity.'''
-    return 1 if lib.Solution_Get_SystemYChanged() else 0
+    return lib.Solution_Get_SystemYChanged() != 0
 
 def TimeTimeStep():
     '''(read-only) Get the solution process time + sample time for time step'''

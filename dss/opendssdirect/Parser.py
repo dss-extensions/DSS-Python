@@ -19,7 +19,7 @@ def AutoIncrement(*args):
     '''Default is FALSE. If TRUE parser automatically advances to next token after DblValue, IntValue, or StrValue. Simpler when you don't need to check for parameter names.'''
     # Getter
     if len(args) == 0:
-        return 1 if lib.Parser_Get_AutoIncrement() else 0
+        return lib.Parser_Get_AutoIncrement() != 0
     
     # Setter
     Value, = args
