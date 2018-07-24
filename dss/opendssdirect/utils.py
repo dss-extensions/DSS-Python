@@ -103,7 +103,7 @@ def class_to_dataframe(class_name, dss=None, transform_string=None):
     if is_pandas_installed:
         return pd.DataFrame(data).T
     else:
-        warnings.warn("Pandas cannot be installed. Please see documentation for how to install extra dependencies.")
+        warnings.warn("Pandas is not installed. Please see documentation for how to install extra dependencies.")
         return data
 
 
