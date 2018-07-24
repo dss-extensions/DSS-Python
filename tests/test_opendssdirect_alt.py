@@ -152,7 +152,7 @@ def test_ActiveClass(dss):
     assert dss.ActiveClass.Name() == u'650632'
     assert dss.ActiveClass.Next() == 2
     assert dss.ActiveClass.Next() == 3
-    assert dss.ActiveClass.Name(u'650632') == u'0'
+    assert dss.ActiveClass.Name(u'650632') is None
     assert dss.ActiveClass.Name() == u'650632'
     assert dss.ActiveClass.NumElements() == 12
 
@@ -195,13 +195,13 @@ def test_13Node_Basic(dss):
                                    u'CapControl', u'Fault', u'Generator', u'GenDispatcher', u'Storage', u'StorageController', u'Relay', u'Recloser', u'Fuse', u'SwtControl', u'PVSystem', u'UPFC', u'UPFCControl', u'ESPVLControl', u'IndMach012', u'InvControl', u'ExpControl', u'GICLine', u'GICTransformer', u'VSConverter', u'Monitor', u'EnergyMeter', u'Sensor']
     assert dss.Basic.NumClasses() == 47
     assert dss.Basic.ShowPanel() == 0
-    assert dss.Basic.ClearAll() == 0
+    assert dss.Basic.ClearAll() is None
     assert os.path.abspath(dss.Basic.DataPath()) == os.path.abspath('.')
     # assert dss.Basic.DefaultEditor() == u'open -t'
     assert dss.Basic.NewCircuit('Circuit') == u'New Circuit'
     assert dss.Basic.NumCircuits() == 1
     assert dss.Basic.NumUserClasses() == 0
-    assert dss.Basic.Reset() == 0
+    assert dss.Basic.Reset() is None
     #assert dss.Basic.Start(1) == 1 --- needs param
     dss.Basic.Start(1)
     assert dss.Basic.UserClasses() == []
@@ -325,9 +325,9 @@ def test_13Node_Circuit(dss):
     assert dss.Circuit.AllNodeNames() == [u'sourcebus.1', u'sourcebus.2', u'sourcebus.3', u'650.1', u'650.2', u'650.3', u'rg60.1', u'rg60.2', u'rg60.3', u'633.1', u'633.2', u'633.3', u'634.1', u'634.2', u'634.3', u'671.1', u'671.2', u'671.3',
                                           u'645.2', u'645.3', u'646.2', u'646.3', u'692.3', u'692.1', u'692.2', u'675.1', u'675.2', u'675.3', u'611.3', u'652.1', u'670.1', u'670.2', u'670.3', u'632.1', u'632.2', u'632.3', u'680.1', u'680.2', u'680.3', u'684.1', u'684.3']
 #    assert dss.Circuit.Capacity() == 0.0 ---- NEEDS PARAMS
-    assert dss.Circuit.Disable('632') == u''
-    assert dss.Circuit.Enable('632') == u''
-    assert dss.Circuit.EndOfTimeStepUpdate() == 0
+    assert dss.Circuit.Disable('632') is None
+    assert dss.Circuit.Enable('632') is None
+    assert dss.Circuit.EndOfTimeStepUpdate() is None
     assert dss.Circuit.FirstElement() == 1
     assert dss.Circuit.FirstPCElement() == 1
     assert dss.Circuit.FirstPDElement() == 1
@@ -343,16 +343,16 @@ def test_13Node_Circuit(dss):
     assert dss.Circuit.NumCktElements() == 38
     assert dss.Circuit.NumNodes() == 41
     assert dss.Circuit.ParentPDElement() == 0
-    assert dss.Circuit.Sample() == 0
-    assert dss.Circuit.SaveSample() == 0
-#    assert dss.Circuit.SetActiveBus() == u'-1' --- needs params
+    assert dss.Circuit.Sample() is None
+    assert dss.Circuit.SaveSample() is None
+    assert dss.Circuit.SetActiveBus('') == -1 # returns integer
 #    assert dss.Circuit.SetActiveBusi() == 0 --- needs params
-#    assert dss.Circuit.SetActiveClass() == u'0'  --- needs params
-#    assert dss.Circuit.SetActiveElement() == u'-1' --- needs params
+    assert dss.Circuit.SetActiveClass('') == 0
+    assert dss.Circuit.SetActiveElement('') == -1
     assert dss.Circuit.SubstationLosses() == [0.0, 0.0]
-    np.testing.assert_array_almost_equal(dss.Circuit.TotalPower(
-    ), [-3567.2130572232213, -1736.5876246039768], decimal=4)
-    assert dss.Circuit.UpdateStorage() == 0
+    np.testing.assert_array_almost_equal(dss.Circuit.TotalPower(), 
+        [-3567.2130572232213, -1736.5876246039768], decimal=4)
+    assert dss.Circuit.UpdateStorage() is None
     np.testing.assert_array_almost_equal(dss.Circuit.YCurrents(), [
         69802.42815021456, -72191.08720767737, -97420.52952591189, -24355.132407117453,
         27618.101397342507, 96546.21962200984, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -471,18 +471,17 @@ def test_13Node_CktElement(dss):
 
 
 def test_13Node_Capacitors(dss):
-
     assert dss.Capacitors.AddStep() == 0
     assert dss.Capacitors.AllNames() == [u'cap1', u'cap2']
     assert dss.Capacitors.AvailableSteps() == 0
-    assert dss.Capacitors.Close() == 0
+    assert dss.Capacitors.Close() is None
     assert dss.Capacitors.Count() == 2
     assert dss.Capacitors.First() == 1
     assert dss.Capacitors.IsDelta() == 0
     assert dss.Capacitors.Name() == u'cap1'
     assert dss.Capacitors.Next() == 2
     assert dss.Capacitors.NumSteps() == 1
-    assert dss.Capacitors.Open() == 0
+    assert dss.Capacitors.Open() is None
     assert dss.Capacitors.States() == [0]
     assert dss.Capacitors.SubtractStep() == 0
     assert dss.Capacitors.kV() == 2.4
@@ -490,7 +489,6 @@ def test_13Node_Capacitors(dss):
 
 
 def test_13Node_CapControls(dss):
-
     assert dss.CapControls.AllNames() == []
     assert dss.CapControls.CTRatio() == 0.0
     assert dss.CapControls.Capacitor() == u''
@@ -532,9 +530,8 @@ def test_13Node_Executive(dss):#TODO: add default parameter value?
 
 
 def test_13Node_Fuses(dss):
-
     assert dss.Fuses.AllNames() == []
-    assert dss.Fuses.Close() == 0
+    assert dss.Fuses.Close() is None
     assert dss.Fuses.Count() == 0
     assert dss.Fuses.First() == 0
     assert dss.Fuses.Idx() == 0
@@ -544,7 +541,7 @@ def test_13Node_Fuses(dss):
     assert dss.Fuses.Name() == u''
     assert dss.Fuses.Next() == 0
     assert dss.Fuses.NumPhases() == 0
-    assert dss.Fuses.Open() == 0
+    assert dss.Fuses.Open() is None
     assert dss.Fuses.RatedCurrent() == -1.0
     assert dss.Fuses.SwitchedObj() == u''
     assert dss.Fuses.TCCCurve() == u'No Fuse Active!'
@@ -669,7 +666,6 @@ def test_13Node_Loads(dss):
 
 
 def test_13Node_LoadShape(dss):
-
     assert dss.LoadShape.AllNames() == [u'default']
     assert dss.LoadShape.Count() == 1
     assert dss.LoadShape.First() == 1
@@ -677,7 +673,7 @@ def test_13Node_LoadShape(dss):
     assert dss.LoadShape.MinInterval() == 60.0
     assert dss.LoadShape.Name() == u'default'
     assert dss.LoadShape.Next() == 0
-    assert dss.LoadShape.Normalize() == 0
+    assert dss.LoadShape.Normalize() is None
     assert dss.LoadShape.Npts() == 24
     assert dss.LoadShape.PBase() == 0.0
     assert dss.LoadShape.PMult() == [0.677, 0.6256, 0.6087, 0.5833, 0.58028, 0.6025, 0.657, 0.7477, 0.832,
@@ -690,20 +686,18 @@ def test_13Node_LoadShape(dss):
 
 
 def test_13Node_Meters(dss):
-
     assert dss.Meters.AllBranchesInZone() == []
     assert dss.Meters.AllEndElements() == []
     assert dss.Meters.AllNames() == []
     assert dss.Meters.AllocFactors() == [0.0]
     assert dss.Meters.AvgRepairTime() == 0.0
     assert dss.Meters.CalcCurrent() == [0.0]
-    assert dss.Meters.CloseAllDIFiles() == 0
+    assert dss.Meters.CloseAllDIFiles() is None
     assert dss.Meters.Count() == 0
     assert dss.Meters.CountBranches() == 0
     assert dss.Meters.CountEndElements() == 0
     assert dss.Meters.CustInterrupts() == 0.0
     assert dss.Meters.DIFilesAreOpen() == 0
-#    assert dss.Meters.DoReliabilityCalc() == 0 -- write-only, needs param
     assert dss.Meters.FaultRateXRepairHrs() == 0.0
     assert dss.Meters.First() == 0
     assert dss.Meters.MeteredElement() == u''
@@ -714,24 +708,24 @@ def test_13Node_Meters(dss):
     assert dss.Meters.NumSectionCustomers() == 0
     assert dss.Meters.NumSections() == 0
     assert dss.Meters.OCPDeviceType() == 0
-    assert dss.Meters.OpenAllDIFiles() == 0
+    assert dss.Meters.OpenAllDIFiles() is None
     assert dss.Meters.PeakCurrent() == [0.0]
     assert dss.Meters.RegisterNames() == []
     assert dss.Meters.RegisterValues() == [0.0]
-    assert dss.Meters.Reset() == 0
-    assert dss.Meters.ResetAll() == 0
+    assert dss.Meters.Reset() is None
+    assert dss.Meters.ResetAll() is None
     assert dss.Meters.SAIDI() == 0.0
     assert dss.Meters.SAIFI() == 0.0
     assert dss.Meters.SAIFIkW() == 0.0
-    assert dss.Meters.Sample() == 0
-    assert dss.Meters.SampleAll() == 0
-    assert dss.Meters.Save() == 0
-    assert dss.Meters.SaveAll() == 0
+    assert dss.Meters.Sample() is None
+    assert dss.Meters.SampleAll() is None
+    assert dss.Meters.Save() is None
+    assert dss.Meters.SaveAll() is None
     assert dss.Meters.SectSeqidx() == 0
     assert dss.Meters.SectTotalCust() == 0
     assert dss.Meters.SeqListSize() == 0
     assert dss.Meters.SequenceList() == 0
-    assert dss.Meters.SetActiveSection(0) == 0 # needs params
+    assert dss.Meters.SetActiveSection(0) is None
     assert dss.Meters.SumBranchFltRates() == 0.0
     assert dss.Meters.TotalCustomers() == 0
     assert dss.Meters.Totals() == [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -739,7 +733,6 @@ def test_13Node_Meters(dss):
 
 
 def test_13Node_Monitors(dss):
-
     assert dss.Monitors.AllNames() == []
     assert dss.Monitors.ByteStream() == []
     assert dss.Monitors.Count() == 0
@@ -750,15 +743,15 @@ def test_13Node_Monitors(dss):
     assert dss.Monitors.Mode() == 0
     assert dss.Monitors.Name() == u''
     assert dss.Monitors.Next() == 0
-    assert dss.Monitors.Process() == 0
-    assert dss.Monitors.ProcessAll() == 0
-    assert dss.Monitors.Reset() == 0
-    assert dss.Monitors.ResetAll() == 0
-    assert dss.Monitors.Sample() == 0
-    assert dss.Monitors.SampleAll() == 0
-    assert dss.Monitors.Save() == 0
-    assert dss.Monitors.SaveAll() == 0
-    assert dss.Monitors.Show() == 0
+    assert dss.Monitors.Process() is None
+    assert dss.Monitors.ProcessAll() is None
+    assert dss.Monitors.Reset() is None
+    assert dss.Monitors.ResetAll() is None
+    assert dss.Monitors.Sample() is None
+    assert dss.Monitors.SampleAll() is None
+    assert dss.Monitors.Save() is None
+    assert dss.Monitors.SaveAll() is None
+    assert dss.Monitors.Show() is None
     assert dss.Monitors.Terminal() == 0
 
 
@@ -793,7 +786,6 @@ def test_13Node_Properties(dss): #TODO!! rework DSSProperty
 
 
 def test_13Node_PVsystems(dss):
-
     assert dss.PVsystems.Count() == 0
     assert dss.PVsystems.First() == 0
     assert dss.PVsystems.Idx() == 0
@@ -806,9 +798,8 @@ def test_13Node_PVsystems(dss):
 
 
 def test_13Node_Reclosers(dss):
-
     assert dss.Reclosers.AllNames() == []
-    assert dss.Reclosers.Close() == 0
+    assert dss.Reclosers.Close() is None
     assert dss.Reclosers.Count() == 0
     assert dss.Reclosers.First() == 0
     assert dss.Reclosers.GroundInst() == 0.0
@@ -819,7 +810,7 @@ def test_13Node_Reclosers(dss):
     assert dss.Reclosers.Name() == u''
     assert dss.Reclosers.Next() == 0
     assert dss.Reclosers.NumFast() == 0
-    assert dss.Reclosers.Open() == 0
+    assert dss.Reclosers.Open() is None
     assert dss.Reclosers.PhaseInst() == 0.0
     assert dss.Reclosers.PhaseTrip() == 0.0
     assert dss.Reclosers.RecloseIntervals() == [-1.0]
@@ -873,7 +864,6 @@ def test_13Node_Relays(dss):
 
 
 def test_13Node_Sensors(dss):
-
     assert dss.Sensors.AllNames() == []
     assert dss.Sensors.Count() == 0
     assert dss.Sensors.Currents() == [0.0]
@@ -884,8 +874,8 @@ def test_13Node_Sensors(dss):
     assert dss.Sensors.Name() == u''
     assert dss.Sensors.Next() == 0
     assert dss.Sensors.PctError() == 0.0
-    assert dss.Sensors.Reset() == 0
-    assert dss.Sensors.ResetAll() == 0
+    assert dss.Sensors.Reset() is None
+    assert dss.Sensors.ResetAll() is None
     assert dss.Sensors.ReverseDelta() == 0
     assert dss.Sensors.Weight() == 0.0
     assert dss.Sensors.kVBase() == 0.0
@@ -894,11 +884,10 @@ def test_13Node_Sensors(dss):
 
 
 def test_13Node_Settings(dss):
-
-    assert dss.Settings.AllocationFactors(0) == 0.0 # -- needs param
+    assert dss.Settings.AllocationFactors(0) is None
     assert dss.Settings.AllowDuplicates() == 0
+    assert dss.Settings.CktModel() == 0
     assert dss.Settings.AutoBusList() == u'Allocation Factor must be greater than zero.'
-#    assert dss.Settings.CktModel() == 1 # apparently COM says 0
     assert dss.Settings.EmergVmaxpu() == 1.08
     assert dss.Settings.EmergVminpu() == 0.9
     assert dss.Settings.LossRegs() == [13]
@@ -915,14 +904,13 @@ def test_13Node_Settings(dss):
 
 
 def test_13Node_Solution(dss):
-
     assert dss.Solution.AddType() == 1
     assert dss.Solution.Algorithm() == 0
 #    assert dss.Solution.BuildYMatrix() == 0 # TODO: needs params only in my version? check later
     assert dss.Solution.Capkvar() == 600.0
-    assert dss.Solution.CheckControls() == 0
-    assert dss.Solution.CheckFaultStatus() == 0
-    assert dss.Solution.Cleanup() == 0
+    assert dss.Solution.CheckControls() is None
+    assert dss.Solution.CheckFaultStatus() is None
+    assert dss.Solution.Cleanup() is None
     assert dss.Solution.ControlActionsDone() == 1
     assert dss.Solution.ControlIterations() == 3
     assert dss.Solution.ControlMode() == 0
@@ -931,16 +919,16 @@ def test_13Node_Solution(dss):
     assert dss.Solution.DblHour() == 0.0
     assert dss.Solution.DefaultDaily() == u'default'
     assert dss.Solution.DefaultYearly() == u'default'
-    assert dss.Solution.DoControlActions() == 0
+    assert dss.Solution.DoControlActions() is None
     assert dss.Solution.EventLog() == [u'Hour=0, Sec=0, ControlIter=1, Element=Regulator.reg3, Action= CHANGED 7 TAPS TO 1.04375.', u'Hour=0, Sec=0, ControlIter=1, Element=Regulator.reg2, Action= CHANGED 5 TAPS TO 1.03125.', u'Hour=0, Sec=0, ControlIter=1, Element=Regulator.reg1, Action= CHANGED 7 TAPS TO 1.04375.',
                                        u'Hour=0, Sec=0, ControlIter=2, Element=Regulator.reg3, Action= CHANGED 2 TAPS TO 1.05625.', u'Hour=0, Sec=0, ControlIter=2, Element=Regulator.reg2, Action= CHANGED 1 TAPS TO 1.0375.', u'Hour=0, Sec=0, ControlIter=2, Element=Regulator.reg1, Action= CHANGED 2 TAPS TO 1.05625.']
-    assert dss.Solution.FinishTimeStep() == 0
+    assert dss.Solution.FinishTimeStep() is None
     assert dss.Solution.Frequency() == 60.0
     assert dss.Solution.GenMult() == 1.0
     assert dss.Solution.GenPF() == 1.0
     assert dss.Solution.GenkW() == 1000.0
     assert dss.Solution.Hour() == 0
-    assert dss.Solution.InitSnap() == 0
+    assert dss.Solution.InitSnap() is None
     assert dss.Solution.Iterations() == 11
     assert dss.Solution.LDCurve() == u''
     assert dss.Solution.LoadModel() == 1
@@ -954,17 +942,15 @@ def test_13Node_Solution(dss):
     assert dss.Solution.PctGrowth() == 2.499999999999991
     assert isinstance(dss.Solution.ProcessTime(), float)
     assert dss.Solution.Random() == 1
-    assert dss.Solution.SampleControlDevices() == 0
-    assert dss.Solution.SampleDoControlActions() == 0
+    assert dss.Solution.SampleControlDevices() is None
+    assert dss.Solution.SampleDoControlActions() is None
     assert dss.Solution.Seconds() == 0.001
-    assert dss.Solution.Solve() == 0
-    assert dss.Solution.SolveDirect() == 0
-    assert dss.Solution.SolveNoControl() == 0
-    assert dss.Solution.SolvePFlow() == 0
-    assert dss.Solution.SolvePlusControl() == 0
+    assert dss.Solution.Solve() is None
+    assert dss.Solution.SolveDirect() is None
+    assert dss.Solution.SolveNoControl() is None
+    assert dss.Solution.SolvePFlow() is None
+    assert dss.Solution.SolvePlusControl() is None
     assert dss.Solution.StepSize() == 0.001
-#    assert dss.Solution.StepSizeHr() == 0.0 -- This is write-only
-#    assert dss.Solution.StepSizeMin() == 0.0 -- This is write-only
     assert dss.Solution.SystemYChanged() == 0
     assert isinstance(dss.Solution.TimeTimeStep(), float)
     assert dss.Solution.TotalIterations() == 2
@@ -973,7 +959,6 @@ def test_13Node_Solution(dss):
 
 
 def test_13Node_SwtControls(dss):
-
     assert dss.SwtControls.Action() == 0
     assert dss.SwtControls.AllNames() == []
     assert dss.SwtControls.Count() == 0
@@ -987,13 +972,11 @@ def test_13Node_SwtControls(dss):
 
 
 def test_13Node_Topology(dss):
-
     assert dss.Topology.ActiveBranch() == 0
     assert dss.Topology.ActiveLevel() == 0
     assert dss.Topology.AllIsolatedBranches() == []
     assert dss.Topology.AllIsolatedLoads() == []
-    assert dss.Topology.AllLoopedPairs() == [u'Transformer.reg3', u'Transformer.reg2',
-                                             u'Transformer.reg2', u'Line.650632', u'Transformer.reg1', u'Line.650632']
+    assert dss.Topology.AllLoopedPairs() == [u'Transformer.reg3', u'Transformer.reg2', u'Transformer.reg2', u'Line.650632', u'Transformer.reg1', u'Line.650632']
     assert dss.Topology.BranchName() == u''
     assert dss.Topology.BusName() == u''
     assert dss.Topology.First() == 1
@@ -1009,7 +992,6 @@ def test_13Node_Topology(dss):
 
 
 def test_13Node_Transformers(dss):
-
     assert dss.Transformers.AllNames() == [
         u'sub', u'reg1', u'reg2', u'reg3', u'xfm1']
     assert dss.Transformers.Count() == 5
@@ -1035,7 +1017,6 @@ def test_13Node_Transformers(dss):
 
 
 def test_13Node_Vsources(dss):
-
     assert dss.Vsources.AllNames() == [u'source']
     assert dss.Vsources.AngleDeg() == 30.0
     assert dss.Vsources.BasekV() == 115.0
@@ -1049,7 +1030,6 @@ def test_13Node_Vsources(dss):
 
 
 def test_13Node_XYCurves(dss):
-
     assert dss.XYCurves.Count() == 0
     assert dss.XYCurves.First() == 0
     assert dss.XYCurves.Name() == u''
@@ -1066,78 +1046,30 @@ def test_13Node_XYCurves(dss):
 
 
 def test_capacitors_to_dataframe(dss):
-    expected_dict = pd.DataFrame(
-        {
-            # 'AddStep': {
-                # 'cap1': 0,
-                # 'cap2': 0,
-            # },
-            'AvailableSteps': {
-                'cap1': 0,
-                'cap2': 0,
-            },
-            'Close': {
-                'cap1': 0,
-                'cap2': 0,
-            },
-            'Count': {
-                'cap1': 2,
-                'cap2': 2
-            },
-            'IsDelta': {
-                'cap1': 0,
-                'cap2': 0
-            },
-            'Name': {
-                'cap1': 'cap1',
-                'cap2': 'cap2'
-            },
-            'NumSteps': {
-                'cap1': 1,
-                'cap2': 1
-            },
-            'Open': {
-                'cap1': 0,
-                'cap2': 0
-            },
-            'States': {
-                'cap1': [0],
-                'cap2': [0]
-            },
-            # 'SubtractStep': {
-                # 'cap1': 0,
-                # 'cap2': 0
-            # },
-            'kV': {
-                'cap1': 4.16,
-                'cap2': 2.4
-            },
-            'kvar': {
-                'cap1': 600.0,
-                'cap2': 100.0
-            }
-        }
-    ).to_dict()
+    expected_dict = pd.DataFrame({
+        'AvailableSteps': {'cap1': 0, 'cap2': 0},
+        'IsDelta': {'cap1': 0, 'cap2': 0},
+        'Name': {'cap1': 'cap1', 'cap2': 'cap2'},
+        'NumSteps': {'cap1': 1, 'cap2': 1},
+        'States': {'cap1': [1], 'cap2': [1]},
+        'kV': {'cap1': 4.16, 'cap2': 2.4},
+        'kvar': {'cap1': 600.0, 'cap2': 100.0}
+    }).to_dict()
 
     actual_dict = dss.utils.capacitors_to_dataframe().to_dict()
-    
     assert_dict_equal(actual_dict, expected_dict)
 
 
 def test_fuses_to_dataframe(dss):
-
     expected_dict = pd.DataFrame({
          'Delay': {'': -1.0},
          'SwitchedTerm': {'': 0},
-         'Close': {'': 0},
-         'Count': {'': 0},
          'Idx': {'': 0},
          'IsBlown': {'': 0},
          'MonitoredObj': {'': ''},
          'MonitoredTerm': {'': 0},
          'Name': {'': ''},
          'NumPhases': {'': 0},
-         'Open': {'': 0},
          'RatedCurrent': {'': -1.0},
          'SwitchedObj': {'': ''},
          'TCCCurve': {'': 'No Fuse Active!'}
@@ -1148,10 +1080,8 @@ def test_fuses_to_dataframe(dss):
 
 
 def test_generators_to_dataframe(dss):
-
     expected_dict = pd.DataFrame(
-        {'Count': {'': 0},
-         'ForcedON': {'': 0},
+        {'ForcedON': {'': 0},
          'Idx': {'': 0},
          'Model': {'': -1},
          'Name': {'': ''},
@@ -1172,19 +1102,15 @@ def test_generators_to_dataframe(dss):
     assert_dict_equal(actual_dict, expected_dict)
 
 
-
 def test_isource_to_dataframe(dss):
-
     expected_dict = pd.DataFrame(
         {'Amps': {'671692': 0.0},
          'AngleDeg': {'671692': 0.0},
-         'Count': {'671692': 0},
          'Frequency': {'671692': 0.0},
          'Name': {'671692': '671692'}}
     ).to_dict()
 
     actual_dict = dss.utils.isource_to_dataframe().to_dict()
-
     assert_dict_equal(actual_dict, expected_dict)
 
 
@@ -1221,72 +1147,89 @@ def DISABLED_test_lines_to_dataframe(dss): # TODO: needs to be updated to the va
 
 
 def test_loads_to_dataframe(dss):
-
-    expected_dict = pd.DataFrame(
-        {'AllocationFactor': {'611': 0.5, '634a': 0.5, '634b': 0.5, '634c': 0.5, '645': 0.5, '646': 0.5, '652': 0.5, '670a': 0.5, '670b': 0.5, '670c': 0.5, '671': 0.5, '675a': 0.5, '675b': 0.5, '675c': 0.5, '692': 0.5}, 'CFactor': {'611': 4.0, '634a': 4.0, '634b': 4.0, '634c': 4.0, '645': 4.0, '646': 4.0, '652': 4.0, '670a': 4.0, '670b': 4.0, '670c': 4.0, '671': 4.0, '675a': 4.0, '675b': 4.0, '675c': 4.0, '692': 4.0}, 'CVRCurve': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 'CVRvars': {'611': 2.0, '634a': 2.0, '634b': 2.0, '634c': 2.0, '645': 2.0, '646': 2.0, '652': 2.0, '670a': 2.0, '670b': 2.0, '670c': 2.0, '671': 2.0, '675a': 2.0, '675b': 2.0, '675c': 2.0, '692': 2.0}, 'CVRwatts': {'611': 1.0, '634a': 1.0, '634b': 1.0, '634c': 1.0, '645': 1.0, '646': 1.0, '652': 1.0, '670a': 1.0, '670b': 1.0, '670c': 1.0, '671': 1.0, '675a': 1.0, '675b': 1.0, '675c': 1.0, '692': 1.0}, 'Class': {'611': 1, '634a': 1, '634b': 1, '634c': 1, '645': 1, '646': 1, '652': 1, '670a': 1, '670b': 1, '670c': 1, '671': 1, '675a': 1, '675b': 1, '675c': 1, '692': 1}, 'Count': {'611': 15, '634a': 15, '634b': 15, '634c': 15, '645': 15, '646': 15, '652': 15, '670a': 15, '670b': 15, '670c': 15, '671': 15, '675a': 15, '675b': 15, '675c': 15, '692': 15}, 'Daily': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 'Duty': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 'Growth': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 'Idx': {'611': 11, '634a': 2, '634b': 3, '634c': 4, '645': 5, '646': 6, '652': 12, '670a': 13, '670b': 14, '670c': 15, '671': 1, '675a': 8, '675b': 9, '675c': 10, '692': 7}, 'IsDelta': {'611': 0, '634a': 0, '634b': 0, '634c': 0, '645': 0, '646': 1, '652': 0, '670a': 0, '670b': 0, '670c': 0, '671': 1, '675a': 0, '675b': 0, '675c': 0, '692': 1}, 'Model': {'611': 5, '634a': 1, '634b': 1, '634c': 1, '645': 1, '646': 2, '652': 2, '670a': 1, '670b': 1, '670c': 1, '671': 1, '675a': 1, '675b': 1, '675c': 1, '692': 5}, 'Name': {'611': '611', '634a': '634a', '634b': '634b', '634c': '634c', '645': '645', '646': '646', '652': '652', '670a': '670a', '670b': '670b', '670c': '670c', '671': '671', '675a': '675a', '675b': '675b', '675c': '675c', '692': '692'}, 'NumCust': {'611': 1, '634a': 1, '634b': 1, '634c': 1, '645': 1, '646': 1, '652': 1, '670a': 1, '670b': 1, '670c': 1, '671': 1, '675a': 1, '675b': 1, '675c': 1, '692': 1}, 'PF': {'611': 0.9048187022009941, '634a': 0.8240419241993675, '634b': 0.8, '634c': 0.8, '645': 0.8056510126494245, '646': 0.8673133941933718, '652': 0.8300495997825932, '670a': 0.8619342151577695, '670b': 0.8666224568741688, '670c': 0.8645818496218686, '671': 0.8682431421244591, '675a': 0.9311010850748034, '675b': 0.7498378553650925, '675c': 0.8072891017918288, '692': 0.7476519144858309}, 'PctMean': {'611': 50.0, '634a': 50.0, '634b': 50.0, '634c': 50.0, '645': 50.0, '646': 50.0, '652': 50.0, '670a': 50.0, '670b': 50.0, '670c': 50.0, '671': 50.0, '675a': 50.0, '675b': 50.0, '675c': 50.0, '692': 50.0}, 'PctStdDev': {'611': 10.0, '634a': 10.0, '634b': 10.0, '634c': 10.0, '645': 10.0, '646': 10.0, '652': 10.0, '670a': 10.0, '670b': 10.0, '670c': 10.0, '671': 10.0, '675a': 10.0, '675b': 10.0, '675c': 10.0, '692': 10.0}, 'RelWeighting': {'611': 1.0, '634a': 1.0, '634b': 1.0, '634c': 1.0, '645': 1.0, '646': 1.0, '652': 1.0, '670a': 1.0, '670b': 1.0, '670c': 1.0, '671': 1.0, '675a': 1.0, '675b': 1.0, '675c': 1.0, '692': 1.0}, 'Rneut': {'611': -1.0, '634a': -1.0, '634b': -1.0, '634c': -1.0, '645': -1.0, '646': -1.0, '652': -1.0, '670a': -1.0, '670b': -1.0, '670c': -1.0, '671': -1.0, '675a': -1.0, '675b': -1.0, '675c': -1.0, '692': -1.0}, 'Spectrum': {'611': 'defaultload', '634a': 'defaultload', '634b': 'defaultload', '634c': 'defaultload', '645': 'defaultload', '646': 'defaultload', '652': 'defaultload', '670a': 'defaultload', '670b': 'defaultload', '670c': 'defaultload', '671': 'defaultload', '675a': 'defaultload', '675b': 'defaultload', '675c': 'defaultload', '692': 'defaultload'}, 'Status': {'611': 0, '634a': 0, '634b': 0, '634c': 0, '645': 0, '646': 0, '652': 0, '670a': 0, '670b': 0, '670c': 0, '671': 0, '675a': 0, '675b': 0, '675c': 0, '692': 0}, 'Vmaxpu': {'611': 1.05, '634a': 1.05, '634b': 1.05, '634c': 1.05, '645': 1.05, '646': 1.05, '652': 1.05, '670a': 1.05, '670b': 1.05, '670c': 1.05, '671': 1.05, '675a': 1.05, '675b': 1.05, '675c': 1.05, '692': 1.05}, 'VminEmerg': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 'VminNorm': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 'Vminpu': {'611': 0.95, '634a': 0.95, '634b': 0.95, '634c': 0.95, '645': 0.95, '646': 0.95, '652': 0.95, '670a': 0.95, '670b': 0.95, '670c': 0.95, '671': 0.95, '675a': 0.95, '675b': 0.95, '675c': 0.95, '692': 0.95}, 'XfkVA': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 'Xneut': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 'Yearly': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 'ZipV': {'611': [], '634a': [], '634b': [], '634c': [], '645': [], '646': [], '652': [], '670a': [], '670b': [], '670c': [], '671': [], '675a': [], '675b': [], '675c': [], '692': []}, 'kV': {'611': 2.4, '634a': 0.277, '634b': 0.277, '634c': 0.277, '645': 2.4, '646': 4.16, '652': 2.4, '670a': 2.4, '670b': 2.4, '670c': 2.4, '671': 4.16, '675a': 2.4, '675b': 2.4, '675c': 2.4, '692': 4.16}, 'kVABase': {'611': 187.88294228055935, '634a': 194.164878389476, '634b': 150.0, '634c': 150.0, '645': 211.00947846009194, '646': 265.18672666632466, '652': 154.20765220960988, '670a': 19.72308292331602, '670b': 76.15773105863909, '670c': 135.32553343696821, '671': 1330.2725284692608, '675a': 520.8886637276722, '675b': 90.68627239003708, '675c': 359.22694776422327, '692': 227.37853900489378}, 'kW': {'611': 170.0, '634a': 160.0, '634b': 120.0, '634c': 120.0, '645': 170.0, '646': 230.0, '652': 128.0, '670a': 17.0, '670b': 66.0, '670c': 117.0, '671': 1155.0, '675a': 485.0, '675b': 68.0, '675c': 290.0, '692': 170.0}, 'kWh': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 'kWhDays': {'611': 30.0, '634a': 30.0, '634b': 30.0, '634c': 30.0, '645': 30.0, '646': 30.0, '652': 30.0, '670a': 30.0, '670b': 30.0, '670c': 30.0, '671': 30.0, '675a': 30.0, '675b': 30.0, '675c': 30.0, '692': 30.0}, 'kvar': {'611': 80.0, '634a': 110.0, '634b': 90.0, '634c': 90.0, '645': 125.0, '646': 132.0, '652': 86.0, '670a': 10.0, '670b': 38.0, '670c': 68.0, '671': 660.0, '675a': 190.0, '675b': 60.0, '675c': 212.0, '692': 151.0}, 'puSeriesRL': {'611': 50.0, '634a': 50.0, '634b': 50.0, '634c': 50.0, '645': 50.0, '646': 50.0, '652': 50.0, '670a': 50.0, '670b': 50.0, '670c': 50.0, '671': 50.0, '675a': 50.0, '675b': 50.0, '675c': 50.0, '692': 50.0}}
-    ).to_dict()
+    expected_dict = pd.DataFrame({
+        'AllocationFactor': {'611': 0.5, '634a': 0.5, '634b': 0.5, '634c': 0.5, '645': 0.5, '646': 0.5, '652': 0.5, '670a': 0.5, '670b': 0.5, '670c': 0.5, '671': 0.5, '675a': 0.5, '675b': 0.5, '675c': 0.5, '692': 0.5}, 
+        'CFactor': {'611': 4.0, '634a': 4.0, '634b': 4.0, '634c': 4.0, '645': 4.0, '646': 4.0, '652': 4.0, '670a': 4.0, '670b': 4.0, '670c': 4.0, '671': 4.0, '675a': 4.0, '675b': 4.0, '675c': 4.0, '692': 4.0}, 
+        'CVRCurve': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 
+        'CVRvars': {'611': 2.0, '634a': 2.0, '634b': 2.0, '634c': 2.0, '645': 2.0, '646': 2.0, '652': 2.0, '670a': 2.0, '670b': 2.0, '670c': 2.0, '671': 2.0, '675a': 2.0, '675b': 2.0, '675c': 2.0, '692': 2.0}, 
+        'CVRwatts': {'611': 1.0, '634a': 1.0, '634b': 1.0, '634c': 1.0, '645': 1.0, '646': 1.0, '652': 1.0, '670a': 1.0, '670b': 1.0, '670c': 1.0, '671': 1.0, '675a': 1.0, '675b': 1.0, '675c': 1.0, '692': 1.0}, 
+        'Class': {'611': 1, '634a': 1, '634b': 1, '634c': 1, '645': 1, '646': 1, '652': 1, '670a': 1, '670b': 1, '670c': 1, '671': 1, '675a': 1, '675b': 1, '675c': 1, '692': 1}, 
+        'Daily': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 
+        'Duty': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 
+        'Growth': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 
+        'Idx': {'611': 11, '634a': 2, '634b': 3, '634c': 4, '645': 5, '646': 6, '652': 12, '670a': 13, '670b': 14, '670c': 15, '671': 1, '675a': 8, '675b': 9, '675c': 10, '692': 7}, 
+        'IsDelta': {'611': 0, '634a': 0, '634b': 0, '634c': 0, '645': 0, '646': 1, '652': 0, '670a': 0, '670b': 0, '670c': 0, '671': 1, '675a': 0, '675b': 0, '675c': 0, '692': 1}, 
+        'Model': {'611': 5, '634a': 1, '634b': 1, '634c': 1, '645': 1, '646': 2, '652': 2, '670a': 1, '670b': 1, '670c': 1, '671': 1, '675a': 1, '675b': 1, '675c': 1, '692': 5}, 
+        'Name': {'611': '611', '634a': '634a', '634b': '634b', '634c': '634c', '645': '645', '646': '646', '652': '652', '670a': '670a', '670b': '670b', '670c': '670c', '671': '671', '675a': '675a', '675b': '675b', '675c': '675c', '692': '692'}, 
+        'NumCust': {'611': 1, '634a': 1, '634b': 1, '634c': 1, '645': 1, '646': 1, '652': 1, '670a': 1, '670b': 1, '670c': 1, '671': 1, '675a': 1, '675b': 1, '675c': 1, '692': 1}, 
+        'PF': {'611': 0.9048187022009941, '634a': 0.8240419241993675, '634b': 0.8, '634c': 0.8, '645': 0.8056510126494245, '646': 0.8673133941933718, '652': 0.8300495997825932, '670a': 0.8619342151577695, '670b': 0.8666224568741688, '670c': 0.8645818496218686, '671': 0.8682431421244591, '675a': 0.9311010850748034, '675b': 0.7498378553650925, '675c': 0.8072891017918288, '692': 0.7476519144858309}, 
+        'PctMean': {'611': 50.0, '634a': 50.0, '634b': 50.0, '634c': 50.0, '645': 50.0, '646': 50.0, '652': 50.0, '670a': 50.0, '670b': 50.0, '670c': 50.0, '671': 50.0, '675a': 50.0, '675b': 50.0, '675c': 50.0, '692': 50.0}, 
+        'PctStdDev': {'611': 10.0, '634a': 10.0, '634b': 10.0, '634c': 10.0, '645': 10.0, '646': 10.0, '652': 10.0, '670a': 10.0, '670b': 10.0, '670c': 10.0, '671': 10.0, '675a': 10.0, '675b': 10.0, '675c': 10.0, '692': 10.0}, 
+        'RelWeighting': {'611': 1.0, '634a': 1.0, '634b': 1.0, '634c': 1.0, '645': 1.0, '646': 1.0, '652': 1.0, '670a': 1.0, '670b': 1.0, '670c': 1.0, '671': 1.0, '675a': 1.0, '675b': 1.0, '675c': 1.0, '692': 1.0}, 
+        'Rneut': {'611': -1.0, '634a': -1.0, '634b': -1.0, '634c': -1.0, '645': -1.0, '646': -1.0, '652': -1.0, '670a': -1.0, '670b': -1.0, '670c': -1.0, '671': -1.0, '675a': -1.0, '675b': -1.0, '675c': -1.0, '692': -1.0}, 
+        'Spectrum': {'611': 'defaultload', '634a': 'defaultload', '634b': 'defaultload', '634c': 'defaultload', '645': 'defaultload', '646': 'defaultload', '652': 'defaultload', '670a': 'defaultload', '670b': 'defaultload', '670c': 'defaultload', '671': 'defaultload', '675a': 'defaultload', '675b': 'defaultload', '675c': 'defaultload', '692': 'defaultload'}, 
+        'Status': {'611': 0, '634a': 0, '634b': 0, '634c': 0, '645': 0, '646': 0, '652': 0, '670a': 0, '670b': 0, '670c': 0, '671': 0, '675a': 0, '675b': 0, '675c': 0, '692': 0}, 
+        'Vmaxpu': {'611': 1.05, '634a': 1.05, '634b': 1.05, '634c': 1.05, '645': 1.05, '646': 1.05, '652': 1.05, '670a': 1.05, '670b': 1.05, '670c': 1.05, '671': 1.05, '675a': 1.05, '675b': 1.05, '675c': 1.05, '692': 1.05}, 
+        'VminEmerg': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 
+        'VminNorm': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 
+        'Vminpu': {'611': 0.95, '634a': 0.95, '634b': 0.95, '634c': 0.95, '645': 0.95, '646': 0.95, '652': 0.95, '670a': 0.95, '670b': 0.95, '670c': 0.95, '671': 0.95, '675a': 0.95, '675b': 0.95, '675c': 0.95, '692': 0.95}, 
+        'XfkVA': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 
+        'Xneut': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 
+        'Yearly': {'611': '', '634a': '', '634b': '', '634c': '', '645': '', '646': '', '652': '', '670a': '', '670b': '', '670c': '', '671': '', '675a': '', '675b': '', '675c': '', '692': ''}, 
+        'ZipV': {'611': [], '634a': [], '634b': [], '634c': [], '645': [], '646': [], '652': [], '670a': [], '670b': [], '670c': [], '671': [], '675a': [], '675b': [], '675c': [], '692': []}, 
+        'kV': {'611': 2.4, '634a': 0.277, '634b': 0.277, '634c': 0.277, '645': 2.4, '646': 4.16, '652': 2.4, '670a': 2.4, '670b': 2.4, '670c': 2.4, '671': 4.16, '675a': 2.4, '675b': 2.4, '675c': 2.4, '692': 4.16}, 
+        'kVABase': {'611': 187.88294228055935, '634a': 194.164878389476, '634b': 150.0, '634c': 150.0, '645': 211.00947846009194, '646': 265.18672666632466, '652': 154.20765220960988, '670a': 19.72308292331602, '670b': 76.15773105863909, '670c': 135.32553343696821, '671': 1330.2725284692608, '675a': 520.8886637276722, '675b': 90.68627239003708, '675c': 359.22694776422327, '692': 227.37853900489378}, 
+        'kW': {'611': 170.0, '634a': 160.0, '634b': 120.0, '634c': 120.0, '645': 170.0, '646': 230.0, '652': 128.0, '670a': 17.0, '670b': 66.0, '670c': 117.0, '671': 1155.0, '675a': 485.0, '675b': 68.0, '675c': 290.0, '692': 170.0}, 
+        'kWh': {'611': 0.0, '634a': 0.0, '634b': 0.0, '634c': 0.0, '645': 0.0, '646': 0.0, '652': 0.0, '670a': 0.0, '670b': 0.0, '670c': 0.0, '671': 0.0, '675a': 0.0, '675b': 0.0, '675c': 0.0, '692': 0.0}, 
+        'kWhDays': {'611': 30.0, '634a': 30.0, '634b': 30.0, '634c': 30.0, '645': 30.0, '646': 30.0, '652': 30.0, '670a': 30.0, '670b': 30.0, '670c': 30.0, '671': 30.0, '675a': 30.0, '675b': 30.0, '675c': 30.0, '692': 30.0}, 
+        'kvar': {'611': 80.0, '634a': 110.0, '634b': 90.0, '634c': 90.0, '645': 125.0, '646': 132.0, '652': 86.0, '670a': 10.0, '670b': 38.0, '670c': 68.0, '671': 660.0, '675a': 190.0, '675b': 60.0, '675c': 212.0, '692': 151.0}, 
+        'puSeriesRL': {'611': 50.0, '634a': 50.0, '634b': 50.0, '634c': 50.0, '645': 50.0, '646': 50.0, '652': 50.0, '670a': 50.0, '670b': 50.0, '670c': 50.0, '671': 50.0, '675a': 50.0, '675b': 50.0, '675c': 50.0, '692': 50.0}
+    }).to_dict()
 
     actual_dict = dss.utils.loads_to_dataframe().to_dict()
-
     assert_dict_equal(actual_dict, expected_dict)
 
 
-
 def test_loadshape_to_dataframe(dss):
-
     expected_dict = pd.DataFrame(
-        {'Count': {'default': 1}, 'HrInterval': {'default': 1.0}, 'MinInterval': {'default': 60.0}, 'Name': {'default': 'default'}, 'Normalize': {'default': 0}, 'Npts': {'default': 24}, 'PBase': {'default': 0.0}, 'PMult': {'default': [0.677, 0.6256, 0.6087, 0.5833, 0.58028, 0.6025, 0.657, 0.7477, 0.832, 0.88, 0.94, 0.989, 0.985, 0.98, 0.9898, 0.999, 1.0, 0.958, 0.936, 0.913, 0.876, 0.876, 0.828, 0.756]}, 'QBase': {'default': 0.0}, 'QMult': {'default': [0.0]}, 'SInterval': {'default': 3600.0}, 'TimeArray': {'default': [0.0]}, 'UseActual': {'default': 0}}
+        {'HrInterval': {'default': 1.0}, 'MinInterval': {'default': 60.0}, 'Name': {'default': 'default'}, 'Npts': {'default': 24}, 'PBase': {'default': 0.0}, 'PMult': {'default': [0.677, 0.6256, 0.6087, 0.5833, 0.58028, 0.6025, 0.657, 0.7477, 0.832, 0.88, 0.94, 0.989, 0.985, 0.98, 0.9898, 0.999, 1.0, 0.958, 0.936, 0.913, 0.876, 0.876, 0.828, 0.756]}, 'QBase': {'default': 0.0}, 'QMult': {'default': [0.0]}, 'SInterval': {'default': 3600.0}, 'TimeArray': {'default': [0.0]}, 'UseActual': {'default': 0}}
     ).to_dict()
 
     actual_dict = dss.utils.loadshape_to_dataframe().to_dict()
-
     assert_dict_equal(actual_dict, expected_dict)
 
 
 def test_meters_to_dataframe(dss):
-
-    expected_dict = pd.DataFrame(
-        {'AllBranchesInZone': {'0': []},
-         'AllEndElements': {'0': []},
-         'AllocFactors': {'0': [0.0]},
-         'AvgRepairTime': {'0': 0.0},
-         'CalcCurrent': {'0': [0.0]},
-         'CloseAllDIFiles': {'0': 0},
-         'Count': {'0': 0},
-         'CountBranches': {'0': 0},
-         'CountEndElements': {'0': 0},
-         'CustInterrupts': {'0': 0.0},
-         'DIFilesAreOpen': {'0': 0},
-#         'DoReliabilityCalc': {'0': 0},
-         'FaultRateXRepairHrs': {'0': 0.0},
-         'MeteredElement': {'0': ''},
-         'MeteredTerminal': {'0': 0},
-         'Name': {'0': '0'},
-         'NumSectionBranches': {'0': 0},
-         'NumSectionCustomers': {'0': 0},
-         'NumSections': {'0': 0},
-         'OCPDeviceType': {'0': 0},
-         'OpenAllDIFiles': {'0': 0},
-         'PeakCurrent': {'0': [0.0]},
-         'RegisterNames': {'0': []},
-         'RegisterValues': {'0': [0.0]},
-         'Reset': {'0': 0},
-         'ResetAll': {'0': 0},
-         'SAIDI': {'0': 0.0},
-         'SAIFI': {'0': 0.0},
-         'SAIFIkW': {'0': 0.0},
-         'Sample': {'0': 0},
-         'SampleAll': {'0': 0},
-         'Save': {'0': 0},
-         'SaveAll': {'0': 0},
-         'SectSeqidx': {'0': 0},
-         'SectTotalCust': {'0': 0},
-         'SeqListSize': {'0': 0},
-         'SequenceList': {'0': 0},
-#         'SetActiveSection': {'0': 0},
-         'SumBranchFltRates': {'0': 0.0},
-         'TotalCustomers': {'0': 0},
-         'Totals': {'0': [
+    expected_dict = pd.DataFrame({
+        'AllBranchesInZone': {'0': []},
+        'AllEndElements': {'0': []},
+        'AllocFactors': {'0': [0.0]},
+        'AvgRepairTime': {'0': 0.0},
+        'CalcCurrent': {'0': [0.0]},
+        'CountBranches': {'0': 0},
+        'CountEndElements': {'0': 0},
+        'CustInterrupts': {'0': 0.0},
+        'FaultRateXRepairHrs': {'0': 0.0},
+        'MeteredElement': {'0': ''},
+        'MeteredTerminal': {'0': 0},
+        'Name': {'0': '0'},
+        'NumSectionBranches': {'0': 0},
+        'NumSectionCustomers': {'0': 0},
+        'NumSections': {'0': 0},
+        'OCPDeviceType': {'0': 0},
+        'PeakCurrent': {'0': [0.0]},
+        'RegisterNames': {'0': []},
+        'RegisterValues': {'0': [0.0]},
+        'SAIDI': {'0': 0.0},
+        'SAIFI': {'0': 0.0},
+        'SAIFIkW': {'0': 0.0},
+        'SectSeqidx': {'0': 0},
+        'SectTotalCust': {'0': 0},
+        'SeqListSize': {'0': 0},
+        'SequenceList': {'0': 0},
+        'SumBranchFltRates': {'0': 0.0},
+        'TotalCustomers': {'0': 0},
+        'Totals': {'0': [
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
@@ -1296,34 +1239,14 @@ def test_meters_to_dataframe(dss):
     ).to_dict()
 
     actual_dict = dss.utils.meters_to_dataframe().to_dict()
-
-    miss = False
-    for k in actual_dict.keys():
-        if k not in expected_dict:
-            print('MISSING', k, repr(actual_dict[k]))
-            miss = True
-            
-    for k in actual_dict.keys():
-        assert (k, expected_dict[k]) == (k, actual_dict[k])
-        
-    for k in expected_dict.keys():
-        assert (k, expected_dict[k]) == (k, actual_dict[k])
-        
-            #if expected_dict[k] != actual_dict[k]:
-                #('DIFFERENT', k, repr(expected_dict[k]), repr(actual_dict[k]))
-                
-    
-    
     assert_dict_equal(actual_dict, expected_dict)
 
 
 def test_pvsystems_to_dataframe(dss):
-
     dss.run_command('New PVSystem.631')
 
     expected_dict = pd.DataFrame(
-        {'Count': {'631': 1},
-         'Idx': {'631': 1},
+        {'Idx': {'631': 1},
          'Irradiance': {'631': 1.0},
          'Name': {'631': '631'},
          'kVARated': {'631': 500.0},
@@ -1340,18 +1263,14 @@ def test_pvsystems_to_dataframe(dss):
 
 
 def test_reclosers_to_dataframe(dss):
-
     expected_dict = pd.DataFrame(
-        {'Close': {'': 0},
-         'Count': {'': 0},
-         'GroundInst': {'': 0.0},
+        {'GroundInst': {'': 0.0},
          'GroundTrip': {'': 0.0},
          'Idx': {'': 0},
          'MonitoredObj': {'': ''},
          'MonitoredTerm': {'': 0},
          'Name': {'': ''},
          'NumFast': {'': 0},
-         'Open': {'': 0},
          'PhaseInst': {'': 0.0},
          'PhaseTrip': {'': 0.0},
          'RecloseIntervals': {'': [-1.0]},
@@ -1365,25 +1284,19 @@ def test_reclosers_to_dataframe(dss):
     assert_dict_equal(actual_dict, expected_dict)
 
 
-
 def test_regcontrols_to_dataframe(dss):
-
     expected_dict = pd.DataFrame({
-        'Reset': {'reg1': 0, 'reg2': 0, 'reg3': 0}, 
-        'CTPrimary': {'reg1': 700.0, 'reg2': 700.0, 'reg3': 700.0}, 'Count': {'reg1': 3, 'reg2': 3, 'reg3': 3}, 'Delay': {'reg1': 15.0, 'reg2': 15.0, 'reg3': 15.0}, 'ForwardBand': {'reg1': 2.0, 'reg2': 2.0, 'reg3': 2.0}, 'ForwardR': {'reg1': 3.0, 'reg2': 3.0, 'reg3': 3.0}, 'ForwardVreg': {'reg1': 122.0, 'reg2': 122.0, 'reg3': 122.0}, 'ForwardX': {'reg1': 9.0, 'reg2': 9.0, 'reg3': 9.0}, 'IsInverseTime': {'reg1': 0, 'reg2': 0, 'reg3': 0}, 'IsReversible': {'reg1': 0, 'reg2': 0, 'reg3': 0}, 'MaxTapChange': {'reg1': 16, 'reg2': 16, 'reg3': 16}, 'MonitoredBus': {'reg1': '', 'reg2': '', 'reg3': ''}, 'Name': {'reg1': 'reg1', 'reg2': 'reg2', 'reg3': 'reg3'}, 'PTRatio': {'reg1': 20.0, 'reg2': 20.0, 'reg3': 20.0}, 'ReverseBand': {'reg1': 3.0, 'reg2': 3.0, 'reg3': 3.0}, 'ReverseR': {'reg1': 0.0, 'reg2': 0.0, 'reg3': 0.0}, 'ReverseVreg': {'reg1': 120.0, 'reg2': 120.0, 'reg3': 120.0}, 'ReverseX': {'reg1': 0.0, 'reg2': 0.0, 'reg3': 0.0}, 'TapDelay': {'reg1': 2.0, 'reg2': 2.0, 'reg3': 2.0}, 'TapNumber': {'reg1': 9, 'reg2': 6, 'reg3': 9}, 'TapWinding': {'reg1': 2, 'reg2': 2, 'reg3': 2}, 'Transformer': {'reg1': 'reg1', 'reg2': 'reg2', 'reg3': 'reg3'}, 'VoltageLimit': {'reg1': 0.0, 'reg2': 0.0, 'reg3': 0.0}, 'Winding': {'reg1': 2, 'reg2': 2, 'reg3': 2}
+        'CTPrimary': {'reg1': 700.0, 'reg2': 700.0, 'reg3': 700.0}, 'Delay': {'reg1': 15.0, 'reg2': 15.0, 'reg3': 15.0}, 'ForwardBand': {'reg1': 2.0, 'reg2': 2.0, 'reg3': 2.0}, 'ForwardR': {'reg1': 3.0, 'reg2': 3.0, 'reg3': 3.0}, 'ForwardVreg': {'reg1': 122.0, 'reg2': 122.0, 'reg3': 122.0}, 'ForwardX': {'reg1': 9.0, 'reg2': 9.0, 'reg3': 9.0}, 'IsInverseTime': {'reg1': 0, 'reg2': 0, 'reg3': 0}, 'IsReversible': {'reg1': 0, 'reg2': 0, 'reg3': 0}, 'MaxTapChange': {'reg1': 16, 'reg2': 16, 'reg3': 16}, 'MonitoredBus': {'reg1': '', 'reg2': '', 'reg3': ''}, 'Name': {'reg1': 'reg1', 'reg2': 'reg2', 'reg3': 'reg3'}, 'PTRatio': {'reg1': 20.0, 'reg2': 20.0, 'reg3': 20.0}, 'ReverseBand': {'reg1': 3.0, 'reg2': 3.0, 'reg3': 3.0}, 'ReverseR': {'reg1': 0.0, 'reg2': 0.0, 'reg3': 0.0}, 'ReverseVreg': {'reg1': 120.0, 'reg2': 120.0, 'reg3': 120.0}, 'ReverseX': {'reg1': 0.0, 'reg2': 0.0, 'reg3': 0.0}, 'TapDelay': {'reg1': 2.0, 'reg2': 2.0, 'reg3': 2.0}, 'TapNumber': {'reg1': 9, 'reg2': 6, 'reg3': 9}, 'TapWinding': {'reg1': 2, 'reg2': 2, 'reg3': 2}, 'Transformer': {'reg1': 'reg1', 'reg2': 'reg2', 'reg3': 'reg3'}, 'VoltageLimit': {'reg1': 0.0, 'reg2': 0.0, 'reg3': 0.0}, 'Winding': {'reg1': 2, 'reg2': 2, 'reg3': 2}
     }).to_dict()
 
     actual_dict = dss.utils.regcontrols_to_dataframe().to_dict()
 
     assert_dict_equal(actual_dict, expected_dict)
 
-
     
 def test_relays_to_dataframe(dss):
-
     expected_dict = pd.DataFrame(
-        {'Count': {'': 0},
-         'Idx': {'': 0},
+        {'Idx': {'': 0},
          'MonitoredObj': {'': ''},
          'MonitoredTerm': {'': 0},
          'Name': {'': ''},
@@ -1392,23 +1305,18 @@ def test_relays_to_dataframe(dss):
     ).to_dict()
 
     actual_dict = dss.utils.relays_to_dataframe().to_dict()
-
     assert_dict_equal(actual_dict, expected_dict)
 
 
     
 def test_sensors_to_dataframe(dss):
-
     expected_dict = pd.DataFrame(
-        {'Count': {'': 0},
-         'Currents': {'': [0.0]},
+        {'Currents': {'': [0.0]},
          'IsDelta': {'': 0},
          'MeteredElement': {'': ''},
          'MeteredTerminal': {'': 0},
          'Name': {'': ''},
          'PctError': {'': 0.0},
-         'Reset': {'': 0},
-         'ResetAll': {'': 0},
          'ReverseDelta': {'': 0},
          'Weight': {'': 0.0},
          'kVBase': {'': 0.0},
@@ -1418,47 +1326,37 @@ def test_sensors_to_dataframe(dss):
     ).to_dict()
 
     actual_dict = dss.utils.sensors_to_dataframe().to_dict()
-
     assert_dict_equal(actual_dict, expected_dict)
-
 
     
 def test_transformers_to_dataframe(dss):
-
     expected_dict = pd.DataFrame(
-        {'Count': {'reg1': 5, 'reg2': 5, 'reg3': 5, 'sub': 5, 'xfm1': 5}, 'IsDelta': {'reg1': 0, 'reg2': 0, 'reg3': 0, 'sub': 0, 'xfm1': 0}, 'MaxTap': {'reg1': 1.1, 'reg2': 1.1, 'reg3': 1.1, 'sub': 1.1, 'xfm1': 1.1}, 'MinTap': {'reg1': 0.9, 'reg2': 0.9, 'reg3': 0.9, 'sub': 0.9, 'xfm1': 0.9}, 'Name': {'reg1': 'reg1', 'reg2': 'reg2', 'reg3': 'reg3', 'sub': 'sub', 'xfm1': 'xfm1'}, 'NumTaps': {'reg1': 32, 'reg2': 32, 'reg3': 32, 'sub': 32, 'xfm1': 32}, 'NumWindings': {'reg1': 2, 'reg2': 2, 'reg3': 2, 'sub': 2, 'xfm1': 2}, 'R': {'reg1': 5e-05, 'reg2': 5e-05, 'reg3': 5e-05, 'sub': 5e-06, 'xfm1': 0.0055000000000000005}, 'Rneut': {'reg1': -1.0, 'reg2': -1.0, 'reg3': -1.0, 'sub': -1.0, 'xfm1': -1.0}, 'Tap': {'reg1': 1.05625, 'reg2': 1.0375, 'reg3': 1.05625, 'sub': 1.0, 'xfm1': 1.0}, 'Wdg': {'reg1': 2, 'reg2': 2, 'reg3': 2, 'sub': 2, 'xfm1': 2}, 'XfmrCode': {'reg1': '', 'reg2': '', 'reg3': '', 'sub': '', 'xfm1': ''}, 'Xhl': {'reg1': 0.0001, 'reg2': 0.0001, 'reg3': 0.0001, 'sub': 8e-05, 'xfm1': 0.02}, 'Xht': {'reg1': 0.35, 'reg2': 0.35, 'reg3': 0.35, 'sub': 0.04, 'xfm1': 0.01}, 'Xlt': {'reg1': 0.3, 'reg2': 0.3, 'reg3': 0.3, 'sub': 0.04, 'xfm1': 0.01}, 'Xneut': {'reg1': 0.0, 'reg2': 0.0, 'reg3': 0.0, 'sub': 0.0, 'xfm1': 0.0}, 'kV': {'reg1': 2.4, 'reg2': 2.4, 'reg3': 2.4, 'sub': 4.16, 'xfm1': 0.48}, 'kVA': {'reg1': 1666.0, 'reg2': 1666.0, 'reg3': 1666.0, 'sub': 5000.0, 'xfm1': 500.0}}
+        {'IsDelta': {'reg1': 0, 'reg2': 0, 'reg3': 0, 'sub': 0, 'xfm1': 0}, 'MaxTap': {'reg1': 1.1, 'reg2': 1.1, 'reg3': 1.1, 'sub': 1.1, 'xfm1': 1.1}, 'MinTap': {'reg1': 0.9, 'reg2': 0.9, 'reg3': 0.9, 'sub': 0.9, 'xfm1': 0.9}, 'Name': {'reg1': 'reg1', 'reg2': 'reg2', 'reg3': 'reg3', 'sub': 'sub', 'xfm1': 'xfm1'}, 'NumTaps': {'reg1': 32, 'reg2': 32, 'reg3': 32, 'sub': 32, 'xfm1': 32}, 'NumWindings': {'reg1': 2, 'reg2': 2, 'reg3': 2, 'sub': 2, 'xfm1': 2}, 'R': {'reg1': 5e-05, 'reg2': 5e-05, 'reg3': 5e-05, 'sub': 5e-06, 'xfm1': 0.0055000000000000005}, 'Rneut': {'reg1': -1.0, 'reg2': -1.0, 'reg3': -1.0, 'sub': -1.0, 'xfm1': -1.0}, 'Tap': {'reg1': 1.05625, 'reg2': 1.0375, 'reg3': 1.05625, 'sub': 1.0, 'xfm1': 1.0}, 'Wdg': {'reg1': 2, 'reg2': 2, 'reg3': 2, 'sub': 2, 'xfm1': 2}, 'XfmrCode': {'reg1': '', 'reg2': '', 'reg3': '', 'sub': '', 'xfm1': ''}, 'Xhl': {'reg1': 0.0001, 'reg2': 0.0001, 'reg3': 0.0001, 'sub': 8e-05, 'xfm1': 0.02}, 'Xht': {'reg1': 0.35, 'reg2': 0.35, 'reg3': 0.35, 'sub': 0.04, 'xfm1': 0.01}, 'Xlt': {'reg1': 0.3, 'reg2': 0.3, 'reg3': 0.3, 'sub': 0.04, 'xfm1': 0.01}, 'Xneut': {'reg1': 0.0, 'reg2': 0.0, 'reg3': 0.0, 'sub': 0.0, 'xfm1': 0.0}, 'kV': {'reg1': 2.4, 'reg2': 2.4, 'reg3': 2.4, 'sub': 4.16, 'xfm1': 0.48}, 'kVA': {'reg1': 1666.0, 'reg2': 1666.0, 'reg3': 1666.0, 'sub': 5000.0, 'xfm1': 500.0}}
     ).to_dict()
 
     actual_dict = dss.utils.transformers_to_dataframe().to_dict()
-
     assert_dict_equal(actual_dict, expected_dict)
 
 
-
 def test_vsources_to_dataframe(dss):
-
     expected_dict = pd.DataFrame(
-        {'AngleDeg': {'source': 30.0}, 'BasekV': {'source': 115.0}, 'Count': {'source': 1}, 'Frequency': {'source': 60.0}, 'Name': {'source': 'source'}, 'PU': {'source': 1.0001}, 'Phases': {'source': 3}}
+        {'AngleDeg': {'source': 30.0}, 'BasekV': {'source': 115.0}, 'Frequency': {'source': 60.0}, 'Name': {'source': 'source'}, 'PU': {'source': 1.0001}, 'Phases': {'source': 3}}
     ).to_dict()
 
     actual_dict = dss.utils.vsources_to_dataframe().to_dict()
-
     assert_dict_equal(actual_dict, expected_dict)
 
 
 def test_xycurves_to_dataframe(dss):
-
     expected_dict = pd.DataFrame(
-        {'Count': {'': 0}, 'Name': {'': ''}, 'Npts': {'': 0}, 'X': {'': 0.0}, 'XArray': {'': [0.0]}, 'XScale': {'': 0.0}, 'XShift': {'': 0.0}, 'Y': {'': 0.0}, 'YArray': {'': [0.0]}, 'YScale': {'': 0.0}, 'YShift': {'': 0.0}}
+        {'Name': {'': ''}, 'Npts': {'': 0}, 'X': {'': 0.0}, 'XArray': {'': [0.0]}, 'XScale': {'': 0.0}, 'XShift': {'': 0.0}, 'Y': {'': 0.0}, 'YArray': {'': [0.0]}, 'YScale': {'': 0.0}, 'YShift': {'': 0.0}}
     ).to_dict()
 
     actual_dict = dss.utils.xycurves_to_dataframe().to_dict()
-
     assert_dict_equal(actual_dict, expected_dict)
 
 
 def test_storage_to_dataframe(dss):
-
     dss.run_command('New Storage.631')
     
     expected_dict = pd.DataFrame({'%Charge': {'Storage.631': '100'},
@@ -1507,7 +1405,5 @@ def test_storage_to_dataframe(dss):
      'yearly': {'Storage.631': ''}}
     ).to_dict()
 
-
     actual_dict = dss.utils.class_to_dataframe('Storage').to_dict()
-
     assert_dict_equal(actual_dict, expected_dict)
