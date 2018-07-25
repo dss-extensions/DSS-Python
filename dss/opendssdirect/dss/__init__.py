@@ -42,3 +42,4 @@ from .. import CktElement
 from .. import Element
 from .. import Circuit
 from .. import Basic
+from .. import YMatrix

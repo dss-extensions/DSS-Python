@@ -1,4 +1,5 @@
 from ._utils import *
+from .Circuit import NumNodes
 
 def CompressedYMatrix(factor=True):
     '''Return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix'''
@@ -45,14 +46,24 @@ def AddInAuxCurrents(SType):
     lib.YMatrix_AddInAuxCurrents(SType)
 
 def IVector():
+    '''Get access to the internal Current pointer'''
     IvectorPtr = ffi.new('double**')
     lib.YMatrix_getIpointer(IvectorPtr)
-    return IvectorPtr
+    return IvectorPtr[0]
     
 def VVector():
+    '''Get access to the internal Voltage pointer'''
     VvectorPtr = ffi.new('double**')
     lib.YMatrix_getVpointer(VvectorPtr)
-    return VvectorPtr
+    return VvectorPtr[0]
+    
+def getV():
+    VvectorPtr = VVector()
+    return ffi.unpack(VvectorPtr, NumNodes() + 1)
+    
+def getI():
+    IvectorPtr = IVector()
+    return ffi.unpack(IvectorPtr, NumNodes() + 1)
     
 def SolveSystem(NodeV):
     if type(NodeV) is not np.ndarray:
