@@ -79,7 +79,7 @@ def class_to_dataframe(class_name, dss=None, transform_string=None):
         )
 
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
 
     dss.Circuit.SetActiveClass('{class_name}'.format(class_name=class_name))
     if class_name.lower() != dss.ActiveClass.ActiveClassName().lower():
@@ -144,101 +144,101 @@ def getmembers(module):
 
 def capacitors_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Capacitors)
 
 
 def fuses_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Fuses)
 
 
 def generators_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Generators)
 
 
 def isource_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Isource)
 
 
 def lines_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Lines)
 
 
 def loadshape_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.LoadShape)
 
 
 def loads_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Loads)
 
 
 def meters_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Meters)
 
 
 def monitors_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Monitors)
 
 
 def pvsystems_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.PVsystems)
 
 
 def regcontrols_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.RegControls)
 
 
 def reclosers_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Reclosers)
 
 
 def relays_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Relays)
 
 
 def sensors_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Sensors)
 
 
 def transformers_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Transformers)
 
 
 def vsources_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.Vsources)
 
 
 def xycurves_to_dataframe(dss=None):
     if dss is None:
-        import dss.opendssdirect as dss
+        import opendssdirect as dss
     return to_dataframe(dss.XYCurves)

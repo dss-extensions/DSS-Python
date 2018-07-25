@@ -13,7 +13,7 @@ PATH_TO_DSS = os.path.abspath(os.path.join(
 
 @pt.fixture()
 def dss():
-    import dss.opendssdirect as dss
+    import opendssdirect as dss
     assert dss.utils.run_command(
         'Redirect {}'.format(
             PATH_TO_DSS
@@ -159,7 +159,7 @@ def test_ActiveClass(dss):
 
 def test_configuration():
 
-    import dss.opendssdirect as dss
+    import opendssdirect as dss
 
     assert dss.Basic.AllowForms() == 1, "Allow forms should be disabled"
 
