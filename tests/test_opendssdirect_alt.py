@@ -517,11 +517,10 @@ def test_13Node_Element(dss):
     assert dss.Element.NumProperties() == 35
 
 
-def test_13Node_Executive(dss):#TODO: add default parameter value?
-    
+def test_13Node_Executive(dss):
     assert dss.Executive.Command(1) == u'New'
     assert dss.Executive.CommandHelp(1
-    ) == u'Create a new object within the DSS. Object becomes the active object\r\nExample: New Line.line1 ...'
+        ) == u'Create a new object within the DSS. Object becomes the active object\r\nExample: New Line.line1 ...'
     assert dss.Executive.NumCommands() == 107 # adjusted to the latest version on 2018-07-13
     assert dss.Executive.NumOptions() == 111 # adjusted to the latest version on 2018-07-13
     assert dss.Executive.Option(1) == u'type'
@@ -906,7 +905,6 @@ def test_13Node_Settings(dss):
 def test_13Node_Solution(dss):
     assert dss.Solution.AddType() == 1
     assert dss.Solution.Algorithm() == 0
-#    assert dss.Solution.BuildYMatrix() == 0 # TODO: needs params only in my version? check later
     assert dss.Solution.Capkvar() == 600.0
     assert dss.Solution.CheckControls() is None
     assert dss.Solution.CheckFaultStatus() is None
