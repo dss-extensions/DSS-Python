@@ -1,24 +1,25 @@
 from setuptools import setup
 import re, sys, shutil, os
 import subprocess
-from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS, DLL_SUFFIX
-with open('dss/v7/__init__.py', 'r') as f:
+from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS, DLL_SUFFIX, DLL_PREFIX
+
+with open('dss/v7/__init__.py', 'r') as f:
     match = re.search("__version__ = '(.*?)'", f.read())
     package_version = match.group(1)
     
-# Copy the DLLs on Windows
+# Copy the DLLs
 for i, version in enumerate(DSS_VERSIONS):
     base_dll_path_in = '../dss_capi/lib/{}/{}'.format(PLATFORM_FOLDER, version)
     base_dll_path_out = 'dss/'
     
     file_list = ['dss_capi_{}'.format(version)]
     if i == 0:
-        file_list.append('libklusolve')
+        file_list.append('klusolve')
         
     for fn in file_list:
         shutil.copy(
-            os.path.join(base_dll_path_in, fn + DLL_SUFFIX), 
-            os.path.join(base_dll_path_out, fn + DLL_SUFFIX)
+            os.path.join(base_dll_path_in, DLL_PREFIX + fn + DLL_SUFFIX), 
+            os.path.join(base_dll_path_out, DLL_PREFIX + fn + DLL_SUFFIX)
         )
 
         

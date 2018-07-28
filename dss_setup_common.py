@@ -9,9 +9,12 @@ DSS_VERSIONS = ('v7', 'v8')
 
 if sys.platform == 'win32':
     DLL_SUFFIX = '.dll'
+    DLL_PREFIX = ''
 elif sys.platform == 'linux':
     DLL_SUFFIX = '.so'
+    DLL_PREFIX = 'lib'
 elif sys.platform == 'darwin':
     DLL_SUFFIX = '.dylib'
+    DLL_PREFIX = 'lib'
 else:
     raise RuntimeError("Unsupported platform!")
