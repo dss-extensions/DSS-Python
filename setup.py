@@ -14,7 +14,10 @@ for i, version in enumerate(DSS_VERSIONS):
     
     file_list = ['dss_capi_{}'.format(version)]
     if i == 0:
-        file_list.append('klusolve')
+        if sys.platform == 'win32':
+            file_list.append('libklusolve')
+        else:
+            file_list.append('klusolve')
         
     for fn in file_list:
         shutil.copy(
