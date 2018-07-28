@@ -3,7 +3,7 @@ import numpy as np
 
 freeze = True
 _case_insensitive = False
-codec = 'cp1252'
+codec = 'cp1252' #TODO: check with encoding FreePascal defaults to, on Linux
 
 def use_com_compat(value=True):
     global _case_insensitive
@@ -112,6 +112,67 @@ class CffiApiUtil(object):
         
         self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[0])
         return res
+        
+    def get_string_array2(self, func, *args): # for compatibility with OpenDSSDirect.py
+        ptr = self.ffi.new('char***')
+        cnt = self.ffi.new('int32_t*')
+        func(ptr, cnt, *args)
+        
+        if not cnt[0]:
+            res = []
+        else:
+            actual_ptr = ptr[0]
+            if actual_ptr == self.ffi.NULL:
+                res = []
+            else:
+                res = [(str(self.ffi.string(actual_ptr[i]).decode(codec)) if (actual_ptr[i] != self.ffi.NULL) else '') for i in range(cnt[0])]
+                if res == ['']: 
+                    # most COM methods return an empty array as an
+                    # array with an empty string
+                    res = []
+        
+            if len(res) == 1 and res[0].lower() == 'none':
+                res = []
+        
+        self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[0])
+        return res
+
+    def get_float64_array2(self, func, *args):
+        ptr = self.ffi.new('double**')
+        cnt = self.ffi.new('int32_t*')
+        func(ptr, cnt, *args)
+        if not cnt[0]:
+            res = None
+        else:
+            res = self.ffi.unpack(ptr[0], cnt[0])
+
+        self.lib.DSS_Dispose_PDouble(ptr)
+        return res
+        
+    def get_int32_array2(self, func, *args):
+        ptr = self.ffi.new('int32_t**')
+        cnt = self.ffi.new('int32_t*')
+        func(ptr, cnt, *args)
+        if not cnt[0]:
+            res = None
+        else:
+            res = self.ffi.unpack(ptr[0], cnt[0])
+        
+        self.lib.DSS_Dispose_PInteger(ptr)
+        return res
+            
+    def get_int8_array2(self, func, *args):
+        ptr = self.ffi.new('int8_t**')
+        cnt = self.ffi.new('int32_t*')
+        func(ptr, cnt, *args)
+        if not cnt[0]:
+            res = None
+        else:
+            res = self.ffi.unpack(ptr[0], cnt[0])
+        
+        self.lib.DSS_Dispose_PByte(ptr)
+        return res
+
         
     def prepare_float64_array(self, value):
         if type(value) is not np.ndarray or value.dtype != np.float64:
