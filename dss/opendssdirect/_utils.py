@@ -1,5 +1,8 @@
 from __future__ import absolute_import
-from dss._dss_capi import ffi, lib
+
+# Exposing only v7 while v8 is still considered experimental
+from dss._dss_capi_v7 import ffi, lib
+
 from dss._cffi_api_util import *
 import numpy as np
 import warnings
