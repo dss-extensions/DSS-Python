@@ -1,15 +1,15 @@
 '''
-A compatibility layer for DSSPM_CAPI that mimics the official OpenDSS COM interface.
+A compatibility layer for DSS_CAPI_V8 that mimics the official OpenDSS COM interface.
 
 Copyright (c) 2016-2018 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._dsspm_capi import ffi, lib
+from .._dss_capi_v8 import ffi, lib
 from .._cffi_api_util import *
 import numpy as np
 import warnings
 
-# Bind to the FFI module instance for OpenDSS-PM
+# Bind to the FFI module instance for OpenDSS-v8
 api_util = CffiApiUtil(ffi, lib)
 get_string = api_util.get_string
 get_float64_array = api_util.get_float64_array
@@ -63,7 +63,7 @@ class IActiveClass(FrozenClass):
 
     @property
     def Name(self):
-        '''(read-only) Name of the Active Element of the Active Class'''
+        '''Name of the Active Element of the Active Class'''
         return get_string(lib.ActiveClass_Get_Name())
 
     @Name.setter
@@ -1009,10 +1009,7 @@ class IGenerators(FrozenClass):
 
     @property
     def Vmaxpu(self):
-        '''
-        (read) vmaxpu for Generator model
-        (write) Vmaxpu for generator model
-        '''
+        '''Vmaxpu for generator model'''
         return lib.Generators_Get_Vmaxpu()
 
     @Vmaxpu.setter
@@ -1030,10 +1027,7 @@ class IGenerators(FrozenClass):
 
     @property
     def idx(self):
-        '''
-        (read) Get/Set active Generator by index into generators list.  1..Count
-        (write) Get/Set active Generator by index into generators list. 1..Count
-        '''
+        '''Get/Set active Generator by index into generators list.  1..Count'''
         return lib.Generators_Get_idx()
 
     @idx.setter
@@ -1051,10 +1045,7 @@ class IGenerators(FrozenClass):
 
     @property
     def kVArated(self):
-        '''
-        (read) kVA rating of the generator
-        (write) KVA Rating of the generator
-        '''
+        '''kVA rating of the generator'''
         return lib.Generators_Get_kVArated()
 
     @kVArated.setter
@@ -1063,10 +1054,7 @@ class IGenerators(FrozenClass):
 
     @property
     def kW(self):
-        '''
-        (read) kW output for the active generator. kvar is updated for current power factor.
-        (write) kW output for the active generator. kvar is updated for current power factor
-        '''
+        '''kW output for the active generator. kvar is updated for current power factor.'''
         return lib.Generators_Get_kW()
 
     @kW.setter
@@ -1075,10 +1063,7 @@ class IGenerators(FrozenClass):
 
     @property
     def kvar(self):
-        '''
-        (read) kvar output for the active generator. Updates power factor based on present kW value.
-        (write) kvar output for the active generator. Updates power factor based on present kW.
-        '''
+        '''kvar output for the active generator. Updates power factor based on present kW value.'''
         return lib.Generators_Get_kvar()
 
     @kvar.setter
@@ -1096,10 +1081,7 @@ class IISources(FrozenClass):
 
     @property
     def Amps(self):
-        '''
-        (read) Get the magnitude of the ISOURCE in amps
-        (write) Set the magnitude of the ISOURCE, amps
-        '''
+        '''Magnitude of the ISOURCE in amps'''
         return lib.ISources_Get_Amps()
 
     @Amps.setter
@@ -1130,10 +1112,7 @@ class IISources(FrozenClass):
 
     @property
     def Frequency(self):
-        '''
-        (read) The present frequency of the ISOURCE, Hz
-        (write) Set the present frequency for the ISOURCE
-        '''
+        '''The present frequency of the ISOURCE, Hz'''
         return lib.ISources_Get_Frequency()
 
     @Frequency.setter
@@ -1599,7 +1578,7 @@ class ILoads(FrozenClass):
 
     @property
     def AllocationFactor(self):
-        '''(read-only) Factor for allocating loads by connected xfkva'''
+        '''Factor for allocating loads by connected xfkva'''
         return lib.Loads_Get_AllocationFactor()
 
     @AllocationFactor.setter
@@ -1608,7 +1587,7 @@ class ILoads(FrozenClass):
 
     @property
     def CVRcurve(self):
-        '''(read-only) Name of a loadshape with both Mult and Qmult, for CVR factors as a function of time.'''
+        '''Name of a loadshape with both Mult and Qmult, for CVR factors as a function of time.'''
         return get_string(lib.Loads_Get_CVRcurve())
 
     @CVRcurve.setter
@@ -1620,7 +1599,7 @@ class ILoads(FrozenClass):
 
     @property
     def CVRvars(self):
-        '''(read-only) Percent reduction in Q for percent reduction in V. Must be used with dssLoadModelCVR.'''
+        '''Percent reduction in Q for percent reduction in V. Must be used with dssLoadModelCVR.'''
         return lib.Loads_Get_CVRvars()
 
     @CVRvars.setter
@@ -1629,7 +1608,7 @@ class ILoads(FrozenClass):
 
     @property
     def CVRwatts(self):
-        '''(read-only) Percent reduction in P for percent reduction in V. Must be used with dssLoadModelCVR.'''
+        '''Percent reduction in P for percent reduction in V. Must be used with dssLoadModelCVR.'''
         return lib.Loads_Get_CVRwatts()
 
     @CVRwatts.setter
@@ -1638,7 +1617,7 @@ class ILoads(FrozenClass):
 
     @property
     def Cfactor(self):
-        '''(read-only) Factor relates average to peak kw.  Used for allocation with kwh and kwhdays/'''
+        '''Factor relates average to peak kw.  Used for allocation with kwh and kwhdays/'''
         return lib.Loads_Get_Cfactor()
 
     @Cfactor.setter
@@ -1668,7 +1647,7 @@ class ILoads(FrozenClass):
 
     @property
     def Growth(self):
-        '''(read-only) Name of the growthshape curve for yearly load growth factors.'''
+        '''Name of the growthshape curve for yearly load growth factors.'''
         return get_string(lib.Loads_Get_Growth())
 
     @Growth.setter
@@ -1680,7 +1659,7 @@ class ILoads(FrozenClass):
 
     @property
     def IsDelta(self):
-        '''(read-only) Delta loads are connected line-to-line.'''
+        '''Delta loads are connected line-to-line.'''
         return lib.Loads_Get_IsDelta() != 0
 
     @IsDelta.setter
@@ -1689,7 +1668,7 @@ class ILoads(FrozenClass):
 
     @property
     def Model(self):
-        '''(read-only) The Load Model defines variation of P and Q with voltage.'''
+        '''The Load Model defines variation of P and Q with voltage.'''
         return lib.Loads_Get_Model()
 
     @Model.setter
@@ -1715,7 +1694,7 @@ class ILoads(FrozenClass):
 
     @property
     def NumCust(self):
-        '''(read-only) Number of customers in this load, defaults to one.'''
+        '''Number of customers in this load, defaults to one.'''
         return lib.Loads_Get_NumCust()
 
     @NumCust.setter
@@ -1736,7 +1715,7 @@ class ILoads(FrozenClass):
 
     @property
     def PctMean(self):
-        '''(read-only) Average percent of nominal load in Monte Carlo studies; only if no loadshape defined for this load.'''
+        '''Average percent of nominal load in Monte Carlo studies; only if no loadshape defined for this load.'''
         return lib.Loads_Get_PctMean()
 
     @PctMean.setter
@@ -1745,7 +1724,7 @@ class ILoads(FrozenClass):
 
     @property
     def PctStdDev(self):
-        '''(read-only) Percent standard deviation for Monte Carlo load studies; if there is no loadshape assigned to this load.'''
+        '''Percent standard deviation for Monte Carlo load studies; if there is no loadshape assigned to this load.'''
         return lib.Loads_Get_PctStdDev()
 
     @PctStdDev.setter
@@ -1763,7 +1742,7 @@ class ILoads(FrozenClass):
 
     @property
     def Rneut(self):
-        '''(read-only) Neutral resistance for wye-connected loads.'''
+        '''Neutral resistance for wye-connected loads.'''
         return lib.Loads_Get_Rneut()
 
     @Rneut.setter
@@ -1772,7 +1751,7 @@ class ILoads(FrozenClass):
 
     @property
     def Spectrum(self):
-        '''(read-only) Name of harmonic current spectrrum shape.'''
+        '''Name of harmonic current spectrrum shape.'''
         return get_string(lib.Loads_Get_Spectrum())
 
     @Spectrum.setter
@@ -1784,7 +1763,7 @@ class ILoads(FrozenClass):
 
     @property
     def Status(self):
-        '''(read-only) Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).'''
+        '''Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).'''
         return lib.Loads_Get_Status()
 
     @Status.setter
@@ -1793,7 +1772,7 @@ class ILoads(FrozenClass):
 
     @property
     def Vmaxpu(self):
-        '''(read-only) Maximum per-unit voltage to use the load model. Above this, constant Z applies.'''
+        '''Maximum per-unit voltage to use the load model. Above this, constant Z applies.'''
         return lib.Loads_Get_Vmaxpu()
 
     @Vmaxpu.setter
@@ -1802,7 +1781,7 @@ class ILoads(FrozenClass):
 
     @property
     def Vminemerg(self):
-        '''(read-only) Minimum voltage for unserved energy (UE) evaluation.'''
+        '''Minimum voltage for unserved energy (UE) evaluation.'''
         return lib.Loads_Get_Vminemerg()
 
     @Vminemerg.setter
@@ -1811,7 +1790,7 @@ class ILoads(FrozenClass):
 
     @property
     def Vminnorm(self):
-        '''(read-only) Minimum voltage for energy exceeding normal (EEN) evaluations.'''
+        '''Minimum voltage for energy exceeding normal (EEN) evaluations.'''
         return lib.Loads_Get_Vminnorm()
 
     @Vminnorm.setter
@@ -1820,7 +1799,7 @@ class ILoads(FrozenClass):
 
     @property
     def Vminpu(self):
-        '''(read-only) Minimum voltage to apply the load model. Below this, constant Z is used.'''
+        '''Minimum voltage to apply the load model. Below this, constant Z is used.'''
         return lib.Loads_Get_Vminpu()
 
     @Vminpu.setter
@@ -1829,7 +1808,7 @@ class ILoads(FrozenClass):
 
     @property
     def Xneut(self):
-        '''(read-only) Neutral reactance for wye-connected loads.'''
+        '''Neutral reactance for wye-connected loads.'''
         return lib.Loads_Get_Xneut()
 
     @Xneut.setter
@@ -1838,7 +1817,7 @@ class ILoads(FrozenClass):
 
     @property
     def Yearly(self):
-        '''(read-only) Name of yearly duration loadshape'''
+        '''Name of yearly duration loadshape'''
         return get_string(lib.Loads_Get_Yearly())
 
     @Yearly.setter
@@ -1850,7 +1829,7 @@ class ILoads(FrozenClass):
 
     @property
     def ZIPV(self):
-        '''(read-only) Array of 7  doubles with values for ZIPV property of the LOAD object'''
+        '''Array of 7  doubles with values for ZIPV property of the LOAD object'''
         return get_float64_array(lib.Loads_Get_ZIPV)
 
     @ZIPV.setter
@@ -1860,7 +1839,7 @@ class ILoads(FrozenClass):
 
     @property
     def daily(self):
-        '''(read-only) Name of the loadshape for a daily load profile.'''
+        '''Name of the loadshape for a daily load profile.'''
         return get_string(lib.Loads_Get_daily())
 
     @daily.setter
@@ -1872,7 +1851,7 @@ class ILoads(FrozenClass):
 
     @property
     def duty(self):
-        '''(read-only) Name of the loadshape for a duty cycle simulation.'''
+        '''Name of the loadshape for a duty cycle simulation.'''
         return get_string(lib.Loads_Get_duty())
 
     @duty.setter
@@ -1910,7 +1889,7 @@ class ILoads(FrozenClass):
 
     @property
     def kva(self):
-        '''(read-only) Base load kva. Also defined kw and kvar or pf input, or load allocation by kwh or xfkva.'''
+        '''Base load kva. Also defined kw and kvar or pf input, or load allocation by kwh or xfkva.'''
         return lib.Loads_Get_kva()
 
     @kva.setter
@@ -1919,10 +1898,7 @@ class ILoads(FrozenClass):
 
     @property
     def kvar(self):
-        '''
-        (read) Set kvar for active Load. Updates PF based in present kW.
-        (write) Set kvar for active Load. Updates PF based on present kW.
-        '''
+        '''Set kvar for active Load. Updates PF based on present kW.'''
         return lib.Loads_Get_kvar()
 
     @kvar.setter
@@ -1931,7 +1907,7 @@ class ILoads(FrozenClass):
 
     @property
     def kwh(self):
-        '''(read-only) kwh billed for this period. Can be used with Cfactor for load allocation.'''
+        '''kwh billed for this period. Can be used with Cfactor for load allocation.'''
         return lib.Loads_Get_kwh()
 
     @kwh.setter
@@ -1940,7 +1916,7 @@ class ILoads(FrozenClass):
 
     @property
     def kwhdays(self):
-        '''(read-only) Length of kwh billing period for average demand calculation. Default 30.'''
+        '''Length of kwh billing period for average demand calculation. Default 30.'''
         return lib.Loads_Get_kwhdays()
 
     @kwhdays.setter
@@ -1949,7 +1925,7 @@ class ILoads(FrozenClass):
 
     @property
     def pctSeriesRL(self):
-        '''(write-only) Percent of Load that is modeled as series R-L for harmonics studies'''
+        '''Percent of Load that is modeled as series R-L for harmonics studies'''
         return lib.Loads_Get_pctSeriesRL()
 
     @pctSeriesRL.setter
@@ -1958,7 +1934,7 @@ class ILoads(FrozenClass):
 
     @property
     def xfkVA(self):
-        '''(read-only) Rated service transformer kVA for load allocation, using AllocationFactor. Affects kW, kvar, and pf.'''
+        '''Rated service transformer kVA for load allocation, using AllocationFactor. Affects kW, kvar, and pf.'''
         return lib.Loads_Get_xfkVA()
 
     @xfkVA.setter
@@ -1998,10 +1974,7 @@ class ILoadShapes(FrozenClass):
 
     @property
     def HrInterval(self):
-        '''
-        (read) Fixed interval time value, hours
-        (write) Fixed interval time value, hours.
-        '''
+        '''Fixed interval time value, hours.'''
         return lib.LoadShapes_Get_HrInterval()
 
     @HrInterval.setter
@@ -2491,10 +2464,7 @@ class IMonitors(FrozenClass):
 
     @property
     def Terminal(self):
-        '''
-        (read) Terminal number of element being monitored
-        (write) Terminal number of element being monitored.
-        '''
+        '''Terminal number of element being monitored.'''
         return lib.Monitors_Get_Terminal()
 
     @Terminal.setter
@@ -2727,7 +2697,7 @@ class IPDElements(FrozenClass):
 
     @property
     def FaultRate(self):
-        '''(read-only) Get/Set Number of failures per year. For LINE elements: Number of failures per unit length per year. '''
+        '''Get/Set Number of failures per year. For LINE elements: Number of failures per unit length per year. '''
         return lib.PDElements_Get_FaultRate()
 
     @FaultRate.setter
@@ -2756,7 +2726,7 @@ class IPDElements(FrozenClass):
 
     @property
     def Name(self):
-        '''(read-only) Get/Set name of active PD Element. Returns null string if active element is not PDElement type.'''
+        '''Get/Set name of active PD Element. Returns null string if active element is not PDElement type.'''
         return get_string(lib.PDElements_Get_Name())
 
     @Name.setter
@@ -2807,7 +2777,7 @@ class IPDElements(FrozenClass):
 
     @property
     def pctPermanent(self):
-        '''(read-only) Get/Set percent of faults that are permanent (require repair). Otherwise, fault is assumed to be transient/temporary.'''
+        '''Get/Set percent of faults that are permanent (require repair). Otherwise, fault is assumed to be transient/temporary.'''
         return lib.PDElements_Get_pctPermanent()
 
     @pctPermanent.setter
@@ -2973,7 +2943,7 @@ class IReclosers(FrozenClass):
 
     @property
     def GroundTrip(self):
-        '''(read-only) Ground (3I0) trip multiplier or actual amps'''
+        '''Ground (3I0) trip multiplier or actual amps'''
         return lib.Reclosers_Get_GroundTrip()
 
     @GroundTrip.setter
@@ -2997,7 +2967,7 @@ class IReclosers(FrozenClass):
 
     @property
     def MonitoredTerm(self):
-        '''(read-only) Terminal number of Monitored object for the Recloser '''
+        '''Terminal number of Monitored object for the Recloser '''
         return lib.Reclosers_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
@@ -3006,7 +2976,7 @@ class IReclosers(FrozenClass):
 
     @property
     def Name(self):
-        '''(read-only) Get Name of active Recloser or set the active Recloser by name.'''
+        '''Get Name of active Recloser or set the active Recloser by name.'''
         return get_string(lib.Reclosers_Get_Name())
 
     @Name.setter
@@ -3023,7 +2993,7 @@ class IReclosers(FrozenClass):
 
     @property
     def NumFast(self):
-        '''(read-only) Number of fast shots'''
+        '''Number of fast shots'''
         return lib.Reclosers_Get_NumFast()
 
     @NumFast.setter
@@ -3032,7 +3002,7 @@ class IReclosers(FrozenClass):
 
     @property
     def PhaseInst(self):
-        '''(read-only) Phase instantaneous curve multipler or actual amps'''
+        '''Phase instantaneous curve multipler or actual amps'''
         return lib.Reclosers_Get_PhaseInst()
 
     @PhaseInst.setter
@@ -3058,7 +3028,7 @@ class IReclosers(FrozenClass):
 
     @property
     def Shots(self):
-        '''(read-only) Number of shots to lockout (fast + delayed)'''
+        '''Number of shots to lockout (fast + delayed)'''
         return lib.Reclosers_Get_Shots()
 
     @Shots.setter
@@ -3067,7 +3037,7 @@ class IReclosers(FrozenClass):
 
     @property
     def SwitchedObj(self):
-        '''(read-only) Full name of the circuit element that is being switched by the Recloser.'''
+        '''Full name of the circuit element that is being switched by the Recloser.'''
         return get_string(lib.Reclosers_Get_SwitchedObj())
 
     @SwitchedObj.setter
@@ -3079,7 +3049,7 @@ class IReclosers(FrozenClass):
 
     @property
     def SwitchedTerm(self):
-        '''(read-only) Terminal number of the controlled device being switched by the Recloser'''
+        '''Terminal number of the controlled device being switched by the Recloser'''
         return lib.Reclosers_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
@@ -3088,10 +3058,7 @@ class IReclosers(FrozenClass):
 
     @property
     def idx(self):
-        '''
-        (read) Get/Set the active Recloser by index into the recloser list.  1..Count
-        (write) Get/Set the Active Recloser by index into the recloser list. 1..Count
-        '''
+        '''Get/Set the active Recloser by index into the recloser list.  1..Count'''
         return lib.Reclosers_Get_idx()
 
     @idx.setter
@@ -3292,7 +3259,7 @@ class IRegControls(FrozenClass):
 
     @property
     def TapNumber(self):
-        '''(write-only) Integer number of the tap that the controlled transformer winding is currentliy on.'''
+        '''Integer number of the tap that the controlled transformer winding is currentliy on.'''
         return lib.RegControls_Get_TapNumber()
 
     @TapNumber.setter
@@ -3362,7 +3329,7 @@ class IRelays(FrozenClass):
 
     @property
     def MonitoredObj(self):
-        '''(read-only) Full name of object this Relay is monitoring.'''
+        '''Full name of object this Relay is monitoring.'''
         return get_string(lib.Relays_Get_MonitoredObj())
 
     @MonitoredObj.setter
@@ -3374,7 +3341,7 @@ class IRelays(FrozenClass):
 
     @property
     def MonitoredTerm(self):
-        '''(read-only) Number of terminal of monitored element that this Relay is monitoring.'''
+        '''Number of terminal of monitored element that this Relay is monitoring.'''
         return lib.Relays_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
@@ -3403,7 +3370,7 @@ class IRelays(FrozenClass):
 
     @property
     def SwitchedObj(self):
-        '''(read-only) Full name of element that will be switched when relay trips.'''
+        '''Full name of element that will be switched when relay trips.'''
         return get_string(lib.Relays_Get_SwitchedObj())
 
     @SwitchedObj.setter
@@ -3415,7 +3382,7 @@ class IRelays(FrozenClass):
 
     @property
     def SwitchedTerm(self):
-        '''(write-only) Terminal number of the switched object that will be opened when the relay trips.'''
+        '''Terminal number of the switched object that will be opened when the relay trips.'''
         return lib.Relays_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
@@ -3459,7 +3426,7 @@ class ISensors(FrozenClass):
 
     @property
     def Currents(self):
-        '''(read-only) Array of doubles for the line current measurements; don't use with kWS and kVARS.'''
+        '''Array of doubles for the line current measurements; don't use with kWS and kVARS.'''
         return get_float64_array(lib.Sensors_Get_Currents)
 
     @Currents.setter
@@ -3474,7 +3441,7 @@ class ISensors(FrozenClass):
 
     @property
     def IsDelta(self):
-        '''(read-only) True if measured voltages are line-line. Currents are always line currents.'''
+        '''True if measured voltages are line-line. Currents are always line currents.'''
         return lib.Sensors_Get_IsDelta() != 0
 
     @IsDelta.setter
@@ -3483,7 +3450,7 @@ class ISensors(FrozenClass):
 
     @property
     def MeteredElement(self):
-        '''(read-only) Full Name of the measured element'''
+        '''Full Name of the measured element'''
         return get_string(lib.Sensors_Get_MeteredElement())
 
     @MeteredElement.setter
@@ -3495,7 +3462,7 @@ class ISensors(FrozenClass):
 
     @property
     def MeteredTerminal(self):
-        '''(read-only) Number of the measured terminal in the measured element.'''
+        '''Number of the measured terminal in the measured element.'''
         return lib.Sensors_Get_MeteredTerminal()
 
     @MeteredTerminal.setter
@@ -3524,7 +3491,7 @@ class ISensors(FrozenClass):
 
     @property
     def PctError(self):
-        '''(read-only) Assumed percent error in the Sensor measurement. Default is 1.'''
+        '''Assumed percent error in the Sensor measurement. Default is 1.'''
         return lib.Sensors_Get_PctError()
 
     @PctError.setter
@@ -3533,7 +3500,7 @@ class ISensors(FrozenClass):
 
     @property
     def ReverseDelta(self):
-        '''(read-only) True if voltage measurements are 1-3, 3-2, 2-1.'''
+        '''True if voltage measurements are 1-3, 3-2, 2-1.'''
         return lib.Sensors_Get_ReverseDelta() != 0
 
     @ReverseDelta.setter
@@ -3542,7 +3509,7 @@ class ISensors(FrozenClass):
 
     @property
     def Weight(self):
-        '''(read-only) Weighting factor for this Sensor measurement with respect to other Sensors. Default is 1.'''
+        '''Weighting factor for this Sensor measurement with respect to other Sensors. Default is 1.'''
         return lib.Sensors_Get_Weight()
 
     @Weight.setter
@@ -3551,7 +3518,7 @@ class ISensors(FrozenClass):
 
     @property
     def kVARS(self):
-        '''(read-only) Array of doubles for Q measurements. Overwrites Currents with a new estimate using kWS.'''
+        '''Array of doubles for Q measurements. Overwrites Currents with a new estimate using kWS.'''
         return get_float64_array(lib.Sensors_Get_kVARS)
 
     @kVARS.setter
@@ -3561,7 +3528,7 @@ class ISensors(FrozenClass):
 
     @property
     def kVS(self):
-        '''(read-only) Array of doubles for the LL or LN (depending on Delta connection) voltage measurements.'''
+        '''Array of doubles for the LL or LN (depending on Delta connection) voltage measurements.'''
         return get_float64_array(lib.Sensors_Get_kVS)
 
     @kVS.setter
@@ -3571,7 +3538,7 @@ class ISensors(FrozenClass):
 
     @property
     def kVbase(self):
-        '''(read-only) Voltage base for the sensor measurements. LL for 2 and 3-phase sensors, LN for 1-phase sensors.'''
+        '''Voltage base for the sensor measurements. LL for 2 and 3-phase sensors, LN for 1-phase sensors.'''
         return lib.Sensors_Get_kVbase()
 
     @kVbase.setter
@@ -3580,7 +3547,7 @@ class ISensors(FrozenClass):
 
     @property
     def kWS(self):
-        '''(read-only) Array of doubles for P measurements. Overwrites Currents with a new estimate using kVARS.'''
+        '''Array of doubles for P measurements. Overwrites Currents with a new estimate using kVARS.'''
         return get_float64_array(lib.Sensors_Get_kWS)
 
     @kWS.setter
@@ -3848,7 +3815,7 @@ class ISolution(FrozenClass):
 
     @property
     def ControlActionsDone(self):
-        '''(read-only) Flag indicating the control actions are done.'''
+        '''Flag indicating the control actions are done.'''
         return lib.Solution_Get_ControlActionsDone() != 0
 
     @ControlActionsDone.setter
@@ -4357,7 +4324,7 @@ class ITopology(FrozenClass):
 
     @property
     def BranchName(self):
-        '''(read-only) Name of the active branch.'''
+        '''Name of the active branch.'''
         return get_string(lib.Topology_Get_BranchName())
 
     @BranchName.setter
@@ -4369,7 +4336,7 @@ class ITopology(FrozenClass):
 
     @property
     def BusName(self):
-        '''(write-only) Set the active branch to one containing this bus, return index or 0 if not found'''
+        '''Set the active branch to one containing this bus, return index or 0 if not found'''
         return get_string(lib.Topology_Get_BusName())
 
     @BusName.setter
@@ -4637,10 +4604,7 @@ class IVsources(FrozenClass):
 
     @property
     def BasekV(self):
-        '''
-        (read) Source Voltage in kV
-        (write) Source voltage in kV
-        '''
+        '''Source voltage in kV'''
         return lib.Vsources_Get_BasekV()
 
     @BasekV.setter
@@ -4662,10 +4626,7 @@ class IVsources(FrozenClass):
 
     @property
     def Frequency(self):
-        '''
-        (read) Source Frequency in Hz
-        (write) Source frequency in Hz
-        '''
+        '''Source frequency in Hz'''
         return lib.Vsources_Get_Frequency()
 
     @Frequency.setter
@@ -4694,10 +4655,7 @@ class IVsources(FrozenClass):
 
     @property
     def Phases(self):
-        '''
-        (read) Number of Phases
-        (write) Number of phases
-        '''
+        '''Number of phases'''
         return lib.Vsources_Get_Phases()
 
     @Phases.setter
@@ -4755,10 +4713,7 @@ class IXYCurves(FrozenClass):
 
     @property
     def Npts(self):
-        '''
-        (read) Get/Set Number of points in X-Y curve
-        (write) Get/Set Number of Points in X-Y curve
-        '''
+        '''Get/Set Number of points in X-Y curve'''
         return lib.XYCurves_Get_Npts()
 
     @Npts.setter
@@ -4786,7 +4741,7 @@ class IXYCurves(FrozenClass):
 
     @property
     def Xshift(self):
-        '''(read-only) Amount to shift X value from original curve'''
+        '''Amount to shift X value from original curve'''
         return lib.XYCurves_Get_Xshift()
 
     @Xshift.setter
@@ -4817,7 +4772,7 @@ class IXYCurves(FrozenClass):
 
     @property
     def Yshift(self):
-        '''(read-only) amount to shift Y valiue from original curve'''
+        '''amount to shift Y valiue from original curve'''
         return lib.XYCurves_Get_Yshift()
 
     @Yshift.setter
@@ -4826,7 +4781,7 @@ class IXYCurves(FrozenClass):
 
     @property
     def x(self):
-        '''(read-only) Set X value or get interpolated value after setting Y'''
+        '''Set X value or get interpolated value after setting Y'''
         return lib.XYCurves_Get_x()
 
     @x.setter
@@ -5438,7 +5393,7 @@ class IYMatrix(FrozenClass):
     def UseAuxCurrents(self):
         return lib.YMatrix_Get_UseAuxCurrents()
 
-    @SystemYChanged.setter
+    @UseAuxCurrents.setter
     def UseAuxCurrents(self, value):
         lib.YMatrix_Set_UseAuxCurrents(value)
 

@@ -4,6 +4,7 @@ import numpy as np
 
 cd = os.getcwd()
 no_properties = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
+use_v8 = os.getenv('DSS_PYTHON_V8') == '1'
 
 def parse_dss_matrix(m):
     try:
@@ -182,7 +183,9 @@ class ValidatingTest:
                 if not (is_equal or val_A == val_B or A.Properties(prop_name).Val == B.Properties(prop_name).Val):
                     print('ERROR: CktElement.Properties({}).Val'.format(prop_name), A.Properties(prop_name).Val, B.Properties(prop_name).Val)
             
-            assert (A.Properties(prop_name).Description == B.Properties(prop_name).Description), ('Properties({}).Description'.format(prop_name), A.Properties(prop_name).Description, B.Properties(prop_name).Description)
+            if not use_v8:
+                assert (A.Properties(prop_name).Description == B.Properties(prop_name).Description), ('Properties({}).Description'.format(prop_name), A.Properties(prop_name).Description, B.Properties(prop_name).Description)
+                
             assert (A.Properties(prop_name).name == B.Properties(prop_name).name), ('Properties({}).name'.format(prop_name), A.Properties(prop_name).name, B.Properties(prop_name).name)
 
             assert (B.Properties(prop_name).Val == B.Properties[prop_name].Val)
@@ -350,8 +353,10 @@ class ValidatingTest:
             for field in 'Cmatrix,Rmatrix,Xmatrix,Yprim'.split(','):
                 assert np.allclose(getattr(A, field), getattr(B, field), atol=self.atol, rtol=self.rtol), field
 
-            # Note: removed property Parent from the analysis since it raises a popup
-            for field in 'Bus1,Bus2,C0,C1,EmergAmps,Geometry,Length,LineCode,Name,NormAmps,NumCust,Phases,R0,R1,Rg,Rho,Spacing,TotalCust,Units,X0,X1,Xg'.split(','):
+            # Notes: - removed property Parent from the analysis since it raises a popup
+            #        - temporarily removed R1/X1/C1 since COM is broken    
+            #for field in 'Bus1,Bus2,C0,C1,EmergAmps,Geometry,Length,LineCode,Name,NormAmps,NumCust,Phases,R0,R1,Rg,Rho,Spacing,TotalCust,Units,X0,X1,Xg'.split(','):
+            for field in 'Bus1,Bus2,C0,EmergAmps,Geometry,Length,LineCode,Name,NormAmps,NumCust,Phases,R0,Rg,Rho,Spacing,TotalCust,Units,X0,Xg'.split(','):
                 fA = getattr(A, field)
                 fB = getattr(B, field)
                 assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -603,6 +608,7 @@ class ValidatingTest:
 
             #TODO: FileVersion,Header
             for field in 'Element,FileName,Mode,Name,NumChannels,RecordSize,SampleCount,Terminal'.split(','):
+                if use_v8 and field == 'FileName': continue
                 fA = getattr(A, field)
                 fB = getattr(B, field)
                 assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -792,7 +798,13 @@ class ValidatingTest:
 
 
 def run_tests(fns):
-    from dss import DSS, use_com_compat
+    if use_v8:
+        from dss.v8 import DSS, use_com_compat
+        print("Imported DSS V8 version")
+    else:
+        from dss.v7 import DSS, use_com_compat
+        print("Imported DSS V7 version")
+        
     use_com_compat()
 
     import win32com.client
@@ -826,59 +838,59 @@ def run_tests(fns):
 
 if __name__ == '__main__':
     fns = [
-        "../../electricdss/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
-        "../../electricdss/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss",
-         "../../electricdss/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss",
-         "../../electricdss/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss",
-        "../../electricdss/Distrib/IEEETestCases/8500-Node/Master-unbal.dss",
-        "../../electricdss/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS",
-        "../../electricdss/Distrib/IEEETestCases/37Bus/ieee37.dss",
-        "../../electricdss/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS",
-        "../../electricdss/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS",
-        "../../electricdss/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS",
-        "../../electricdss/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4Bus-OYOD-UnBal.DSS",
-        "../../electricdss/Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS",
-        "../../electricdss/Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS",
-        "L!../../electricdss/Distrib/IEEETestCases/123Bus/IEEE123Master.dss",
-        "L!../../electricdss/Distrib/IEEETestCases/123Bus/SolarRamp.DSS",
-        "../../electricdss/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss",
+        "../../electricdss-tst/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
+        "../../electricdss-tst/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss",
+        "../../electricdss-tst/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss",
+        "../../electricdss-tst/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss",
+        "../../electricdss-tst/Distrib/IEEETestCases/8500-Node/Master-unbal.dss",
+        "../../electricdss-tst/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS",
+        "../../electricdss-tst/Distrib/IEEETestCases/37Bus/ieee37.dss",
+        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS",
+        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS",
+        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS",
+        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4Bus-OYOD-UnBal.DSS",
+        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS",
+        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS",
+        "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/IEEE123Master.dss",
+        "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/SolarRamp.DSS",
+        "../../electricdss-tst/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss",
 
-        "../../electricdss/Test/IEEE13_LineSpacing.dss",
-        "../../electricdss/Test/IEEE13_LineGeometry.dss",
-        "../../electricdss/Test/IEEE13_LineAndCableSpacing.dss",
-        "../../electricdss/Test/IEEE13_Assets.dss",
-        "L!../../electricdss/Test/CableParameters.dss",
-        "L!../../electricdss/Test/Cable_constants.DSS",
-        "L!../../electricdss/Test/BundleDemo.DSS",
-        "../../electricdss/Test/IEEE13_SpacingGeometry.dss",
-        "../../electricdss/Test/TextTsCable750MCM.dss",
-        "L!../../electricdss/Test/TestDDRegulator.dss",
-        "../../electricdss/Test/XYCurvetest.dss",
-        "L!../../electricdss/Test/PVSystemTestHarm.dss",
-        "L!../../electricdss/Test/TestAuto.dss",
-        "L!../../electricdss/Test/Stevenson.dss",
-        "L!../../electricdss/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
-        "../../electricdss/Test/Master_TestCapInterface.DSS",
-        "../../electricdss/Test/LoadTest.DSS",
-        "L!../../electricdss/Test/IEEELineGeometry.dss",
-        "L!../../electricdss/Test/ODRegTest.dss",
-        "L!../../electricdss/Test/MultiCircuitTest.DSS",
-        "L!../../electricdss/Test/TriplexLineCodeCalc.DSS",
-        "L!../../electricdss/Test/PVSystemTest-Duty.dss",
-        "L!../../electricdss/Test/PVSystemTest.dss",
-        "L!../../electricdss/Test/REACTORTest.DSS",
+        "../../electricdss-tst/Test/IEEE13_LineSpacing.dss",
+        "../../electricdss-tst/Test/IEEE13_LineGeometry.dss",
+        "../../electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss",
+        "../../electricdss-tst/Test/IEEE13_Assets.dss",
+        "L!../../electricdss-tst/Test/CableParameters.dss",
+        "L!../../electricdss-tst/Test/Cable_constants.DSS",
+        "L!../../electricdss-tst/Test/BundleDemo.DSS",
+        "../../electricdss-tst/Test/IEEE13_SpacingGeometry.dss",
+        "../../electricdss-tst/Test/TextTsCable750MCM.dss",
+        "L!../../electricdss-tst/Test/TestDDRegulator.dss",
+        "../../electricdss-tst/Test/XYCurvetest.dss",
+        "L!../../electricdss-tst/Test/PVSystemTestHarm.dss",
+        "L!../../electricdss-tst/Test/TestAuto.dss",
+        "L!../../electricdss-tst/Test/Stevenson.dss",
+        "L!../../electricdss-tst/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
+        "../../electricdss-tst/Test/Master_TestCapInterface.DSS",
+        "../../electricdss-tst/Test/LoadTest.DSS",
+        "L!../../electricdss-tst/Test/IEEELineGeometry.dss",
+        "L!../../electricdss-tst/Test/ODRegTest.dss",
+        "L!../../electricdss-tst/Test/MultiCircuitTest.DSS",
+        "L!../../electricdss-tst/Test/TriplexLineCodeCalc.DSS",
+        "L!../../electricdss-tst/Test/PVSystemTest-Duty.dss",
+        "L!../../electricdss-tst/Test/PVSystemTest.dss",
+        "L!../../electricdss-tst/Test/REACTORTest.DSS",
 
-        #"../../electricdss/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
-        #"../../electricdss/Test/IEEE13_CDPSM.dss",
+        #"../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
+        #"../../electricdss-tst/Test/IEEE13_CDPSM.dss",
 
-        #"L!../../electricdss/Test/Run_SimpleStorageTest.DSS", # Missing DLL?
-        #"L!../../electricdss/Test/Run_SimpleStorageTest-1ph.DSS", # Missing DLL?
-        #"L!../../electricdss/Test/Source012Test.dss", # Different encoding, skipping
+        #"L!../../electricdss-tst/Test/Run_SimpleStorageTest.DSS", # Missing DLL?
+        #"L!../../electricdss-tst/Test/Run_SimpleStorageTest-1ph.DSS", # Missing DLL?
+        #"L!../../electricdss-tst/Test/Source012Test.dss", # Different encoding, skipping
 
         # 'Generator User Model IndMach012a Not Loaded.'
-        #"L!../../electricdss/Distrib/IEEETestCases/4wire-Delta/Kersting4wire_Lagging.dss",
-        #"L!../../electricdss/Distrib/IEEETestCases/4wire-Delta/Kersting4wire_Leading.dss",
-        #"L!../../electricdss/Distrib/IEEETestCases/4wire-Delta/Kersting4wireIndMotor.dss",
+        #"L!../../electricdss-tst/Distrib/IEEETestCases/4wire-Delta/Kersting4wire_Lagging.dss",
+        #"L!../../electricdss-tst/Distrib/IEEETestCases/4wire-Delta/Kersting4wire_Leading.dss",
+        #"L!../../electricdss-tst/Distrib/IEEETestCases/4wire-Delta/Kersting4wireIndMotor.dss",
 
     ]
 
