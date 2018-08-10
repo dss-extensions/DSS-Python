@@ -1,12 +1,10 @@
---------------------------------------------------
-dss_python: Unofficial bindings for EPRI's OpenDSS
---------------------------------------------------
+# dss_python: Unofficial bindings for EPRI's OpenDSS
 
 Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simulator). Based on CFFI and `dss_capi`, aiming for full COM compatibility on Windows and Linux.
 
 If you are looking for the C API library, see [`dss_capi`](http://github.com/PMeira/dss_capi/).
 
-Version 0.9.7, based on [OpenDSS revision 2152](https://sourceforge.net/p/electricdss/code/2152/tree/). 
+Version 0.9.8, based on OpenDSS revision 2246.
 This is a work-in-progress but it's deemed stable enough to be made public.
 *Note that, while the interface with OpenDSS is stable (classic version), the OpenDSS-PM (actor-based parallel machine version) interface was integrated recently and is experimental.*
 
@@ -15,8 +13,9 @@ Most of the COM documentation can be used as-is, but instead of returning tuples
 
 This module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the sparse system admittance matrix.
 
-Recent changes
-==============
+## Recent changes
+
+- 2018-08-10 / version 0.9.8: Reorganize modules (v7 and v8), adds 8 missing methods and new backend methods for OpenDSSDirect.py v0.3+. Integrates many fixes from DSS_CAPI and the upstream OpenDSS.
 - 2018-04-30 / version 0.9.7: Fix some of the setters that used array data.
 - 2018-04-05 / version 0.9.6: Adds missing `ActiveCircuit.CktElements[index]` (or `...CktElements(index)`) and `ActiveCircuit.Buses[index]` (or `...Buses(index)`).
 - 2018-03-07 / version 0.9.4: Allows using `len` on several classes, fixes DSSProperty, and includes COM helpstrings as docstrings. Contains changes up to OpenDSS revision 2152.
@@ -25,8 +24,7 @@ Recent changes
 - 2018-02-08 / version 0.9.1: First public release (OpenDSS revision 2123)
 
 
-Missing features and limitations
-================================
+## Missing features and limitations
 
 Most limitations are inherited from `dss_capi`, i.e.:
 
@@ -35,19 +33,18 @@ Most limitations are inherited from `dss_capi`, i.e.:
     - `DSSEvents` from `DLL/ImplEvents.pas`: seems too dependent on COM.
     - `DSSProgress` from `DLL/ImplDSSProgress.pas`: would need a reimplementation depending on the target UI (GUI, text, headless, etc.)
 
-- Although tests were successful on openSuse 42.3 (both CPython 3.6 and PyPy3.5 v5.10.1), Linux binaries are not yet available. For the time being, you need to build them yourself.
+- Although tests were successful on openSuse 42.3 (both CPython 3.6 and PyPy3.5 v5.10.1).
     
-Extra features
-==============
+## Extra features
+
 Besides most of the COM methods, some of the unique DDLL methods are also exposed in adapted forms, namely the methods from `DYMatrix.pas`, especially `GetCompressedYMatrix` (check the source files for more information).
 
 Since no GUI components are used in the FreePascal DLL, we are experimenting with different ways of handling OpenDSS errors. Currently, the `DSS.Text.Command` call checks for OpenDSS errors (through the `DSS.Error` interface) and converts those to Python exceptions. Ideally every error should be converted to Python exceptions, but that could negatively impact performance. You can manually trigger an error check by calling the function `CheckForError()` from the main module.
 
 
-Installing
-==========
+## Installing
 
-On Windows (64-bit Python 2.7 and 3.6), you can install directly from pip:
+On Windows (Python 2.7, 3.6 and 3.7), you can install directly from pip:
 
 ```
 pip install dss_python
@@ -56,8 +53,7 @@ pip install dss_python
 If successful, you can then import the `dss` module from your Python interpreter.
 
 
-Building
-========
+## Building
 
 Get this repository:
 
@@ -70,7 +66,7 @@ Assuming you successfully built or downloaded the `dss_capi` (check [its reposit
 ```
 dss_capi/
 dss_python/
-electricdss/
+electricdss-src/
 ```
 
 Open a command prompt in the `dss_python` subfolder and run the build process:
