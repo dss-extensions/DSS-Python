@@ -5318,7 +5318,8 @@ class ICircuit(FrozenClass):
 class IYMatrix(FrozenClass):
     _isfrozen = freeze
     
-    def GetCompressedYMatrix(self, factor=False):
+    def GetCompressedYMatrix(self, factor=True):
+        '''Return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix'''
         nBus = ffi.new('uint32_t*')
         nBus[0] = 0
         nNz = ffi.new('uint32_t*')
@@ -5362,14 +5363,16 @@ class IYMatrix(FrozenClass):
         lib.YMatrix_AddInAuxCurrents(SType)
     
     def GetIPointer(self):
+        '''Get access to the internal Current pointer'''
         IvectorPtr = ffi.new('double**')
         lib.YMatrix_getIpointer(IvectorPtr)
-        return IvectorPtr
+        return IvectorPtr[0]
         
     def GetVPointer(self):
+        '''Get access to the internal Voltage pointer'''
         VvectorPtr = ffi.new('double**')
         lib.YMatrix_getVpointer(VvectorPtr)
-        return VvectorPtr
+        return VvectorPtr[0]
         
     def SolveSystem(self, NodeV):
         if type(NodeV) is not np.ndarray:
@@ -5396,8 +5399,21 @@ class IYMatrix(FrozenClass):
     @UseAuxCurrents.setter
     def UseAuxCurrents(self, value):
         lib.YMatrix_Set_UseAuxCurrents(value)
-
         
+    # for better compatibility with OpenDSSDirect.py
+    getYSparse = GetCompressedYMatrix
+
+    def getI(self):
+        '''Get the data from the internal Current pointer'''
+        IvectorPtr = self.IVector()
+        return ffi.unpack(IvectorPtr, lib.Circuit_Get_NumNodes() + 1)
+        
+    def getV(self):
+        '''Get the data from the internal Voltage pointer'''
+        VvectorPtr = self.VVector()
+        return ffi.unpack(VvectorPtr, lib.Circuit_Get_NumNodes() + 1)
+
+
 class IDSS(FrozenClass):
     _isfrozen = freeze
     ActiveCircuit = ICircuit()
