@@ -3,6 +3,11 @@ import re, sys, shutil, os
 import subprocess
 from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS, DLL_SUFFIX, DLL_PREFIX
 
+# Copy README.md contents
+with open('README.md', encoding='utf8') as readme_md:
+    long_description = readme_md.read()
+
+# Extract version from the source files
 with open('dss/v7/__init__.py', 'r') as f:
     match = re.search("__version__ = '(.*?)'", f.read())
     package_version = match.group(1)
@@ -30,10 +35,11 @@ extra_args = dict(package_data={
     'dss': ['*{}'.format(DLL_SUFFIX)]
 })
 
-
 setup(
     name="dss_python",
     description="OpenDSS bindings based on the DSS C-API project",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author="Paulo Meira",
     author_email="pmeira@ieee.org",
     version=package_version,
