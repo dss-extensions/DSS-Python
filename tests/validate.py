@@ -1,6 +1,7 @@
 from __future__ import print_function
 import os, sys
 import numpy as np
+from scipy.sparse import csc_matrix
 
 cd = os.getcwd()
 no_properties = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
@@ -752,6 +753,16 @@ class ValidatingTest:
             elif type(v[1]) == float:
                 assert abs(v[0] - v[1]) < atol, (k, type(v[1]))
 
+    def validate_YMatrix(self):
+        NN = self.capi.ActiveCircuit.NumNodes
+        if NN > 2000: # test only on small strings
+            return
+            
+        ysparse = csc_matrix(self.capi.YMatrix.GetCompressedYMatrix(factor=False))
+        ydense = self.capi.ActiveCircuit.SystemY.view(dtype=complex).reshape((NN, NN))
+        assert (np.allclose(ydense, ysparse.todense(), atol=self.atol, rtol=self.rtol))
+        
+                
     def validate_all(self):
         self.rtol = 1e-5
 
@@ -785,6 +796,8 @@ class ValidatingTest:
         self.validate_Meters()
         # print('Reclosers')
         self.validate_Reclosers()
+        # print('YMatrix')
+        self.validate_YMatrix()
 
         #self.atol = 1e-5
         # print('Buses')
