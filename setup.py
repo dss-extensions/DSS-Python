@@ -12,25 +12,35 @@ with open('dss/v7/__init__.py', 'r') as f:
     match = re.search("__version__ = '(.*?)'", f.read())
     package_version = match.group(1)
     
+    
 # Copy the DLLs
+
+# KLUSolve DLL
+base_dll_path_out = 'dss/'
+base_dll_path_in = '../dss_capi/lib/{}'.format(PLATFORM_FOLDER)
+
+if sys.platform == 'win32':
+    libklusolve = 'libklusolve'
+else:
+    libklusolve = 'klusolve'
+    
+shutil.copy(
+    os.path.join(base_dll_path_in, DLL_PREFIX + libklusolve + DLL_SUFFIX), 
+    os.path.join(base_dll_path_out, DLL_PREFIX + libklusolve + DLL_SUFFIX)
+)
+
+# DSS_CAPI DLLs
 for i, version in enumerate(DSS_VERSIONS):
     base_dll_path_in = '../dss_capi/lib/{}/{}'.format(PLATFORM_FOLDER, version)
-    base_dll_path_out = 'dss/'
-    
     file_list = ['dss_capi_{}'.format(version)]
-    if i == 0:
-        if sys.platform == 'win32':
-            file_list.append('libklusolve')
-        else:
-            file_list.append('klusolve')
-        
+    
     for fn in file_list:
         shutil.copy(
             os.path.join(base_dll_path_in, DLL_PREFIX + fn + DLL_SUFFIX), 
             os.path.join(base_dll_path_out, DLL_PREFIX + fn + DLL_SUFFIX)
         )
 
-        
+
 extra_args = dict(package_data={
     'dss': ['*{}'.format(DLL_SUFFIX)]
 })
