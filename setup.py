@@ -1,10 +1,10 @@
 from setuptools import setup
-import re, sys, shutil, os
+import re, sys, shutil, os, io
 import subprocess
 from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS, DLL_SUFFIX, DLL_PREFIX
 
 # Copy README.md contents
-with open('README.md', encoding='utf8') as readme_md:
+with io.open('README.md', encoding='utf8') as readme_md:
     long_description = readme_md.read()
 
 # Extract version from the source files
@@ -40,10 +40,15 @@ for i, version in enumerate(DSS_VERSIONS):
             os.path.join(base_dll_path_out, DLL_PREFIX + fn + DLL_SUFFIX)
         )
 
+if os.environ.get('DSS_PYTHON_MANYLINUX', '0') == '1':
+    # Do not pack .so files when building manylinux wheels
+    # (auditwheel will copy them anyway)
+    extra_args = dict()
+else:
+    extra_args = dict(package_data={
+        'dss': ['*{}'.format(DLL_SUFFIX)]
+    })
 
-extra_args = dict(package_data={
-    'dss': ['*{}'.format(DLL_SUFFIX)]
-})
 
 setup(
     name="dss_python",

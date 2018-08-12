@@ -10,7 +10,7 @@ DSS_VERSIONS = ('v7', 'v8')
 if sys.platform == 'win32':
     DLL_SUFFIX = '.dll'
     DLL_PREFIX = ''
-elif sys.platform == 'linux':
+elif sys.platform in ('linux', 'linux2'):
     DLL_SUFFIX = '.so'
     DLL_PREFIX = 'lib'
 elif sys.platform == 'darwin':
