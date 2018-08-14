@@ -8,7 +8,7 @@ with io.open('README.md', encoding='utf8') as readme_md:
     long_description = readme_md.read()
 
 # Extract version from the source files
-with open('dss/v7/__init__.py', 'r') as f:
+with open('dss/__init__.py', 'r') as f:
     match = re.search("__version__ = '(.*?)'", f.read())
     package_version = match.group(1)
     
@@ -69,11 +69,12 @@ setup(
         'Intended Audience :: Science/Research',
         'Intended Audience :: Education',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
-        'Programming Language :: SQL',
+#        'Programming Language :: SQL', -- not yet!
         'Development Status :: 4 - Beta',
         'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: BSD License'

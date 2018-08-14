@@ -4,13 +4,13 @@ Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simul
 
 If you are looking for the custom OpenDSS C-API library, see [`dss_capi`](http://github.com/PMeira/dss_capi/).
 
-Version 0.9.8, based on OpenDSS revision 2246.
+Version 0.10.0 (**unreleased**), based on OpenDSS revision 2246. For version 0.9.8, see [here](https://github.com/PMeira/dss_python/tree/0.9.8).
 This is a work-in-progress but it's deemed stable enough to be made public. The main goal of creating a COM-compatible API was reached!
 
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level.
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange. 
 
-This module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the sparse system admittance matrix.
+The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the sparse system admittance matrix.
 
 If you are not bound to the COM API and its quirks, you might be insterested in OpenDSSDirect.py. [OpenDSSDirect.py](https://github.com/NREL/OpenDSSDirect.py/) exposes a more Pythonic API and contains extra utilities. Thanks to @kdheepak, OpenDSSDirect.py v0.3+ uses dss_python's backend -- this means you can use both modules at once. For example, if you have old code using the official COM objects, you could quickly switch to dss_python with very few code changes, and then use [`opendssdirect.utils`](https://nrel.github.io/OpenDSSDirect.py/opendssdirect.html#module-opendssdirect.utils) to generate some DataFrames.
 
@@ -32,7 +32,7 @@ Most limitations are inherited from `dss_capi`, i.e., these are not implemented:
 
 - `DSSEvents` from `DLL/ImplEvents.pas`: seems too dependent on COM.
 - `DSSProgress` from `DLL/ImplDSSProgress.pas`: would need a reimplementation depending on the target UI (GUI, text, headless, etc.).
-    
+
 In general, the DLL from `dss_capi` provides more features than both the official Direct DLL and the COM object.
     
 ## Extra features
