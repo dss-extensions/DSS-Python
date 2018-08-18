@@ -222,39 +222,6 @@ class ValidatingTest:
                 if field in ('SeqVoltages', 'CplxSeqVoltages', 'VLL'): continue # skip
 
                 if field == 'CplxSeqVoltages':
-                    # Investigating the different in (Cplx)SeqVoltages, I noted that the phase-to-sequence
-                    # transform matrix has low precision values in OpenDSS. Currently, the matrix is filled as:
-                    #
-                    #    SetAMatrix(Ap2s);
-                    #    Ap2s.Invert;
-                    #
-                    # ...but, since SetAMatrix doesn't use high precision values, the inverted
-                    # matrix has poor values. This should not be much of an issue, but we cannot
-                    # compare high resolution values in this validation since much of the precision
-                    # is lost.
-                    #
-                    # An alternative (untested) would be to fill the Ap2s matrix directly and use
-                    # a higher number of digits in "a":
-                    #
-                    #    Procedure SetAMatrix_inv(Amat:Tcmatrix);
-                    #    Var
-                    #       a,aa:complex;
-                    #       i:Integer;
-                    #    Begin
-                    #        a := cmplx(-0.5,0.8660254037844387);
-                    #        aa := cmplx(-0.5,-0.8660254037844387);
-                    #        With Amat Do begin
-                    #             For i := 1 to 3 Do SetElemSym(1,i,CONE);
-                    #             SetElement(2,2,a);
-                    #             SetElement(3,3,a);
-                    #             SetElemsym(2,3,aa);
-                    #        End;
-                    #    End;
-                    #    SetAMatrix_inv(Ap2s);
-                    #
-                    #
-                    #
-
                     vA = np.array(A.Voltages).view(dtype=complex)
                     vB = B.Voltages.view(dtype=complex)
 
@@ -270,7 +237,7 @@ class ValidatingTest:
                         # np.dot(vB, T012),
                         # B.CplxSeqVoltages.view(dtype=complex)
                     # ):
-                        # assert np.isclose(pyB, pyA, atol=self.atol, rtol=1e-5), ('pyB, pyA =', pyB, pyB)
+                        # assert np.isclose(pyB, pyA, atol=self.atol, rtol=1e-5), ('pyB, pyA =', pyB, pyA)
                     for pasA, pasB in zip(
                         np.array(A.CplxSeqVoltages).view(dtype=complex),
                         np.array(B.CplxSeqVoltages).view(dtype=complex)
@@ -278,10 +245,6 @@ class ValidatingTest:
                         assert np.isclose(pasA, pasB, atol=self.atol, rtol=self.rtol), ('ActiveBus.' + field, name, pasA, pasB)
 
                     continue
-
-                # if field == 'VMagAngle':
-                    # fA = (np.array(fA) * np.pi / 180.0) % (np.pi)
-                    # fB = (np.array(fB) * np.pi / 180.0) % (np.pi)
 
                 assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('ActiveBus.' + field, name, fA, fB)
 
@@ -893,8 +856,8 @@ if __name__ == '__main__':
         "L!../../electricdss-tst/Test/PVSystemTest.dss",
         "L!../../electricdss-tst/Test/REACTORTest.DSS",
 
-        #"../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
-        #"../../electricdss-tst/Test/IEEE13_CDPSM.dss",
+        "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
+        "../../electricdss-tst/Test/IEEE13_CDPSM.dss",
 
         #"L!../../electricdss-tst/Test/Run_SimpleStorageTest.DSS", # Missing DLL?
         #"L!../../electricdss-tst/Test/Run_SimpleStorageTest-1ph.DSS", # Missing DLL?
