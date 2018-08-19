@@ -1,0 +1,27 @@
+package:
+    name: dss_python
+    version: "0.9.8"
+    
+source:
+    git_rev: "0.9.8"
+    git_url: https://github.com/PMeira/dss_python.git
+    
+requirements:
+    build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - python {{ python }}
+        # - {{ compiler('pascal') }}
+        - cmake
+        - git
+        
+    host:
+        - python
+        - setuptools
+        - cffi
+        
+    run: 
+        - python
+        - cffi
+        - numpy
+        
