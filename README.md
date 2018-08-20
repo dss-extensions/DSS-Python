@@ -141,7 +141,7 @@ dss_engine = dss.v8.DSS
 
 Testing
 =======
-Since the DLL is built using the Free Pascal compiler, which is not officially supported by EPRI, the results are validated running sample networks provided in the official OpenDSS distribution. The only modifications are done directly by the script, removing interactive features and some minor other minor issues.
+Since the DLL is built using the Free Pascal compiler, which is not officially supported by EPRI, the results are validated running sample networks provided in the official OpenDSS distribution. The only modifications are done directly by the script, removing interactive features and some other minor issues.
 
 The validation scripts is `tests/validation.py` and requires the same folder structure as the building process. You need `win32com` to run it.
 
