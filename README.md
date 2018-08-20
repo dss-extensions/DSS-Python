@@ -2,6 +2,10 @@
 
 Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simulator). Based on CFFI and `dss_capi`, aiming for full COM compatibility on Windows, Linux and MacOS.
 
+<p align="center">
+    <img alt="Overview of related repositories" src="https://raw.githubusercontent.com/PMeira/dss_python/master/docs/images/repomap.svg?sanitize=true" width=600>
+</p>
+
 If you are looking for the custom OpenDSS C-API library, see [`dss_capi`](http://github.com/PMeira/dss_capi/).
 
 Version 0.10.0 (**unreleased**), based on OpenDSS revision 2246. For version 0.9.8, see [here](https://github.com/PMeira/dss_python/tree/0.9.8).

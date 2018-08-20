@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1068.5676"
+   height="693.44598"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="repomap.svg">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="-244.85788"
+     inkscape:cy="249.83047"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:snap-global="false"
+     inkscape:window-width="3840"
+     inkscape:window-height="2068"
+     inkscape:window-x="-12"
+     inkscape:window-y="-12"
+     inkscape:window-maximized="1"
+     fit-margin-top="4"
+     fit-margin-left="4"
+     fit-margin-right="4"
+     fit-margin-bottom="4" />
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Sstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Sstart"
+       style="overflow:visible">
+      <path
+         id="path4022"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(0.2,0,0,0.2,1.2,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart"
+       style="overflow:visible">
+      <path
+         id="path4010"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lstart"
+       style="overflow:visible">
+      <path
+         id="path4028"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(1.1,0,0,1.1,1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Mstart"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mstart">
+      <path
+         transform="scale(0.6,0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         id="path4034"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mstart"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mstart">
+      <path
+         transform="matrix(0.4,0,0,0.4,4,0)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         id="path4016"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Mend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(-0.6,-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         id="path4037"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Lend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Lend">
+      <path
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         id="path4031"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Mstartn"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mstartn">
+      <path
+         transform="scale(0.6,0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#d1a600;fill-rule:evenodd;stroke:#d1a600;stroke-width:0.625;stroke-linejoin:round"
+         id="path5444"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Mendv"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mendv">
+      <path
+         transform="scale(-0.6,-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#d1a600;fill-rule:evenodd;stroke:#d1a600;stroke-width:0.625;stroke-linejoin:round"
+         id="path5447"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1"
+     transform="translate(-165.01627,-194.6575)">
+    <rect
+       y="417.23108"
+       x="594.01624"
+       height="252.85715"
+       width="281.6091"
+       id="rect3130"
+       style="fill:#f2f2f2;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <rect
+       y="199.6575"
+       x="170.01627"
+       height="210.43074"
+       width="706.8833"
+       id="rect2985"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       id="text2987"
+       y="298.60239"
+       x="523.17664"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         y="298.60239"
+         x="523.17664"
+         id="tspan2989"
+         sodipodi:role="line"
+         style="font-size:40px;line-height:1.25">OpenDSS</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial"
+         id="tspan3137"
+         y="334.19031"
+         x="523.17664"
+         sodipodi:role="line">(PMeira/electricdss-src)</tspan></text>
+    <rect
+       style="fill:#ffffff;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3008"
+       width="420"
+       height="252.85715"
+       x="170.01627"
+       y="417.23108" />
+    <g
+       id="g7340"
+       transform="translate(499.71429,260.16124)">
+      <rect
+         style="fill:#ffeeaa;fill-opacity:1;stroke:#d1a600;stroke-width:1.86626172;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect4000"
+         width="438.7814"
+         height="186.44992"
+         x="-318.11325"
+         y="436.55917"
+         ry="62.846233"
+         rx="62.846233" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         x="-100.59583"
+         y="476.862"
+         id="text3016"><tspan
+           sodipodi:role="line"
+           x="-97.159988"
+           y="476.862"
+           id="tspan3029"
+           style="font-size:24.77679825px;line-height:1.25">1) Exposes a more tradicional API, </tspan><tspan
+           sodipodi:role="line"
+           x="-97.159988"
+           y="507.83301"
+           id="tspan3031"
+           style="font-size:24.77679825px;line-height:1.25">easily digestable by many </tspan><tspan
+           sodipodi:role="line"
+           x="-100.59583"
+           y="538.80402"
+           id="tspan3101"
+           style="font-size:24.77679825px;line-height:1.25">programming languages.</tspan><tspan
+           sodipodi:role="line"
+           x="-97.159988"
+           y="569.77496"
+           id="tspan3093"
+           style="font-size:24.77679825px;line-height:1.25">2) Goal of exposing all COM methods </tspan><tspan
+           sodipodi:role="line"
+           x="-100.59583"
+           y="600.74597"
+           id="tspan3109"
+           style="font-size:24.77679825px;line-height:1.25">possible has been reached.</tspan></text>
+    </g>
+    <g
+       transform="translate(124,-20)"
+       id="g5423">
+      <rect
+         rx="82.808609"
+         ry="73.428848"
+         y="716.93298"
+         x="516.84143"
+         height="169.98799"
+         width="442.72916"
+         id="rect4002"
+         style="fill:#ffeeaa;fill-opacity:1;stroke:#d1a600;stroke-width:1.71759701;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <text
+         id="text3085"
+         y="755.52466"
+         x="738.93872"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           y="755.52466"
+           x="738.93872"
+           sodipodi:role="line"
+           id="tspan3089"
+           style="font-size:26.14031219px;line-height:1.25">Language-specific bindings</tspan><tspan
+           y="788.20007"
+           x="738.93872"
+           sodipodi:role="line"
+           id="tspan3113"
+           style="font-size:26.14031219px;line-height:1.25">to achieve better user experience</tspan><tspan
+           y="820.87543"
+           x="738.93872"
+           sodipodi:role="line"
+           id="tspan3115"
+           style="font-size:26.14031219px;line-height:1.25">when migrating from COM.</tspan><tspan
+           y="853.55084"
+           x="738.93872"
+           sodipodi:role="line"
+           id="tspan5421"
+           style="font-size:26.14031219px;line-height:1.25">Just replace the import/references.</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="614.94666"
+       y="656.01605"
+       id="text3121"><tspan
+         sodipodi:role="line"
+         id="tspan3123"
+         x="614.94666"
+         y="656.01605"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.81196022px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Oblique'">More coming soon!</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;"
+       x="394.9823"
+       y="538.7655"
+       id="text3139"><tspan
+         sodipodi:role="line"
+         id="tspan3141"
+         x="394.9823"
+         y="538.7655"
+         style="font-weight:normal;font-size:40px;line-height:1.25;-inkscape-font-specification:'Arial Bold';fill:#000000;">DSS C-API</tspan><tspan
+         sodipodi:role="line"
+         x="394.9823"
+         y="574.35345"
+         id="tspan3143"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;">(PMeira/dss_capi)</tspan></text>
+    <g
+       transform="translate(12,6)"
+       id="g3220">
+      <rect
+         y="423.79706"
+         x="900.01624"
+         height="90.222588"
+         width="310.03513"
+         id="rect3147"
+         style="fill:#ffffff;stroke:#000000;stroke-width:1.99999988;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <text
+         id="text3153"
+         y="462.60239"
+         x="1055.1765"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           y="462.60239"
+           x="1055.1765"
+           id="tspan3155"
+           sodipodi:role="line"
+           style="font-size:36px;line-height:1.25">OpenDSSDirect.py</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan3157"
+           y="496.79333"
+           x="1055.1765"
+           sodipodi:role="line">(NREL/OpenDSSDirect.py)</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.99999988;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3212"
+       width="256.66168"
+       height="90.222588"
+       x="610.70294"
+       y="529.79706" />
+    <rect
+       y="429.79706"
+       x="610.70294"
+       height="90.222588"
+       width="256.66168"
+       id="rect3161"
+       style="fill:#ff0000;stroke:#800000;stroke-width:1.99999988;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       id="text3163"
+       y="468.60242"
+       x="739.17651"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         y="468.60242"
+         x="739.17651"
+         id="tspan3165"
+         sodipodi:role="line"
+         style="font-weight:bold;font-size:40px;line-height:1.25;fill:#ffffff">DSS Python</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff"
+         id="tspan3167"
+         y="504.19034"
+         x="739.17651"
+         sodipodi:role="line">(PMeira/dss_python)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="733.17651"
+       y="568.60242"
+       id="text3190"><tspan
+         sodipodi:role="line"
+         id="tspan3192"
+         x="733.17651"
+         y="568.60242"
+         style="font-size:40px;line-height:1.25">DSS# (.NET)</tspan><tspan
+         sodipodi:role="line"
+         x="733.17651"
+         y="604.19037"
+         id="tspan3194"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial">(PMeira/dss_sharp)</tspan></text>
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path3228"
+       d="m 398.0001,362.67166 0,99.599"
+       style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow2Mstart);marker-end:url(#Arrow2Mend)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.90479803;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow2Mstart);marker-end:url(#Arrow2Mend)"
+       d="m 917.47077,475.25865 -57.86299,0"
+       id="path4824"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path5394"
+       d="m 629.47077,475.25865 -57.86299,0"
+       style="fill:none;stroke:#000000;stroke-width:2.90479803;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow2Mstart);marker-end:url(#Arrow2Mend)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.90479803;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow2Mstart);marker-end:url(#Arrow2Mend)"
+       d="m 629.47077,577.25865 -57.86299,0"
+       id="path5396"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <g
+       id="g7331">
+      <rect
+         style="fill:#ffeeaa;fill-opacity:1;stroke:#d1a600;stroke-width:1.71726644;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect4004"
+         width="331.61276"
+         height="146.75479"
+         x="897.11255"
+         y="543.91101"
+         ry="73.377396"
+         rx="85.65728" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         x="1065.51"
+         y="591.52466"
+         id="text5398"><tspan
+           id="tspan5404"
+           sodipodi:role="line"
+           x="1065.51"
+           y="591.52466"
+           style="font-size:26.14031219px;line-height:1.25">More Pythonic API,</tspan><tspan
+           sodipodi:role="line"
+           x="1069.1349"
+           y="624.20007"
+           id="tspan5413"
+           style="font-size:26.14031219px;line-height:1.25">extra utilities. Free of </tspan><tspan
+           sodipodi:role="line"
+           x="1065.51"
+           y="656.87543"
+           id="tspan5419"
+           style="font-size:26.14031219px;line-height:1.25">COM restrictions.</tspan></text>
+    </g>
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path5431"
+       d="m 734.79287,669.80178 0,28.78935"
+       style="fill:none;stroke:#d1a600;stroke-width:2.90499997;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-mid:none;marker-end:url(#Arrow2Mendv)" />
+    <path
+       style="fill:none;stroke:#d1a600;stroke-width:2.90499997;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-mid:none;marker-end:url(#Arrow2Mendv)"
+       d="m 1067.0059,520.47215 0,28.78935"
+       id="path7329"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#d1a600;stroke-width:2.90499997;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-mid:none;marker-end:url(#Arrow2Mendv)"
+       d="m 276.96383,668.36665 0,28.78935"
+       id="path7338"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <g
+       id="g7383"
+       transform="translate(-48,163.36631)">
+      <rect
+         rx="69.584702"
+         ry="73.450584"
+         y="68.055969"
+         x="947.547"
+         height="146.90117"
+         width="277.21091"
+         id="rect7351"
+         style="fill:#ffeeaa;fill-opacity:1;stroke:#d1a600;stroke-width:1.57088256;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <text
+         id="text7353"
+         y="115.74281"
+         x="1088.7435"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           id="tspan7359"
+           y="115.74281"
+           x="1092.3684"
+           sodipodi:role="line"
+           style="font-size:26.14031219px;line-height:1.25">Main OpenDSS </tspan><tspan
+           y="148.4182"
+           x="1092.3684"
+           sodipodi:role="line"
+           id="tspan7366"
+           style="font-size:26.14031219px;line-height:1.25">codebase with </tspan><tspan
+           y="181.0936"
+           x="1088.7435"
+           sodipodi:role="line"
+           id="tspan7370"
+           style="font-size:26.14031219px;line-height:1.25">custom patches</tspan></text>
+    </g>
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path7390"
+       d="m 877.35207,304.90078 28.78935,0"
+       style="fill:none;stroke:#d1a600;stroke-width:2.90499997;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-mid:none;marker-end:url(#Arrow2Mendv)" />
+  </g>
+</svg>
