@@ -62,7 +62,6 @@ class ValidatingTest:
         os.chdir(cd)
         dss.Start(0)
         dss.Text.Command = 'Clear'
-        dss.AllowForms = False
 
         if self.line_by_line:
             with open(self.fn, 'r') as f:
@@ -791,6 +790,22 @@ def run_tests(fns):
     #com = comtypes.client.CreateObject("OpenDSSEngine.DSS")
 
     capi = DSS
+
+    # Test toggling console output with C-API, COM can only be disabled
+    for dss in com, capi:
+        dss.AllowForms = True
+        assert dss.AllowForms == True
+
+        dss.AllowForms = False
+        assert dss.AllowForms == False
+        
+        dss.AllowForms = True
+        if dss != com:
+            assert dss.AllowForms == True
+
+        dss.AllowForms = False
+        assert dss.AllowForms == False
+            
 
     for fn in fns:
         line_by_line = fn.startswith('L!')
