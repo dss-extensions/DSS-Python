@@ -17,8 +17,10 @@ def prepare_com_compat(variables):
     try:
         freeze = False
         for v in variables.values():
-            if inspect.isclass(v) and issubclass(v, FrozenClass) and v != FrozenClass:
-                lowercase_map = {a.lower(): a for a in dir(v) if not a.startswith('_')}
+            if inspect.isclass(v) and issubclass(v, FrozenDssClass) and v != FrozenDssClass:
+                v._dss_original_attributes = {a for a in dir(v) if not a.startswith('_')}
+
+                lowercase_map = {a.lower(): a for a in v._dss_original_attributes}
                 v._dss_atributes = lowercase_map
                 
     finally:
@@ -26,7 +28,7 @@ def prepare_com_compat(variables):
     
 
 # workaround to make a __slots__ equivalent restriction compatible with Python 2 and 3
-class FrozenClass(object):
+class FrozenDssClass(object):
     _isfrozen = False
     
     def __getattr__(self, key):
@@ -44,9 +46,9 @@ class FrozenClass(object):
             okey = key
             key = self._dss_atributes.get(key.lower(), None)
             if key is None:
-                raise TypeError("%r is a frozen class" % self)
+                raise TypeError("%r is a frozen class (attribute not found even ignoring case)" % self)
     
-        if self._isfrozen and not hasattr(self, key):
+        if self._isfrozen and key not in self._dss_original_attributes:
             raise TypeError("%r is a frozen class" % self)
             
         object.__setattr__(self, key, value)
