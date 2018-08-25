@@ -1,5 +1,6 @@
 from __future__ import print_function
 import os, sys
+from time import time
 import numpy as np
 from scipy.sparse import csc_matrix
 
@@ -806,7 +807,9 @@ def run_tests(fns):
         dss.AllowForms = False
         assert dss.AllowForms == False
             
-
+    total_com_time = 0.0
+    total_capi_time = 0.0
+            
     for fn in fns:
         line_by_line = fn.startswith('L!')
         if line_by_line:
@@ -815,9 +818,15 @@ def run_tests(fns):
         print("> File", fn)
         test = ValidatingTest(fn, com, capi, line_by_line)
         print("Running using CAPI")
+        t0 = time()
         test.run(capi, solve=True)
+        total_capi_time += time() - t0
+        
         print("Running using COM")
+        t0 = time()
         test.run(com, solve=True)
+        total_com_time += time() - t0
+        
         print("Validating")
         try:
             test.validate_all()
@@ -827,6 +836,13 @@ def run_tests(fns):
             print('!!!!!!!!!!!!!!!!!!!!!!')
 
 
+    print("Total COM running time: {} seconds".format(int(total_com_time)))
+    print("Total C-API running time: {} seconds ({}% of COM)".format(
+        int(total_capi_time), 
+        round(100 * total_capi_time / total_com_time, 1)
+    ))
+            
+            
 if __name__ == '__main__':
     fns = [
         "../../electricdss-tst/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
@@ -888,7 +904,6 @@ if __name__ == '__main__':
 
     ]
 
-    from time import time
     t0_global = time()
     run_tests(fns)
     print(time() - t0_global, 'seconds')
