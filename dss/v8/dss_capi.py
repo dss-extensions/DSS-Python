@@ -5494,11 +5494,12 @@ class IDSS(FrozenClass):
 
     @property
     def AllowForms(self):
-        warnings.warn('AllowForms is not implemented.')
+        return lib.DSS_Get_AllowForms() != 0
 
     @AllowForms.setter
     def AllowForms(self, value):
-        warnings.warn('AllowForms is not implemented.')
+        '''Gets/sets whether text output is allowed'''
+        return lib.DSS_Set_AllowForms(value)
     
     def ShowPanel(self):
         warnings.warn('ShowPanel is not implemented.')
