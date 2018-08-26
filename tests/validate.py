@@ -187,11 +187,11 @@ class ValidatingTest:
             if not use_v8:
                 assert (A.Properties(prop_name).Description == B.Properties(prop_name).Description), ('Properties({}).Description'.format(prop_name), A.Properties(prop_name).Description, B.Properties(prop_name).Description)
                 
-            assert (A.Properties(prop_name).name == B.Properties(prop_name).name), ('Properties({}).name'.format(prop_name), A.Properties(prop_name).name, B.Properties(prop_name).name)
+            assert (A.Properties(prop_name).Name == B.Properties(prop_name).Name), ('Properties({}).name'.format(prop_name), A.Properties(prop_name).Name, B.Properties(prop_name).Name)
 
             assert (B.Properties(prop_name).Val == B.Properties[prop_name].Val)
             assert (B.Properties(prop_name).Description == B.Properties[prop_name].Description)
-            assert (B.Properties(prop_name).name == B.Properties[prop_name].name)
+            assert (B.Properties(prop_name).Name == B.Properties[prop_name].Name)
 
 
     def validate_Buses(self):
@@ -364,8 +364,8 @@ class ValidatingTest:
 
 
     def validate_Loadshapes(self):
-        A = self.com.ActiveCircuit.Loadshapes
-        B = self.capi.ActiveCircuit.Loadshapes
+        A = self.com.ActiveCircuit.LoadShapes
+        B = self.capi.ActiveCircuit.LoadShapes
         assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
         assert A.Count == B.Count
         assert len(A) == len(B)
@@ -378,7 +378,7 @@ class ValidatingTest:
             for field in 'Pmult,Qmult,TimeArray'.split(','):
                 assert np.allclose(getattr(A, field), getattr(B, field), atol=self.atol, rtol=self.rtol), field
 
-            for field in 'HrInterval,MinInterval,Name,Npts,PBase,Qbase,UseActual,sInterval'.split(','): #TODO: ZIPV
+            for field in 'HrInterval,MinInterval,Name,Npts,Pbase,Qbase,UseActual,Sinterval'.split(','): #TODO: ZIPV
                 fA = getattr(A, field)
                 fB = getattr(B, field)
                 assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -401,7 +401,7 @@ class ValidatingTest:
         count = 0
         while nA != 0:
             count += 1
-            for field in 'IsDelta,MaxTap,MinTap,Name,NumTaps,NumWindings,R,Rneut,Tap,Wdg,XfmrCode,Xhl,Xht,Xlt,Xneut,kV,kVA'.split(','):
+            for field in 'IsDelta,MaxTap,MinTap,Name,NumTaps,NumWindings,R,Rneut,Tap,Wdg,XfmrCode,Xhl,Xht,Xlt,Xneut,kV,kva'.split(','):
                 fA = getattr(A, field)
                 fB = getattr(B, field)
                 assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -449,7 +449,7 @@ class ValidatingTest:
 
 
     def validate_Isources(self):
-        A = self.com.ActiveCircuit.Isources
+        A = self.com.ActiveCircuit.ISources
         B = self.capi.ActiveCircuit.Isources
         assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
         assert A.Count == B.Count
@@ -784,8 +784,7 @@ def run_tests(fns):
     use_com_compat()
 
     import win32com.client
-    com = win32com.client.Dispatch("OpenDSSEngine.DSS")
-    #com = win32com.client.gencache.EnsureDispatch("OpenDSSEngine.DSS")
+    com = win32com.client.gencache.EnsureDispatch("OpenDSSEngine.DSS")
 
     #import comtypes.client
     #com = comtypes.client.CreateObject("OpenDSSEngine.DSS")
