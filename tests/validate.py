@@ -843,66 +843,7 @@ def run_tests(fns):
             
             
 if __name__ == '__main__':
-    fns = [
-        "../../electricdss-tst/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
-        "../../electricdss-tst/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss",
-        "../../electricdss-tst/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss",
-        "../../electricdss-tst/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss",
-        "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/J1/Master_withPV.dss",
-        "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/K1/Master_NoPV.dss",
-        "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/M1/Master_NoPV.dss",
-        "../../electricdss-tst/Distrib/IEEETestCases/8500-Node/Master-unbal.dss",
-        "../../electricdss-tst/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS",
-        "../../electricdss-tst/Distrib/IEEETestCases/37Bus/ieee37.dss",
-        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS",
-        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS",
-        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS",
-        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4Bus-OYOD-UnBal.DSS",
-        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS",
-        "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS",
-        "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/IEEE123Master.dss",
-        "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/SolarRamp.DSS",
-        "../../electricdss-tst/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss",
-
-        "../../electricdss-tst/Test/IEEE13_LineSpacing.dss",
-        "../../electricdss-tst/Test/IEEE13_LineGeometry.dss",
-        "../../electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss",
-        "../../electricdss-tst/Test/IEEE13_Assets.dss",
-        "L!../../electricdss-tst/Test/CableParameters.dss",
-        "L!../../electricdss-tst/Test/Cable_constants.DSS",
-        "L!../../electricdss-tst/Test/BundleDemo.DSS",
-        "../../electricdss-tst/Test/IEEE13_SpacingGeometry.dss",
-        "../../electricdss-tst/Test/TextTsCable750MCM.dss",
-        "L!../../electricdss-tst/Test/TestDDRegulator.dss",
-        "../../electricdss-tst/Test/XYCurvetest.dss",
-        "L!../../electricdss-tst/Test/PVSystemTestHarm.dss",
-        "L!../../electricdss-tst/Test/TestAuto.dss",
-        "L!../../electricdss-tst/Test/Stevenson.dss",
-        "L!../../electricdss-tst/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
-        "../../electricdss-tst/Test/Master_TestCapInterface.DSS",
-        "../../electricdss-tst/Test/LoadTest.DSS",
-        "L!../../electricdss-tst/Test/IEEELineGeometry.dss",
-        "L!../../electricdss-tst/Test/ODRegTest.dss",
-        "L!../../electricdss-tst/Test/MultiCircuitTest.DSS",
-        "L!../../electricdss-tst/Test/TriplexLineCodeCalc.DSS",
-        "L!../../electricdss-tst/Test/PVSystemTest-Duty.dss",
-        "L!../../electricdss-tst/Test/PVSystemTest.dss",
-        "L!../../electricdss-tst/Test/REACTORTest.DSS",
-
-        "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
-        "../../electricdss-tst/Test/IEEE13_CDPSM.dss",
-
-        #"L!../../electricdss-tst/Test/Run_SimpleStorageTest.DSS", # Missing DLL?
-        #"L!../../electricdss-tst/Test/Run_SimpleStorageTest-1ph.DSS", # Missing DLL?
-        #"L!../../electricdss-tst/Test/Source012Test.dss", # Different encoding, skipping
-
-        # 'Generator User Model IndMach012a Not Loaded.'
-        #"L!../../electricdss-tst/Distrib/IEEETestCases/4wire-Delta/Kersting4wire_Lagging.dss",
-        #"L!../../electricdss-tst/Distrib/IEEETestCases/4wire-Delta/Kersting4wire_Leading.dss",
-        #"L!../../electricdss-tst/Distrib/IEEETestCases/4wire-Delta/Kersting4wireIndMotor.dss",
-
-    ]
-
+    from common import test_filenames
     t0_global = time()
-    run_tests(fns)
+    run_tests(test_filenames)
     print(time() - t0_global, 'seconds')
