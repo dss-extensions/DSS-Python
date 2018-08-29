@@ -47,7 +47,7 @@ test_filenames = [
     "L!../../electricdss-tst/Test/PVSystemTest.dss",
     "L!../../electricdss-tst/Test/REACTORTest.DSS",
 
-    "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
+    # "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
     "../../electricdss-tst/Test/IEEE13_CDPSM.dss",
 
     #"L!../../electricdss-tst/Test/Run_SimpleStorageTest.DSS", # Missing DLL?

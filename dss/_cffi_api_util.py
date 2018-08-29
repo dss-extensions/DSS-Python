@@ -3,7 +3,10 @@ import numpy as np
 
 freeze = True
 _case_insensitive = False
-codec = 'cp1252' #TODO: check which encoding FreePascal defaults to, on Linux
+
+# The codec was changed to ASCII in version 0.10.0. 
+# A rewrite of DSS C-API is expected to return UTF8Strings in the future
+codec = 'ascii' #TODO: check which encoding FreePascal defaults to, on Linux
 
 def use_com_compat(value=True):
     global _case_insensitive
@@ -53,101 +56,76 @@ class FrozenDssClass(object):
 
         object.__setattr__(self, key, value)
 
-
-
-CACHE_PTR_STRING_VECTOR = 0
-CACHE_PTR_DOUBLE_VECTOR = 1
-CACHE_PTR_INT32_VECTOR = 2
-
 class CffiApiUtil(object):
     def __init__(self, ffi, lib):
-        self.cached_buffers = [(None, None), (None, None), (None, None)]
-
         self.ffi = ffi
         self.lib = lib
+        tmp_string_pointers = (self.ffi.new('char****'), self.ffi.new('int32_t**'))
+        tmp_float64_pointers = (self.ffi.new('double***'), self.ffi.new('int32_t**'))
+        tmp_int32_pointers = (self.ffi.new('int32_t***'), self.ffi.new('int32_t**'))
+        tmp_int8_pointers = (self.ffi.new('int8_t***'), self.ffi.new('int32_t**'))
 
-        ptr = self.ffi.new('char***')
-        cnt = self.ffi.new('int32_t[2]') # ffi initializes this to 0
-        self.cached_buffers[CACHE_PTR_STRING_VECTOR] = (ptr, cnt)
+        # reorder pointers so data pointers are first, count pointers last
+        ptr_args = [
+            ptr 
+            for ptrs in zip(tmp_string_pointers, tmp_float64_pointers, tmp_int32_pointers, tmp_int8_pointers)
+            for ptr in ptrs
+        ]
+        self.lib.DSS_GetGRPointers(*ptr_args)
 
-        ptr = self.ffi.new('double**')
-        cnt = self.ffi.new('int32_t[2]')
-        self.cached_buffers[CACHE_PTR_DOUBLE_VECTOR] = (ptr, cnt)
-
-        ptr = self.ffi.new('int32_t**')
-        cnt = self.ffi.new('int32_t[2]')
-        self.cached_buffers[CACHE_PTR_INT32_VECTOR] = (ptr, cnt)
-
-
+        # we don't need to keep the extra indirections
+        self.gr_string_pointers = (tmp_string_pointers[0][0], tmp_string_pointers[1][0])
+        self.gr_float64_pointers = (tmp_float64_pointers[0][0], tmp_float64_pointers[1][0])
+        self.gr_int32_pointers = (tmp_int32_pointers[0][0], tmp_int32_pointers[1][0])
+        self.gr_int8_pointers = (tmp_int8_pointers[0][0], tmp_int8_pointers[1][0])
+        
 
     def clear_buffers():
-        ptr, cnt = self.cached_buffers.get(CACHE_PTR_STRING_VECTOR)
-        if ptr:
-            self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
-
-        ptr = self.ffi.new('char***')
-        cnt = self.ffi.new('int32_t[2]') # ffi initializes this to 0
-        self.cached_buffers[CACHE_PTR_STRING_VECTOR] = (ptr, cnt)
-
-
-        ptr, cnt = self.cached_buffers.get(CACHE_PTR_DOUBLE_VECTOR)
-        if ptr:
-            self.lib.DSS_Dispose_PDouble(ptr)
-
-        ptr = self.ffi.new('double**')
-        cnt = self.ffi.new('int32_t[2]')
-        self.cached_buffers[CACHE_PTR_DOUBLE_VECTOR] = (ptr, cnt)
-
-
-        ptr, cnt = self.cached_buffers[CACHE_PTR_INT32_VECTOR]
-        if ptr:
-            self.lib.DSS_Dispose_PInteger(ptr)
-
-        ptr = self.ffi.new('int32_t**')
-        cnt = self.ffi.new('int32_t[2]')
-        self.cached_buffers[CACHE_PTR_INT32_VECTOR] = (ptr, cnt)
+        self.lib.DSS_DisposeGRData()
+        self.lib.DSS_ResetStringBuffer()
 
     def get_string(self, b):
         return self.ffi.string(b).decode(codec)
 
     def get_float64_array(self, func, *args):
-        ptr, cnt = self.cached_buffers[CACHE_PTR_DOUBLE_VECTOR]
-
+        ptr = self.ffi.new('double**')
+        cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
-        if not cnt[0]:
-            res = None
-        else:
-            res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float).copy()
-
-        #self.lib.DSS_Dispose_PDouble(ptr)
+        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float)
+        self.lib.DSS_Dispose_PDouble(ptr)
         return res
 
+    def get_float64_gr_array(self):
+        ptr, cnt = self.gr_float64_pointers
+        return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float)
+        
     def get_int32_array(self, func, *args):
-        ptr, cnt = self.cached_buffers[CACHE_PTR_INT32_VECTOR]
+        ptr = self.ffi.new('int32_t**')
+        cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
-        if not cnt[0]:
-            res = None
-        else:
-            res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
-
-        #self.lib.DSS_Dispose_PInteger(ptr)
+        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32)
+        self.lib.DSS_Dispose_PInteger(ptr)
         return res
+        
+    def get_int32_gr_array(self):
+        ptr, cnt = self.gr_int32_pointers
+        return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32)
 
     def get_int8_array(self, func, *args):
         ptr = self.ffi.new('int8_t**')
         cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
-        if not cnt[0]:
-            res = None
-        else:
-            res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
-
+        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8)
         self.lib.DSS_Dispose_PByte(ptr)
         return res
 
+    def get_int8_gr_array(self):
+        ptr, cnt = self.gr_int8_pointers
+        return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8)
+        
     def get_string_array(self, func, *args):
-        ptr, cnt = self.cached_buffers[CACHE_PTR_STRING_VECTOR]
-
+        ptr = self.ffi.new('char***')
+        cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
         if not cnt[0]:
             res = []
@@ -156,9 +134,11 @@ class CffiApiUtil(object):
             if actual_ptr == self.ffi.NULL:
                 res = []
             else:
-                res = [(str(self.ffi.string(actual_ptr[i]).decode(codec)) if (actual_ptr[i] != self.ffi.NULL) else None) for i in range(cnt[0])]
+                str_ptrs = self.ffi.unpack(actual_ptr, cnt[0])
+                #res = [(str(self.ffi.string(str_ptr).decode(codec)) if (str_ptr != self.ffi.NULL) else None) for str_ptr in str_ptrs]
+                res = [(self.ffi.string(str_ptr).decode(codec) if (str_ptr != self.ffi.NULL) else None) for str_ptr in str_ptrs]
 
-        #self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
+        self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
         return res
 
     def get_string_array2(self, func, *args): # for compatibility with OpenDSSDirect.py
