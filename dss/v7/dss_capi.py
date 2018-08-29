@@ -13,6 +13,7 @@ import warnings
 api_util = CffiApiUtil(ffi, lib)
 get_string = api_util.get_string
 get_float64_array = api_util.get_float64_array
+get_float64_gr_array = api_util.get_float64_gr_array
 get_int32_array = api_util.get_int32_array
 get_int8_array = api_util.get_int8_array
 get_string_array = api_util.get_string_array
@@ -101,7 +102,8 @@ class IBus(FrozenDssClass):
     @property
     def CplxSeqVoltages(self):
         '''(read-only) Complex Double array of Sequence Voltages (0, 1, 2) at this Bus.'''
-        return get_float64_array(lib.Bus_Get_CplxSeqVoltages)
+        lib.Bus_Get_CplxSeqVoltages_GR()
+        return get_float64_gr_array()
 
     @property
     def Cust_Duration(self):
@@ -126,7 +128,8 @@ class IBus(FrozenDssClass):
     @property
     def Isc(self):
         '''(read-only) Short circuit currents at bus; Complex Array.'''
-        return get_float64_array(lib.Bus_Get_Isc)
+        lib.Bus_Get_Isc_GR()
+        return get_float64_gr_array()
 
     @property
     def Lambda(self):
@@ -166,7 +169,8 @@ class IBus(FrozenDssClass):
     @property
     def SeqVoltages(self):
         '''(read-only) Double Array of sequence voltages at this bus.'''
-        return get_float64_array(lib.Bus_Get_SeqVoltages)
+        lib.Bus_Get_SeqVoltages_GR()
+        return get_float64_gr_array()
 
     @property
     def TotalMiles(self):
@@ -176,42 +180,50 @@ class IBus(FrozenDssClass):
     @property
     def VLL(self):
         '''(read-only) For 2- and 3-phase buses, returns array of complex numbers represetin L-L voltages in volts. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only first 3.'''
-        return get_float64_array(lib.Bus_Get_VLL)
+        lib.Bus_Get_VLL_GR()
+        return get_float64_gr_array()
 
     @property
     def VMagAngle(self):
         '''(read-only) Variant Array of doubles containing voltages in Magnitude (VLN), angle (deg) '''
-        return get_float64_array(lib.Bus_Get_VMagAngle)
+        lib.Bus_Get_VMagAngle_GR()
+        return get_float64_gr_array()
 
     @property
     def Voc(self):
         '''(read-only) Open circuit voltage; Complex array.'''
-        return get_float64_array(lib.Bus_Get_Voc)
+        lib.Bus_Get_Voc_GR()
+        return get_float64_gr_array()
 
     @property
     def Voltages(self):
         '''(read-only) Complex array of voltages at this bus.'''
-        return get_float64_array(lib.Bus_Get_Voltages)
+        lib.Bus_Get_Voltages_GR()
+        return get_float64_gr_array()
 
     @property
     def YscMatrix(self):
         '''(read-only) Complex array of Ysc matrix at bus. Column by column.'''
-        return get_float64_array(lib.Bus_Get_YscMatrix)
+        lib.Bus_Get_YscMatrix_GR()
+        return get_float64_gr_array()
 
     @property
     def Zsc0(self):
         '''(read-only) Complex Zero-Sequence short circuit impedance at bus.'''
-        return get_float64_array(lib.Bus_Get_Zsc0)
+        lib.Bus_Get_Zsc0_GR()
+        return get_float64_gr_array()
 
     @property
     def Zsc1(self):
         '''(read-only) Complex Positive-Sequence short circuit impedance at bus..'''
-        return get_float64_array(lib.Bus_Get_Zsc1)
+        lib.Bus_Get_Zsc1_GR()
+        return get_float64_gr_array()
 
     @property
     def ZscMatrix(self):
         '''(read-only) Complex array of Zsc matrix at bus. Column by column.'''
-        return get_float64_array(lib.Bus_Get_ZscMatrix)
+        lib.Bus_Get_ZscMatrix_GR()
+        return get_float64_gr_array()
 
     @property
     def kVBase(self):
@@ -221,17 +233,20 @@ class IBus(FrozenDssClass):
     @property
     def puVLL(self):
         '''(read-only) Returns Complex array of pu L-L voltages for 2- and 3-phase buses. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only 3 phases.'''
-        return get_float64_array(lib.Bus_Get_puVLL)
+        lib.Bus_Get_puVLL_GR()
+        return get_float64_gr_array()
 
     @property
     def puVmagAngle(self):
         '''(read-only) Array of doubles containig voltage magnitude, angle pairs in per unit'''
-        return get_float64_array(lib.Bus_Get_puVmagAngle)
+        lib.Bus_Get_puVmagAngle_GR()
+        return get_float64_gr_array()
 
     @property
     def puVoltages(self):
         '''(read-only) Complex Array of pu voltages at the bus.'''
-        return get_float64_array(lib.Bus_Get_puVoltages)
+        lib.Bus_Get_puVoltages_GR()
+        return get_float64_gr_array()
 
     @property
     def x(self):
@@ -560,23 +575,28 @@ class ICmathLib(FrozenDssClass):
 
     def cdiv(self, a1, b1, a2, b2):
         '''(read-only) Divide two complex number: (a1, b1)/(a2, b2). Returns array of two doubles representing complex result.'''
-        return get_float64_array(lib.CmathLib_Get_cdiv, a1, b1, a2, b2)
+        lib.CmathLib_Get_cdiv, a1, b1, a2_GR()
+        return get_float64_gr_array()
 
     def cmplx(self, RealPart, ImagPart):
         '''(read-only) Convert real and imaginary doubles to Array of doubles'''
-        return get_float64_array(lib.CmathLib_Get_cmplx, RealPart, ImagPart)
+        lib.CmathLib_Get_cmplx, RealPart_GR()
+        return get_float64_gr_array()
 
     def cmul(self, a1, b1, a2, b2):
         '''(read-only) Multiply two complex numbers: (a1, b1) * (a2, b2). Returns result as a array of two doubles.'''
-        return get_float64_array(lib.CmathLib_Get_cmul, a1, b1, a2, b2)
+        lib.CmathLib_Get_cmul, a1, b1, a2_GR()
+        return get_float64_gr_array()
 
     def ctopolardeg(self, RealPart, ImagPart):
         '''(read-only) Convert complex number to magnitude and angle, degrees. Returns array of two doubles.'''
-        return get_float64_array(lib.CmathLib_Get_ctopolardeg, RealPart, ImagPart)
+        lib.CmathLib_Get_ctopolardeg, RealPart_GR()
+        return get_float64_gr_array()
 
     def pdegtocomplex(self, magnitude, angle):
         '''(read-only) Convert magnitude, angle in degrees to a complex number. Returns Array of two doubles.'''
-        return get_float64_array(lib.CmathLib_Get_pdegtocomplex, magnitude, angle)
+        lib.CmathLib_Get_pdegtocomplex, magnitude_GR()
+        return get_float64_gr_array()
 
 
 class ICtrlQueue(FrozenDssClass):
@@ -641,10 +661,12 @@ class IDSSimComs(FrozenDssClass):
     _isfrozen = freeze
 
     def BusVoltage(self, Index):
-        return get_float64_array(lib.DSSimComs_BusVoltage, Index)
+        lib.DSSimComs_BusVoltage_GR()
+        return get_float64_gr_array()
 
     def BusVoltagepu(self, Index):
-        return get_float64_array(lib.DSSimComs_BusVoltagepu, Index)
+        lib.DSSimComs_BusVoltagepu_GR()
+        return get_float64_gr_array()
 
 
 class IDSSProgress(FrozenDssClass):
@@ -1005,7 +1027,8 @@ class IGenerators(FrozenDssClass):
     @property
     def RegisterValues(self):
         '''(read-only) Array of valus in generator energy meter registers.'''
-        return get_float64_array(lib.Generators_Get_RegisterValues)
+        lib.Generators_Get_RegisterValues_GR()
+        return get_float64_gr_array()
 
     @property
     def Vmaxpu(self):
@@ -1169,7 +1192,8 @@ class ILineCodes(FrozenDssClass):
     @property
     def Cmatrix(self):
         '''Capacitance matrix, nF per unit length'''
-        return get_float64_array(lib.LineCodes_Get_Cmatrix)
+        lib.LineCodes_Get_Cmatrix_GR()
+        return get_float64_gr_array()
 
     @Cmatrix.setter
     def Cmatrix(self, Value):
@@ -1257,7 +1281,8 @@ class ILineCodes(FrozenDssClass):
     @property
     def Rmatrix(self):
         '''Resistance matrix, ohms per unit length'''
-        return get_float64_array(lib.LineCodes_Get_Rmatrix)
+        lib.LineCodes_Get_Rmatrix_GR()
+        return get_float64_gr_array()
 
     @Rmatrix.setter
     def Rmatrix(self, Value):
@@ -1293,7 +1318,8 @@ class ILineCodes(FrozenDssClass):
     @property
     def Xmatrix(self):
         '''Reactance matrix, ohms per unit length'''
-        return get_float64_array(lib.LineCodes_Get_Xmatrix)
+        lib.LineCodes_Get_Xmatrix_GR()
+        return get_float64_gr_array()
 
     @Xmatrix.setter
     def Xmatrix(self, Value):
@@ -1359,7 +1385,8 @@ class ILines(FrozenDssClass):
 
     @property
     def Cmatrix(self):
-        return get_float64_array(lib.Lines_Get_Cmatrix)
+        lib.Lines_Get_Cmatrix_GR()
+        return get_float64_gr_array()
 
     @Cmatrix.setter
     def Cmatrix(self, Value):
@@ -1505,7 +1532,8 @@ class ILines(FrozenDssClass):
     @property
     def Rmatrix(self):
         '''Resistance matrix (full), ohms per unit length. Array of doubles.'''
-        return get_float64_array(lib.Lines_Get_Rmatrix)
+        lib.Lines_Get_Rmatrix_GR()
+        return get_float64_gr_array()
 
     @Rmatrix.setter
     def Rmatrix(self, Value):
@@ -1566,7 +1594,8 @@ class ILines(FrozenDssClass):
 
     @property
     def Xmatrix(self):
-        return get_float64_array(lib.Lines_Get_Xmatrix)
+        lib.Lines_Get_Xmatrix_GR()
+        return get_float64_gr_array()
 
     @Xmatrix.setter
     def Xmatrix(self, Value):
@@ -1576,7 +1605,8 @@ class ILines(FrozenDssClass):
     @property
     def Yprim(self):
         '''Yprimitive: Does Nothing at present on Put; Dangerous'''
-        return get_float64_array(lib.Lines_Get_Yprim)
+        lib.Lines_Get_Yprim_GR()
+        return get_float64_gr_array()
 
     @Yprim.setter
     def Yprim(self, Value):
@@ -1846,7 +1876,8 @@ class ILoads(FrozenDssClass):
     @property
     def ZIPV(self):
         '''Array of 7  doubles with values for ZIPV property of the LOAD object'''
-        return get_float64_array(lib.Loads_Get_ZIPV)
+        lib.Loads_Get_ZIPV_GR()
+        return get_float64_gr_array()
 
     @ZIPV.setter
     def ZIPV(self, Value):
@@ -2052,7 +2083,8 @@ class ILoadShapes(FrozenDssClass):
         (read) Array of Doubles for the P multiplier in the Loadshape.
         (write) Array of doubles containing the P array for the Loadshape.
         '''
-        return get_float64_array(lib.LoadShapes_Get_Pmult)
+        lib.LoadShapes_Get_Pmult_GR()
+        return get_float64_gr_array()
 
     @Pmult.setter
     def Pmult(self, Value):
@@ -2071,7 +2103,8 @@ class ILoadShapes(FrozenDssClass):
     @property
     def Qmult(self):
         '''Array of doubles containing the Q multipliers.'''
-        return get_float64_array(lib.LoadShapes_Get_Qmult)
+        lib.LoadShapes_Get_Qmult_GR()
+        return get_float64_gr_array()
 
     @Qmult.setter
     def Qmult(self, Value):
@@ -2081,7 +2114,8 @@ class ILoadShapes(FrozenDssClass):
     @property
     def TimeArray(self):
         '''Time array in hours correscponding to P and Q multipliers when the Interval=0.'''
-        return get_float64_array(lib.LoadShapes_Get_TimeArray)
+        lib.LoadShapes_Get_TimeArray_GR()
+        return get_float64_gr_array()
 
     @TimeArray.setter
     def TimeArray(self, Value):
@@ -2157,7 +2191,8 @@ class IMeters(FrozenDssClass):
     @property
     def AllocFactors(self):
         '''Array of doubles: set the phase allocation factors for the active meter.'''
-        return get_float64_array(lib.Meters_Get_AllocFactors)
+        lib.Meters_Get_AllocFactors_GR()
+        return get_float64_gr_array()
 
     @AllocFactors.setter
     def AllocFactors(self, Value):
@@ -2172,7 +2207,8 @@ class IMeters(FrozenDssClass):
     @property
     def CalcCurrent(self):
         '''Set the magnitude of the real part of the Calculated Current (normally determined by solution) for the Meter to force some behavior on Load Allocation'''
-        return get_float64_array(lib.Meters_Get_CalcCurrent)
+        lib.Meters_Get_CalcCurrent_GR()
+        return get_float64_gr_array()
 
     @CalcCurrent.setter
     def CalcCurrent(self, Value):
@@ -2281,7 +2317,8 @@ class IMeters(FrozenDssClass):
     @property
     def Peakcurrent(self):
         '''Array of doubles to set values of Peak Current property'''
-        return get_float64_array(lib.Meters_Get_Peakcurrent)
+        lib.Meters_Get_Peakcurrent_GR()
+        return get_float64_gr_array()
 
     @Peakcurrent.setter
     def Peakcurrent(self, Value):
@@ -2296,7 +2333,8 @@ class IMeters(FrozenDssClass):
     @property
     def RegisterValues(self):
         '''(read-only) Array of all the values contained in the Meter registers for the active Meter.'''
-        return get_float64_array(lib.Meters_Get_RegisterValues)
+        lib.Meters_Get_RegisterValues_GR()
+        return get_float64_gr_array()
 
     @property
     def SAIDI(self):
@@ -2350,7 +2388,8 @@ class IMeters(FrozenDssClass):
     @property
     def Totals(self):
         '''(read-only) Totals of all registers of all meters'''
-        return get_float64_array(lib.Meters_Get_Totals)
+        lib.Meters_Get_Totals_GR()
+        return get_float64_gr_array()
 
 
 class IMonitors(FrozenDssClass):
@@ -2358,7 +2397,8 @@ class IMonitors(FrozenDssClass):
 
     def Channel(self, Index):
         '''(read-only) Array of doubles for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
-        return get_float64_array(lib.Monitors_Get_Channel, Index)
+        lib.Monitors_Get_Channel_GR(Index)
+        return get_float64_gr_array()
 
     def Process(self):
         lib.Monitors_Process()
@@ -2490,12 +2530,14 @@ class IMonitors(FrozenDssClass):
     @property
     def dblFreq(self):
         '''(read-only) Array of doubles containing frequency values for harmonics mode solutions; Empty for time mode solutions (use dblHour)'''
-        return get_float64_array(lib.Monitors_Get_dblFreq)
+        lib.Monitors_Get_dblFreq_GR()
+        return get_float64_gr_array()
 
     @property
     def dblHour(self):
         '''(read-only) Array of doubles containgin time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution  (see dblFreq)'''
-        return get_float64_array(lib.Monitors_Get_dblHour)
+        lib.Monitors_Get_dblHour_GR()
+        return get_float64_gr_array()
 
 
 class IParser(FrozenDssClass):
@@ -2503,15 +2545,18 @@ class IParser(FrozenDssClass):
 
     def Matrix(self, ExpectedOrder):
         '''(read-only) Use this property to parse a Matrix token in OpenDSS format.  Returns square matrix of order specified. Order same as default Fortran order: column by column.'''
-        return get_float64_array(lib.Parser_Get_Matrix, ExpectedOrder)
+        lib.Parser_Get_Matrix_GR()
+        return get_float64_gr_array()
 
     def SymMatrix(self, ExpectedOrder):
         '''(read-only) Use this property to parse a matrix token specified in lower triangle form. Symmetry is forced.'''
-        return get_float64_array(lib.Parser_Get_SymMatrix, ExpectedOrder)
+        lib.Parser_Get_SymMatrix_GR()
+        return get_float64_gr_array()
 
     def Vector(self, ExpectedSize):
         '''(read-only) Returns token as array of doubles. For parsing quoted array syntax.'''
-        return get_float64_array(lib.Parser_Get_Vector, ExpectedSize)
+        lib.Parser_Get_Vector_GR()
+        return get_float64_gr_array()
 
     def ResetDelimiters(self):
         lib.Parser_ResetDelimiters()
@@ -2791,7 +2836,8 @@ class IPVSystems(FrozenDssClass):
     @property
     def RegisterValues(self):
         '''(read-only) Array of doubles containing values in PVSystem registers.'''
-        return get_float64_array(lib.PVSystems_Get_RegisterValues)
+        lib.PVSystems_Get_RegisterValues_GR()
+        return get_float64_gr_array()
 
     @property
     def idx(self):
@@ -2957,7 +3003,8 @@ class IReclosers(FrozenDssClass):
     @property
     def RecloseIntervals(self):
         '''(read-only) Variant Array of Doubles: reclose intervals, s, between shots.'''
-        return get_float64_array(lib.Reclosers_Get_RecloseIntervals)
+        lib.Reclosers_Get_RecloseIntervals_GR()
+        return get_float64_gr_array()
 
     @property
     def Shots(self):
@@ -3360,7 +3407,8 @@ class ISensors(FrozenDssClass):
     @property
     def Currents(self):
         '''Array of doubles for the line current measurements; don't use with kWS and kVARS.'''
-        return get_float64_array(lib.Sensors_Get_Currents)
+        lib.Sensors_Get_Currents_GR()
+        return get_float64_gr_array()
 
     @Currents.setter
     def Currents(self, Value):
@@ -3452,7 +3500,8 @@ class ISensors(FrozenDssClass):
     @property
     def kVARS(self):
         '''Array of doubles for Q measurements. Overwrites Currents with a new estimate using kWS.'''
-        return get_float64_array(lib.Sensors_Get_kVARS)
+        lib.Sensors_Get_kVARS_GR()
+        return get_float64_gr_array()
 
     @kVARS.setter
     def kVARS(self, Value):
@@ -3462,7 +3511,8 @@ class ISensors(FrozenDssClass):
     @property
     def kVS(self):
         '''Array of doubles for the LL or LN (depending on Delta connection) voltage measurements.'''
-        return get_float64_array(lib.Sensors_Get_kVS)
+        lib.Sensors_Get_kVS_GR()
+        return get_float64_gr_array()
 
     @kVS.setter
     def kVS(self, Value):
@@ -3481,7 +3531,8 @@ class ISensors(FrozenDssClass):
     @property
     def kWS(self):
         '''Array of doubles for P measurements. Overwrites Currents with a new estimate using kVARS.'''
-        return get_float64_array(lib.Sensors_Get_kWS)
+        lib.Sensors_Get_kWS_GR()
+        return get_float64_gr_array()
 
     @kWS.setter
     def kWS(self, Value):
@@ -3638,7 +3689,8 @@ class ISettings(FrozenDssClass):
     @property
     def VoltageBases(self):
         '''Array of doubles defining the legal voltage bases in kV L-L'''
-        return get_float64_array(lib.Settings_Get_VoltageBases)
+        lib.Settings_Get_VoltageBases_GR()
+        return get_float64_gr_array()
 
     @VoltageBases.setter
     def VoltageBases(self, Value):
@@ -4637,7 +4689,8 @@ class IXYCurves(FrozenDssClass):
     @property
     def Xarray(self):
         '''Get/Set X values as a Array of doubles. Set Npts to max number expected if setting'''
-        return get_float64_array(lib.XYCurves_Get_Xarray)
+        lib.XYCurves_Get_Xarray_GR()
+        return get_float64_gr_array()
 
     @Xarray.setter
     def Xarray(self, Value):
@@ -4665,7 +4718,8 @@ class IXYCurves(FrozenDssClass):
     @property
     def Yarray(self):
         '''Get/Set Y values in curve; Set Npts to max number expected if setting'''
-        return get_float64_array(lib.XYCurves_Get_Yarray)
+        lib.XYCurves_Get_Yarray_GR()
+        return get_float64_gr_array()
 
     @Yarray.setter
     def Yarray(self, Value):
@@ -4756,7 +4810,8 @@ class ICktElement(FrozenDssClass):
     @property
     def AllVariableValues(self):
         '''(read-only) Array of doubles. Values of state variables of active element if PC element.'''
-        return get_float64_array(lib.CktElement_Get_AllVariableValues)
+        lib.CktElement_Get_AllVariableValues_GR()
+        return get_float64_gr_array()
 
     @property
     def BusNames(self):
@@ -4774,22 +4829,26 @@ class ICktElement(FrozenDssClass):
     @property
     def CplxSeqCurrents(self):
         '''(read-only) Complex double array of Sequence Currents for all conductors of all terminals of active circuit element.'''
-        return get_float64_array(lib.CktElement_Get_CplxSeqCurrents)
+        lib.CktElement_Get_CplxSeqCurrents_GR()
+        return get_float64_gr_array()
 
     @property
     def CplxSeqVoltages(self):
         '''(read-only) Complex double array of Sequence Voltage for all terminals of active circuit element.'''
-        return get_float64_array(lib.CktElement_Get_CplxSeqVoltages)
+        lib.CktElement_Get_CplxSeqVoltages_GR()
+        return get_float64_gr_array()
 
     @property
     def Currents(self):
         '''(read-only) Complex array of currents into each conductor of each terminal'''
-        return get_float64_array(lib.CktElement_Get_Currents)
+        lib.CktElement_Get_Currents_GR()
+        return get_float64_gr_array()
 
     @property
     def CurrentsMagAng(self):
         '''(read-only) Currents in magnitude, angle format as a array of doubles.'''
-        return get_float64_array(lib.CktElement_Get_CurrentsMagAng)
+        lib.CktElement_Get_CurrentsMagAng_GR()
+        return get_float64_gr_array()
 
     @property
     def DisplayName(self):
@@ -4857,7 +4916,8 @@ class ICktElement(FrozenDssClass):
     @property
     def Losses(self):
         '''(read-only) Total losses in the element: two-element complex array'''
-        return get_float64_array(lib.CktElement_Get_Losses)
+        lib.CktElement_Get_Losses_GR()
+        return get_float64_gr_array()
 
     @property
     def Name(self):
@@ -4919,47 +4979,56 @@ class ICktElement(FrozenDssClass):
     @property
     def PhaseLosses(self):
         '''(read-only) Complex array of losses by phase'''
-        return get_float64_array(lib.CktElement_Get_PhaseLosses)
+        lib.CktElement_Get_PhaseLosses_GR()
+        return get_float64_gr_array()
 
     @property
     def Powers(self):
         '''(read-only) Complex array of powers into each conductor of each terminal'''
-        return get_float64_array(lib.CktElement_Get_Powers)
+        lib.CktElement_Get_Powers_GR()
+        return get_float64_gr_array()
 
     @property
     def Residuals(self):
         '''(read-only) Residual currents for each terminal: (mag, angle)'''
-        return get_float64_array(lib.CktElement_Get_Residuals)
+        lib.CktElement_Get_Residuals_GR()
+        return get_float64_gr_array()
 
     @property
     def SeqCurrents(self):
         '''(read-only) Double array of symmetrical component currents into each 3-phase terminal'''
-        return get_float64_array(lib.CktElement_Get_SeqCurrents)
+        lib.CktElement_Get_SeqCurrents_GR()
+        return get_float64_gr_array()
 
     @property
     def SeqPowers(self):
         '''(read-only) Double array of sequence powers into each 3-phase teminal'''
-        return get_float64_array(lib.CktElement_Get_SeqPowers)
+        lib.CktElement_Get_SeqPowers_GR()
+        return get_float64_gr_array()
 
     @property
     def SeqVoltages(self):
         '''(read-only) Double array of symmetrical component voltages at each 3-phase terminal'''
-        return get_float64_array(lib.CktElement_Get_SeqVoltages)
+        lib.CktElement_Get_SeqVoltages_GR()
+        return get_float64_gr_array()
 
     @property
     def Voltages(self):
         '''(read-only) Complex array of voltages at terminals'''
-        return get_float64_array(lib.CktElement_Get_Voltages)
+        lib.CktElement_Get_Voltages_GR()
+        return get_float64_gr_array()
 
     @property
     def VoltagesMagAng(self):
         '''(read-only) Voltages at each conductor in magnitude, angle form as array of doubles.'''
-        return get_float64_array(lib.CktElement_Get_VoltagesMagAng)
+        lib.CktElement_Get_VoltagesMagAng_GR()
+        return get_float64_gr_array()
 
     @property
     def Yprim(self):
         '''(read-only) YPrim matrix, column order, complex numbers (paired)'''
-        return get_float64_array(lib.CktElement_Get_Yprim)
+        lib.CktElement_Get_Yprim_GR()
+        return get_float64_gr_array()
 
     def __getitem__(self, index):
         if isinstance(index, int):
@@ -4999,6 +5068,144 @@ class IDSSElement(FrozenDssClass):
         return lib.DSSElement_Get_NumProperties()
 
 
+class ILineGeometries(FrozenDssClass):
+    '''Experimental API extension exposing part of the LineGeometry objects'''
+
+    _isfrozen = freeze
+
+    @property
+    def AllNames(self):
+        '''(read-only) Array of strings with names of all devices'''
+        return get_string_array(lib.LineGeometries_Get_AllNames)
+
+    @property
+    def Conductors(self):
+        '''(read-only) Array of strings with names of all conductors in the active LineGeometry object'''
+        return get_string_array(lib.LineGeometries_Get_Conductors)
+
+    @property
+    def Count(self):
+        '''(read-only) Number of LineGeometries'''
+        return lib.LineGeometries_Get_Count()
+
+    @property
+    def First(self):
+        return lib.LineGeometries_Get_First()
+
+    @property
+    def Next(self):
+        return lib.LineGeometries_Get_Next()
+
+    @property
+    def Name(self):
+        '''Name of active LineGeometry'''
+        return get_string(lib.LineGeometries_Get_Name())
+
+    @Name.setter
+    def Name(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.LineGeometries_Set_Name(Value)
+
+    def __len__(self):
+        return lib.LineGeometries_Get_Count()
+
+    @property
+    def EmergAmps(self):
+        '''Emergency ampere rating'''
+        return lib.LineGeometries_Get_EmergAmps()
+
+    @EmergAmps.setter
+    def EmergAmps(self, Value):
+        lib.LineGeometries_Set_EmergAmps(Value)
+
+    @property
+    def NormAmps(self):
+        '''Normal Ampere rating'''
+        return lib.LineGeometries_Get_NormAmps()
+
+    @NormAmps.setter
+    def NormAmps(self, Value):
+        lib.LineGeometries_Set_NormAmps(Value)
+
+    @property
+    def RhoEarth(self):
+        return lib.LineGeometries_Get_RhoEarth()
+
+    @RhoEarth.setter
+    def RhoEarth(self, Value):
+        lib.LineGeometries_Set_RhoEarth(Value)
+
+    @property
+    def Reduce(self):
+        return lib.LineGeometries_Get_Reduce() != 0
+
+    @Reduce.setter
+    def Reduce(self, Value):
+        lib.LineGeometries_Set_Reduce(Value)
+
+    @property
+    def Phases(self):
+        '''Number of Phases'''
+        return lib.LineGeometries_Get_Phases()
+
+    @Phases.setter
+    def Phases(self, Value):
+        lib.LineGeometries_Set_Phases(Value)
+
+    def Rmatrix(self, Frequency, Length, Units):
+        '''(read-only) Resistance matrix, ohms'''
+        lib.LineGeometries_Get_Rmatrix_GR(Frequency, Length, Units)
+        return get_float64_gr_array()
+
+    def Xmatrix(self, Frequency, Length, Units):
+        '''(read-only) Reactance matrix, ohms'''
+        lib.LineGeometries_Get_Xmatrix_GR(Frequency, Length, Units)
+        return get_float64_gr_array()
+
+    def Zmatrix(self, Frequency, Length, Units):
+        '''(read-only) Complex impedance matrix, ohms'''
+        lib.LineGeometries_Get_Zmatrix_GR(Frequency, Length, Units)
+        return get_float64_gr_array()
+
+    def Cmatrix(self, Frequency, Length, Units):
+        '''(read-only) Capacitance matrix, nF'''
+        lib.LineGeometries_Get_Cmatrix_GR(Frequency, Length, Units)
+        return get_float64_gr_array()
+
+    @property
+    def Units(self):
+        return get_int32_array(lib.LineGeometries_Get_Units)
+
+    @Units.setter
+    def Units(self, Value):
+        Value, ValuePtr, ValueCount = prepare_int32_array(Value)
+        lib.LineGeometries_Set_Units(ValuePtr, ValueCount)
+
+    @property
+    def Xcoords(self):
+        '''Get/Set the X (horizontal) coordinates of the conductors'''
+        lib.LineGeometries_Get_Xcoords_GR()
+        return get_float64_gr_array()
+
+    @Xcoords.setter
+    def Xcoords(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.LineGeometries_Set_Xcoords(ValuePtr, ValueCount)
+
+    @property
+    def Ycoords(self):
+        '''Get/Set the Y (vertical/height) coordinates of the conductors'''
+        lib.LineGeometries_Get_Ycoords_GR()
+        return get_float64_gr_array()
+
+    @Ycoords.setter
+    def Ycoords(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.LineGeometries_Set_Ycoords(ValuePtr, ValueCount)
+
+        
 class ICircuit(FrozenDssClass):
     _isfrozen = freeze
     Buses = IBus()
@@ -5034,6 +5241,7 @@ class ICircuit(FrozenDssClass):
     PVSystems = IPVSystems()
     Vsources = IVsources()
     LineCodes = ILineCodes()
+    LineGeometries = ILineGeometries()
 
     def Capacity(self, Start, Increment):
         return lib.Circuit_Capacity(Start, Increment)
@@ -5064,7 +5272,8 @@ class ICircuit(FrozenDssClass):
 
     def AllNodeDistancesByPhase(self, Phase):
         '''(read-only) Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.'''
-        return get_float64_array(lib.Circuit_Get_AllNodeDistancesByPhase, Phase)
+        lib.Circuit_Get_AllNodeDistancesByPhase_GR()
+        return get_float64_gr_array()
 
     def AllNodeNamesByPhase(self, Phase):
         '''(read-only) Return array of strings of the node names for the By Phase criteria. Sequence corresponds to other ByPhase properties.'''
@@ -5072,11 +5281,13 @@ class ICircuit(FrozenDssClass):
 
     def AllNodeVmagByPhase(self, Phase):
         '''(read-only) Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.'''
-        return get_float64_array(lib.Circuit_Get_AllNodeVmagByPhase, Phase)
+        lib.Circuit_Get_AllNodeVmagByPhase_GR()
+        return get_float64_gr_array()
 
     def AllNodeVmagPUByPhase(self, Phase):
         '''(read-only) Returns array of per unit voltage magnitudes for each node by phase'''
-        return get_float64_array(lib.Circuit_Get_AllNodeVmagPUByPhase, Phase)
+        lib.Circuit_Get_AllNodeVmagPUByPhase_GR()
+        return get_float64_gr_array()
 
     def NextElement(self):
         return lib.Circuit_NextElement()
@@ -5120,7 +5331,8 @@ class ICircuit(FrozenDssClass):
     @property
     def AllBusDistances(self):
         '''(read-only) Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.'''
-        return get_float64_array(lib.Circuit_Get_AllBusDistances)
+        lib.Circuit_Get_AllBusDistances_GR()
+        return get_float64_gr_array()
 
     @property
     def AllBusNames(self):
@@ -5130,22 +5342,26 @@ class ICircuit(FrozenDssClass):
     @property
     def AllBusVmag(self):
         '''(read-only) Array of magnitudes (doubles) of voltages at all buses'''
-        return get_float64_array(lib.Circuit_Get_AllBusVmag)
+        lib.Circuit_Get_AllBusVmag_GR()
+        return get_float64_gr_array()
 
     @property
     def AllBusVmagPu(self):
         '''(read-only) Double Array of all bus voltages (each node) magnitudes in Per unit'''
-        return get_float64_array(lib.Circuit_Get_AllBusVmagPu)
+        lib.Circuit_Get_AllBusVmagPu_GR()
+        return get_float64_gr_array()
 
     @property
     def AllBusVolts(self):
         '''(read-only) Complex array of all bus, node voltages from most recent solution'''
-        return get_float64_array(lib.Circuit_Get_AllBusVolts)
+        lib.Circuit_Get_AllBusVolts_GR()
+        return get_float64_gr_array()
 
     @property
     def AllElementLosses(self):
         '''(read-only) Array of total losses (complex) in each circuit element'''
-        return get_float64_array(lib.Circuit_Get_AllElementLosses)
+        lib.Circuit_Get_AllElementLosses_GR()
+        return get_float64_gr_array()
 
     @property
     def AllElementNames(self):
@@ -5155,7 +5371,8 @@ class ICircuit(FrozenDssClass):
     @property
     def AllNodeDistances(self):
         '''(read-only) Returns an array of distances from parent EnergyMeter for each Node. Corresponds to AllBusVMag sequence.'''
-        return get_float64_array(lib.Circuit_Get_AllNodeDistances)
+        lib.Circuit_Get_AllNodeDistances_GR()
+        return get_float64_gr_array()
 
     @property
     def AllNodeNames(self):
@@ -5165,12 +5382,14 @@ class ICircuit(FrozenDssClass):
     @property
     def LineLosses(self):
         '''(read-only) Complex total line losses in the circuit'''
-        return get_float64_array(lib.Circuit_Get_LineLosses)
+        lib.Circuit_Get_LineLosses_GR()
+        return get_float64_gr_array()
 
     @property
     def Losses(self):
         '''(read-only) Total losses in active circuit, complex number (two-element array of double).'''
-        return get_float64_array(lib.Circuit_Get_Losses)
+        lib.Circuit_Get_Losses_GR()
+        return get_float64_gr_array()
 
     @property
     def Name(self):
@@ -5200,22 +5419,26 @@ class ICircuit(FrozenDssClass):
     @property
     def SubstationLosses(self):
         '''(read-only) Complex losses in all transformers designated to substations.'''
-        return get_float64_array(lib.Circuit_Get_SubstationLosses)
+        lib.Circuit_Get_SubstationLosses_GR()
+        return get_float64_gr_array()
 
     @property
     def SystemY(self):
         '''(read-only) System Y matrix (after a solution has been performed)'''
-        return get_float64_array(lib.Circuit_Get_SystemY)
+        lib.Circuit_Get_SystemY_GR()
+        return get_float64_gr_array()
 
     @property
     def TotalPower(self):
         '''(read-only) Total power, watts delivered to the circuit'''
-        return get_float64_array(lib.Circuit_Get_TotalPower)
+        lib.Circuit_Get_TotalPower_GR()
+        return get_float64_gr_array()
 
     @property
     def YCurrents(self):
         '''(read-only) Array of doubles containing complex injection currents for the present solution. Is is the "I" vector of I=YV'''
-        return get_float64_array(lib.Circuit_Get_YCurrents)
+        lib.Circuit_Get_YCurrents_GR()
+        return get_float64_gr_array()
 
     @property
     def YNodeOrder(self):
@@ -5225,7 +5448,8 @@ class ICircuit(FrozenDssClass):
     @property
     def YNodeVarray(self):
         '''(read-only) Complex array of actual node voltages in same order as SystemY matrix.'''
-        return get_float64_array(lib.Circuit_Get_YNodeVarray)
+        lib.Circuit_Get_YNodeVarray_GR()
+        return get_float64_gr_array()
 
 
 class IYMatrix(FrozenDssClass):
@@ -5249,9 +5473,9 @@ class IYMatrix(FrozenDssClass):
         else:
             # return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix
             res = (
-                np.frombuffer(ffi.buffer(cValsPtr[0], nNz[0] * 16), dtype=np.complex).copy(),
-                np.frombuffer(ffi.buffer(RowIdxPtr[0], nNz[0] * 4), dtype=np.int32).copy(),
-                np.frombuffer(ffi.buffer(ColPtr[0], (nBus[0] + 1) * 4), dtype=np.int32).copy()
+                np.fromstring(ffi.buffer(cValsPtr[0], nNz[0] * 16), dtype=np.complex),
+                np.fromstring(ffi.buffer(RowIdxPtr[0], nNz[0] * 4), dtype=np.int32),
+                np.fromstring(ffi.buffer(ColPtr[0], (nBus[0] + 1) * 4), dtype=np.int32)
             )
         
         lib.DSS_Dispose_PInteger(ColPtr)
