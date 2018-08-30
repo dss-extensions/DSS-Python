@@ -8,6 +8,7 @@ from .._dss_capi_v7 import ffi, lib
 from .._cffi_api_util import *
 import numpy as np
 import warnings
+#TODO: consider using this (PY3 only): from .. import enums
 
 # Bind to the FFI module instance for OpenDSS-v7
 api_util = CffiApiUtil(ffi, lib)
@@ -5068,6 +5069,97 @@ class IDSSElement(FrozenDssClass):
         return lib.DSSElement_Get_NumProperties()
 
 
+class ILineSpacings(FrozenDssClass):
+    '''Experimental API extension exposing part of the LineSpacing objects'''
+
+    _isfrozen = freeze
+
+    @property
+    def AllNames(self):
+        '''(read-only) Array of strings with names of all devices'''
+        return get_string_array(lib.LineSpacings_Get_AllNames)
+
+    @property
+    def Conductors(self):
+        '''(read-only) Array of strings with names of all conductors in the active LineSpacing object'''
+        return get_string_array(lib.LineSpacings_Get_Conductors)
+
+    @property
+    def Count(self):
+        '''(read-only) Number of LineSpacings'''
+        return lib.LineSpacings_Get_Count()
+
+    @property
+    def First(self):
+        return lib.LineSpacings_Get_First()
+
+    @property
+    def Next(self):
+        return lib.LineSpacings_Get_Next()
+
+    @property
+    def Name(self):
+        '''Name of active LineSpacing'''
+        return get_string(lib.LineSpacings_Get_Name())
+
+    @Name.setter
+    def Name(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.LineSpacings_Set_Name(Value)
+
+    def __len__(self):
+        return lib.LineSpacings_Get_Count()
+
+    @property
+    def Phases(self):
+        '''Number of Phases'''
+        return lib.LineSpacings_Get_Phases()
+
+    @Phases.setter
+    def Phases(self, Value):
+        lib.LineSpacings_Set_Phases(Value)
+
+    @property
+    def Nconds(self):
+        return lib.LineSpacings_Get_Nconds()
+
+    @Nconds.setter
+    def Nconds(self, Value):
+        lib.LineSpacings_Set_Nconds(Value)
+        
+    @property
+    def Units(self):
+        return lib.LineSpacings_Get_Units()
+
+    @Units.setter
+    def Units(self, Value):
+        lib.LineSpacings_Set_Units(Value)
+
+    @property
+    def Xcoords(self):
+        '''Get/Set the X (horizontal) coordinates of the conductors'''
+        lib.LineSpacings_Get_Xcoords_GR()
+        return get_float64_gr_array()
+
+    @Xcoords.setter
+    def Xcoords(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.LineSpacings_Set_Xcoords(ValuePtr, ValueCount)
+
+    @property
+    def Ycoords(self):
+        '''Get/Set the Y (vertical/height) coordinates of the conductors'''
+        lib.LineSpacings_Get_Ycoords_GR()
+        return get_float64_gr_array()
+
+    @Ycoords.setter
+    def Ycoords(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.LineSpacings_Set_Ycoords(ValuePtr, ValueCount)
+
+
 class ILineGeometries(FrozenDssClass):
     '''Experimental API extension exposing part of the LineGeometry objects'''
 
@@ -5205,6 +5297,127 @@ class ILineGeometries(FrozenDssClass):
         Value, ValuePtr, ValueCount = prepare_float64_array(Value)
         lib.LineGeometries_Set_Ycoords(ValuePtr, ValueCount)
 
+class IWireData(FrozenDssClass):
+    '''Experimental API extension exposing part of the WireData objects'''
+
+    _isfrozen = freeze
+
+    @property
+    def AllNames(self):
+        '''(read-only) Array of strings with names of all devices'''
+        return get_string_array(lib.WireData_Get_AllNames)
+
+    @property
+    def Count(self):
+        '''(read-only) Number of WireData'''
+        return lib.WireData_Get_Count()
+
+    @property
+    def First(self):
+        return lib.WireData_Get_First()
+
+    @property
+    def Next(self):
+        return lib.WireData_Get_Next()
+
+    @property
+    def Name(self):
+        '''Name of active WireData'''
+        return get_string(lib.WireData_Get_Name())
+
+    @Name.setter
+    def Name(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.WireData_Set_Name(Value)
+
+    def __len__(self):
+        return lib.WireData_Get_Count()
+
+    @property
+    def EmergAmps(self):
+        '''Emergency ampere rating'''
+        return lib.WireData_Get_EmergAmps()
+
+    @EmergAmps.setter
+    def EmergAmps(self, Value):
+        lib.WireData_Set_EmergAmps(Value)
+
+    @property
+    def NormAmps(self):
+        '''Normal Ampere rating'''
+        return lib.WireData_Get_NormAmps()
+
+    @NormAmps.setter
+    def NormAmps(self, Value):
+        lib.WireData_Set_NormAmps(Value)
+
+    @property
+    def Rdc(self):
+        return lib.WireData_Get_Rdc()
+
+    @Rdc.setter
+    def Rdc(self, Value):
+        lib.WireData_Set_Rdc(Value)
+
+    @property
+    def Rac(self):
+        return lib.WireData_Get_Rac()
+
+    @Rac.setter
+    def Rac(self, Value):
+        lib.WireData_Set_Rac(Value)
+
+    @property
+    def GMRac(self):
+        return lib.WireData_Get_GMRac()
+
+    @GMRac.setter
+    def GMRac(self, Value):
+        lib.WireData_Set_GMRac(Value)
+
+    @property
+    def GMRUnits(self):
+        return lib.WireData_Get_GMRUnits()
+
+    @GMRUnits.setter
+    def GMRUnits(self, Value):
+        lib.WireData_Set_GMRUnits(Value)
+
+    @property
+    def Radius(self):
+        return lib.WireData_Get_Radius()
+
+    @Radius.setter
+    def Radius(self, Value):
+        lib.WireData_Set_Radius(Value)
+
+    @property
+    def RadiusUnits(self):
+        return lib.WireData_Get_RadiusUnits()
+
+    @RadiusUnits.setter
+    def RadiusUnits(self, Value):
+        lib.WireData_Set_RadiusUnits(Value)
+        
+    @property
+    def ResistanceUnits(self):
+        return lib.WireData_Get_ResistanceUnits()
+
+    @ResistanceUnits.setter
+    def ResistanceUnits(self, Value):
+        lib.WireData_Set_ResistanceUnits(Value)
+
+    @property
+    def Diameter(self):
+        return lib.WireData_Get_Diameter()
+
+    @Diameter.setter
+    def Diameter(self, Value):
+        lib.WireData_Set_Diameter(Value)
+
+
         
 class ICircuit(FrozenDssClass):
     _isfrozen = freeze
@@ -5242,6 +5455,8 @@ class ICircuit(FrozenDssClass):
     Vsources = IVsources()
     LineCodes = ILineCodes()
     LineGeometries = ILineGeometries()
+    LineSpacings = ILineSpacings()
+    WireData = IWireData()
 
     def Capacity(self, Start, Increment):
         return lib.Circuit_Capacity(Start, Increment)
