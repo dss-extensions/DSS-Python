@@ -8,7 +8,6 @@ from .._dss_capi_v7 import ffi, lib
 from .._cffi_api_util import *
 import numpy as np
 import warnings
-#TODO: consider using this (PY3 only): from .. import enums
 
 # Bind to the FFI module instance for OpenDSS-v7
 api_util = CffiApiUtil(ffi, lib)
@@ -16,7 +15,9 @@ get_string = api_util.get_string
 get_float64_array = api_util.get_float64_array
 get_float64_gr_array = api_util.get_float64_gr_array
 get_int32_array = api_util.get_int32_array
+get_int32_gr_array = api_util.get_int32_gr_array
 get_int8_array = api_util.get_int8_array
+get_int8_gr_array = api_util.get_int8_gr_array
 get_string_array = api_util.get_string_array
 prepare_float64_array = api_util.prepare_float64_array
 prepare_int32_array = api_util.prepare_int32_array
@@ -155,7 +156,8 @@ class IBus(FrozenDssClass):
     @property
     def Nodes(self):
         '''(read-only) Integer Array of Node Numbers defined at the bus in same order as the voltages.'''
-        return get_int32_array(lib.Bus_Get_Nodes)
+        lib.Bus_Get_Nodes_GR()
+        return get_int32_gr_array()
 
     @property
     def NumNodes(self):
@@ -364,7 +366,8 @@ class ICapacitors(FrozenDssClass):
         (read) A array of  integer [0..numsteps-1] indicating state of each step. If value is -1 an error has occurred.
         (write) Array of integer [0 ..numSteps-1] indicating the state of each step
         '''
-        return get_int32_array(lib.Capacitors_Get_States)
+        lib.Capacitors_Get_States_GR()
+        return get_int32_gr_array()
 
     @States.setter
     def States(self, Value):
@@ -576,27 +579,27 @@ class ICmathLib(FrozenDssClass):
 
     def cdiv(self, a1, b1, a2, b2):
         '''(read-only) Divide two complex number: (a1, b1)/(a2, b2). Returns array of two doubles representing complex result.'''
-        lib.CmathLib_Get_cdiv, a1, b1, a2_GR()
+        lib.CmathLib_Get_cdiv_GR(a1, b1, a2, b2)
         return get_float64_gr_array()
 
     def cmplx(self, RealPart, ImagPart):
         '''(read-only) Convert real and imaginary doubles to Array of doubles'''
-        lib.CmathLib_Get_cmplx, RealPart_GR()
+        lib.CmathLib_Get_cmplx_GR(RealPart, ImagPart)
         return get_float64_gr_array()
 
     def cmul(self, a1, b1, a2, b2):
         '''(read-only) Multiply two complex numbers: (a1, b1) * (a2, b2). Returns result as a array of two doubles.'''
-        lib.CmathLib_Get_cmul, a1, b1, a2_GR()
+        lib.CmathLib_Get_cmul_GR(a1, b1, a2, b2)
         return get_float64_gr_array()
 
     def ctopolardeg(self, RealPart, ImagPart):
         '''(read-only) Convert complex number to magnitude and angle, degrees. Returns array of two doubles.'''
-        lib.CmathLib_Get_ctopolardeg, RealPart_GR()
+        lib.CmathLib_Get_ctopolardeg_GR(RealPart, ImagPart)
         return get_float64_gr_array()
 
     def pdegtocomplex(self, magnitude, angle):
         '''(read-only) Convert magnitude, angle in degrees to a complex number. Returns Array of two doubles.'''
-        lib.CmathLib_Get_pdegtocomplex, magnitude_GR()
+        lib.CmathLib_Get_pdegtocomplex_GR(magnitude, angle)
         return get_float64_gr_array()
 
 
@@ -662,11 +665,11 @@ class IDSSimComs(FrozenDssClass):
     _isfrozen = freeze
 
     def BusVoltage(self, Index):
-        lib.DSSimComs_BusVoltage_GR()
+        lib.DSSimComs_BusVoltage_GR(Index)
         return get_float64_gr_array()
 
     def BusVoltagepu(self, Index):
-        lib.DSSimComs_BusVoltagepu_GR()
+        lib.DSSimComs_BusVoltagepu_GR(Index)
         return get_float64_gr_array()
 
 
@@ -2077,6 +2080,8 @@ class ILoadShapes(FrozenDssClass):
     @PBase.setter
     def PBase(self, Value):
         lib.LoadShapes_Set_PBase(Value)
+        
+    Pbase = PBase
 
     @property
     def Pmult(self):
@@ -2093,14 +2098,16 @@ class ILoadShapes(FrozenDssClass):
         lib.LoadShapes_Set_Pmult(ValuePtr, ValueCount)
 
     @property
-    def Qbase(self):
+    def QBase(self):
         '''Base for normalizing Q curve. If left at zero, the peak value is used.'''
         return lib.LoadShapes_Get_Qbase()
 
-    @Qbase.setter
-    def Qbase(self, Value):
+    @QBase.setter
+    def QBase(self, Value):
         lib.LoadShapes_Set_Qbase(Value)
 
+    Qbase = QBase
+        
     @property
     def Qmult(self):
         '''Array of doubles containing the Q multipliers.'''
@@ -2140,6 +2147,8 @@ class ILoadShapes(FrozenDssClass):
     def sInterval(self, Value):
         lib.LoadShapes_Set_Sinterval(Value)
 
+    Sinterval = sInterval
+    
 
 class IMeters(FrozenDssClass):
     _isfrozen = freeze
@@ -2397,9 +2406,31 @@ class IMonitors(FrozenDssClass):
     _isfrozen = freeze
 
     def Channel(self, Index):
-        '''(read-only) Array of doubles for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
-        lib.Monitors_Get_Channel_GR(Index)
-        return get_float64_gr_array()
+        '''(read-only) Array of float32 for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
+        lib.Monitors_Get_ByteStream_GR()
+        ptr, cnt = api_util.gr_int8_pointers
+        cnt = cnt[0]
+        if cnt == 272:
+            return np.zeros((1,), dtype=np.float32)
+            
+        ptr = ptr[0]
+        record_size = ffi.cast('int32_t*', ptr)[2] + 2
+        data = np.frombuffer(ffi.buffer(ptr, cnt), dtype=np.float32, offset=272)
+        return data[(Index + 1)::record_size]
+
+    def AsMatrix(self):
+        '''(read-only) Matrix of the active monitor, containing the hour vector, second vector, and all channels (index 2 = channel 1)'''
+        lib.Monitors_Get_ByteStream_GR()
+        ptr, cnt = api_util.gr_int8_pointers
+        cnt = cnt[0]
+        if cnt == 272:
+            return None #np.zeros((0,), dtype=np.float32)
+            
+        ptr = ptr[0]
+        record_size = ffi.cast('int32_t*', ptr)[2] + 2
+        data = np.frombuffer(ffi.buffer(ptr, cnt), dtype=np.float32, offset=272)
+        data = data.reshape((len(data) // record_size, record_size)).copy()
+        return data
 
     def Process(self):
         lib.Monitors_Process()
@@ -2436,7 +2467,8 @@ class IMonitors(FrozenDssClass):
     @property
     def ByteStream(self):
         '''(read-only) Byte Array containing monitor stream values. Make sure a "save" is done first (standard solution modes do this automatically)'''
-        return get_int8_array(lib.Monitors_Get_ByteStream)
+        lib.Monitors_Get_ByteStream_GR()
+        return get_int8_gr_array()
 
     @property
     def Count(self):
@@ -2546,17 +2578,17 @@ class IParser(FrozenDssClass):
 
     def Matrix(self, ExpectedOrder):
         '''(read-only) Use this property to parse a Matrix token in OpenDSS format.  Returns square matrix of order specified. Order same as default Fortran order: column by column.'''
-        lib.Parser_Get_Matrix_GR()
+        lib.Parser_Get_Matrix_GR(ExpectedOrder)
         return get_float64_gr_array()
 
     def SymMatrix(self, ExpectedOrder):
         '''(read-only) Use this property to parse a matrix token specified in lower triangle form. Symmetry is forced.'''
-        lib.Parser_Get_SymMatrix_GR()
+        lib.Parser_Get_SymMatrix_GR(ExpectedOrder)
         return get_float64_gr_array()
 
     def Vector(self, ExpectedSize):
         '''(read-only) Returns token as array of doubles. For parsing quoted array syntax.'''
-        lib.Parser_Get_Vector_GR()
+        lib.Parser_Get_Vector_GR(ExpectedSize)
         return get_float64_gr_array()
 
     def ResetDelimiters(self):
@@ -3604,7 +3636,8 @@ class ISettings(FrozenDssClass):
     @property
     def LossRegs(self):
         '''Integer array defining which energy meter registers to use for computing losses'''
-        return get_int32_array(lib.Settings_Get_LossRegs)
+        lib.Settings_Get_LossRegs_GR()
+        return get_int32_gr_array()
 
     @LossRegs.setter
     def LossRegs(self, Value):
@@ -3671,7 +3704,8 @@ class ISettings(FrozenDssClass):
     @property
     def UEregs(self):
         '''Array of Integers defining energy meter registers to use for computing UE'''
-        return get_int32_array(lib.Settings_Get_UEregs)
+        lib.Settings_Get_UEregs_GR()
+        return get_int32_gr_array()
 
     @UEregs.setter
     def UEregs(self, Value):
@@ -4548,6 +4582,7 @@ class ITransformers(FrozenDssClass):
     def kVA(self, Value):
         lib.Transformers_Set_kVA(Value)
 
+    kva = kVA
 
 class IVsources(FrozenDssClass):
     _isfrozen = freeze
@@ -4928,7 +4963,8 @@ class ICktElement(FrozenDssClass):
     @property
     def NodeOrder(self):
         '''(read-only) Array of integer containing the node numbers (representing phases, for example) for each conductor of each terminal. '''
-        return get_int32_array(lib.CktElement_Get_NodeOrder)
+        lib.CktElement_Get_NodeOrder_GR()
+        return get_int32_gr_array()
 
     @property
     def NormalAmps(self):
@@ -5268,7 +5304,8 @@ class ILineGeometries(FrozenDssClass):
 
     @property
     def Units(self):
-        return get_int32_array(lib.LineGeometries_Get_Units)
+        lib.LineGeometries_Get_Units_GR()
+        return get_int32_gr_array()
 
     @Units.setter
     def Units(self, Value):
@@ -5449,7 +5486,10 @@ class ICircuit(FrozenDssClass):
     Relays = IRelays()
     LoadShapes = ILoadShapes()
     Fuses = IFuses()
+    
     Isources = IISources()
+    ISources = Isources
+    
     DSSim_Coms = IDSSimComs()
     PVSystems = IPVSystems()
     Vsources = IVsources()
@@ -5487,7 +5527,7 @@ class ICircuit(FrozenDssClass):
 
     def AllNodeDistancesByPhase(self, Phase):
         '''(read-only) Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.'''
-        lib.Circuit_Get_AllNodeDistancesByPhase_GR()
+        lib.Circuit_Get_AllNodeDistancesByPhase_GR(Phase)
         return get_float64_gr_array()
 
     def AllNodeNamesByPhase(self, Phase):
@@ -5496,12 +5536,12 @@ class ICircuit(FrozenDssClass):
 
     def AllNodeVmagByPhase(self, Phase):
         '''(read-only) Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.'''
-        lib.Circuit_Get_AllNodeVmagByPhase_GR()
+        lib.Circuit_Get_AllNodeVmagByPhase_GR(Phase)
         return get_float64_gr_array()
 
     def AllNodeVmagPUByPhase(self, Phase):
         '''(read-only) Returns array of per unit voltage magnitudes for each node by phase'''
-        lib.Circuit_Get_AllNodeVmagPUByPhase_GR()
+        lib.Circuit_Get_AllNodeVmagPUByPhase_GR(Phase)
         return get_float64_gr_array()
 
     def NextElement(self):
