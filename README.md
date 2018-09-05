@@ -199,7 +199,7 @@ Roadmap
 Besides bug fixes, the main funcionality of this library is mostly done. Notable desirable features that may be implemented are:
 
 - More and better documentation
-- Besides providing binary wheels, create packages for the Anaconda stack with `conda-build`.
+- Plotting and reports integrated in Python
 
 Questions?
 ==========
