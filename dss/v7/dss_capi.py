@@ -284,8 +284,13 @@ class IBus(FrozenDssClass):
     def __call__(self, index):
         return self.__getitem__(index)
         
-
-
+    def __iter__(self):
+        n = lib.Circuit_SetActiveBusi(0)
+        while n == 0:
+            yield self
+            n = lib.Bus_Get_Next()
+            
+        
 
 class ICapacitors(FrozenDssClass):
     _isfrozen = freeze
@@ -392,6 +397,12 @@ class ICapacitors(FrozenDssClass):
     def kvar(self, Value):
         lib.Capacitors_Set_kvar(Value)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+        
 
 class ICapControls(FrozenDssClass):
     _isfrozen = freeze
@@ -564,6 +575,12 @@ class ICapControls(FrozenDssClass):
     @Vmin.setter
     def Vmin(self, Value):
         lib.CapControls_Set_Vmin(Value)
+        
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
 
 class ICmathLib(FrozenDssClass):
@@ -948,6 +965,12 @@ class IFuses(FrozenDssClass):
     def idx(self, Value):
         lib.Fuses_Set_idx(Value)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
 
 class IGenerators(FrozenDssClass):
     _isfrozen = freeze
@@ -1097,6 +1120,12 @@ class IGenerators(FrozenDssClass):
     def kvar(self, Value):
         lib.Generators_Set_kvar(Value)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
 
 class IISources(FrozenDssClass):
     _isfrozen = freeze
@@ -1166,6 +1195,12 @@ class IISources(FrozenDssClass):
         '''(read-only) Sets the next ISOURCE element to be the active one. Returns Zero if no more.'''
         return lib.ISources_Get_Next()
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+        
 
 class ILineCodes(FrozenDssClass):
     _isfrozen = freeze
@@ -1330,6 +1365,12 @@ class ILineCodes(FrozenDssClass):
         Value, ValuePtr, ValueCount = prepare_float64_array(Value)
         lib.LineCodes_Set_Xmatrix(ValuePtr, ValueCount)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+        
 
 class ILines(FrozenDssClass):
     _isfrozen = freeze
@@ -1616,6 +1657,12 @@ class ILines(FrozenDssClass):
     def Yprim(self, Value):
         Value, ValuePtr, ValueCount = prepare_float64_array(Value)
         lib.Lines_Set_Yprim(ValuePtr, ValueCount)
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
 
 class ILoads(FrozenDssClass):
@@ -1992,6 +2039,12 @@ class ILoads(FrozenDssClass):
     def xfkVA(self, Value):
         lib.Loads_Set_xfkVA(Value)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+        
 
 class ILoadShapes(FrozenDssClass):
     _isfrozen = freeze
@@ -2148,6 +2201,12 @@ class ILoadShapes(FrozenDssClass):
         lib.LoadShapes_Set_Sinterval(Value)
 
     Sinterval = sInterval
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
     
 
 class IMeters(FrozenDssClass):
@@ -2401,6 +2460,12 @@ class IMeters(FrozenDssClass):
         lib.Meters_Get_Totals_GR()
         return get_float64_gr_array()
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+        
 
 class IMonitors(FrozenDssClass):
     _isfrozen = freeze
@@ -2571,6 +2636,12 @@ class IMonitors(FrozenDssClass):
         '''(read-only) Array of doubles containgin time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution  (see dblFreq)'''
         lib.Monitors_Get_dblHour_GR()
         return get_float64_gr_array()
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
 
 class IParser(FrozenDssClass):
@@ -2795,6 +2866,12 @@ class IPDElements(FrozenDssClass):
     def pctPermanent(self, Value):
         lib.PDElements_Set_pctPermanent(Value)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
 
 class IPVSystems(FrozenDssClass):
     _isfrozen = freeze
@@ -2912,6 +2989,12 @@ class IPVSystems(FrozenDssClass):
     @kvar.setter
     def kvar(self, Value):
         lib.PVSystems_Set_kvar(Value)
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
 
 class IReclosers(FrozenDssClass):
@@ -3078,7 +3161,13 @@ class IReclosers(FrozenDssClass):
     def idx(self, Value):
         lib.Reclosers_Set_idx(Value)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
+        
 class IRegControls(FrozenDssClass):
     _isfrozen = freeze
 
@@ -3318,6 +3407,12 @@ class IRegControls(FrozenDssClass):
     def Winding(self, Value):
         lib.RegControls_Set_Winding(Value)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
 
 class IRelays(FrozenDssClass):
     _isfrozen = freeze
@@ -3413,6 +3508,12 @@ class IRelays(FrozenDssClass):
     @idx.setter
     def idx(self, Value):
         lib.Relays_Set_idx(Value)
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
 
 class ISensors(FrozenDssClass):
@@ -3571,6 +3672,12 @@ class ISensors(FrozenDssClass):
     def kWS(self, Value):
         Value, ValuePtr, ValueCount = prepare_float64_array(Value)
         lib.Sensors_Set_kWS(ValuePtr, ValueCount)
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
 
 class ISettings(FrozenDssClass):
@@ -4267,6 +4374,12 @@ class ISwtControls(FrozenDssClass):
     def SwitchedTerm(self, Value):
         lib.SwtControls_Set_SwitchedTerm(Value)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
 
 class IText(FrozenDssClass):
     _isfrozen = freeze
@@ -4584,6 +4697,13 @@ class ITransformers(FrozenDssClass):
 
     kva = kVA
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
+
 class IVsources(FrozenDssClass):
     _isfrozen = freeze
 
@@ -4675,6 +4795,12 @@ class IVsources(FrozenDssClass):
     @pu.setter
     def pu(self, Value):
         lib.Vsources_Set_pu(Value)
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
 
 class IXYCurves(FrozenDssClass):
@@ -4803,6 +4929,12 @@ class IXYCurves(FrozenDssClass):
     @y.setter
     def y(self, Value):
         lib.XYCurves_Set_y(Value)
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
 
 class ICktElement(FrozenDssClass):
@@ -5195,6 +5327,12 @@ class ILineSpacings(FrozenDssClass):
         Value, ValuePtr, ValueCount = prepare_float64_array(Value)
         lib.LineSpacings_Set_Ycoords(ValuePtr, ValueCount)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
 
 class ILineGeometries(FrozenDssClass):
     '''Experimental API extension exposing part of the LineGeometry objects'''
@@ -5334,6 +5472,13 @@ class ILineGeometries(FrozenDssClass):
         Value, ValuePtr, ValueCount = prepare_float64_array(Value)
         lib.LineGeometries_Set_Ycoords(ValuePtr, ValueCount)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
+
 class IWireData(FrozenDssClass):
     '''Experimental API extension exposing part of the WireData objects'''
 
@@ -5454,8 +5599,13 @@ class IWireData(FrozenDssClass):
     def Diameter(self, Value):
         lib.WireData_Set_Diameter(Value)
 
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
 
-        
+
 class ICircuit(FrozenDssClass):
     _isfrozen = freeze
     Buses = IBus()
