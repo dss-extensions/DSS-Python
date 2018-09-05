@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 import numpy as np
+import os
 
-freeze = True
+freeze = os.getenv('DSS_PYTHON_FREEZE', '1') == '1'
 _case_insensitive = False
 
 # The codec was changed to ASCII in version 0.10.0. 
@@ -140,7 +141,7 @@ class CffiApiUtil(object):
 
         self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
         return res
-
+        
     def get_string_array2(self, func, *args): # for compatibility with OpenDSSDirect.py
         ptr = self.ffi.new('char***')
         cnt = self.ffi.new('int32_t[2]')
@@ -177,6 +178,10 @@ class CffiApiUtil(object):
         self.lib.DSS_Dispose_PDouble(ptr)
         return res
 
+    def get_float64_gr_array2(self):
+        ptr, cnt = self.gr_float64_pointers
+        return self.ffi.unpack(ptr[0], cnt[0])
+        
     def get_int32_array2(self, func, *args):
         ptr = self.ffi.new('int32_t**')
         cnt = self.ffi.new('int32_t[2]')
@@ -189,6 +194,10 @@ class CffiApiUtil(object):
         self.lib.DSS_Dispose_PInteger(ptr)
         return res
 
+    def get_int32_gr_array2(self):
+        ptr, cnt = self.gr_int32_pointers
+        return self.ffi.unpack(ptr[0], cnt[0])
+        
     def get_int8_array2(self, func, *args):
         ptr = self.ffi.new('int8_t**')
         cnt = self.ffi.new('int32_t[2]')
@@ -200,8 +209,12 @@ class CffiApiUtil(object):
 
         self.lib.DSS_Dispose_PByte(ptr)
         return res
+        
+    def get_int8_gr_array2(self):
+        ptr, cnt = self.gr_int8_pointers
+        return self.ffi.unpack(ptr[0], cnt[0])
 
-
+        
     def prepare_float64_array(self, value):
         if type(value) is not np.ndarray or value.dtype != np.float64:
             value = np.array(value, dtype=np.float64)
