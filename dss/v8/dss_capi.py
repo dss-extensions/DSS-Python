@@ -23,11 +23,8 @@ prepare_float64_array = api_util.prepare_float64_array
 prepare_int32_array = api_util.prepare_int32_array
 prepare_string_array = api_util.prepare_string_array
 
-if not freeze:
-    FrozenDssClass = object
-
 class IDSSEvents: # Not implemented
-    pass 
+    __slots__ = []
 
 class DssException(Exception):
     pass
@@ -38,8 +35,8 @@ def CheckForError():
         raise DssException(error_num, get_string(lib.Error_Get_Description()))
 
     
-class IActiveClass(FrozenDssClass):
-    _isfrozen = freeze
+class IActiveClass(Base):
+    __slots__ = []
 
     @property
     def ActiveClassName(self):
@@ -87,8 +84,8 @@ class IActiveClass(FrozenDssClass):
         return lib.ActiveClass_Get_NumElements()
 
 
-class IBus(FrozenDssClass):
-    _isfrozen = freeze
+class IBus(Base):
+    __slots__ = []
 
     def GetUniqueNodeNumber(self, StartNumber):
         return lib.Bus_GetUniqueNodeNumber(StartNumber)
@@ -292,8 +289,8 @@ class IBus(FrozenDssClass):
             
         
 
-class ICapacitors(FrozenDssClass):
-    _isfrozen = freeze
+class ICapacitors(Base):
+    __slots__ = []
 
     def AddStep(self):
         return lib.Capacitors_AddStep() != 0
@@ -404,8 +401,8 @@ class ICapacitors(FrozenDssClass):
             idx = self.Next
         
 
-class ICapControls(FrozenDssClass):
-    _isfrozen = freeze
+class ICapControls(Base):
+    __slots__ = []
 
     def Reset(self):
         lib.CapControls_Reset()
@@ -583,8 +580,8 @@ class ICapControls(FrozenDssClass):
             idx = self.Next
 
 
-class ICmathLib(FrozenDssClass):
-    _isfrozen = freeze
+class ICmathLib(Base):
+    __slots__ = []
 
     def cabs(self, realpart, imagpart):
         '''(read-only) Return abs value of complex number given in real and imag doubles'''
@@ -620,8 +617,8 @@ class ICmathLib(FrozenDssClass):
         return get_float64_gr_array()
 
 
-class ICtrlQueue(FrozenDssClass):
-    _isfrozen = freeze
+class ICtrlQueue(Base):
+    __slots__ = []
 
     def ClearActions(self):
         lib.CtrlQueue_ClearActions()
@@ -678,8 +675,8 @@ class ICtrlQueue(FrozenDssClass):
         lib.CtrlQueue_Set_Action(Param1)
 
 
-class IDSSimComs(FrozenDssClass):
-    _isfrozen = freeze
+class IDSSimComs(Base):
+    __slots__ = []
 
     def BusVoltage(self, Index):
         lib.DSSimComs_BusVoltage_GR(Index)
@@ -690,8 +687,8 @@ class IDSSimComs(FrozenDssClass):
         return get_float64_gr_array()
 
 
-class IDSSProgress(FrozenDssClass):
-    _isfrozen = freeze
+class IDSSProgress(Base):
+    __slots__ = []
 
     def Close(self):
         lib.DSSProgress_Close()
@@ -721,8 +718,8 @@ class IDSSProgress(FrozenDssClass):
         lib.DSSProgress_Set_PctProgress(Value)
 
 
-class IDSSProperty(FrozenDssClass):
-    _isfrozen = freeze
+class IDSSProperty(Base):
+    __slots__ = []
 
     @property
     def Description(self):
@@ -761,8 +758,8 @@ class IDSSProperty(FrozenDssClass):
 
 
 
-class IDSS_Executive(FrozenDssClass):
-    _isfrozen = freeze
+class IDSS_Executive(Base):
+    __slots__ = []
 
     def Command(self, i):
         '''(read-only) Get i-th command'''
@@ -795,8 +792,8 @@ class IDSS_Executive(FrozenDssClass):
         return lib.DSS_Executive_Get_NumOptions()
 
 
-class IError(FrozenDssClass):
-    _isfrozen = freeze
+class IError(Base):
+    __slots__ = []
 
     @property
     def Description(self):
@@ -811,8 +808,8 @@ class IError(FrozenDssClass):
 
 
 
-class IFuses(FrozenDssClass):
-    _isfrozen = freeze
+class IFuses(Base):
+    __slots__ = []
 
     def Close(self):
         lib.Fuses_Close()
@@ -972,8 +969,8 @@ class IFuses(FrozenDssClass):
             idx = self.Next
 
 
-class IGenerators(FrozenDssClass):
-    _isfrozen = freeze
+class IGenerators(Base):
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -1127,8 +1124,8 @@ class IGenerators(FrozenDssClass):
             idx = self.Next
 
 
-class IISources(FrozenDssClass):
-    _isfrozen = freeze
+class IISources(Base):
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -1202,8 +1199,8 @@ class IISources(FrozenDssClass):
             idx = self.Next
         
 
-class ILineCodes(FrozenDssClass):
-    _isfrozen = freeze
+class ILineCodes(Base):
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -1372,8 +1369,8 @@ class ILineCodes(FrozenDssClass):
             idx = self.Next
         
 
-class ILines(FrozenDssClass):
-    _isfrozen = freeze
+class ILines(Base):
+    __slots__ = []
 
     def New(self, Name):
         if type(Name) is not bytes:
@@ -1665,8 +1662,8 @@ class ILines(FrozenDssClass):
             idx = self.Next
 
 
-class ILoads(FrozenDssClass):
-    _isfrozen = freeze
+class ILoads(Base):
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -2046,8 +2043,8 @@ class ILoads(FrozenDssClass):
             idx = self.Next
         
 
-class ILoadShapes(FrozenDssClass):
-    _isfrozen = freeze
+class ILoadShapes(Base):
+    __slots__ = []
 
     def New(self, Name):
         if type(Name) is not bytes:
@@ -2209,8 +2206,8 @@ class ILoadShapes(FrozenDssClass):
             idx = self.Next
     
 
-class IMeters(FrozenDssClass):
-    _isfrozen = freeze
+class IMeters(Base):
+    __slots__ = []
 
     def CloseAllDIFiles(self):
         lib.Meters_CloseAllDIFiles()
@@ -2467,8 +2464,8 @@ class IMeters(FrozenDssClass):
             idx = self.Next
         
 
-class IMonitors(FrozenDssClass):
-    _isfrozen = freeze
+class IMonitors(Base):
+    __slots__ = []
 
     def Channel(self, Index):
         '''(read-only) Array of float32 for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
@@ -2644,8 +2641,8 @@ class IMonitors(FrozenDssClass):
             idx = self.Next
 
 
-class IParser(FrozenDssClass):
-    _isfrozen = freeze
+class IParser(Base):
+    __slots__ = []
 
     def Matrix(self, ExpectedOrder):
         '''(read-only) Use this property to parse a Matrix token in OpenDSS format.  Returns square matrix of order specified. Order same as default Fortran order: column by column.'''
@@ -2761,8 +2758,8 @@ class IParser(FrozenDssClass):
         lib.Parser_Set_WhiteSpace(Value)
 
 
-class IPDElements(FrozenDssClass):
-    _isfrozen = freeze
+class IPDElements(Base):
+    __slots__ = []
 
     @property
     def AccumulatedL(self):
@@ -2873,8 +2870,8 @@ class IPDElements(FrozenDssClass):
             idx = self.Next
 
 
-class IPVSystems(FrozenDssClass):
-    _isfrozen = freeze
+class IPVSystems(Base):
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -2997,8 +2994,8 @@ class IPVSystems(FrozenDssClass):
             idx = self.Next
 
 
-class IReclosers(FrozenDssClass):
-    _isfrozen = freeze
+class IReclosers(Base):
+    __slots__ = []
 
     def Close(self):
         lib.Reclosers_Close()
@@ -3168,8 +3165,8 @@ class IReclosers(FrozenDssClass):
             idx = self.Next
 
         
-class IRegControls(FrozenDssClass):
-    _isfrozen = freeze
+class IRegControls(Base):
+    __slots__ = []
 
     def Reset(self):
         lib.RegControls_Reset()
@@ -3414,8 +3411,8 @@ class IRegControls(FrozenDssClass):
             idx = self.Next
 
 
-class IRelays(FrozenDssClass):
-    _isfrozen = freeze
+class IRelays(Base):
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -3516,8 +3513,8 @@ class IRelays(FrozenDssClass):
             idx = self.Next
 
 
-class ISensors(FrozenDssClass):
-    _isfrozen = freeze
+class ISensors(Base):
+    __slots__ = []
 
     def Reset(self):
         lib.Sensors_Reset()
@@ -3680,8 +3677,8 @@ class ISensors(FrozenDssClass):
             idx = self.Next
 
 
-class ISettings(FrozenDssClass):
-    _isfrozen = freeze
+class ISettings(Base):
+    __slots__ = []
 
     @property
     def AllowDuplicates(self):
@@ -3858,8 +3855,8 @@ class ISettings(FrozenDssClass):
         lib.Settings_Set_AllocationFactors(Value)
 
 
-class ISolution(FrozenDssClass):
-    _isfrozen = freeze
+class ISolution(Base):
+    __slots__ = []
 
     def BuildYMatrix(self, BuildOption, AllocateVI):
         lib.Solution_BuildYMatrix(BuildOption, AllocateVI)
@@ -4290,8 +4287,8 @@ class ISolution(FrozenDssClass):
         lib.Solution_SolveAll()
         
         
-class ISwtControls(FrozenDssClass):
-    _isfrozen = freeze
+class ISwtControls(Base):
+    __slots__ = []
 
     def Reset(self):
         lib.SwtControls_Reset()
@@ -4409,8 +4406,8 @@ class ISwtControls(FrozenDssClass):
             idx = self.Next
 
 
-class IText(FrozenDssClass):
-    _isfrozen = freeze
+class IText(Base):
+    __slots__ = []
 
     @property
     def Command(self):
@@ -4431,8 +4428,8 @@ class IText(FrozenDssClass):
         return get_string(lib.Text_Get_Result())
 
 
-class ITopology(FrozenDssClass):
-    _isfrozen = freeze
+class ITopology(Base):
+    __slots__ = []
 
     @property
     def ActiveBranch(self):
@@ -4539,8 +4536,8 @@ class ITopology(FrozenDssClass):
         return lib.Topology_Get_ParallelBranch()
 
 
-class ITransformers(FrozenDssClass):
-    _isfrozen = freeze
+class ITransformers(Base):
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -4732,8 +4729,8 @@ class ITransformers(FrozenDssClass):
             idx = self.Next
 
 
-class IVsources(FrozenDssClass):
-    _isfrozen = freeze
+class IVsources(Base):
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -4831,8 +4828,8 @@ class IVsources(FrozenDssClass):
             idx = self.Next
 
 
-class IXYCurves(FrozenDssClass):
-    _isfrozen = freeze
+class IXYCurves(Base):
+    __slots__ = []
 
     @property
     def Count(self):
@@ -4965,8 +4962,8 @@ class IXYCurves(FrozenDssClass):
             idx = self.Next
 
 
-class ICktElement(FrozenDssClass):
-    _isfrozen = freeze
+class ICktElement(Base):
+    __slots__ = []
     Properties = IDSSProperty()
 
     def Close(self, Term, Phs):
@@ -5245,8 +5242,8 @@ class ICktElement(FrozenDssClass):
 
 
 
-class IDSSElement(FrozenDssClass):
-    _isfrozen = freeze
+class IDSSElement(Base):
+    __slots__ = []
     Properties = IDSSProperty()
 
     @property
@@ -5265,10 +5262,10 @@ class IDSSElement(FrozenDssClass):
         return lib.DSSElement_Get_NumProperties()
 
 
-class ILineSpacings(FrozenDssClass):
+class ILineSpacings(Base):
     '''Experimental API extension exposing part of the LineSpacing objects'''
 
-    _isfrozen = freeze
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -5362,10 +5359,10 @@ class ILineSpacings(FrozenDssClass):
             idx = self.Next
 
 
-class ILineGeometries(FrozenDssClass):
+class ILineGeometries(Base):
     '''Experimental API extension exposing part of the LineGeometry objects'''
 
-    _isfrozen = freeze
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -5507,10 +5504,10 @@ class ILineGeometries(FrozenDssClass):
             idx = self.Next
 
 
-class IWireData(FrozenDssClass):
+class IWireData(Base):
     '''Experimental API extension exposing part of the WireData objects'''
 
-    _isfrozen = freeze
+    __slots__ = []
 
     @property
     def AllNames(self):
@@ -5633,8 +5630,8 @@ class IWireData(FrozenDssClass):
             yield self
             idx = self.Next
 
-class IParallel(FrozenDssClass):
-    _isfrozen = freeze
+class IParallel(Base):
+    __slots__ = []
 
     def CreateActor(self):
         lib.Parallel_CreateActor()
@@ -5719,8 +5716,8 @@ class IParallel(FrozenDssClass):
 
 
         
-class ICircuit(FrozenDssClass):
-    _isfrozen = freeze
+class ICircuit(Base):
+    __slots__ = []
     Buses = IBus()
     CktElements = ICktElement()
     ActiveElement = ICktElement()
@@ -5972,8 +5969,8 @@ class ICircuit(FrozenDssClass):
         return get_float64_gr_array()
 
 
-class IYMatrix(FrozenDssClass):
-    _isfrozen = freeze
+class IYMatrix(Base):
+    __slots__ = []
     
     def GetCompressedYMatrix(self, factor=True):
         '''Return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix'''
@@ -6071,8 +6068,8 @@ class IYMatrix(FrozenDssClass):
         return ffi.unpack(VvectorPtr, lib.Circuit_Get_NumNodes() + 1)
 
 
-class IDSS(FrozenDssClass):
-    _isfrozen = freeze
+class IDSS(Base):
+    __slots__ = []
     ActiveCircuit = ICircuit()
     Circuits = ICircuit()
     Error = IError()
@@ -6171,10 +6168,4 @@ class IDSS(FrozenDssClass):
         return self.ActiveCircuit
 
 
-
-
-
-DSS = IDSS()        
-
-prepare_com_compat(vars())
-       
+DSS = IDSS()

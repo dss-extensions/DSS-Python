@@ -2,61 +2,43 @@ from __future__ import absolute_import
 import numpy as np
 import os
 
-freeze = os.getenv('DSS_PYTHON_FREEZE', '1') == '1'
-_case_insensitive = False
-
 # The codec was changed to ASCII in version 0.10.0. 
 # A rewrite of DSS C-API is expected to return UTF8Strings in the future
 codec = 'ascii' #TODO: check which encoding FreePascal defaults to, on Linux
 
+interface_classes = set()
+
 def use_com_compat(value=True):
-    global _case_insensitive
-    _case_insensitive = value
+    if value:
+        Base.__getattr__ = Base._getattr
+        Base.__setattr__ = Base._setattr
+    elif Base.__getattr__ == Base._getattr:
+        del Base.__setattr__
+        del Base.__getattr__ 
+    
+class Base(object):
+    __slots__ = []
+    
+    def __init__(self):
+        cls = type(self)
+        if cls not in interface_classes:
+            interface_classes.add(cls)
+            cls._dss_original_attributes = {a for a in dir(self) if not a.startswith('_')}
+            lowercase_map = {a.lower(): a for a in cls._dss_original_attributes}
+            cls._dss_attributes = lowercase_map
 
-def prepare_com_compat(variables):
-    global freeze
-
-    import inspect
-    old_freeze = freeze
-    try:
-        freeze = False
-        for v in variables.values():
-            if inspect.isclass(v) and issubclass(v, FrozenDssClass) and v != FrozenDssClass:
-                v._dss_original_attributes = {a for a in dir(v) if not a.startswith('_')}
-
-                lowercase_map = {a.lower(): a for a in v._dss_original_attributes}
-                v._dss_atributes = lowercase_map
-
-    finally:
-        freeze = old_freeze
-
-
-# workaround to make a __slots__ equivalent restriction compatible with Python 2 and 3
-class FrozenDssClass(object):
-    _isfrozen = False
-
-    def __getattr__(self, key):
+    def _getattr(self, key):
         if key.startswith('_'):
             return object.__getattribute__(self, key)
 
-        if _case_insensitive:
-            key = self._dss_atributes.get(key.lower(), key)
-
+        key = self.__class__._dss_attributes.get(key.lower(), key)
         return object.__getattribute__(self, key)
 
-
-    def __setattr__(self, key, value):
-        if _case_insensitive:
-            okey = key
-            key = self._dss_atributes.get(key.lower(), None)
-            if key is None:
-                raise TypeError("%r is a frozen class (attribute not found even ignoring case)" % self)
-
-        if self._isfrozen and key not in self._dss_original_attributes:
-            raise TypeError("%r is a frozen class" % self)
-
+    def _setattr(self, key, value):
+        key = self.__class__._dss_attributes.get(key.lower(), key)
         object.__setattr__(self, key, value)
-
+    
+    
 class CffiApiUtil(object):
     def __init__(self, ffi, lib):
         self.ffi = ffi
