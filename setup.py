@@ -1,7 +1,9 @@
-from setuptools import setup
 import re, sys, shutil, os, io
-import subprocess
 from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS, DLL_SUFFIX, DLL_PREFIX
+from setuptools import setup
+from setuptools import Extension
+from Cython.Build import cythonize
+import numpy
 
 # Copy README.md contents
 with io.open('README.md', encoding='utf8') as readme_md:
@@ -50,6 +52,18 @@ else:
     })
 
 
+version = 'v7'
+    
+extensions = [
+    Extension(
+        "_dss_capi_{}".format(version),
+        ["dss/_dss_capi_{}.pyx".format(version)],
+        include_dirs=['../dss_capi/include/{}'.format(version), numpy.get_include()],
+        libraries=['dss_capi_{}'.format(version)],
+        library_dirs=['../dss_capi/lib/{}/{}'.format(PLATFORM_FOLDER, version)],
+    )
+]
+
 setup(
     name="dss_python",
     description="OpenDSS bindings based on the DSS C-API project",
@@ -60,10 +74,10 @@ setup(
     version=package_version,
     license="BSD",
     packages=['dss', 'dss.v7', 'dss.v8'],
-    setup_requires=["cffi>=1.11.2"],
-    cffi_modules=["dss_build.py:ffi_builder_{}".format(version) for version in DSS_VERSIONS],
+    setup_requires=["cython>=0.28"],
+    ext_modules=cythonize(extensions, include_path=['./dss']),
     ext_package="dss",
-    install_requires=["cffi>=1.11.2", "numpy>=1.0"],
+    install_requires=["cython>=0.28", "numpy>=1.0"],
     zip_safe=False,
     classifiers=[
         'Intended Audience :: Science/Research',
