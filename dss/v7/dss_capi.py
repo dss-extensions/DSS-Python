@@ -28,13 +28,13 @@ class IDSSEvents: # Not implemented
 
 class DssException(Exception):
     pass
-    
+
 def CheckForError():
     error_num = lib.Error_Get_Number()
     if error_num:
         raise DssException(error_num, get_string(lib.Error_Get_Description()))
 
-    
+
 class IActiveClass(Base):
     __slots__ = []
 
@@ -86,7 +86,7 @@ class IActiveClass(Base):
 
 class IBus(Base):
     __slots__ = []
-    
+
     def GetUniqueNodeNumber(self, StartNumber):
         return lib.Bus_GetUniqueNodeNumber(StartNumber)
 
@@ -273,21 +273,21 @@ class IBus(Base):
         else:
             if type(index) is not bytes:
                 index = index.encode(codec)
-                
+
             lib.Circuit_SetActiveBus(index)
-    
+
         return self
-        
+
     def __call__(self, index):
         return self.__getitem__(index)
-        
+
     def __iter__(self):
         n = lib.Circuit_SetActiveBusi(0)
         while n == 0:
             yield self
             n = lib.Bus_Get_Next()
-            
-        
+
+
 
 class ICapacitors(Base):
     __slots__ = []
@@ -399,7 +399,7 @@ class ICapacitors(Base):
         while idx != 0:
             yield self
             idx = self.Next
-        
+
 
 class ICapControls(Base):
     __slots__ = []
@@ -572,7 +572,7 @@ class ICapControls(Base):
     @Vmin.setter
     def Vmin(self, Value):
         lib.CapControls_Set_Vmin(Value)
-        
+
     def __iter__(self):
         idx = self.First
         while idx != 0:
@@ -748,15 +748,15 @@ class IDSSProperty(Base):
         else:
             if type(propname_index) is not bytes:
                 propname_index = propname_index.encode(codec)
-                
+
             lib.DSSProperty_Set_Name(propname_index)
-    
+
         return self
-    
+
     def __call__(self, propname_index):
         return self.__getitem__(propname_index)
 
-        
+
 
 class IDSS_Executive(Base):
     __slots__ = []
@@ -1197,7 +1197,7 @@ class IISources(Base):
         while idx != 0:
             yield self
             idx = self.Next
-        
+
 
 class ILineCodes(Base):
     __slots__ = []
@@ -1367,7 +1367,7 @@ class ILineCodes(Base):
         while idx != 0:
             yield self
             idx = self.Next
-        
+
 
 class ILines(Base):
     __slots__ = []
@@ -2041,7 +2041,7 @@ class ILoads(Base):
         while idx != 0:
             yield self
             idx = self.Next
-        
+
 
 class ILoadShapes(Base):
     __slots__ = []
@@ -2130,7 +2130,7 @@ class ILoadShapes(Base):
     @PBase.setter
     def PBase(self, Value):
         lib.LoadShapes_Set_PBase(Value)
-        
+
     Pbase = PBase
 
     @property
@@ -2157,7 +2157,7 @@ class ILoadShapes(Base):
         lib.LoadShapes_Set_Qbase(Value)
 
     Qbase = QBase
-        
+
     @property
     def Qmult(self):
         '''Array of doubles containing the Q multipliers.'''
@@ -2204,7 +2204,7 @@ class ILoadShapes(Base):
         while idx != 0:
             yield self
             idx = self.Next
-    
+
 
 class IMeters(Base):
     __slots__ = []
@@ -2462,7 +2462,7 @@ class IMeters(Base):
         while idx != 0:
             yield self
             idx = self.Next
-        
+
 
 class IMonitors(Base):
     __slots__ = []
@@ -2474,7 +2474,7 @@ class IMonitors(Base):
         cnt = cnt[0]
         if cnt == 272:
             return np.zeros((1,), dtype=np.float32)
-            
+
         ptr = ptr[0]
         record_size = ffi.cast('int32_t*', ptr)[2] + 2
         data = np.frombuffer(ffi.buffer(ptr, cnt), dtype=np.float32, offset=272)
@@ -2487,7 +2487,7 @@ class IMonitors(Base):
         cnt = cnt[0]
         if cnt == 272:
             return None #np.zeros((0,), dtype=np.float32)
-            
+
         ptr = ptr[0]
         record_size = ffi.cast('int32_t*', ptr)[2] + 2
         data = np.frombuffer(ffi.buffer(ptr, cnt), dtype=np.float32, offset=272)
@@ -2926,8 +2926,8 @@ class IPVSystems(Base):
     @property
     def PF(self):
         '''
-        (read) Get Power factor 
-        (write) Set PF 
+        (read) Get Power factor
+        (write) Set PF
         '''
         return lib.PVSystems_Get_PF()
 
@@ -3164,7 +3164,7 @@ class IReclosers(Base):
             yield self
             idx = self.Next
 
-        
+
 class IRegControls(Base):
     __slots__ = []
 
@@ -5203,14 +5203,14 @@ class ICktElement(Base):
         else:
             if type(index) is not bytes:
                 index = index.encode(codec)
-                
+
             lib.Circuit_SetCktElementName(index)
-    
+
         return self
-        
+
     def __call__(self, index):
         return self.__getitem__(index)
-        
+
 
 
 
@@ -5293,7 +5293,7 @@ class ILineSpacings(Base):
     @Nconds.setter
     def Nconds(self, Value):
         lib.LineSpacings_Set_Nconds(Value)
-        
+
     @property
     def Units(self):
         return lib.LineSpacings_Get_Units()
@@ -5579,7 +5579,7 @@ class IWireData(Base):
     @RadiusUnits.setter
     def RadiusUnits(self, Value):
         lib.WireData_Set_RadiusUnits(Value)
-        
+
     @property
     def ResistanceUnits(self):
         return lib.WireData_Get_ResistanceUnits()
@@ -5601,6 +5601,670 @@ class IWireData(Base):
         while idx != 0:
             yield self
             idx = self.Next
+
+
+class ICNData(Base):
+    '''Experimental API extension exposing CNData objects'''
+
+    __slots__ = []
+
+    @property
+    def AllNames(self):
+        '''(read-only) Array of strings with names of all devices'''
+        return get_string_array(lib.CNData_Get_AllNames)
+
+    @property
+    def Conductors(self):
+        '''(read-only) Array of strings with names of all conductors in the active CNData object'''
+        return get_string_array(lib.CNData_Get_Conductors)
+
+    @property
+    def Count(self):
+        '''(read-only) Number of CNData'''
+        return lib.CNData_Get_Count()
+
+    @property
+    def First(self):
+        return lib.CNData_Get_First()
+
+    @property
+    def Next(self):
+        return lib.CNData_Get_Next()
+
+    @property
+    def Name(self):
+        '''Name of active CNData'''
+        return get_string(lib.CNData_Get_Name())
+
+    @Name.setter
+    def Name(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.CNData_Set_Name(Value)
+
+    def __len__(self):
+        return lib.CNData_Get_Count()
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
+    @property
+    def EmergAmps(self):
+        '''Emergency ampere rating'''
+        return lib.CNData_Get_EmergAmps()
+
+    @EmergAmps.setter
+    def EmergAmps(self, Value):
+        lib.CNData_Set_EmergAmps(Value)
+
+    @property
+    def NormAmps(self):
+        '''Normal Ampere rating'''
+        return lib.CNData_Get_NormAmps()
+
+    @NormAmps.setter
+    def NormAmps(self, Value):
+        lib.CNData_Set_NormAmps(Value)
+
+    @property
+    def Rdc(self):
+        return lib.CNData_Get_Rdc()
+
+    @Rdc.setter
+    def Rdc(self, Value):
+        lib.CNData_Set_Rdc(Value)
+
+    @property
+    def Rac(self):
+        return lib.CNData_Get_Rac()
+
+    @Rac.setter
+    def Rac(self, Value):
+        lib.CNData_Set_Rac(Value)
+
+    @property
+    def GMRac(self):
+        return lib.CNData_Get_GMRac()
+
+    @GMRac.setter
+    def GMRac(self, Value):
+        lib.CNData_Set_GMRac(Value)
+
+    @property
+    def GMRUnits(self):
+        return lib.CNData_Get_GMRUnits()
+
+    @GMRUnits.setter
+    def GMRUnits(self, Value):
+        lib.CNData_Set_GMRUnits(Value)
+
+    @property
+    def Radius(self):
+        return lib.CNData_Get_Radius()
+
+    @Radius.setter
+    def Radius(self, Value):
+        lib.CNData_Set_Radius(Value)
+
+    @property
+    def RadiusUnits(self):
+        return lib.CNData_Get_RadiusUnits()
+
+    @RadiusUnits.setter
+    def RadiusUnits(self, Value):
+        lib.CNData_Set_RadiusUnits(Value)
+
+    @property
+    def ResistanceUnits(self):
+        return lib.CNData_Get_ResistanceUnits()
+
+    @ResistanceUnits.setter
+    def ResistanceUnits(self, Value):
+        lib.CNData_Set_ResistanceUnits(Value)
+
+    @property
+    def Diameter(self):
+        return lib.CNData_Get_Diameter()
+
+    @Diameter.setter
+    def Diameter(self, Value):
+        lib.CNData_Set_Diameter(Value)
+
+    @property
+    def EpsR(self):
+        return lib.CNData_Get_EpsR()
+
+    @EpsR.setter
+    def EpsR(self, Value):
+        lib.CNData_Set_EpsR(Value)
+
+    @property
+    def InsLayer(self):
+        return lib.CNData_Get_InsLayer()
+
+    @InsLayer.setter
+    def InsLayer(self, Value):
+        lib.CNData_Set_InsLayer(Value)
+
+    @property
+    def DiaIns(self):
+        return lib.CNData_Get_DiaIns()
+
+    @DiaIns.setter
+    def DiaIns(self, Value):
+        lib.CNData_Set_DiaIns(Value)
+
+    @property
+    def DiaCable(self):
+        return lib.CNData_Get_DiaCable()
+
+    @DiaCable.setter
+    def DiaCable(self, Value):
+        lib.CNData_Set_DiaCable(Value)
+
+    @property
+    def k(self):
+        return lib.CNData_Get_k()
+
+    @k.setter
+    def k(self, Value):
+        lib.CNData_Set_k(Value)
+
+    @property
+    def DiaStrand(self):
+        return lib.CNData_Get_DiaStrand()
+
+    @DiaStrand.setter
+    def DiaStrand(self, Value):
+        lib.CNData_Set_DiaStrand(Value)
+
+    @property
+    def GmrStrand(self):
+        return lib.CNData_Get_GmrStrand()
+
+    @GmrStrand.setter
+    def GmrStrand(self, Value):
+        lib.CNData_Set_GmrStrand(Value)
+
+    @property
+    def RStrand(self):
+        return lib.CNData_Get_RStrand()
+
+    @RStrand.setter
+    def RStrand(self, Value):
+        lib.CNData_Set_RStrand(Value)
+
+
+class IReactors(Base):
+    '''Experimental API extension exposing Reactor objects'''
+
+    __slots__ = []
+
+    @property
+    def AllNames(self):
+        '''(read-only) Array of strings with names of all devices'''
+        return get_string_array(lib.Reactors_Get_AllNames)
+
+    @property
+    def Conductors(self):
+        '''(read-only) Array of strings with names of all conductors in the active Reactor object'''
+        return get_string_array(lib.Reactors_Get_Conductors)
+
+    @property
+    def Count(self):
+        '''(read-only) Number of Reactors'''
+        return lib.Reactors_Get_Count()
+
+    @property
+    def First(self):
+        return lib.Reactors_Get_First()
+
+    @property
+    def Next(self):
+        return lib.Reactors_Get_Next()
+
+    @property
+    def Name(self):
+        '''Name of active Reactor'''
+        return get_string(lib.Reactors_Get_Name())
+
+    @Name.setter
+    def Name(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.Reactors_Set_Name(Value)
+
+    def __len__(self):
+        return lib.Reactors_Get_Count()
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
+    @property
+    def SpecType(self):
+        '''
+        How the reactor data was provided: 1=kvar, 2=R+jX, 3=R and X matrices, 4=sym components.
+        Depending on this value, only some properties are filled or make sense in the context.
+        '''
+        return lib.Reactors_Get_SpecType()
+
+    @property
+    def IsDelta(self):
+        '''Delta connection or wye?'''
+        return lib.Reactors_Get_IsDelta() != 0
+
+    @IsDelta.setter
+    def IsDelta(self, Value):
+        lib.Reactors_Set_IsDelta(Value)
+
+    @property
+    def Parallel(self):
+        '''Indicates whether Rmatrix and Xmatrix are to be considered in parallel.'''
+        return lib.Reactors_Get_Parallel() != 0
+
+    @Parallel.setter
+    def Parallel(self, Value):
+        lib.Reactors_Set_Parallel(Value)
+
+    @property
+    def LmH(self):
+        '''Inductance, mH. Alternate way to define the reactance, X, property.'''
+        return lib.Reactors_Get_LmH()
+
+    @LmH.setter
+    def LmH(self, Value):
+        lib.Reactors_Set_LmH(Value)
+
+    @property
+    def kV(self):
+        '''For 2, 3-phase, kV phase-phase. Otherwise specify actual coil rating.'''
+        return lib.Reactors_Get_kV()
+
+    @kV.setter
+    def kV(self, Value):
+        lib.Reactors_Set_kV(Value)
+
+    @property
+    def kvar(self):
+        '''Total kvar, all phases.  Evenly divided among phases. Only determines X. Specify R separately'''
+        return lib.Reactors_Get_kvar()
+
+    @kvar.setter
+    def kvar(self, Value):
+        lib.Reactors_Set_kvar(Value)
+
+    @property
+    def Phases(self):
+        '''Number of phases.'''
+        return lib.Reactors_Get_Phases()
+
+    @Phases.setter
+    def Phases(self, Value):
+        lib.Reactors_Set_Phases(Value)
+
+    @property
+    def Bus1(self):
+        '''
+        Name of first bus.
+        Bus2 property will default to this bus, node 0, unless previously specified.
+        Only Bus1 need be specified for a Yg shunt reactor.
+        '''
+        return get_string(lib.Reactors_Get_Bus1())
+
+    @Bus1.setter
+    def Bus1(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.Reactors_Set_Bus1(Value)
+
+    @property
+    def Bus2(self):
+        '''
+        Name of 2nd bus. Defaults to all phases connected to first bus, node 0, (Shunt Wye Connection) except when Bus2 is specifically defined.
+        Not necessary to specify for delta (LL) connection
+        '''
+        return get_string(lib.Reactors_Get_Bus2())
+
+    @Bus2.setter
+    def Bus2(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.Reactors_Set_Bus2(Value)
+
+    @property
+    def LCurve(self):
+        '''Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property. L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.'''
+        return get_string(lib.Reactors_Get_LCurve())
+
+    @LCurve.setter
+    def LCurve(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.Reactors_Set_LCurve(Value)
+
+    @property
+    def RCurve(self):
+        '''Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.'''
+        return get_string(lib.Reactors_Get_RCurve())
+
+    @RCurve.setter
+    def RCurve(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.Reactors_Set_RCurve(Value)
+
+    @property
+    def R(self):
+        '''Resistance (in series with reactance), each phase, ohms. This property applies to REACTOR specified by either kvar or X. See also help on Z.'''
+        return lib.Reactors_Get_R()
+
+    @R.setter
+    def R(self, Value):
+        lib.Reactors_Set_R(Value)
+
+    @property
+    def X(self):
+        '''Reactance, each phase, ohms at base frequency. See also help on Z and LmH properties.'''
+        return lib.Reactors_Get_X()
+
+    @X.setter
+    def X(self, Value):
+        lib.Reactors_Set_X(Value)
+
+    @property
+    def Rp(self):
+        '''Resistance in parallel with R and X (the entire branch). Assumed infinite if not specified.'''
+        return lib.Reactors_Get_Rp()
+
+    @Rp.setter
+    def Rp(self, Value):
+        lib.Reactors_Set_Rp(Value)
+
+    @property
+    def Rmatrix(self):
+        '''Resistance matrix, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.'''
+        lib.Reactors_Get_Rmatrix_GR()
+        return get_float64_gr_array()
+
+    @Rmatrix.setter
+    def Rmatrix(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.Reactors_Set_Rmatrix(ValuePtr, ValueCount)
+
+    @property
+    def Xmatrix(self):
+        '''Reactance matrix, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.'''
+        lib.Reactors_Get_Xmatrix_GR()
+        return get_float64_gr_array()
+
+    @Xmatrix.setter
+    def Xmatrix(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.Reactors_Set_Xmatrix(ValuePtr, ValueCount)
+
+    @property
+    def Z(self):
+        '''Alternative way of defining R and X properties. Enter a 2-element array representing R +jX in ohms.'''
+        lib.Reactors_Get_Z_GR()
+        return get_float64_gr_array()
+
+    @Z.setter
+    def Z(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.Reactors_Set_Z(ValuePtr, ValueCount)
+
+    @property
+    def Z1(self):
+        '''
+        Positive-sequence impedance, ohms, as a 2-element array representing a complex number.
+
+        If defined, Z1, Z2, and Z0 are used to define the impedance matrix of the REACTOR.
+
+        Z1 MUST BE DEFINED TO USE THIS OPTION FOR DEFINING THE MATRIX.
+
+        Side Effect: Sets Z2 and Z0 to same values unless they were previously defined.
+        '''
+        lib.Reactors_Get_Z1_GR()
+        return get_float64_gr_array()
+
+    @Z1.setter
+    def Z1(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.Reactors_Set_Z1(ValuePtr, ValueCount)
+
+    @property
+    def Z2(self):
+        '''
+        Negative-sequence impedance, ohms, as a 2-element array representing a complex number.
+
+        Used to define the impedance matrix of the REACTOR if Z1 is also specified.
+
+        Note: Z2 defaults to Z1 if it is not specifically defined. If Z2 is not equal to Z1, the impedance matrix is asymmetrical.
+        '''
+        lib.Reactors_Get_Z2_GR()
+        return get_float64_gr_array()
+
+    @Z2.setter
+    def Z2(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.Reactors_Set_Z2(ValuePtr, ValueCount)
+
+    @property
+    def Z0(self):
+        '''
+        Zero-sequence impedance, ohms, as a 2-element array representing a complex number.
+
+        Used to define the impedance matrix of the REACTOR if Z1 is also specified.
+
+        Note: Z0 defaults to Z1 if it is not specifically defined.
+        '''
+        lib.Reactors_Get_Z0_GR()
+        return get_float64_gr_array()
+
+    @Z0.setter
+    def Z0(self, Value):
+        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
+        lib.Reactors_Set_Z0(ValuePtr, ValueCount)
+
+
+class ITSData(Base):
+    '''Experimental API extension exposing TSData objects'''
+
+    __slots__ = []
+
+    @property
+    def AllNames(self):
+        '''(read-only) Array of strings with names of all devices'''
+        return get_string_array(lib.TSData_Get_AllNames)
+
+    @property
+    def Conductors(self):
+        '''(read-only) Array of strings with names of all conductors in the active TSData object'''
+        return get_string_array(lib.TSData_Get_Conductors)
+
+    @property
+    def Count(self):
+        '''(read-only) Number of TSData'''
+        return lib.TSData_Get_Count()
+
+    @property
+    def First(self):
+        return lib.TSData_Get_First()
+
+    @property
+    def Next(self):
+        return lib.TSData_Get_Next()
+
+    @property
+    def Name(self):
+        '''Name of active TSData'''
+        return get_string(lib.TSData_Get_Name())
+
+    @Name.setter
+    def Name(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(codec)
+
+        lib.TSData_Set_Name(Value)
+
+    def __len__(self):
+        return lib.TSData_Get_Count()
+
+    def __iter__(self):
+        idx = self.First
+        while idx != 0:
+            yield self
+            idx = self.Next
+
+    @property
+    def EmergAmps(self):
+        '''Emergency ampere rating'''
+        return lib.TSData_Get_EmergAmps()
+
+    @EmergAmps.setter
+    def EmergAmps(self, Value):
+        lib.TSData_Set_EmergAmps(Value)
+
+    @property
+    def NormAmps(self):
+        '''Normal Ampere rating'''
+        return lib.TSData_Get_NormAmps()
+
+    @NormAmps.setter
+    def NormAmps(self, Value):
+        lib.TSData_Set_NormAmps(Value)
+
+    @property
+    def Rdc(self):
+        return lib.TSData_Get_Rdc()
+
+    @Rdc.setter
+    def Rdc(self, Value):
+        lib.TSData_Set_Rdc(Value)
+
+    @property
+    def Rac(self):
+        return lib.TSData_Get_Rac()
+
+    @Rac.setter
+    def Rac(self, Value):
+        lib.TSData_Set_Rac(Value)
+
+    @property
+    def GMRac(self):
+        return lib.TSData_Get_GMRac()
+
+    @GMRac.setter
+    def GMRac(self, Value):
+        lib.TSData_Set_GMRac(Value)
+
+    @property
+    def GMRUnits(self):
+        return lib.TSData_Get_GMRUnits()
+
+    @GMRUnits.setter
+    def GMRUnits(self, Value):
+        lib.TSData_Set_GMRUnits(Value)
+
+    @property
+    def Radius(self):
+        return lib.TSData_Get_Radius()
+
+    @Radius.setter
+    def Radius(self, Value):
+        lib.TSData_Set_Radius(Value)
+
+    @property
+    def RadiusUnits(self):
+        return lib.TSData_Get_RadiusUnits()
+
+    @RadiusUnits.setter
+    def RadiusUnits(self, Value):
+        lib.TSData_Set_RadiusUnits(Value)
+
+    @property
+    def ResistanceUnits(self):
+        return lib.TSData_Get_ResistanceUnits()
+
+    @ResistanceUnits.setter
+    def ResistanceUnits(self, Value):
+        lib.TSData_Set_ResistanceUnits(Value)
+
+    @property
+    def Diameter(self):
+        return lib.TSData_Get_Diameter()
+
+    @Diameter.setter
+    def Diameter(self, Value):
+        lib.TSData_Set_Diameter(Value)
+
+    @property
+    def EpsR(self):
+        return lib.TSData_Get_EpsR()
+
+    @EpsR.setter
+    def EpsR(self, Value):
+        lib.TSData_Set_EpsR(Value)
+
+    @property
+    def InsLayer(self):
+        return lib.TSData_Get_InsLayer()
+
+    @InsLayer.setter
+    def InsLayer(self, Value):
+        lib.TSData_Set_InsLayer(Value)
+
+    @property
+    def DiaIns(self):
+        return lib.TSData_Get_DiaIns()
+
+    @DiaIns.setter
+    def DiaIns(self, Value):
+        lib.TSData_Set_DiaIns(Value)
+
+    @property
+    def DiaCable(self):
+        return lib.TSData_Get_DiaCable()
+
+    @DiaCable.setter
+    def DiaCable(self, Value):
+        lib.TSData_Set_DiaCable(Value)
+
+    @property
+    def DiaShield(self):
+        return lib.TSData_Get_DiaShield()
+
+    @DiaShield.setter
+    def DiaShield(self, Value):
+        lib.TSData_Set_DiaShield(Value)
+
+    @property
+    def TapeLayer(self):
+        return lib.TSData_Get_TapeLayer()
+
+    @TapeLayer.setter
+    def TapeLayer(self, Value):
+        lib.TSData_Set_TapeLayer(Value)
+
+    @property
+    def TapeLap(self):
+        return lib.TSData_Get_TapeLap()
+
+    @TapeLap.setter
+    def TapeLap(self, Value):
+        lib.TSData_Set_TapeLap(Value)
 
 
 class ICircuit(Base):
@@ -5633,10 +6297,10 @@ class ICircuit(Base):
     Relays = IRelays()
     LoadShapes = ILoadShapes()
     Fuses = IFuses()
-    
+
     Isources = IISources()
     ISources = Isources
-    
+
     DSSim_Coms = IDSSimComs()
     PVSystems = IPVSystems()
     Vsources = IVsources()
@@ -5644,6 +6308,10 @@ class ICircuit(Base):
     LineGeometries = ILineGeometries()
     LineSpacings = ILineSpacings()
     WireData = IWireData()
+    CNData = ICNData()
+    TSData = ITSData()
+    Reactors = IReactors()
+
 
     def Capacity(self, Start, Increment):
         return lib.Circuit_Capacity(Start, Increment)
@@ -5856,20 +6524,20 @@ class ICircuit(Base):
 
 class IYMatrix(Base):
     __slots__ = []
-    
+
     def GetCompressedYMatrix(self, factor=True):
         '''Return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix'''
         nBus = ffi.new('uint32_t*')
         nBus[0] = 0
         nNz = ffi.new('uint32_t*')
         nNz[0] = 0
-        
+
         ColPtr = ffi.new('int32_t**')
         RowIdxPtr = ffi.new('int32_t**')
         cValsPtr = ffi.new('double**')
-        
+
         lib.YMatrix_GetCompressedYMatrix(factor, nBus, nNz, ColPtr, RowIdxPtr, cValsPtr)
-        
+
         if not nBus[0] or not nNz[0]:
             res = None
         else:
@@ -5879,50 +6547,50 @@ class IYMatrix(Base):
                 np.fromstring(ffi.buffer(RowIdxPtr[0], nNz[0] * 4), dtype=np.int32),
                 np.fromstring(ffi.buffer(ColPtr[0], (nBus[0] + 1) * 4), dtype=np.int32)
             )
-        
+
         lib.DSS_Dispose_PInteger(ColPtr)
         lib.DSS_Dispose_PInteger(RowIdxPtr)
         lib.DSS_Dispose_PDouble(cValsPtr)
-        
+
         return res
-        
+
     def ZeroInjCurr(self):
         lib.YMatrix_ZeroInjCurr()
-        
+
     def GetSourceInjCurrents(self):
         lib.YMatrix_GetSourceInjCurrents()
-        
+
     def GetPCInjCurr(self):
         lib.YMatrix_GetPCInjCurr()
-        
+
     def BuildYMatrixD(self, BuildOps, AllocateVI):
         lib.YMatrix_BuildYMatrixD(BuildOps, AllocateVI)
-        
+
     def AddInAuxCurrents(self, SType):
         lib.YMatrix_AddInAuxCurrents(SType)
-    
+
     def GetIPointer(self):
         '''Get access to the internal Current pointer'''
         IvectorPtr = ffi.new('double**')
         lib.YMatrix_getIpointer(IvectorPtr)
         return IvectorPtr[0]
-        
+
     def GetVPointer(self):
         '''Get access to the internal Voltage pointer'''
         VvectorPtr = ffi.new('double**')
         lib.YMatrix_getVpointer(VvectorPtr)
         return VvectorPtr[0]
-        
+
     def SolveSystem(self, NodeV):
         if type(NodeV) is not np.ndarray:
             NodeV = np.array(NodeV)
-            
+
         NodeV = ffi.cast("double *", NodeV.ctypes.data)
         NodeVPtr = ffi.new('double**')
         NodeVPtr[0] = NodeV
         result = lib.YMatrix_SolveSystem(NodeVPtr)
         return result
-    
+
     @property
     def SystemYChanged(self):
         return lib.YMatrix_Get_SystemYChanged()
@@ -5930,7 +6598,7 @@ class IYMatrix(Base):
     @SystemYChanged.setter
     def SystemYChanged(self, value):
         lib.YMatrix_Set_SystemYChanged(value)
-    
+
     @property
     def UseAuxCurrents(self):
         return lib.YMatrix_Get_UseAuxCurrents()
@@ -5946,7 +6614,7 @@ class IYMatrix(Base):
         '''Get the data from the internal Current pointer'''
         IvectorPtr = self.IVector()
         return ffi.unpack(IvectorPtr, lib.Circuit_Get_NumNodes() + 1)
-        
+
     def getV(self):
         '''Get the data from the internal Voltage pointer'''
         VvectorPtr = self.VVector()
@@ -6039,17 +6707,17 @@ class IDSS(Base):
     def AllowForms(self, value):
         '''Gets/sets whether text output is allowed'''
         return lib.DSS_Set_AllowForms(value)
-    
+
     def ShowPanel(self):
         warnings.warn('ShowPanel is not implemented.')
-        
+
     def NewCircuit(self, name):
         if type(name) is not bytes:
             name = name.encode(codec)
 
         lib.DSS_NewCircuit(name)
         CheckForError()
-        
+
         return self.ActiveCircuit
 
 
