@@ -52,7 +52,7 @@ else:
 
 setup(
     name="dss_python",
-    description="OpenDSS bindings based on the DSS C-API project",
+    description="OpenDSS bindings and tools based on the DSS C-API project",
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="Paulo Meira",
@@ -61,7 +61,14 @@ setup(
     license="BSD",
     packages=['dss', 'dss.v7', 'dss.v8'],
     setup_requires=["cffi>=1.11.2"],
-    cffi_modules=["dss_build.py:ffi_builder_{}".format(version) for version in DSS_VERSIONS],
+    cffi_modules=["dss_build.py:ffi_builder_{}".format(version) for version in DSS_VERSIONS] + 
+        [
+            'dss_build.py:ffi_builder_GenUserModel', 
+            'dss_build.py:ffi_builder_PVSystemUserModel', 
+            'dss_build.py:ffi_builder_StoreDynaModel', 
+            'dss_build.py:ffi_builder_StoreUserModel', 
+            'dss_build.py:ffi_builder_CapUserControl'
+        ],
     ext_package="dss",
     install_requires=["cffi>=1.11.2", "numpy>=1.0"],
     zip_safe=False,
