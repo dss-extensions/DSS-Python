@@ -6,6 +6,8 @@ from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS
 def process_header(src, extern_py=False, implement_py=False, prefix=''):
     '''Prepare the DSS C-API headers for parsing and building with CFFI'''
     
+    call_convention = '__stdcall ' if (sys.platform == 'win32') else ''
+    
     if not implement_py:
         src = re.sub('^extern .*', '', src, flags=re.MULTILINE)
         src = re.sub('^.*extern .*$', '', src, flags=re.MULTILINE)
@@ -13,7 +15,7 @@ def process_header(src, extern_py=False, implement_py=False, prefix=''):
         src = re.sub('DSS_CAPI_.*_DLL', '', src)
         src = re.sub(
             r'DSS_MODEL_CALLBACK\(([^,]+), ([^\)]+)\)', 
-            r'\1 (__stdcall *\2)', 
+            r'\1 ({call_convention}*\2)'.format(call_convention=call_convention), 
             src
         )
     
@@ -47,7 +49,7 @@ def process_header(src, extern_py=False, implement_py=False, prefix=''):
             out_lines.append(re.sub(
                 r'DSS_MODEL_DLL\(([^\)]+)\) \w+\((.*)\);',
                 r'''
-\1 {prefix}{name}(\2);
+static \1 {prefix}{name}(\2);
 DSS_MODEL_DLL(\1) {name}(\2)
 {{
     {rtrn}{prefix}{name}({params});
@@ -119,9 +121,6 @@ for user_model in user_models:
     prefix = "py{}_".format(user_model)
     user_model_def = process_header(func_def, extern_py=True, prefix=prefix)
     user_model_src = process_header(func_def, implement_py=True, prefix=prefix)
-    
-    # There's probably a better alternative for this one:
-    user_model_def += '\nchar *strcpy(char *destination, const char *source);'
         
     ffi_builder = FFI()
     ffi_builder.cdef(cffi_header_um + user_model_def, packed=True)
