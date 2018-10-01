@@ -150,8 +150,8 @@ class GenUserModelBase(object):
         while self.callbacks.NextParam(param_name, BUFFER_SIZE):
             self.callbacks.GetStrValue(param_str, BUFFER_SIZE)
             
-            py_param_name = ffi.string(param_name).decode('mbcs').lower()
-            py_param_str = ffi.string(param_str).decode('mbcs')
+            py_param_name = ffi.string(param_name).decode('ascii').lower()
+            py_param_str = ffi.string(param_str).decode('ascii')
             # print(repr(py_param_name), repr(py_param_str))
             
             if len(py_param_name) == 0:
@@ -191,7 +191,7 @@ class GenUserModelBase(object):
             elif param_pointer == num_vars + 2:
                 help_str = u"option={Debug | NoDebug }\n";
                 help_str += u"Help: this help message."
-                lib.strcpy(param_str, help_str.encode('mbcs'))
+                lib.strcpy(param_str, help_str.encode('ascii'))
                 self.callBacks.MsgCallBack(param_str, len(help_str) + 1)
         
         if changed:
