@@ -2036,6 +2036,16 @@ class ILoads(Base):
     def xfkVA(self, Value):
         lib.Loads_Set_xfkVA(Value)
 
+    # API extensions
+    @property
+    def Phases(self):
+        '''Number of phases'''
+        return lib.Loads_Get_Phases()
+
+    @Phases.setter
+    def Phases(self, Value):
+        lib.Loads_Set_Phases(Value)
+
     def __iter__(self):
         idx = self.First
         while idx != 0:
