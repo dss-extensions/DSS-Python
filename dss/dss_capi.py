@@ -1,39 +1,18 @@
 '''
-A compatibility layer for DSS_CAPI_V7 that mimics the official OpenDSS COM interface.
+A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
 Copyright (c) 2016-2018 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._dss_capi_v7 import ffi, lib
-from .._cffi_api_util import *
+from ._cffi_api_util import *
 import numpy as np
 import warnings
 
-# Bind to the FFI module instance for OpenDSS-v7
-api_util = CffiApiUtil(ffi, lib)
-get_string = api_util.get_string
-get_float64_array = api_util.get_float64_array
-get_float64_gr_array = api_util.get_float64_gr_array
-get_int32_array = api_util.get_int32_array
-get_int32_gr_array = api_util.get_int32_gr_array
-get_int8_array = api_util.get_int8_array
-get_int8_gr_array = api_util.get_int8_gr_array
-get_string_array = api_util.get_string_array
-prepare_float64_array = api_util.prepare_float64_array
-prepare_int32_array = api_util.prepare_int32_array
-prepare_string_array = api_util.prepare_string_array
-
-class IDSSEvents: # Not implemented
+class IDSSEvents(object): # Not implemented
     __slots__ = []
-
-class DssException(Exception):
-    pass
-
-def CheckForError():
-    error_num = lib.Error_Get_Number()
-    if error_num:
-        raise DssException(error_num, get_string(lib.Error_Get_Description()))
-
+    
+    def __init__(self, api_util):
+        pass
 
 class IActiveClass(Base):
     __slots__ = []
@@ -41,240 +20,240 @@ class IActiveClass(Base):
     @property
     def ActiveClassName(self):
         '''(read-only) Returns name of active class.'''
-        return get_string(lib.ActiveClass_Get_ActiveClassName())
+        return self.get_string(self.lib.ActiveClass_Get_ActiveClassName())
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings consisting of all element names in the active class.'''
-        return get_string_array(lib.ActiveClass_Get_AllNames)
+        return self.get_string_array(self.lib.ActiveClass_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of elements in Active Class. Same as NumElements Property.'''
-        return lib.ActiveClass_Get_Count()
+        return self.lib.ActiveClass_Get_Count()
 
     def __len__(self):
-        return lib.ActiveClass_Get_Count()
+        return self.lib.ActiveClass_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Sets first element in the active class to be the active DSS object. If object is a CktElement, ActiveCktELment also points to this element. Returns 0 if none.'''
-        return lib.ActiveClass_Get_First()
+        return self.lib.ActiveClass_Get_First()
 
     @property
     def Name(self):
         '''Name of the Active Element of the Active Class'''
-        return get_string(lib.ActiveClass_Get_Name())
+        return self.get_string(self.lib.ActiveClass_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.ActiveClass_Set_Name(Value)
+        self.lib.ActiveClass_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets next element in active class to be the active DSS object. If object is a CktElement, ActiveCktElement also points to this element.  Returns 0 if no more.'''
-        return lib.ActiveClass_Get_Next()
+        return self.lib.ActiveClass_Get_Next()
 
     @property
     def NumElements(self):
         '''(read-only) Number of elements in this class. Same as Count property.'''
-        return lib.ActiveClass_Get_NumElements()
+        return self.lib.ActiveClass_Get_NumElements()
 
 
 class IBus(Base):
     __slots__ = []
 
     def GetUniqueNodeNumber(self, StartNumber):
-        return lib.Bus_GetUniqueNodeNumber(StartNumber)
+        return self.lib.Bus_GetUniqueNodeNumber(StartNumber)
 
     def ZscRefresh(self):
-        return lib.Bus_ZscRefresh() != 0
+        return self.lib.Bus_ZscRefresh() != 0
 
     @property
     def Coorddefined(self):
         '''(read-only) False=0 else True. Indicates whether a coordinate has been defined for this bus'''
-        return lib.Bus_Get_Coorddefined() != 0
+        return self.lib.Bus_Get_Coorddefined() != 0
 
     @property
     def CplxSeqVoltages(self):
         '''(read-only) Complex Double array of Sequence Voltages (0, 1, 2) at this Bus.'''
-        lib.Bus_Get_CplxSeqVoltages_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_CplxSeqVoltages_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Cust_Duration(self):
         '''(read-only) Accumulated customer outage durations'''
-        return lib.Bus_Get_Cust_Duration()
+        return self.lib.Bus_Get_Cust_Duration()
 
     @property
     def Cust_Interrupts(self):
         '''(read-only) Annual number of customer-interruptions from this bus'''
-        return lib.Bus_Get_Cust_Interrupts()
+        return self.lib.Bus_Get_Cust_Interrupts()
 
     @property
     def Distance(self):
         '''(read-only) Distance from energymeter (if non-zero)'''
-        return lib.Bus_Get_Distance()
+        return self.lib.Bus_Get_Distance()
 
     @property
     def Int_Duration(self):
         '''(read-only) Average interruption duration, hr.'''
-        return lib.Bus_Get_Int_Duration()
+        return self.lib.Bus_Get_Int_Duration()
 
     @property
     def Isc(self):
         '''(read-only) Short circuit currents at bus; Complex Array.'''
-        lib.Bus_Get_Isc_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_Isc_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Lambda(self):
         '''(read-only) Accumulated failure rate downstream from this bus; faults per year'''
-        return lib.Bus_Get_Lambda()
+        return self.lib.Bus_Get_Lambda()
 
     @property
     def N_Customers(self):
         '''(read-only) Total numbers of customers served downline from this bus'''
-        return lib.Bus_Get_N_Customers()
+        return self.lib.Bus_Get_N_Customers()
 
     @property
     def N_interrupts(self):
         '''(read-only) Number of interruptions this bus per year'''
-        return lib.Bus_Get_N_interrupts()
+        return self.lib.Bus_Get_N_interrupts()
 
     @property
     def Name(self):
         '''(read-only) Name of Bus'''
-        return get_string(lib.Bus_Get_Name())
+        return self.get_string(self.lib.Bus_Get_Name())
 
     @property
     def Nodes(self):
         '''(read-only) Integer Array of Node Numbers defined at the bus in same order as the voltages.'''
-        lib.Bus_Get_Nodes_GR()
-        return get_int32_gr_array()
+        self.lib.Bus_Get_Nodes_GR()
+        return self.get_int32_gr_array()
 
     @property
     def NumNodes(self):
         '''(read-only) Number of Nodes this bus.'''
-        return lib.Bus_Get_NumNodes()
+        return self.lib.Bus_Get_NumNodes()
 
     @property
     def SectionID(self):
         '''(read-only) Integer ID of the feeder section in which this bus is located.'''
-        return lib.Bus_Get_SectionID()
+        return self.lib.Bus_Get_SectionID()
 
     @property
     def SeqVoltages(self):
         '''(read-only) Double Array of sequence voltages at this bus.'''
-        lib.Bus_Get_SeqVoltages_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_SeqVoltages_GR()
+        return self.get_float64_gr_array()
 
     @property
     def TotalMiles(self):
         '''(read-only) Total length of line downline from this bus, in miles. For recloser siting algorithm.'''
-        return lib.Bus_Get_TotalMiles()
+        return self.lib.Bus_Get_TotalMiles()
 
     @property
     def VLL(self):
         '''(read-only) For 2- and 3-phase buses, returns array of complex numbers represetin L-L voltages in volts. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only first 3.'''
-        lib.Bus_Get_VLL_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_VLL_GR()
+        return self.get_float64_gr_array()
 
     @property
     def VMagAngle(self):
         '''(read-only) Variant Array of doubles containing voltages in Magnitude (VLN), angle (deg) '''
-        lib.Bus_Get_VMagAngle_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_VMagAngle_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Voc(self):
         '''(read-only) Open circuit voltage; Complex array.'''
-        lib.Bus_Get_Voc_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_Voc_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Voltages(self):
         '''(read-only) Complex array of voltages at this bus.'''
-        lib.Bus_Get_Voltages_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_Voltages_GR()
+        return self.get_float64_gr_array()
 
     @property
     def YscMatrix(self):
         '''(read-only) Complex array of Ysc matrix at bus. Column by column.'''
-        lib.Bus_Get_YscMatrix_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_YscMatrix_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Zsc0(self):
         '''(read-only) Complex Zero-Sequence short circuit impedance at bus.'''
-        lib.Bus_Get_Zsc0_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_Zsc0_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Zsc1(self):
         '''(read-only) Complex Positive-Sequence short circuit impedance at bus..'''
-        lib.Bus_Get_Zsc1_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_Zsc1_GR()
+        return self.get_float64_gr_array()
 
     @property
     def ZscMatrix(self):
         '''(read-only) Complex array of Zsc matrix at bus. Column by column.'''
-        lib.Bus_Get_ZscMatrix_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_ZscMatrix_GR()
+        return self.get_float64_gr_array()
 
     @property
     def kVBase(self):
         '''(read-only) Base voltage at bus in kV'''
-        return lib.Bus_Get_kVBase()
+        return self.lib.Bus_Get_kVBase()
 
     @property
     def puVLL(self):
         '''(read-only) Returns Complex array of pu L-L voltages for 2- and 3-phase buses. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only 3 phases.'''
-        lib.Bus_Get_puVLL_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_puVLL_GR()
+        return self.get_float64_gr_array()
 
     @property
     def puVmagAngle(self):
         '''(read-only) Array of doubles containig voltage magnitude, angle pairs in per unit'''
-        lib.Bus_Get_puVmagAngle_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_puVmagAngle_GR()
+        return self.get_float64_gr_array()
 
     @property
     def puVoltages(self):
         '''(read-only) Complex Array of pu voltages at the bus.'''
-        lib.Bus_Get_puVoltages_GR()
-        return get_float64_gr_array()
+        self.lib.Bus_Get_puVoltages_GR()
+        return self.get_float64_gr_array()
 
     @property
     def x(self):
         '''X Coordinate for bus (double)'''
-        return lib.Bus_Get_x()
+        return self.lib.Bus_Get_x()
 
     @x.setter
     def x(self, Value):
-        lib.Bus_Set_x(Value)
+        self.lib.Bus_Set_x(Value)
 
     @property
     def y(self):
         '''Y coordinate for bus(double)'''
-        return lib.Bus_Get_y()
+        return self.lib.Bus_Get_y()
 
     @y.setter
     def y(self, Value):
-        lib.Bus_Set_y(Value)
+        self.lib.Bus_Set_y(Value)
 
     def __getitem__(self, index):
         if isinstance(index, int):
             # bus index is zero based, pass it directly
-            lib.Circuit_SetActiveBusi(index)
+            self.lib.Circuit_SetActiveBusi(index)
         else:
             if type(index) is not bytes:
                 index = index.encode(codec)
 
-            lib.Circuit_SetActiveBus(index)
+            self.lib.Circuit_SetActiveBus(index)
 
         return self
 
@@ -282,85 +261,84 @@ class IBus(Base):
         return self.__getitem__(index)
 
     def __iter__(self):
-        n = lib.Circuit_SetActiveBusi(0)
+        n = self.lib.Circuit_SetActiveBusi(0)
         while n == 0:
             yield self
-            n = lib.Bus_Get_Next()
-
+            n = self.lib.Bus_Get_Next()
 
 
 class ICapacitors(Base):
     __slots__ = []
 
     def AddStep(self):
-        return lib.Capacitors_AddStep() != 0
+        return self.lib.Capacitors_AddStep() != 0
 
     def Close(self):
-        lib.Capacitors_Close()
+        self.lib.Capacitors_Close()
 
     def Open(self):
-        lib.Capacitors_Open()
+        self.lib.Capacitors_Open()
 
     def SubtractStep(self):
-        return lib.Capacitors_SubtractStep() != 0
+        return self.lib.Capacitors_SubtractStep() != 0
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings with all Capacitor names in the circuit.'''
-        return get_string_array(lib.Capacitors_Get_AllNames)
+        return self.get_string_array(self.lib.Capacitors_Get_AllNames)
 
     @property
     def AvailableSteps(self):
         '''(read-only) Number of Steps available in cap bank to be switched ON.'''
-        return lib.Capacitors_Get_AvailableSteps()
+        return self.lib.Capacitors_Get_AvailableSteps()
 
     @property
     def Count(self):
         '''(read-only) Number of Capacitor objects in active circuit.'''
-        return lib.Capacitors_Get_Count()
+        return self.lib.Capacitors_Get_Count()
 
     def __len__(self):
-        return lib.Capacitors_Get_Count()
+        return self.lib.Capacitors_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Sets the first Capacitor active. Returns 0 if no more.'''
-        return lib.Capacitors_Get_First()
+        return self.lib.Capacitors_Get_First()
 
     @property
     def IsDelta(self):
         '''Delta connection or wye?'''
-        return lib.Capacitors_Get_IsDelta() != 0
+        return self.lib.Capacitors_Get_IsDelta() != 0
 
     @IsDelta.setter
     def IsDelta(self, Value):
-        lib.Capacitors_Set_IsDelta(Value)
+        self.lib.Capacitors_Set_IsDelta(Value)
 
     @property
     def Name(self):
         '''Sets the active Capacitor by Name.'''
-        return get_string(lib.Capacitors_Get_Name())
+        return self.get_string(self.lib.Capacitors_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Capacitors_Set_Name(Value)
+        self.lib.Capacitors_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next Capacitor active. Returns 0 if no more.'''
-        return lib.Capacitors_Get_Next()
+        return self.lib.Capacitors_Get_Next()
 
     @property
     def NumSteps(self):
         '''Number of steps (default 1) for distributing and switching the total bank kVAR.'''
-        return lib.Capacitors_Get_NumSteps()
+        return self.lib.Capacitors_Get_NumSteps()
 
     @NumSteps.setter
     def NumSteps(self, Value):
-        lib.Capacitors_Set_NumSteps(Value)
+        self.lib.Capacitors_Set_NumSteps(Value)
 
     @property
     def States(self):
@@ -368,31 +346,31 @@ class ICapacitors(Base):
         (read) A array of  integer [0..numsteps-1] indicating state of each step. If value is -1 an error has occurred.
         (write) Array of integer [0 ..numSteps-1] indicating the state of each step
         '''
-        lib.Capacitors_Get_States_GR()
-        return get_int32_gr_array()
+        self.lib.Capacitors_Get_States_GR()
+        return self.get_int32_gr_array()
 
     @States.setter
     def States(self, Value):
-        Value, ValuePtr, ValueCount = prepare_int32_array(Value)
-        lib.Capacitors_Set_States(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_int32_array(Value)
+        self.lib.Capacitors_Set_States(ValuePtr, ValueCount)
 
     @property
     def kV(self):
         '''Bank kV rating. Use LL for 2 or 3 phases, or actual can rating for 1 phase.'''
-        return lib.Capacitors_Get_kV()
+        return self.lib.Capacitors_Get_kV()
 
     @kV.setter
     def kV(self, Value):
-        lib.Capacitors_Set_kV(Value)
+        self.lib.Capacitors_Set_kV(Value)
 
     @property
     def kvar(self):
         '''Total bank KVAR, distributed equally among phases and steps.'''
-        return lib.Capacitors_Get_kvar()
+        return self.lib.Capacitors_Get_kvar()
 
     @kvar.setter
     def kvar(self, Value):
-        lib.Capacitors_Set_kvar(Value)
+        self.lib.Capacitors_Set_kvar(Value)
 
     def __iter__(self):
         idx = self.First
@@ -405,173 +383,173 @@ class ICapControls(Base):
     __slots__ = []
 
     def Reset(self):
-        lib.CapControls_Reset()
+        self.lib.CapControls_Reset()
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings with all CapControl names.'''
-        return get_string_array(lib.CapControls_Get_AllNames)
+        return self.get_string_array(self.lib.CapControls_Get_AllNames)
 
     @property
     def CTratio(self):
         '''Transducer ratio from pirmary current to control current.'''
-        return lib.CapControls_Get_CTratio()
+        return self.lib.CapControls_Get_CTratio()
 
     @CTratio.setter
     def CTratio(self, Value):
-        lib.CapControls_Set_CTratio(Value)
+        self.lib.CapControls_Set_CTratio(Value)
 
     @property
     def Capacitor(self):
         '''Name of the Capacitor that is controlled.'''
-        return get_string(lib.CapControls_Get_Capacitor())
+        return self.get_string(self.lib.CapControls_Get_Capacitor())
 
     @Capacitor.setter
     def Capacitor(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.CapControls_Set_Capacitor(Value)
+        self.lib.CapControls_Set_Capacitor(Value)
 
     @property
     def Count(self):
         '''(read-only) Number of CapControls in Active Circuit'''
-        return lib.CapControls_Get_Count()
+        return self.lib.CapControls_Get_Count()
 
     def __len__(self):
-        return lib.CapControls_Get_Count()
+        return self.lib.CapControls_Get_Count()
 
     @property
     def DeadTime(self):
-        return lib.CapControls_Get_DeadTime()
+        return self.lib.CapControls_Get_DeadTime()
 
     @DeadTime.setter
     def DeadTime(self, Value):
-        lib.CapControls_Set_DeadTime(Value)
+        self.lib.CapControls_Set_DeadTime(Value)
 
     @property
     def Delay(self):
         '''Time delay [s] to switch on after arming.  Control may reset before actually switching.'''
-        return lib.CapControls_Get_Delay()
+        return self.lib.CapControls_Get_Delay()
 
     @Delay.setter
     def Delay(self, Value):
-        lib.CapControls_Set_Delay(Value)
+        self.lib.CapControls_Set_Delay(Value)
 
     @property
     def DelayOff(self):
         '''Time delay [s] before swithcing off a step. Control may reset before actually switching.'''
-        return lib.CapControls_Get_DelayOff()
+        return self.lib.CapControls_Get_DelayOff()
 
     @DelayOff.setter
     def DelayOff(self, Value):
-        lib.CapControls_Set_DelayOff(Value)
+        self.lib.CapControls_Set_DelayOff(Value)
 
     @property
     def First(self):
         '''(read-only) Sets the first CapControl as active. Return 0 if none.'''
-        return lib.CapControls_Get_First()
+        return self.lib.CapControls_Get_First()
 
     @property
     def Mode(self):
         '''Type of automatic controller.'''
-        return lib.CapControls_Get_Mode()
+        return self.lib.CapControls_Get_Mode()
 
     @Mode.setter
     def Mode(self, Value):
-        lib.CapControls_Set_Mode(Value)
+        self.lib.CapControls_Set_Mode(Value)
 
     @property
     def MonitoredObj(self):
         '''Full name of the element that PT and CT are connected to.'''
-        return get_string(lib.CapControls_Get_MonitoredObj())
+        return self.get_string(self.lib.CapControls_Get_MonitoredObj())
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.CapControls_Set_MonitoredObj(Value)
+        self.lib.CapControls_Set_MonitoredObj(Value)
 
     @property
     def MonitoredTerm(self):
         '''Terminal number on the element that PT and CT are connected to.'''
-        return lib.CapControls_Get_MonitoredTerm()
+        return self.lib.CapControls_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
-        lib.CapControls_Set_MonitoredTerm(Value)
+        self.lib.CapControls_Set_MonitoredTerm(Value)
 
     @property
     def Name(self):
         '''Sets a CapControl active by name.'''
-        return get_string(lib.CapControls_Get_Name())
+        return self.get_string(self.lib.CapControls_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.CapControls_Set_Name(Value)
+        self.lib.CapControls_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Gets the next CapControl in the circut. Returns 0 if none.'''
-        return lib.CapControls_Get_Next()
+        return self.lib.CapControls_Get_Next()
 
     @property
     def OFFSetting(self):
         '''Threshold to switch off a step. See Mode for units.'''
-        return lib.CapControls_Get_OFFSetting()
+        return self.lib.CapControls_Get_OFFSetting()
 
     @OFFSetting.setter
     def OFFSetting(self, Value):
-        lib.CapControls_Set_OFFSetting(Value)
+        self.lib.CapControls_Set_OFFSetting(Value)
 
     @property
     def ONSetting(self):
         '''Threshold to arm or switch on a step.  See Mode for units.'''
-        return lib.CapControls_Get_ONSetting()
+        return self.lib.CapControls_Get_ONSetting()
 
     @ONSetting.setter
     def ONSetting(self, Value):
-        lib.CapControls_Set_ONSetting(Value)
+        self.lib.CapControls_Set_ONSetting(Value)
 
     @property
     def PTratio(self):
         '''Transducer ratio from primary feeder to control voltage.'''
-        return lib.CapControls_Get_PTratio()
+        return self.lib.CapControls_Get_PTratio()
 
     @PTratio.setter
     def PTratio(self, Value):
-        lib.CapControls_Set_PTratio(Value)
+        self.lib.CapControls_Set_PTratio(Value)
 
     @property
     def UseVoltOverride(self):
         '''Enables Vmin and Vmax to override the control Mode'''
-        return lib.CapControls_Get_UseVoltOverride() != 0
+        return self.lib.CapControls_Get_UseVoltOverride() != 0
 
     @UseVoltOverride.setter
     def UseVoltOverride(self, Value):
-        lib.CapControls_Set_UseVoltOverride(Value)
+        self.lib.CapControls_Set_UseVoltOverride(Value)
 
     @property
     def Vmax(self):
         '''With VoltOverride, swtich off whenever PT voltage exceeds this level.'''
-        return lib.CapControls_Get_Vmax()
+        return self.lib.CapControls_Get_Vmax()
 
     @Vmax.setter
     def Vmax(self, Value):
-        lib.CapControls_Set_Vmax(Value)
+        self.lib.CapControls_Set_Vmax(Value)
 
     @property
     def Vmin(self):
         '''With VoltOverride, switch ON whenever PT voltage drops below this level.'''
-        return lib.CapControls_Get_Vmin()
+        return self.lib.CapControls_Get_Vmin()
 
     @Vmin.setter
     def Vmin(self, Value):
-        lib.CapControls_Set_Vmin(Value)
+        self.lib.CapControls_Set_Vmin(Value)
 
     def __iter__(self):
         idx = self.First
@@ -585,85 +563,85 @@ class ICmathLib(Base):
 
     def cabs(self, realpart, imagpart):
         '''(read-only) Return abs value of complex number given in real and imag doubles'''
-        return lib.CmathLib_Get_cabs(realpart, imagpart)
+        return self.lib.CmathLib_Get_cabs(realpart, imagpart)
 
     def cdang(self, RealPart, ImagPart):
         '''(read-only) Returns the angle, in degrees, of a complex number specified as two doubles: Realpart and imagpart.'''
-        return lib.CmathLib_Get_cdang(RealPart, ImagPart)
+        return self.lib.CmathLib_Get_cdang(RealPart, ImagPart)
 
     def cdiv(self, a1, b1, a2, b2):
         '''(read-only) Divide two complex number: (a1, b1)/(a2, b2). Returns array of two doubles representing complex result.'''
-        lib.CmathLib_Get_cdiv_GR(a1, b1, a2, b2)
-        return get_float64_gr_array()
+        self.lib.CmathLib_Get_cdiv_GR(a1, b1, a2, b2)
+        return self.get_float64_gr_array()
 
     def cmplx(self, RealPart, ImagPart):
         '''(read-only) Convert real and imaginary doubles to Array of doubles'''
-        lib.CmathLib_Get_cmplx_GR(RealPart, ImagPart)
-        return get_float64_gr_array()
+        self.lib.CmathLib_Get_cmplx_GR(RealPart, ImagPart)
+        return self.get_float64_gr_array()
 
     def cmul(self, a1, b1, a2, b2):
         '''(read-only) Multiply two complex numbers: (a1, b1) * (a2, b2). Returns result as a array of two doubles.'''
-        lib.CmathLib_Get_cmul_GR(a1, b1, a2, b2)
-        return get_float64_gr_array()
+        self.lib.CmathLib_Get_cmul_GR(a1, b1, a2, b2)
+        return self.get_float64_gr_array()
 
     def ctopolardeg(self, RealPart, ImagPart):
         '''(read-only) Convert complex number to magnitude and angle, degrees. Returns array of two doubles.'''
-        lib.CmathLib_Get_ctopolardeg_GR(RealPart, ImagPart)
-        return get_float64_gr_array()
+        self.lib.CmathLib_Get_ctopolardeg_GR(RealPart, ImagPart)
+        return self.get_float64_gr_array()
 
     def pdegtocomplex(self, magnitude, angle):
         '''(read-only) Convert magnitude, angle in degrees to a complex number. Returns Array of two doubles.'''
-        lib.CmathLib_Get_pdegtocomplex_GR(magnitude, angle)
-        return get_float64_gr_array()
+        self.lib.CmathLib_Get_pdegtocomplex_GR(magnitude, angle)
+        return self.get_float64_gr_array()
 
 
 class ICtrlQueue(Base):
     __slots__ = []
 
     def ClearActions(self):
-        lib.CtrlQueue_ClearActions()
+        self.lib.CtrlQueue_ClearActions()
 
     def ClearQueue(self):
-        lib.CtrlQueue_ClearQueue()
+        self.lib.CtrlQueue_ClearQueue()
 
     def Delete(self, ActionHandle):
-        lib.CtrlQueue_Delete(ActionHandle)
+        self.lib.CtrlQueue_Delete(ActionHandle)
 
     def DoAllQueue(self):
-        lib.CtrlQueue_DoAllQueue()
+        self.lib.CtrlQueue_DoAllQueue()
 
     def Show(self):
-        lib.CtrlQueue_Show()
+        self.lib.CtrlQueue_Show()
 
     @property
     def ActionCode(self):
         '''(read-only) Code for the active action. Long integer code to tell the control device what to do'''
-        return lib.CtrlQueue_Get_ActionCode()
+        return self.lib.CtrlQueue_Get_ActionCode()
 
     @property
     def DeviceHandle(self):
         '''(read-only) Handle (User defined) to device that must act on the pending action.'''
-        return lib.CtrlQueue_Get_DeviceHandle()
+        return self.lib.CtrlQueue_Get_DeviceHandle()
 
     @property
     def NumActions(self):
         '''(read-only) Number of Actions on the current actionlist (that have been popped off the control queue by CheckControlActions)'''
-        return lib.CtrlQueue_Get_NumActions()
+        return self.lib.CtrlQueue_Get_NumActions()
 
     @property
     def PopAction(self):
         '''(read-only) Pops next action off the action list and makes it the active action. Returns zero if none.'''
-        return lib.CtrlQueue_Get_PopAction()
+        return self.lib.CtrlQueue_Get_PopAction()
 
     @property
     def Queue(self):
         '''(read-only) Array of strings containing the entire queue in CSV format'''
-        return get_string_array(lib.CtrlQueue_Get_Queue)
+        return self.get_string_array(self.lib.CtrlQueue_Get_Queue)
 
     @property
     def QueueSize(self):
         '''(read-only) Number of items on the OpenDSS control Queue'''
-        return lib.CtrlQueue_Get_QueueSize()
+        return self.lib.CtrlQueue_Get_QueueSize()
 
     @property
     def Action(self):
@@ -672,29 +650,29 @@ class ICtrlQueue(Base):
 
     @Action.setter
     def Action(self, Param1):
-        lib.CtrlQueue_Set_Action(Param1)
+        self.lib.CtrlQueue_Set_Action(Param1)
 
 
 class IDSSimComs(Base):
     __slots__ = []
 
     def BusVoltage(self, Index):
-        lib.DSSimComs_BusVoltage_GR(Index)
-        return get_float64_gr_array()
+        self.lib.DSSimComs_BusVoltage_GR(Index)
+        return self.get_float64_gr_array()
 
     def BusVoltagepu(self, Index):
-        lib.DSSimComs_BusVoltagepu_GR(Index)
-        return get_float64_gr_array()
+        self.lib.DSSimComs_BusVoltagepu_GR(Index)
+        return self.get_float64_gr_array()
 
 
 class IDSSProgress(Base):
     __slots__ = []
 
     def Close(self):
-        lib.DSSProgress_Close()
+        self.lib.DSSProgress_Close()
 
     def Show(self):
-        lib.DSSProgress_Show()
+        self.lib.DSSProgress_Show()
 
     @property
     def Caption(self):
@@ -706,7 +684,7 @@ class IDSSProgress(Base):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.DSSProgress_Set_Caption(Value)
+        self.lib.DSSProgress_Set_Caption(Value)
 
     @property
     def PctProgress(self):
@@ -715,7 +693,7 @@ class IDSSProgress(Base):
 
     @PctProgress.setter
     def PctProgress(self, Value):
-        lib.DSSProgress_Set_PctProgress(Value)
+        self.lib.DSSProgress_Set_PctProgress(Value)
 
 
 class IDSSProperty(Base):
@@ -724,32 +702,32 @@ class IDSSProperty(Base):
     @property
     def Description(self):
         '''(read-only) Description of the property.'''
-        return get_string(lib.DSSProperty_Get_Description())
+        return self.get_string(self.lib.DSSProperty_Get_Description())
 
     @property
     def Name(self):
         '''(read-only) Name of Property'''
-        return get_string(lib.DSSProperty_Get_Name())
+        return self.get_string(self.lib.DSSProperty_Get_Name())
 
     @property
     def Val(self):
-        return get_string(lib.DSSProperty_Get_Val())
+        return self.get_string(self.lib.DSSProperty_Get_Val())
 
     @Val.setter
     def Val(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.DSSProperty_Set_Val(Value)
+        self.lib.DSSProperty_Set_Val(Value)
 
     def __getitem__(self, propname_index):
         if isinstance(propname_index, int):
-            lib.DSSProperty_Set_Index(propname_index)
+            self.lib.DSSProperty_Set_Index(propname_index)
         else:
             if type(propname_index) is not bytes:
                 propname_index = propname_index.encode(codec)
 
-            lib.DSSProperty_Set_Name(propname_index)
+            self.lib.DSSProperty_Set_Name(propname_index)
 
         return self
 
@@ -757,39 +735,38 @@ class IDSSProperty(Base):
         return self.__getitem__(propname_index)
 
 
-
 class IDSS_Executive(Base):
     __slots__ = []
 
     def Command(self, i):
         '''(read-only) Get i-th command'''
-        return get_string(lib.DSS_Executive_Get_Command(i))
+        return self.get_string(self.lib.DSS_Executive_Get_Command(i))
 
     def CommandHelp(self, i):
         '''(read-only) Get help string for i-th command'''
-        return get_string(lib.DSS_Executive_Get_CommandHelp(i))
+        return self.get_string(self.lib.DSS_Executive_Get_CommandHelp(i))
 
     def Option(self, i):
         '''(read-only) Get i-th option'''
-        return get_string(lib.DSS_Executive_Get_Option(i))
+        return self.get_string(self.lib.DSS_Executive_Get_Option(i))
 
     def OptionHelp(self, i):
         '''(read-only) Get help string for i-th option'''
-        return get_string(lib.DSS_Executive_Get_OptionHelp(i))
+        return self.get_string(self.lib.DSS_Executive_Get_OptionHelp(i))
 
     def OptionValue(self, i):
         '''(read-only) Get present value of i-th option'''
-        return get_string(lib.DSS_Executive_Get_OptionValue(i))
+        return self.get_string(self.lib.DSS_Executive_Get_OptionValue(i))
 
     @property
     def NumCommands(self):
         '''(read-only) Number of DSS Executive Commands'''
-        return lib.DSS_Executive_Get_NumCommands()
+        return self.lib.DSS_Executive_Get_NumCommands()
 
     @property
     def NumOptions(self):
         '''(read-only) Number of DSS Executive Options'''
-        return lib.DSS_Executive_Get_NumOptions()
+        return self.lib.DSS_Executive_Get_NumOptions()
 
 
 class IError(Base):
@@ -798,40 +775,38 @@ class IError(Base):
     @property
     def Description(self):
         '''(read-only) Description of error for last operation'''
-        return get_string(lib.Error_Get_Description())
+        return self.get_string(self.lib.Error_Get_Description())
 
     @property
     def Number(self):
         '''(read-only) Error Number'''
-        return lib.Error_Get_Number()
-
-
+        return self.lib.Error_Get_Number()
 
 
 class IFuses(Base):
     __slots__ = []
 
     def Close(self):
-        lib.Fuses_Close()
+        self.lib.Fuses_Close()
 
     def IsBlown(self):
-        return lib.Fuses_IsBlown() != 0
+        return self.lib.Fuses_IsBlown() != 0
 
     def Open(self):
-        lib.Fuses_Open()
+        self.lib.Fuses_Open()
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings containing names of all Fuses in the circuit'''
-        return get_string_array(lib.Fuses_Get_AllNames)
+        return self.get_string_array(self.lib.Fuses_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of Fuse elements in the circuit'''
-        return lib.Fuses_Get_Count()
+        return self.lib.Fuses_Get_Count()
 
     def __len__(self):
-        return lib.Fuses_Get_Count()
+        return self.lib.Fuses_Get_Count()
 
     @property
     def Delay(self):
@@ -839,28 +814,28 @@ class IFuses(Base):
         (read) A fixed delay time in seconds added to the fuse blowing time determined by the TCC curve. Default is 0.
         (write) Fixed delay time in seconds added to the fuse blowing time to represent fuse clear or other delay.
         '''
-        return lib.Fuses_Get_Delay()
+        return self.lib.Fuses_Get_Delay()
 
     @Delay.setter
     def Delay(self, Value):
-        lib.Fuses_Set_Delay(Value)
+        self.lib.Fuses_Set_Delay(Value)
 
     @property
     def First(self):
         '''(read-only) Set the first Fuse to be the active fuse. Returns 0 if none.'''
-        return lib.Fuses_Get_First()
+        return self.lib.Fuses_Get_First()
 
     @property
     def MonitoredObj(self):
         '''Full name of the circuit element to which the fuse is connected.'''
-        return get_string(lib.Fuses_Get_MonitoredObj())
+        return self.get_string(self.lib.Fuses_Get_MonitoredObj())
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Fuses_Set_MonitoredObj(Value)
+        self.lib.Fuses_Set_MonitoredObj(Value)
 
     @property
     def MonitoredTerm(self):
@@ -868,11 +843,11 @@ class IFuses(Base):
         (read) Terminal number to which the fuse is connected.
         (write) Number of the terminal to which the fuse is connected
         '''
-        return lib.Fuses_Get_MonitoredTerm()
+        return self.lib.Fuses_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
-        lib.Fuses_Set_MonitoredTerm(Value)
+        self.lib.Fuses_Set_MonitoredTerm(Value)
 
     @property
     def Name(self):
@@ -880,24 +855,24 @@ class IFuses(Base):
         (read) Get the name of the active Fuse element
         (write) Set the active Fuse element by name.
         '''
-        return get_string(lib.Fuses_Get_Name())
+        return self.get_string(self.lib.Fuses_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Fuses_Set_Name(Value)
+        self.lib.Fuses_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Advance the active Fuse element pointer to the next fuse. Returns 0 if no more fuses.'''
-        return lib.Fuses_Get_Next()
+        return self.lib.Fuses_Get_Next()
 
     @property
     def NumPhases(self):
         '''(read-only) Number of phases, this fuse. '''
-        return lib.Fuses_Get_NumPhases()
+        return self.lib.Fuses_Get_NumPhases()
 
     @property
     def RatedCurrent(self):
@@ -905,11 +880,11 @@ class IFuses(Base):
         (read) Multiplier or actual amps for the TCCcurve object. Defaults to 1.0.  Multipliy current values of TCC curve by this to get actual amps.
         (write) Multiplier or actual fuse amps for the TCC curve. Defaults to 1.0. Has to correspond to the Current axis of TCCcurve object.
         '''
-        return lib.Fuses_Get_RatedCurrent()
+        return self.lib.Fuses_Get_RatedCurrent()
 
     @RatedCurrent.setter
     def RatedCurrent(self, Value):
-        lib.Fuses_Set_RatedCurrent(Value)
+        self.lib.Fuses_Set_RatedCurrent(Value)
 
     @property
     def SwitchedObj(self):
@@ -917,14 +892,14 @@ class IFuses(Base):
         (read) Full name of the circuit element switch that the fuse controls. Defaults to the MonitoredObj.
         (write) Full name of the circuit element switch that the fuse controls. Defaults to MonitoredObj.
         '''
-        return get_string(lib.Fuses_Get_SwitchedObj())
+        return self.get_string(self.lib.Fuses_Get_SwitchedObj())
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Fuses_Set_SwitchedObj(Value)
+        self.lib.Fuses_Set_SwitchedObj(Value)
 
     @property
     def SwitchedTerm(self):
@@ -932,23 +907,23 @@ class IFuses(Base):
         (read) Number of the terminal containing the switch controlled by the fuse.
         (write) Number of the terminal of the controlled element containing the switch controlled by the fuse.
         '''
-        return lib.Fuses_Get_SwitchedTerm()
+        return self.lib.Fuses_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
-        lib.Fuses_Set_SwitchedTerm(Value)
+        self.lib.Fuses_Set_SwitchedTerm(Value)
 
     @property
     def TCCcurve(self):
         '''Name of the TCCcurve object that determines fuse blowing.'''
-        return get_string(lib.Fuses_Get_TCCcurve())
+        return self.get_string(self.lib.Fuses_Get_TCCcurve())
 
     @TCCcurve.setter
     def TCCcurve(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Fuses_Set_TCCcurve(Value)
+        self.lib.Fuses_Set_TCCcurve(Value)
 
     @property
     def idx(self):
@@ -956,11 +931,11 @@ class IFuses(Base):
         (read) Get/set active fuse by index into the list of fuses. 1 based: 1..count
         (write) Set Fuse active by index into the list of fuses. 1..count
         '''
-        return lib.Fuses_Get_idx()
+        return self.lib.Fuses_Get_idx()
 
     @idx.setter
     def idx(self, Value):
-        lib.Fuses_Set_idx(Value)
+        self.lib.Fuses_Set_idx(Value)
 
     def __iter__(self):
         idx = self.First
@@ -975,147 +950,147 @@ class IGenerators(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of names of all Generator objects.'''
-        return get_string_array(lib.Generators_Get_AllNames)
+        return self.get_string_array(self.lib.Generators_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of Generator Objects in Active Circuit'''
-        return lib.Generators_Get_Count()
+        return self.lib.Generators_Get_Count()
 
     def __len__(self):
-        return lib.Generators_Get_Count()
+        return self.lib.Generators_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Sets first Generator to be active.  Returns 0 if none.'''
-        return lib.Generators_Get_First()
+        return self.lib.Generators_Get_First()
 
     @property
     def ForcedON(self):
         '''Indicates whether the generator is forced ON regardles of other dispatch criteria.'''
-        return lib.Generators_Get_ForcedON() != 0
+        return self.lib.Generators_Get_ForcedON() != 0
 
     @ForcedON.setter
     def ForcedON(self, Value):
-        lib.Generators_Set_ForcedON(Value)
+        self.lib.Generators_Set_ForcedON(Value)
 
     @property
     def Model(self):
         '''Generator Model'''
-        return lib.Generators_Get_Model()
+        return self.lib.Generators_Get_Model()
 
     @Model.setter
     def Model(self, Value):
-        lib.Generators_Set_Model(Value)
+        self.lib.Generators_Set_Model(Value)
 
     @property
     def Name(self):
         '''Sets a generator active by name.'''
-        return get_string(lib.Generators_Get_Name())
+        return self.get_string(self.lib.Generators_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Generators_Set_Name(Value)
+        self.lib.Generators_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets next Generator to be active.  Returns 0 if no more.'''
-        return lib.Generators_Get_Next()
+        return self.lib.Generators_Get_Next()
 
     @property
     def PF(self):
         '''Power factor (pos. = producing vars). Updates kvar based on present kW value.'''
-        return lib.Generators_Get_PF()
+        return self.lib.Generators_Get_PF()
 
     @PF.setter
     def PF(self, Value):
-        lib.Generators_Set_PF(Value)
+        self.lib.Generators_Set_PF(Value)
 
     @property
     def Phases(self):
         '''Number of phases'''
-        return lib.Generators_Get_Phases()
+        return self.lib.Generators_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value):
-        lib.Generators_Set_Phases(Value)
+        self.lib.Generators_Set_Phases(Value)
 
     @property
     def RegisterNames(self):
         '''(read-only) Array of Names of all generator energy meter registers'''
-        return get_string_array(lib.Generators_Get_RegisterNames)
+        return self.get_string_array(self.lib.Generators_Get_RegisterNames)
 
     @property
     def RegisterValues(self):
         '''(read-only) Array of valus in generator energy meter registers.'''
-        lib.Generators_Get_RegisterValues_GR()
-        return get_float64_gr_array()
+        self.lib.Generators_Get_RegisterValues_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Vmaxpu(self):
         '''Vmaxpu for generator model'''
-        return lib.Generators_Get_Vmaxpu()
+        return self.lib.Generators_Get_Vmaxpu()
 
     @Vmaxpu.setter
     def Vmaxpu(self, Value):
-        lib.Generators_Set_Vmaxpu(Value)
+        self.lib.Generators_Set_Vmaxpu(Value)
 
     @property
     def Vminpu(self):
         '''Vminpu for Generator model'''
-        return lib.Generators_Get_Vminpu()
+        return self.lib.Generators_Get_Vminpu()
 
     @Vminpu.setter
     def Vminpu(self, Value):
-        lib.Generators_Set_Vminpu(Value)
+        self.lib.Generators_Set_Vminpu(Value)
 
     @property
     def idx(self):
         '''Get/Set active Generator by index into generators list.  1..Count'''
-        return lib.Generators_Get_idx()
+        return self.lib.Generators_Get_idx()
 
     @idx.setter
     def idx(self, Value):
-        lib.Generators_Set_idx(Value)
+        self.lib.Generators_Set_idx(Value)
 
     @property
     def kV(self):
         '''Voltage base for the active generator, kV'''
-        return lib.Generators_Get_kV()
+        return self.lib.Generators_Get_kV()
 
     @kV.setter
     def kV(self, Value):
-        lib.Generators_Set_kV(Value)
+        self.lib.Generators_Set_kV(Value)
 
     @property
     def kVArated(self):
         '''kVA rating of the generator'''
-        return lib.Generators_Get_kVArated()
+        return self.lib.Generators_Get_kVArated()
 
     @kVArated.setter
     def kVArated(self, Value):
-        lib.Generators_Set_kVArated(Value)
+        self.lib.Generators_Set_kVArated(Value)
 
     @property
     def kW(self):
         '''kW output for the active generator. kvar is updated for current power factor.'''
-        return lib.Generators_Get_kW()
+        return self.lib.Generators_Get_kW()
 
     @kW.setter
     def kW(self, Value):
-        lib.Generators_Set_kW(Value)
+        self.lib.Generators_Set_kW(Value)
 
     @property
     def kvar(self):
         '''kvar output for the active generator. Updates power factor based on present kW value.'''
-        return lib.Generators_Get_kvar()
+        return self.lib.Generators_Get_kvar()
 
     @kvar.setter
     def kvar(self, Value):
-        lib.Generators_Set_kvar(Value)
+        self.lib.Generators_Set_kvar(Value)
 
     def __iter__(self):
         idx = self.First
@@ -1130,47 +1105,47 @@ class IISources(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings containing names of all ISOURCE elements.'''
-        return get_string_array(lib.ISources_Get_AllNames)
+        return self.get_string_array(self.lib.ISources_Get_AllNames)
 
     @property
     def Amps(self):
         '''Magnitude of the ISOURCE in amps'''
-        return lib.ISources_Get_Amps()
+        return self.lib.ISources_Get_Amps()
 
     @Amps.setter
     def Amps(self, Value):
-        lib.ISources_Set_Amps(Value)
+        self.lib.ISources_Set_Amps(Value)
 
     @property
     def AngleDeg(self):
         '''Phase angle for ISOURCE, degrees'''
-        return lib.ISources_Get_AngleDeg()
+        return self.lib.ISources_Get_AngleDeg()
 
     @AngleDeg.setter
     def AngleDeg(self, Value):
-        lib.ISources_Set_AngleDeg(Value)
+        self.lib.ISources_Set_AngleDeg(Value)
 
     @property
     def Count(self):
         '''(read-only) Count: Number of ISOURCE elements.'''
-        return lib.ISources_Get_Count()
+        return self.lib.ISources_Get_Count()
 
     def __len__(self):
-        return lib.ISources_Get_Count()
+        return self.lib.ISources_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Set the First ISOURCE to be active; returns Zero if none.'''
-        return lib.ISources_Get_First()
+        return self.lib.ISources_Get_First()
 
     @property
     def Frequency(self):
         '''The present frequency of the ISOURCE, Hz'''
-        return lib.ISources_Get_Frequency()
+        return self.lib.ISources_Get_Frequency()
 
     @Frequency.setter
     def Frequency(self, Value):
-        lib.ISources_Set_Frequency(Value)
+        self.lib.ISources_Set_Frequency(Value)
 
     @property
     def Name(self):
@@ -1178,19 +1153,19 @@ class IISources(Base):
         (read) Get name of active ISOURCE
         (write) Set Active ISOURCE by name
         '''
-        return get_string(lib.ISources_Get_Name())
+        return self.get_string(self.lib.ISources_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.ISources_Set_Name(Value)
+        self.lib.ISources_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next ISOURCE element to be the active one. Returns Zero if no more.'''
-        return lib.ISources_Get_Next()
+        return self.lib.ISources_Get_Next()
 
     def __iter__(self):
         idx = self.First
@@ -1205,162 +1180,162 @@ class ILineCodes(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all devices'''
-        return get_string_array(lib.LineCodes_Get_AllNames)
+        return self.get_string_array(self.lib.LineCodes_Get_AllNames)
 
     @property
     def C0(self):
         '''Zero-sequence capacitance, nF per unit length'''
-        return lib.LineCodes_Get_C0()
+        return self.lib.LineCodes_Get_C0()
 
     @C0.setter
     def C0(self, Value):
-        lib.LineCodes_Set_C0(Value)
+        self.lib.LineCodes_Set_C0(Value)
 
     @property
     def C1(self):
         '''Positive-sequence capacitance, nF per unit length'''
-        return lib.LineCodes_Get_C1()
+        return self.lib.LineCodes_Get_C1()
 
     @C1.setter
     def C1(self, Value):
-        lib.LineCodes_Set_C1(Value)
+        self.lib.LineCodes_Set_C1(Value)
 
     @property
     def Cmatrix(self):
         '''Capacitance matrix, nF per unit length'''
-        lib.LineCodes_Get_Cmatrix_GR()
-        return get_float64_gr_array()
+        self.lib.LineCodes_Get_Cmatrix_GR()
+        return self.get_float64_gr_array()
 
     @Cmatrix.setter
     def Cmatrix(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LineCodes_Set_Cmatrix(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LineCodes_Set_Cmatrix(ValuePtr, ValueCount)
 
     @property
     def Count(self):
         '''(read-only) Number of LineCodes'''
-        return lib.LineCodes_Get_Count()
+        return self.lib.LineCodes_Get_Count()
 
     def __len__(self):
-        return lib.LineCodes_Get_Count()
+        return self.lib.LineCodes_Get_Count()
 
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''
-        return lib.LineCodes_Get_EmergAmps()
+        return self.lib.LineCodes_Get_EmergAmps()
 
     @EmergAmps.setter
     def EmergAmps(self, Value):
-        lib.LineCodes_Set_EmergAmps(Value)
+        self.lib.LineCodes_Set_EmergAmps(Value)
 
     @property
     def First(self):
-        return lib.LineCodes_Get_First()
+        return self.lib.LineCodes_Get_First()
 
     @property
     def IsZ1Z0(self):
         '''(read-only) Flag denoting whether impedance data were entered in symmetrical components'''
-        return lib.LineCodes_Get_IsZ1Z0() != 0
+        return self.lib.LineCodes_Get_IsZ1Z0() != 0
 
     @property
     def Name(self):
         '''Name of active LineCode'''
-        return get_string(lib.LineCodes_Get_Name())
+        return self.get_string(self.lib.LineCodes_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.LineCodes_Set_Name(Value)
+        self.lib.LineCodes_Set_Name(Value)
 
     @property
     def Next(self):
-        return lib.LineCodes_Get_Next()
+        return self.lib.LineCodes_Get_Next()
 
     @property
     def NormAmps(self):
         '''Normal Ampere rating'''
-        return lib.LineCodes_Get_NormAmps()
+        return self.lib.LineCodes_Get_NormAmps()
 
     @NormAmps.setter
     def NormAmps(self, Value):
-        lib.LineCodes_Set_NormAmps(Value)
+        self.lib.LineCodes_Set_NormAmps(Value)
 
     @property
     def Phases(self):
         '''Number of Phases'''
-        return lib.LineCodes_Get_Phases()
+        return self.lib.LineCodes_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value):
-        lib.LineCodes_Set_Phases(Value)
+        self.lib.LineCodes_Set_Phases(Value)
 
     @property
     def R0(self):
         '''Zero-Sequence Resistance, ohms per unit length'''
-        return lib.LineCodes_Get_R0()
+        return self.lib.LineCodes_Get_R0()
 
     @R0.setter
     def R0(self, Value):
-        lib.LineCodes_Set_R0(Value)
+        self.lib.LineCodes_Set_R0(Value)
 
     @property
     def R1(self):
         '''Positive-sequence resistance ohms per unit length'''
-        return lib.LineCodes_Get_R1()
+        return self.lib.LineCodes_Get_R1()
 
     @R1.setter
     def R1(self, Value):
-        lib.LineCodes_Set_R1(Value)
+        self.lib.LineCodes_Set_R1(Value)
 
     @property
     def Rmatrix(self):
         '''Resistance matrix, ohms per unit length'''
-        lib.LineCodes_Get_Rmatrix_GR()
-        return get_float64_gr_array()
+        self.lib.LineCodes_Get_Rmatrix_GR()
+        return self.get_float64_gr_array()
 
     @Rmatrix.setter
     def Rmatrix(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LineCodes_Set_Rmatrix(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LineCodes_Set_Rmatrix(ValuePtr, ValueCount)
 
     @property
     def Units(self):
-        return lib.LineCodes_Get_Units()
+        return self.lib.LineCodes_Get_Units()
 
     @Units.setter
     def Units(self, Value):
-        lib.LineCodes_Set_Units(Value)
+        self.lib.LineCodes_Set_Units(Value)
 
     @property
     def X0(self):
         '''Zero Sequence Reactance, Ohms per unit length'''
-        return lib.LineCodes_Get_X0()
+        return self.lib.LineCodes_Get_X0()
 
     @X0.setter
     def X0(self, Value):
-        lib.LineCodes_Set_X0(Value)
+        self.lib.LineCodes_Set_X0(Value)
 
     @property
     def X1(self):
         '''Posiive-sequence reactance, ohms per unit length'''
-        return lib.LineCodes_Get_X1()
+        return self.lib.LineCodes_Get_X1()
 
     @X1.setter
     def X1(self, Value):
-        lib.LineCodes_Set_X1(Value)
+        self.lib.LineCodes_Set_X1(Value)
 
     @property
     def Xmatrix(self):
         '''Reactance matrix, ohms per unit length'''
-        lib.LineCodes_Get_Xmatrix_GR()
-        return get_float64_gr_array()
+        self.lib.LineCodes_Get_Xmatrix_GR()
+        return self.get_float64_gr_array()
 
     @Xmatrix.setter
     def Xmatrix(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LineCodes_Set_Xmatrix(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LineCodes_Set_Xmatrix(ValuePtr, ValueCount)
 
     def __iter__(self):
         idx = self.First
@@ -1376,284 +1351,284 @@ class ILines(Base):
         if type(Name) is not bytes:
             Name = Name.encode(codec)
 
-        return lib.Lines_New(Name)
+        return self.lib.Lines_New(Name)
 
     @property
     def AllNames(self):
         '''(read-only) Names of all Line Objects'''
-        return get_string_array(lib.Lines_Get_AllNames)
+        return self.get_string_array(self.lib.Lines_Get_AllNames)
 
     @property
     def Bus1(self):
         '''Name of bus for terminal 1.'''
-        return get_string(lib.Lines_Get_Bus1())
+        return self.get_string(self.lib.Lines_Get_Bus1())
 
     @Bus1.setter
     def Bus1(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Lines_Set_Bus1(Value)
+        self.lib.Lines_Set_Bus1(Value)
 
     @property
     def Bus2(self):
         '''Name of bus for terminal 2.'''
-        return get_string(lib.Lines_Get_Bus2())
+        return self.get_string(self.lib.Lines_Get_Bus2())
 
     @Bus2.setter
     def Bus2(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Lines_Set_Bus2(Value)
+        self.lib.Lines_Set_Bus2(Value)
 
     @property
     def C0(self):
         '''Zero Sequence capacitance, nanofarads per unit length.'''
-        return lib.Lines_Get_C0()
+        return self.lib.Lines_Get_C0()
 
     @C0.setter
     def C0(self, Value):
-        lib.Lines_Set_C0(Value)
+        self.lib.Lines_Set_C0(Value)
 
     @property
     def C1(self):
         '''Positive Sequence capacitance, nanofarads per unit length.'''
-        return lib.Lines_Get_C1()
+        return self.lib.Lines_Get_C1()
 
     @C1.setter
     def C1(self, Value):
-        lib.Lines_Set_C1(Value)
+        self.lib.Lines_Set_C1(Value)
 
     @property
     def Cmatrix(self):
-        lib.Lines_Get_Cmatrix_GR()
-        return get_float64_gr_array()
+        self.lib.Lines_Get_Cmatrix_GR()
+        return self.get_float64_gr_array()
 
     @Cmatrix.setter
     def Cmatrix(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Lines_Set_Cmatrix(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Lines_Set_Cmatrix(ValuePtr, ValueCount)
 
     @property
     def Count(self):
         '''(read-only) Number of Line objects in Active Circuit.'''
-        return lib.Lines_Get_Count()
+        return self.lib.Lines_Get_Count()
 
     def __len__(self):
-        return lib.Lines_Get_Count()
+        return self.lib.Lines_Get_Count()
 
     @property
     def EmergAmps(self):
         '''Emergency (maximum) ampere rating of Line.'''
-        return lib.Lines_Get_EmergAmps()
+        return self.lib.Lines_Get_EmergAmps()
 
     @EmergAmps.setter
     def EmergAmps(self, Value):
-        lib.Lines_Set_EmergAmps(Value)
+        self.lib.Lines_Set_EmergAmps(Value)
 
     @property
     def First(self):
         '''(read-only) Invoking this property sets the first element active.  Returns 0 if no lines.  Otherwise, index of the line element.'''
-        return lib.Lines_Get_First()
+        return self.lib.Lines_Get_First()
 
     @property
     def Geometry(self):
         '''Line geometry code'''
-        return get_string(lib.Lines_Get_Geometry())
+        return self.get_string(self.lib.Lines_Get_Geometry())
 
     @Geometry.setter
     def Geometry(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Lines_Set_Geometry(Value)
+        self.lib.Lines_Set_Geometry(Value)
 
     @property
     def Length(self):
         '''Length of line section in units compatible with the LineCode definition.'''
-        return lib.Lines_Get_Length()
+        return self.lib.Lines_Get_Length()
 
     @Length.setter
     def Length(self, Value):
-        lib.Lines_Set_Length(Value)
+        self.lib.Lines_Set_Length(Value)
 
     @property
     def LineCode(self):
         '''Name of LineCode object that defines the impedances.'''
-        return get_string(lib.Lines_Get_LineCode())
+        return self.get_string(self.lib.Lines_Get_LineCode())
 
     @LineCode.setter
     def LineCode(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Lines_Set_LineCode(Value)
+        self.lib.Lines_Set_LineCode(Value)
 
     @property
     def Name(self):
         '''Specify the name of the Line element to set it active.'''
-        return get_string(lib.Lines_Get_Name())
+        return self.get_string(self.lib.Lines_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Lines_Set_Name(Value)
+        self.lib.Lines_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Invoking this property advances to the next Line element active.  Returns 0 if no more lines.  Otherwise, index of the line element.'''
-        return lib.Lines_Get_Next()
+        return self.lib.Lines_Get_Next()
 
     @property
     def NormAmps(self):
         '''Normal ampere rating of Line.'''
-        return lib.Lines_Get_NormAmps()
+        return self.lib.Lines_Get_NormAmps()
 
     @NormAmps.setter
     def NormAmps(self, Value):
-        lib.Lines_Set_NormAmps(Value)
+        self.lib.Lines_Set_NormAmps(Value)
 
     @property
     def NumCust(self):
         '''(read-only) Number of customers on this line section.'''
-        return lib.Lines_Get_NumCust()
+        return self.lib.Lines_Get_NumCust()
 
     @property
     def Parent(self):
         '''(read-only) Sets Parent of the active Line to be the active line. Returns 0 if no parent or action fails.'''
-        return lib.Lines_Get_Parent()
+        return self.lib.Lines_Get_Parent()
 
     @property
     def Phases(self):
         '''Number of Phases, this Line element.'''
-        return lib.Lines_Get_Phases()
+        return self.lib.Lines_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value):
-        lib.Lines_Set_Phases(Value)
+        self.lib.Lines_Set_Phases(Value)
 
     @property
     def R0(self):
         '''Zero Sequence resistance, ohms per unit length.'''
-        return lib.Lines_Get_R0()
+        return self.lib.Lines_Get_R0()
 
     @R0.setter
     def R0(self, Value):
-        lib.Lines_Set_R0(Value)
+        self.lib.Lines_Set_R0(Value)
 
     @property
     def R1(self):
         '''Positive Sequence resistance, ohms per unit length.'''
-        return lib.Lines_Get_R1()
+        return self.lib.Lines_Get_R1()
 
     @R1.setter
     def R1(self, Value):
-        lib.Lines_Set_R1(Value)
+        self.lib.Lines_Set_R1(Value)
 
     @property
     def Rg(self):
         '''Earth return resistance value used to compute line impedances at power frequency'''
-        return lib.Lines_Get_Rg()
+        return self.lib.Lines_Get_Rg()
 
     @Rg.setter
     def Rg(self, Value):
-        lib.Lines_Set_Rg(Value)
+        self.lib.Lines_Set_Rg(Value)
 
     @property
     def Rho(self):
         '''Earth Resistivity, m-ohms'''
-        return lib.Lines_Get_Rho()
+        return self.lib.Lines_Get_Rho()
 
     @Rho.setter
     def Rho(self, Value):
-        lib.Lines_Set_Rho(Value)
+        self.lib.Lines_Set_Rho(Value)
 
     @property
     def Rmatrix(self):
         '''Resistance matrix (full), ohms per unit length. Array of doubles.'''
-        lib.Lines_Get_Rmatrix_GR()
-        return get_float64_gr_array()
+        self.lib.Lines_Get_Rmatrix_GR()
+        return self.get_float64_gr_array()
 
     @Rmatrix.setter
     def Rmatrix(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Lines_Set_Rmatrix(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Lines_Set_Rmatrix(ValuePtr, ValueCount)
 
     @property
     def Spacing(self):
         '''Line spacing code'''
-        return get_string(lib.Lines_Get_Spacing())
+        return self.get_string(self.lib.Lines_Get_Spacing())
 
     @Spacing.setter
     def Spacing(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Lines_Set_Spacing(Value)
+        self.lib.Lines_Set_Spacing(Value)
 
     @property
     def TotalCust(self):
         '''(read-only) Total Number of customers served from this line section.'''
-        return lib.Lines_Get_TotalCust()
+        return self.lib.Lines_Get_TotalCust()
 
     @property
     def Units(self):
-        return lib.Lines_Get_Units()
+        return self.lib.Lines_Get_Units()
 
     @Units.setter
     def Units(self, Value):
-        lib.Lines_Set_Units(Value)
+        self.lib.Lines_Set_Units(Value)
 
     @property
     def X0(self):
         '''Zero Sequence reactance ohms per unit length.'''
-        return lib.Lines_Get_X0()
+        return self.lib.Lines_Get_X0()
 
     @X0.setter
     def X0(self, Value):
-        lib.Lines_Set_X0(Value)
+        self.lib.Lines_Set_X0(Value)
 
     @property
     def X1(self):
         '''Positive Sequence reactance, ohms per unit length.'''
-        return lib.Lines_Get_X1()
+        return self.lib.Lines_Get_X1()
 
     @X1.setter
     def X1(self, Value):
-        lib.Lines_Set_X1(Value)
+        self.lib.Lines_Set_X1(Value)
 
     @property
     def Xg(self):
         '''Earth return reactance value used to compute line impedances at power frequency'''
-        return lib.Lines_Get_Xg()
+        return self.lib.Lines_Get_Xg()
 
     @Xg.setter
     def Xg(self, Value):
-        lib.Lines_Set_Xg(Value)
+        self.lib.Lines_Set_Xg(Value)
 
     @property
     def Xmatrix(self):
-        lib.Lines_Get_Xmatrix_GR()
-        return get_float64_gr_array()
+        self.lib.Lines_Get_Xmatrix_GR()
+        return self.get_float64_gr_array()
 
     @Xmatrix.setter
     def Xmatrix(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Lines_Set_Xmatrix(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Lines_Set_Xmatrix(ValuePtr, ValueCount)
 
     @property
     def Yprim(self):
         '''Yprimitive: Does Nothing at present on Put; Dangerous'''
-        lib.Lines_Get_Yprim_GR()
-        return get_float64_gr_array()
+        self.lib.Lines_Get_Yprim_GR()
+        return self.get_float64_gr_array()
 
     @Yprim.setter
     def Yprim(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Lines_Set_Yprim(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Lines_Set_Yprim(ValuePtr, ValueCount)
 
     def __iter__(self):
         idx = self.First
@@ -1668,132 +1643,132 @@ class ILoads(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings containing all Load names'''
-        return get_string_array(lib.Loads_Get_AllNames)
+        return self.get_string_array(self.lib.Loads_Get_AllNames)
 
     @property
     def AllocationFactor(self):
         '''Factor for allocating loads by connected xfkva'''
-        return lib.Loads_Get_AllocationFactor()
+        return self.lib.Loads_Get_AllocationFactor()
 
     @AllocationFactor.setter
     def AllocationFactor(self, Value):
-        lib.Loads_Set_AllocationFactor(Value)
+        self.lib.Loads_Set_AllocationFactor(Value)
 
     @property
     def CVRcurve(self):
         '''Name of a loadshape with both Mult and Qmult, for CVR factors as a function of time.'''
-        return get_string(lib.Loads_Get_CVRcurve())
+        return self.get_string(self.lib.Loads_Get_CVRcurve())
 
     @CVRcurve.setter
     def CVRcurve(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Loads_Set_CVRcurve(Value)
+        self.lib.Loads_Set_CVRcurve(Value)
 
     @property
     def CVRvars(self):
         '''Percent reduction in Q for percent reduction in V. Must be used with dssLoadModelCVR.'''
-        return lib.Loads_Get_CVRvars()
+        return self.lib.Loads_Get_CVRvars()
 
     @CVRvars.setter
     def CVRvars(self, Value):
-        lib.Loads_Set_CVRvars(Value)
+        self.lib.Loads_Set_CVRvars(Value)
 
     @property
     def CVRwatts(self):
         '''Percent reduction in P for percent reduction in V. Must be used with dssLoadModelCVR.'''
-        return lib.Loads_Get_CVRwatts()
+        return self.lib.Loads_Get_CVRwatts()
 
     @CVRwatts.setter
     def CVRwatts(self, Value):
-        lib.Loads_Set_CVRwatts(Value)
+        self.lib.Loads_Set_CVRwatts(Value)
 
     @property
     def Cfactor(self):
         '''Factor relates average to peak kw.  Used for allocation with kwh and kwhdays/'''
-        return lib.Loads_Get_Cfactor()
+        return self.lib.Loads_Get_Cfactor()
 
     @Cfactor.setter
     def Cfactor(self, Value):
-        lib.Loads_Set_Cfactor(Value)
+        self.lib.Loads_Set_Cfactor(Value)
 
     @property
     def Class(self):
-        return lib.Loads_Get_Class_()
+        return self.lib.Loads_Get_Class_()
 
     @Class.setter
     def Class(self, Value):
-        lib.Loads_Set_Class_(Value)
+        self.lib.Loads_Set_Class_(Value)
 
     @property
     def Count(self):
         '''(read-only) Number of Load objects in active circuit.'''
-        return lib.Loads_Get_Count()
+        return self.lib.Loads_Get_Count()
 
     def __len__(self):
-        return lib.Loads_Get_Count()
+        return self.lib.Loads_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Set first Load element to be active; returns 0 if none.'''
-        return lib.Loads_Get_First()
+        return self.lib.Loads_Get_First()
 
     @property
     def Growth(self):
         '''Name of the growthshape curve for yearly load growth factors.'''
-        return get_string(lib.Loads_Get_Growth())
+        return self.get_string(self.lib.Loads_Get_Growth())
 
     @Growth.setter
     def Growth(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Loads_Set_Growth(Value)
+        self.lib.Loads_Set_Growth(Value)
 
     @property
     def IsDelta(self):
         '''Delta loads are connected line-to-line.'''
-        return lib.Loads_Get_IsDelta() != 0
+        return self.lib.Loads_Get_IsDelta() != 0
 
     @IsDelta.setter
     def IsDelta(self, Value):
-        lib.Loads_Set_IsDelta(Value)
+        self.lib.Loads_Set_IsDelta(Value)
 
     @property
     def Model(self):
         '''The Load Model defines variation of P and Q with voltage.'''
-        return lib.Loads_Get_Model()
+        return self.lib.Loads_Get_Model()
 
     @Model.setter
     def Model(self, Value):
-        lib.Loads_Set_Model(Value)
+        self.lib.Loads_Set_Model(Value)
 
     @property
     def Name(self):
         '''Set active load by name.'''
-        return get_string(lib.Loads_Get_Name())
+        return self.get_string(self.lib.Loads_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Loads_Set_Name(Value)
+        self.lib.Loads_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets next Load element to be active; returns 0 of none else index of active load.'''
-        return lib.Loads_Get_Next()
+        return self.lib.Loads_Get_Next()
 
     @property
     def NumCust(self):
         '''Number of customers in this load, defaults to one.'''
-        return lib.Loads_Get_NumCust()
+        return self.lib.Loads_Get_NumCust()
 
     @NumCust.setter
     def NumCust(self, Value):
-        lib.Loads_Set_NumCust(Value)
+        self.lib.Loads_Set_NumCust(Value)
 
     @property
     def PF(self):
@@ -1801,250 +1776,250 @@ class ILoads(Base):
         (read) Set Power Factor for Active Load. Specify leading PF as negative. Updates kvar based on kW value
         (write) Set Power Factor for Active Load. Specify leading PF as negative. Updates kvar based on present value of kW.
         '''
-        return lib.Loads_Get_PF()
+        return self.lib.Loads_Get_PF()
 
     @PF.setter
     def PF(self, Value):
-        lib.Loads_Set_PF(Value)
+        self.lib.Loads_Set_PF(Value)
 
     @property
     def PctMean(self):
         '''Average percent of nominal load in Monte Carlo studies; only if no loadshape defined for this load.'''
-        return lib.Loads_Get_PctMean()
+        return self.lib.Loads_Get_PctMean()
 
     @PctMean.setter
     def PctMean(self, Value):
-        lib.Loads_Set_PctMean(Value)
+        self.lib.Loads_Set_PctMean(Value)
 
     @property
     def PctStdDev(self):
         '''Percent standard deviation for Monte Carlo load studies; if there is no loadshape assigned to this load.'''
-        return lib.Loads_Get_PctStdDev()
+        return self.lib.Loads_Get_PctStdDev()
 
     @PctStdDev.setter
     def PctStdDev(self, Value):
-        lib.Loads_Set_PctStdDev(Value)
+        self.lib.Loads_Set_PctStdDev(Value)
 
     @property
     def RelWeight(self):
         '''Relative Weighting factor for the active LOAD'''
-        return lib.Loads_Get_RelWeight()
+        return self.lib.Loads_Get_RelWeight()
 
     @RelWeight.setter
     def RelWeight(self, Value):
-        lib.Loads_Set_RelWeight(Value)
+        self.lib.Loads_Set_RelWeight(Value)
 
     @property
     def Rneut(self):
         '''Neutral resistance for wye-connected loads.'''
-        return lib.Loads_Get_Rneut()
+        return self.lib.Loads_Get_Rneut()
 
     @Rneut.setter
     def Rneut(self, Value):
-        lib.Loads_Set_Rneut(Value)
+        self.lib.Loads_Set_Rneut(Value)
 
     @property
     def Spectrum(self):
         '''Name of harmonic current spectrrum shape.'''
-        return get_string(lib.Loads_Get_Spectrum())
+        return self.get_string(self.lib.Loads_Get_Spectrum())
 
     @Spectrum.setter
     def Spectrum(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Loads_Set_Spectrum(Value)
+        self.lib.Loads_Set_Spectrum(Value)
 
     @property
     def Status(self):
         '''Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).'''
-        return lib.Loads_Get_Status()
+        return self.lib.Loads_Get_Status()
 
     @Status.setter
     def Status(self, Value):
-        lib.Loads_Set_Status(Value)
+        self.lib.Loads_Set_Status(Value)
 
     @property
     def Vmaxpu(self):
         '''Maximum per-unit voltage to use the load model. Above this, constant Z applies.'''
-        return lib.Loads_Get_Vmaxpu()
+        return self.lib.Loads_Get_Vmaxpu()
 
     @Vmaxpu.setter
     def Vmaxpu(self, Value):
-        lib.Loads_Set_Vmaxpu(Value)
+        self.lib.Loads_Set_Vmaxpu(Value)
 
     @property
     def Vminemerg(self):
         '''Minimum voltage for unserved energy (UE) evaluation.'''
-        return lib.Loads_Get_Vminemerg()
+        return self.lib.Loads_Get_Vminemerg()
 
     @Vminemerg.setter
     def Vminemerg(self, Value):
-        lib.Loads_Set_Vminemerg(Value)
+        self.lib.Loads_Set_Vminemerg(Value)
 
     @property
     def Vminnorm(self):
         '''Minimum voltage for energy exceeding normal (EEN) evaluations.'''
-        return lib.Loads_Get_Vminnorm()
+        return self.lib.Loads_Get_Vminnorm()
 
     @Vminnorm.setter
     def Vminnorm(self, Value):
-        lib.Loads_Set_Vminnorm(Value)
+        self.lib.Loads_Set_Vminnorm(Value)
 
     @property
     def Vminpu(self):
         '''Minimum voltage to apply the load model. Below this, constant Z is used.'''
-        return lib.Loads_Get_Vminpu()
+        return self.lib.Loads_Get_Vminpu()
 
     @Vminpu.setter
     def Vminpu(self, Value):
-        lib.Loads_Set_Vminpu(Value)
+        self.lib.Loads_Set_Vminpu(Value)
 
     @property
     def Xneut(self):
         '''Neutral reactance for wye-connected loads.'''
-        return lib.Loads_Get_Xneut()
+        return self.lib.Loads_Get_Xneut()
 
     @Xneut.setter
     def Xneut(self, Value):
-        lib.Loads_Set_Xneut(Value)
+        self.lib.Loads_Set_Xneut(Value)
 
     @property
     def Yearly(self):
         '''Name of yearly duration loadshape'''
-        return get_string(lib.Loads_Get_Yearly())
+        return self.get_string(self.lib.Loads_Get_Yearly())
 
     @Yearly.setter
     def Yearly(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Loads_Set_Yearly(Value)
+        self.lib.Loads_Set_Yearly(Value)
 
     @property
     def ZIPV(self):
         '''Array of 7  doubles with values for ZIPV property of the LOAD object'''
-        lib.Loads_Get_ZIPV_GR()
-        return get_float64_gr_array()
+        self.lib.Loads_Get_ZIPV_GR()
+        return self.get_float64_gr_array()
 
     @ZIPV.setter
     def ZIPV(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Loads_Set_ZIPV(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Loads_Set_ZIPV(ValuePtr, ValueCount)
 
     @property
     def daily(self):
         '''Name of the loadshape for a daily load profile.'''
-        return get_string(lib.Loads_Get_daily())
+        return self.get_string(self.lib.Loads_Get_daily())
 
     @daily.setter
     def daily(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Loads_Set_daily(Value)
+        self.lib.Loads_Set_daily(Value)
 
     @property
     def duty(self):
         '''Name of the loadshape for a duty cycle simulation.'''
-        return get_string(lib.Loads_Get_duty())
+        return self.get_string(self.lib.Loads_Get_duty())
 
     @duty.setter
     def duty(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Loads_Set_duty(Value)
+        self.lib.Loads_Set_duty(Value)
 
     @property
     def idx(self):
-        return lib.Loads_Get_idx()
+        return self.lib.Loads_Get_idx()
 
     @idx.setter
     def idx(self, Value):
-        lib.Loads_Set_idx(Value)
+        self.lib.Loads_Set_idx(Value)
 
     @property
     def kV(self):
         '''Set kV rating for active Load. For 2 or more phases set Line-Line kV. Else actual kV across terminals.'''
-        return lib.Loads_Get_kV()
+        return self.lib.Loads_Get_kV()
 
     @kV.setter
     def kV(self, Value):
-        lib.Loads_Set_kV(Value)
+        self.lib.Loads_Set_kV(Value)
 
     @property
     def kW(self):
         '''Set kW for active Load. Updates kvar based on present PF.'''
-        return lib.Loads_Get_kW()
+        return self.lib.Loads_Get_kW()
 
     @kW.setter
     def kW(self, Value):
-        lib.Loads_Set_kW(Value)
+        self.lib.Loads_Set_kW(Value)
 
     @property
     def kva(self):
         '''Base load kva. Also defined kw and kvar or pf input, or load allocation by kwh or xfkva.'''
-        return lib.Loads_Get_kva()
+        return self.lib.Loads_Get_kva()
 
     @kva.setter
     def kva(self, Value):
-        lib.Loads_Set_kva(Value)
+        self.lib.Loads_Set_kva(Value)
 
     @property
     def kvar(self):
         '''Set kvar for active Load. Updates PF based on present kW.'''
-        return lib.Loads_Get_kvar()
+        return self.lib.Loads_Get_kvar()
 
     @kvar.setter
     def kvar(self, Value):
-        lib.Loads_Set_kvar(Value)
+        self.lib.Loads_Set_kvar(Value)
 
     @property
     def kwh(self):
         '''kwh billed for this period. Can be used with Cfactor for load allocation.'''
-        return lib.Loads_Get_kwh()
+        return self.lib.Loads_Get_kwh()
 
     @kwh.setter
     def kwh(self, Value):
-        lib.Loads_Set_kwh(Value)
+        self.lib.Loads_Set_kwh(Value)
 
     @property
     def kwhdays(self):
         '''Length of kwh billing period for average demand calculation. Default 30.'''
-        return lib.Loads_Get_kwhdays()
+        return self.lib.Loads_Get_kwhdays()
 
     @kwhdays.setter
     def kwhdays(self, Value):
-        lib.Loads_Set_kwhdays(Value)
+        self.lib.Loads_Set_kwhdays(Value)
 
     @property
     def pctSeriesRL(self):
         '''Percent of Load that is modeled as series R-L for harmonics studies'''
-        return lib.Loads_Get_pctSeriesRL()
+        return self.lib.Loads_Get_pctSeriesRL()
 
     @pctSeriesRL.setter
     def pctSeriesRL(self, Value):
-        lib.Loads_Set_pctSeriesRL(Value)
+        self.lib.Loads_Set_pctSeriesRL(Value)
 
     @property
     def xfkVA(self):
         '''Rated service transformer kVA for load allocation, using AllocationFactor. Affects kW, kvar, and pf.'''
-        return lib.Loads_Get_xfkVA()
+        return self.lib.Loads_Get_xfkVA()
 
     @xfkVA.setter
     def xfkVA(self, Value):
-        lib.Loads_Set_xfkVA(Value)
+        self.lib.Loads_Set_xfkVA(Value)
 
     # API extensions
     @property
     def Phases(self):
         '''Number of phases'''
-        return lib.Loads_Get_Phases()
+        return self.lib.Loads_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value):
-        lib.Loads_Set_Phases(Value)
+        self.lib.Loads_Set_Phases(Value)
 
     def __iter__(self):
         idx = self.First
@@ -2060,46 +2035,46 @@ class ILoadShapes(Base):
         if type(Name) is not bytes:
             Name = Name.encode(codec)
 
-        return lib.LoadShapes_New(Name)
+        return self.lib.LoadShapes_New(Name)
 
     def Normalize(self):
-        lib.LoadShapes_Normalize()
+        self.lib.LoadShapes_Normalize()
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings containing names of all Loadshape objects currently defined.'''
-        return get_string_array(lib.LoadShapes_Get_AllNames)
+        return self.get_string_array(self.lib.LoadShapes_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of Loadshape objects currently defined in Loadshape collection'''
-        return lib.LoadShapes_Get_Count()
+        return self.lib.LoadShapes_Get_Count()
 
     def __len__(self):
-        return lib.LoadShapes_Get_Count()
+        return self.lib.LoadShapes_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Set the first loadshape active and return integer index of the loadshape. Returns 0 if none.'''
-        return lib.LoadShapes_Get_First()
+        return self.lib.LoadShapes_Get_First()
 
     @property
     def HrInterval(self):
         '''Fixed interval time value, hours.'''
-        return lib.LoadShapes_Get_HrInterval()
+        return self.lib.LoadShapes_Get_HrInterval()
 
     @HrInterval.setter
     def HrInterval(self, Value):
-        lib.LoadShapes_Set_HrInterval(Value)
+        self.lib.LoadShapes_Set_HrInterval(Value)
 
     @property
     def MinInterval(self):
         '''Fixed Interval time value, in minutes'''
-        return lib.LoadShapes_Get_MinInterval()
+        return self.lib.LoadShapes_Get_MinInterval()
 
     @MinInterval.setter
     def MinInterval(self, Value):
-        lib.LoadShapes_Set_MinInterval(Value)
+        self.lib.LoadShapes_Set_MinInterval(Value)
 
     @property
     def Name(self):
@@ -2107,19 +2082,19 @@ class ILoadShapes(Base):
         (read) Get the Name of the active Loadshape
         (write) Set the active Loadshape by name
         '''
-        return get_string(lib.LoadShapes_Get_Name())
+        return self.get_string(self.lib.LoadShapes_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.LoadShapes_Set_Name(Value)
+        self.lib.LoadShapes_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Advance active Loadshape to the next on in the collection. Returns 0 if no more loadshapes.'''
-        return lib.LoadShapes_Get_Next()
+        return self.lib.LoadShapes_Get_Next()
 
     @property
     def Npts(self):
@@ -2127,19 +2102,19 @@ class ILoadShapes(Base):
         (read) Get Number of points in active Loadshape.
         (write) Set number of points to allocate for active Loadshape.
         '''
-        return lib.LoadShapes_Get_Npts()
+        return self.lib.LoadShapes_Get_Npts()
 
     @Npts.setter
     def Npts(self, Value):
-        lib.LoadShapes_Set_Npts(Value)
+        self.lib.LoadShapes_Set_Npts(Value)
 
     @property
     def PBase(self):
-        return lib.LoadShapes_Get_PBase()
+        return self.lib.LoadShapes_Get_PBase()
 
     @PBase.setter
     def PBase(self, Value):
-        lib.LoadShapes_Set_PBase(Value)
+        self.lib.LoadShapes_Set_PBase(Value)
 
     Pbase = PBase
 
@@ -2149,63 +2124,63 @@ class ILoadShapes(Base):
         (read) Array of Doubles for the P multiplier in the Loadshape.
         (write) Array of doubles containing the P array for the Loadshape.
         '''
-        lib.LoadShapes_Get_Pmult_GR()
-        return get_float64_gr_array()
+        self.lib.LoadShapes_Get_Pmult_GR()
+        return self.get_float64_gr_array()
 
     @Pmult.setter
     def Pmult(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LoadShapes_Set_Pmult(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LoadShapes_Set_Pmult(ValuePtr, ValueCount)
 
     @property
     def QBase(self):
         '''Base for normalizing Q curve. If left at zero, the peak value is used.'''
-        return lib.LoadShapes_Get_Qbase()
+        return self.lib.LoadShapes_Get_Qbase()
 
     @QBase.setter
     def QBase(self, Value):
-        lib.LoadShapes_Set_Qbase(Value)
+        self.lib.LoadShapes_Set_Qbase(Value)
 
     Qbase = QBase
 
     @property
     def Qmult(self):
         '''Array of doubles containing the Q multipliers.'''
-        lib.LoadShapes_Get_Qmult_GR()
-        return get_float64_gr_array()
+        self.lib.LoadShapes_Get_Qmult_GR()
+        return self.get_float64_gr_array()
 
     @Qmult.setter
     def Qmult(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LoadShapes_Set_Qmult(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LoadShapes_Set_Qmult(ValuePtr, ValueCount)
 
     @property
     def TimeArray(self):
         '''Time array in hours correscponding to P and Q multipliers when the Interval=0.'''
-        lib.LoadShapes_Get_TimeArray_GR()
-        return get_float64_gr_array()
+        self.lib.LoadShapes_Get_TimeArray_GR()
+        return self.get_float64_gr_array()
 
     @TimeArray.setter
     def TimeArray(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LoadShapes_Set_TimeArray(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LoadShapes_Set_TimeArray(ValuePtr, ValueCount)
 
     @property
     def UseActual(self):
         '''T/F flag to let Loads know to use the actual value in the curve rather than use the value as a multiplier.'''
-        return lib.LoadShapes_Get_UseActual() != 0
+        return self.lib.LoadShapes_Get_UseActual() != 0
 
     @UseActual.setter
     def UseActual(self, Value):
-        lib.LoadShapes_Set_UseActual(Value)
+        self.lib.LoadShapes_Set_UseActual(Value)
 
     @property
     def sInterval(self):
-        return lib.LoadShapes_Get_sInterval()
+        return self.lib.LoadShapes_Get_sInterval()
 
     @sInterval.setter
     def sInterval(self, Value):
-        lib.LoadShapes_Set_Sinterval(Value)
+        self.lib.LoadShapes_Set_Sinterval(Value)
 
     Sinterval = sInterval
 
@@ -2220,135 +2195,135 @@ class IMeters(Base):
     __slots__ = []
 
     def CloseAllDIFiles(self):
-        lib.Meters_CloseAllDIFiles()
+        self.lib.Meters_CloseAllDIFiles()
 
     def DoReliabilityCalc(self, AssumeRestoration):
-        lib.Meters_DoReliabilityCalc(AssumeRestoration)
+        self.lib.Meters_DoReliabilityCalc(AssumeRestoration)
 
     def OpenAllDIFiles(self):
-        lib.Meters_OpenAllDIFiles()
+        self.lib.Meters_OpenAllDIFiles()
 
     def Reset(self):
-        lib.Meters_Reset()
+        self.lib.Meters_Reset()
 
     def ResetAll(self):
-        lib.Meters_ResetAll()
+        self.lib.Meters_ResetAll()
 
     def Sample(self):
-        lib.Meters_Sample()
+        self.lib.Meters_Sample()
 
     def SampleAll(self):
-        lib.Meters_SampleAll()
+        self.lib.Meters_SampleAll()
 
     def Save(self):
-        lib.Meters_Save()
+        self.lib.Meters_Save()
 
     def SaveAll(self):
-        lib.Meters_SaveAll()
+        self.lib.Meters_SaveAll()
 
     def SetActiveSection(self, SectIdx):
-        lib.Meters_SetActiveSection(SectIdx)
+        self.lib.Meters_SetActiveSection(SectIdx)
 
     @property
     def AllBranchesInZone(self):
         '''(read-only) Wide string list of all branches in zone of the active energymeter object.'''
-        return get_string_array(lib.Meters_Get_AllBranchesInZone)
+        return self.get_string_array(self.lib.Meters_Get_AllBranchesInZone)
 
     @property
     def AllEndElements(self):
         '''(read-only) Array of names of all zone end elements.'''
-        return get_string_array(lib.Meters_Get_AllEndElements)
+        return self.get_string_array(self.lib.Meters_Get_AllEndElements)
 
     @property
     def AllNames(self):
         '''(read-only) Array of all energy Meter names'''
-        return get_string_array(lib.Meters_Get_AllNames)
+        return self.get_string_array(self.lib.Meters_Get_AllNames)
 
     @property
     def AllocFactors(self):
         '''Array of doubles: set the phase allocation factors for the active meter.'''
-        lib.Meters_Get_AllocFactors_GR()
-        return get_float64_gr_array()
+        self.lib.Meters_Get_AllocFactors_GR()
+        return self.get_float64_gr_array()
 
     @AllocFactors.setter
     def AllocFactors(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Meters_Set_AllocFactors(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Meters_Set_AllocFactors(ValuePtr, ValueCount)
 
     @property
     def AvgRepairTime(self):
         '''(read-only) Average Repair time in this section of the meter zone'''
-        return lib.Meters_Get_AvgRepairTime()
+        return self.lib.Meters_Get_AvgRepairTime()
 
     @property
     def CalcCurrent(self):
         '''Set the magnitude of the real part of the Calculated Current (normally determined by solution) for the Meter to force some behavior on Load Allocation'''
-        lib.Meters_Get_CalcCurrent_GR()
-        return get_float64_gr_array()
+        self.lib.Meters_Get_CalcCurrent_GR()
+        return self.get_float64_gr_array()
 
     @CalcCurrent.setter
     def CalcCurrent(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Meters_Set_CalcCurrent(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Meters_Set_CalcCurrent(ValuePtr, ValueCount)
 
     @property
     def Count(self):
         '''(read-only) Number of Energy Meters in the Active Circuit'''
-        return lib.Meters_Get_Count()
+        return self.lib.Meters_Get_Count()
 
     def __len__(self):
-        return lib.Meters_Get_Count()
+        return self.lib.Meters_Get_Count()
 
     @property
     def CountBranches(self):
         '''(read-only) Number of branches in Active energymeter zone. (Same as sequencelist size)'''
-        return lib.Meters_Get_CountBranches()
+        return self.lib.Meters_Get_CountBranches()
 
     @property
     def CountEndElements(self):
         '''(read-only) Number of zone end elements in the active meter zone.'''
-        return lib.Meters_Get_CountEndElements()
+        return self.lib.Meters_Get_CountEndElements()
 
     @property
     def CustInterrupts(self):
         '''(read-only) Total customer interruptions for this Meter zone based on reliability calcs.'''
-        return lib.Meters_Get_CustInterrupts()
+        return self.lib.Meters_Get_CustInterrupts()
 
     @property
     def DIFilesAreOpen(self):
         '''(read-only) Global Flag in the DSS to indicate if Demand Interval (DI) files have been properly opened.'''
-        return lib.Meters_Get_DIFilesAreOpen() != 0
+        return self.lib.Meters_Get_DIFilesAreOpen() != 0
 
     @property
     def FaultRateXRepairHrs(self):
         '''(read-only) Sum of Fault Rate time Repair Hrs in this section of the meter zone'''
-        return lib.Meters_Get_FaultRateXRepairHrs()
+        return self.lib.Meters_Get_FaultRateXRepairHrs()
 
     @property
     def First(self):
         '''(read-only) Set the first energy Meter active. Returns 0 if none.'''
-        return lib.Meters_Get_First()
+        return self.lib.Meters_Get_First()
 
     @property
     def MeteredElement(self):
         '''Set Name of metered element'''
-        return get_string(lib.Meters_Get_MeteredElement())
+        return self.get_string(self.lib.Meters_Get_MeteredElement())
 
     @MeteredElement.setter
     def MeteredElement(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Meters_Set_MeteredElement(Value)
+        self.lib.Meters_Set_MeteredElement(Value)
 
     @property
     def MeteredTerminal(self):
         '''set Number of Metered Terminal'''
-        return lib.Meters_Get_MeteredTerminal()
+        return self.lib.Meters_Get_MeteredTerminal()
 
     @MeteredTerminal.setter
     def MeteredTerminal(self, Value):
-        lib.Meters_Set_MeteredTerminal(Value)
+        self.lib.Meters_Set_MeteredTerminal(Value)
 
     @property
     def Name(self):
@@ -2356,116 +2331,116 @@ class IMeters(Base):
         (read) Get/Set the active meter  name.
         (write) Set a meter to be active by name.
         '''
-        return get_string(lib.Meters_Get_Name())
+        return self.get_string(self.lib.Meters_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Meters_Set_Name(Value)
+        self.lib.Meters_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next energy Meter active.  Returns 0 if no more.'''
-        return lib.Meters_Get_Next()
+        return self.lib.Meters_Get_Next()
 
     @property
     def NumSectionBranches(self):
         '''(read-only) Number of branches (lines) in this section'''
-        return lib.Meters_Get_NumSectionBranches()
+        return self.lib.Meters_Get_NumSectionBranches()
 
     @property
     def NumSectionCustomers(self):
         '''(read-only) Number of Customers in the active section.'''
-        return lib.Meters_Get_NumSectionCustomers()
+        return self.lib.Meters_Get_NumSectionCustomers()
 
     @property
     def NumSections(self):
         '''(read-only) Number of feeder sections in this meter's zone'''
-        return lib.Meters_Get_NumSections()
+        return self.lib.Meters_Get_NumSections()
 
     @property
     def OCPDeviceType(self):
         '''(read-only) Type of OCP device. 1=Fuse; 2=Recloser; 3=Relay'''
-        return lib.Meters_Get_OCPDeviceType()
+        return self.lib.Meters_Get_OCPDeviceType()
 
     @property
     def Peakcurrent(self):
         '''Array of doubles to set values of Peak Current property'''
-        lib.Meters_Get_Peakcurrent_GR()
-        return get_float64_gr_array()
+        self.lib.Meters_Get_Peakcurrent_GR()
+        return self.get_float64_gr_array()
 
     @Peakcurrent.setter
     def Peakcurrent(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Meters_Set_Peakcurrent(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Meters_Set_Peakcurrent(ValuePtr, ValueCount)
 
     @property
     def RegisterNames(self):
         '''(read-only) Array of strings containing the names of the registers.'''
-        return get_string_array(lib.Meters_Get_RegisterNames)
+        return self.get_string_array(self.lib.Meters_Get_RegisterNames)
 
     @property
     def RegisterValues(self):
         '''(read-only) Array of all the values contained in the Meter registers for the active Meter.'''
-        lib.Meters_Get_RegisterValues_GR()
-        return get_float64_gr_array()
+        self.lib.Meters_Get_RegisterValues_GR()
+        return self.get_float64_gr_array()
 
     @property
     def SAIDI(self):
         '''(read-only) SAIDI for this meter's zone. Execute DoReliabilityCalc first.'''
-        return lib.Meters_Get_SAIDI()
+        return self.lib.Meters_Get_SAIDI()
 
     @property
     def SAIFI(self):
         '''(read-only) Returns SAIFI for this meter's Zone. Execute Reliability Calc method first.'''
-        return lib.Meters_Get_SAIFI()
+        return self.lib.Meters_Get_SAIFI()
 
     @property
     def SAIFIKW(self):
         '''(read-only) SAIFI based on kW rather than number of customers. Get after reliability calcs.'''
-        return lib.Meters_Get_SAIFIKW()
+        return self.lib.Meters_Get_SAIFIKW()
 
     @property
     def SectSeqIdx(self):
         '''(read-only) SequenceIndex of the branch at the head of this section'''
-        return lib.Meters_Get_SectSeqIdx()
+        return self.lib.Meters_Get_SectSeqIdx()
 
     @property
     def SectTotalCust(self):
         '''(read-only) Total Customers downline from this section'''
-        return lib.Meters_Get_SectTotalCust()
+        return self.lib.Meters_Get_SectTotalCust()
 
     @property
     def SeqListSize(self):
         '''(read-only) Size of Sequence List'''
-        return lib.Meters_Get_SeqListSize()
+        return self.lib.Meters_Get_SeqListSize()
 
     @property
     def SequenceIndex(self):
         '''Get/set Index into Meter's SequenceList that contains branch pointers in lexical order. Earlier index guaranteed to be upline from later index. Sets PDelement active.'''
-        return lib.Meters_Get_SequenceIndex()
+        return self.lib.Meters_Get_SequenceIndex()
 
     @SequenceIndex.setter
     def SequenceIndex(self, Value):
-        lib.Meters_Set_SequenceIndex(Value)
+        self.lib.Meters_Set_SequenceIndex(Value)
 
     @property
     def SumBranchFltRates(self):
         '''(read-only) Sum of the branch fault rates in this section of the meter's zone'''
-        return lib.Meters_Get_SumBranchFltRates()
+        return self.lib.Meters_Get_SumBranchFltRates()
 
     @property
     def TotalCustomers(self):
         '''(read-only) Total Number of customers in this zone (downline from the EnergyMeter)'''
-        return lib.Meters_Get_TotalCustomers()
+        return self.lib.Meters_Get_TotalCustomers()
 
     @property
     def Totals(self):
         '''(read-only) Totals of all registers of all meters'''
-        lib.Meters_Get_Totals_GR()
-        return get_float64_gr_array()
+        self.lib.Meters_Get_Totals_GR()
+        return self.get_float64_gr_array()
 
     def __iter__(self):
         idx = self.First
@@ -2479,8 +2454,10 @@ class IMonitors(Base):
 
     def Channel(self, Index):
         '''(read-only) Array of float32 for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
-        lib.Monitors_Get_ByteStream_GR()
-        ptr, cnt = api_util.gr_int8_pointers
+        
+        ffi = self.api_util.ffi
+        self.lib.Monitors_Get_ByteStream_GR()
+        ptr, cnt = self.api_util.gr_int8_pointers
         cnt = cnt[0]
         if cnt == 272:
             return np.zeros((1,), dtype=np.float32)
@@ -2492,8 +2469,10 @@ class IMonitors(Base):
 
     def AsMatrix(self):
         '''(read-only) Matrix of the active monitor, containing the hour vector, second vector, and all channels (index 2 = channel 1)'''
-        lib.Monitors_Get_ByteStream_GR()
-        ptr, cnt = api_util.gr_int8_pointers
+        
+        ffi = self.api_util.ffi
+        self.lib.Monitors_Get_ByteStream_GR()
+        ptr, cnt = self.api_util.gr_int8_pointers
         cnt = cnt[0]
         if cnt == 272:
             return None #np.zeros((0,), dtype=np.float32)
@@ -2505,144 +2484,144 @@ class IMonitors(Base):
         return data
 
     def Process(self):
-        lib.Monitors_Process()
+        self.lib.Monitors_Process()
 
     def ProcessAll(self):
-        lib.Monitors_ProcessAll()
+        self.lib.Monitors_ProcessAll()
 
     def Reset(self):
-        lib.Monitors_Reset()
+        self.lib.Monitors_Reset()
 
     def ResetAll(self):
-        lib.Monitors_ResetAll()
+        self.lib.Monitors_ResetAll()
 
     def Sample(self):
-        lib.Monitors_Sample()
+        self.lib.Monitors_Sample()
 
     def SampleAll(self):
-        lib.Monitors_SampleAll()
+        self.lib.Monitors_SampleAll()
 
     def Save(self):
-        lib.Monitors_Save()
+        self.lib.Monitors_Save()
 
     def SaveAll(self):
-        lib.Monitors_SaveAll()
+        self.lib.Monitors_SaveAll()
 
     def Show(self):
-        lib.Monitors_Show()
+        self.lib.Monitors_Show()
 
     @property
     def AllNames(self):
         '''(read-only) Array of all Monitor Names'''
-        return get_string_array(lib.Monitors_Get_AllNames)
+        return self.get_string_array(self.lib.Monitors_Get_AllNames)
 
     @property
     def ByteStream(self):
         '''(read-only) Byte Array containing monitor stream values. Make sure a "save" is done first (standard solution modes do this automatically)'''
-        lib.Monitors_Get_ByteStream_GR()
-        return get_int8_gr_array()
+        self.lib.Monitors_Get_ByteStream_GR()
+        return self.get_int8_gr_array()
 
     @property
     def Count(self):
         '''(read-only) Number of Monitors'''
-        return lib.Monitors_Get_Count()
+        return self.lib.Monitors_Get_Count()
 
     def __len__(self):
-        return lib.Monitors_Get_Count()
+        return self.lib.Monitors_Get_Count()
 
     @property
     def Element(self):
         '''Full object name of element being monitored.'''
-        return get_string(lib.Monitors_Get_Element())
+        return self.get_string(self.lib.Monitors_Get_Element())
 
     @Element.setter
     def Element(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Monitors_Set_Element(Value)
+        self.lib.Monitors_Set_Element(Value)
 
     @property
     def FileName(self):
         '''(read-only) Name of CSV file associated with active Monitor.'''
-        return get_string(lib.Monitors_Get_FileName())
+        return self.get_string(self.lib.Monitors_Get_FileName())
 
     @property
     def FileVersion(self):
         '''(read-only) Monitor File Version (integer)'''
-        return lib.Monitors_Get_FileVersion()
+        return self.lib.Monitors_Get_FileVersion()
 
     @property
     def First(self):
         '''(read-only) Sets the first Monitor active.  Returns 0 if no monitors.'''
-        return lib.Monitors_Get_First()
+        return self.lib.Monitors_Get_First()
 
     @property
     def Header(self):
         '''(read-only) Header string;  Array of strings containing Channel names'''
-        return get_string_array(lib.Monitors_Get_Header)
+        return self.get_string_array(self.lib.Monitors_Get_Header)
 
     @property
     def Mode(self):
         '''Set Monitor mode (bitmask integer - see DSS Help)'''
-        return lib.Monitors_Get_Mode()
+        return self.lib.Monitors_Get_Mode()
 
     @Mode.setter
     def Mode(self, Value):
-        lib.Monitors_Set_Mode(Value)
+        self.lib.Monitors_Set_Mode(Value)
 
     @property
     def Name(self):
         '''Sets the active Monitor object by name'''
-        return get_string(lib.Monitors_Get_Name())
+        return self.get_string(self.lib.Monitors_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Monitors_Set_Name(Value)
+        self.lib.Monitors_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets next monitor active.  Returns 0 if no more.'''
-        return lib.Monitors_Get_Next()
+        return self.lib.Monitors_Get_Next()
 
     @property
     def NumChannels(self):
         '''(read-only) Number of Channels in the active Monitor'''
-        return lib.Monitors_Get_NumChannels()
+        return self.lib.Monitors_Get_NumChannels()
 
     @property
     def RecordSize(self):
         '''(read-only) Size of each record in ByteStream (Integer). Same as NumChannels.'''
-        return lib.Monitors_Get_RecordSize()
+        return self.lib.Monitors_Get_RecordSize()
 
     @property
     def SampleCount(self):
         '''(read-only) Number of Samples in Monitor at Present'''
-        return lib.Monitors_Get_SampleCount()
+        return self.lib.Monitors_Get_SampleCount()
 
     @property
     def Terminal(self):
         '''Terminal number of element being monitored.'''
-        return lib.Monitors_Get_Terminal()
+        return self.lib.Monitors_Get_Terminal()
 
     @Terminal.setter
     def Terminal(self, Value):
-        lib.Monitors_Set_Terminal(Value)
+        self.lib.Monitors_Set_Terminal(Value)
 
     @property
     def dblFreq(self):
         '''(read-only) Array of doubles containing frequency values for harmonics mode solutions; Empty for time mode solutions (use dblHour)'''
-        lib.Monitors_Get_dblFreq_GR()
-        return get_float64_gr_array()
+        self.lib.Monitors_Get_dblFreq_GR()
+        return self.get_float64_gr_array()
 
     @property
     def dblHour(self):
         '''(read-only) Array of doubles containgin time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution  (see dblFreq)'''
-        lib.Monitors_Get_dblHour_GR()
-        return get_float64_gr_array()
+        self.lib.Monitors_Get_dblHour_GR()
+        return self.get_float64_gr_array()
 
     def __iter__(self):
         idx = self.First
@@ -2656,30 +2635,30 @@ class IParser(Base):
 
     def Matrix(self, ExpectedOrder):
         '''(read-only) Use this property to parse a Matrix token in OpenDSS format.  Returns square matrix of order specified. Order same as default Fortran order: column by column.'''
-        lib.Parser_Get_Matrix_GR(ExpectedOrder)
-        return get_float64_gr_array()
+        self.lib.Parser_Get_Matrix_GR(ExpectedOrder)
+        return self.get_float64_gr_array()
 
     def SymMatrix(self, ExpectedOrder):
         '''(read-only) Use this property to parse a matrix token specified in lower triangle form. Symmetry is forced.'''
-        lib.Parser_Get_SymMatrix_GR(ExpectedOrder)
-        return get_float64_gr_array()
+        self.lib.Parser_Get_SymMatrix_GR(ExpectedOrder)
+        return self.get_float64_gr_array()
 
     def Vector(self, ExpectedSize):
         '''(read-only) Returns token as array of doubles. For parsing quoted array syntax.'''
-        lib.Parser_Get_Vector_GR(ExpectedSize)
-        return get_float64_gr_array()
+        self.lib.Parser_Get_Vector_GR(ExpectedSize)
+        return self.get_float64_gr_array()
 
     def ResetDelimiters(self):
-        lib.Parser_ResetDelimiters()
+        self.lib.Parser_ResetDelimiters()
 
     @property
     def AutoIncrement(self):
         '''Default is FALSE. If TRUE parser automatically advances to next token after DblValue, IntValue, or StrValue. Simpler when you don't need to check for parameter names.'''
-        return lib.Parser_Get_AutoIncrement() != 0
+        return self.lib.Parser_Get_AutoIncrement() != 0
 
     @AutoIncrement.setter
     def AutoIncrement(self, Value):
-        lib.Parser_Set_AutoIncrement(Value)
+        self.lib.Parser_Set_AutoIncrement(Value)
 
     @property
     def BeginQuote(self):
@@ -2687,70 +2666,70 @@ class IParser(Base):
         (read) Get String containing the the characters for Quoting in OpenDSS scripts. Matching pairs defined in EndQuote. Default is "'([{.
         (write) Set String containing the the characters for Quoting in OpenDSS scripts. Matching pairs defined in EndQuote. Default is "'([{.
         '''
-        return get_string(lib.Parser_Get_BeginQuote())
+        return self.get_string(self.lib.Parser_Get_BeginQuote())
 
     @BeginQuote.setter
     def BeginQuote(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Parser_Set_BeginQuote(Value)
+        self.lib.Parser_Set_BeginQuote(Value)
 
     @property
     def CmdString(self):
         '''String to be parsed. Loading this string resets the Parser to the beginning of the line. Then parse off the tokens in sequence.'''
-        return get_string(lib.Parser_Get_CmdString())
+        return self.get_string(self.lib.Parser_Get_CmdString())
 
     @CmdString.setter
     def CmdString(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Parser_Set_CmdString(Value)
+        self.lib.Parser_Set_CmdString(Value)
 
     @property
     def DblValue(self):
         '''(read-only) Return next parameter as a double.'''
-        return lib.Parser_Get_DblValue()
+        return self.lib.Parser_Get_DblValue()
 
     @property
     def Delimiters(self):
         '''String defining hard delimiters used to separate token on the command string. Default is , and =. The = separates token name from token value. These override whitesspace to separate tokens.'''
-        return get_string(lib.Parser_Get_Delimiters())
+        return self.get_string(self.lib.Parser_Get_Delimiters())
 
     @Delimiters.setter
     def Delimiters(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Parser_Set_Delimiters(Value)
+        self.lib.Parser_Set_Delimiters(Value)
 
     @property
     def EndQuote(self):
         '''String containing characters, in order, that match the beginning quote characters in BeginQuote. Default is "')]}'''
-        return get_string(lib.Parser_Get_EndQuote())
+        return self.get_string(self.lib.Parser_Get_EndQuote())
 
     @EndQuote.setter
     def EndQuote(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Parser_Set_EndQuote(Value)
+        self.lib.Parser_Set_EndQuote(Value)
 
     @property
     def IntValue(self):
         '''(read-only) Return next parameter as a long integer.'''
-        return lib.Parser_Get_IntValue()
+        return self.lib.Parser_Get_IntValue()
 
     @property
     def NextParam(self):
         '''(read-only) Get next token and return tag name (before = sign) if any. See AutoIncrement.'''
-        return get_string(lib.Parser_Get_NextParam())
+        return self.get_string(self.lib.Parser_Get_NextParam())
 
     @property
     def StrValue(self):
         '''(read-only) Return next parameter as a string'''
-        return get_string(lib.Parser_Get_StrValue())
+        return self.get_string(self.lib.Parser_Get_StrValue())
 
     @property
     def WhiteSpace(self):
@@ -2758,14 +2737,14 @@ class IParser(Base):
         (read) Get the characters used for White space in the command string.  Default is blank and Tab.
         (write) Set the characters used for White space in the command string.  Default is blank and Tab.
         '''
-        return get_string(lib.Parser_Get_WhiteSpace())
+        return self.get_string(self.lib.Parser_Get_WhiteSpace())
 
     @WhiteSpace.setter
     def WhiteSpace(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Parser_Set_WhiteSpace(Value)
+        self.lib.Parser_Set_WhiteSpace(Value)
 
 
 class IPDElements(Base):
@@ -2774,104 +2753,104 @@ class IPDElements(Base):
     @property
     def AccumulatedL(self):
         '''(read-only) accummulated failure rate for this branch on downline'''
-        return lib.PDElements_Get_AccumulatedL()
+        return self.lib.PDElements_Get_AccumulatedL()
 
     @property
     def Count(self):
         '''(read-only) Number of PD elements (including disabled elements)'''
-        return lib.PDElements_Get_Count()
+        return self.lib.PDElements_Get_Count()
 
     def __len__(self):
-        return lib.PDElements_Get_Count()
+        return self.lib.PDElements_Get_Count()
 
     @property
     def FaultRate(self):
         '''Get/Set Number of failures per year. For LINE elements: Number of failures per unit length per year. '''
-        return lib.PDElements_Get_FaultRate()
+        return self.lib.PDElements_Get_FaultRate()
 
     @FaultRate.setter
     def FaultRate(self, Value):
-        lib.PDElements_Set_FaultRate(Value)
+        self.lib.PDElements_Set_FaultRate(Value)
 
     @property
     def First(self):
         '''(read-only) Set the first enabled PD element to be the active element.  Returns 0 if none found.'''
-        return lib.PDElements_Get_First()
+        return self.lib.PDElements_Get_First()
 
     @property
     def FromTerminal(self):
         '''(read-only) Number of the terminal of active PD element that is on the "from" side. This is set after the meter zone is determined.'''
-        return lib.PDElements_Get_FromTerminal()
+        return self.lib.PDElements_Get_FromTerminal()
 
     @property
     def IsShunt(self):
         '''(read-only) Variant boolean indicating of PD element should be treated as a shunt element rather than a series element. Applies to Capacitor and Reactor elements in particular.'''
-        return lib.PDElements_Get_IsShunt() != 0
+        return self.lib.PDElements_Get_IsShunt() != 0
 
     @property
     def Lambda(self):
         '''(read-only) Failure rate for this branch. Faults per year including length of line.'''
-        return lib.PDElements_Get_Lambda()
+        return self.lib.PDElements_Get_Lambda()
 
     @property
     def Name(self):
         '''Get/Set name of active PD Element. Returns null string if active element is not PDElement type.'''
-        return get_string(lib.PDElements_Get_Name())
+        return self.get_string(self.lib.PDElements_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.PDElements_Set_Name(Value)
+        self.lib.PDElements_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Advance to the next PD element in the circuit. Enabled elements only. Returns 0 when no more elements.'''
-        return lib.PDElements_Get_Next()
+        return self.lib.PDElements_Get_Next()
 
     @property
     def Numcustomers(self):
         '''(read-only) Number of customers, this branch'''
-        return lib.PDElements_Get_Numcustomers()
+        return self.lib.PDElements_Get_Numcustomers()
 
     @property
     def ParentPDElement(self):
         '''(read-only) Sets the parent PD element to be the active circuit element.  Returns 0 if no more elements upline.'''
-        return lib.PDElements_Get_ParentPDElement()
+        return self.lib.PDElements_Get_ParentPDElement()
 
     @property
     def RepairTime(self):
         '''Average repair time for this element in hours'''
-        return lib.PDElements_Get_RepairTime()
+        return self.lib.PDElements_Get_RepairTime()
 
     @RepairTime.setter
     def RepairTime(self, Value):
-        lib.PDElements_Set_RepairTime(Value)
+        self.lib.PDElements_Set_RepairTime(Value)
 
     @property
     def SectionID(self):
         '''(read-only) Integer ID of the feeder section that this PDElement branch is part of'''
-        return lib.PDElements_Get_SectionID()
+        return self.lib.PDElements_Get_SectionID()
 
     @property
     def TotalMiles(self):
         '''(read-only) Total miles of line from this element to the end of the zone. For recloser siting algorithm.'''
-        return lib.PDElements_Get_TotalMiles()
+        return self.lib.PDElements_Get_TotalMiles()
 
     @property
     def Totalcustomers(self):
         '''(read-only) Total number of customers from this branch to the end of the zone'''
-        return lib.PDElements_Get_Totalcustomers()
+        return self.lib.PDElements_Get_Totalcustomers()
 
     @property
     def pctPermanent(self):
         '''Get/Set percent of faults that are permanent (require repair). Otherwise, fault is assumed to be transient/temporary.'''
-        return lib.PDElements_Get_pctPermanent()
+        return self.lib.PDElements_Get_pctPermanent()
 
     @pctPermanent.setter
     def pctPermanent(self, Value):
-        lib.PDElements_Set_pctPermanent(Value)
+        self.lib.PDElements_Set_pctPermanent(Value)
 
     def __iter__(self):
         idx = self.First
@@ -2886,20 +2865,20 @@ class IPVSystems(Base):
     @property
     def AllNames(self):
         '''(read-only) Vairant array of strings with all PVSystem names'''
-        return get_string_array(lib.PVSystems_Get_AllNames)
+        return self.get_string_array(self.lib.PVSystems_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of PVSystems'''
-        return lib.PVSystems_Get_Count()
+        return self.lib.PVSystems_Get_Count()
 
     def __len__(self):
-        return lib.PVSystems_Get_Count()
+        return self.lib.PVSystems_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Set first PVSystem active; returns 0 if none.'''
-        return lib.PVSystems_Get_First()
+        return self.lib.PVSystems_Get_First()
 
     @property
     def Irradiance(self):
@@ -2907,11 +2886,11 @@ class IPVSystems(Base):
         (read) Get the present value of the Irradiance property in W/sq-m
         (write) Set the present Irradiance value in W/sq-m
         '''
-        return lib.PVSystems_Get_Irradiance()
+        return self.lib.PVSystems_Get_Irradiance()
 
     @Irradiance.setter
     def Irradiance(self, Value):
-        lib.PVSystems_Set_Irradiance(Value)
+        self.lib.PVSystems_Set_Irradiance(Value)
 
     @property
     def Name(self):
@@ -2919,19 +2898,19 @@ class IPVSystems(Base):
         (read) Get the name of the active PVSystem
         (write) Set the name of the active PVSystem
         '''
-        return get_string(lib.PVSystems_Get_Name())
+        return self.get_string(self.lib.PVSystems_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.PVSystems_Set_Name(Value)
+        self.lib.PVSystems_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets next PVSystem active; returns 0 if no more.'''
-        return lib.PVSystems_Get_Next()
+        return self.lib.PVSystems_Get_Next()
 
     @property
     def PF(self):
@@ -2939,22 +2918,22 @@ class IPVSystems(Base):
         (read) Get Power factor
         (write) Set PF
         '''
-        return lib.PVSystems_Get_PF()
+        return self.lib.PVSystems_Get_PF()
 
     @PF.setter
     def PF(self, Value):
-        lib.PVSystems_Set_PF(Value)
+        self.lib.PVSystems_Set_PF(Value)
 
     @property
     def RegisterNames(self):
         '''(read-only) Variant Array of PVSYSTEM energy meter register names'''
-        return get_string_array(lib.PVSystems_Get_RegisterNames)
+        return self.get_string_array(self.lib.PVSystems_Get_RegisterNames)
 
     @property
     def RegisterValues(self):
         '''(read-only) Array of doubles containing values in PVSystem registers.'''
-        lib.PVSystems_Get_RegisterValues_GR()
-        return get_float64_gr_array()
+        self.lib.PVSystems_Get_RegisterValues_GR()
+        return self.get_float64_gr_array()
 
     @property
     def idx(self):
@@ -2962,11 +2941,11 @@ class IPVSystems(Base):
         (read) Get/set active PVSystem by index;  1..Count
         (write) Get/Set Active PVSystem by index:  1.. Count
         '''
-        return lib.PVSystems_Get_idx()
+        return self.lib.PVSystems_Get_idx()
 
     @idx.setter
     def idx(self, Value):
-        lib.PVSystems_Set_idx(Value)
+        self.lib.PVSystems_Set_idx(Value)
 
     @property
     def kVArated(self):
@@ -2974,16 +2953,16 @@ class IPVSystems(Base):
         (read) Get Rated kVA of the PVSystem
         (write) Set kva rated
         '''
-        return lib.PVSystems_Get_kVArated()
+        return self.lib.PVSystems_Get_kVArated()
 
     @kVArated.setter
     def kVArated(self, Value):
-        lib.PVSystems_Set_kVArated(Value)
+        self.lib.PVSystems_Set_kVArated(Value)
 
     @property
     def kW(self):
         '''(read-only) get kW output'''
-        return lib.PVSystems_Get_kW()
+        return self.lib.PVSystems_Get_kW()
 
     @property
     def kvar(self):
@@ -2991,11 +2970,11 @@ class IPVSystems(Base):
         (read) Get kvar value
         (write) Set kvar output value
         '''
-        return lib.PVSystems_Get_kvar()
+        return self.lib.PVSystems_Get_kvar()
 
     @kvar.setter
     def kvar(self, Value):
-        lib.PVSystems_Set_kvar(Value)
+        self.lib.PVSystems_Set_kvar(Value)
 
     def __iter__(self):
         idx = self.First
@@ -3008,28 +2987,28 @@ class IReclosers(Base):
     __slots__ = []
 
     def Close(self):
-        lib.Reclosers_Close()
+        self.lib.Reclosers_Close()
 
     def Open(self):
-        lib.Reclosers_Open()
+        self.lib.Reclosers_Open()
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all Reclosers in Active Circuit'''
-        return get_string_array(lib.Reclosers_Get_AllNames)
+        return self.get_string_array(self.lib.Reclosers_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of Reclosers in active circuit.'''
-        return lib.Reclosers_Get_Count()
+        return self.lib.Reclosers_Get_Count()
 
     def __len__(self):
-        return lib.Reclosers_Get_Count()
+        return self.lib.Reclosers_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Set First Recloser to be Active Ckt Element. Returns 0 if none.'''
-        return lib.Reclosers_Get_First()
+        return self.lib.Reclosers_Get_First()
 
     @property
     def GroundInst(self):
@@ -3037,20 +3016,20 @@ class IReclosers(Base):
         (read) Ground (3I0) instantaneous trip setting - curve multipler or actual amps.
         (write) Ground (3I0) trip instantaneous multiplier or actual amps
         '''
-        return lib.Reclosers_Get_GroundInst()
+        return self.lib.Reclosers_Get_GroundInst()
 
     @GroundInst.setter
     def GroundInst(self, Value):
-        lib.Reclosers_Set_GroundInst(Value)
+        self.lib.Reclosers_Set_GroundInst(Value)
 
     @property
     def GroundTrip(self):
         '''Ground (3I0) trip multiplier or actual amps'''
-        return lib.Reclosers_Get_GroundTrip()
+        return self.lib.Reclosers_Get_GroundTrip()
 
     @GroundTrip.setter
     def GroundTrip(self, Value):
-        lib.Reclosers_Set_GroundTrip(Value)
+        self.lib.Reclosers_Set_GroundTrip(Value)
 
     @property
     def MonitoredObj(self):
@@ -3058,58 +3037,58 @@ class IReclosers(Base):
         (read) Full name of object this Recloser is monitoring.
         (write) Set monitored object by full name.
         '''
-        return get_string(lib.Reclosers_Get_MonitoredObj())
+        return self.get_string(self.lib.Reclosers_Get_MonitoredObj())
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Reclosers_Set_MonitoredObj(Value)
+        self.lib.Reclosers_Set_MonitoredObj(Value)
 
     @property
     def MonitoredTerm(self):
         '''Terminal number of Monitored object for the Recloser '''
-        return lib.Reclosers_Get_MonitoredTerm()
+        return self.lib.Reclosers_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
-        lib.Reclosers_Set_MonitoredTerm(Value)
+        self.lib.Reclosers_Set_MonitoredTerm(Value)
 
     @property
     def Name(self):
         '''Get Name of active Recloser or set the active Recloser by name.'''
-        return get_string(lib.Reclosers_Get_Name())
+        return self.get_string(self.lib.Reclosers_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Reclosers_Set_Name(Value)
+        self.lib.Reclosers_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Iterate to the next recloser in the circuit. Returns zero if no more.'''
-        return lib.Reclosers_Get_Next()
+        return self.lib.Reclosers_Get_Next()
 
     @property
     def NumFast(self):
         '''Number of fast shots'''
-        return lib.Reclosers_Get_NumFast()
+        return self.lib.Reclosers_Get_NumFast()
 
     @NumFast.setter
     def NumFast(self, Value):
-        lib.Reclosers_Set_NumFast(Value)
+        self.lib.Reclosers_Set_NumFast(Value)
 
     @property
     def PhaseInst(self):
         '''Phase instantaneous curve multipler or actual amps'''
-        return lib.Reclosers_Get_PhaseInst()
+        return self.lib.Reclosers_Get_PhaseInst()
 
     @PhaseInst.setter
     def PhaseInst(self, Value):
-        lib.Reclosers_Set_PhaseInst(Value)
+        self.lib.Reclosers_Set_PhaseInst(Value)
 
     @property
     def PhaseTrip(self):
@@ -3117,56 +3096,56 @@ class IReclosers(Base):
         (read) Phase trip curve multiplier or actual amps
         (write) Phase Trip multiplier or actual amps
         '''
-        return lib.Reclosers_Get_PhaseTrip()
+        return self.lib.Reclosers_Get_PhaseTrip()
 
     @PhaseTrip.setter
     def PhaseTrip(self, Value):
-        lib.Reclosers_Set_PhaseTrip(Value)
+        self.lib.Reclosers_Set_PhaseTrip(Value)
 
     @property
     def RecloseIntervals(self):
         '''(read-only) Variant Array of Doubles: reclose intervals, s, between shots.'''
-        lib.Reclosers_Get_RecloseIntervals_GR()
-        return get_float64_gr_array()
+        self.lib.Reclosers_Get_RecloseIntervals_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Shots(self):
         '''Number of shots to lockout (fast + delayed)'''
-        return lib.Reclosers_Get_Shots()
+        return self.lib.Reclosers_Get_Shots()
 
     @Shots.setter
     def Shots(self, Value):
-        lib.Reclosers_Set_Shots(Value)
+        self.lib.Reclosers_Set_Shots(Value)
 
     @property
     def SwitchedObj(self):
         '''Full name of the circuit element that is being switched by the Recloser.'''
-        return get_string(lib.Reclosers_Get_SwitchedObj())
+        return self.get_string(self.lib.Reclosers_Get_SwitchedObj())
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Reclosers_Set_SwitchedObj(Value)
+        self.lib.Reclosers_Set_SwitchedObj(Value)
 
     @property
     def SwitchedTerm(self):
         '''Terminal number of the controlled device being switched by the Recloser'''
-        return lib.Reclosers_Get_SwitchedTerm()
+        return self.lib.Reclosers_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
-        lib.Reclosers_Set_SwitchedTerm(Value)
+        self.lib.Reclosers_Set_SwitchedTerm(Value)
 
     @property
     def idx(self):
         '''Get/Set the active Recloser by index into the recloser list.  1..Count'''
-        return lib.Reclosers_Get_idx()
+        return self.lib.Reclosers_Get_idx()
 
     @idx.setter
     def idx(self, Value):
-        lib.Reclosers_Set_idx(Value)
+        self.lib.Reclosers_Set_idx(Value)
 
     def __iter__(self):
         idx = self.First
@@ -3179,118 +3158,118 @@ class IRegControls(Base):
     __slots__ = []
 
     def Reset(self):
-        lib.RegControls_Reset()
+        self.lib.RegControls_Reset()
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings containing all RegControl names'''
-        return get_string_array(lib.RegControls_Get_AllNames)
+        return self.get_string_array(self.lib.RegControls_Get_AllNames)
 
     @property
     def CTPrimary(self):
         '''CT primary ampere rating (secondary is 0.2 amperes)'''
-        return lib.RegControls_Get_CTPrimary()
+        return self.lib.RegControls_Get_CTPrimary()
 
     @CTPrimary.setter
     def CTPrimary(self, Value):
-        lib.RegControls_Set_CTPrimary(Value)
+        self.lib.RegControls_Set_CTPrimary(Value)
 
     @property
     def Count(self):
         '''(read-only) Number of RegControl objects in Active Circuit'''
-        return lib.RegControls_Get_Count()
+        return self.lib.RegControls_Get_Count()
 
     def __len__(self):
-        return lib.RegControls_Get_Count()
+        return self.lib.RegControls_Get_Count()
 
     @property
     def Delay(self):
         '''Time delay [s] after arming before the first tap change. Control may reset before actually changing taps.'''
-        return lib.RegControls_Get_Delay()
+        return self.lib.RegControls_Get_Delay()
 
     @Delay.setter
     def Delay(self, Value):
-        lib.RegControls_Set_Delay(Value)
+        self.lib.RegControls_Set_Delay(Value)
 
     @property
     def First(self):
         '''(read-only) Sets the first RegControl active. Returns 0 if none.'''
-        return lib.RegControls_Get_First()
+        return self.lib.RegControls_Get_First()
 
     @property
     def ForwardBand(self):
         '''Regulation bandwidth in forward direciton, centered on Vreg'''
-        return lib.RegControls_Get_ForwardBand()
+        return self.lib.RegControls_Get_ForwardBand()
 
     @ForwardBand.setter
     def ForwardBand(self, Value):
-        lib.RegControls_Set_ForwardBand(Value)
+        self.lib.RegControls_Set_ForwardBand(Value)
 
     @property
     def ForwardR(self):
         '''LDC R setting in Volts'''
-        return lib.RegControls_Get_ForwardR()
+        return self.lib.RegControls_Get_ForwardR()
 
     @ForwardR.setter
     def ForwardR(self, Value):
-        lib.RegControls_Set_ForwardR(Value)
+        self.lib.RegControls_Set_ForwardR(Value)
 
     @property
     def ForwardVreg(self):
         '''Target voltage in the forward direction, on PT secondary base.'''
-        return lib.RegControls_Get_ForwardVreg()
+        return self.lib.RegControls_Get_ForwardVreg()
 
     @ForwardVreg.setter
     def ForwardVreg(self, Value):
-        lib.RegControls_Set_ForwardVreg(Value)
+        self.lib.RegControls_Set_ForwardVreg(Value)
 
     @property
     def ForwardX(self):
         '''LDC X setting in Volts'''
-        return lib.RegControls_Get_ForwardX()
+        return self.lib.RegControls_Get_ForwardX()
 
     @ForwardX.setter
     def ForwardX(self, Value):
-        lib.RegControls_Set_ForwardX(Value)
+        self.lib.RegControls_Set_ForwardX(Value)
 
     @property
     def IsInverseTime(self):
         '''Time delay is inversely adjsuted, proportinal to the amount of voltage outside the regulating band.'''
-        return lib.RegControls_Get_IsInverseTime() != 0
+        return self.lib.RegControls_Get_IsInverseTime() != 0
 
     @IsInverseTime.setter
     def IsInverseTime(self, Value):
-        lib.RegControls_Set_IsInverseTime(Value)
+        self.lib.RegControls_Set_IsInverseTime(Value)
 
     @property
     def IsReversible(self):
         '''Regulator can use different settings in the reverse direction.  Usually not applicable to substation transformers.'''
-        return lib.RegControls_Get_IsReversible() != 0
+        return self.lib.RegControls_Get_IsReversible() != 0
 
     @IsReversible.setter
     def IsReversible(self, Value):
-        lib.RegControls_Set_IsReversible(Value)
+        self.lib.RegControls_Set_IsReversible(Value)
 
     @property
     def MaxTapChange(self):
         '''Maximum tap change per iteration in STATIC solution mode. 1 is more realistic, 16 is the default for a faster soluiton.'''
-        return lib.RegControls_Get_MaxTapChange()
+        return self.lib.RegControls_Get_MaxTapChange()
 
     @MaxTapChange.setter
     def MaxTapChange(self, Value):
-        lib.RegControls_Set_MaxTapChange(Value)
+        self.lib.RegControls_Set_MaxTapChange(Value)
 
     @property
     def MonitoredBus(self):
         '''Name of a remote regulated bus, in lieu of LDC settings'''
-        return get_string(lib.RegControls_Get_MonitoredBus())
+        return self.get_string(self.lib.RegControls_Get_MonitoredBus())
 
     @MonitoredBus.setter
     def MonitoredBus(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.RegControls_Set_MonitoredBus(Value)
+        self.lib.RegControls_Set_MonitoredBus(Value)
 
     @property
     def Name(self):
@@ -3298,121 +3277,121 @@ class IRegControls(Base):
         (read) Get/set Active RegControl  name
         (write) Sets a RegControl active by name
         '''
-        return get_string(lib.RegControls_Get_Name())
+        return self.get_string(self.lib.RegControls_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.RegControls_Set_Name(Value)
+        self.lib.RegControls_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next RegControl active. Returns 0 if none.'''
-        return lib.RegControls_Get_Next()
+        return self.lib.RegControls_Get_Next()
 
     @property
     def PTratio(self):
         '''PT ratio for voltage control settings'''
-        return lib.RegControls_Get_PTratio()
+        return self.lib.RegControls_Get_PTratio()
 
     @PTratio.setter
     def PTratio(self, Value):
-        lib.RegControls_Set_PTratio(Value)
+        self.lib.RegControls_Set_PTratio(Value)
 
     @property
     def ReverseBand(self):
         '''Bandwidth in reverse direction, centered on reverse Vreg.'''
-        return lib.RegControls_Get_ReverseBand()
+        return self.lib.RegControls_Get_ReverseBand()
 
     @ReverseBand.setter
     def ReverseBand(self, Value):
-        lib.RegControls_Set_ReverseBand(Value)
+        self.lib.RegControls_Set_ReverseBand(Value)
 
     @property
     def ReverseR(self):
         '''Reverse LDC R setting in Volts.'''
-        return lib.RegControls_Get_ReverseR()
+        return self.lib.RegControls_Get_ReverseR()
 
     @ReverseR.setter
     def ReverseR(self, Value):
-        lib.RegControls_Set_ReverseR(Value)
+        self.lib.RegControls_Set_ReverseR(Value)
 
     @property
     def ReverseVreg(self):
         '''Target voltage in the revese direction, on PT secondary base.'''
-        return lib.RegControls_Get_ReverseVreg()
+        return self.lib.RegControls_Get_ReverseVreg()
 
     @ReverseVreg.setter
     def ReverseVreg(self, Value):
-        lib.RegControls_Set_ReverseVreg(Value)
+        self.lib.RegControls_Set_ReverseVreg(Value)
 
     @property
     def ReverseX(self):
         '''Reverse LDC X setting in volts.'''
-        return lib.RegControls_Get_ReverseX()
+        return self.lib.RegControls_Get_ReverseX()
 
     @ReverseX.setter
     def ReverseX(self, Value):
-        lib.RegControls_Set_ReverseX(Value)
+        self.lib.RegControls_Set_ReverseX(Value)
 
     @property
     def TapDelay(self):
         '''Time delay [s] for subsequent tap changes in a set. Control may reset before actually changing taps.'''
-        return lib.RegControls_Get_TapDelay()
+        return self.lib.RegControls_Get_TapDelay()
 
     @TapDelay.setter
     def TapDelay(self, Value):
-        lib.RegControls_Set_TapDelay(Value)
+        self.lib.RegControls_Set_TapDelay(Value)
 
     @property
     def TapNumber(self):
         '''Integer number of the tap that the controlled transformer winding is currentliy on.'''
-        return lib.RegControls_Get_TapNumber()
+        return self.lib.RegControls_Get_TapNumber()
 
     @TapNumber.setter
     def TapNumber(self, Value):
-        lib.RegControls_Set_TapNumber(Value)
+        self.lib.RegControls_Set_TapNumber(Value)
 
     @property
     def TapWinding(self):
         '''Tapped winding number'''
-        return lib.RegControls_Get_TapWinding()
+        return self.lib.RegControls_Get_TapWinding()
 
     @TapWinding.setter
     def TapWinding(self, Value):
-        lib.RegControls_Set_TapWinding(Value)
+        self.lib.RegControls_Set_TapWinding(Value)
 
     @property
     def Transformer(self):
         '''Name of the transformer this regulator controls'''
-        return get_string(lib.RegControls_Get_Transformer())
+        return self.get_string(self.lib.RegControls_Get_Transformer())
 
     @Transformer.setter
     def Transformer(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.RegControls_Set_Transformer(Value)
+        self.lib.RegControls_Set_Transformer(Value)
 
     @property
     def VoltageLimit(self):
         '''First house voltage limit on PT secondary base.  Setting to 0 disables this function.'''
-        return lib.RegControls_Get_VoltageLimit()
+        return self.lib.RegControls_Get_VoltageLimit()
 
     @VoltageLimit.setter
     def VoltageLimit(self, Value):
-        lib.RegControls_Set_VoltageLimit(Value)
+        self.lib.RegControls_Set_VoltageLimit(Value)
 
     @property
     def Winding(self):
         '''Winding number for PT and CT connections'''
-        return lib.RegControls_Get_Winding()
+        return self.lib.RegControls_Get_Winding()
 
     @Winding.setter
     def Winding(self, Value):
-        lib.RegControls_Set_Winding(Value)
+        self.lib.RegControls_Set_Winding(Value)
 
     def __iter__(self):
         idx = self.First
@@ -3427,41 +3406,41 @@ class IRelays(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings containing names of all Relay elements'''
-        return get_string_array(lib.Relays_Get_AllNames)
+        return self.get_string_array(self.lib.Relays_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of Relays in circuit'''
-        return lib.Relays_Get_Count()
+        return self.lib.Relays_Get_Count()
 
     def __len__(self):
-        return lib.Relays_Get_Count()
+        return self.lib.Relays_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Set First Relay active. If none, returns 0.'''
-        return lib.Relays_Get_First()
+        return self.lib.Relays_Get_First()
 
     @property
     def MonitoredObj(self):
         '''Full name of object this Relay is monitoring.'''
-        return get_string(lib.Relays_Get_MonitoredObj())
+        return self.get_string(self.lib.Relays_Get_MonitoredObj())
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Relays_Set_MonitoredObj(Value)
+        self.lib.Relays_Set_MonitoredObj(Value)
 
     @property
     def MonitoredTerm(self):
         '''Number of terminal of monitored element that this Relay is monitoring.'''
-        return lib.Relays_Get_MonitoredTerm()
+        return self.lib.Relays_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
-        lib.Relays_Set_MonitoredTerm(Value)
+        self.lib.Relays_Set_MonitoredTerm(Value)
 
     @property
     def Name(self):
@@ -3469,40 +3448,40 @@ class IRelays(Base):
         (read) Get name of active relay.
         (write) Set Relay active by name
         '''
-        return get_string(lib.Relays_Get_Name())
+        return self.get_string(self.lib.Relays_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Relays_Set_Name(Value)
+        self.lib.Relays_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Advance to next Relay object. Returns 0 when no more relays.'''
-        return lib.Relays_Get_Next()
+        return self.lib.Relays_Get_Next()
 
     @property
     def SwitchedObj(self):
         '''Full name of element that will be switched when relay trips.'''
-        return get_string(lib.Relays_Get_SwitchedObj())
+        return self.get_string(self.lib.Relays_Get_SwitchedObj())
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Relays_Set_SwitchedObj(Value)
+        self.lib.Relays_Set_SwitchedObj(Value)
 
     @property
     def SwitchedTerm(self):
         '''Terminal number of the switched object that will be opened when the relay trips.'''
-        return lib.Relays_Get_SwitchedTerm()
+        return self.lib.Relays_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
-        lib.Relays_Set_SwitchedTerm(Value)
+        self.lib.Relays_Set_SwitchedTerm(Value)
 
     @property
     def idx(self):
@@ -3510,11 +3489,11 @@ class IRelays(Base):
         (read) Get/Set active Relay by index into the Relay list. 1..Count
         (write) Get/Set Relay active by index into relay list. 1..Count
         '''
-        return lib.Relays_Get_idx()
+        return self.lib.Relays_Get_idx()
 
     @idx.setter
     def idx(self, Value):
-        lib.Relays_Set_idx(Value)
+        self.lib.Relays_Set_idx(Value)
 
     def __iter__(self):
         idx = self.First
@@ -3527,69 +3506,69 @@ class ISensors(Base):
     __slots__ = []
 
     def Reset(self):
-        lib.Sensors_Reset()
+        self.lib.Sensors_Reset()
 
     def ResetAll(self):
-        lib.Sensors_ResetAll()
+        self.lib.Sensors_ResetAll()
 
     @property
     def AllNames(self):
         '''(read-only) Array of Sensor names.'''
-        return get_string_array(lib.Sensors_Get_AllNames)
+        return self.get_string_array(self.lib.Sensors_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of Sensors in Active Circuit.'''
-        return lib.Sensors_Get_Count()
+        return self.lib.Sensors_Get_Count()
 
     def __len__(self):
-        return lib.Sensors_Get_Count()
+        return self.lib.Sensors_Get_Count()
 
     @property
     def Currents(self):
         '''Array of doubles for the line current measurements; don't use with kWS and kVARS.'''
-        lib.Sensors_Get_Currents_GR()
-        return get_float64_gr_array()
+        self.lib.Sensors_Get_Currents_GR()
+        return self.get_float64_gr_array()
 
     @Currents.setter
     def Currents(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Sensors_Set_Currents(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Sensors_Set_Currents(ValuePtr, ValueCount)
 
     @property
     def First(self):
         '''(read-only) Sets the first sensor active. Returns 0 if none.'''
-        return lib.Sensors_Get_First()
+        return self.lib.Sensors_Get_First()
 
     @property
     def IsDelta(self):
         '''True if measured voltages are line-line. Currents are always line currents.'''
-        return lib.Sensors_Get_IsDelta() != 0
+        return self.lib.Sensors_Get_IsDelta() != 0
 
     @IsDelta.setter
     def IsDelta(self, Value):
-        lib.Sensors_Set_IsDelta(Value)
+        self.lib.Sensors_Set_IsDelta(Value)
 
     @property
     def MeteredElement(self):
         '''Full Name of the measured element'''
-        return get_string(lib.Sensors_Get_MeteredElement())
+        return self.get_string(self.lib.Sensors_Get_MeteredElement())
 
     @MeteredElement.setter
     def MeteredElement(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Sensors_Set_MeteredElement(Value)
+        self.lib.Sensors_Set_MeteredElement(Value)
 
     @property
     def MeteredTerminal(self):
         '''Number of the measured terminal in the measured element.'''
-        return lib.Sensors_Get_MeteredTerminal()
+        return self.lib.Sensors_Get_MeteredTerminal()
 
     @MeteredTerminal.setter
     def MeteredTerminal(self, Value):
-        lib.Sensors_Set_MeteredTerminal(Value)
+        self.lib.Sensors_Set_MeteredTerminal(Value)
 
     @property
     def Name(self):
@@ -3597,88 +3576,88 @@ class ISensors(Base):
         (read) Name of the active sensor.
         (write) Set the active Sensor by name.
         '''
-        return get_string(lib.Sensors_Get_Name())
+        return self.get_string(self.lib.Sensors_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Sensors_Set_Name(Value)
+        self.lib.Sensors_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next Sensor active. Returns 0 if no more.'''
-        return lib.Sensors_Get_Next()
+        return self.lib.Sensors_Get_Next()
 
     @property
     def PctError(self):
         '''Assumed percent error in the Sensor measurement. Default is 1.'''
-        return lib.Sensors_Get_PctError()
+        return self.lib.Sensors_Get_PctError()
 
     @PctError.setter
     def PctError(self, Value):
-        lib.Sensors_Set_PctError(Value)
+        self.lib.Sensors_Set_PctError(Value)
 
     @property
     def ReverseDelta(self):
         '''True if voltage measurements are 1-3, 3-2, 2-1.'''
-        return lib.Sensors_Get_ReverseDelta() != 0
+        return self.lib.Sensors_Get_ReverseDelta() != 0
 
     @ReverseDelta.setter
     def ReverseDelta(self, Value):
-        lib.Sensors_Set_ReverseDelta(Value)
+        self.lib.Sensors_Set_ReverseDelta(Value)
 
     @property
     def Weight(self):
         '''Weighting factor for this Sensor measurement with respect to other Sensors. Default is 1.'''
-        return lib.Sensors_Get_Weight()
+        return self.lib.Sensors_Get_Weight()
 
     @Weight.setter
     def Weight(self, Value):
-        lib.Sensors_Set_Weight(Value)
+        self.lib.Sensors_Set_Weight(Value)
 
     @property
     def kVARS(self):
         '''Array of doubles for Q measurements. Overwrites Currents with a new estimate using kWS.'''
-        lib.Sensors_Get_kVARS_GR()
-        return get_float64_gr_array()
+        self.lib.Sensors_Get_kVARS_GR()
+        return self.get_float64_gr_array()
 
     @kVARS.setter
     def kVARS(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Sensors_Set_kVARS(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Sensors_Set_kVARS(ValuePtr, ValueCount)
 
     @property
     def kVS(self):
         '''Array of doubles for the LL or LN (depending on Delta connection) voltage measurements.'''
-        lib.Sensors_Get_kVS_GR()
-        return get_float64_gr_array()
+        self.lib.Sensors_Get_kVS_GR()
+        return self.get_float64_gr_array()
 
     @kVS.setter
     def kVS(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Sensors_Set_kVS(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Sensors_Set_kVS(ValuePtr, ValueCount)
 
     @property
     def kVbase(self):
         '''Voltage base for the sensor measurements. LL for 2 and 3-phase sensors, LN for 1-phase sensors.'''
-        return lib.Sensors_Get_kVbase()
+        return self.lib.Sensors_Get_kVbase()
 
     @kVbase.setter
     def kVbase(self, Value):
-        lib.Sensors_Set_kVbase(Value)
+        self.lib.Sensors_Set_kVbase(Value)
 
     @property
     def kWS(self):
         '''Array of doubles for P measurements. Overwrites Currents with a new estimate using kVARS.'''
-        lib.Sensors_Get_kWS_GR()
-        return get_float64_gr_array()
+        self.lib.Sensors_Get_kWS_GR()
+        return self.get_float64_gr_array()
 
     @kWS.setter
     def kWS(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Sensors_Set_kWS(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Sensors_Set_kWS(ValuePtr, ValueCount)
 
     def __iter__(self):
         idx = self.First
@@ -3693,167 +3672,167 @@ class ISettings(Base):
     @property
     def AllowDuplicates(self):
         '''{True | False*} Designates whether to allow duplicate names of objects'''
-        return lib.Settings_Get_AllowDuplicates() != 0
+        return self.lib.Settings_Get_AllowDuplicates() != 0
 
     @AllowDuplicates.setter
     def AllowDuplicates(self, Value):
-        lib.Settings_Set_AllowDuplicates(Value)
+        self.lib.Settings_Set_AllowDuplicates(Value)
 
     @property
     def AutoBusList(self):
         '''List of Buses or (File=xxxx) syntax for the AutoAdd solution mode.'''
-        return get_string(lib.Settings_Get_AutoBusList())
+        return self.get_string(self.lib.Settings_Get_AutoBusList())
 
     @AutoBusList.setter
     def AutoBusList(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Settings_Set_AutoBusList(Value)
+        self.lib.Settings_Set_AutoBusList(Value)
 
     @property
     def CktModel(self):
         '''{dssMultiphase * | dssPositiveSeq} IIndicate if the circuit model is positive sequence.'''
-        return lib.Settings_Get_CktModel()
+        return self.lib.Settings_Get_CktModel()
 
     @CktModel.setter
     def CktModel(self, Value):
-        lib.Settings_Set_CktModel(Value)
+        self.lib.Settings_Set_CktModel(Value)
 
     @property
     def ControlTrace(self):
         '''{True | False*} Denotes whether to trace the control actions to a file.'''
-        return lib.Settings_Get_ControlTrace() != 0
+        return self.lib.Settings_Get_ControlTrace() != 0
 
     @ControlTrace.setter
     def ControlTrace(self, Value):
-        lib.Settings_Set_ControlTrace(Value)
+        self.lib.Settings_Set_ControlTrace(Value)
 
     @property
     def EmergVmaxpu(self):
         '''Per Unit maximum voltage for Emergency conditions.'''
-        return lib.Settings_Get_EmergVmaxpu()
+        return self.lib.Settings_Get_EmergVmaxpu()
 
     @EmergVmaxpu.setter
     def EmergVmaxpu(self, Value):
-        lib.Settings_Set_EmergVmaxpu(Value)
+        self.lib.Settings_Set_EmergVmaxpu(Value)
 
     @property
     def EmergVminpu(self):
         '''Per Unit minimum voltage for Emergency conditions.'''
-        return lib.Settings_Get_EmergVminpu()
+        return self.lib.Settings_Get_EmergVminpu()
 
     @EmergVminpu.setter
     def EmergVminpu(self, Value):
-        lib.Settings_Set_EmergVminpu(Value)
+        self.lib.Settings_Set_EmergVminpu(Value)
 
     @property
     def LossRegs(self):
         '''Integer array defining which energy meter registers to use for computing losses'''
-        lib.Settings_Get_LossRegs_GR()
-        return get_int32_gr_array()
+        self.lib.Settings_Get_LossRegs_GR()
+        return self.get_int32_gr_array()
 
     @LossRegs.setter
     def LossRegs(self, Value):
-        Value, ValuePtr, ValueCount = prepare_int32_array(Value)
-        lib.Settings_Set_LossRegs(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_int32_array(Value)
+        self.lib.Settings_Set_LossRegs(ValuePtr, ValueCount)
 
     @property
     def LossWeight(self):
         '''Weighting factor applied to Loss register values.'''
-        return lib.Settings_Get_LossWeight()
+        return self.lib.Settings_Get_LossWeight()
 
     @LossWeight.setter
     def LossWeight(self, Value):
-        lib.Settings_Set_LossWeight(Value)
+        self.lib.Settings_Set_LossWeight(Value)
 
     @property
     def NormVmaxpu(self):
         '''Per Unit maximum voltage for Normal conditions.'''
-        return lib.Settings_Get_NormVmaxpu()
+        return self.lib.Settings_Get_NormVmaxpu()
 
     @NormVmaxpu.setter
     def NormVmaxpu(self, Value):
-        lib.Settings_Set_NormVmaxpu(Value)
+        self.lib.Settings_Set_NormVmaxpu(Value)
 
     @property
     def NormVminpu(self):
         '''Per Unit minimum voltage for Normal conditions.'''
-        return lib.Settings_Get_NormVminpu()
+        return self.lib.Settings_Get_NormVminpu()
 
     @NormVminpu.setter
     def NormVminpu(self, Value):
-        lib.Settings_Set_NormVminpu(Value)
+        self.lib.Settings_Set_NormVminpu(Value)
 
     @property
     def PriceCurve(self):
         '''Name of LoadShape object that serves as the source of price signal data for yearly simulations, etc.'''
-        return get_string(lib.Settings_Get_PriceCurve())
+        return self.get_string(self.lib.Settings_Get_PriceCurve())
 
     @PriceCurve.setter
     def PriceCurve(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Settings_Set_PriceCurve(Value)
+        self.lib.Settings_Set_PriceCurve(Value)
 
     @property
     def PriceSignal(self):
         '''Price Signal for the Circuit'''
-        return lib.Settings_Get_PriceSignal()
+        return self.lib.Settings_Get_PriceSignal()
 
     @PriceSignal.setter
     def PriceSignal(self, Value):
-        lib.Settings_Set_PriceSignal(Value)
+        self.lib.Settings_Set_PriceSignal(Value)
 
     @property
     def Trapezoidal(self):
         '''{True | False *} Gets value of trapezoidal integration flag in energy meters.'''
-        return lib.Settings_Get_Trapezoidal() != 0
+        return self.lib.Settings_Get_Trapezoidal() != 0
 
     @Trapezoidal.setter
     def Trapezoidal(self, Value):
-        lib.Settings_Set_Trapezoidal(Value)
+        self.lib.Settings_Set_Trapezoidal(Value)
 
     @property
     def UEregs(self):
         '''Array of Integers defining energy meter registers to use for computing UE'''
-        lib.Settings_Get_UEregs_GR()
-        return get_int32_gr_array()
+        self.lib.Settings_Get_UEregs_GR()
+        return self.get_int32_gr_array()
 
     @UEregs.setter
     def UEregs(self, Value):
-        Value, ValuePtr, ValueCount = prepare_int32_array(Value)
-        lib.Settings_Set_UEregs(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_int32_array(Value)
+        self.lib.Settings_Set_UEregs(ValuePtr, ValueCount)
 
     @property
     def UEweight(self):
         '''Weighting factor applied to UE register values.'''
-        return lib.Settings_Get_UEweight()
+        return self.lib.Settings_Get_UEweight()
 
     @UEweight.setter
     def UEweight(self, Value):
-        lib.Settings_Set_UEweight(Value)
+        self.lib.Settings_Set_UEweight(Value)
 
     @property
     def VoltageBases(self):
         '''Array of doubles defining the legal voltage bases in kV L-L'''
-        lib.Settings_Get_VoltageBases_GR()
-        return get_float64_gr_array()
+        self.lib.Settings_Get_VoltageBases_GR()
+        return self.get_float64_gr_array()
 
     @VoltageBases.setter
     def VoltageBases(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Settings_Set_VoltageBases(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Settings_Set_VoltageBases(ValuePtr, ValueCount)
 
     @property
     def ZoneLock(self):
         '''{True | False*}  Locks Zones on energy meters to prevent rebuilding if a circuit change occurs.'''
-        return lib.Settings_Get_ZoneLock() != 0
+        return self.lib.Settings_Get_ZoneLock() != 0
 
     @ZoneLock.setter
     def ZoneLock(self, Value):
-        lib.Settings_Set_ZoneLock(Value)
+        self.lib.Settings_Set_ZoneLock(Value)
 
     @property
     def AllocationFactors(self):
@@ -3862,193 +3841,193 @@ class ISettings(Base):
 
     @AllocationFactors.setter
     def AllocationFactors(self, Value):
-        lib.Settings_Set_AllocationFactors(Value)
+        self.lib.Settings_Set_AllocationFactors(Value)
 
 
 class ISolution(Base):
     __slots__ = []
 
     def BuildYMatrix(self, BuildOption, AllocateVI):
-        lib.Solution_BuildYMatrix(BuildOption, AllocateVI)
+        self.lib.Solution_BuildYMatrix(BuildOption, AllocateVI)
 
     def CheckControls(self):
-        lib.Solution_CheckControls()
+        self.lib.Solution_CheckControls()
 
     def CheckFaultStatus(self):
-        lib.Solution_CheckFaultStatus()
+        self.lib.Solution_CheckFaultStatus()
 
     def Cleanup(self):
-        lib.Solution_Cleanup()
+        self.lib.Solution_Cleanup()
 
     def DoControlActions(self):
-        lib.Solution_DoControlActions()
+        self.lib.Solution_DoControlActions()
 
     def FinishTimeStep(self):
-        lib.Solution_FinishTimeStep()
+        self.lib.Solution_FinishTimeStep()
 
     def InitSnap(self):
-        lib.Solution_InitSnap()
+        self.lib.Solution_InitSnap()
 
     def SampleControlDevices(self):
-        lib.Solution_SampleControlDevices()
+        self.lib.Solution_SampleControlDevices()
 
     def Sample_DoControlActions(self):
-        lib.Solution_Sample_DoControlActions()
+        self.lib.Solution_Sample_DoControlActions()
 
     def Solve(self):
-        lib.Solution_Solve()
+        self.lib.Solution_Solve()
 
     def SolveDirect(self):
-        lib.Solution_SolveDirect()
+        self.lib.Solution_SolveDirect()
 
     def SolveNoControl(self):
-        lib.Solution_SolveNoControl()
+        self.lib.Solution_SolveNoControl()
 
     def SolvePflow(self):
-        lib.Solution_SolvePflow()
+        self.lib.Solution_SolvePflow()
 
     def SolvePlusControl(self):
-        lib.Solution_SolvePlusControl()
+        self.lib.Solution_SolvePlusControl()
 
     def SolveSnap(self):
-        lib.Solution_SolveSnap()
+        self.lib.Solution_SolveSnap()
 
     @property
     def AddType(self):
         '''Type of device to add in AutoAdd Mode: {dssGen (Default) | dssCap}'''
-        return lib.Solution_Get_AddType()
+        return self.lib.Solution_Get_AddType()
 
     @AddType.setter
     def AddType(self, Value):
-        lib.Solution_Set_AddType(Value)
+        self.lib.Solution_Set_AddType(Value)
 
     @property
     def Algorithm(self):
         '''Base Solution algorithm: {dssNormalSolve | dssNewtonSolve}'''
-        return lib.Solution_Get_Algorithm()
+        return self.lib.Solution_Get_Algorithm()
 
     @Algorithm.setter
     def Algorithm(self, Value):
-        lib.Solution_Set_Algorithm(Value)
+        self.lib.Solution_Set_Algorithm(Value)
 
     @property
     def Capkvar(self):
         '''Capacitor kvar for adding capacitors in AutoAdd mode'''
-        return lib.Solution_Get_Capkvar()
+        return self.lib.Solution_Get_Capkvar()
 
     @Capkvar.setter
     def Capkvar(self, Value):
-        lib.Solution_Set_Capkvar(Value)
+        self.lib.Solution_Set_Capkvar(Value)
 
     @property
     def ControlActionsDone(self):
         '''Flag indicating the control actions are done.'''
-        return lib.Solution_Get_ControlActionsDone() != 0
+        return self.lib.Solution_Get_ControlActionsDone() != 0
 
     @ControlActionsDone.setter
     def ControlActionsDone(self, Value):
-        lib.Solution_Set_ControlActionsDone(Value)
+        self.lib.Solution_Set_ControlActionsDone(Value)
 
     @property
     def ControlIterations(self):
         '''Value of the control iteration counter'''
-        return lib.Solution_Get_ControlIterations()
+        return self.lib.Solution_Get_ControlIterations()
 
     @ControlIterations.setter
     def ControlIterations(self, Value):
-        lib.Solution_Set_ControlIterations(Value)
+        self.lib.Solution_Set_ControlIterations(Value)
 
     @property
     def ControlMode(self):
         '''{dssStatic* | dssEvent | dssTime}  Modes for control devices'''
-        return lib.Solution_Get_ControlMode()
+        return self.lib.Solution_Get_ControlMode()
 
     @ControlMode.setter
     def ControlMode(self, Value):
-        lib.Solution_Set_ControlMode(Value)
+        self.lib.Solution_Set_ControlMode(Value)
 
     @property
     def Converged(self):
         '''Flag to indicate whether the circuit solution converged'''
-        return lib.Solution_Get_Converged() != 0
+        return self.lib.Solution_Get_Converged() != 0
 
     @Converged.setter
     def Converged(self, Value):
-        lib.Solution_Set_Converged(Value)
+        self.lib.Solution_Set_Converged(Value)
 
     @property
     def DefaultDaily(self):
         '''Default daily load shape (defaults to "Default")'''
-        return get_string(lib.Solution_Get_DefaultDaily())
+        return self.get_string(self.lib.Solution_Get_DefaultDaily())
 
     @DefaultDaily.setter
     def DefaultDaily(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Solution_Set_DefaultDaily(Value)
+        self.lib.Solution_Set_DefaultDaily(Value)
 
     @property
     def DefaultYearly(self):
         '''Default Yearly load shape (defaults to "Default")'''
-        return get_string(lib.Solution_Get_DefaultYearly())
+        return self.get_string(self.lib.Solution_Get_DefaultYearly())
 
     @DefaultYearly.setter
     def DefaultYearly(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Solution_Set_DefaultYearly(Value)
+        self.lib.Solution_Set_DefaultYearly(Value)
 
     @property
     def EventLog(self):
         '''(read-only) Array of strings containing the Event Log'''
-        return get_string_array(lib.Solution_Get_EventLog)
+        return self.get_string_array(self.lib.Solution_Get_EventLog)
 
     @property
     def Frequency(self):
         '''Set the Frequency for next solution'''
-        return lib.Solution_Get_Frequency()
+        return self.lib.Solution_Get_Frequency()
 
     @Frequency.setter
     def Frequency(self, Value):
-        lib.Solution_Set_Frequency(Value)
+        self.lib.Solution_Set_Frequency(Value)
 
     @property
     def GenMult(self):
         '''Default Multiplier applied to generators (like LoadMult)'''
-        return lib.Solution_Get_GenMult()
+        return self.lib.Solution_Get_GenMult()
 
     @GenMult.setter
     def GenMult(self, Value):
-        lib.Solution_Set_GenMult(Value)
+        self.lib.Solution_Set_GenMult(Value)
 
     @property
     def GenPF(self):
         '''PF for generators in AutoAdd mode'''
-        return lib.Solution_Get_GenPF()
+        return self.lib.Solution_Get_GenPF()
 
     @GenPF.setter
     def GenPF(self, Value):
-        lib.Solution_Set_GenPF(Value)
+        self.lib.Solution_Set_GenPF(Value)
 
     @property
     def GenkW(self):
         '''Generator kW for AutoAdd mode'''
-        return lib.Solution_Get_GenkW()
+        return self.lib.Solution_Get_GenkW()
 
     @GenkW.setter
     def GenkW(self, Value):
-        lib.Solution_Set_GenkW(Value)
+        self.lib.Solution_Set_GenkW(Value)
 
     @property
     def Hour(self):
         '''Set Hour for time series solutions.'''
-        return lib.Solution_Get_Hour()
+        return self.lib.Solution_Get_Hour()
 
     @Hour.setter
     def Hour(self, Value):
-        lib.Solution_Set_Hour(Value)
+        self.lib.Solution_Set_Hour(Value)
 
     @property
     def IntervalHrs(self):
@@ -4056,64 +4035,64 @@ class ISolution(Base):
         (read) Get/Set the Solution.IntervalHrs variable used for devices that integrate
         (write) Get/Set the Solution.IntervalHrs variable for custom solution algorithms
         '''
-        return lib.Solution_Get_IntervalHrs()
+        return self.lib.Solution_Get_IntervalHrs()
 
     @IntervalHrs.setter
     def IntervalHrs(self, Value):
-        lib.Solution_Set_IntervalHrs(Value)
+        self.lib.Solution_Set_IntervalHrs(Value)
 
     @property
     def Iterations(self):
         '''(read-only) Number of iterations taken for last solution. (Same as TotalIterations)'''
-        return lib.Solution_Get_Iterations()
+        return self.lib.Solution_Get_Iterations()
 
     @property
     def LDCurve(self):
         '''Load-Duration Curve name for LD modes'''
-        return get_string(lib.Solution_Get_LDCurve())
+        return self.get_string(self.lib.Solution_Get_LDCurve())
 
     @LDCurve.setter
     def LDCurve(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Solution_Set_LDCurve(Value)
+        self.lib.Solution_Set_LDCurve(Value)
 
     @property
     def LoadModel(self):
         '''Load Model: {dssPowerFlow (default) | dssAdmittance}'''
-        return lib.Solution_Get_LoadModel()
+        return self.lib.Solution_Get_LoadModel()
 
     @LoadModel.setter
     def LoadModel(self, Value):
-        lib.Solution_Set_LoadModel(Value)
+        self.lib.Solution_Set_LoadModel(Value)
 
     @property
     def LoadMult(self):
         '''Default load multiplier applied to all non-fixed loads'''
-        return lib.Solution_Get_LoadMult()
+        return self.lib.Solution_Get_LoadMult()
 
     @LoadMult.setter
     def LoadMult(self, Value):
-        lib.Solution_Set_LoadMult(Value)
+        self.lib.Solution_Set_LoadMult(Value)
 
     @property
     def MaxControlIterations(self):
         '''Maximum allowable control iterations'''
-        return lib.Solution_Get_MaxControlIterations()
+        return self.lib.Solution_Get_MaxControlIterations()
 
     @MaxControlIterations.setter
     def MaxControlIterations(self, Value):
-        lib.Solution_Set_MaxControlIterations(Value)
+        self.lib.Solution_Set_MaxControlIterations(Value)
 
     @property
     def MaxIterations(self):
         '''Max allowable iterations.'''
-        return lib.Solution_Get_MaxIterations()
+        return self.lib.Solution_Get_MaxIterations()
 
     @MaxIterations.setter
     def MaxIterations(self, Value):
-        lib.Solution_Set_MaxIterations(Value)
+        self.lib.Solution_Set_MaxIterations(Value)
 
     @property
     def MinIterations(self):
@@ -4121,90 +4100,90 @@ class ISolution(Base):
         (read) Minimum number of iterations required for a power flow solution.
         (write) Mininum number of iterations required for a power flow solution.
         '''
-        return lib.Solution_Get_MinIterations()
+        return self.lib.Solution_Get_MinIterations()
 
     @MinIterations.setter
     def MinIterations(self, Value):
-        lib.Solution_Set_MinIterations(Value)
+        self.lib.Solution_Set_MinIterations(Value)
 
     @property
     def Mode(self):
         '''Set present solution mode (by a text code - see DSS Help)'''
-        return lib.Solution_Get_Mode()
+        return self.lib.Solution_Get_Mode()
 
     @Mode.setter
     def Mode(self, Mode):
-        lib.Solution_Set_Mode(Mode)
+        self.lib.Solution_Set_Mode(Mode)
 
     @property
     def ModeID(self):
         '''(read-only) ID (text) of the present solution mode'''
-        return get_string(lib.Solution_Get_ModeID())
+        return self.get_string(self.lib.Solution_Get_ModeID())
 
     @property
     def MostIterationsDone(self):
         '''(read-only) Max number of iterations required to converge at any control iteration of the most recent solution.'''
-        return lib.Solution_Get_MostIterationsDone()
+        return self.lib.Solution_Get_MostIterationsDone()
 
     @property
     def Number(self):
         '''Number of solutions to perform for Monte Carlo and time series simulations'''
-        return lib.Solution_Get_Number()
+        return self.lib.Solution_Get_Number()
 
     @Number.setter
     def Number(self, Value):
-        lib.Solution_Set_Number(Value)
+        self.lib.Solution_Set_Number(Value)
 
     @property
     def Process_Time(self):
         '''(read-only) Gets the time required to perform the latest solution (Read only)'''
-        return lib.Solution_Get_Process_Time()
+        return self.lib.Solution_Get_Process_Time()
 
     @property
     def Random(self):
         '''Randomization mode for random variables "Gaussian" or "Uniform"'''
-        return lib.Solution_Get_Random()
+        return self.lib.Solution_Get_Random()
 
     @Random.setter
     def Random(self, Random):
-        lib.Solution_Set_Random(Random)
+        self.lib.Solution_Set_Random(Random)
 
     @property
     def Seconds(self):
         '''Seconds from top of the hour.'''
-        return lib.Solution_Get_Seconds()
+        return self.lib.Solution_Get_Seconds()
 
     @Seconds.setter
     def Seconds(self, Value):
-        lib.Solution_Set_Seconds(Value)
+        self.lib.Solution_Set_Seconds(Value)
 
     @property
     def StepSize(self):
         '''Time step size in sec'''
-        return lib.Solution_Get_StepSize()
+        return self.lib.Solution_Get_StepSize()
 
     @StepSize.setter
     def StepSize(self, Value):
-        lib.Solution_Set_StepSize(Value)
+        self.lib.Solution_Set_StepSize(Value)
 
     @property
     def SystemYChanged(self):
         '''(read-only) Flag that indicates if elements of the System Y have been changed by recent activity.'''
-        return lib.Solution_Get_SystemYChanged() != 0
+        return self.lib.Solution_Get_SystemYChanged() != 0
 
     @property
     def Time_of_Step(self):
         '''(read-only) Get the solution process time + sample time for time step'''
-        return lib.Solution_Get_Time_of_Step()
+        return self.lib.Solution_Get_Time_of_Step()
 
     @property
     def Tolerance(self):
         '''Solution convergence tolerance.'''
-        return lib.Solution_Get_Tolerance()
+        return self.lib.Solution_Get_Tolerance()
 
     @Tolerance.setter
     def Tolerance(self, Value):
-        lib.Solution_Set_Tolerance(Value)
+        self.lib.Solution_Set_Tolerance(Value)
 
     @property
     def Total_Time(self):
@@ -4212,43 +4191,43 @@ class ISolution(Base):
         (read) Gets the accumulated time of the simulation
         (write) Sets the Accumulated time of the simulation
         '''
-        return lib.Solution_Get_Total_Time()
+        return self.lib.Solution_Get_Total_Time()
 
     @Total_Time.setter
     def Total_Time(self, Value):
-        lib.Solution_Set_Total_Time(Value)
+        self.lib.Solution_Set_Total_Time(Value)
 
     @property
     def Totaliterations(self):
         '''(read-only) Total iterations including control iterations for most recent solution.'''
-        return lib.Solution_Get_Totaliterations()
+        return self.lib.Solution_Get_Totaliterations()
 
     @property
     def Year(self):
         '''Set year for planning studies'''
-        return lib.Solution_Get_Year()
+        return self.lib.Solution_Get_Year()
 
     @Year.setter
     def Year(self, Value):
-        lib.Solution_Set_Year(Value)
+        self.lib.Solution_Set_Year(Value)
 
     @property
     def dblHour(self):
         '''Hour as a double, including fractional part'''
-        return lib.Solution_Get_dblHour()
+        return self.lib.Solution_Get_dblHour()
 
     @dblHour.setter
     def dblHour(self, Value):
-        lib.Solution_Set_dblHour(Value)
+        self.lib.Solution_Set_dblHour(Value)
 
     @property
     def pctGrowth(self):
         '''Percent default  annual load growth rate'''
-        return lib.Solution_Get_pctGrowth()
+        return self.lib.Solution_Get_pctGrowth()
 
     @pctGrowth.setter
     def pctGrowth(self, Value):
-        lib.Solution_Set_pctGrowth(Value)
+        self.lib.Solution_Set_pctGrowth(Value)
 
     @property
     def StepsizeHr(self):
@@ -4257,7 +4236,7 @@ class ISolution(Base):
 
     @StepsizeHr.setter
     def StepsizeHr(self, Value):
-        lib.Solution_Set_StepsizeHr(Value)
+        self.lib.Solution_Set_StepsizeHr(Value)
 
     @property
     def StepsizeMin(self):
@@ -4266,75 +4245,102 @@ class ISolution(Base):
 
     @StepsizeMin.setter
     def StepsizeMin(self, Value):
-        lib.Solution_Set_StepsizeMin(Value)
+        self.lib.Solution_Set_StepsizeMin(Value)
 
+    # The following are available only in v8
+    @property
+    def BusLevels(self):
+        self.lib.Solution_Get_BusLevels_GR()
+        return self.get_int32_gr_array()
 
+    @property
+    def IncMatrix(self):
+        self.lib.Solution_Get_IncMatrix_GR()
+        return self.get_int32_gr_array()
+
+    @property
+    def IncMatrixCols(self):
+        return self.get_string_array(self.lib.Solution_Get_IncMatrixCols)
+
+    @property
+    def IncMatrixRows(self):
+        return self.get_string_array(self.lib.Solution_Get_IncMatrixRows)
+
+    @property
+    def Laplacian(self):
+        self.lib.Solution_Get_Laplacian_GR()
+        return self.get_int32_gr_array()
+
+    def SolveAll(self):
+        self.lib.Solution_SolveAll()
+        
+        
 class ISwtControls(Base):
     __slots__ = []
 
     def Reset(self):
-        lib.SwtControls_Reset()
+        self.lib.SwtControls_Reset()
 
     @property
     def Action(self):
         '''Open or Close the switch. No effect if switch is locked.  However, Reset removes any lock and then closes the switch (shelf state).'''
-        return lib.SwtControls_Get_Action()
+        return self.lib.SwtControls_Get_Action()
 
     @Action.setter
     def Action(self, Value):
-        lib.SwtControls_Set_Action(Value)
+        self.lib.SwtControls_Set_Action(Value)
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings with all SwtControl names in the active circuit.'''
-        return get_string_array(lib.SwtControls_Get_AllNames)
+        return self.get_string_array(self.lib.SwtControls_Get_AllNames)
 
     @property
     def Count(self):
-        return lib.SwtControls_Get_Count()
+        return self.lib.SwtControls_Get_Count()
 
     def __len__(self):
-        return lib.SwtControls_Get_Count()
+        return self.lib.SwtControls_Get_Count()
 
     @property
     def Delay(self):
         '''Time delay [s] betwen arming and opening or closing the switch.  Control may reset before actually operating the switch.'''
-        return lib.SwtControls_Get_Delay()
+        return self.lib.SwtControls_Get_Delay()
 
     @Delay.setter
     def Delay(self, Value):
-        lib.SwtControls_Set_Delay(Value)
+        self.lib.SwtControls_Set_Delay(Value)
 
     @property
     def First(self):
         '''(read-only) Sets the first SwtControl active. Returns 0 if no more.'''
-        return lib.SwtControls_Get_First()
+        return self.lib.SwtControls_Get_First()
 
     @property
     def IsLocked(self):
         '''The lock prevents both manual and automatic switch operation.'''
-        return lib.SwtControls_Get_IsLocked() != 0
+        return self.lib.SwtControls_Get_IsLocked() != 0
 
     @IsLocked.setter
     def IsLocked(self, Value):
-        lib.SwtControls_Set_IsLocked(Value)
+        self.lib.SwtControls_Set_IsLocked(Value)
 
     @property
     def Name(self):
         '''Sets a SwtControl active by Name.'''
-        return get_string(lib.SwtControls_Get_Name())
+        return self.get_string(self.lib.SwtControls_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.SwtControls_Set_Name(Value)
+        self.lib.SwtControls_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next SwtControl active. Returns 0 if no more.'''
-        return lib.SwtControls_Get_Next()
+        return self.lib.SwtControls_Get_Next()
 
     @property
     def NormalState(self):
@@ -4342,11 +4348,11 @@ class ISwtControls(Base):
         (read) Get Normal state of switch
         (write) set Normal state of switch  (see actioncodes) dssActionOpen or dssActionClose
         '''
-        return lib.SwtControls_Get_NormalState()
+        return self.lib.SwtControls_Get_NormalState()
 
     @NormalState.setter
     def NormalState(self, Value):
-        lib.SwtControls_Set_NormalState(Value)
+        self.lib.SwtControls_Set_NormalState(Value)
 
     @property
     def State(self):
@@ -4354,32 +4360,32 @@ class ISwtControls(Base):
         (read) Force switch to specified state
         (write) Get Present state of switch
         '''
-        return lib.SwtControls_Get_State()
+        return self.lib.SwtControls_Get_State()
 
     @State.setter
     def State(self, Value):
-        lib.SwtControls_Set_State(Value)
+        self.lib.SwtControls_Set_State(Value)
 
     @property
     def SwitchedObj(self):
         '''Full name of the switched element.'''
-        return get_string(lib.SwtControls_Get_SwitchedObj())
+        return self.get_string(self.lib.SwtControls_Get_SwitchedObj())
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.SwtControls_Set_SwitchedObj(Value)
+        self.lib.SwtControls_Set_SwitchedObj(Value)
 
     @property
     def SwitchedTerm(self):
         '''Terminal number where the switch is located on the SwitchedObj'''
-        return lib.SwtControls_Get_SwitchedTerm()
+        return self.lib.SwtControls_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
-        lib.SwtControls_Set_SwitchedTerm(Value)
+        self.lib.SwtControls_Set_SwitchedTerm(Value)
 
     def __iter__(self):
         idx = self.First
@@ -4394,20 +4400,20 @@ class IText(Base):
     @property
     def Command(self):
         '''Input command string for the DSS.'''
-        return get_string(lib.Text_Get_Command())
+        return self.get_string(self.lib.Text_Get_Command())
 
     @Command.setter
     def Command(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Text_Set_Command(Value)
-        CheckForError()
+        self.lib.Text_Set_Command(Value)
+        self.CheckForError()
 
     @property
     def Result(self):
         '''(read-only) Result string for the last command.'''
-        return get_string(lib.Text_Get_Result())
+        return self.get_string(self.lib.Text_Get_Result())
 
 
 class ITopology(Base):
@@ -4416,106 +4422,106 @@ class ITopology(Base):
     @property
     def ActiveBranch(self):
         '''(read-only) Returns index of the active branch'''
-        return lib.Topology_Get_ActiveBranch()
+        return self.lib.Topology_Get_ActiveBranch()
 
     @property
     def ActiveLevel(self):
         '''(read-only) Topological depth of the active branch'''
-        return lib.Topology_Get_ActiveLevel()
+        return self.lib.Topology_Get_ActiveLevel()
 
     @property
     def AllIsolatedBranches(self):
         '''(read-only) Array of all isolated branch names.'''
-        return get_string_array(lib.Topology_Get_AllIsolatedBranches)
+        return self.get_string_array(self.lib.Topology_Get_AllIsolatedBranches)
 
     @property
     def AllIsolatedLoads(self):
         '''(read-only) Array of all isolated load names.'''
-        return get_string_array(lib.Topology_Get_AllIsolatedLoads)
+        return self.get_string_array(self.lib.Topology_Get_AllIsolatedLoads)
 
     @property
     def AllLoopedPairs(self):
         '''(read-only) Array of all looped element names, by pairs.'''
-        return get_string_array(lib.Topology_Get_AllLoopedPairs)
+        return self.get_string_array(self.lib.Topology_Get_AllLoopedPairs)
 
     @property
     def BackwardBranch(self):
         '''(read-only) MOve back toward the source, return index of new active branch, or 0 if no more.'''
-        return lib.Topology_Get_BackwardBranch()
+        return self.lib.Topology_Get_BackwardBranch()
 
     @property
     def BranchName(self):
         '''Name of the active branch.'''
-        return get_string(lib.Topology_Get_BranchName())
+        return self.get_string(self.lib.Topology_Get_BranchName())
 
     @BranchName.setter
     def BranchName(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Topology_Set_BranchName(Value)
+        self.lib.Topology_Set_BranchName(Value)
 
     @property
     def BusName(self):
         '''Set the active branch to one containing this bus, return index or 0 if not found'''
-        return get_string(lib.Topology_Get_BusName())
+        return self.get_string(self.lib.Topology_Get_BusName())
 
     @BusName.setter
     def BusName(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Topology_Set_BusName(Value)
+        self.lib.Topology_Set_BusName(Value)
 
     @property
     def First(self):
         '''(read-only) Sets the first branch active, returns 0 if none.'''
-        return lib.Topology_Get_First()
+        return self.lib.Topology_Get_First()
 
     @property
     def FirstLoad(self):
         '''(read-only) First load at the active branch, return index or 0 if none.'''
-        return lib.Topology_Get_FirstLoad()
+        return self.lib.Topology_Get_FirstLoad()
 
     @property
     def ForwardBranch(self):
         '''(read-only) Move forward in the tree, return index of new active branch or 0 if no more'''
-        return lib.Topology_Get_ForwardBranch()
+        return self.lib.Topology_Get_ForwardBranch()
 
     @property
     def LoopedBranch(self):
         '''(read-only) Move to looped branch, return index or 0 if none.'''
-        return lib.Topology_Get_LoopedBranch()
+        return self.lib.Topology_Get_LoopedBranch()
 
     @property
     def Next(self):
         '''(read-only) Sets the next branch active, returns 0 if no more.'''
-        return lib.Topology_Get_Next()
+        return self.lib.Topology_Get_Next()
 
     @property
     def NextLoad(self):
         '''(read-only) Next load at the active branch, return index or 0 if no more.'''
-        return lib.Topology_Get_NextLoad()
+        return self.lib.Topology_Get_NextLoad()
 
     @property
     def NumIsolatedBranches(self):
         '''(read-only) Number of isolated branches (PD elements and capacitors).'''
-        return lib.Topology_Get_NumIsolatedBranches()
+        return self.lib.Topology_Get_NumIsolatedBranches()
 
     @property
     def NumIsolatedLoads(self):
         '''(read-only) Number of isolated loads'''
-        return lib.Topology_Get_NumIsolatedLoads()
+        return self.lib.Topology_Get_NumIsolatedLoads()
 
     @property
     def NumLoops(self):
         '''(read-only) Number of loops'''
-        return lib.Topology_Get_NumLoops()
+        return self.lib.Topology_Get_NumLoops()
 
     @property
     def ParallelBranch(self):
         '''(read-only) Move to directly parallel branch, return index or 0 if none.'''
-        return lib.Topology_Get_ParallelBranch()
+        return self.lib.Topology_Get_ParallelBranch()
 
 
 class ITransformers(Base):
@@ -4524,183 +4530,183 @@ class ITransformers(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with all Transformer names in the active circuit.'''
-        return get_string_array(lib.Transformers_Get_AllNames)
+        return self.get_string_array(self.lib.Transformers_Get_AllNames)
 
     @property
     def Count(self):
-        return lib.Transformers_Get_Count()
+        return self.lib.Transformers_Get_Count()
 
     def __len__(self):
-        return lib.Transformers_Get_Count()
+        return self.lib.Transformers_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Sets the first Transformer active. Returns 0 if no more.'''
-        return lib.Transformers_Get_First()
+        return self.lib.Transformers_Get_First()
 
     @property
     def IsDelta(self):
         '''Active Winding delta or wye connection?'''
-        return lib.Transformers_Get_IsDelta() != 0
+        return self.lib.Transformers_Get_IsDelta() != 0
 
     @IsDelta.setter
     def IsDelta(self, Value):
-        lib.Transformers_Set_IsDelta(Value)
+        self.lib.Transformers_Set_IsDelta(Value)
 
     @property
     def MaxTap(self):
         '''Active Winding maximum tap in per-unit.'''
-        return lib.Transformers_Get_MaxTap()
+        return self.lib.Transformers_Get_MaxTap()
 
     @MaxTap.setter
     def MaxTap(self, Value):
-        lib.Transformers_Set_MaxTap(Value)
+        self.lib.Transformers_Set_MaxTap(Value)
 
     @property
     def MinTap(self):
         '''Active Winding minimum tap in per-unit.'''
-        return lib.Transformers_Get_MinTap()
+        return self.lib.Transformers_Get_MinTap()
 
     @MinTap.setter
     def MinTap(self, Value):
-        lib.Transformers_Set_MinTap(Value)
+        self.lib.Transformers_Set_MinTap(Value)
 
     @property
     def Name(self):
         '''Sets a Transformer active by Name.'''
-        return get_string(lib.Transformers_Get_Name())
+        return self.get_string(self.lib.Transformers_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Transformers_Set_Name(Value)
+        self.lib.Transformers_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next Transformer active. Returns 0 if no more.'''
-        return lib.Transformers_Get_Next()
+        return self.lib.Transformers_Get_Next()
 
     @property
     def NumTaps(self):
         '''Active Winding number of tap steps betwein MinTap and MaxTap.'''
-        return lib.Transformers_Get_NumTaps()
+        return self.lib.Transformers_Get_NumTaps()
 
     @NumTaps.setter
     def NumTaps(self, Value):
-        lib.Transformers_Set_NumTaps(Value)
+        self.lib.Transformers_Set_NumTaps(Value)
 
     @property
     def NumWindings(self):
         '''Number of windings on this transformer. Allocates memory; set or change this property first.'''
-        return lib.Transformers_Get_NumWindings()
+        return self.lib.Transformers_Get_NumWindings()
 
     @NumWindings.setter
     def NumWindings(self, Value):
-        lib.Transformers_Set_NumWindings(Value)
+        self.lib.Transformers_Set_NumWindings(Value)
 
     @property
     def R(self):
         '''Active Winding resistance in %'''
-        return lib.Transformers_Get_R()
+        return self.lib.Transformers_Get_R()
 
     @R.setter
     def R(self, Value):
-        lib.Transformers_Set_R(Value)
+        self.lib.Transformers_Set_R(Value)
 
     @property
     def Rneut(self):
         '''Active Winding neutral resistance [ohms] for wye connections. Set less than zero for ungrounded wye.'''
-        return lib.Transformers_Get_Rneut()
+        return self.lib.Transformers_Get_Rneut()
 
     @Rneut.setter
     def Rneut(self, Value):
-        lib.Transformers_Set_Rneut(Value)
+        self.lib.Transformers_Set_Rneut(Value)
 
     @property
     def Tap(self):
         '''Active Winding tap in per-unit.'''
-        return lib.Transformers_Get_Tap()
+        return self.lib.Transformers_Get_Tap()
 
     @Tap.setter
     def Tap(self, Value):
-        lib.Transformers_Set_Tap(Value)
+        self.lib.Transformers_Set_Tap(Value)
 
     @property
     def Wdg(self):
         '''Active Winding Number from 1..NumWindings. Update this before reading or setting a sequence of winding properties (R, Tap, kV, kVA, etc.)'''
-        return lib.Transformers_Get_Wdg()
+        return self.lib.Transformers_Get_Wdg()
 
     @Wdg.setter
     def Wdg(self, Value):
-        lib.Transformers_Set_Wdg(Value)
+        self.lib.Transformers_Set_Wdg(Value)
 
     @property
     def XfmrCode(self):
         '''Name of an XfrmCode that supplies electircal parameters for this Transformer.'''
-        return get_string(lib.Transformers_Get_XfmrCode())
+        return self.get_string(self.lib.Transformers_Get_XfmrCode())
 
     @XfmrCode.setter
     def XfmrCode(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Transformers_Set_XfmrCode(Value)
+        self.lib.Transformers_Set_XfmrCode(Value)
 
     @property
     def Xhl(self):
         '''Percent reactance between windings 1 and 2, on winding 1 kVA base. Use for 2-winding or 3-winding transformers.'''
-        return lib.Transformers_Get_Xhl()
+        return self.lib.Transformers_Get_Xhl()
 
     @Xhl.setter
     def Xhl(self, Value):
-        lib.Transformers_Set_Xhl(Value)
+        self.lib.Transformers_Set_Xhl(Value)
 
     @property
     def Xht(self):
         '''Percent reactance between windigns 1 and 3, on winding 1 kVA base.  Use for 3-winding transformers only.'''
-        return lib.Transformers_Get_Xht()
+        return self.lib.Transformers_Get_Xht()
 
     @Xht.setter
     def Xht(self, Value):
-        lib.Transformers_Set_Xht(Value)
+        self.lib.Transformers_Set_Xht(Value)
 
     @property
     def Xlt(self):
         '''Percent reactance between windings 2 and 3, on winding 1 kVA base. Use for 3-winding transformers only.'''
-        return lib.Transformers_Get_Xlt()
+        return self.lib.Transformers_Get_Xlt()
 
     @Xlt.setter
     def Xlt(self, Value):
-        lib.Transformers_Set_Xlt(Value)
+        self.lib.Transformers_Set_Xlt(Value)
 
     @property
     def Xneut(self):
         '''Active Winding neutral reactance [ohms] for wye connections.'''
-        return lib.Transformers_Get_Xneut()
+        return self.lib.Transformers_Get_Xneut()
 
     @Xneut.setter
     def Xneut(self, Value):
-        lib.Transformers_Set_Xneut(Value)
+        self.lib.Transformers_Set_Xneut(Value)
 
     @property
     def kV(self):
         '''Active Winding kV rating.  Phase-phase for 2 or 3 phases, actual winding kV for 1 phase transformer.'''
-        return lib.Transformers_Get_kV()
+        return self.lib.Transformers_Get_kV()
 
     @kV.setter
     def kV(self, Value):
-        lib.Transformers_Set_kV(Value)
+        self.lib.Transformers_Set_kV(Value)
 
     @property
     def kVA(self):
         '''Active Winding kVA rating. On winding 1, this also determines normal and emergency current ratings for all windings.'''
-        return lib.Transformers_Get_kVA()
+        return self.lib.Transformers_Get_kVA()
 
     @kVA.setter
     def kVA(self, Value):
-        lib.Transformers_Set_kVA(Value)
+        self.lib.Transformers_Set_kVA(Value)
 
     kva = kVA
 
@@ -4717,7 +4723,7 @@ class IVsources(Base):
     @property
     def AllNames(self):
         '''(read-only) Names of all Vsource objects in the circuit'''
-        return get_string_array(lib.Vsources_Get_AllNames)
+        return self.get_string_array(self.lib.Vsources_Get_AllNames)
 
     @property
     def AngleDeg(self):
@@ -4725,42 +4731,42 @@ class IVsources(Base):
         (read) Phase angle of first phase in degrees
         (write) phase angle in degrees
         '''
-        return lib.Vsources_Get_AngleDeg()
+        return self.lib.Vsources_Get_AngleDeg()
 
     @AngleDeg.setter
     def AngleDeg(self, Value):
-        lib.Vsources_Set_AngleDeg(Value)
+        self.lib.Vsources_Set_AngleDeg(Value)
 
     @property
     def BasekV(self):
         '''Source voltage in kV'''
-        return lib.Vsources_Get_BasekV()
+        return self.lib.Vsources_Get_BasekV()
 
     @BasekV.setter
     def BasekV(self, Value):
-        lib.Vsources_Set_BasekV(Value)
+        self.lib.Vsources_Set_BasekV(Value)
 
     @property
     def Count(self):
         '''(read-only) Number of Vsource Object'''
-        return lib.Vsources_Get_Count()
+        return self.lib.Vsources_Get_Count()
 
     def __len__(self):
-        return lib.Vsources_Get_Count()
+        return self.lib.Vsources_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Sets the first VSOURCE to be active; Returns 0 if none'''
-        return lib.Vsources_Get_First()
+        return self.lib.Vsources_Get_First()
 
     @property
     def Frequency(self):
         '''Source frequency in Hz'''
-        return lib.Vsources_Get_Frequency()
+        return self.lib.Vsources_Get_Frequency()
 
     @Frequency.setter
     def Frequency(self, Value):
-        lib.Vsources_Set_Frequency(Value)
+        self.lib.Vsources_Set_Frequency(Value)
 
     @property
     def Name(self):
@@ -4768,28 +4774,28 @@ class IVsources(Base):
         (read) Get Active VSOURCE name
         (write) Set Active VSOURCE by Name
         '''
-        return get_string(lib.Vsources_Get_Name())
+        return self.get_string(self.lib.Vsources_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Vsources_Set_Name(Value)
+        self.lib.Vsources_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next VSOURCE object to be active; returns zero if no more'''
-        return lib.Vsources_Get_Next()
+        return self.lib.Vsources_Get_Next()
 
     @property
     def Phases(self):
         '''Number of phases'''
-        return lib.Vsources_Get_Phases()
+        return self.lib.Vsources_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value):
-        lib.Vsources_Set_Phases(Value)
+        self.lib.Vsources_Set_Phases(Value)
 
     @property
     def pu(self):
@@ -4797,11 +4803,11 @@ class IVsources(Base):
         (read) Source pu voltage.
         (write) Per-unit value of source voltage based on kV
         '''
-        return lib.Vsources_Get_pu()
+        return self.lib.Vsources_Get_pu()
 
     @pu.setter
     def pu(self, Value):
-        lib.Vsources_Set_pu(Value)
+        self.lib.Vsources_Set_pu(Value)
 
     def __iter__(self):
         idx = self.First
@@ -4816,15 +4822,15 @@ class IXYCurves(Base):
     @property
     def Count(self):
         '''(read-only) Number of XYCurve Objects'''
-        return lib.XYCurves_Get_Count()
+        return self.lib.XYCurves_Get_Count()
 
     def __len__(self):
-        return lib.XYCurves_Get_Count()
+        return self.lib.XYCurves_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Sets first XYcurve object active; returns 0 if none.'''
-        return lib.XYCurves_Get_First()
+        return self.lib.XYCurves_Get_First()
 
     @property
     def Name(self):
@@ -4832,68 +4838,68 @@ class IXYCurves(Base):
         (read) Name of active XYCurve Object
         (write) Get Name of active XYCurve Object
         '''
-        return get_string(lib.XYCurves_Get_Name())
+        return self.get_string(self.lib.XYCurves_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.XYCurves_Set_Name(Value)
+        self.lib.XYCurves_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Advances to next XYCurve object; returns 0 if no more objects of this class'''
-        return lib.XYCurves_Get_Next()
+        return self.lib.XYCurves_Get_Next()
 
     @property
     def Npts(self):
         '''Get/Set Number of points in X-Y curve'''
-        return lib.XYCurves_Get_Npts()
+        return self.lib.XYCurves_Get_Npts()
 
     @Npts.setter
     def Npts(self, Value):
-        lib.XYCurves_Set_Npts(Value)
+        self.lib.XYCurves_Set_Npts(Value)
 
     @property
     def Xarray(self):
         '''Get/Set X values as a Array of doubles. Set Npts to max number expected if setting'''
-        lib.XYCurves_Get_Xarray_GR()
-        return get_float64_gr_array()
+        self.lib.XYCurves_Get_Xarray_GR()
+        return self.get_float64_gr_array()
 
     @Xarray.setter
     def Xarray(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.XYCurves_Set_Xarray(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.XYCurves_Set_Xarray(ValuePtr, ValueCount)
 
     @property
     def Xscale(self):
         '''Factor to scale X values from original curve'''
-        return lib.XYCurves_Get_Xscale()
+        return self.lib.XYCurves_Get_Xscale()
 
     @Xscale.setter
     def Xscale(self, Value):
-        lib.XYCurves_Set_Xscale(Value)
+        self.lib.XYCurves_Set_Xscale(Value)
 
     @property
     def Xshift(self):
         '''Amount to shift X value from original curve'''
-        return lib.XYCurves_Get_Xshift()
+        return self.lib.XYCurves_Get_Xshift()
 
     @Xshift.setter
     def Xshift(self, Value):
-        lib.XYCurves_Set_Xshift(Value)
+        self.lib.XYCurves_Set_Xshift(Value)
 
     @property
     def Yarray(self):
         '''Get/Set Y values in curve; Set Npts to max number expected if setting'''
-        lib.XYCurves_Get_Yarray_GR()
-        return get_float64_gr_array()
+        self.lib.XYCurves_Get_Yarray_GR()
+        return self.get_float64_gr_array()
 
     @Yarray.setter
     def Yarray(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.XYCurves_Set_Yarray(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.XYCurves_Set_Yarray(ValuePtr, ValueCount)
 
     @property
     def Yscale(self):
@@ -4901,29 +4907,29 @@ class IXYCurves(Base):
         (read) Factor to scale Y values from original curve
         (write) Amount to scale Y values from original curve. Represents a curve shift.
         '''
-        return lib.XYCurves_Get_Yscale()
+        return self.lib.XYCurves_Get_Yscale()
 
     @Yscale.setter
     def Yscale(self, Value):
-        lib.XYCurves_Set_Yscale(Value)
+        self.lib.XYCurves_Set_Yscale(Value)
 
     @property
     def Yshift(self):
         '''amount to shift Y valiue from original curve'''
-        return lib.XYCurves_Get_Yshift()
+        return self.lib.XYCurves_Get_Yshift()
 
     @Yshift.setter
     def Yshift(self, Value):
-        lib.XYCurves_Set_Yshift(Value)
+        self.lib.XYCurves_Set_Yshift(Value)
 
     @property
     def x(self):
         '''Set X value or get interpolated value after setting Y'''
-        return lib.XYCurves_Get_x()
+        return self.lib.XYCurves_Get_x()
 
     @x.setter
     def x(self, Value):
-        lib.XYCurves_Set_x(Value)
+        self.lib.XYCurves_Set_x(Value)
 
     @property
     def y(self):
@@ -4931,11 +4937,11 @@ class IXYCurves(Base):
         (read) Y value for present X or set this value then get corresponding X
         (write) Set Y value or get interpolated Y value after setting X
         '''
-        return lib.XYCurves_Get_y()
+        return self.lib.XYCurves_Get_y()
 
     @y.setter
     def y(self, Value):
-        lib.XYCurves_Set_y(Value)
+        self.lib.XYCurves_Set_y(Value)
 
     def __iter__(self):
         idx = self.First
@@ -4945,48 +4951,53 @@ class IXYCurves(Base):
 
 
 class ICktElement(Base):
-    __slots__ = []
-    Properties = IDSSProperty()
+    __slots__ = [
+        'Properties'
+    ]
 
+    def __init__(self, api_util):
+        self.Properties = IDSSProperty(api_util)
+        Base.__init__(self, api_util)    
+    
     def Close(self, Term, Phs):
-        lib.CktElement_Close(Term, Phs)
+        self.lib.CktElement_Close(Term, Phs)
 
     def Controller(self, idx):
         '''(read-only) Full name of the i-th controller attached to this element. Ex: str = Controller(2).  See NumControls to determine valid index range'''
-        return get_string(lib.CktElement_Get_Controller(idx))
+        return self.get_string(self.lib.CktElement_Get_Controller(idx))
 
     def Variable(self, MyVarName, Code):
         '''(read-only) For PCElement, get the value of a variable by name. If Code>0 Then no variable by this name or not a PCelement.'''
         if type(MyVarName) is not bytes:
             MyVarName = MyVarName.encode(codec)
 
-        return lib.CktElement_Get_Variable(MyVarName, Code)
+        return self.lib.CktElement_Get_Variable(MyVarName, Code)
 
     def Variablei(self, Idx, Code):
         '''(read-only) For PCElement, get the value of a variable by integer index.'''
-        return lib.CktElement_Get_Variablei(Idx, Code)
+        return self.lib.CktElement_Get_Variablei(Idx, Code)
 
     def IsOpen(self, Term, Phs):
-        return lib.CktElement_IsOpen(Term, Phs) != 0
+        return self.lib.CktElement_IsOpen(Term, Phs) != 0
 
     def Open(self, Term, Phs):
-        lib.CktElement_Open(Term, Phs)
+        self.lib.CktElement_Open(Term, Phs)
 
     @property
     def AllPropertyNames(self):
         '''(read-only) Array containing all property names of the active device.'''
-        return get_string_array(lib.CktElement_Get_AllPropertyNames)
+        return self.get_string_array(self.lib.CktElement_Get_AllPropertyNames)
 
     @property
     def AllVariableNames(self):
         '''(read-only) Array of strings listing all the published variable names, if a PCElement. Otherwise, null string.'''
-        return get_string_array(lib.CktElement_Get_AllVariableNames)
+        return self.get_string_array(self.lib.CktElement_Get_AllVariableNames)
 
     @property
     def AllVariableValues(self):
         '''(read-only) Array of doubles. Values of state variables of active element if PC element.'''
-        lib.CktElement_Get_AllVariableValues_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_AllVariableValues_GR()
+        return self.get_float64_gr_array()
 
     @property
     def BusNames(self):
@@ -4994,48 +5005,48 @@ class ICktElement(Base):
         (read) Array of strings. Get  Bus definitions to which each terminal is connected. 0-based array.
         (write) Array of strings. Set Bus definitions for each terminal is connected.
         '''
-        return get_string_array(lib.CktElement_Get_BusNames)
+        return self.get_string_array(self.lib.CktElement_Get_BusNames)
 
     @BusNames.setter
     def BusNames(self, Value):
-        Value, ValuePtr, ValueCount = prepare_string_array(Value)
-        lib.CktElement_Set_BusNames(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_string_array(Value)
+        self.lib.CktElement_Set_BusNames(ValuePtr, ValueCount)
 
     @property
     def CplxSeqCurrents(self):
         '''(read-only) Complex double array of Sequence Currents for all conductors of all terminals of active circuit element.'''
-        lib.CktElement_Get_CplxSeqCurrents_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_CplxSeqCurrents_GR()
+        return self.get_float64_gr_array()
 
     @property
     def CplxSeqVoltages(self):
         '''(read-only) Complex double array of Sequence Voltage for all terminals of active circuit element.'''
-        lib.CktElement_Get_CplxSeqVoltages_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_CplxSeqVoltages_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Currents(self):
         '''(read-only) Complex array of currents into each conductor of each terminal'''
-        lib.CktElement_Get_Currents_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_Currents_GR()
+        return self.get_float64_gr_array()
 
     @property
     def CurrentsMagAng(self):
         '''(read-only) Currents in magnitude, angle format as a array of doubles.'''
-        lib.CktElement_Get_CurrentsMagAng_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_CurrentsMagAng_GR()
+        return self.get_float64_gr_array()
 
     @property
     def DisplayName(self):
         '''Display name of the object (not necessarily unique)'''
-        return get_string(lib.CktElement_Get_DisplayName())
+        return self.get_string(self.lib.CktElement_Get_DisplayName())
 
     @DisplayName.setter
     def DisplayName(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.CktElement_Set_DisplayName(Value)
+        self.lib.CktElement_Set_DisplayName(Value)
 
     @property
     def EmergAmps(self):
@@ -5043,67 +5054,67 @@ class ICktElement(Base):
         (read) Emergency Ampere Rating for PD elements
         (write) Emergency Ampere Rating
         '''
-        return lib.CktElement_Get_EmergAmps()
+        return self.lib.CktElement_Get_EmergAmps()
 
     @EmergAmps.setter
     def EmergAmps(self, Value):
-        lib.CktElement_Set_EmergAmps(Value)
+        self.lib.CktElement_Set_EmergAmps(Value)
 
     @property
     def Enabled(self):
         '''Boolean indicating that element is currently in the circuit.'''
-        return lib.CktElement_Get_Enabled() != 0
+        return self.lib.CktElement_Get_Enabled() != 0
 
     @Enabled.setter
     def Enabled(self, Value):
-        lib.CktElement_Set_Enabled(Value)
+        self.lib.CktElement_Set_Enabled(Value)
 
     @property
     def EnergyMeter(self):
         '''(read-only) Name of the Energy Meter this element is assigned to.'''
-        return get_string(lib.CktElement_Get_EnergyMeter())
+        return self.get_string(self.lib.CktElement_Get_EnergyMeter())
 
     @property
     def GUID(self):
         '''(read-only) globally unique identifier for this object'''
-        return get_string(lib.CktElement_Get_GUID())
+        return self.get_string(self.lib.CktElement_Get_GUID())
 
     @property
     def Handle(self):
         '''(read-only) Pointer to this object'''
-        return lib.CktElement_Get_Handle()
+        return self.lib.CktElement_Get_Handle()
 
     @property
     def HasOCPDevice(self):
         '''(read-only) True if a recloser, relay, or fuse controlling this ckt element. OCP = Overcurrent Protection '''
-        return lib.CktElement_Get_HasOCPDevice() != 0
+        return self.lib.CktElement_Get_HasOCPDevice() != 0
 
     @property
     def HasSwitchControl(self):
         '''(read-only) This element has a SwtControl attached.'''
-        return lib.CktElement_Get_HasSwitchControl() != 0
+        return self.lib.CktElement_Get_HasSwitchControl() != 0
 
     @property
     def HasVoltControl(self):
         '''(read-only) This element has a CapControl or RegControl attached.'''
-        return lib.CktElement_Get_HasVoltControl() != 0
+        return self.lib.CktElement_Get_HasVoltControl() != 0
 
     @property
     def Losses(self):
         '''(read-only) Total losses in the element: two-element complex array'''
-        lib.CktElement_Get_Losses_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_Losses_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Name(self):
         '''(read-only) Full Name of Active Circuit Element'''
-        return get_string(lib.CktElement_Get_Name())
+        return self.get_string(self.lib.CktElement_Get_Name())
 
     @property
     def NodeOrder(self):
         '''(read-only) Array of integer containing the node numbers (representing phases, for example) for each conductor of each terminal. '''
-        lib.CktElement_Get_NodeOrder_GR()
-        return get_int32_gr_array()
+        self.lib.CktElement_Get_NodeOrder_GR()
+        return self.get_int32_gr_array()
 
     @property
     def NormalAmps(self):
@@ -5111,110 +5122,110 @@ class ICktElement(Base):
         (read) Normal ampere rating for PD Elements
         (write) Normal ampere rating
         '''
-        return lib.CktElement_Get_NormalAmps()
+        return self.lib.CktElement_Get_NormalAmps()
 
     @NormalAmps.setter
     def NormalAmps(self, Value):
-        lib.CktElement_Set_NormalAmps(Value)
+        self.lib.CktElement_Set_NormalAmps(Value)
 
     @property
     def NumConductors(self):
         '''(read-only) Number of Conductors per Terminal'''
-        return lib.CktElement_Get_NumConductors()
+        return self.lib.CktElement_Get_NumConductors()
 
     @property
     def NumControls(self):
         '''(read-only) Number of controls connected to this device. Use to determine valid range for index into Controller array.'''
-        return lib.CktElement_Get_NumControls()
+        return self.lib.CktElement_Get_NumControls()
 
     @property
     def NumPhases(self):
         '''(read-only) Number of Phases'''
-        return lib.CktElement_Get_NumPhases()
+        return self.lib.CktElement_Get_NumPhases()
 
     @property
     def NumProperties(self):
         '''(read-only) Number of Properties this Circuit Element.'''
-        return lib.CktElement_Get_NumProperties()
+        return self.lib.CktElement_Get_NumProperties()
 
     @property
     def NumTerminals(self):
         '''(read-only) Number of Terminals this Circuit Element'''
-        return lib.CktElement_Get_NumTerminals()
+        return self.lib.CktElement_Get_NumTerminals()
 
     @property
     def OCPDevIndex(self):
         '''(read-only) Index into Controller list of OCP Device controlling this CktElement'''
-        return lib.CktElement_Get_OCPDevIndex()
+        return self.lib.CktElement_Get_OCPDevIndex()
 
     @property
     def OCPDevType(self):
         '''(read-only) 0=None; 1=Fuse; 2=Recloser; 3=Relay;  Type of OCP controller device'''
-        return lib.CktElement_Get_OCPDevType()
+        return self.lib.CktElement_Get_OCPDevType()
 
     @property
     def PhaseLosses(self):
         '''(read-only) Complex array of losses by phase'''
-        lib.CktElement_Get_PhaseLosses_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_PhaseLosses_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Powers(self):
         '''(read-only) Complex array of powers into each conductor of each terminal'''
-        lib.CktElement_Get_Powers_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_Powers_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Residuals(self):
         '''(read-only) Residual currents for each terminal: (mag, angle)'''
-        lib.CktElement_Get_Residuals_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_Residuals_GR()
+        return self.get_float64_gr_array()
 
     @property
     def SeqCurrents(self):
         '''(read-only) Double array of symmetrical component currents into each 3-phase terminal'''
-        lib.CktElement_Get_SeqCurrents_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_SeqCurrents_GR()
+        return self.get_float64_gr_array()
 
     @property
     def SeqPowers(self):
         '''(read-only) Double array of sequence powers into each 3-phase teminal'''
-        lib.CktElement_Get_SeqPowers_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_SeqPowers_GR()
+        return self.get_float64_gr_array()
 
     @property
     def SeqVoltages(self):
         '''(read-only) Double array of symmetrical component voltages at each 3-phase terminal'''
-        lib.CktElement_Get_SeqVoltages_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_SeqVoltages_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Voltages(self):
         '''(read-only) Complex array of voltages at terminals'''
-        lib.CktElement_Get_Voltages_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_Voltages_GR()
+        return self.get_float64_gr_array()
 
     @property
     def VoltagesMagAng(self):
         '''(read-only) Voltages at each conductor in magnitude, angle form as array of doubles.'''
-        lib.CktElement_Get_VoltagesMagAng_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_VoltagesMagAng_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Yprim(self):
         '''(read-only) YPrim matrix, column order, complex numbers (paired)'''
-        lib.CktElement_Get_Yprim_GR()
-        return get_float64_gr_array()
+        self.lib.CktElement_Get_Yprim_GR()
+        return self.get_float64_gr_array()
 
     def __getitem__(self, index):
         if isinstance(index, int):
             # index is zero based, pass it directly
-            lib.Circuit_SetCktElementIndex(index)
+            self.lib.Circuit_SetCktElementIndex(index)
         else:
             if type(index) is not bytes:
                 index = index.encode(codec)
 
-            lib.Circuit_SetCktElementName(index)
+            self.lib.Circuit_SetCktElementName(index)
 
         return self
 
@@ -5222,26 +5233,29 @@ class ICktElement(Base):
         return self.__getitem__(index)
 
 
-
-
 class IDSSElement(Base):
-    __slots__ = []
-    Properties = IDSSProperty()
+    __slots__ = [
+        'Properties'
+    ]
+    
+    def __init__(self, api_util):
+        self.Properties = IDSSProperty(api_util)
+        Base.__init__(self, api_util)    
 
     @property
     def AllPropertyNames(self):
         '''(read-only) Array of strings containing the names of all properties for the active DSS object.'''
-        return get_string_array(lib.DSSElement_Get_AllPropertyNames)
+        return self.get_string_array(self.lib.DSSElement_Get_AllPropertyNames)
 
     @property
     def Name(self):
         '''(read-only) Full Name of Active DSS Object (general element or circuit element).'''
-        return get_string(lib.DSSElement_Get_Name())
+        return self.get_string(self.lib.DSSElement_Get_Name())
 
     @property
     def NumProperties(self):
         '''(read-only) Number of Properties for the active DSS object.'''
-        return lib.DSSElement_Get_NumProperties()
+        return self.lib.DSSElement_Get_NumProperties()
 
 
 class ILineSpacings(Base):
@@ -5252,87 +5266,87 @@ class ILineSpacings(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all devices'''
-        return get_string_array(lib.LineSpacings_Get_AllNames)
+        return self.get_string_array(self.lib.LineSpacings_Get_AllNames)
 
     @property
     def Conductors(self):
         '''(read-only) Array of strings with names of all conductors in the active LineSpacing object'''
-        return get_string_array(lib.LineSpacings_Get_Conductors)
+        return self.get_string_array(self.lib.LineSpacings_Get_Conductors)
 
     @property
     def Count(self):
         '''(read-only) Number of LineSpacings'''
-        return lib.LineSpacings_Get_Count()
+        return self.lib.LineSpacings_Get_Count()
 
     @property
     def First(self):
-        return lib.LineSpacings_Get_First()
+        return self.lib.LineSpacings_Get_First()
 
     @property
     def Next(self):
-        return lib.LineSpacings_Get_Next()
+        return self.lib.LineSpacings_Get_Next()
 
     @property
     def Name(self):
         '''Name of active LineSpacing'''
-        return get_string(lib.LineSpacings_Get_Name())
+        return self.get_string(self.lib.LineSpacings_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.LineSpacings_Set_Name(Value)
+        self.lib.LineSpacings_Set_Name(Value)
 
     def __len__(self):
-        return lib.LineSpacings_Get_Count()
+        return self.lib.LineSpacings_Get_Count()
 
     @property
     def Phases(self):
         '''Number of Phases'''
-        return lib.LineSpacings_Get_Phases()
+        return self.lib.LineSpacings_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value):
-        lib.LineSpacings_Set_Phases(Value)
+        self.lib.LineSpacings_Set_Phases(Value)
 
     @property
     def Nconds(self):
-        return lib.LineSpacings_Get_Nconds()
+        return self.lib.LineSpacings_Get_Nconds()
 
     @Nconds.setter
     def Nconds(self, Value):
-        lib.LineSpacings_Set_Nconds(Value)
+        self.lib.LineSpacings_Set_Nconds(Value)
 
     @property
     def Units(self):
-        return lib.LineSpacings_Get_Units()
+        return self.lib.LineSpacings_Get_Units()
 
     @Units.setter
     def Units(self, Value):
-        lib.LineSpacings_Set_Units(Value)
+        self.lib.LineSpacings_Set_Units(Value)
 
     @property
     def Xcoords(self):
         '''Get/Set the X (horizontal) coordinates of the conductors'''
-        lib.LineSpacings_Get_Xcoords_GR()
-        return get_float64_gr_array()
+        self.lib.LineSpacings_Get_Xcoords_GR()
+        return self.get_float64_gr_array()
 
     @Xcoords.setter
     def Xcoords(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LineSpacings_Set_Xcoords(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LineSpacings_Set_Xcoords(ValuePtr, ValueCount)
 
     @property
     def Ycoords(self):
         '''Get/Set the Y (vertical/height) coordinates of the conductors'''
-        lib.LineSpacings_Get_Ycoords_GR()
-        return get_float64_gr_array()
+        self.lib.LineSpacings_Get_Ycoords_GR()
+        return self.get_float64_gr_array()
 
     @Ycoords.setter
     def Ycoords(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LineSpacings_Set_Ycoords(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LineSpacings_Set_Ycoords(ValuePtr, ValueCount)
 
     def __iter__(self):
         idx = self.First
@@ -5349,135 +5363,135 @@ class ILineGeometries(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all devices'''
-        return get_string_array(lib.LineGeometries_Get_AllNames)
+        return self.get_string_array(self.lib.LineGeometries_Get_AllNames)
 
     @property
     def Conductors(self):
         '''(read-only) Array of strings with names of all conductors in the active LineGeometry object'''
-        return get_string_array(lib.LineGeometries_Get_Conductors)
+        return self.get_string_array(self.lib.LineGeometries_Get_Conductors)
 
     @property
     def Count(self):
         '''(read-only) Number of LineGeometries'''
-        return lib.LineGeometries_Get_Count()
+        return self.lib.LineGeometries_Get_Count()
 
     @property
     def First(self):
-        return lib.LineGeometries_Get_First()
+        return self.lib.LineGeometries_Get_First()
 
     @property
     def Next(self):
-        return lib.LineGeometries_Get_Next()
+        return self.lib.LineGeometries_Get_Next()
 
     @property
     def Name(self):
         '''Name of active LineGeometry'''
-        return get_string(lib.LineGeometries_Get_Name())
+        return self.get_string(self.lib.LineGeometries_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.LineGeometries_Set_Name(Value)
+        self.lib.LineGeometries_Set_Name(Value)
 
     def __len__(self):
-        return lib.LineGeometries_Get_Count()
+        return self.lib.LineGeometries_Get_Count()
 
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''
-        return lib.LineGeometries_Get_EmergAmps()
+        return self.lib.LineGeometries_Get_EmergAmps()
 
     @EmergAmps.setter
     def EmergAmps(self, Value):
-        lib.LineGeometries_Set_EmergAmps(Value)
+        self.lib.LineGeometries_Set_EmergAmps(Value)
 
     @property
     def NormAmps(self):
         '''Normal Ampere rating'''
-        return lib.LineGeometries_Get_NormAmps()
+        return self.lib.LineGeometries_Get_NormAmps()
 
     @NormAmps.setter
     def NormAmps(self, Value):
-        lib.LineGeometries_Set_NormAmps(Value)
+        self.lib.LineGeometries_Set_NormAmps(Value)
 
     @property
     def RhoEarth(self):
-        return lib.LineGeometries_Get_RhoEarth()
+        return self.lib.LineGeometries_Get_RhoEarth()
 
     @RhoEarth.setter
     def RhoEarth(self, Value):
-        lib.LineGeometries_Set_RhoEarth(Value)
+        self.lib.LineGeometries_Set_RhoEarth(Value)
 
     @property
     def Reduce(self):
-        return lib.LineGeometries_Get_Reduce() != 0
+        return self.lib.LineGeometries_Get_Reduce() != 0
 
     @Reduce.setter
     def Reduce(self, Value):
-        lib.LineGeometries_Set_Reduce(Value)
+        self.lib.LineGeometries_Set_Reduce(Value)
 
     @property
     def Phases(self):
         '''Number of Phases'''
-        return lib.LineGeometries_Get_Phases()
+        return self.lib.LineGeometries_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value):
-        lib.LineGeometries_Set_Phases(Value)
+        self.lib.LineGeometries_Set_Phases(Value)
 
     def Rmatrix(self, Frequency, Length, Units):
         '''(read-only) Resistance matrix, ohms'''
-        lib.LineGeometries_Get_Rmatrix_GR(Frequency, Length, Units)
-        return get_float64_gr_array()
+        self.lib.LineGeometries_Get_Rmatrix_GR(Frequency, Length, Units)
+        return self.get_float64_gr_array()
 
     def Xmatrix(self, Frequency, Length, Units):
         '''(read-only) Reactance matrix, ohms'''
-        lib.LineGeometries_Get_Xmatrix_GR(Frequency, Length, Units)
-        return get_float64_gr_array()
+        self.lib.LineGeometries_Get_Xmatrix_GR(Frequency, Length, Units)
+        return self.get_float64_gr_array()
 
     def Zmatrix(self, Frequency, Length, Units):
         '''(read-only) Complex impedance matrix, ohms'''
-        lib.LineGeometries_Get_Zmatrix_GR(Frequency, Length, Units)
-        return get_float64_gr_array()
+        self.lib.LineGeometries_Get_Zmatrix_GR(Frequency, Length, Units)
+        return self.get_float64_gr_array()
 
     def Cmatrix(self, Frequency, Length, Units):
         '''(read-only) Capacitance matrix, nF'''
-        lib.LineGeometries_Get_Cmatrix_GR(Frequency, Length, Units)
-        return get_float64_gr_array()
+        self.lib.LineGeometries_Get_Cmatrix_GR(Frequency, Length, Units)
+        return self.get_float64_gr_array()
 
     @property
     def Units(self):
-        lib.LineGeometries_Get_Units_GR()
-        return get_int32_gr_array()
+        self.lib.LineGeometries_Get_Units_GR()
+        return self.get_int32_gr_array()
 
     @Units.setter
     def Units(self, Value):
-        Value, ValuePtr, ValueCount = prepare_int32_array(Value)
-        lib.LineGeometries_Set_Units(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_int32_array(Value)
+        self.lib.LineGeometries_Set_Units(ValuePtr, ValueCount)
 
     @property
     def Xcoords(self):
         '''Get/Set the X (horizontal) coordinates of the conductors'''
-        lib.LineGeometries_Get_Xcoords_GR()
-        return get_float64_gr_array()
+        self.lib.LineGeometries_Get_Xcoords_GR()
+        return self.get_float64_gr_array()
 
     @Xcoords.setter
     def Xcoords(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LineGeometries_Set_Xcoords(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LineGeometries_Set_Xcoords(ValuePtr, ValueCount)
 
     @property
     def Ycoords(self):
         '''Get/Set the Y (vertical/height) coordinates of the conductors'''
-        lib.LineGeometries_Get_Ycoords_GR()
-        return get_float64_gr_array()
+        self.lib.LineGeometries_Get_Ycoords_GR()
+        return self.get_float64_gr_array()
 
     @Ycoords.setter
     def Ycoords(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.LineGeometries_Set_Ycoords(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.LineGeometries_Set_Ycoords(ValuePtr, ValueCount)
 
     def __iter__(self):
         idx = self.First
@@ -5494,117 +5508,117 @@ class IWireData(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all devices'''
-        return get_string_array(lib.WireData_Get_AllNames)
+        return self.get_string_array(self.lib.WireData_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of WireData'''
-        return lib.WireData_Get_Count()
+        return self.lib.WireData_Get_Count()
 
     @property
     def First(self):
-        return lib.WireData_Get_First()
+        return self.lib.WireData_Get_First()
 
     @property
     def Next(self):
-        return lib.WireData_Get_Next()
+        return self.lib.WireData_Get_Next()
 
     @property
     def Name(self):
         '''Name of active WireData'''
-        return get_string(lib.WireData_Get_Name())
+        return self.get_string(self.lib.WireData_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.WireData_Set_Name(Value)
+        self.lib.WireData_Set_Name(Value)
 
     def __len__(self):
-        return lib.WireData_Get_Count()
+        return self.lib.WireData_Get_Count()
 
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''
-        return lib.WireData_Get_EmergAmps()
+        return self.lib.WireData_Get_EmergAmps()
 
     @EmergAmps.setter
     def EmergAmps(self, Value):
-        lib.WireData_Set_EmergAmps(Value)
+        self.lib.WireData_Set_EmergAmps(Value)
 
     @property
     def NormAmps(self):
         '''Normal Ampere rating'''
-        return lib.WireData_Get_NormAmps()
+        return self.lib.WireData_Get_NormAmps()
 
     @NormAmps.setter
     def NormAmps(self, Value):
-        lib.WireData_Set_NormAmps(Value)
+        self.lib.WireData_Set_NormAmps(Value)
 
     @property
     def Rdc(self):
-        return lib.WireData_Get_Rdc()
+        return self.lib.WireData_Get_Rdc()
 
     @Rdc.setter
     def Rdc(self, Value):
-        lib.WireData_Set_Rdc(Value)
+        self.lib.WireData_Set_Rdc(Value)
 
     @property
     def Rac(self):
-        return lib.WireData_Get_Rac()
+        return self.lib.WireData_Get_Rac()
 
     @Rac.setter
     def Rac(self, Value):
-        lib.WireData_Set_Rac(Value)
+        self.lib.WireData_Set_Rac(Value)
 
     @property
     def GMRac(self):
-        return lib.WireData_Get_GMRac()
+        return self.lib.WireData_Get_GMRac()
 
     @GMRac.setter
     def GMRac(self, Value):
-        lib.WireData_Set_GMRac(Value)
+        self.lib.WireData_Set_GMRac(Value)
 
     @property
     def GMRUnits(self):
-        return lib.WireData_Get_GMRUnits()
+        return self.lib.WireData_Get_GMRUnits()
 
     @GMRUnits.setter
     def GMRUnits(self, Value):
-        lib.WireData_Set_GMRUnits(Value)
+        self.lib.WireData_Set_GMRUnits(Value)
 
     @property
     def Radius(self):
-        return lib.WireData_Get_Radius()
+        return self.lib.WireData_Get_Radius()
 
     @Radius.setter
     def Radius(self, Value):
-        lib.WireData_Set_Radius(Value)
+        self.lib.WireData_Set_Radius(Value)
 
     @property
     def RadiusUnits(self):
-        return lib.WireData_Get_RadiusUnits()
+        return self.lib.WireData_Get_RadiusUnits()
 
     @RadiusUnits.setter
     def RadiusUnits(self, Value):
-        lib.WireData_Set_RadiusUnits(Value)
+        self.lib.WireData_Set_RadiusUnits(Value)
 
     @property
     def ResistanceUnits(self):
-        return lib.WireData_Get_ResistanceUnits()
+        return self.lib.WireData_Get_ResistanceUnits()
 
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value):
-        lib.WireData_Set_ResistanceUnits(Value)
+        self.lib.WireData_Set_ResistanceUnits(Value)
 
     @property
     def Diameter(self):
-        return lib.WireData_Get_Diameter()
+        return self.lib.WireData_Get_Diameter()
 
     @Diameter.setter
     def Diameter(self, Value):
-        lib.WireData_Set_Diameter(Value)
+        self.lib.WireData_Set_Diameter(Value)
 
     def __iter__(self):
         idx = self.First
@@ -5621,40 +5635,40 @@ class ICNData(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all devices'''
-        return get_string_array(lib.CNData_Get_AllNames)
+        return self.get_string_array(self.lib.CNData_Get_AllNames)
 
     @property
     def Conductors(self):
         '''(read-only) Array of strings with names of all conductors in the active CNData object'''
-        return get_string_array(lib.CNData_Get_Conductors)
+        return self.get_string_array(self.lib.CNData_Get_Conductors)
 
     @property
     def Count(self):
         '''(read-only) Number of CNData'''
-        return lib.CNData_Get_Count()
+        return self.lib.CNData_Get_Count()
 
     @property
     def First(self):
-        return lib.CNData_Get_First()
+        return self.lib.CNData_Get_First()
 
     @property
     def Next(self):
-        return lib.CNData_Get_Next()
+        return self.lib.CNData_Get_Next()
 
     @property
     def Name(self):
         '''Name of active CNData'''
-        return get_string(lib.CNData_Get_Name())
+        return self.get_string(self.lib.CNData_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.CNData_Set_Name(Value)
+        self.lib.CNData_Set_Name(Value)
 
     def __len__(self):
-        return lib.CNData_Get_Count()
+        return self.lib.CNData_Get_Count()
 
     def __iter__(self):
         idx = self.First
@@ -5665,148 +5679,148 @@ class ICNData(Base):
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''
-        return lib.CNData_Get_EmergAmps()
+        return self.lib.CNData_Get_EmergAmps()
 
     @EmergAmps.setter
     def EmergAmps(self, Value):
-        lib.CNData_Set_EmergAmps(Value)
+        self.lib.CNData_Set_EmergAmps(Value)
 
     @property
     def NormAmps(self):
         '''Normal Ampere rating'''
-        return lib.CNData_Get_NormAmps()
+        return self.lib.CNData_Get_NormAmps()
 
     @NormAmps.setter
     def NormAmps(self, Value):
-        lib.CNData_Set_NormAmps(Value)
+        self.lib.CNData_Set_NormAmps(Value)
 
     @property
     def Rdc(self):
-        return lib.CNData_Get_Rdc()
+        return self.lib.CNData_Get_Rdc()
 
     @Rdc.setter
     def Rdc(self, Value):
-        lib.CNData_Set_Rdc(Value)
+        self.lib.CNData_Set_Rdc(Value)
 
     @property
     def Rac(self):
-        return lib.CNData_Get_Rac()
+        return self.lib.CNData_Get_Rac()
 
     @Rac.setter
     def Rac(self, Value):
-        lib.CNData_Set_Rac(Value)
+        self.lib.CNData_Set_Rac(Value)
 
     @property
     def GMRac(self):
-        return lib.CNData_Get_GMRac()
+        return self.lib.CNData_Get_GMRac()
 
     @GMRac.setter
     def GMRac(self, Value):
-        lib.CNData_Set_GMRac(Value)
+        self.lib.CNData_Set_GMRac(Value)
 
     @property
     def GMRUnits(self):
-        return lib.CNData_Get_GMRUnits()
+        return self.lib.CNData_Get_GMRUnits()
 
     @GMRUnits.setter
     def GMRUnits(self, Value):
-        lib.CNData_Set_GMRUnits(Value)
+        self.lib.CNData_Set_GMRUnits(Value)
 
     @property
     def Radius(self):
-        return lib.CNData_Get_Radius()
+        return self.lib.CNData_Get_Radius()
 
     @Radius.setter
     def Radius(self, Value):
-        lib.CNData_Set_Radius(Value)
+        self.lib.CNData_Set_Radius(Value)
 
     @property
     def RadiusUnits(self):
-        return lib.CNData_Get_RadiusUnits()
+        return self.lib.CNData_Get_RadiusUnits()
 
     @RadiusUnits.setter
     def RadiusUnits(self, Value):
-        lib.CNData_Set_RadiusUnits(Value)
+        self.lib.CNData_Set_RadiusUnits(Value)
 
     @property
     def ResistanceUnits(self):
-        return lib.CNData_Get_ResistanceUnits()
+        return self.lib.CNData_Get_ResistanceUnits()
 
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value):
-        lib.CNData_Set_ResistanceUnits(Value)
+        self.lib.CNData_Set_ResistanceUnits(Value)
 
     @property
     def Diameter(self):
-        return lib.CNData_Get_Diameter()
+        return self.lib.CNData_Get_Diameter()
 
     @Diameter.setter
     def Diameter(self, Value):
-        lib.CNData_Set_Diameter(Value)
+        self.lib.CNData_Set_Diameter(Value)
 
     @property
     def EpsR(self):
-        return lib.CNData_Get_EpsR()
+        return self.lib.CNData_Get_EpsR()
 
     @EpsR.setter
     def EpsR(self, Value):
-        lib.CNData_Set_EpsR(Value)
+        self.lib.CNData_Set_EpsR(Value)
 
     @property
     def InsLayer(self):
-        return lib.CNData_Get_InsLayer()
+        return self.lib.CNData_Get_InsLayer()
 
     @InsLayer.setter
     def InsLayer(self, Value):
-        lib.CNData_Set_InsLayer(Value)
+        self.lib.CNData_Set_InsLayer(Value)
 
     @property
     def DiaIns(self):
-        return lib.CNData_Get_DiaIns()
+        return self.lib.CNData_Get_DiaIns()
 
     @DiaIns.setter
     def DiaIns(self, Value):
-        lib.CNData_Set_DiaIns(Value)
+        self.lib.CNData_Set_DiaIns(Value)
 
     @property
     def DiaCable(self):
-        return lib.CNData_Get_DiaCable()
+        return self.lib.CNData_Get_DiaCable()
 
     @DiaCable.setter
     def DiaCable(self, Value):
-        lib.CNData_Set_DiaCable(Value)
+        self.lib.CNData_Set_DiaCable(Value)
 
     @property
     def k(self):
-        return lib.CNData_Get_k()
+        return self.lib.CNData_Get_k()
 
     @k.setter
     def k(self, Value):
-        lib.CNData_Set_k(Value)
+        self.lib.CNData_Set_k(Value)
 
     @property
     def DiaStrand(self):
-        return lib.CNData_Get_DiaStrand()
+        return self.lib.CNData_Get_DiaStrand()
 
     @DiaStrand.setter
     def DiaStrand(self, Value):
-        lib.CNData_Set_DiaStrand(Value)
+        self.lib.CNData_Set_DiaStrand(Value)
 
     @property
     def GmrStrand(self):
-        return lib.CNData_Get_GmrStrand()
+        return self.lib.CNData_Get_GmrStrand()
 
     @GmrStrand.setter
     def GmrStrand(self, Value):
-        lib.CNData_Set_GmrStrand(Value)
+        self.lib.CNData_Set_GmrStrand(Value)
 
     @property
     def RStrand(self):
-        return lib.CNData_Get_RStrand()
+        return self.lib.CNData_Get_RStrand()
 
     @RStrand.setter
     def RStrand(self, Value):
-        lib.CNData_Set_RStrand(Value)
+        self.lib.CNData_Set_RStrand(Value)
 
 
 class IReactors(Base):
@@ -5817,40 +5831,40 @@ class IReactors(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all devices'''
-        return get_string_array(lib.Reactors_Get_AllNames)
+        return self.get_string_array(self.lib.Reactors_Get_AllNames)
 
     @property
     def Conductors(self):
         '''(read-only) Array of strings with names of all conductors in the active Reactor object'''
-        return get_string_array(lib.Reactors_Get_Conductors)
+        return self.get_string_array(self.lib.Reactors_Get_Conductors)
 
     @property
     def Count(self):
         '''(read-only) Number of Reactors'''
-        return lib.Reactors_Get_Count()
+        return self.lib.Reactors_Get_Count()
 
     @property
     def First(self):
-        return lib.Reactors_Get_First()
+        return self.lib.Reactors_Get_First()
 
     @property
     def Next(self):
-        return lib.Reactors_Get_Next()
+        return self.lib.Reactors_Get_Next()
 
     @property
     def Name(self):
         '''Name of active Reactor'''
-        return get_string(lib.Reactors_Get_Name())
+        return self.get_string(self.lib.Reactors_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Reactors_Set_Name(Value)
+        self.lib.Reactors_Set_Name(Value)
 
     def __len__(self):
-        return lib.Reactors_Get_Count()
+        return self.lib.Reactors_Get_Count()
 
     def __iter__(self):
         idx = self.First
@@ -5864,61 +5878,61 @@ class IReactors(Base):
         How the reactor data was provided: 1=kvar, 2=R+jX, 3=R and X matrices, 4=sym components.
         Depending on this value, only some properties are filled or make sense in the context.
         '''
-        return lib.Reactors_Get_SpecType()
+        return self.lib.Reactors_Get_SpecType()
 
     @property
     def IsDelta(self):
         '''Delta connection or wye?'''
-        return lib.Reactors_Get_IsDelta() != 0
+        return self.lib.Reactors_Get_IsDelta() != 0
 
     @IsDelta.setter
     def IsDelta(self, Value):
-        lib.Reactors_Set_IsDelta(Value)
+        self.lib.Reactors_Set_IsDelta(Value)
 
     @property
     def Parallel(self):
         '''Indicates whether Rmatrix and Xmatrix are to be considered in parallel.'''
-        return lib.Reactors_Get_Parallel() != 0
+        return self.lib.Reactors_Get_Parallel() != 0
 
     @Parallel.setter
     def Parallel(self, Value):
-        lib.Reactors_Set_Parallel(Value)
+        self.lib.Reactors_Set_Parallel(Value)
 
     @property
     def LmH(self):
         '''Inductance, mH. Alternate way to define the reactance, X, property.'''
-        return lib.Reactors_Get_LmH()
+        return self.lib.Reactors_Get_LmH()
 
     @LmH.setter
     def LmH(self, Value):
-        lib.Reactors_Set_LmH(Value)
+        self.lib.Reactors_Set_LmH(Value)
 
     @property
     def kV(self):
         '''For 2, 3-phase, kV phase-phase. Otherwise specify actual coil rating.'''
-        return lib.Reactors_Get_kV()
+        return self.lib.Reactors_Get_kV()
 
     @kV.setter
     def kV(self, Value):
-        lib.Reactors_Set_kV(Value)
+        self.lib.Reactors_Set_kV(Value)
 
     @property
     def kvar(self):
         '''Total kvar, all phases.  Evenly divided among phases. Only determines X. Specify R separately'''
-        return lib.Reactors_Get_kvar()
+        return self.lib.Reactors_Get_kvar()
 
     @kvar.setter
     def kvar(self, Value):
-        lib.Reactors_Set_kvar(Value)
+        self.lib.Reactors_Set_kvar(Value)
 
     @property
     def Phases(self):
         '''Number of phases.'''
-        return lib.Reactors_Get_Phases()
+        return self.lib.Reactors_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value):
-        lib.Reactors_Set_Phases(Value)
+        self.lib.Reactors_Set_Phases(Value)
 
     @property
     def Bus1(self):
@@ -5927,14 +5941,14 @@ class IReactors(Base):
         Bus2 property will default to this bus, node 0, unless previously specified.
         Only Bus1 need be specified for a Yg shunt reactor.
         '''
-        return get_string(lib.Reactors_Get_Bus1())
+        return self.get_string(self.lib.Reactors_Get_Bus1())
 
     @Bus1.setter
     def Bus1(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Reactors_Set_Bus1(Value)
+        self.lib.Reactors_Set_Bus1(Value)
 
     @property
     def Bus2(self):
@@ -5942,98 +5956,98 @@ class IReactors(Base):
         Name of 2nd bus. Defaults to all phases connected to first bus, node 0, (Shunt Wye Connection) except when Bus2 is specifically defined.
         Not necessary to specify for delta (LL) connection
         '''
-        return get_string(lib.Reactors_Get_Bus2())
+        return self.get_string(self.lib.Reactors_Get_Bus2())
 
     @Bus2.setter
     def Bus2(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Reactors_Set_Bus2(Value)
+        self.lib.Reactors_Set_Bus2(Value)
 
     @property
     def LCurve(self):
         '''Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property. L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.'''
-        return get_string(lib.Reactors_Get_LCurve())
+        return self.get_string(self.lib.Reactors_Get_LCurve())
 
     @LCurve.setter
     def LCurve(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Reactors_Set_LCurve(Value)
+        self.lib.Reactors_Set_LCurve(Value)
 
     @property
     def RCurve(self):
         '''Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.'''
-        return get_string(lib.Reactors_Get_RCurve())
+        return self.get_string(self.lib.Reactors_Get_RCurve())
 
     @RCurve.setter
     def RCurve(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.Reactors_Set_RCurve(Value)
+        self.lib.Reactors_Set_RCurve(Value)
 
     @property
     def R(self):
         '''Resistance (in series with reactance), each phase, ohms. This property applies to REACTOR specified by either kvar or X. See also help on Z.'''
-        return lib.Reactors_Get_R()
+        return self.lib.Reactors_Get_R()
 
     @R.setter
     def R(self, Value):
-        lib.Reactors_Set_R(Value)
+        self.lib.Reactors_Set_R(Value)
 
     @property
     def X(self):
         '''Reactance, each phase, ohms at base frequency. See also help on Z and LmH properties.'''
-        return lib.Reactors_Get_X()
+        return self.lib.Reactors_Get_X()
 
     @X.setter
     def X(self, Value):
-        lib.Reactors_Set_X(Value)
+        self.lib.Reactors_Set_X(Value)
 
     @property
     def Rp(self):
         '''Resistance in parallel with R and X (the entire branch). Assumed infinite if not specified.'''
-        return lib.Reactors_Get_Rp()
+        return self.lib.Reactors_Get_Rp()
 
     @Rp.setter
     def Rp(self, Value):
-        lib.Reactors_Set_Rp(Value)
+        self.lib.Reactors_Set_Rp(Value)
 
     @property
     def Rmatrix(self):
         '''Resistance matrix, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.'''
-        lib.Reactors_Get_Rmatrix_GR()
-        return get_float64_gr_array()
+        self.lib.Reactors_Get_Rmatrix_GR()
+        return self.get_float64_gr_array()
 
     @Rmatrix.setter
     def Rmatrix(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Reactors_Set_Rmatrix(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Reactors_Set_Rmatrix(ValuePtr, ValueCount)
 
     @property
     def Xmatrix(self):
         '''Reactance matrix, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.'''
-        lib.Reactors_Get_Xmatrix_GR()
-        return get_float64_gr_array()
+        self.lib.Reactors_Get_Xmatrix_GR()
+        return self.get_float64_gr_array()
 
     @Xmatrix.setter
     def Xmatrix(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Reactors_Set_Xmatrix(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Reactors_Set_Xmatrix(ValuePtr, ValueCount)
 
     @property
     def Z(self):
         '''Alternative way of defining R and X properties. Enter a 2-element array representing R +jX in ohms.'''
-        lib.Reactors_Get_Z_GR()
-        return get_float64_gr_array()
+        self.lib.Reactors_Get_Z_GR()
+        return self.get_float64_gr_array()
 
     @Z.setter
     def Z(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Reactors_Set_Z(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Reactors_Set_Z(ValuePtr, ValueCount)
 
     @property
     def Z1(self):
@@ -6046,13 +6060,13 @@ class IReactors(Base):
 
         Side Effect: Sets Z2 and Z0 to same values unless they were previously defined.
         '''
-        lib.Reactors_Get_Z1_GR()
-        return get_float64_gr_array()
+        self.lib.Reactors_Get_Z1_GR()
+        return self.get_float64_gr_array()
 
     @Z1.setter
     def Z1(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Reactors_Set_Z1(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Reactors_Set_Z1(ValuePtr, ValueCount)
 
     @property
     def Z2(self):
@@ -6063,13 +6077,13 @@ class IReactors(Base):
 
         Note: Z2 defaults to Z1 if it is not specifically defined. If Z2 is not equal to Z1, the impedance matrix is asymmetrical.
         '''
-        lib.Reactors_Get_Z2_GR()
-        return get_float64_gr_array()
+        self.lib.Reactors_Get_Z2_GR()
+        return self.get_float64_gr_array()
 
     @Z2.setter
     def Z2(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Reactors_Set_Z2(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Reactors_Set_Z2(ValuePtr, ValueCount)
 
     @property
     def Z0(self):
@@ -6080,13 +6094,13 @@ class IReactors(Base):
 
         Note: Z0 defaults to Z1 if it is not specifically defined.
         '''
-        lib.Reactors_Get_Z0_GR()
-        return get_float64_gr_array()
+        self.lib.Reactors_Get_Z0_GR()
+        return self.get_float64_gr_array()
 
     @Z0.setter
     def Z0(self, Value):
-        Value, ValuePtr, ValueCount = prepare_float64_array(Value)
-        lib.Reactors_Set_Z0(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self.prepare_float64_array(Value)
+        self.lib.Reactors_Set_Z0(ValuePtr, ValueCount)
 
 
 class ITSData(Base):
@@ -6097,40 +6111,40 @@ class ITSData(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all devices'''
-        return get_string_array(lib.TSData_Get_AllNames)
+        return self.get_string_array(self.lib.TSData_Get_AllNames)
 
     @property
     def Conductors(self):
         '''(read-only) Array of strings with names of all conductors in the active TSData object'''
-        return get_string_array(lib.TSData_Get_Conductors)
+        return self.get_string_array(self.lib.TSData_Get_Conductors)
 
     @property
     def Count(self):
         '''(read-only) Number of TSData'''
-        return lib.TSData_Get_Count()
+        return self.lib.TSData_Get_Count()
 
     @property
     def First(self):
-        return lib.TSData_Get_First()
+        return self.lib.TSData_Get_First()
 
     @property
     def Next(self):
-        return lib.TSData_Get_Next()
+        return self.lib.TSData_Get_Next()
 
     @property
     def Name(self):
         '''Name of active TSData'''
-        return get_string(lib.TSData_Get_Name())
+        return self.get_string(self.lib.TSData_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.TSData_Set_Name(Value)
+        self.lib.TSData_Set_Name(Value)
 
     def __len__(self):
-        return lib.TSData_Get_Count()
+        return self.lib.TSData_Get_Count()
 
     def __iter__(self):
         idx = self.First
@@ -6141,395 +6155,533 @@ class ITSData(Base):
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''
-        return lib.TSData_Get_EmergAmps()
+        return self.lib.TSData_Get_EmergAmps()
 
     @EmergAmps.setter
     def EmergAmps(self, Value):
-        lib.TSData_Set_EmergAmps(Value)
+        self.lib.TSData_Set_EmergAmps(Value)
 
     @property
     def NormAmps(self):
         '''Normal Ampere rating'''
-        return lib.TSData_Get_NormAmps()
+        return self.lib.TSData_Get_NormAmps()
 
     @NormAmps.setter
     def NormAmps(self, Value):
-        lib.TSData_Set_NormAmps(Value)
+        self.lib.TSData_Set_NormAmps(Value)
 
     @property
     def Rdc(self):
-        return lib.TSData_Get_Rdc()
+        return self.lib.TSData_Get_Rdc()
 
     @Rdc.setter
     def Rdc(self, Value):
-        lib.TSData_Set_Rdc(Value)
+        self.lib.TSData_Set_Rdc(Value)
 
     @property
     def Rac(self):
-        return lib.TSData_Get_Rac()
+        return self.lib.TSData_Get_Rac()
 
     @Rac.setter
     def Rac(self, Value):
-        lib.TSData_Set_Rac(Value)
+        self.lib.TSData_Set_Rac(Value)
 
     @property
     def GMRac(self):
-        return lib.TSData_Get_GMRac()
+        return self.lib.TSData_Get_GMRac()
 
     @GMRac.setter
     def GMRac(self, Value):
-        lib.TSData_Set_GMRac(Value)
+        self.lib.TSData_Set_GMRac(Value)
 
     @property
     def GMRUnits(self):
-        return lib.TSData_Get_GMRUnits()
+        return self.lib.TSData_Get_GMRUnits()
 
     @GMRUnits.setter
     def GMRUnits(self, Value):
-        lib.TSData_Set_GMRUnits(Value)
+        self.lib.TSData_Set_GMRUnits(Value)
 
     @property
     def Radius(self):
-        return lib.TSData_Get_Radius()
+        return self.lib.TSData_Get_Radius()
 
     @Radius.setter
     def Radius(self, Value):
-        lib.TSData_Set_Radius(Value)
+        self.lib.TSData_Set_Radius(Value)
 
     @property
     def RadiusUnits(self):
-        return lib.TSData_Get_RadiusUnits()
+        return self.lib.TSData_Get_RadiusUnits()
 
     @RadiusUnits.setter
     def RadiusUnits(self, Value):
-        lib.TSData_Set_RadiusUnits(Value)
+        self.lib.TSData_Set_RadiusUnits(Value)
 
     @property
     def ResistanceUnits(self):
-        return lib.TSData_Get_ResistanceUnits()
+        return self.lib.TSData_Get_ResistanceUnits()
 
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value):
-        lib.TSData_Set_ResistanceUnits(Value)
+        self.lib.TSData_Set_ResistanceUnits(Value)
 
     @property
     def Diameter(self):
-        return lib.TSData_Get_Diameter()
+        return self.lib.TSData_Get_Diameter()
 
     @Diameter.setter
     def Diameter(self, Value):
-        lib.TSData_Set_Diameter(Value)
+        self.lib.TSData_Set_Diameter(Value)
 
     @property
     def EpsR(self):
-        return lib.TSData_Get_EpsR()
+        return self.lib.TSData_Get_EpsR()
 
     @EpsR.setter
     def EpsR(self, Value):
-        lib.TSData_Set_EpsR(Value)
+        self.lib.TSData_Set_EpsR(Value)
 
     @property
     def InsLayer(self):
-        return lib.TSData_Get_InsLayer()
+        return self.lib.TSData_Get_InsLayer()
 
     @InsLayer.setter
     def InsLayer(self, Value):
-        lib.TSData_Set_InsLayer(Value)
+        self.lib.TSData_Set_InsLayer(Value)
 
     @property
     def DiaIns(self):
-        return lib.TSData_Get_DiaIns()
+        return self.lib.TSData_Get_DiaIns()
 
     @DiaIns.setter
     def DiaIns(self, Value):
-        lib.TSData_Set_DiaIns(Value)
+        self.lib.TSData_Set_DiaIns(Value)
 
     @property
     def DiaCable(self):
-        return lib.TSData_Get_DiaCable()
+        return self.lib.TSData_Get_DiaCable()
 
     @DiaCable.setter
     def DiaCable(self, Value):
-        lib.TSData_Set_DiaCable(Value)
+        self.lib.TSData_Set_DiaCable(Value)
 
     @property
     def DiaShield(self):
-        return lib.TSData_Get_DiaShield()
+        return self.lib.TSData_Get_DiaShield()
 
     @DiaShield.setter
     def DiaShield(self, Value):
-        lib.TSData_Set_DiaShield(Value)
+        self.lib.TSData_Set_DiaShield(Value)
 
     @property
     def TapeLayer(self):
-        return lib.TSData_Get_TapeLayer()
+        return self.lib.TSData_Get_TapeLayer()
 
     @TapeLayer.setter
     def TapeLayer(self, Value):
-        lib.TSData_Set_TapeLayer(Value)
+        self.lib.TSData_Set_TapeLayer(Value)
 
     @property
     def TapeLap(self):
-        return lib.TSData_Get_TapeLap()
+        return self.lib.TSData_Get_TapeLap()
 
     @TapeLap.setter
     def TapeLap(self, Value):
-        lib.TSData_Set_TapeLap(Value)
+        self.lib.TSData_Set_TapeLap(Value)
+
+
+
+class IParallel(Base):
+    '''Parallel machine interface. Available only in OpenDSS v8+'''
+
+    __slots__ = []
+
+    def CreateActor(self):
+        self.lib.Parallel_CreateActor()
+
+    def Wait(self):
+        self.lib.Parallel_Wait()
+
+    @property
+    def ActiveActor(self):
+        '''
+        (read) Gets the ID of the Active Actor
+        (write) Sets the Active Actor
+        '''
+        return self.lib.Parallel_Get_ActiveActor()
+
+    @ActiveActor.setter
+    def ActiveActor(self, Value):
+        self.lib.Parallel_Set_ActiveActor(Value)
+
+    @property
+    def ActiveParallel(self):
+        '''
+        (read) Sets ON/OFF (1/0) Parallel features of the Engine
+        (write) Delivers if the Parallel features of the Engine are Active
+        '''
+        return self.lib.Parallel_Get_ActiveParallel()
+
+    @ActiveParallel.setter
+    def ActiveParallel(self, Value):
+        self.lib.Parallel_Set_ActiveParallel(Value)
+
+    @property
+    def ActorCPU(self):
+        '''
+        (read) Gets the CPU of the Active Actor
+        (write) Sets the CPU for the Active Actor
+        '''
+        return self.lib.Parallel_Get_ActorCPU()
+
+    @ActorCPU.setter
+    def ActorCPU(self, Value):
+        self.lib.Parallel_Set_ActorCPU(Value)
+
+    @property
+    def ActorProgress(self):
+        '''(read-only) Gets the progress of all existing actors in pct'''
+        self.lib.Parallel_Get_ActorProgress_GR()
+        return self.get_int32_gr_array()
+
+    @property
+    def ActorStatus(self):
+        '''(read-only) Gets the status of each actor'''
+        self.lib.Parallel_Get_ActorStatus_GR()
+        return self.get_int32_gr_array()
+
+    @property
+    def ConcatenateReports(self):
+        '''
+        (read) Reads the values of the ConcatenateReports option (1=enabled, 0=disabled)
+        (write) Enable/Disable (1/0) the ConcatenateReports option for extracting monitors data
+        '''
+        return self.lib.Parallel_Get_ConcatenateReports()
+
+    @ConcatenateReports.setter
+    def ConcatenateReports(self, Value):
+        self.lib.Parallel_Set_ConcatenateReports(Value)
+
+    @property
+    def NumCPUs(self):
+        '''(read-only) Delivers the number of CPUs on the current PC'''
+        return self.lib.Parallel_Get_NumCPUs()
+
+    @property
+    def NumCores(self):
+        '''(read-only) Delivers the number of Cores of the local PC'''
+        return self.lib.Parallel_Get_NumCores()
+
+    @property
+    def NumOfActors(self):
+        '''(read-only) Gets the number of Actors created'''
+        return self.lib.Parallel_Get_NumOfActors()
 
 
 class ICircuit(Base):
-    __slots__ = []
-    Buses = IBus()
-    CktElements = ICktElement()
-    ActiveElement = ICktElement()
-    Solution = ISolution()
-    ActiveBus = IBus()
-    Generators = IGenerators()
-    Meters = IMeters()
-    Monitors = IMonitors()
-    Settings = ISettings()
-    Lines = ILines()
-    CtrlQueue = ICtrlQueue()
-    Loads = ILoads()
-    ActiveCktElement = ICktElement()
-    ActiveDSSElement = IDSSElement()
-    ActiveClass = IActiveClass()
-    CapControls = ICapControls()
-    RegControls = IRegControls()
-    SwtControls = ISwtControls()
-    Transformers = ITransformers()
-    Capacitors = ICapacitors()
-    Topology = ITopology()
-    Sensors = ISensors()
-    XYCurves = IXYCurves()
-    PDElements = IPDElements()
-    Reclosers = IReclosers()
-    Relays = IRelays()
-    LoadShapes = ILoadShapes()
-    Fuses = IFuses()
+    __slots__ = [
+        'Buses',
+        'CktElements',
+        'ActiveElement',
+        'Solution',
+        'ActiveBus',
+        'Generators',
+        'Meters',
+        'Monitors',
+        'Settings',
+        'Lines',
+        'CtrlQueue',
+        'Loads',
+        'ActiveCktElement',
+        'ActiveDSSElement',
+        'ActiveClass',
+        'CapControls',
+        'RegControls',
+        'SwtControls',
+        'Transformers',
+        'Capacitors',
+        'Topology',
+        'Sensors',
+        'XYCurves',
+        'PDElements',
+        'Reclosers',
+        'Relays',
+        'LoadShapes',
+        'Fuses',
+        'Isources',
+        'ISources',
+        'DSSim_Coms',
+        'PVSystems',
+        'Vsources',
+        'LineCodes',
+        'LineGeometries',
+        'LineSpacings',
+        'WireData',
+        'CNData',
+        'TSData',
+        'Reactors',
+        'Parallel',
+    ]
+    
+    def __init__(self, api_util):
+        self.Buses = IBus(api_util)
+        self.CktElements = ICktElement(api_util)
+        self.ActiveElement = ICktElement(api_util)
+        self.Solution = ISolution(api_util)
+        self.ActiveBus = IBus(api_util)
+        self.Generators = IGenerators(api_util)
+        self.Meters = IMeters(api_util)
+        self.Monitors = IMonitors(api_util)
+        self.Settings = ISettings(api_util)
+        self.Lines = ILines(api_util)
+        self.CtrlQueue = ICtrlQueue(api_util)
+        self.Loads = ILoads(api_util)
+        self.ActiveCktElement = ICktElement(api_util)
+        self.ActiveDSSElement = IDSSElement(api_util)
+        self.ActiveClass = IActiveClass(api_util)
+        self.CapControls = ICapControls(api_util)
+        self.RegControls = IRegControls(api_util)
+        self.SwtControls = ISwtControls(api_util)
+        self.Transformers = ITransformers(api_util)
+        self.Capacitors = ICapacitors(api_util)
+        self.Topology = ITopology(api_util)
+        self.Sensors = ISensors(api_util)
+        self.XYCurves = IXYCurves(api_util)
+        self.PDElements = IPDElements(api_util)
+        self.Reclosers = IReclosers(api_util)
+        self.Relays = IRelays(api_util)
+        self.LoadShapes = ILoadShapes(api_util)
+        self.Fuses = IFuses(api_util)
 
-    Isources = IISources()
-    ISources = Isources
+        self.Isources = IISources(api_util)
+        self.ISources = self.Isources
 
-    DSSim_Coms = IDSSimComs()
-    PVSystems = IPVSystems()
-    Vsources = IVsources()
-    LineCodes = ILineCodes()
-    LineGeometries = ILineGeometries()
-    LineSpacings = ILineSpacings()
-    WireData = IWireData()
-    CNData = ICNData()
-    TSData = ITSData()
-    Reactors = IReactors()
+        self.DSSim_Coms = IDSSimComs(api_util)
+        self.PVSystems = IPVSystems(api_util)
+        self.Vsources = IVsources(api_util)
+        self.LineCodes = ILineCodes(api_util)
+        self.LineGeometries = ILineGeometries(api_util)
+        self.LineSpacings = ILineSpacings(api_util)
+        self.WireData = IWireData(api_util)
+        self.CNData = ICNData(api_util)
+        self.TSData = ITSData(api_util)
+        self.Reactors = IReactors(api_util)
 
-
+        if hasattr(api_util.lib, 'Parallel_CreateActor'):
+            self.Parallel = IParallel(api_util)
+        else:
+            self.Parallel = None
+            
+        Base.__init__(self, api_util)
+            
     def Capacity(self, Start, Increment):
-        return lib.Circuit_Capacity(Start, Increment)
+        return self.lib.Circuit_Capacity(Start, Increment)
 
     def Disable(self, Name):
         if type(Name) is not bytes:
             Name = Name.encode(codec)
 
-        lib.Circuit_Disable(Name)
+        self.lib.Circuit_Disable(Name)
 
     def Enable(self, Name):
         if type(Name) is not bytes:
             Name = Name.encode(codec)
 
-        lib.Circuit_Enable(Name)
+        self.lib.Circuit_Enable(Name)
 
     def EndOfTimeStepUpdate(self):
-        lib.Circuit_EndOfTimeStepUpdate()
+        self.lib.Circuit_EndOfTimeStepUpdate()
 
     def FirstElement(self):
-        return lib.Circuit_FirstElement()
+        return self.lib.Circuit_FirstElement()
 
     def FirstPCElement(self):
-        return lib.Circuit_FirstPCElement()
+        return self.lib.Circuit_FirstPCElement()
 
     def FirstPDElement(self):
-        return lib.Circuit_FirstPDElement()
+        return self.lib.Circuit_FirstPDElement()
 
     def AllNodeDistancesByPhase(self, Phase):
         '''(read-only) Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.'''
-        lib.Circuit_Get_AllNodeDistancesByPhase_GR(Phase)
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_AllNodeDistancesByPhase_GR(Phase)
+        return self.get_float64_gr_array()
 
     def AllNodeNamesByPhase(self, Phase):
         '''(read-only) Return array of strings of the node names for the By Phase criteria. Sequence corresponds to other ByPhase properties.'''
-        return get_string_array(lib.Circuit_Get_AllNodeNamesByPhase, Phase)
+        return self.get_string_array(self.lib.Circuit_Get_AllNodeNamesByPhase, Phase)
 
     def AllNodeVmagByPhase(self, Phase):
         '''(read-only) Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.'''
-        lib.Circuit_Get_AllNodeVmagByPhase_GR(Phase)
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_AllNodeVmagByPhase_GR(Phase)
+        return self.get_float64_gr_array()
 
     def AllNodeVmagPUByPhase(self, Phase):
         '''(read-only) Returns array of per unit voltage magnitudes for each node by phase'''
-        lib.Circuit_Get_AllNodeVmagPUByPhase_GR(Phase)
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_AllNodeVmagPUByPhase_GR(Phase)
+        return self.get_float64_gr_array()
 
     def NextElement(self):
-        return lib.Circuit_NextElement()
+        return self.lib.Circuit_NextElement()
 
     def NextPCElement(self):
-        return lib.Circuit_NextPCElement()
+        return self.lib.Circuit_NextPCElement()
 
     def NextPDElement(self):
-        return lib.Circuit_NextPDElement()
+        return self.lib.Circuit_NextPDElement()
 
     def Sample(self):
-        lib.Circuit_Sample()
+        self.lib.Circuit_Sample()
 
     def SaveSample(self):
-        lib.Circuit_SaveSample()
+        self.lib.Circuit_SaveSample()
 
     def SetActiveBus(self, BusName):
         if type(BusName) is not bytes:
             BusName = BusName.encode(codec)
 
-        return lib.Circuit_SetActiveBus(BusName)
+        return self.lib.Circuit_SetActiveBus(BusName)
 
     def SetActiveBusi(self, BusIndex):
-        return lib.Circuit_SetActiveBusi(BusIndex)
+        return self.lib.Circuit_SetActiveBusi(BusIndex)
 
     def SetActiveClass(self, ClassName):
         if type(ClassName) is not bytes:
             ClassName = ClassName.encode(codec)
 
-        return lib.Circuit_SetActiveClass(ClassName)
+        return self.lib.Circuit_SetActiveClass(ClassName)
 
     def SetActiveElement(self, FullName):
         if type(FullName) is not bytes:
             FullName = FullName.encode(codec)
 
-        return lib.Circuit_SetActiveElement(FullName)
+        return self.lib.Circuit_SetActiveElement(FullName)
 
     def UpdateStorage(self):
-        lib.Circuit_UpdateStorage()
+        self.lib.Circuit_UpdateStorage()
 
     @property
     def AllBusDistances(self):
         '''(read-only) Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.'''
-        lib.Circuit_Get_AllBusDistances_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_AllBusDistances_GR()
+        return self.get_float64_gr_array()
 
     @property
     def AllBusNames(self):
         '''(read-only) Array of strings containing names of all buses in circuit (see AllNodeNames).'''
-        return get_string_array(lib.Circuit_Get_AllBusNames)
+        return self.get_string_array(self.lib.Circuit_Get_AllBusNames)
 
     @property
     def AllBusVmag(self):
         '''(read-only) Array of magnitudes (doubles) of voltages at all buses'''
-        lib.Circuit_Get_AllBusVmag_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_AllBusVmag_GR()
+        return self.get_float64_gr_array()
 
     @property
     def AllBusVmagPu(self):
         '''(read-only) Double Array of all bus voltages (each node) magnitudes in Per unit'''
-        lib.Circuit_Get_AllBusVmagPu_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_AllBusVmagPu_GR()
+        return self.get_float64_gr_array()
 
     @property
     def AllBusVolts(self):
         '''(read-only) Complex array of all bus, node voltages from most recent solution'''
-        lib.Circuit_Get_AllBusVolts_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_AllBusVolts_GR()
+        return self.get_float64_gr_array()
 
     @property
     def AllElementLosses(self):
         '''(read-only) Array of total losses (complex) in each circuit element'''
-        lib.Circuit_Get_AllElementLosses_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_AllElementLosses_GR()
+        return self.get_float64_gr_array()
 
     @property
     def AllElementNames(self):
         '''(read-only) Array of strings containing Full Name of all elements.'''
-        return get_string_array(lib.Circuit_Get_AllElementNames)
+        return self.get_string_array(self.lib.Circuit_Get_AllElementNames)
 
     @property
     def AllNodeDistances(self):
         '''(read-only) Returns an array of distances from parent EnergyMeter for each Node. Corresponds to AllBusVMag sequence.'''
-        lib.Circuit_Get_AllNodeDistances_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_AllNodeDistances_GR()
+        return self.get_float64_gr_array()
 
     @property
     def AllNodeNames(self):
         '''(read-only) Array of strings containing full name of each node in system in same order as returned by AllBusVolts, etc.'''
-        return get_string_array(lib.Circuit_Get_AllNodeNames)
+        return self.get_string_array(self.lib.Circuit_Get_AllNodeNames)
 
     @property
     def LineLosses(self):
         '''(read-only) Complex total line losses in the circuit'''
-        lib.Circuit_Get_LineLosses_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_LineLosses_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Losses(self):
         '''(read-only) Total losses in active circuit, complex number (two-element array of double).'''
-        lib.Circuit_Get_Losses_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_Losses_GR()
+        return self.get_float64_gr_array()
 
     @property
     def Name(self):
         '''(read-only) Name of the active circuit.'''
-        return get_string(lib.Circuit_Get_Name())
+        return self.get_string(self.lib.Circuit_Get_Name())
 
     @property
     def NumBuses(self):
         '''(read-only) Total number of Buses in the circuit.'''
-        return lib.Circuit_Get_NumBuses()
+        return self.lib.Circuit_Get_NumBuses()
 
     @property
     def NumCktElements(self):
         '''(read-only) Number of CktElements in the circuit.'''
-        return lib.Circuit_Get_NumCktElements()
+        return self.lib.Circuit_Get_NumCktElements()
 
     @property
     def NumNodes(self):
         '''(read-only) Total number of nodes in the circuit.'''
-        return lib.Circuit_Get_NumNodes()
+        return self.lib.Circuit_Get_NumNodes()
 
     @property
     def ParentPDElement(self):
         '''(read-only) Sets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
-        return lib.Circuit_Get_ParentPDElement()
+        return self.lib.Circuit_Get_ParentPDElement()
 
     @property
     def SubstationLosses(self):
         '''(read-only) Complex losses in all transformers designated to substations.'''
-        lib.Circuit_Get_SubstationLosses_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_SubstationLosses_GR()
+        return self.get_float64_gr_array()
 
     @property
     def SystemY(self):
         '''(read-only) System Y matrix (after a solution has been performed)'''
-        lib.Circuit_Get_SystemY_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_SystemY_GR()
+        return self.get_float64_gr_array()
 
     @property
     def TotalPower(self):
         '''(read-only) Total power, watts delivered to the circuit'''
-        lib.Circuit_Get_TotalPower_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_TotalPower_GR()
+        return self.get_float64_gr_array()
 
     @property
     def YCurrents(self):
         '''(read-only) Array of doubles containing complex injection currents for the present solution. Is is the "I" vector of I=YV'''
-        lib.Circuit_Get_YCurrents_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_YCurrents_GR()
+        return self.get_float64_gr_array()
 
     @property
     def YNodeOrder(self):
         '''(read-only) Array of strings containing the names of the nodes in the same order as the Y matrix'''
-        return get_string_array(lib.Circuit_Get_YNodeOrder)
+        return self.get_string_array(self.lib.Circuit_Get_YNodeOrder)
 
     @property
     def YNodeVarray(self):
         '''(read-only) Complex array of actual node voltages in same order as SystemY matrix.'''
-        lib.Circuit_Get_YNodeVarray_GR()
-        return get_float64_gr_array()
+        self.lib.Circuit_Get_YNodeVarray_GR()
+        return self.get_float64_gr_array()
 
 
 class IYMatrix(Base):
@@ -6537,6 +6689,9 @@ class IYMatrix(Base):
 
     def GetCompressedYMatrix(self, factor=True):
         '''Return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix'''
+        
+        ffi = self.api_util.ffi
+        
         nBus = ffi.new('uint32_t*')
         nBus[0] = 0
         nNz = ffi.new('uint32_t*')
@@ -6546,7 +6701,7 @@ class IYMatrix(Base):
         RowIdxPtr = ffi.new('int32_t**')
         cValsPtr = ffi.new('double**')
 
-        lib.YMatrix_GetCompressedYMatrix(factor, nBus, nNz, ColPtr, RowIdxPtr, cValsPtr)
+        self.lib.YMatrix_GetCompressedYMatrix(factor, nBus, nNz, ColPtr, RowIdxPtr, cValsPtr)
 
         if not nBus[0] or not nNz[0]:
             res = None
@@ -6558,64 +6713,64 @@ class IYMatrix(Base):
                 np.fromstring(ffi.buffer(ColPtr[0], (nBus[0] + 1) * 4), dtype=np.int32)
             )
 
-        lib.DSS_Dispose_PInteger(ColPtr)
-        lib.DSS_Dispose_PInteger(RowIdxPtr)
-        lib.DSS_Dispose_PDouble(cValsPtr)
+        self.lib.DSS_Dispose_PInteger(ColPtr)
+        self.lib.DSS_Dispose_PInteger(RowIdxPtr)
+        self.lib.DSS_Dispose_PDouble(cValsPtr)
 
         return res
 
     def ZeroInjCurr(self):
-        lib.YMatrix_ZeroInjCurr()
+        self.lib.YMatrix_ZeroInjCurr()
 
     def GetSourceInjCurrents(self):
-        lib.YMatrix_GetSourceInjCurrents()
+        self.lib.YMatrix_GetSourceInjCurrents()
 
     def GetPCInjCurr(self):
-        lib.YMatrix_GetPCInjCurr()
+        self.lib.YMatrix_GetPCInjCurr()
 
     def BuildYMatrixD(self, BuildOps, AllocateVI):
-        lib.YMatrix_BuildYMatrixD(BuildOps, AllocateVI)
+        self.lib.YMatrix_BuildYMatrixD(BuildOps, AllocateVI)
 
     def AddInAuxCurrents(self, SType):
-        lib.YMatrix_AddInAuxCurrents(SType)
+        self.lib.YMatrix_AddInAuxCurrents(SType)
 
     def GetIPointer(self):
         '''Get access to the internal Current pointer'''
-        IvectorPtr = ffi.new('double**')
-        lib.YMatrix_getIpointer(IvectorPtr)
+        IvectorPtr = self.api_util.ffi.new('double**')
+        self.lib.YMatrix_getIpointer(IvectorPtr)
         return IvectorPtr[0]
 
     def GetVPointer(self):
         '''Get access to the internal Voltage pointer'''
-        VvectorPtr = ffi.new('double**')
-        lib.YMatrix_getVpointer(VvectorPtr)
+        VvectorPtr = self.api_util.ffi.new('double**')
+        self.lib.YMatrix_getVpointer(VvectorPtr)
         return VvectorPtr[0]
 
     def SolveSystem(self, NodeV):
         if type(NodeV) is not np.ndarray:
             NodeV = np.array(NodeV)
 
-        NodeV = ffi.cast("double *", NodeV.ctypes.data)
-        NodeVPtr = ffi.new('double**')
+        NodeV = self.api_util.ffi.cast("double *", NodeV.ctypes.data)
+        NodeVPtr = self.api_util.ffi.new('double**')
         NodeVPtr[0] = NodeV
-        result = lib.YMatrix_SolveSystem(NodeVPtr)
+        result = self.lib.YMatrix_SolveSystem(NodeVPtr)
         return result
 
     @property
     def SystemYChanged(self):
-        return lib.YMatrix_Get_SystemYChanged()
+        return self.lib.YMatrix_Get_SystemYChanged()
 
     @SystemYChanged.setter
     def SystemYChanged(self, value):
-        lib.YMatrix_Set_SystemYChanged(value)
+        self.lib.YMatrix_Set_SystemYChanged(value)
 
     @property
     def UseAuxCurrents(self):
-        return lib.YMatrix_Get_UseAuxCurrents()
+        return self.lib.YMatrix_Get_UseAuxCurrents()
 
     @UseAuxCurrents.setter
     def UseAuxCurrents(self, value):
-        lib.YMatrix_Set_UseAuxCurrents(value)
+        self.lib.YMatrix_Set_UseAuxCurrents(value)
 
     # for better compatibility with OpenDSSDirect.py
     getYSparse = GetCompressedYMatrix
@@ -6623,100 +6778,119 @@ class IYMatrix(Base):
     def getI(self):
         '''Get the data from the internal Current pointer'''
         IvectorPtr = self.IVector()
-        return ffi.unpack(IvectorPtr, lib.Circuit_Get_NumNodes() + 1)
+        return self.api_util.ffi.unpack(IvectorPtr, self.lib.Circuit_Get_NumNodes() + 1)
 
     def getV(self):
         '''Get the data from the internal Voltage pointer'''
         VvectorPtr = self.VVector()
-        return ffi.unpack(VvectorPtr, lib.Circuit_Get_NumNodes() + 1)
+        return self.api_util.ffi.unpack(VvectorPtr, self.lib.Circuit_Get_NumNodes() + 1)
 
 
 class IDSS(Base):
-    __slots__ = []
-    ActiveCircuit = ICircuit()
-    Circuits = ICircuit()
-    Error = IError()
-    Text = IText()
-    NewCircuit = ICircuit()
-    DSSProgress = IDSSProgress()
-    ActiveClass = IActiveClass()
-    Executive = IDSS_Executive()
-    Events = IDSSEvents()
-    CmathLib = ICmathLib()
-    Parser = IParser()
-    DSSim_Coms = IDSSimComs()
-    YMatrix = IYMatrix()
+    __slots__ = [
+        'ActiveCircuit',
+        'Circuits',
+        'Error',
+        'Text',
+        # 'NewCircuit',
+        'DSSProgress',
+        'ActiveClass',
+        'Executive',
+        'Events',
+        'CmathLib',
+        'Parser',
+        'DSSim_Coms',
+        'YMatrix',
+    ]
 
+    def __init__(self, api_util):
+        self.ActiveCircuit = ICircuit(api_util)
+        self.Circuits = ICircuit(api_util)
+        self.Error = IError(api_util)
+        self.Text = IText(api_util)
+        # self.NewCircuit = ICircuit(api_util)
+        self.DSSProgress = IDSSProgress(api_util)
+        self.ActiveClass = IActiveClass(api_util)
+        self.Executive = IDSS_Executive(api_util)
+        self.Events = IDSSEvents(api_util)
+        self.CmathLib = ICmathLib(api_util)
+        self.Parser = IParser(api_util)
+        self.DSSim_Coms = IDSSimComs(api_util)
+        self.YMatrix = IYMatrix(api_util)
+
+        Base.__init__(self, api_util)    
+
+        
     def ClearAll(self):
-        lib.DSS_ClearAll()
+        self.lib.DSS_ClearAll()
 
     def Reset(self):
-        lib.DSS_Reset()
+        self.lib.DSS_Reset()
 
     def SetActiveClass(self, ClassName):
         if type(ClassName) is not bytes:
             ClassName = ClassName.encode(codec)
 
-        return lib.DSS_SetActiveClass(ClassName)
+        return self.lib.DSS_SetActiveClass(ClassName)
 
     def Start(self, code):
-        return lib.DSS_Start(code) != 0
+        return self.lib.DSS_Start(code) != 0
 
     @property
     def Classes(self):
         '''(read-only) List of DSS intrinsic classes (names of the classes)'''
-        return get_string_array(lib.DSS_Get_Classes)
+        return self.get_string_array(self.lib.DSS_Get_Classes)
 
     @property
     def DataPath(self):
         '''DSS Data File Path.  Default path for reports, etc. from DSS'''
-        return get_string(lib.DSS_Get_DataPath())
+        return self.get_string(self.lib.DSS_Get_DataPath())
 
     @DataPath.setter
     def DataPath(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(codec)
 
-        lib.DSS_Set_DataPath(Value)
+        self.lib.DSS_Set_DataPath(Value)
 
     @property
     def DefaultEditor(self):
         '''(read-only) Returns the path name for the default text editor.'''
-        return get_string(lib.DSS_Get_DefaultEditor())
+        return self.get_string(self.lib.DSS_Get_DefaultEditor())
 
     @property
     def NumCircuits(self):
         '''(read-only) Number of Circuits currently defined'''
-        return lib.DSS_Get_NumCircuits()
+        return self.lib.DSS_Get_NumCircuits()
 
     @property
     def NumClasses(self):
         '''(read-only) Number of DSS intrinsic classes'''
-        return lib.DSS_Get_NumClasses()
+        return self.lib.DSS_Get_NumClasses()
 
     @property
     def NumUserClasses(self):
         '''(read-only) Number of user-defined classes'''
-        return lib.DSS_Get_NumUserClasses()
+        return self.lib.DSS_Get_NumUserClasses()
 
     @property
     def UserClasses(self):
         '''(read-only) List of user-defined classes'''
-        return get_string_array(lib.DSS_Get_UserClasses)
+        return self.get_string_array(self.lib.DSS_Get_UserClasses)
 
     @property
     def Version(self):
         '''(read-only) Get version string for the DSS.'''
-        return get_string(lib.DSS_Get_Version())
+        return self.get_string(self.lib.DSS_Get_Version())
 
     @property
     def AllowForms(self):
-        return lib.DSS_Get_AllowForms() != 0
+        return self.lib.DSS_Get_AllowForms() != 0
 
     @AllowForms.setter
     def AllowForms(self, value):
         '''Gets/sets whether text output is allowed'''
-        return lib.DSS_Set_AllowForms(value)
+        return self.lib.DSS_Set_AllowForms(value)
 
     def ShowPanel(self):
         warnings.warn('ShowPanel is not implemented.')
@@ -6725,10 +6899,9 @@ class IDSS(Base):
         if type(name) is not bytes:
             name = name.encode(codec)
 
-        lib.DSS_NewCircuit(name)
-        CheckForError()
+        self.lib.DSS_NewCircuit(name)
+        self.CheckForError()
 
         return self.ActiveCircuit
+        
 
-
-DSS = IDSS()
