@@ -1,0 +1,115 @@
+'''
+A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+
+Copyright (c) 2016-2018 Paulo Meira
+'''
+from __future__ import absolute_import
+from .._cffi_api_util import Base
+
+class ITopology(Base):
+    __slots__ = []
+
+    @property
+    def ActiveBranch(self):
+        '''(read-only) Returns index of the active branch'''
+        return self.lib.Topology_Get_ActiveBranch()
+
+    @property
+    def ActiveLevel(self):
+        '''(read-only) Topological depth of the active branch'''
+        return self.lib.Topology_Get_ActiveLevel()
+
+    @property
+    def AllIsolatedBranches(self):
+        '''(read-only) Array of all isolated branch names.'''
+        return self.get_string_array(self.lib.Topology_Get_AllIsolatedBranches)
+
+    @property
+    def AllIsolatedLoads(self):
+        '''(read-only) Array of all isolated load names.'''
+        return self.get_string_array(self.lib.Topology_Get_AllIsolatedLoads)
+
+    @property
+    def AllLoopedPairs(self):
+        '''(read-only) Array of all looped element names, by pairs.'''
+        return self.get_string_array(self.lib.Topology_Get_AllLoopedPairs)
+
+    @property
+    def BackwardBranch(self):
+        '''(read-only) MOve back toward the source, return index of new active branch, or 0 if no more.'''
+        return self.lib.Topology_Get_BackwardBranch()
+
+    @property
+    def BranchName(self):
+        '''Name of the active branch.'''
+        return self.get_string(self.lib.Topology_Get_BranchName())
+
+    @BranchName.setter
+    def BranchName(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self.api_util.codec)
+
+        self.lib.Topology_Set_BranchName(Value)
+
+    @property
+    def BusName(self):
+        '''Set the active branch to one containing this bus, return index or 0 if not found'''
+        return self.get_string(self.lib.Topology_Get_BusName())
+
+    @BusName.setter
+    def BusName(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self.api_util.codec)
+
+        self.lib.Topology_Set_BusName(Value)
+
+    @property
+    def First(self):
+        '''(read-only) Sets the first branch active, returns 0 if none.'''
+        return self.lib.Topology_Get_First()
+
+    @property
+    def FirstLoad(self):
+        '''(read-only) First load at the active branch, return index or 0 if none.'''
+        return self.lib.Topology_Get_FirstLoad()
+
+    @property
+    def ForwardBranch(self):
+        '''(read-only) Move forward in the tree, return index of new active branch or 0 if no more'''
+        return self.lib.Topology_Get_ForwardBranch()
+
+    @property
+    def LoopedBranch(self):
+        '''(read-only) Move to looped branch, return index or 0 if none.'''
+        return self.lib.Topology_Get_LoopedBranch()
+
+    @property
+    def Next(self):
+        '''(read-only) Sets the next branch active, returns 0 if no more.'''
+        return self.lib.Topology_Get_Next()
+
+    @property
+    def NextLoad(self):
+        '''(read-only) Next load at the active branch, return index or 0 if no more.'''
+        return self.lib.Topology_Get_NextLoad()
+
+    @property
+    def NumIsolatedBranches(self):
+        '''(read-only) Number of isolated branches (PD elements and capacitors).'''
+        return self.lib.Topology_Get_NumIsolatedBranches()
+
+    @property
+    def NumIsolatedLoads(self):
+        '''(read-only) Number of isolated loads'''
+        return self.lib.Topology_Get_NumIsolatedLoads()
+
+    @property
+    def NumLoops(self):
+        '''(read-only) Number of loops'''
+        return self.lib.Topology_Get_NumLoops()
+
+    @property
+    def ParallelBranch(self):
+        '''(read-only) Move to directly parallel branch, return index or 0 if none.'''
+        return self.lib.Topology_Get_ParallelBranch()
+

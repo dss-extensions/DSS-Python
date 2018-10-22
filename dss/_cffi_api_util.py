@@ -4,8 +4,6 @@ import os
 
 # The codec was changed to ASCII in version 0.10.0. 
 # A rewrite of DSS C-API is expected to return UTF8Strings in the future
-codec = 'ascii' #TODO: check which encoding FreePascal defaults to, on Linux
-
 interface_classes = set()
 
 def use_com_compat(value=True):
@@ -77,6 +75,7 @@ class Base(object):
     
 class CffiApiUtil(object):
     def __init__(self, ffi, lib):
+        self.codec = 'ascii' #TODO: check which encoding FreePascal defaults to, on Linux
         self.ffi = ffi
         self.lib = lib
         tmp_string_pointers = (self.ffi.new('char****'), self.ffi.new('int32_t**'))
@@ -104,7 +103,7 @@ class CffiApiUtil(object):
         self.lib.DSS_ResetStringBuffer()
 
     def get_string(self, b):
-        return self.ffi.string(b).decode(codec)
+        return self.ffi.string(b).decode(self.codec)
 
     def get_float64_array(self, func, *args):
         ptr = self.ffi.new('double**')
@@ -153,6 +152,7 @@ class CffiApiUtil(object):
             if actual_ptr == self.ffi.NULL:
                 res = []
             else:
+                codec = self.codec
                 str_ptrs = self.ffi.unpack(actual_ptr, cnt[0])
                 #res = [(str(self.ffi.string(str_ptr).decode(codec)) if (str_ptr != self.ffi.NULL) else None) for str_ptr in str_ptrs]
                 res = [(self.ffi.string(str_ptr).decode(codec) if (str_ptr != self.ffi.NULL) else None) for str_ptr in str_ptrs]
@@ -172,6 +172,7 @@ class CffiApiUtil(object):
             if actual_ptr == self.ffi.NULL:
                 res = []
             else:
+                codec = self.codec
                 res = [(str(self.ffi.string(actual_ptr[i]).decode(codec)) if (actual_ptr[i] != self.ffi.NULL) else '') for i in range(cnt[0])]
                 if res == ['']:
                     # most COM methods return an empty array as an
@@ -254,6 +255,7 @@ class CffiApiUtil(object):
             raise ValueError("Value cannot be None!")
 
         ptrs = []
+        codec = self.codec
         for v in value:
             if type(v) is not bytes:
                 v = v.encode(codec)

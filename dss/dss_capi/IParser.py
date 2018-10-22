@@ -1,0 +1,124 @@
+'''
+A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+
+Copyright (c) 2016-2018 Paulo Meira
+'''
+from __future__ import absolute_import
+from .._cffi_api_util import Base
+
+class IParser(Base):
+    __slots__ = []
+
+    def Matrix(self, ExpectedOrder):
+        '''(read-only) Use this property to parse a Matrix token in OpenDSS format.  Returns square matrix of order specified. Order same as default Fortran order: column by column.'''
+        self.lib.Parser_Get_Matrix_GR(ExpectedOrder)
+        return self.get_float64_gr_array()
+
+    def SymMatrix(self, ExpectedOrder):
+        '''(read-only) Use this property to parse a matrix token specified in lower triangle form. Symmetry is forced.'''
+        self.lib.Parser_Get_SymMatrix_GR(ExpectedOrder)
+        return self.get_float64_gr_array()
+
+    def Vector(self, ExpectedSize):
+        '''(read-only) Returns token as array of doubles. For parsing quoted array syntax.'''
+        self.lib.Parser_Get_Vector_GR(ExpectedSize)
+        return self.get_float64_gr_array()
+
+    def ResetDelimiters(self):
+        self.lib.Parser_ResetDelimiters()
+
+    @property
+    def AutoIncrement(self):
+        '''Default is FALSE. If TRUE parser automatically advances to next token after DblValue, IntValue, or StrValue. Simpler when you don't need to check for parameter names.'''
+        return self.lib.Parser_Get_AutoIncrement() != 0
+
+    @AutoIncrement.setter
+    def AutoIncrement(self, Value):
+        self.lib.Parser_Set_AutoIncrement(Value)
+
+    @property
+    def BeginQuote(self):
+        '''
+        (read) Get String containing the the characters for Quoting in OpenDSS scripts. Matching pairs defined in EndQuote. Default is "'([{.
+        (write) Set String containing the the characters for Quoting in OpenDSS scripts. Matching pairs defined in EndQuote. Default is "'([{.
+        '''
+        return self.get_string(self.lib.Parser_Get_BeginQuote())
+
+    @BeginQuote.setter
+    def BeginQuote(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self.api_util.codec)
+
+        self.lib.Parser_Set_BeginQuote(Value)
+
+    @property
+    def CmdString(self):
+        '''String to be parsed. Loading this string resets the Parser to the beginning of the line. Then parse off the tokens in sequence.'''
+        return self.get_string(self.lib.Parser_Get_CmdString())
+
+    @CmdString.setter
+    def CmdString(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self.api_util.codec)
+
+        self.lib.Parser_Set_CmdString(Value)
+
+    @property
+    def DblValue(self):
+        '''(read-only) Return next parameter as a double.'''
+        return self.lib.Parser_Get_DblValue()
+
+    @property
+    def Delimiters(self):
+        '''String defining hard delimiters used to separate token on the command string. Default is , and =. The = separates token name from token value. These override whitesspace to separate tokens.'''
+        return self.get_string(self.lib.Parser_Get_Delimiters())
+
+    @Delimiters.setter
+    def Delimiters(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self.api_util.codec)
+
+        self.lib.Parser_Set_Delimiters(Value)
+
+    @property
+    def EndQuote(self):
+        '''String containing characters, in order, that match the beginning quote characters in BeginQuote. Default is "')]}'''
+        return self.get_string(self.lib.Parser_Get_EndQuote())
+
+    @EndQuote.setter
+    def EndQuote(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self.api_util.codec)
+
+        self.lib.Parser_Set_EndQuote(Value)
+
+    @property
+    def IntValue(self):
+        '''(read-only) Return next parameter as a long integer.'''
+        return self.lib.Parser_Get_IntValue()
+
+    @property
+    def NextParam(self):
+        '''(read-only) Get next token and return tag name (before = sign) if any. See AutoIncrement.'''
+        return self.get_string(self.lib.Parser_Get_NextParam())
+
+    @property
+    def StrValue(self):
+        '''(read-only) Return next parameter as a string'''
+        return self.get_string(self.lib.Parser_Get_StrValue())
+
+    @property
+    def WhiteSpace(self):
+        '''
+        (read) Get the characters used for White space in the command string.  Default is blank and Tab.
+        (write) Set the characters used for White space in the command string.  Default is blank and Tab.
+        '''
+        return self.get_string(self.lib.Parser_Get_WhiteSpace())
+
+    @WhiteSpace.setter
+    def WhiteSpace(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self.api_util.codec)
+
+        self.lib.Parser_Set_WhiteSpace(Value)
+
