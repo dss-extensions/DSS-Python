@@ -45,6 +45,7 @@ from .IWireData import IWireData
 from .ICNData import ICNData
 from .ITSData import ITSData
 from .IReactors import IReactors
+from .IParallel import IParallel
 
 class ICircuit(Base):
     __slots__ = [
