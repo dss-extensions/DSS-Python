@@ -192,6 +192,41 @@ class ITransformers(Base):
 
     kva = kVA
 
+    @property
+    def WdgVoltages(self):
+        '''(read-only) Complex array of voltages for active winding'''
+        self.lib.Transformers_Get_WdgVoltages_GR()
+        return self.get_float64_gr_array()
+
+    @property
+    def WdgCurrents(self):
+        '''(read-only) All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)'''
+        self.lib.Transformers_Get_WdgCurrents_GR()
+        return self.get_float64_gr_array()
+
+    @property
+    def strWdgCurrents(self):
+        '''(read-only) All winding currents in CSV string form like the WdgCurrents property'''
+        return self.get_string(self.lib.Transformers_Get_strWdgCurrents())
+
+    @property
+    def CoreType(self):
+        '''Transformer Core Type: 0=shell;1 = 1-phase; 3= 3-leg; 5= 5-leg'''
+        return self.lib.Transformers_Get_CoreType()
+
+    @CoreType.setter
+    def CoreType(self, Value):
+        self.lib.Transformers_Set_CoreType(Value)
+
+    @property
+    def RdcOhms(self):
+        '''dc Resistance of active winding in ohms for GIC analysis'''
+        return self.lib.Transformers_Get_RdcOhms()
+
+    @RdcOhms.setter
+    def RdcOhms(self, Value):
+        self.lib.Transformers_Set_RdcOhms(Value)
+
     def __iter__(self):
         idx = self.First
         while idx != 0:
