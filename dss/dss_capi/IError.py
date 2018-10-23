@@ -12,11 +12,11 @@ class IError(Base):
     @property
     def Description(self):
         '''(read-only) Description of error for last operation'''
-        return self.get_string(self.lib.Error_Get_Description())
+        return self._get_string(self._lib.Error_Get_Description())
 
     @property
     def Number(self):
         '''(read-only) Error Number'''
-        return self.lib.Error_Get_Number()
+        return self._lib.Error_Get_Number()
 
 

@@ -54,84 +54,84 @@ class IDSS(Base):
 
         
     def ClearAll(self):
-        self.lib.DSS_ClearAll()
+        self._lib.DSS_ClearAll()
 
     def Reset(self):
-        self.lib.DSS_Reset()
+        self._lib.DSS_Reset()
 
     def SetActiveClass(self, ClassName):
         if type(ClassName) is not bytes:
-            ClassName = ClassName.encode(self.api_util.codec)
+            ClassName = ClassName.encode(self._api_util.codec)
 
-        return self.lib.DSS_SetActiveClass(ClassName)
+        return self._lib.DSS_SetActiveClass(ClassName)
 
     def Start(self, code):
-        return self.lib.DSS_Start(code) != 0
+        return self._lib.DSS_Start(code) != 0
 
     @property
     def Classes(self):
         '''(read-only) List of DSS intrinsic classes (names of the classes)'''
-        return self.get_string_array(self.lib.DSS_Get_Classes)
+        return self._get_string_array(self._lib.DSS_Get_Classes)
 
     @property
     def DataPath(self):
         '''DSS Data File Path.  Default path for reports, etc. from DSS'''
-        return self.get_string(self.lib.DSS_Get_DataPath())
+        return self._get_string(self._lib.DSS_Get_DataPath())
 
     @DataPath.setter
     def DataPath(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.DSS_Set_DataPath(Value)
+        self._lib.DSS_Set_DataPath(Value)
 
     @property
     def DefaultEditor(self):
         '''(read-only) Returns the path name for the default text editor.'''
-        return self.get_string(self.lib.DSS_Get_DefaultEditor())
+        return self._get_string(self._lib.DSS_Get_DefaultEditor())
 
     @property
     def NumCircuits(self):
         '''(read-only) Number of Circuits currently defined'''
-        return self.lib.DSS_Get_NumCircuits()
+        return self._lib.DSS_Get_NumCircuits()
 
     @property
     def NumClasses(self):
         '''(read-only) Number of DSS intrinsic classes'''
-        return self.lib.DSS_Get_NumClasses()
+        return self._lib.DSS_Get_NumClasses()
 
     @property
     def NumUserClasses(self):
         '''(read-only) Number of user-defined classes'''
-        return self.lib.DSS_Get_NumUserClasses()
+        return self._lib.DSS_Get_NumUserClasses()
 
     @property
     def UserClasses(self):
         '''(read-only) List of user-defined classes'''
-        return self.get_string_array(self.lib.DSS_Get_UserClasses)
+        return self._get_string_array(self._lib.DSS_Get_UserClasses)
 
     @property
     def Version(self):
         '''(read-only) Get version string for the DSS.'''
-        return self.get_string(self.lib.DSS_Get_Version())
+        return self._get_string(self._lib.DSS_Get_Version())
 
     @property
     def AllowForms(self):
-        return self.lib.DSS_Get_AllowForms() != 0
+        return self._lib.DSS_Get_AllowForms() != 0
 
     @AllowForms.setter
     def AllowForms(self, value):
         '''Gets/sets whether text output is allowed'''
-        return self.lib.DSS_Set_AllowForms(value)
+        return self._lib.DSS_Set_AllowForms(value)
 
     def ShowPanel(self):
         warnings.warn('ShowPanel is not implemented.')
 
     def NewCircuit(self, name):
         if type(name) is not bytes:
-            name = name.encode(self.api_util.codec)
+            name = name.encode(self._api_util.codec)
 
-        self.lib.DSS_NewCircuit(name)
+        self._lib.DSS_NewCircuit(name)
         self.CheckForError()
 
         return self.ActiveCircuit

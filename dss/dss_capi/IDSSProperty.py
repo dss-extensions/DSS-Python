@@ -12,32 +12,32 @@ class IDSSProperty(Base):
     @property
     def Description(self):
         '''(read-only) Description of the property.'''
-        return self.get_string(self.lib.DSSProperty_Get_Description())
+        return self._get_string(self._lib.DSSProperty_Get_Description())
 
     @property
     def Name(self):
         '''(read-only) Name of Property'''
-        return self.get_string(self.lib.DSSProperty_Get_Name())
+        return self._get_string(self._lib.DSSProperty_Get_Name())
 
     @property
     def Val(self):
-        return self.get_string(self.lib.DSSProperty_Get_Val())
+        return self._get_string(self._lib.DSSProperty_Get_Val())
 
     @Val.setter
     def Val(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.DSSProperty_Set_Val(Value)
+        self._lib.DSSProperty_Set_Val(Value)
 
     def __getitem__(self, propname_index):
         if isinstance(propname_index, int):
-            self.lib.DSSProperty_Set_Index(propname_index)
+            self._lib.DSSProperty_Set_Index(propname_index)
         else:
             if type(propname_index) is not bytes:
-                propname_index = propname_index.encode(self.api_util.codec)
+                propname_index = propname_index.encode(self._api_util.codec)
 
-            self.lib.DSSProperty_Set_Name(propname_index)
+            self._lib.DSSProperty_Set_Name(propname_index)
 
         return self
 

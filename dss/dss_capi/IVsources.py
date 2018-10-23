@@ -12,7 +12,7 @@ class IVsources(Base):
     @property
     def AllNames(self):
         '''(read-only) Names of all Vsource objects in the circuit'''
-        return self.get_string_array(self.lib.Vsources_Get_AllNames)
+        return self._get_string_array(self._lib.Vsources_Get_AllNames)
 
     @property
     def AngleDeg(self):
@@ -20,42 +20,42 @@ class IVsources(Base):
         (read) Phase angle of first phase in degrees
         (write) phase angle in degrees
         '''
-        return self.lib.Vsources_Get_AngleDeg()
+        return self._lib.Vsources_Get_AngleDeg()
 
     @AngleDeg.setter
     def AngleDeg(self, Value):
-        self.lib.Vsources_Set_AngleDeg(Value)
+        self._lib.Vsources_Set_AngleDeg(Value)
 
     @property
     def BasekV(self):
         '''Source voltage in kV'''
-        return self.lib.Vsources_Get_BasekV()
+        return self._lib.Vsources_Get_BasekV()
 
     @BasekV.setter
     def BasekV(self, Value):
-        self.lib.Vsources_Set_BasekV(Value)
+        self._lib.Vsources_Set_BasekV(Value)
 
     @property
     def Count(self):
         '''(read-only) Number of Vsource Object'''
-        return self.lib.Vsources_Get_Count()
+        return self._lib.Vsources_Get_Count()
 
     def __len__(self):
-        return self.lib.Vsources_Get_Count()
+        return self._lib.Vsources_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Sets the first VSOURCE to be active; Returns 0 if none'''
-        return self.lib.Vsources_Get_First()
+        return self._lib.Vsources_Get_First()
 
     @property
     def Frequency(self):
         '''Source frequency in Hz'''
-        return self.lib.Vsources_Get_Frequency()
+        return self._lib.Vsources_Get_Frequency()
 
     @Frequency.setter
     def Frequency(self, Value):
-        self.lib.Vsources_Set_Frequency(Value)
+        self._lib.Vsources_Set_Frequency(Value)
 
     @property
     def Name(self):
@@ -63,28 +63,28 @@ class IVsources(Base):
         (read) Get Active VSOURCE name
         (write) Set Active VSOURCE by Name
         '''
-        return self.get_string(self.lib.Vsources_Get_Name())
+        return self._get_string(self._lib.Vsources_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.Vsources_Set_Name(Value)
+        self._lib.Vsources_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next VSOURCE object to be active; returns zero if no more'''
-        return self.lib.Vsources_Get_Next()
+        return self._lib.Vsources_Get_Next()
 
     @property
     def Phases(self):
         '''Number of phases'''
-        return self.lib.Vsources_Get_Phases()
+        return self._lib.Vsources_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value):
-        self.lib.Vsources_Set_Phases(Value)
+        self._lib.Vsources_Set_Phases(Value)
 
     @property
     def pu(self):
@@ -92,11 +92,11 @@ class IVsources(Base):
         (read) Source pu voltage.
         (write) Per-unit value of source voltage based on kV
         '''
-        return self.lib.Vsources_Get_pu()
+        return self._lib.Vsources_Get_pu()
 
     @pu.setter
     def pu(self, Value):
-        self.lib.Vsources_Set_pu(Value)
+        self._lib.Vsources_Set_pu(Value)
 
     def __iter__(self):
         idx = self.First

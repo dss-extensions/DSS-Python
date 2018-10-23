@@ -10,49 +10,49 @@ class ICtrlQueue(Base):
     __slots__ = []
 
     def ClearActions(self):
-        self.lib.CtrlQueue_ClearActions()
+        self._lib.CtrlQueue_ClearActions()
 
     def ClearQueue(self):
-        self.lib.CtrlQueue_ClearQueue()
+        self._lib.CtrlQueue_ClearQueue()
 
     def Delete(self, ActionHandle):
-        self.lib.CtrlQueue_Delete(ActionHandle)
+        self._lib.CtrlQueue_Delete(ActionHandle)
 
     def DoAllQueue(self):
-        self.lib.CtrlQueue_DoAllQueue()
+        self._lib.CtrlQueue_DoAllQueue()
 
     def Show(self):
-        self.lib.CtrlQueue_Show()
+        self._lib.CtrlQueue_Show()
 
     @property
     def ActionCode(self):
         '''(read-only) Code for the active action. Long integer code to tell the control device what to do'''
-        return self.lib.CtrlQueue_Get_ActionCode()
+        return self._lib.CtrlQueue_Get_ActionCode()
 
     @property
     def DeviceHandle(self):
         '''(read-only) Handle (User defined) to device that must act on the pending action.'''
-        return self.lib.CtrlQueue_Get_DeviceHandle()
+        return self._lib.CtrlQueue_Get_DeviceHandle()
 
     @property
     def NumActions(self):
         '''(read-only) Number of Actions on the current actionlist (that have been popped off the control queue by CheckControlActions)'''
-        return self.lib.CtrlQueue_Get_NumActions()
+        return self._lib.CtrlQueue_Get_NumActions()
 
     @property
     def PopAction(self):
         '''(read-only) Pops next action off the action list and makes it the active action. Returns zero if none.'''
-        return self.lib.CtrlQueue_Get_PopAction()
+        return self._lib.CtrlQueue_Get_PopAction()
 
     @property
     def Queue(self):
         '''(read-only) Array of strings containing the entire queue in CSV format'''
-        return self.get_string_array(self.lib.CtrlQueue_Get_Queue)
+        return self._get_string_array(self._lib.CtrlQueue_Get_Queue)
 
     @property
     def QueueSize(self):
         '''(read-only) Number of items on the OpenDSS control Queue'''
-        return self.lib.CtrlQueue_Get_QueueSize()
+        return self._lib.CtrlQueue_Get_QueueSize()
 
     @property
     def Action(self):
@@ -61,5 +61,5 @@ class ICtrlQueue(Base):
 
     @Action.setter
     def Action(self, Param1):
-        self.lib.CtrlQueue_Set_Action(Param1)
+        self._lib.CtrlQueue_Set_Action(Param1)
 

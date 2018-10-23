@@ -14,117 +14,117 @@ class IWireData(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all devices'''
-        return self.get_string_array(self.lib.WireData_Get_AllNames)
+        return self._get_string_array(self._lib.WireData_Get_AllNames)
 
     @property
     def Count(self):
         '''(read-only) Number of WireData'''
-        return self.lib.WireData_Get_Count()
+        return self._lib.WireData_Get_Count()
 
     @property
     def First(self):
-        return self.lib.WireData_Get_First()
+        return self._lib.WireData_Get_First()
 
     @property
     def Next(self):
-        return self.lib.WireData_Get_Next()
+        return self._lib.WireData_Get_Next()
 
     @property
     def Name(self):
         '''Name of active WireData'''
-        return self.get_string(self.lib.WireData_Get_Name())
+        return self._get_string(self._lib.WireData_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.WireData_Set_Name(Value)
+        self._lib.WireData_Set_Name(Value)
 
     def __len__(self):
-        return self.lib.WireData_Get_Count()
+        return self._lib.WireData_Get_Count()
 
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''
-        return self.lib.WireData_Get_EmergAmps()
+        return self._lib.WireData_Get_EmergAmps()
 
     @EmergAmps.setter
     def EmergAmps(self, Value):
-        self.lib.WireData_Set_EmergAmps(Value)
+        self._lib.WireData_Set_EmergAmps(Value)
 
     @property
     def NormAmps(self):
         '''Normal Ampere rating'''
-        return self.lib.WireData_Get_NormAmps()
+        return self._lib.WireData_Get_NormAmps()
 
     @NormAmps.setter
     def NormAmps(self, Value):
-        self.lib.WireData_Set_NormAmps(Value)
+        self._lib.WireData_Set_NormAmps(Value)
 
     @property
     def Rdc(self):
-        return self.lib.WireData_Get_Rdc()
+        return self._lib.WireData_Get_Rdc()
 
     @Rdc.setter
     def Rdc(self, Value):
-        self.lib.WireData_Set_Rdc(Value)
+        self._lib.WireData_Set_Rdc(Value)
 
     @property
     def Rac(self):
-        return self.lib.WireData_Get_Rac()
+        return self._lib.WireData_Get_Rac()
 
     @Rac.setter
     def Rac(self, Value):
-        self.lib.WireData_Set_Rac(Value)
+        self._lib.WireData_Set_Rac(Value)
 
     @property
     def GMRac(self):
-        return self.lib.WireData_Get_GMRac()
+        return self._lib.WireData_Get_GMRac()
 
     @GMRac.setter
     def GMRac(self, Value):
-        self.lib.WireData_Set_GMRac(Value)
+        self._lib.WireData_Set_GMRac(Value)
 
     @property
     def GMRUnits(self):
-        return self.lib.WireData_Get_GMRUnits()
+        return self._lib.WireData_Get_GMRUnits()
 
     @GMRUnits.setter
     def GMRUnits(self, Value):
-        self.lib.WireData_Set_GMRUnits(Value)
+        self._lib.WireData_Set_GMRUnits(Value)
 
     @property
     def Radius(self):
-        return self.lib.WireData_Get_Radius()
+        return self._lib.WireData_Get_Radius()
 
     @Radius.setter
     def Radius(self, Value):
-        self.lib.WireData_Set_Radius(Value)
+        self._lib.WireData_Set_Radius(Value)
 
     @property
     def RadiusUnits(self):
-        return self.lib.WireData_Get_RadiusUnits()
+        return self._lib.WireData_Get_RadiusUnits()
 
     @RadiusUnits.setter
     def RadiusUnits(self, Value):
-        self.lib.WireData_Set_RadiusUnits(Value)
+        self._lib.WireData_Set_RadiusUnits(Value)
 
     @property
     def ResistanceUnits(self):
-        return self.lib.WireData_Get_ResistanceUnits()
+        return self._lib.WireData_Get_ResistanceUnits()
 
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value):
-        self.lib.WireData_Set_ResistanceUnits(Value)
+        self._lib.WireData_Set_ResistanceUnits(Value)
 
     @property
     def Diameter(self):
-        return self.lib.WireData_Get_Diameter()
+        return self._lib.WireData_Get_Diameter()
 
     @Diameter.setter
     def Diameter(self, Value):
-        self.lib.WireData_Set_Diameter(Value)
+        self._lib.WireData_Set_Diameter(Value)
 
     def __iter__(self):
         idx = self.First

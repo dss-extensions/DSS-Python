@@ -10,68 +10,68 @@ class ISwtControls(Base):
     __slots__ = []
 
     def Reset(self):
-        self.lib.SwtControls_Reset()
+        self._lib.SwtControls_Reset()
 
     @property
     def Action(self):
         '''Open or Close the switch. No effect if switch is locked.  However, Reset removes any lock and then closes the switch (shelf state).'''
-        return self.lib.SwtControls_Get_Action()
+        return self._lib.SwtControls_Get_Action()
 
     @Action.setter
     def Action(self, Value):
-        self.lib.SwtControls_Set_Action(Value)
+        self._lib.SwtControls_Set_Action(Value)
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings with all SwtControl names in the active circuit.'''
-        return self.get_string_array(self.lib.SwtControls_Get_AllNames)
+        return self._get_string_array(self._lib.SwtControls_Get_AllNames)
 
     @property
     def Count(self):
-        return self.lib.SwtControls_Get_Count()
+        return self._lib.SwtControls_Get_Count()
 
     def __len__(self):
-        return self.lib.SwtControls_Get_Count()
+        return self._lib.SwtControls_Get_Count()
 
     @property
     def Delay(self):
         '''Time delay [s] betwen arming and opening or closing the switch.  Control may reset before actually operating the switch.'''
-        return self.lib.SwtControls_Get_Delay()
+        return self._lib.SwtControls_Get_Delay()
 
     @Delay.setter
     def Delay(self, Value):
-        self.lib.SwtControls_Set_Delay(Value)
+        self._lib.SwtControls_Set_Delay(Value)
 
     @property
     def First(self):
         '''(read-only) Sets the first SwtControl active. Returns 0 if no more.'''
-        return self.lib.SwtControls_Get_First()
+        return self._lib.SwtControls_Get_First()
 
     @property
     def IsLocked(self):
         '''The lock prevents both manual and automatic switch operation.'''
-        return self.lib.SwtControls_Get_IsLocked() != 0
+        return self._lib.SwtControls_Get_IsLocked() != 0
 
     @IsLocked.setter
     def IsLocked(self, Value):
-        self.lib.SwtControls_Set_IsLocked(Value)
+        self._lib.SwtControls_Set_IsLocked(Value)
 
     @property
     def Name(self):
         '''Sets a SwtControl active by Name.'''
-        return self.get_string(self.lib.SwtControls_Get_Name())
+        return self._get_string(self._lib.SwtControls_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.SwtControls_Set_Name(Value)
+        self._lib.SwtControls_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next SwtControl active. Returns 0 if no more.'''
-        return self.lib.SwtControls_Get_Next()
+        return self._lib.SwtControls_Get_Next()
 
     @property
     def NormalState(self):
@@ -79,11 +79,11 @@ class ISwtControls(Base):
         (read) Get Normal state of switch
         (write) set Normal state of switch  (see actioncodes) dssActionOpen or dssActionClose
         '''
-        return self.lib.SwtControls_Get_NormalState()
+        return self._lib.SwtControls_Get_NormalState()
 
     @NormalState.setter
     def NormalState(self, Value):
-        self.lib.SwtControls_Set_NormalState(Value)
+        self._lib.SwtControls_Set_NormalState(Value)
 
     @property
     def State(self):
@@ -91,32 +91,32 @@ class ISwtControls(Base):
         (read) Force switch to specified state
         (write) Get Present state of switch
         '''
-        return self.lib.SwtControls_Get_State()
+        return self._lib.SwtControls_Get_State()
 
     @State.setter
     def State(self, Value):
-        self.lib.SwtControls_Set_State(Value)
+        self._lib.SwtControls_Set_State(Value)
 
     @property
     def SwitchedObj(self):
         '''Full name of the switched element.'''
-        return self.get_string(self.lib.SwtControls_Get_SwitchedObj())
+        return self._get_string(self._lib.SwtControls_Get_SwitchedObj())
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.SwtControls_Set_SwitchedObj(Value)
+        self._lib.SwtControls_Set_SwitchedObj(Value)
 
     @property
     def SwitchedTerm(self):
         '''Terminal number where the switch is located on the SwitchedObj'''
-        return self.lib.SwtControls_Get_SwitchedTerm()
+        return self._lib.SwtControls_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
-        self.lib.SwtControls_Set_SwitchedTerm(Value)
+        self._lib.SwtControls_Set_SwitchedTerm(Value)
 
     def __iter__(self):
         idx = self.First

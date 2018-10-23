@@ -14,40 +14,40 @@ class ITSData(Base):
     @property
     def AllNames(self):
         '''(read-only) Array of strings with names of all devices'''
-        return self.get_string_array(self.lib.TSData_Get_AllNames)
+        return self._get_string_array(self._lib.TSData_Get_AllNames)
 
     @property
     def Conductors(self):
         '''(read-only) Array of strings with names of all conductors in the active TSData object'''
-        return self.get_string_array(self.lib.TSData_Get_Conductors)
+        return self._get_string_array(self._lib.TSData_Get_Conductors)
 
     @property
     def Count(self):
         '''(read-only) Number of TSData'''
-        return self.lib.TSData_Get_Count()
+        return self._lib.TSData_Get_Count()
 
     @property
     def First(self):
-        return self.lib.TSData_Get_First()
+        return self._lib.TSData_Get_First()
 
     @property
     def Next(self):
-        return self.lib.TSData_Get_Next()
+        return self._lib.TSData_Get_Next()
 
     @property
     def Name(self):
         '''Name of active TSData'''
-        return self.get_string(self.lib.TSData_Get_Name())
+        return self._get_string(self._lib.TSData_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.TSData_Set_Name(Value)
+        self._lib.TSData_Set_Name(Value)
 
     def __len__(self):
-        return self.lib.TSData_Get_Count()
+        return self._lib.TSData_Get_Count()
 
     def __iter__(self):
         idx = self.First
@@ -58,139 +58,139 @@ class ITSData(Base):
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''
-        return self.lib.TSData_Get_EmergAmps()
+        return self._lib.TSData_Get_EmergAmps()
 
     @EmergAmps.setter
     def EmergAmps(self, Value):
-        self.lib.TSData_Set_EmergAmps(Value)
+        self._lib.TSData_Set_EmergAmps(Value)
 
     @property
     def NormAmps(self):
         '''Normal Ampere rating'''
-        return self.lib.TSData_Get_NormAmps()
+        return self._lib.TSData_Get_NormAmps()
 
     @NormAmps.setter
     def NormAmps(self, Value):
-        self.lib.TSData_Set_NormAmps(Value)
+        self._lib.TSData_Set_NormAmps(Value)
 
     @property
     def Rdc(self):
-        return self.lib.TSData_Get_Rdc()
+        return self._lib.TSData_Get_Rdc()
 
     @Rdc.setter
     def Rdc(self, Value):
-        self.lib.TSData_Set_Rdc(Value)
+        self._lib.TSData_Set_Rdc(Value)
 
     @property
     def Rac(self):
-        return self.lib.TSData_Get_Rac()
+        return self._lib.TSData_Get_Rac()
 
     @Rac.setter
     def Rac(self, Value):
-        self.lib.TSData_Set_Rac(Value)
+        self._lib.TSData_Set_Rac(Value)
 
     @property
     def GMRac(self):
-        return self.lib.TSData_Get_GMRac()
+        return self._lib.TSData_Get_GMRac()
 
     @GMRac.setter
     def GMRac(self, Value):
-        self.lib.TSData_Set_GMRac(Value)
+        self._lib.TSData_Set_GMRac(Value)
 
     @property
     def GMRUnits(self):
-        return self.lib.TSData_Get_GMRUnits()
+        return self._lib.TSData_Get_GMRUnits()
 
     @GMRUnits.setter
     def GMRUnits(self, Value):
-        self.lib.TSData_Set_GMRUnits(Value)
+        self._lib.TSData_Set_GMRUnits(Value)
 
     @property
     def Radius(self):
-        return self.lib.TSData_Get_Radius()
+        return self._lib.TSData_Get_Radius()
 
     @Radius.setter
     def Radius(self, Value):
-        self.lib.TSData_Set_Radius(Value)
+        self._lib.TSData_Set_Radius(Value)
 
     @property
     def RadiusUnits(self):
-        return self.lib.TSData_Get_RadiusUnits()
+        return self._lib.TSData_Get_RadiusUnits()
 
     @RadiusUnits.setter
     def RadiusUnits(self, Value):
-        self.lib.TSData_Set_RadiusUnits(Value)
+        self._lib.TSData_Set_RadiusUnits(Value)
 
     @property
     def ResistanceUnits(self):
-        return self.lib.TSData_Get_ResistanceUnits()
+        return self._lib.TSData_Get_ResistanceUnits()
 
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value):
-        self.lib.TSData_Set_ResistanceUnits(Value)
+        self._lib.TSData_Set_ResistanceUnits(Value)
 
     @property
     def Diameter(self):
-        return self.lib.TSData_Get_Diameter()
+        return self._lib.TSData_Get_Diameter()
 
     @Diameter.setter
     def Diameter(self, Value):
-        self.lib.TSData_Set_Diameter(Value)
+        self._lib.TSData_Set_Diameter(Value)
 
     @property
     def EpsR(self):
-        return self.lib.TSData_Get_EpsR()
+        return self._lib.TSData_Get_EpsR()
 
     @EpsR.setter
     def EpsR(self, Value):
-        self.lib.TSData_Set_EpsR(Value)
+        self._lib.TSData_Set_EpsR(Value)
 
     @property
     def InsLayer(self):
-        return self.lib.TSData_Get_InsLayer()
+        return self._lib.TSData_Get_InsLayer()
 
     @InsLayer.setter
     def InsLayer(self, Value):
-        self.lib.TSData_Set_InsLayer(Value)
+        self._lib.TSData_Set_InsLayer(Value)
 
     @property
     def DiaIns(self):
-        return self.lib.TSData_Get_DiaIns()
+        return self._lib.TSData_Get_DiaIns()
 
     @DiaIns.setter
     def DiaIns(self, Value):
-        self.lib.TSData_Set_DiaIns(Value)
+        self._lib.TSData_Set_DiaIns(Value)
 
     @property
     def DiaCable(self):
-        return self.lib.TSData_Get_DiaCable()
+        return self._lib.TSData_Get_DiaCable()
 
     @DiaCable.setter
     def DiaCable(self, Value):
-        self.lib.TSData_Set_DiaCable(Value)
+        self._lib.TSData_Set_DiaCable(Value)
 
     @property
     def DiaShield(self):
-        return self.lib.TSData_Get_DiaShield()
+        return self._lib.TSData_Get_DiaShield()
 
     @DiaShield.setter
     def DiaShield(self, Value):
-        self.lib.TSData_Set_DiaShield(Value)
+        self._lib.TSData_Set_DiaShield(Value)
 
     @property
     def TapeLayer(self):
-        return self.lib.TSData_Get_TapeLayer()
+        return self._lib.TSData_Get_TapeLayer()
 
     @TapeLayer.setter
     def TapeLayer(self, Value):
-        self.lib.TSData_Set_TapeLayer(Value)
+        self._lib.TSData_Set_TapeLayer(Value)
 
     @property
     def TapeLap(self):
-        return self.lib.TSData_Get_TapeLap()
+        return self._lib.TSData_Get_TapeLap()
 
     @TapeLap.setter
     def TapeLap(self, Value):
-        self.lib.TSData_Set_TapeLap(Value)
+        self._lib.TSData_Set_TapeLap(Value)
 
 

@@ -10,186 +10,186 @@ class ISolution(Base):
     __slots__ = []
 
     def BuildYMatrix(self, BuildOption, AllocateVI):
-        self.lib.Solution_BuildYMatrix(BuildOption, AllocateVI)
+        self._lib.Solution_BuildYMatrix(BuildOption, AllocateVI)
 
     def CheckControls(self):
-        self.lib.Solution_CheckControls()
+        self._lib.Solution_CheckControls()
 
     def CheckFaultStatus(self):
-        self.lib.Solution_CheckFaultStatus()
+        self._lib.Solution_CheckFaultStatus()
 
     def Cleanup(self):
-        self.lib.Solution_Cleanup()
+        self._lib.Solution_Cleanup()
 
     def DoControlActions(self):
-        self.lib.Solution_DoControlActions()
+        self._lib.Solution_DoControlActions()
 
     def FinishTimeStep(self):
-        self.lib.Solution_FinishTimeStep()
+        self._lib.Solution_FinishTimeStep()
 
     def InitSnap(self):
-        self.lib.Solution_InitSnap()
+        self._lib.Solution_InitSnap()
 
     def SampleControlDevices(self):
-        self.lib.Solution_SampleControlDevices()
+        self._lib.Solution_SampleControlDevices()
 
     def Sample_DoControlActions(self):
-        self.lib.Solution_Sample_DoControlActions()
+        self._lib.Solution_Sample_DoControlActions()
 
     def Solve(self):
-        self.lib.Solution_Solve()
+        self._lib.Solution_Solve()
 
     def SolveDirect(self):
-        self.lib.Solution_SolveDirect()
+        self._lib.Solution_SolveDirect()
 
     def SolveNoControl(self):
-        self.lib.Solution_SolveNoControl()
+        self._lib.Solution_SolveNoControl()
 
     def SolvePflow(self):
-        self.lib.Solution_SolvePflow()
+        self._lib.Solution_SolvePflow()
 
     def SolvePlusControl(self):
-        self.lib.Solution_SolvePlusControl()
+        self._lib.Solution_SolvePlusControl()
 
     def SolveSnap(self):
-        self.lib.Solution_SolveSnap()
+        self._lib.Solution_SolveSnap()
 
     @property
     def AddType(self):
         '''Type of device to add in AutoAdd Mode: {dssGen (Default) | dssCap}'''
-        return self.lib.Solution_Get_AddType()
+        return self._lib.Solution_Get_AddType()
 
     @AddType.setter
     def AddType(self, Value):
-        self.lib.Solution_Set_AddType(Value)
+        self._lib.Solution_Set_AddType(Value)
 
     @property
     def Algorithm(self):
         '''Base Solution algorithm: {dssNormalSolve | dssNewtonSolve}'''
-        return self.lib.Solution_Get_Algorithm()
+        return self._lib.Solution_Get_Algorithm()
 
     @Algorithm.setter
     def Algorithm(self, Value):
-        self.lib.Solution_Set_Algorithm(Value)
+        self._lib.Solution_Set_Algorithm(Value)
 
     @property
     def Capkvar(self):
         '''Capacitor kvar for adding capacitors in AutoAdd mode'''
-        return self.lib.Solution_Get_Capkvar()
+        return self._lib.Solution_Get_Capkvar()
 
     @Capkvar.setter
     def Capkvar(self, Value):
-        self.lib.Solution_Set_Capkvar(Value)
+        self._lib.Solution_Set_Capkvar(Value)
 
     @property
     def ControlActionsDone(self):
         '''Flag indicating the control actions are done.'''
-        return self.lib.Solution_Get_ControlActionsDone() != 0
+        return self._lib.Solution_Get_ControlActionsDone() != 0
 
     @ControlActionsDone.setter
     def ControlActionsDone(self, Value):
-        self.lib.Solution_Set_ControlActionsDone(Value)
+        self._lib.Solution_Set_ControlActionsDone(Value)
 
     @property
     def ControlIterations(self):
         '''Value of the control iteration counter'''
-        return self.lib.Solution_Get_ControlIterations()
+        return self._lib.Solution_Get_ControlIterations()
 
     @ControlIterations.setter
     def ControlIterations(self, Value):
-        self.lib.Solution_Set_ControlIterations(Value)
+        self._lib.Solution_Set_ControlIterations(Value)
 
     @property
     def ControlMode(self):
         '''{dssStatic* | dssEvent | dssTime}  Modes for control devices'''
-        return self.lib.Solution_Get_ControlMode()
+        return self._lib.Solution_Get_ControlMode()
 
     @ControlMode.setter
     def ControlMode(self, Value):
-        self.lib.Solution_Set_ControlMode(Value)
+        self._lib.Solution_Set_ControlMode(Value)
 
     @property
     def Converged(self):
         '''Flag to indicate whether the circuit solution converged'''
-        return self.lib.Solution_Get_Converged() != 0
+        return self._lib.Solution_Get_Converged() != 0
 
     @Converged.setter
     def Converged(self, Value):
-        self.lib.Solution_Set_Converged(Value)
+        self._lib.Solution_Set_Converged(Value)
 
     @property
     def DefaultDaily(self):
         '''Default daily load shape (defaults to "Default")'''
-        return self.get_string(self.lib.Solution_Get_DefaultDaily())
+        return self._get_string(self._lib.Solution_Get_DefaultDaily())
 
     @DefaultDaily.setter
     def DefaultDaily(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.Solution_Set_DefaultDaily(Value)
+        self._lib.Solution_Set_DefaultDaily(Value)
 
     @property
     def DefaultYearly(self):
         '''Default Yearly load shape (defaults to "Default")'''
-        return self.get_string(self.lib.Solution_Get_DefaultYearly())
+        return self._get_string(self._lib.Solution_Get_DefaultYearly())
 
     @DefaultYearly.setter
     def DefaultYearly(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.Solution_Set_DefaultYearly(Value)
+        self._lib.Solution_Set_DefaultYearly(Value)
 
     @property
     def EventLog(self):
         '''(read-only) Array of strings containing the Event Log'''
-        return self.get_string_array(self.lib.Solution_Get_EventLog)
+        return self._get_string_array(self._lib.Solution_Get_EventLog)
 
     @property
     def Frequency(self):
         '''Set the Frequency for next solution'''
-        return self.lib.Solution_Get_Frequency()
+        return self._lib.Solution_Get_Frequency()
 
     @Frequency.setter
     def Frequency(self, Value):
-        self.lib.Solution_Set_Frequency(Value)
+        self._lib.Solution_Set_Frequency(Value)
 
     @property
     def GenMult(self):
         '''Default Multiplier applied to generators (like LoadMult)'''
-        return self.lib.Solution_Get_GenMult()
+        return self._lib.Solution_Get_GenMult()
 
     @GenMult.setter
     def GenMult(self, Value):
-        self.lib.Solution_Set_GenMult(Value)
+        self._lib.Solution_Set_GenMult(Value)
 
     @property
     def GenPF(self):
         '''PF for generators in AutoAdd mode'''
-        return self.lib.Solution_Get_GenPF()
+        return self._lib.Solution_Get_GenPF()
 
     @GenPF.setter
     def GenPF(self, Value):
-        self.lib.Solution_Set_GenPF(Value)
+        self._lib.Solution_Set_GenPF(Value)
 
     @property
     def GenkW(self):
         '''Generator kW for AutoAdd mode'''
-        return self.lib.Solution_Get_GenkW()
+        return self._lib.Solution_Get_GenkW()
 
     @GenkW.setter
     def GenkW(self, Value):
-        self.lib.Solution_Set_GenkW(Value)
+        self._lib.Solution_Set_GenkW(Value)
 
     @property
     def Hour(self):
         '''Set Hour for time series solutions.'''
-        return self.lib.Solution_Get_Hour()
+        return self._lib.Solution_Get_Hour()
 
     @Hour.setter
     def Hour(self, Value):
-        self.lib.Solution_Set_Hour(Value)
+        self._lib.Solution_Set_Hour(Value)
 
     @property
     def IntervalHrs(self):
@@ -197,64 +197,64 @@ class ISolution(Base):
         (read) Get/Set the Solution.IntervalHrs variable used for devices that integrate
         (write) Get/Set the Solution.IntervalHrs variable for custom solution algorithms
         '''
-        return self.lib.Solution_Get_IntervalHrs()
+        return self._lib.Solution_Get_IntervalHrs()
 
     @IntervalHrs.setter
     def IntervalHrs(self, Value):
-        self.lib.Solution_Set_IntervalHrs(Value)
+        self._lib.Solution_Set_IntervalHrs(Value)
 
     @property
     def Iterations(self):
         '''(read-only) Number of iterations taken for last solution. (Same as TotalIterations)'''
-        return self.lib.Solution_Get_Iterations()
+        return self._lib.Solution_Get_Iterations()
 
     @property
     def LDCurve(self):
         '''Load-Duration Curve name for LD modes'''
-        return self.get_string(self.lib.Solution_Get_LDCurve())
+        return self._get_string(self._lib.Solution_Get_LDCurve())
 
     @LDCurve.setter
     def LDCurve(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.Solution_Set_LDCurve(Value)
+        self._lib.Solution_Set_LDCurve(Value)
 
     @property
     def LoadModel(self):
         '''Load Model: {dssPowerFlow (default) | dssAdmittance}'''
-        return self.lib.Solution_Get_LoadModel()
+        return self._lib.Solution_Get_LoadModel()
 
     @LoadModel.setter
     def LoadModel(self, Value):
-        self.lib.Solution_Set_LoadModel(Value)
+        self._lib.Solution_Set_LoadModel(Value)
 
     @property
     def LoadMult(self):
         '''Default load multiplier applied to all non-fixed loads'''
-        return self.lib.Solution_Get_LoadMult()
+        return self._lib.Solution_Get_LoadMult()
 
     @LoadMult.setter
     def LoadMult(self, Value):
-        self.lib.Solution_Set_LoadMult(Value)
+        self._lib.Solution_Set_LoadMult(Value)
 
     @property
     def MaxControlIterations(self):
         '''Maximum allowable control iterations'''
-        return self.lib.Solution_Get_MaxControlIterations()
+        return self._lib.Solution_Get_MaxControlIterations()
 
     @MaxControlIterations.setter
     def MaxControlIterations(self, Value):
-        self.lib.Solution_Set_MaxControlIterations(Value)
+        self._lib.Solution_Set_MaxControlIterations(Value)
 
     @property
     def MaxIterations(self):
         '''Max allowable iterations.'''
-        return self.lib.Solution_Get_MaxIterations()
+        return self._lib.Solution_Get_MaxIterations()
 
     @MaxIterations.setter
     def MaxIterations(self, Value):
-        self.lib.Solution_Set_MaxIterations(Value)
+        self._lib.Solution_Set_MaxIterations(Value)
 
     @property
     def MinIterations(self):
@@ -262,90 +262,90 @@ class ISolution(Base):
         (read) Minimum number of iterations required for a power flow solution.
         (write) Mininum number of iterations required for a power flow solution.
         '''
-        return self.lib.Solution_Get_MinIterations()
+        return self._lib.Solution_Get_MinIterations()
 
     @MinIterations.setter
     def MinIterations(self, Value):
-        self.lib.Solution_Set_MinIterations(Value)
+        self._lib.Solution_Set_MinIterations(Value)
 
     @property
     def Mode(self):
         '''Set present solution mode (by a text code - see DSS Help)'''
-        return self.lib.Solution_Get_Mode()
+        return self._lib.Solution_Get_Mode()
 
     @Mode.setter
     def Mode(self, Mode):
-        self.lib.Solution_Set_Mode(Mode)
+        self._lib.Solution_Set_Mode(Mode)
 
     @property
     def ModeID(self):
         '''(read-only) ID (text) of the present solution mode'''
-        return self.get_string(self.lib.Solution_Get_ModeID())
+        return self._get_string(self._lib.Solution_Get_ModeID())
 
     @property
     def MostIterationsDone(self):
         '''(read-only) Max number of iterations required to converge at any control iteration of the most recent solution.'''
-        return self.lib.Solution_Get_MostIterationsDone()
+        return self._lib.Solution_Get_MostIterationsDone()
 
     @property
     def Number(self):
         '''Number of solutions to perform for Monte Carlo and time series simulations'''
-        return self.lib.Solution_Get_Number()
+        return self._lib.Solution_Get_Number()
 
     @Number.setter
     def Number(self, Value):
-        self.lib.Solution_Set_Number(Value)
+        self._lib.Solution_Set_Number(Value)
 
     @property
     def Process_Time(self):
         '''(read-only) Gets the time required to perform the latest solution (Read only)'''
-        return self.lib.Solution_Get_Process_Time()
+        return self._lib.Solution_Get_Process_Time()
 
     @property
     def Random(self):
         '''Randomization mode for random variables "Gaussian" or "Uniform"'''
-        return self.lib.Solution_Get_Random()
+        return self._lib.Solution_Get_Random()
 
     @Random.setter
     def Random(self, Random):
-        self.lib.Solution_Set_Random(Random)
+        self._lib.Solution_Set_Random(Random)
 
     @property
     def Seconds(self):
         '''Seconds from top of the hour.'''
-        return self.lib.Solution_Get_Seconds()
+        return self._lib.Solution_Get_Seconds()
 
     @Seconds.setter
     def Seconds(self, Value):
-        self.lib.Solution_Set_Seconds(Value)
+        self._lib.Solution_Set_Seconds(Value)
 
     @property
     def StepSize(self):
         '''Time step size in sec'''
-        return self.lib.Solution_Get_StepSize()
+        return self._lib.Solution_Get_StepSize()
 
     @StepSize.setter
     def StepSize(self, Value):
-        self.lib.Solution_Set_StepSize(Value)
+        self._lib.Solution_Set_StepSize(Value)
 
     @property
     def SystemYChanged(self):
         '''(read-only) Flag that indicates if elements of the System Y have been changed by recent activity.'''
-        return self.lib.Solution_Get_SystemYChanged() != 0
+        return self._lib.Solution_Get_SystemYChanged() != 0
 
     @property
     def Time_of_Step(self):
         '''(read-only) Get the solution process time + sample time for time step'''
-        return self.lib.Solution_Get_Time_of_Step()
+        return self._lib.Solution_Get_Time_of_Step()
 
     @property
     def Tolerance(self):
         '''Solution convergence tolerance.'''
-        return self.lib.Solution_Get_Tolerance()
+        return self._lib.Solution_Get_Tolerance()
 
     @Tolerance.setter
     def Tolerance(self, Value):
-        self.lib.Solution_Set_Tolerance(Value)
+        self._lib.Solution_Set_Tolerance(Value)
 
     @property
     def Total_Time(self):
@@ -353,43 +353,43 @@ class ISolution(Base):
         (read) Gets the accumulated time of the simulation
         (write) Sets the Accumulated time of the simulation
         '''
-        return self.lib.Solution_Get_Total_Time()
+        return self._lib.Solution_Get_Total_Time()
 
     @Total_Time.setter
     def Total_Time(self, Value):
-        self.lib.Solution_Set_Total_Time(Value)
+        self._lib.Solution_Set_Total_Time(Value)
 
     @property
     def Totaliterations(self):
         '''(read-only) Total iterations including control iterations for most recent solution.'''
-        return self.lib.Solution_Get_Totaliterations()
+        return self._lib.Solution_Get_Totaliterations()
 
     @property
     def Year(self):
         '''Set year for planning studies'''
-        return self.lib.Solution_Get_Year()
+        return self._lib.Solution_Get_Year()
 
     @Year.setter
     def Year(self, Value):
-        self.lib.Solution_Set_Year(Value)
+        self._lib.Solution_Set_Year(Value)
 
     @property
     def dblHour(self):
         '''Hour as a double, including fractional part'''
-        return self.lib.Solution_Get_dblHour()
+        return self._lib.Solution_Get_dblHour()
 
     @dblHour.setter
     def dblHour(self, Value):
-        self.lib.Solution_Set_dblHour(Value)
+        self._lib.Solution_Set_dblHour(Value)
 
     @property
     def pctGrowth(self):
         '''Percent default  annual load growth rate'''
-        return self.lib.Solution_Get_pctGrowth()
+        return self._lib.Solution_Get_pctGrowth()
 
     @pctGrowth.setter
     def pctGrowth(self, Value):
-        self.lib.Solution_Set_pctGrowth(Value)
+        self._lib.Solution_Set_pctGrowth(Value)
 
     @property
     def StepsizeHr(self):
@@ -398,7 +398,7 @@ class ISolution(Base):
 
     @StepsizeHr.setter
     def StepsizeHr(self, Value):
-        self.lib.Solution_Set_StepsizeHr(Value)
+        self._lib.Solution_Set_StepsizeHr(Value)
 
     @property
     def StepsizeMin(self):
@@ -407,32 +407,32 @@ class ISolution(Base):
 
     @StepsizeMin.setter
     def StepsizeMin(self, Value):
-        self.lib.Solution_Set_StepsizeMin(Value)
+        self._lib.Solution_Set_StepsizeMin(Value)
 
     # The following are available only in v8
     @property
     def BusLevels(self):
-        self.lib.Solution_Get_BusLevels_GR()
-        return self.get_int32_gr_array()
+        self._lib.Solution_Get_BusLevels_GR()
+        return self._get_int32_gr_array()
 
     @property
     def IncMatrix(self):
-        self.lib.Solution_Get_IncMatrix_GR()
-        return self.get_int32_gr_array()
+        self._lib.Solution_Get_IncMatrix_GR()
+        return self._get_int32_gr_array()
 
     @property
     def IncMatrixCols(self):
-        return self.get_string_array(self.lib.Solution_Get_IncMatrixCols)
+        return self._get_string_array(self._lib.Solution_Get_IncMatrixCols)
 
     @property
     def IncMatrixRows(self):
-        return self.get_string_array(self.lib.Solution_Get_IncMatrixRows)
+        return self._get_string_array(self._lib.Solution_Get_IncMatrixRows)
 
     @property
     def Laplacian(self):
-        self.lib.Solution_Get_Laplacian_GR()
-        return self.get_int32_gr_array()
+        self._lib.Solution_Get_Laplacian_GR()
+        return self._get_int32_gr_array()
 
     def SolveAll(self):
-        self.lib.Solution_SolveAll()
+        self._lib.Solution_SolveAll()
         

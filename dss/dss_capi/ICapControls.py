@@ -10,173 +10,173 @@ class ICapControls(Base):
     __slots__ = []
 
     def Reset(self):
-        self.lib.CapControls_Reset()
+        self._lib.CapControls_Reset()
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings with all CapControl names.'''
-        return self.get_string_array(self.lib.CapControls_Get_AllNames)
+        return self._get_string_array(self._lib.CapControls_Get_AllNames)
 
     @property
     def CTratio(self):
         '''Transducer ratio from pirmary current to control current.'''
-        return self.lib.CapControls_Get_CTratio()
+        return self._lib.CapControls_Get_CTratio()
 
     @CTratio.setter
     def CTratio(self, Value):
-        self.lib.CapControls_Set_CTratio(Value)
+        self._lib.CapControls_Set_CTratio(Value)
 
     @property
     def Capacitor(self):
         '''Name of the Capacitor that is controlled.'''
-        return self.get_string(self.lib.CapControls_Get_Capacitor())
+        return self._get_string(self._lib.CapControls_Get_Capacitor())
 
     @Capacitor.setter
     def Capacitor(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.CapControls_Set_Capacitor(Value)
+        self._lib.CapControls_Set_Capacitor(Value)
 
     @property
     def Count(self):
         '''(read-only) Number of CapControls in Active Circuit'''
-        return self.lib.CapControls_Get_Count()
+        return self._lib.CapControls_Get_Count()
 
     def __len__(self):
-        return self.lib.CapControls_Get_Count()
+        return self._lib.CapControls_Get_Count()
 
     @property
     def DeadTime(self):
-        return self.lib.CapControls_Get_DeadTime()
+        return self._lib.CapControls_Get_DeadTime()
 
     @DeadTime.setter
     def DeadTime(self, Value):
-        self.lib.CapControls_Set_DeadTime(Value)
+        self._lib.CapControls_Set_DeadTime(Value)
 
     @property
     def Delay(self):
         '''Time delay [s] to switch on after arming.  Control may reset before actually switching.'''
-        return self.lib.CapControls_Get_Delay()
+        return self._lib.CapControls_Get_Delay()
 
     @Delay.setter
     def Delay(self, Value):
-        self.lib.CapControls_Set_Delay(Value)
+        self._lib.CapControls_Set_Delay(Value)
 
     @property
     def DelayOff(self):
         '''Time delay [s] before swithcing off a step. Control may reset before actually switching.'''
-        return self.lib.CapControls_Get_DelayOff()
+        return self._lib.CapControls_Get_DelayOff()
 
     @DelayOff.setter
     def DelayOff(self, Value):
-        self.lib.CapControls_Set_DelayOff(Value)
+        self._lib.CapControls_Set_DelayOff(Value)
 
     @property
     def First(self):
         '''(read-only) Sets the first CapControl as active. Return 0 if none.'''
-        return self.lib.CapControls_Get_First()
+        return self._lib.CapControls_Get_First()
 
     @property
     def Mode(self):
         '''Type of automatic controller.'''
-        return self.lib.CapControls_Get_Mode()
+        return self._lib.CapControls_Get_Mode()
 
     @Mode.setter
     def Mode(self, Value):
-        self.lib.CapControls_Set_Mode(Value)
+        self._lib.CapControls_Set_Mode(Value)
 
     @property
     def MonitoredObj(self):
         '''Full name of the element that PT and CT are connected to.'''
-        return self.get_string(self.lib.CapControls_Get_MonitoredObj())
+        return self._get_string(self._lib.CapControls_Get_MonitoredObj())
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.CapControls_Set_MonitoredObj(Value)
+        self._lib.CapControls_Set_MonitoredObj(Value)
 
     @property
     def MonitoredTerm(self):
         '''Terminal number on the element that PT and CT are connected to.'''
-        return self.lib.CapControls_Get_MonitoredTerm()
+        return self._lib.CapControls_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
-        self.lib.CapControls_Set_MonitoredTerm(Value)
+        self._lib.CapControls_Set_MonitoredTerm(Value)
 
     @property
     def Name(self):
         '''Sets a CapControl active by name.'''
-        return self.get_string(self.lib.CapControls_Get_Name())
+        return self._get_string(self._lib.CapControls_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.CapControls_Set_Name(Value)
+        self._lib.CapControls_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Gets the next CapControl in the circut. Returns 0 if none.'''
-        return self.lib.CapControls_Get_Next()
+        return self._lib.CapControls_Get_Next()
 
     @property
     def OFFSetting(self):
         '''Threshold to switch off a step. See Mode for units.'''
-        return self.lib.CapControls_Get_OFFSetting()
+        return self._lib.CapControls_Get_OFFSetting()
 
     @OFFSetting.setter
     def OFFSetting(self, Value):
-        self.lib.CapControls_Set_OFFSetting(Value)
+        self._lib.CapControls_Set_OFFSetting(Value)
 
     @property
     def ONSetting(self):
         '''Threshold to arm or switch on a step.  See Mode for units.'''
-        return self.lib.CapControls_Get_ONSetting()
+        return self._lib.CapControls_Get_ONSetting()
 
     @ONSetting.setter
     def ONSetting(self, Value):
-        self.lib.CapControls_Set_ONSetting(Value)
+        self._lib.CapControls_Set_ONSetting(Value)
 
     @property
     def PTratio(self):
         '''Transducer ratio from primary feeder to control voltage.'''
-        return self.lib.CapControls_Get_PTratio()
+        return self._lib.CapControls_Get_PTratio()
 
     @PTratio.setter
     def PTratio(self, Value):
-        self.lib.CapControls_Set_PTratio(Value)
+        self._lib.CapControls_Set_PTratio(Value)
 
     @property
     def UseVoltOverride(self):
         '''Enables Vmin and Vmax to override the control Mode'''
-        return self.lib.CapControls_Get_UseVoltOverride() != 0
+        return self._lib.CapControls_Get_UseVoltOverride() != 0
 
     @UseVoltOverride.setter
     def UseVoltOverride(self, Value):
-        self.lib.CapControls_Set_UseVoltOverride(Value)
+        self._lib.CapControls_Set_UseVoltOverride(Value)
 
     @property
     def Vmax(self):
         '''With VoltOverride, swtich off whenever PT voltage exceeds this level.'''
-        return self.lib.CapControls_Get_Vmax()
+        return self._lib.CapControls_Get_Vmax()
 
     @Vmax.setter
     def Vmax(self, Value):
-        self.lib.CapControls_Set_Vmax(Value)
+        self._lib.CapControls_Set_Vmax(Value)
 
     @property
     def Vmin(self):
         '''With VoltOverride, switch ON whenever PT voltage drops below this level.'''
-        return self.lib.CapControls_Get_Vmin()
+        return self._lib.CapControls_Get_Vmin()
 
     @Vmin.setter
     def Vmin(self, Value):
-        self.lib.CapControls_Set_Vmin(Value)
+        self._lib.CapControls_Set_Vmin(Value)
 
     def __iter__(self):
         idx = self.First

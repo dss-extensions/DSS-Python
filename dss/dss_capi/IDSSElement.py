@@ -19,15 +19,15 @@ class IDSSElement(Base):
     @property
     def AllPropertyNames(self):
         '''(read-only) Array of strings containing the names of all properties for the active DSS object.'''
-        return self.get_string_array(self.lib.DSSElement_Get_AllPropertyNames)
+        return self._get_string_array(self._lib.DSSElement_Get_AllPropertyNames)
 
     @property
     def Name(self):
         '''(read-only) Full Name of Active DSS Object (general element or circuit element).'''
-        return self.get_string(self.lib.DSSElement_Get_Name())
+        return self._get_string(self._lib.DSSElement_Get_Name())
 
     @property
     def NumProperties(self):
         '''(read-only) Number of Properties for the active DSS object.'''
-        return self.lib.DSSElement_Get_NumProperties()
+        return self._lib.DSSElement_Get_NumProperties()
 

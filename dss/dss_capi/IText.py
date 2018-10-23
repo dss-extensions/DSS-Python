@@ -12,17 +12,17 @@ class IText(Base):
     @property
     def Command(self):
         '''Input command string for the DSS.'''
-        return self.get_string(self.lib.Text_Get_Command())
+        return self._get_string(self._lib.Text_Get_Command())
 
     @Command.setter
     def Command(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.Text_Set_Command(Value)
+        self._lib.Text_Set_Command(Value)
         self.CheckForError()
 
     @property
     def Result(self):
         '''(read-only) Result string for the last command.'''
-        return self.get_string(self.lib.Text_Get_Result())
+        return self._get_string(self._lib.Text_Get_Result())

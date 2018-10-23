@@ -10,74 +10,74 @@ class ICapacitors(Base):
     __slots__ = []
 
     def AddStep(self):
-        return self.lib.Capacitors_AddStep() != 0
+        return self._lib.Capacitors_AddStep() != 0
 
     def Close(self):
-        self.lib.Capacitors_Close()
+        self._lib.Capacitors_Close()
 
     def Open(self):
-        self.lib.Capacitors_Open()
+        self._lib.Capacitors_Open()
 
     def SubtractStep(self):
-        return self.lib.Capacitors_SubtractStep() != 0
+        return self._lib.Capacitors_SubtractStep() != 0
 
     @property
     def AllNames(self):
         '''(read-only) Array of strings with all Capacitor names in the circuit.'''
-        return self.get_string_array(self.lib.Capacitors_Get_AllNames)
+        return self._get_string_array(self._lib.Capacitors_Get_AllNames)
 
     @property
     def AvailableSteps(self):
         '''(read-only) Number of Steps available in cap bank to be switched ON.'''
-        return self.lib.Capacitors_Get_AvailableSteps()
+        return self._lib.Capacitors_Get_AvailableSteps()
 
     @property
     def Count(self):
         '''(read-only) Number of Capacitor objects in active circuit.'''
-        return self.lib.Capacitors_Get_Count()
+        return self._lib.Capacitors_Get_Count()
 
     def __len__(self):
-        return self.lib.Capacitors_Get_Count()
+        return self._lib.Capacitors_Get_Count()
 
     @property
     def First(self):
         '''(read-only) Sets the first Capacitor active. Returns 0 if no more.'''
-        return self.lib.Capacitors_Get_First()
+        return self._lib.Capacitors_Get_First()
 
     @property
     def IsDelta(self):
         '''Delta connection or wye?'''
-        return self.lib.Capacitors_Get_IsDelta() != 0
+        return self._lib.Capacitors_Get_IsDelta() != 0
 
     @IsDelta.setter
     def IsDelta(self, Value):
-        self.lib.Capacitors_Set_IsDelta(Value)
+        self._lib.Capacitors_Set_IsDelta(Value)
 
     @property
     def Name(self):
         '''Sets the active Capacitor by Name.'''
-        return self.get_string(self.lib.Capacitors_Get_Name())
+        return self._get_string(self._lib.Capacitors_Get_Name())
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self.api_util.codec)
+            Value = Value.encode(self._api_util.codec)
 
-        self.lib.Capacitors_Set_Name(Value)
+        self._lib.Capacitors_Set_Name(Value)
 
     @property
     def Next(self):
         '''(read-only) Sets the next Capacitor active. Returns 0 if no more.'''
-        return self.lib.Capacitors_Get_Next()
+        return self._lib.Capacitors_Get_Next()
 
     @property
     def NumSteps(self):
         '''Number of steps (default 1) for distributing and switching the total bank kVAR.'''
-        return self.lib.Capacitors_Get_NumSteps()
+        return self._lib.Capacitors_Get_NumSteps()
 
     @NumSteps.setter
     def NumSteps(self, Value):
-        self.lib.Capacitors_Set_NumSteps(Value)
+        self._lib.Capacitors_Set_NumSteps(Value)
 
     @property
     def States(self):
@@ -85,31 +85,31 @@ class ICapacitors(Base):
         (read) A array of  integer [0..numsteps-1] indicating state of each step. If value is -1 an error has occurred.
         (write) Array of integer [0 ..numSteps-1] indicating the state of each step
         '''
-        self.lib.Capacitors_Get_States_GR()
-        return self.get_int32_gr_array()
+        self._lib.Capacitors_Get_States_GR()
+        return self._get_int32_gr_array()
 
     @States.setter
     def States(self, Value):
-        Value, ValuePtr, ValueCount = self.prepare_int32_array(Value)
-        self.lib.Capacitors_Set_States(ValuePtr, ValueCount)
+        Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
+        self._lib.Capacitors_Set_States(ValuePtr, ValueCount)
 
     @property
     def kV(self):
         '''Bank kV rating. Use LL for 2 or 3 phases, or actual can rating for 1 phase.'''
-        return self.lib.Capacitors_Get_kV()
+        return self._lib.Capacitors_Get_kV()
 
     @kV.setter
     def kV(self, Value):
-        self.lib.Capacitors_Set_kV(Value)
+        self._lib.Capacitors_Set_kV(Value)
 
     @property
     def kvar(self):
         '''Total bank KVAR, distributed equally among phases and steps.'''
-        return self.lib.Capacitors_Get_kvar()
+        return self._lib.Capacitors_Get_kvar()
 
     @kvar.setter
     def kvar(self, Value):
-        self.lib.Capacitors_Set_kvar(Value)
+        self._lib.Capacitors_Set_kvar(Value)
 
     def __iter__(self):
         idx = self.First

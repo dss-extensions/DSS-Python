@@ -143,209 +143,209 @@ class ICircuit(Base):
         Base.__init__(self, api_util)
             
     def Capacity(self, Start, Increment):
-        return self.lib.Circuit_Capacity(Start, Increment)
+        return self._lib.Circuit_Capacity(Start, Increment)
 
     def Disable(self, Name):
         if type(Name) is not bytes:
-            Name = Name.encode(self.api_util.codec)
+            Name = Name.encode(self._api_util.codec)
 
-        self.lib.Circuit_Disable(Name)
+        self._lib.Circuit_Disable(Name)
 
     def Enable(self, Name):
         if type(Name) is not bytes:
-            Name = Name.encode(self.api_util.codec)
+            Name = Name.encode(self._api_util.codec)
 
-        self.lib.Circuit_Enable(Name)
+        self._lib.Circuit_Enable(Name)
 
     def EndOfTimeStepUpdate(self):
-        self.lib.Circuit_EndOfTimeStepUpdate()
+        self._lib.Circuit_EndOfTimeStepUpdate()
 
     def FirstElement(self):
-        return self.lib.Circuit_FirstElement()
+        return self._lib.Circuit_FirstElement()
 
     def FirstPCElement(self):
-        return self.lib.Circuit_FirstPCElement()
+        return self._lib.Circuit_FirstPCElement()
 
     def FirstPDElement(self):
-        return self.lib.Circuit_FirstPDElement()
+        return self._lib.Circuit_FirstPDElement()
 
     def AllNodeDistancesByPhase(self, Phase):
         '''(read-only) Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.'''
-        self.lib.Circuit_Get_AllNodeDistancesByPhase_GR(Phase)
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_AllNodeDistancesByPhase_GR(Phase)
+        return self._get_float64_gr_array()
 
     def AllNodeNamesByPhase(self, Phase):
         '''(read-only) Return array of strings of the node names for the By Phase criteria. Sequence corresponds to other ByPhase properties.'''
-        return self.get_string_array(self.lib.Circuit_Get_AllNodeNamesByPhase, Phase)
+        return self._get_string_array(self._lib.Circuit_Get_AllNodeNamesByPhase, Phase)
 
     def AllNodeVmagByPhase(self, Phase):
         '''(read-only) Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.'''
-        self.lib.Circuit_Get_AllNodeVmagByPhase_GR(Phase)
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_AllNodeVmagByPhase_GR(Phase)
+        return self._get_float64_gr_array()
 
     def AllNodeVmagPUByPhase(self, Phase):
         '''(read-only) Returns array of per unit voltage magnitudes for each node by phase'''
-        self.lib.Circuit_Get_AllNodeVmagPUByPhase_GR(Phase)
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_AllNodeVmagPUByPhase_GR(Phase)
+        return self._get_float64_gr_array()
 
     def NextElement(self):
-        return self.lib.Circuit_NextElement()
+        return self._lib.Circuit_NextElement()
 
     def NextPCElement(self):
-        return self.lib.Circuit_NextPCElement()
+        return self._lib.Circuit_NextPCElement()
 
     def NextPDElement(self):
-        return self.lib.Circuit_NextPDElement()
+        return self._lib.Circuit_NextPDElement()
 
     def Sample(self):
-        self.lib.Circuit_Sample()
+        self._lib.Circuit_Sample()
 
     def SaveSample(self):
-        self.lib.Circuit_SaveSample()
+        self._lib.Circuit_SaveSample()
 
     def SetActiveBus(self, BusName):
         if type(BusName) is not bytes:
-            BusName = BusName.encode(self.api_util.codec)
+            BusName = BusName.encode(self._api_util.codec)
 
-        return self.lib.Circuit_SetActiveBus(BusName)
+        return self._lib.Circuit_SetActiveBus(BusName)
 
     def SetActiveBusi(self, BusIndex):
-        return self.lib.Circuit_SetActiveBusi(BusIndex)
+        return self._lib.Circuit_SetActiveBusi(BusIndex)
 
     def SetActiveClass(self, ClassName):
         if type(ClassName) is not bytes:
-            ClassName = ClassName.encode(self.api_util.codec)
+            ClassName = ClassName.encode(self._api_util.codec)
 
-        return self.lib.Circuit_SetActiveClass(ClassName)
+        return self._lib.Circuit_SetActiveClass(ClassName)
 
     def SetActiveElement(self, FullName):
         if type(FullName) is not bytes:
-            FullName = FullName.encode(self.api_util.codec)
+            FullName = FullName.encode(self._api_util.codec)
 
-        return self.lib.Circuit_SetActiveElement(FullName)
+        return self._lib.Circuit_SetActiveElement(FullName)
 
     def UpdateStorage(self):
-        self.lib.Circuit_UpdateStorage()
+        self._lib.Circuit_UpdateStorage()
 
     @property
     def AllBusDistances(self):
         '''(read-only) Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.'''
-        self.lib.Circuit_Get_AllBusDistances_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_AllBusDistances_GR()
+        return self._get_float64_gr_array()
 
     @property
     def AllBusNames(self):
         '''(read-only) Array of strings containing names of all buses in circuit (see AllNodeNames).'''
-        return self.get_string_array(self.lib.Circuit_Get_AllBusNames)
+        return self._get_string_array(self._lib.Circuit_Get_AllBusNames)
 
     @property
     def AllBusVmag(self):
         '''(read-only) Array of magnitudes (doubles) of voltages at all buses'''
-        self.lib.Circuit_Get_AllBusVmag_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_AllBusVmag_GR()
+        return self._get_float64_gr_array()
 
     @property
     def AllBusVmagPu(self):
         '''(read-only) Double Array of all bus voltages (each node) magnitudes in Per unit'''
-        self.lib.Circuit_Get_AllBusVmagPu_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_AllBusVmagPu_GR()
+        return self._get_float64_gr_array()
 
     @property
     def AllBusVolts(self):
         '''(read-only) Complex array of all bus, node voltages from most recent solution'''
-        self.lib.Circuit_Get_AllBusVolts_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_AllBusVolts_GR()
+        return self._get_float64_gr_array()
 
     @property
     def AllElementLosses(self):
         '''(read-only) Array of total losses (complex) in each circuit element'''
-        self.lib.Circuit_Get_AllElementLosses_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_AllElementLosses_GR()
+        return self._get_float64_gr_array()
 
     @property
     def AllElementNames(self):
         '''(read-only) Array of strings containing Full Name of all elements.'''
-        return self.get_string_array(self.lib.Circuit_Get_AllElementNames)
+        return self._get_string_array(self._lib.Circuit_Get_AllElementNames)
 
     @property
     def AllNodeDistances(self):
         '''(read-only) Returns an array of distances from parent EnergyMeter for each Node. Corresponds to AllBusVMag sequence.'''
-        self.lib.Circuit_Get_AllNodeDistances_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_AllNodeDistances_GR()
+        return self._get_float64_gr_array()
 
     @property
     def AllNodeNames(self):
         '''(read-only) Array of strings containing full name of each node in system in same order as returned by AllBusVolts, etc.'''
-        return self.get_string_array(self.lib.Circuit_Get_AllNodeNames)
+        return self._get_string_array(self._lib.Circuit_Get_AllNodeNames)
 
     @property
     def LineLosses(self):
         '''(read-only) Complex total line losses in the circuit'''
-        self.lib.Circuit_Get_LineLosses_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_LineLosses_GR()
+        return self._get_float64_gr_array()
 
     @property
     def Losses(self):
         '''(read-only) Total losses in active circuit, complex number (two-element array of double).'''
-        self.lib.Circuit_Get_Losses_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_Losses_GR()
+        return self._get_float64_gr_array()
 
     @property
     def Name(self):
         '''(read-only) Name of the active circuit.'''
-        return self.get_string(self.lib.Circuit_Get_Name())
+        return self._get_string(self._lib.Circuit_Get_Name())
 
     @property
     def NumBuses(self):
         '''(read-only) Total number of Buses in the circuit.'''
-        return self.lib.Circuit_Get_NumBuses()
+        return self._lib.Circuit_Get_NumBuses()
 
     @property
     def NumCktElements(self):
         '''(read-only) Number of CktElements in the circuit.'''
-        return self.lib.Circuit_Get_NumCktElements()
+        return self._lib.Circuit_Get_NumCktElements()
 
     @property
     def NumNodes(self):
         '''(read-only) Total number of nodes in the circuit.'''
-        return self.lib.Circuit_Get_NumNodes()
+        return self._lib.Circuit_Get_NumNodes()
 
     @property
     def ParentPDElement(self):
         '''(read-only) Sets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
-        return self.lib.Circuit_Get_ParentPDElement()
+        return self._lib.Circuit_Get_ParentPDElement()
 
     @property
     def SubstationLosses(self):
         '''(read-only) Complex losses in all transformers designated to substations.'''
-        self.lib.Circuit_Get_SubstationLosses_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_SubstationLosses_GR()
+        return self._get_float64_gr_array()
 
     @property
     def SystemY(self):
         '''(read-only) System Y matrix (after a solution has been performed)'''
-        self.lib.Circuit_Get_SystemY_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_SystemY_GR()
+        return self._get_float64_gr_array()
 
     @property
     def TotalPower(self):
         '''(read-only) Total power, watts delivered to the circuit'''
-        self.lib.Circuit_Get_TotalPower_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_TotalPower_GR()
+        return self._get_float64_gr_array()
 
     @property
     def YCurrents(self):
         '''(read-only) Array of doubles containing complex injection currents for the present solution. Is is the "I" vector of I=YV'''
-        self.lib.Circuit_Get_YCurrents_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_YCurrents_GR()
+        return self._get_float64_gr_array()
 
     @property
     def YNodeOrder(self):
         '''(read-only) Array of strings containing the names of the nodes in the same order as the Y matrix'''
-        return self.get_string_array(self.lib.Circuit_Get_YNodeOrder)
+        return self._get_string_array(self._lib.Circuit_Get_YNodeOrder)
 
     @property
     def YNodeVarray(self):
         '''(read-only) Complex array of actual node voltages in same order as SystemY matrix.'''
-        self.lib.Circuit_Get_YNodeVarray_GR()
-        return self.get_float64_gr_array()
+        self._lib.Circuit_Get_YNodeVarray_GR()
+        return self._get_float64_gr_array()

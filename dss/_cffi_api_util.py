@@ -19,35 +19,35 @@ class DssException(Exception):
         
 class Base(object):
     __slots__ = [
-        'lib',
-        'api_util',
-        'get_string',
-        'get_float64_array',
-        'get_float64_gr_array',
-        'get_int32_array',
-        'get_int32_gr_array',
-        'get_int8_array',
-        'get_int8_gr_array',
-        'get_string_array',
-        'prepare_float64_array',
-        'prepare_int32_array',
-        'prepare_string_array',
+        '_lib',
+        '_api_util',
+        '_get_string',
+        '_get_float64_array',
+        '_get_float64_gr_array',
+        '_get_int32_array',
+        '_get_int32_gr_array',
+        '_get_int8_array',
+        '_get_int8_gr_array',
+        '_get_string_array',
+        '_prepare_float64_array',
+        '_prepare_int32_array',
+        '_prepare_string_array',
     ]
     
     def __init__(self, api_util):
-        self.lib = api_util.lib
-        self.api_util = api_util
-        self.get_string = api_util.get_string
-        self.get_float64_array = api_util.get_float64_array
-        self.get_float64_gr_array = api_util.get_float64_gr_array
-        self.get_int32_array = api_util.get_int32_array
-        self.get_int32_gr_array = api_util.get_int32_gr_array
-        self.get_int8_array = api_util.get_int8_array
-        self.get_int8_gr_array = api_util.get_int8_gr_array
-        self.get_string_array = api_util.get_string_array
-        self.prepare_float64_array = api_util.prepare_float64_array
-        self.prepare_int32_array = api_util.prepare_int32_array
-        self.prepare_string_array = api_util.prepare_string_array
+        self._lib = api_util.lib
+        self._api_util = api_util
+        self._get_string = api_util.get_string
+        self._get_float64_array = api_util.get_float64_array
+        self._get_float64_gr_array = api_util.get_float64_gr_array
+        self._get_int32_array = api_util.get_int32_array
+        self._get_int32_gr_array = api_util.get_int32_gr_array
+        self._get_int8_array = api_util.get_int8_array
+        self._get_int8_gr_array = api_util.get_int8_gr_array
+        self._get_string_array = api_util.get_string_array
+        self._prepare_float64_array = api_util.prepare_float64_array
+        self._prepare_int32_array = api_util.prepare_int32_array
+        self._prepare_string_array = api_util.prepare_string_array
     
         cls = type(self)
         if cls not in interface_classes:
@@ -57,9 +57,9 @@ class Base(object):
             cls._dss_attributes = lowercase_map
 
     def CheckForError(self):
-        error_num = self.lib.Error_Get_Number()
+        error_num = self._lib.Error_Get_Number()
         if error_num:
-            raise DssException(error_num, self.get_string(self.lib.Error_Get_Description()))
+            raise DssException(error_num, self._get_string(self._lib.Error_Get_Description()))
             
     def _getattr(self, key):
         if key.startswith('_'):

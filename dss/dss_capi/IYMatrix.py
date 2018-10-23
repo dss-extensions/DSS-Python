@@ -13,7 +13,7 @@ class IYMatrix(Base):
     def GetCompressedYMatrix(self, factor=True):
         '''Return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix'''
         
-        ffi = self.api_util.ffi
+        ffi = self._api_util.ffi
         
         nBus = ffi.new('uint32_t*')
         nBus[0] = 0
@@ -24,7 +24,7 @@ class IYMatrix(Base):
         RowIdxPtr = ffi.new('int32_t**')
         cValsPtr = ffi.new('double**')
 
-        self.lib.YMatrix_GetCompressedYMatrix(factor, nBus, nNz, ColPtr, RowIdxPtr, cValsPtr)
+        self._lib.YMatrix_GetCompressedYMatrix(factor, nBus, nNz, ColPtr, RowIdxPtr, cValsPtr)
 
         if not nBus[0] or not nNz[0]:
             res = None
@@ -36,64 +36,64 @@ class IYMatrix(Base):
                 np.fromstring(ffi.buffer(ColPtr[0], (nBus[0] + 1) * 4), dtype=np.int32)
             )
 
-        self.lib.DSS_Dispose_PInteger(ColPtr)
-        self.lib.DSS_Dispose_PInteger(RowIdxPtr)
-        self.lib.DSS_Dispose_PDouble(cValsPtr)
+        self._lib.DSS_Dispose_PInteger(ColPtr)
+        self._lib.DSS_Dispose_PInteger(RowIdxPtr)
+        self._lib.DSS_Dispose_PDouble(cValsPtr)
 
         return res
 
     def ZeroInjCurr(self):
-        self.lib.YMatrix_ZeroInjCurr()
+        self._lib.YMatrix_ZeroInjCurr()
 
     def GetSourceInjCurrents(self):
-        self.lib.YMatrix_GetSourceInjCurrents()
+        self._lib.YMatrix_GetSourceInjCurrents()
 
     def GetPCInjCurr(self):
-        self.lib.YMatrix_GetPCInjCurr()
+        self._lib.YMatrix_GetPCInjCurr()
 
     def BuildYMatrixD(self, BuildOps, AllocateVI):
-        self.lib.YMatrix_BuildYMatrixD(BuildOps, AllocateVI)
+        self._lib.YMatrix_BuildYMatrixD(BuildOps, AllocateVI)
 
     def AddInAuxCurrents(self, SType):
-        self.lib.YMatrix_AddInAuxCurrents(SType)
+        self._lib.YMatrix_AddInAuxCurrents(SType)
 
     def GetIPointer(self):
         '''Get access to the internal Current pointer'''
-        IvectorPtr = self.api_util.ffi.new('double**')
-        self.lib.YMatrix_getIpointer(IvectorPtr)
+        IvectorPtr = self._api_util.ffi.new('double**')
+        self._lib.YMatrix_getIpointer(IvectorPtr)
         return IvectorPtr[0]
 
     def GetVPointer(self):
         '''Get access to the internal Voltage pointer'''
-        VvectorPtr = self.api_util.ffi.new('double**')
-        self.lib.YMatrix_getVpointer(VvectorPtr)
+        VvectorPtr = self._api_util.ffi.new('double**')
+        self._lib.YMatrix_getVpointer(VvectorPtr)
         return VvectorPtr[0]
 
     def SolveSystem(self, NodeV):
         if type(NodeV) is not np.ndarray:
             NodeV = np.array(NodeV)
 
-        NodeV = self.api_util.ffi.cast("double *", NodeV.ctypes.data)
-        NodeVPtr = self.api_util.ffi.new('double**')
+        NodeV = self._api_util.ffi.cast("double *", NodeV.ctypes.data)
+        NodeVPtr = self._api_util.ffi.new('double**')
         NodeVPtr[0] = NodeV
-        result = self.lib.YMatrix_SolveSystem(NodeVPtr)
+        result = self._lib.YMatrix_SolveSystem(NodeVPtr)
         return result
 
     @property
     def SystemYChanged(self):
-        return self.lib.YMatrix_Get_SystemYChanged()
+        return self._lib.YMatrix_Get_SystemYChanged()
 
     @SystemYChanged.setter
     def SystemYChanged(self, value):
-        self.lib.YMatrix_Set_SystemYChanged(value)
+        self._lib.YMatrix_Set_SystemYChanged(value)
 
     @property
     def UseAuxCurrents(self):
-        return self.lib.YMatrix_Get_UseAuxCurrents()
+        return self._lib.YMatrix_Get_UseAuxCurrents()
 
     @UseAuxCurrents.setter
     def UseAuxCurrents(self, value):
-        self.lib.YMatrix_Set_UseAuxCurrents(value)
+        self._lib.YMatrix_Set_UseAuxCurrents(value)
 
     # for better compatibility with OpenDSSDirect.py
     getYSparse = GetCompressedYMatrix
@@ -101,10 +101,10 @@ class IYMatrix(Base):
     def getI(self):
         '''Get the data from the internal Current pointer'''
         IvectorPtr = self.IVector()
-        return self.api_util.ffi.unpack(IvectorPtr, self.lib.Circuit_Get_NumNodes() + 1)
+        return self._api_util.ffi.unpack(IvectorPtr, self._lib.Circuit_Get_NumNodes() + 1)
 
     def getV(self):
         '''Get the data from the internal Voltage pointer'''
         VvectorPtr = self.VVector()
-        return self.api_util.ffi.unpack(VvectorPtr, self.lib.Circuit_Get_NumNodes() + 1)
+        return self._api_util.ffi.unpack(VvectorPtr, self._lib.Circuit_Get_NumNodes() + 1)
 
