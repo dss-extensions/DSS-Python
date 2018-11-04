@@ -13,31 +13,17 @@ class IMonitors(Base):
     def Channel(self, Index):
         '''(read-only) Array of float32 for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
         
-        ffi = self._api_util.ffi
-        self._lib.Monitors_Get_ByteStream_GR()
-        ptr, cnt = self._api_util.gr_int8_pointers
-        cnt = cnt[0]
-        if cnt == 272:
-            return np.zeros((1,), dtype=np.float32)
-
-        ptr = ptr[0]
-        record_size = ffi.cast('int32_t*', ptr)[2] + 2
-        data = np.frombuffer(ffi.buffer(ptr, cnt), dtype=np.float32, offset=272)
-        return data[(Index + 1)::record_size]
+        return self._get_float64_array(self._lib.Monitors_Get_Channel, Index)
 
     def AsMatrix(self):
         '''(read-only) Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1)'''
         
-        ffi = self._api_util.ffi
-        self._lib.Monitors_Get_ByteStream_GR()
-        ptr, cnt = self._api_util.gr_int8_pointers
-        cnt = cnt[0]
-        if cnt == 272:
+        buffer = self._get_int8_array(self._lib.Monitors_Get_ByteStream, Index)
+        if len(buffer) <= 1:
             return None #np.zeros((0,), dtype=np.float32)
-
-        ptr = ptr[0]
-        record_size = ffi.cast('int32_t*', ptr)[2] + 2
-        data = np.frombuffer(ffi.buffer(ptr, cnt), dtype=np.float32, offset=272)
+            
+        record_size = buffer.view(dtype=np.int32)[2] + 2
+        data = buffer[272:].view(dtype=np.float32)
         data = data.reshape((len(data) // record_size, record_size)).copy()
         return data
 
@@ -76,8 +62,7 @@ class IMonitors(Base):
     @property
     def ByteStream(self):
         '''(read-only) Byte Array containing monitor stream values. Make sure a "save" is done first (standard solution modes do this automatically)'''
-        self._lib.Monitors_Get_ByteStream_GR()
-        return self._get_int8_gr_array()
+        return self._get_int8_array(self._lib.Monitors_Get_ByteStream)
 
     @property
     def Count(self):
@@ -172,14 +157,12 @@ class IMonitors(Base):
     @property
     def dblFreq(self):
         '''(read-only) Array of doubles containing frequency values for harmonics mode solutions; Empty for time mode solutions (use dblHour)'''
-        self._lib.Monitors_Get_dblFreq_GR()
-        return self._get_float64_gr_array()
+        return self._get_float64_array(self._lib.Monitors_Get_dblFreq)
 
     @property
     def dblHour(self):
         '''(read-only) Array of doubles containgin time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution  (see dblFreq)'''
-        self._lib.Monitors_Get_dblHour_GR()
-        return self._get_float64_gr_array()
+        return self._get_float64_array(self._lib.Monitors_Get_dblHour)
 
     def __iter__(self):
         idx = self.First
