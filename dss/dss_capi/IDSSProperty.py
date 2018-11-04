@@ -26,7 +26,7 @@ class IDSSProperty(Base):
     @Val.setter
     def Val(self, Value):
         if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
+            Value = str(Value).encode(self._api_util.codec)
 
         self._lib.DSSProperty_Set_Val(Value)
 
