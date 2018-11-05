@@ -84,6 +84,7 @@ class IDSS(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.DSS_Set_DataPath(Value)
+        self.CheckForError()
 
     @property
     def DefaultEditor(self):
@@ -117,12 +118,13 @@ class IDSS(Base):
 
     @property
     def AllowForms(self):
+        '''Gets/sets whether text output is allowed'''
         return self._lib.DSS_Get_AllowForms() != 0
 
     @AllowForms.setter
     def AllowForms(self, value):
-        '''Gets/sets whether text output is allowed'''
-        return self._lib.DSS_Set_AllowForms(value)
+        self._lib.DSS_Set_AllowForms(value)
+        self.CheckForError()
 
     def ShowPanel(self):
         warnings.warn('ShowPanel is not implemented.')

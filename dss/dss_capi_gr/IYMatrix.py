@@ -86,6 +86,7 @@ class IYMatrix(Base):
     @SystemYChanged.setter
     def SystemYChanged(self, value):
         self._lib.YMatrix_Set_SystemYChanged(value)
+        self.CheckForError()
 
     @property
     def UseAuxCurrents(self):
@@ -94,6 +95,7 @@ class IYMatrix(Base):
     @UseAuxCurrents.setter
     def UseAuxCurrents(self, value):
         self._lib.YMatrix_Set_UseAuxCurrents(value)
+        self.CheckForError()
 
     # for better compatibility with OpenDSSDirect.py
     getYSparse = GetCompressedYMatrix

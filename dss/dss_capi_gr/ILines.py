@@ -31,6 +31,7 @@ class ILines(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Lines_Set_Bus1(Value)
+        self.CheckForError()
 
     @property
     def Bus2(self):
@@ -43,6 +44,7 @@ class ILines(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Lines_Set_Bus2(Value)
+        self.CheckForError()
 
     @property
     def C0(self):
@@ -52,6 +54,7 @@ class ILines(Base):
     @C0.setter
     def C0(self, Value):
         self._lib.Lines_Set_C0(Value)
+        self.CheckForError()
 
     @property
     def C1(self):
@@ -61,6 +64,7 @@ class ILines(Base):
     @C1.setter
     def C1(self, Value):
         self._lib.Lines_Set_C1(Value)
+        self.CheckForError()
 
     @property
     def Cmatrix(self):
@@ -71,6 +75,7 @@ class ILines(Base):
     def Cmatrix(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Lines_Set_Cmatrix(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Count(self):
@@ -88,6 +93,7 @@ class ILines(Base):
     @EmergAmps.setter
     def EmergAmps(self, Value):
         self._lib.Lines_Set_EmergAmps(Value)
+        self.CheckForError()
 
     @property
     def First(self):
@@ -105,6 +111,7 @@ class ILines(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Lines_Set_Geometry(Value)
+        self.CheckForError()
 
     @property
     def Length(self):
@@ -114,6 +121,7 @@ class ILines(Base):
     @Length.setter
     def Length(self, Value):
         self._lib.Lines_Set_Length(Value)
+        self.CheckForError()
 
     @property
     def LineCode(self):
@@ -126,6 +134,7 @@ class ILines(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Lines_Set_LineCode(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -138,6 +147,7 @@ class ILines(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Lines_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -152,6 +162,7 @@ class ILines(Base):
     @NormAmps.setter
     def NormAmps(self, Value):
         self._lib.Lines_Set_NormAmps(Value)
+        self.CheckForError()
 
     @property
     def NumCust(self):
@@ -171,6 +182,7 @@ class ILines(Base):
     @Phases.setter
     def Phases(self, Value):
         self._lib.Lines_Set_Phases(Value)
+        self.CheckForError()
 
     @property
     def R0(self):
@@ -180,6 +192,7 @@ class ILines(Base):
     @R0.setter
     def R0(self, Value):
         self._lib.Lines_Set_R0(Value)
+        self.CheckForError()
 
     @property
     def R1(self):
@@ -189,6 +202,7 @@ class ILines(Base):
     @R1.setter
     def R1(self, Value):
         self._lib.Lines_Set_R1(Value)
+        self.CheckForError()
 
     @property
     def Rg(self):
@@ -198,6 +212,7 @@ class ILines(Base):
     @Rg.setter
     def Rg(self, Value):
         self._lib.Lines_Set_Rg(Value)
+        self.CheckForError()
 
     @property
     def Rho(self):
@@ -207,6 +222,7 @@ class ILines(Base):
     @Rho.setter
     def Rho(self, Value):
         self._lib.Lines_Set_Rho(Value)
+        self.CheckForError()
 
     @property
     def Rmatrix(self):
@@ -218,6 +234,7 @@ class ILines(Base):
     def Rmatrix(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Lines_Set_Rmatrix(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Spacing(self):
@@ -230,6 +247,7 @@ class ILines(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Lines_Set_Spacing(Value)
+        self.CheckForError()
 
     @property
     def TotalCust(self):
@@ -243,6 +261,7 @@ class ILines(Base):
     @Units.setter
     def Units(self, Value):
         self._lib.Lines_Set_Units(Value)
+        self.CheckForError()
 
     @property
     def X0(self):
@@ -252,6 +271,7 @@ class ILines(Base):
     @X0.setter
     def X0(self, Value):
         self._lib.Lines_Set_X0(Value)
+        self.CheckForError()
 
     @property
     def X1(self):
@@ -261,6 +281,7 @@ class ILines(Base):
     @X1.setter
     def X1(self, Value):
         self._lib.Lines_Set_X1(Value)
+        self.CheckForError()
 
     @property
     def Xg(self):
@@ -270,6 +291,7 @@ class ILines(Base):
     @Xg.setter
     def Xg(self, Value):
         self._lib.Lines_Set_Xg(Value)
+        self.CheckForError()
 
     @property
     def Xmatrix(self):
@@ -280,6 +302,7 @@ class ILines(Base):
     def Xmatrix(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Lines_Set_Xmatrix(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Yprim(self):
@@ -291,6 +314,7 @@ class ILines(Base):
     def Yprim(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Lines_Set_Yprim(ValuePtr, ValueCount)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

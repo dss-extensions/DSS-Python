@@ -42,6 +42,7 @@ class IFuses(Base):
     @Delay.setter
     def Delay(self, Value):
         self._lib.Fuses_Set_Delay(Value)
+        self.CheckForError()
 
     @property
     def First(self):
@@ -59,6 +60,7 @@ class IFuses(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Fuses_Set_MonitoredObj(Value)
+        self.CheckForError()
 
     @property
     def MonitoredTerm(self):
@@ -71,6 +73,7 @@ class IFuses(Base):
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
         self._lib.Fuses_Set_MonitoredTerm(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -86,6 +89,7 @@ class IFuses(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Fuses_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -108,6 +112,7 @@ class IFuses(Base):
     @RatedCurrent.setter
     def RatedCurrent(self, Value):
         self._lib.Fuses_Set_RatedCurrent(Value)
+        self.CheckForError()
 
     @property
     def SwitchedObj(self):
@@ -123,6 +128,7 @@ class IFuses(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Fuses_Set_SwitchedObj(Value)
+        self.CheckForError()
 
     @property
     def SwitchedTerm(self):
@@ -135,6 +141,7 @@ class IFuses(Base):
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
         self._lib.Fuses_Set_SwitchedTerm(Value)
+        self.CheckForError()
 
     @property
     def TCCcurve(self):
@@ -147,6 +154,7 @@ class IFuses(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Fuses_Set_TCCcurve(Value)
+        self.CheckForError()
 
     @property
     def idx(self):
@@ -159,6 +167,7 @@ class IFuses(Base):
     @idx.setter
     def idx(self, Value):
         self._lib.Fuses_Set_idx(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

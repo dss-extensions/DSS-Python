@@ -22,6 +22,7 @@ class IISources(Base):
     @Amps.setter
     def Amps(self, Value):
         self._lib.ISources_Set_Amps(Value)
+        self.CheckForError()
 
     @property
     def AngleDeg(self):
@@ -31,6 +32,7 @@ class IISources(Base):
     @AngleDeg.setter
     def AngleDeg(self, Value):
         self._lib.ISources_Set_AngleDeg(Value)
+        self.CheckForError()
 
     @property
     def Count(self):
@@ -53,6 +55,7 @@ class IISources(Base):
     @Frequency.setter
     def Frequency(self, Value):
         self._lib.ISources_Set_Frequency(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -68,6 +71,7 @@ class IISources(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.ISources_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):

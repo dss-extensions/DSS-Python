@@ -64,6 +64,7 @@ class IMeters(Base):
     def AllocFactors(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Meters_Set_AllocFactors(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def AvgRepairTime(self):
@@ -80,6 +81,7 @@ class IMeters(Base):
     def CalcCurrent(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Meters_Set_CalcCurrent(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Count(self):
@@ -130,6 +132,7 @@ class IMeters(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Meters_Set_MeteredElement(Value)
+        self.CheckForError()
 
     @property
     def MeteredTerminal(self):
@@ -139,6 +142,7 @@ class IMeters(Base):
     @MeteredTerminal.setter
     def MeteredTerminal(self, Value):
         self._lib.Meters_Set_MeteredTerminal(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -154,6 +158,7 @@ class IMeters(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Meters_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -190,6 +195,7 @@ class IMeters(Base):
     def Peakcurrent(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Meters_Set_Peakcurrent(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def RegisterNames(self):
@@ -240,6 +246,7 @@ class IMeters(Base):
     @SequenceIndex.setter
     def SequenceIndex(self, Value):
         self._lib.Meters_Set_SequenceIndex(Value)
+        self.CheckForError()
 
     @property
     def SumBranchFltRates(self):

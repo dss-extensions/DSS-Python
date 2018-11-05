@@ -38,6 +38,7 @@ class IRelays(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Relays_Set_MonitoredObj(Value)
+        self.CheckForError()
 
     @property
     def MonitoredTerm(self):
@@ -47,6 +48,7 @@ class IRelays(Base):
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
         self._lib.Relays_Set_MonitoredTerm(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -62,6 +64,7 @@ class IRelays(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Relays_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -79,6 +82,7 @@ class IRelays(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Relays_Set_SwitchedObj(Value)
+        self.CheckForError()
 
     @property
     def SwitchedTerm(self):
@@ -88,6 +92,7 @@ class IRelays(Base):
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
         self._lib.Relays_Set_SwitchedTerm(Value)
+        self.CheckForError()
 
     @property
     def idx(self):
@@ -100,6 +105,7 @@ class IRelays(Base):
     @idx.setter
     def idx(self, Value):
         self._lib.Relays_Set_idx(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

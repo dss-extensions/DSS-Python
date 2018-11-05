@@ -45,6 +45,7 @@ class ILineSpacings(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.LineSpacings_Set_Name(Value)
+        self.CheckForError()
 
     def __len__(self):
         return self._lib.LineSpacings_Get_Count()
@@ -57,6 +58,7 @@ class ILineSpacings(Base):
     @Phases.setter
     def Phases(self, Value):
         self._lib.LineSpacings_Set_Phases(Value)
+        self.CheckForError()
 
     @property
     def Nconds(self):
@@ -65,6 +67,7 @@ class ILineSpacings(Base):
     @Nconds.setter
     def Nconds(self, Value):
         self._lib.LineSpacings_Set_Nconds(Value)
+        self.CheckForError()
 
     @property
     def Units(self):
@@ -73,6 +76,7 @@ class ILineSpacings(Base):
     @Units.setter
     def Units(self, Value):
         self._lib.LineSpacings_Set_Units(Value)
+        self.CheckForError()
 
     @property
     def Xcoords(self):
@@ -84,6 +88,7 @@ class ILineSpacings(Base):
     def Xcoords(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineSpacings_Set_Xcoords(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Ycoords(self):
@@ -95,6 +100,7 @@ class ILineSpacings(Base):
     def Ycoords(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineSpacings_Set_Ycoords(ValuePtr, ValueCount)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

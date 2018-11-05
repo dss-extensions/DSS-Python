@@ -34,6 +34,7 @@ class ILoads(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Loads_Set_CVRcurve(Value)
+        self.CheckForError()
 
     @property
     def CVRvars(self):
@@ -43,6 +44,7 @@ class ILoads(Base):
     @CVRvars.setter
     def CVRvars(self, Value):
         self._lib.Loads_Set_CVRvars(Value)
+        self.CheckForError()
 
     @property
     def CVRwatts(self):
@@ -52,6 +54,7 @@ class ILoads(Base):
     @CVRwatts.setter
     def CVRwatts(self, Value):
         self._lib.Loads_Set_CVRwatts(Value)
+        self.CheckForError()
 
     @property
     def Cfactor(self):
@@ -61,6 +64,7 @@ class ILoads(Base):
     @Cfactor.setter
     def Cfactor(self, Value):
         self._lib.Loads_Set_Cfactor(Value)
+        self.CheckForError()
 
     @property
     def Class(self):
@@ -69,6 +73,7 @@ class ILoads(Base):
     @Class.setter
     def Class(self, Value):
         self._lib.Loads_Set_Class_(Value)
+        self.CheckForError()
 
     @property
     def Count(self):
@@ -94,6 +99,7 @@ class ILoads(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Loads_Set_Growth(Value)
+        self.CheckForError()
 
     @property
     def IsDelta(self):
@@ -103,6 +109,7 @@ class ILoads(Base):
     @IsDelta.setter
     def IsDelta(self, Value):
         self._lib.Loads_Set_IsDelta(Value)
+        self.CheckForError()
 
     @property
     def Model(self):
@@ -112,6 +119,7 @@ class ILoads(Base):
     @Model.setter
     def Model(self, Value):
         self._lib.Loads_Set_Model(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -124,6 +132,7 @@ class ILoads(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Loads_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -138,6 +147,7 @@ class ILoads(Base):
     @NumCust.setter
     def NumCust(self, Value):
         self._lib.Loads_Set_NumCust(Value)
+        self.CheckForError()
 
     @property
     def PF(self):
@@ -150,6 +160,7 @@ class ILoads(Base):
     @PF.setter
     def PF(self, Value):
         self._lib.Loads_Set_PF(Value)
+        self.CheckForError()
 
     @property
     def PctMean(self):
@@ -159,6 +170,7 @@ class ILoads(Base):
     @PctMean.setter
     def PctMean(self, Value):
         self._lib.Loads_Set_PctMean(Value)
+        self.CheckForError()
 
     @property
     def PctStdDev(self):
@@ -168,6 +180,7 @@ class ILoads(Base):
     @PctStdDev.setter
     def PctStdDev(self, Value):
         self._lib.Loads_Set_PctStdDev(Value)
+        self.CheckForError()
 
     @property
     def RelWeight(self):
@@ -177,6 +190,7 @@ class ILoads(Base):
     @RelWeight.setter
     def RelWeight(self, Value):
         self._lib.Loads_Set_RelWeight(Value)
+        self.CheckForError()
 
     @property
     def Rneut(self):
@@ -186,6 +200,7 @@ class ILoads(Base):
     @Rneut.setter
     def Rneut(self, Value):
         self._lib.Loads_Set_Rneut(Value)
+        self.CheckForError()
 
     @property
     def Spectrum(self):
@@ -198,6 +213,7 @@ class ILoads(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Loads_Set_Spectrum(Value)
+        self.CheckForError()
 
     @property
     def Status(self):
@@ -207,6 +223,7 @@ class ILoads(Base):
     @Status.setter
     def Status(self, Value):
         self._lib.Loads_Set_Status(Value)
+        self.CheckForError()
 
     @property
     def Vmaxpu(self):
@@ -216,6 +233,7 @@ class ILoads(Base):
     @Vmaxpu.setter
     def Vmaxpu(self, Value):
         self._lib.Loads_Set_Vmaxpu(Value)
+        self.CheckForError()
 
     @property
     def Vminemerg(self):
@@ -225,6 +243,7 @@ class ILoads(Base):
     @Vminemerg.setter
     def Vminemerg(self, Value):
         self._lib.Loads_Set_Vminemerg(Value)
+        self.CheckForError()
 
     @property
     def Vminnorm(self):
@@ -234,6 +253,7 @@ class ILoads(Base):
     @Vminnorm.setter
     def Vminnorm(self, Value):
         self._lib.Loads_Set_Vminnorm(Value)
+        self.CheckForError()
 
     @property
     def Vminpu(self):
@@ -243,6 +263,7 @@ class ILoads(Base):
     @Vminpu.setter
     def Vminpu(self, Value):
         self._lib.Loads_Set_Vminpu(Value)
+        self.CheckForError()
 
     @property
     def Xneut(self):
@@ -252,6 +273,7 @@ class ILoads(Base):
     @Xneut.setter
     def Xneut(self, Value):
         self._lib.Loads_Set_Xneut(Value)
+        self.CheckForError()
 
     @property
     def Yearly(self):
@@ -264,6 +286,7 @@ class ILoads(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Loads_Set_Yearly(Value)
+        self.CheckForError()
 
     @property
     def ZIPV(self):
@@ -274,6 +297,7 @@ class ILoads(Base):
     def ZIPV(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Loads_Set_ZIPV(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def daily(self):
@@ -286,6 +310,7 @@ class ILoads(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Loads_Set_daily(Value)
+        self.CheckForError()
 
     @property
     def duty(self):
@@ -298,6 +323,7 @@ class ILoads(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Loads_Set_duty(Value)
+        self.CheckForError()
 
     @property
     def idx(self):
@@ -306,6 +332,7 @@ class ILoads(Base):
     @idx.setter
     def idx(self, Value):
         self._lib.Loads_Set_idx(Value)
+        self.CheckForError()
 
     @property
     def kV(self):
@@ -315,6 +342,7 @@ class ILoads(Base):
     @kV.setter
     def kV(self, Value):
         self._lib.Loads_Set_kV(Value)
+        self.CheckForError()
 
     @property
     def kW(self):
@@ -324,6 +352,7 @@ class ILoads(Base):
     @kW.setter
     def kW(self, Value):
         self._lib.Loads_Set_kW(Value)
+        self.CheckForError()
 
     @property
     def kva(self):
@@ -333,6 +362,7 @@ class ILoads(Base):
     @kva.setter
     def kva(self, Value):
         self._lib.Loads_Set_kva(Value)
+        self.CheckForError()
 
     @property
     def kvar(self):
@@ -342,6 +372,7 @@ class ILoads(Base):
     @kvar.setter
     def kvar(self, Value):
         self._lib.Loads_Set_kvar(Value)
+        self.CheckForError()
 
     @property
     def kwh(self):
@@ -351,6 +382,7 @@ class ILoads(Base):
     @kwh.setter
     def kwh(self, Value):
         self._lib.Loads_Set_kwh(Value)
+        self.CheckForError()
 
     @property
     def kwhdays(self):
@@ -360,6 +392,7 @@ class ILoads(Base):
     @kwhdays.setter
     def kwhdays(self, Value):
         self._lib.Loads_Set_kwhdays(Value)
+        self.CheckForError()
 
     @property
     def pctSeriesRL(self):
@@ -369,6 +402,7 @@ class ILoads(Base):
     @pctSeriesRL.setter
     def pctSeriesRL(self, Value):
         self._lib.Loads_Set_pctSeriesRL(Value)
+        self.CheckForError()
 
     @property
     def xfkVA(self):
@@ -378,6 +412,7 @@ class ILoads(Base):
     @xfkVA.setter
     def xfkVA(self, Value):
         self._lib.Loads_Set_xfkVA(Value)
+        self.CheckForError()
 
     # API extensions
     @property
@@ -388,6 +423,7 @@ class ILoads(Base):
     @Phases.setter
     def Phases(self, Value):
         self._lib.Loads_Set_Phases(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

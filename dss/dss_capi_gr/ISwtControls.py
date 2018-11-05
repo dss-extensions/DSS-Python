@@ -20,6 +20,7 @@ class ISwtControls(Base):
     @Action.setter
     def Action(self, Value):
         self._lib.SwtControls_Set_Action(Value)
+        self.CheckForError()
 
     @property
     def AllNames(self):
@@ -41,6 +42,7 @@ class ISwtControls(Base):
     @Delay.setter
     def Delay(self, Value):
         self._lib.SwtControls_Set_Delay(Value)
+        self.CheckForError()
 
     @property
     def First(self):
@@ -55,6 +57,7 @@ class ISwtControls(Base):
     @IsLocked.setter
     def IsLocked(self, Value):
         self._lib.SwtControls_Set_IsLocked(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -67,6 +70,7 @@ class ISwtControls(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.SwtControls_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -84,6 +88,7 @@ class ISwtControls(Base):
     @NormalState.setter
     def NormalState(self, Value):
         self._lib.SwtControls_Set_NormalState(Value)
+        self.CheckForError()
 
     @property
     def State(self):
@@ -96,6 +101,7 @@ class ISwtControls(Base):
     @State.setter
     def State(self, Value):
         self._lib.SwtControls_Set_State(Value)
+        self.CheckForError()
 
     @property
     def SwitchedObj(self):
@@ -108,6 +114,7 @@ class ISwtControls(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.SwtControls_Set_SwitchedObj(Value)
+        self.CheckForError()
 
     @property
     def SwitchedTerm(self):
@@ -117,6 +124,7 @@ class ISwtControls(Base):
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
         self._lib.SwtControls_Set_SwitchedTerm(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

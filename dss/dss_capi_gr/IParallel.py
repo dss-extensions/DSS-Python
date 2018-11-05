@@ -28,6 +28,7 @@ class IParallel(Base):
     @ActiveActor.setter
     def ActiveActor(self, Value):
         self._lib.Parallel_Set_ActiveActor(Value)
+        self.CheckForError()
 
     @property
     def ActiveParallel(self):
@@ -40,6 +41,7 @@ class IParallel(Base):
     @ActiveParallel.setter
     def ActiveParallel(self, Value):
         self._lib.Parallel_Set_ActiveParallel(Value)
+        self.CheckForError()
 
     @property
     def ActorCPU(self):
@@ -52,6 +54,7 @@ class IParallel(Base):
     @ActorCPU.setter
     def ActorCPU(self, Value):
         self._lib.Parallel_Set_ActorCPU(Value)
+        self.CheckForError()
 
     @property
     def ActorProgress(self):
@@ -76,6 +79,7 @@ class IParallel(Base):
     @ConcatenateReports.setter
     def ConcatenateReports(self, Value):
         self._lib.Parallel_Set_ConcatenateReports(Value)
+        self.CheckForError()
 
     @property
     def NumCPUs(self):

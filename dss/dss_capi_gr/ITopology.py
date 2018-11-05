@@ -50,6 +50,7 @@ class ITopology(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Topology_Set_BranchName(Value)
+        self.CheckForError()
 
     @property
     def BusName(self):
@@ -62,6 +63,7 @@ class ITopology(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Topology_Set_BusName(Value)
+        self.CheckForError()
 
     @property
     def First(self):

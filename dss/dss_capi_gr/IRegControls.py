@@ -25,6 +25,7 @@ class IRegControls(Base):
     @CTPrimary.setter
     def CTPrimary(self, Value):
         self._lib.RegControls_Set_CTPrimary(Value)
+        self.CheckForError()
 
     @property
     def Count(self):
@@ -42,6 +43,7 @@ class IRegControls(Base):
     @Delay.setter
     def Delay(self, Value):
         self._lib.RegControls_Set_Delay(Value)
+        self.CheckForError()
 
     @property
     def First(self):
@@ -56,6 +58,7 @@ class IRegControls(Base):
     @ForwardBand.setter
     def ForwardBand(self, Value):
         self._lib.RegControls_Set_ForwardBand(Value)
+        self.CheckForError()
 
     @property
     def ForwardR(self):
@@ -65,6 +68,7 @@ class IRegControls(Base):
     @ForwardR.setter
     def ForwardR(self, Value):
         self._lib.RegControls_Set_ForwardR(Value)
+        self.CheckForError()
 
     @property
     def ForwardVreg(self):
@@ -74,6 +78,7 @@ class IRegControls(Base):
     @ForwardVreg.setter
     def ForwardVreg(self, Value):
         self._lib.RegControls_Set_ForwardVreg(Value)
+        self.CheckForError()
 
     @property
     def ForwardX(self):
@@ -83,6 +88,7 @@ class IRegControls(Base):
     @ForwardX.setter
     def ForwardX(self, Value):
         self._lib.RegControls_Set_ForwardX(Value)
+        self.CheckForError()
 
     @property
     def IsInverseTime(self):
@@ -92,6 +98,7 @@ class IRegControls(Base):
     @IsInverseTime.setter
     def IsInverseTime(self, Value):
         self._lib.RegControls_Set_IsInverseTime(Value)
+        self.CheckForError()
 
     @property
     def IsReversible(self):
@@ -101,6 +108,7 @@ class IRegControls(Base):
     @IsReversible.setter
     def IsReversible(self, Value):
         self._lib.RegControls_Set_IsReversible(Value)
+        self.CheckForError()
 
     @property
     def MaxTapChange(self):
@@ -110,6 +118,7 @@ class IRegControls(Base):
     @MaxTapChange.setter
     def MaxTapChange(self, Value):
         self._lib.RegControls_Set_MaxTapChange(Value)
+        self.CheckForError()
 
     @property
     def MonitoredBus(self):
@@ -122,6 +131,7 @@ class IRegControls(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.RegControls_Set_MonitoredBus(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -137,6 +147,7 @@ class IRegControls(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.RegControls_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -151,6 +162,7 @@ class IRegControls(Base):
     @PTratio.setter
     def PTratio(self, Value):
         self._lib.RegControls_Set_PTratio(Value)
+        self.CheckForError()
 
     @property
     def ReverseBand(self):
@@ -160,6 +172,7 @@ class IRegControls(Base):
     @ReverseBand.setter
     def ReverseBand(self, Value):
         self._lib.RegControls_Set_ReverseBand(Value)
+        self.CheckForError()
 
     @property
     def ReverseR(self):
@@ -169,6 +182,7 @@ class IRegControls(Base):
     @ReverseR.setter
     def ReverseR(self, Value):
         self._lib.RegControls_Set_ReverseR(Value)
+        self.CheckForError()
 
     @property
     def ReverseVreg(self):
@@ -178,6 +192,7 @@ class IRegControls(Base):
     @ReverseVreg.setter
     def ReverseVreg(self, Value):
         self._lib.RegControls_Set_ReverseVreg(Value)
+        self.CheckForError()
 
     @property
     def ReverseX(self):
@@ -187,6 +202,7 @@ class IRegControls(Base):
     @ReverseX.setter
     def ReverseX(self, Value):
         self._lib.RegControls_Set_ReverseX(Value)
+        self.CheckForError()
 
     @property
     def TapDelay(self):
@@ -196,6 +212,7 @@ class IRegControls(Base):
     @TapDelay.setter
     def TapDelay(self, Value):
         self._lib.RegControls_Set_TapDelay(Value)
+        self.CheckForError()
 
     @property
     def TapNumber(self):
@@ -205,6 +222,7 @@ class IRegControls(Base):
     @TapNumber.setter
     def TapNumber(self, Value):
         self._lib.RegControls_Set_TapNumber(Value)
+        self.CheckForError()
 
     @property
     def TapWinding(self):
@@ -214,6 +232,7 @@ class IRegControls(Base):
     @TapWinding.setter
     def TapWinding(self, Value):
         self._lib.RegControls_Set_TapWinding(Value)
+        self.CheckForError()
 
     @property
     def Transformer(self):
@@ -226,6 +245,7 @@ class IRegControls(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.RegControls_Set_Transformer(Value)
+        self.CheckForError()
 
     @property
     def VoltageLimit(self):
@@ -235,6 +255,7 @@ class IRegControls(Base):
     @VoltageLimit.setter
     def VoltageLimit(self, Value):
         self._lib.RegControls_Set_VoltageLimit(Value)
+        self.CheckForError()
 
     @property
     def Winding(self):
@@ -244,6 +265,7 @@ class IRegControls(Base):
     @Winding.setter
     def Winding(self, Value):
         self._lib.RegControls_Set_Winding(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

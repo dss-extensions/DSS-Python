@@ -25,6 +25,7 @@ class IVsources(Base):
     @AngleDeg.setter
     def AngleDeg(self, Value):
         self._lib.Vsources_Set_AngleDeg(Value)
+        self.CheckForError()
 
     @property
     def BasekV(self):
@@ -34,6 +35,7 @@ class IVsources(Base):
     @BasekV.setter
     def BasekV(self, Value):
         self._lib.Vsources_Set_BasekV(Value)
+        self.CheckForError()
 
     @property
     def Count(self):
@@ -56,6 +58,7 @@ class IVsources(Base):
     @Frequency.setter
     def Frequency(self, Value):
         self._lib.Vsources_Set_Frequency(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -71,6 +74,7 @@ class IVsources(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Vsources_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -85,6 +89,7 @@ class IVsources(Base):
     @Phases.setter
     def Phases(self, Value):
         self._lib.Vsources_Set_Phases(Value)
+        self.CheckForError()
 
     @property
     def pu(self):
@@ -97,6 +102,7 @@ class IVsources(Base):
     @pu.setter
     def pu(self, Value):
         self._lib.Vsources_Set_pu(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

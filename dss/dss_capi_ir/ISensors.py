@@ -37,6 +37,7 @@ class ISensors(Base):
     def Currents(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Sensors_Set_Currents(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def First(self):
@@ -51,6 +52,7 @@ class ISensors(Base):
     @IsDelta.setter
     def IsDelta(self, Value):
         self._lib.Sensors_Set_IsDelta(Value)
+        self.CheckForError()
 
     @property
     def MeteredElement(self):
@@ -63,6 +65,7 @@ class ISensors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Sensors_Set_MeteredElement(Value)
+        self.CheckForError()
 
     @property
     def MeteredTerminal(self):
@@ -72,6 +75,7 @@ class ISensors(Base):
     @MeteredTerminal.setter
     def MeteredTerminal(self, Value):
         self._lib.Sensors_Set_MeteredTerminal(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -87,6 +91,7 @@ class ISensors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Sensors_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -101,6 +106,7 @@ class ISensors(Base):
     @PctError.setter
     def PctError(self, Value):
         self._lib.Sensors_Set_PctError(Value)
+        self.CheckForError()
 
     @property
     def ReverseDelta(self):
@@ -110,6 +116,7 @@ class ISensors(Base):
     @ReverseDelta.setter
     def ReverseDelta(self, Value):
         self._lib.Sensors_Set_ReverseDelta(Value)
+        self.CheckForError()
 
     @property
     def Weight(self):
@@ -119,6 +126,7 @@ class ISensors(Base):
     @Weight.setter
     def Weight(self, Value):
         self._lib.Sensors_Set_Weight(Value)
+        self.CheckForError()
 
     @property
     def kVARS(self):
@@ -129,6 +137,7 @@ class ISensors(Base):
     def kVARS(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Sensors_Set_kVARS(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def kVS(self):
@@ -139,6 +148,7 @@ class ISensors(Base):
     def kVS(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Sensors_Set_kVS(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def kVbase(self):
@@ -148,6 +158,7 @@ class ISensors(Base):
     @kVbase.setter
     def kVbase(self, Value):
         self._lib.Sensors_Set_kVbase(Value)
+        self.CheckForError()
 
     @property
     def kWS(self):
@@ -158,6 +169,7 @@ class ISensors(Base):
     def kWS(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Sensors_Set_kWS(ValuePtr, ValueCount)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

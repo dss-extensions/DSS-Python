@@ -45,6 +45,7 @@ class ILineGeometries(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.LineGeometries_Set_Name(Value)
+        self.CheckForError()
 
     def __len__(self):
         return self._lib.LineGeometries_Get_Count()
@@ -57,6 +58,7 @@ class ILineGeometries(Base):
     @EmergAmps.setter
     def EmergAmps(self, Value):
         self._lib.LineGeometries_Set_EmergAmps(Value)
+        self.CheckForError()
 
     @property
     def NormAmps(self):
@@ -66,6 +68,7 @@ class ILineGeometries(Base):
     @NormAmps.setter
     def NormAmps(self, Value):
         self._lib.LineGeometries_Set_NormAmps(Value)
+        self.CheckForError()
 
     @property
     def RhoEarth(self):
@@ -74,6 +77,7 @@ class ILineGeometries(Base):
     @RhoEarth.setter
     def RhoEarth(self, Value):
         self._lib.LineGeometries_Set_RhoEarth(Value)
+        self.CheckForError()
 
     @property
     def Reduce(self):
@@ -82,6 +86,7 @@ class ILineGeometries(Base):
     @Reduce.setter
     def Reduce(self, Value):
         self._lib.LineGeometries_Set_Reduce(Value)
+        self.CheckForError()
 
     @property
     def Phases(self):
@@ -91,6 +96,7 @@ class ILineGeometries(Base):
     @Phases.setter
     def Phases(self, Value):
         self._lib.LineGeometries_Set_Phases(Value)
+        self.CheckForError()
 
     def Rmatrix(self, Frequency, Length, Units):
         '''(read-only) Resistance matrix, ohms'''
@@ -116,6 +122,7 @@ class ILineGeometries(Base):
     def Units(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
         self._lib.LineGeometries_Set_Units(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Xcoords(self):
@@ -126,6 +133,7 @@ class ILineGeometries(Base):
     def Xcoords(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineGeometries_Set_Xcoords(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Ycoords(self):
@@ -136,6 +144,7 @@ class ILineGeometries(Base):
     def Ycoords(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineGeometries_Set_Ycoords(ValuePtr, ValueCount)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

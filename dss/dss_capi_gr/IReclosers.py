@@ -44,6 +44,7 @@ class IReclosers(Base):
     @GroundInst.setter
     def GroundInst(self, Value):
         self._lib.Reclosers_Set_GroundInst(Value)
+        self.CheckForError()
 
     @property
     def GroundTrip(self):
@@ -53,6 +54,7 @@ class IReclosers(Base):
     @GroundTrip.setter
     def GroundTrip(self, Value):
         self._lib.Reclosers_Set_GroundTrip(Value)
+        self.CheckForError()
 
     @property
     def MonitoredObj(self):
@@ -68,6 +70,7 @@ class IReclosers(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Reclosers_Set_MonitoredObj(Value)
+        self.CheckForError()
 
     @property
     def MonitoredTerm(self):
@@ -77,6 +80,7 @@ class IReclosers(Base):
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
         self._lib.Reclosers_Set_MonitoredTerm(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -89,6 +93,7 @@ class IReclosers(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Reclosers_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -103,6 +108,7 @@ class IReclosers(Base):
     @NumFast.setter
     def NumFast(self, Value):
         self._lib.Reclosers_Set_NumFast(Value)
+        self.CheckForError()
 
     @property
     def PhaseInst(self):
@@ -112,6 +118,7 @@ class IReclosers(Base):
     @PhaseInst.setter
     def PhaseInst(self, Value):
         self._lib.Reclosers_Set_PhaseInst(Value)
+        self.CheckForError()
 
     @property
     def PhaseTrip(self):
@@ -124,6 +131,7 @@ class IReclosers(Base):
     @PhaseTrip.setter
     def PhaseTrip(self, Value):
         self._lib.Reclosers_Set_PhaseTrip(Value)
+        self.CheckForError()
 
     @property
     def RecloseIntervals(self):
@@ -139,6 +147,7 @@ class IReclosers(Base):
     @Shots.setter
     def Shots(self, Value):
         self._lib.Reclosers_Set_Shots(Value)
+        self.CheckForError()
 
     @property
     def SwitchedObj(self):
@@ -151,6 +160,7 @@ class IReclosers(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Reclosers_Set_SwitchedObj(Value)
+        self.CheckForError()
 
     @property
     def SwitchedTerm(self):
@@ -160,6 +170,7 @@ class IReclosers(Base):
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
         self._lib.Reclosers_Set_SwitchedTerm(Value)
+        self.CheckForError()
 
     @property
     def idx(self):
@@ -169,6 +180,7 @@ class IReclosers(Base):
     @idx.setter
     def idx(self, Value):
         self._lib.Reclosers_Set_idx(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

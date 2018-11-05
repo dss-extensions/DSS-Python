@@ -32,6 +32,7 @@ class IParser(Base):
     @AutoIncrement.setter
     def AutoIncrement(self, Value):
         self._lib.Parser_Set_AutoIncrement(Value)
+        self.CheckForError()
 
     @property
     def BeginQuote(self):
@@ -47,6 +48,7 @@ class IParser(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Parser_Set_BeginQuote(Value)
+        self.CheckForError()
 
     @property
     def CmdString(self):
@@ -59,6 +61,7 @@ class IParser(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Parser_Set_CmdString(Value)
+        self.CheckForError()
 
     @property
     def DblValue(self):
@@ -76,6 +79,7 @@ class IParser(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Parser_Set_Delimiters(Value)
+        self.CheckForError()
 
     @property
     def EndQuote(self):
@@ -88,6 +92,7 @@ class IParser(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Parser_Set_EndQuote(Value)
+        self.CheckForError()
 
     @property
     def IntValue(self):
@@ -118,4 +123,5 @@ class IParser(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Parser_Set_WhiteSpace(Value)
+        self.CheckForError()
 

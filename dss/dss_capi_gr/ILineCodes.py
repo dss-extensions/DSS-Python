@@ -22,6 +22,7 @@ class ILineCodes(Base):
     @C0.setter
     def C0(self, Value):
         self._lib.LineCodes_Set_C0(Value)
+        self.CheckForError()
 
     @property
     def C1(self):
@@ -31,6 +32,7 @@ class ILineCodes(Base):
     @C1.setter
     def C1(self, Value):
         self._lib.LineCodes_Set_C1(Value)
+        self.CheckForError()
 
     @property
     def Cmatrix(self):
@@ -42,6 +44,7 @@ class ILineCodes(Base):
     def Cmatrix(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineCodes_Set_Cmatrix(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Count(self):
@@ -59,6 +62,7 @@ class ILineCodes(Base):
     @EmergAmps.setter
     def EmergAmps(self, Value):
         self._lib.LineCodes_Set_EmergAmps(Value)
+        self.CheckForError()
 
     @property
     def First(self):
@@ -80,6 +84,7 @@ class ILineCodes(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.LineCodes_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -93,6 +98,7 @@ class ILineCodes(Base):
     @NormAmps.setter
     def NormAmps(self, Value):
         self._lib.LineCodes_Set_NormAmps(Value)
+        self.CheckForError()
 
     @property
     def Phases(self):
@@ -102,6 +108,7 @@ class ILineCodes(Base):
     @Phases.setter
     def Phases(self, Value):
         self._lib.LineCodes_Set_Phases(Value)
+        self.CheckForError()
 
     @property
     def R0(self):
@@ -111,6 +118,7 @@ class ILineCodes(Base):
     @R0.setter
     def R0(self, Value):
         self._lib.LineCodes_Set_R0(Value)
+        self.CheckForError()
 
     @property
     def R1(self):
@@ -120,6 +128,7 @@ class ILineCodes(Base):
     @R1.setter
     def R1(self, Value):
         self._lib.LineCodes_Set_R1(Value)
+        self.CheckForError()
 
     @property
     def Rmatrix(self):
@@ -131,6 +140,7 @@ class ILineCodes(Base):
     def Rmatrix(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineCodes_Set_Rmatrix(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Units(self):
@@ -139,6 +149,7 @@ class ILineCodes(Base):
     @Units.setter
     def Units(self, Value):
         self._lib.LineCodes_Set_Units(Value)
+        self.CheckForError()
 
     @property
     def X0(self):
@@ -148,6 +159,7 @@ class ILineCodes(Base):
     @X0.setter
     def X0(self, Value):
         self._lib.LineCodes_Set_X0(Value)
+        self.CheckForError()
 
     @property
     def X1(self):
@@ -157,6 +169,7 @@ class ILineCodes(Base):
     @X1.setter
     def X1(self, Value):
         self._lib.LineCodes_Set_X1(Value)
+        self.CheckForError()
 
     @property
     def Xmatrix(self):
@@ -168,6 +181,7 @@ class ILineCodes(Base):
     def Xmatrix(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineCodes_Set_Xmatrix(ValuePtr, ValueCount)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

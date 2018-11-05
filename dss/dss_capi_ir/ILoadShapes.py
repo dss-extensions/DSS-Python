@@ -44,6 +44,7 @@ class ILoadShapes(Base):
     @HrInterval.setter
     def HrInterval(self, Value):
         self._lib.LoadShapes_Set_HrInterval(Value)
+        self.CheckForError()
 
     @property
     def MinInterval(self):
@@ -53,6 +54,7 @@ class ILoadShapes(Base):
     @MinInterval.setter
     def MinInterval(self, Value):
         self._lib.LoadShapes_Set_MinInterval(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -68,6 +70,7 @@ class ILoadShapes(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.LoadShapes_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -85,6 +88,7 @@ class ILoadShapes(Base):
     @Npts.setter
     def Npts(self, Value):
         self._lib.LoadShapes_Set_Npts(Value)
+        self.CheckForError()
 
     @property
     def PBase(self):
@@ -93,6 +97,7 @@ class ILoadShapes(Base):
     @PBase.setter
     def PBase(self, Value):
         self._lib.LoadShapes_Set_PBase(Value)
+        self.CheckForError()
 
     Pbase = PBase
 
@@ -108,6 +113,7 @@ class ILoadShapes(Base):
     def Pmult(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LoadShapes_Set_Pmult(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def QBase(self):
@@ -117,6 +123,7 @@ class ILoadShapes(Base):
     @QBase.setter
     def QBase(self, Value):
         self._lib.LoadShapes_Set_Qbase(Value)
+        self.CheckForError()
 
     Qbase = QBase
 
@@ -129,6 +136,7 @@ class ILoadShapes(Base):
     def Qmult(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LoadShapes_Set_Qmult(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def TimeArray(self):
@@ -139,6 +147,7 @@ class ILoadShapes(Base):
     def TimeArray(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LoadShapes_Set_TimeArray(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def UseActual(self):
@@ -148,6 +157,7 @@ class ILoadShapes(Base):
     @UseActual.setter
     def UseActual(self, Value):
         self._lib.LoadShapes_Set_UseActual(Value)
+        self.CheckForError()
 
     @property
     def sInterval(self):
@@ -156,6 +166,7 @@ class ILoadShapes(Base):
     @sInterval.setter
     def sInterval(self, Value):
         self._lib.LoadShapes_Set_Sinterval(Value)
+        self.CheckForError()
 
     Sinterval = sInterval
 

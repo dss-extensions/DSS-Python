@@ -25,6 +25,7 @@ class ICapControls(Base):
     @CTratio.setter
     def CTratio(self, Value):
         self._lib.CapControls_Set_CTratio(Value)
+        self.CheckForError()
 
     @property
     def Capacitor(self):
@@ -37,6 +38,7 @@ class ICapControls(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.CapControls_Set_Capacitor(Value)
+        self.CheckForError()
 
     @property
     def Count(self):
@@ -53,6 +55,7 @@ class ICapControls(Base):
     @DeadTime.setter
     def DeadTime(self, Value):
         self._lib.CapControls_Set_DeadTime(Value)
+        self.CheckForError()
 
     @property
     def Delay(self):
@@ -62,6 +65,7 @@ class ICapControls(Base):
     @Delay.setter
     def Delay(self, Value):
         self._lib.CapControls_Set_Delay(Value)
+        self.CheckForError()
 
     @property
     def DelayOff(self):
@@ -71,6 +75,7 @@ class ICapControls(Base):
     @DelayOff.setter
     def DelayOff(self, Value):
         self._lib.CapControls_Set_DelayOff(Value)
+        self.CheckForError()
 
     @property
     def First(self):
@@ -85,6 +90,7 @@ class ICapControls(Base):
     @Mode.setter
     def Mode(self, Value):
         self._lib.CapControls_Set_Mode(Value)
+        self.CheckForError()
 
     @property
     def MonitoredObj(self):
@@ -97,6 +103,7 @@ class ICapControls(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.CapControls_Set_MonitoredObj(Value)
+        self.CheckForError()
 
     @property
     def MonitoredTerm(self):
@@ -106,6 +113,7 @@ class ICapControls(Base):
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
         self._lib.CapControls_Set_MonitoredTerm(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -118,6 +126,7 @@ class ICapControls(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.CapControls_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -132,6 +141,7 @@ class ICapControls(Base):
     @OFFSetting.setter
     def OFFSetting(self, Value):
         self._lib.CapControls_Set_OFFSetting(Value)
+        self.CheckForError()
 
     @property
     def ONSetting(self):
@@ -141,6 +151,7 @@ class ICapControls(Base):
     @ONSetting.setter
     def ONSetting(self, Value):
         self._lib.CapControls_Set_ONSetting(Value)
+        self.CheckForError()
 
     @property
     def PTratio(self):
@@ -150,6 +161,7 @@ class ICapControls(Base):
     @PTratio.setter
     def PTratio(self, Value):
         self._lib.CapControls_Set_PTratio(Value)
+        self.CheckForError()
 
     @property
     def UseVoltOverride(self):
@@ -159,6 +171,7 @@ class ICapControls(Base):
     @UseVoltOverride.setter
     def UseVoltOverride(self, Value):
         self._lib.CapControls_Set_UseVoltOverride(Value)
+        self.CheckForError()
 
     @property
     def Vmax(self):
@@ -168,6 +181,7 @@ class ICapControls(Base):
     @Vmax.setter
     def Vmax(self, Value):
         self._lib.CapControls_Set_Vmax(Value)
+        self.CheckForError()
 
     @property
     def Vmin(self):
@@ -177,6 +191,7 @@ class ICapControls(Base):
     @Vmin.setter
     def Vmin(self, Value):
         self._lib.CapControls_Set_Vmin(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

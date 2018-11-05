@@ -17,6 +17,7 @@ class ISettings(Base):
     @AllowDuplicates.setter
     def AllowDuplicates(self, Value):
         self._lib.Settings_Set_AllowDuplicates(Value)
+        self.CheckForError()
 
     @property
     def AutoBusList(self):
@@ -29,6 +30,7 @@ class ISettings(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Settings_Set_AutoBusList(Value)
+        self.CheckForError()
 
     @property
     def CktModel(self):
@@ -38,6 +40,7 @@ class ISettings(Base):
     @CktModel.setter
     def CktModel(self, Value):
         self._lib.Settings_Set_CktModel(Value)
+        self.CheckForError()
 
     @property
     def ControlTrace(self):
@@ -47,6 +50,7 @@ class ISettings(Base):
     @ControlTrace.setter
     def ControlTrace(self, Value):
         self._lib.Settings_Set_ControlTrace(Value)
+        self.CheckForError()
 
     @property
     def EmergVmaxpu(self):
@@ -56,6 +60,7 @@ class ISettings(Base):
     @EmergVmaxpu.setter
     def EmergVmaxpu(self, Value):
         self._lib.Settings_Set_EmergVmaxpu(Value)
+        self.CheckForError()
 
     @property
     def EmergVminpu(self):
@@ -65,6 +70,7 @@ class ISettings(Base):
     @EmergVminpu.setter
     def EmergVminpu(self, Value):
         self._lib.Settings_Set_EmergVminpu(Value)
+        self.CheckForError()
 
     @property
     def LossRegs(self):
@@ -75,6 +81,7 @@ class ISettings(Base):
     def LossRegs(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
         self._lib.Settings_Set_LossRegs(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def LossWeight(self):
@@ -84,6 +91,7 @@ class ISettings(Base):
     @LossWeight.setter
     def LossWeight(self, Value):
         self._lib.Settings_Set_LossWeight(Value)
+        self.CheckForError()
 
     @property
     def NormVmaxpu(self):
@@ -93,6 +101,7 @@ class ISettings(Base):
     @NormVmaxpu.setter
     def NormVmaxpu(self, Value):
         self._lib.Settings_Set_NormVmaxpu(Value)
+        self.CheckForError()
 
     @property
     def NormVminpu(self):
@@ -102,6 +111,7 @@ class ISettings(Base):
     @NormVminpu.setter
     def NormVminpu(self, Value):
         self._lib.Settings_Set_NormVminpu(Value)
+        self.CheckForError()
 
     @property
     def PriceCurve(self):
@@ -114,6 +124,7 @@ class ISettings(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Settings_Set_PriceCurve(Value)
+        self.CheckForError()
 
     @property
     def PriceSignal(self):
@@ -123,6 +134,7 @@ class ISettings(Base):
     @PriceSignal.setter
     def PriceSignal(self, Value):
         self._lib.Settings_Set_PriceSignal(Value)
+        self.CheckForError()
 
     @property
     def Trapezoidal(self):
@@ -132,6 +144,7 @@ class ISettings(Base):
     @Trapezoidal.setter
     def Trapezoidal(self, Value):
         self._lib.Settings_Set_Trapezoidal(Value)
+        self.CheckForError()
 
     @property
     def UEregs(self):
@@ -142,6 +155,7 @@ class ISettings(Base):
     def UEregs(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
         self._lib.Settings_Set_UEregs(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def UEweight(self):
@@ -151,6 +165,7 @@ class ISettings(Base):
     @UEweight.setter
     def UEweight(self, Value):
         self._lib.Settings_Set_UEweight(Value)
+        self.CheckForError()
 
     @property
     def VoltageBases(self):
@@ -161,6 +176,7 @@ class ISettings(Base):
     def VoltageBases(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Settings_Set_VoltageBases(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def ZoneLock(self):
@@ -170,6 +186,7 @@ class ISettings(Base):
     @ZoneLock.setter
     def ZoneLock(self, Value):
         self._lib.Settings_Set_ZoneLock(Value)
+        self.CheckForError()
 
     @property
     def AllocationFactors(self):
@@ -179,3 +196,4 @@ class ISettings(Base):
     @AllocationFactors.setter
     def AllocationFactors(self, Value):
         self._lib.Settings_Set_AllocationFactors(Value)
+        self.CheckForError()

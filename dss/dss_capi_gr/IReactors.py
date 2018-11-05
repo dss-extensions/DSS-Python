@@ -45,6 +45,7 @@ class IReactors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Reactors_Set_Name(Value)
+        self.CheckForError()
 
     def __len__(self):
         return self._lib.Reactors_Get_Count()
@@ -71,6 +72,7 @@ class IReactors(Base):
     @IsDelta.setter
     def IsDelta(self, Value):
         self._lib.Reactors_Set_IsDelta(Value)
+        self.CheckForError()
 
     @property
     def Parallel(self):
@@ -80,6 +82,7 @@ class IReactors(Base):
     @Parallel.setter
     def Parallel(self, Value):
         self._lib.Reactors_Set_Parallel(Value)
+        self.CheckForError()
 
     @property
     def LmH(self):
@@ -89,6 +92,7 @@ class IReactors(Base):
     @LmH.setter
     def LmH(self, Value):
         self._lib.Reactors_Set_LmH(Value)
+        self.CheckForError()
 
     @property
     def kV(self):
@@ -98,6 +102,7 @@ class IReactors(Base):
     @kV.setter
     def kV(self, Value):
         self._lib.Reactors_Set_kV(Value)
+        self.CheckForError()
 
     @property
     def kvar(self):
@@ -107,6 +112,7 @@ class IReactors(Base):
     @kvar.setter
     def kvar(self, Value):
         self._lib.Reactors_Set_kvar(Value)
+        self.CheckForError()
 
     @property
     def Phases(self):
@@ -116,6 +122,7 @@ class IReactors(Base):
     @Phases.setter
     def Phases(self, Value):
         self._lib.Reactors_Set_Phases(Value)
+        self.CheckForError()
 
     @property
     def Bus1(self):
@@ -132,6 +139,7 @@ class IReactors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Reactors_Set_Bus1(Value)
+        self.CheckForError()
 
     @property
     def Bus2(self):
@@ -147,6 +155,7 @@ class IReactors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Reactors_Set_Bus2(Value)
+        self.CheckForError()
 
     @property
     def LCurve(self):
@@ -159,6 +168,7 @@ class IReactors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Reactors_Set_LCurve(Value)
+        self.CheckForError()
 
     @property
     def RCurve(self):
@@ -171,6 +181,7 @@ class IReactors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Reactors_Set_RCurve(Value)
+        self.CheckForError()
 
     @property
     def R(self):
@@ -180,6 +191,7 @@ class IReactors(Base):
     @R.setter
     def R(self, Value):
         self._lib.Reactors_Set_R(Value)
+        self.CheckForError()
 
     @property
     def X(self):
@@ -189,6 +201,7 @@ class IReactors(Base):
     @X.setter
     def X(self, Value):
         self._lib.Reactors_Set_X(Value)
+        self.CheckForError()
 
     @property
     def Rp(self):
@@ -198,6 +211,7 @@ class IReactors(Base):
     @Rp.setter
     def Rp(self, Value):
         self._lib.Reactors_Set_Rp(Value)
+        self.CheckForError()
 
     @property
     def Rmatrix(self):
@@ -209,6 +223,7 @@ class IReactors(Base):
     def Rmatrix(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Reactors_Set_Rmatrix(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Xmatrix(self):
@@ -220,6 +235,7 @@ class IReactors(Base):
     def Xmatrix(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Reactors_Set_Xmatrix(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Z(self):
@@ -231,6 +247,7 @@ class IReactors(Base):
     def Z(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Reactors_Set_Z(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Z1(self):
@@ -250,6 +267,7 @@ class IReactors(Base):
     def Z1(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Reactors_Set_Z1(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Z2(self):
@@ -267,6 +285,7 @@ class IReactors(Base):
     def Z2(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Reactors_Set_Z2(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Z0(self):
@@ -284,4 +303,5 @@ class IReactors(Base):
     def Z0(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Reactors_Set_Z0(ValuePtr, ValueCount)
+        self.CheckForError()
 

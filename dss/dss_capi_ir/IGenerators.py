@@ -35,6 +35,7 @@ class IGenerators(Base):
     @ForcedON.setter
     def ForcedON(self, Value):
         self._lib.Generators_Set_ForcedON(Value)
+        self.CheckForError()
 
     @property
     def Model(self):
@@ -44,6 +45,7 @@ class IGenerators(Base):
     @Model.setter
     def Model(self, Value):
         self._lib.Generators_Set_Model(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -56,6 +58,7 @@ class IGenerators(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Generators_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -70,6 +73,7 @@ class IGenerators(Base):
     @PF.setter
     def PF(self, Value):
         self._lib.Generators_Set_PF(Value)
+        self.CheckForError()
 
     @property
     def Phases(self):
@@ -79,6 +83,7 @@ class IGenerators(Base):
     @Phases.setter
     def Phases(self, Value):
         self._lib.Generators_Set_Phases(Value)
+        self.CheckForError()
 
     @property
     def RegisterNames(self):
@@ -98,6 +103,7 @@ class IGenerators(Base):
     @Vmaxpu.setter
     def Vmaxpu(self, Value):
         self._lib.Generators_Set_Vmaxpu(Value)
+        self.CheckForError()
 
     @property
     def Vminpu(self):
@@ -107,6 +113,7 @@ class IGenerators(Base):
     @Vminpu.setter
     def Vminpu(self, Value):
         self._lib.Generators_Set_Vminpu(Value)
+        self.CheckForError()
 
     @property
     def idx(self):
@@ -116,6 +123,7 @@ class IGenerators(Base):
     @idx.setter
     def idx(self, Value):
         self._lib.Generators_Set_idx(Value)
+        self.CheckForError()
 
     @property
     def kV(self):
@@ -125,6 +133,7 @@ class IGenerators(Base):
     @kV.setter
     def kV(self, Value):
         self._lib.Generators_Set_kV(Value)
+        self.CheckForError()
 
     @property
     def kVArated(self):
@@ -134,6 +143,7 @@ class IGenerators(Base):
     @kVArated.setter
     def kVArated(self, Value):
         self._lib.Generators_Set_kVArated(Value)
+        self.CheckForError()
 
     @property
     def kW(self):
@@ -143,6 +153,7 @@ class IGenerators(Base):
     @kW.setter
     def kW(self, Value):
         self._lib.Generators_Set_kW(Value)
+        self.CheckForError()
 
     @property
     def kvar(self):
@@ -152,6 +163,7 @@ class IGenerators(Base):
     @kvar.setter
     def kvar(self, Value):
         self._lib.Generators_Set_kvar(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

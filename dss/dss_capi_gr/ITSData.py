@@ -45,6 +45,7 @@ class ITSData(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.TSData_Set_Name(Value)
+        self.CheckForError()
 
     def __len__(self):
         return self._lib.TSData_Get_Count()
@@ -63,6 +64,7 @@ class ITSData(Base):
     @EmergAmps.setter
     def EmergAmps(self, Value):
         self._lib.TSData_Set_EmergAmps(Value)
+        self.CheckForError()
 
     @property
     def NormAmps(self):
@@ -72,6 +74,7 @@ class ITSData(Base):
     @NormAmps.setter
     def NormAmps(self, Value):
         self._lib.TSData_Set_NormAmps(Value)
+        self.CheckForError()
 
     @property
     def Rdc(self):
@@ -80,6 +83,7 @@ class ITSData(Base):
     @Rdc.setter
     def Rdc(self, Value):
         self._lib.TSData_Set_Rdc(Value)
+        self.CheckForError()
 
     @property
     def Rac(self):
@@ -88,6 +92,7 @@ class ITSData(Base):
     @Rac.setter
     def Rac(self, Value):
         self._lib.TSData_Set_Rac(Value)
+        self.CheckForError()
 
     @property
     def GMRac(self):
@@ -96,6 +101,7 @@ class ITSData(Base):
     @GMRac.setter
     def GMRac(self, Value):
         self._lib.TSData_Set_GMRac(Value)
+        self.CheckForError()
 
     @property
     def GMRUnits(self):
@@ -104,6 +110,7 @@ class ITSData(Base):
     @GMRUnits.setter
     def GMRUnits(self, Value):
         self._lib.TSData_Set_GMRUnits(Value)
+        self.CheckForError()
 
     @property
     def Radius(self):
@@ -112,6 +119,7 @@ class ITSData(Base):
     @Radius.setter
     def Radius(self, Value):
         self._lib.TSData_Set_Radius(Value)
+        self.CheckForError()
 
     @property
     def RadiusUnits(self):
@@ -120,6 +128,7 @@ class ITSData(Base):
     @RadiusUnits.setter
     def RadiusUnits(self, Value):
         self._lib.TSData_Set_RadiusUnits(Value)
+        self.CheckForError()
 
     @property
     def ResistanceUnits(self):
@@ -128,6 +137,7 @@ class ITSData(Base):
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value):
         self._lib.TSData_Set_ResistanceUnits(Value)
+        self.CheckForError()
 
     @property
     def Diameter(self):
@@ -136,6 +146,7 @@ class ITSData(Base):
     @Diameter.setter
     def Diameter(self, Value):
         self._lib.TSData_Set_Diameter(Value)
+        self.CheckForError()
 
     @property
     def EpsR(self):
@@ -144,6 +155,7 @@ class ITSData(Base):
     @EpsR.setter
     def EpsR(self, Value):
         self._lib.TSData_Set_EpsR(Value)
+        self.CheckForError()
 
     @property
     def InsLayer(self):
@@ -152,6 +164,7 @@ class ITSData(Base):
     @InsLayer.setter
     def InsLayer(self, Value):
         self._lib.TSData_Set_InsLayer(Value)
+        self.CheckForError()
 
     @property
     def DiaIns(self):
@@ -160,6 +173,7 @@ class ITSData(Base):
     @DiaIns.setter
     def DiaIns(self, Value):
         self._lib.TSData_Set_DiaIns(Value)
+        self.CheckForError()
 
     @property
     def DiaCable(self):
@@ -168,6 +182,7 @@ class ITSData(Base):
     @DiaCable.setter
     def DiaCable(self, Value):
         self._lib.TSData_Set_DiaCable(Value)
+        self.CheckForError()
 
     @property
     def DiaShield(self):
@@ -176,6 +191,7 @@ class ITSData(Base):
     @DiaShield.setter
     def DiaShield(self, Value):
         self._lib.TSData_Set_DiaShield(Value)
+        self.CheckForError()
 
     @property
     def TapeLayer(self):
@@ -184,6 +200,7 @@ class ITSData(Base):
     @TapeLayer.setter
     def TapeLayer(self, Value):
         self._lib.TSData_Set_TapeLayer(Value)
+        self.CheckForError()
 
     @property
     def TapeLap(self):
@@ -192,5 +209,6 @@ class ITSData(Base):
     @TapeLap.setter
     def TapeLap(self, Value):
         self._lib.TSData_Set_TapeLap(Value)
+        self.CheckForError()
 
 

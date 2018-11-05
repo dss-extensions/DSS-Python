@@ -30,6 +30,7 @@ class IPDElements(Base):
     @FaultRate.setter
     def FaultRate(self, Value):
         self._lib.PDElements_Set_FaultRate(Value)
+        self.CheckForError()
 
     @property
     def First(self):
@@ -62,6 +63,7 @@ class IPDElements(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.PDElements_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -86,6 +88,7 @@ class IPDElements(Base):
     @RepairTime.setter
     def RepairTime(self, Value):
         self._lib.PDElements_Set_RepairTime(Value)
+        self.CheckForError()
 
     @property
     def SectionID(self):
@@ -110,6 +113,7 @@ class IPDElements(Base):
     @pctPermanent.setter
     def pctPermanent(self, Value):
         self._lib.PDElements_Set_pctPermanent(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

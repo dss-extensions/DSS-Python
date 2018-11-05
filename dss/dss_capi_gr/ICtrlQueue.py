@@ -62,4 +62,5 @@ class ICtrlQueue(Base):
     @Action.setter
     def Action(self, Param1):
         self._lib.CtrlQueue_Set_Action(Param1)
+        self.CheckForError()
 

@@ -68,6 +68,7 @@ class ICktElement(Base):
     def BusNames(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_string_array(Value)
         self._lib.CktElement_Set_BusNames(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def CplxSeqCurrents(self):
@@ -104,6 +105,7 @@ class ICktElement(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.CktElement_Set_DisplayName(Value)
+        self.CheckForError()
 
     @property
     def EmergAmps(self):
@@ -116,6 +118,7 @@ class ICktElement(Base):
     @EmergAmps.setter
     def EmergAmps(self, Value):
         self._lib.CktElement_Set_EmergAmps(Value)
+        self.CheckForError()
 
     @property
     def Enabled(self):
@@ -125,6 +128,7 @@ class ICktElement(Base):
     @Enabled.setter
     def Enabled(self, Value):
         self._lib.CktElement_Set_Enabled(Value)
+        self.CheckForError()
 
     @property
     def EnergyMeter(self):
@@ -184,6 +188,7 @@ class ICktElement(Base):
     @NormalAmps.setter
     def NormalAmps(self, Value):
         self._lib.CktElement_Set_NormalAmps(Value)
+        self.CheckForError()
 
     @property
     def NumConductors(self):

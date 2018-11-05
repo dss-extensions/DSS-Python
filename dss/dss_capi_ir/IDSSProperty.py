@@ -29,6 +29,7 @@ class IDSSProperty(Base):
             Value = str(Value).encode(self._api_util.codec)
 
         self._lib.DSSProperty_Set_Val(Value)
+        self.CheckForError()
 
     def __getitem__(self, propname_index):
         if isinstance(propname_index, int):

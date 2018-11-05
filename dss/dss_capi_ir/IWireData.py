@@ -40,6 +40,7 @@ class IWireData(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.WireData_Set_Name(Value)
+        self.CheckForError()
 
     def __len__(self):
         return self._lib.WireData_Get_Count()
@@ -52,6 +53,7 @@ class IWireData(Base):
     @EmergAmps.setter
     def EmergAmps(self, Value):
         self._lib.WireData_Set_EmergAmps(Value)
+        self.CheckForError()
 
     @property
     def NormAmps(self):
@@ -61,6 +63,7 @@ class IWireData(Base):
     @NormAmps.setter
     def NormAmps(self, Value):
         self._lib.WireData_Set_NormAmps(Value)
+        self.CheckForError()
 
     @property
     def Rdc(self):
@@ -69,6 +72,7 @@ class IWireData(Base):
     @Rdc.setter
     def Rdc(self, Value):
         self._lib.WireData_Set_Rdc(Value)
+        self.CheckForError()
 
     @property
     def Rac(self):
@@ -77,6 +81,7 @@ class IWireData(Base):
     @Rac.setter
     def Rac(self, Value):
         self._lib.WireData_Set_Rac(Value)
+        self.CheckForError()
 
     @property
     def GMRac(self):
@@ -85,6 +90,7 @@ class IWireData(Base):
     @GMRac.setter
     def GMRac(self, Value):
         self._lib.WireData_Set_GMRac(Value)
+        self.CheckForError()
 
     @property
     def GMRUnits(self):
@@ -93,6 +99,7 @@ class IWireData(Base):
     @GMRUnits.setter
     def GMRUnits(self, Value):
         self._lib.WireData_Set_GMRUnits(Value)
+        self.CheckForError()
 
     @property
     def Radius(self):
@@ -101,6 +108,7 @@ class IWireData(Base):
     @Radius.setter
     def Radius(self, Value):
         self._lib.WireData_Set_Radius(Value)
+        self.CheckForError()
 
     @property
     def RadiusUnits(self):
@@ -109,6 +117,7 @@ class IWireData(Base):
     @RadiusUnits.setter
     def RadiusUnits(self, Value):
         self._lib.WireData_Set_RadiusUnits(Value)
+        self.CheckForError()
 
     @property
     def ResistanceUnits(self):
@@ -117,6 +126,7 @@ class IWireData(Base):
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value):
         self._lib.WireData_Set_ResistanceUnits(Value)
+        self.CheckForError()
 
     @property
     def Diameter(self):
@@ -125,6 +135,7 @@ class IWireData(Base):
     @Diameter.setter
     def Diameter(self, Value):
         self._lib.WireData_Set_Diameter(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

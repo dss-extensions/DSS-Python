@@ -178,6 +178,7 @@ class IBus(Base):
     @x.setter
     def x(self, Value):
         self._lib.Bus_Set_x(Value)
+        self.CheckForError()
 
     @property
     def y(self):
@@ -187,6 +188,7 @@ class IBus(Base):
     @y.setter
     def y(self, Value):
         self._lib.Bus_Set_y(Value)
+        self.CheckForError()
 
     def __getitem__(self, index):
         if isinstance(index, int):

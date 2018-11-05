@@ -26,6 +26,7 @@ class IDSSProgress(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.DSSProgress_Set_Caption(Value)
+        self.CheckForError()
 
     @property
     def PctProgress(self):
@@ -35,5 +36,6 @@ class IDSSProgress(Base):
     @PctProgress.setter
     def PctProgress(self, Value):
         self._lib.DSSProgress_Set_PctProgress(Value)
+        self.CheckForError()
 
 

@@ -36,6 +36,7 @@ class IXYCurves(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.XYCurves_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -50,6 +51,7 @@ class IXYCurves(Base):
     @Npts.setter
     def Npts(self, Value):
         self._lib.XYCurves_Set_Npts(Value)
+        self.CheckForError()
 
     @property
     def Xarray(self):
@@ -60,6 +62,7 @@ class IXYCurves(Base):
     def Xarray(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.XYCurves_Set_Xarray(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Xscale(self):
@@ -69,6 +72,7 @@ class IXYCurves(Base):
     @Xscale.setter
     def Xscale(self, Value):
         self._lib.XYCurves_Set_Xscale(Value)
+        self.CheckForError()
 
     @property
     def Xshift(self):
@@ -78,6 +82,7 @@ class IXYCurves(Base):
     @Xshift.setter
     def Xshift(self, Value):
         self._lib.XYCurves_Set_Xshift(Value)
+        self.CheckForError()
 
     @property
     def Yarray(self):
@@ -88,6 +93,7 @@ class IXYCurves(Base):
     def Yarray(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.XYCurves_Set_Yarray(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def Yscale(self):
@@ -100,6 +106,7 @@ class IXYCurves(Base):
     @Yscale.setter
     def Yscale(self, Value):
         self._lib.XYCurves_Set_Yscale(Value)
+        self.CheckForError()
 
     @property
     def Yshift(self):
@@ -109,6 +116,7 @@ class IXYCurves(Base):
     @Yshift.setter
     def Yshift(self, Value):
         self._lib.XYCurves_Set_Yshift(Value)
+        self.CheckForError()
 
     @property
     def x(self):
@@ -118,6 +126,7 @@ class IXYCurves(Base):
     @x.setter
     def x(self, Value):
         self._lib.XYCurves_Set_x(Value)
+        self.CheckForError()
 
     @property
     def y(self):
@@ -130,6 +139,7 @@ class IXYCurves(Base):
     @y.setter
     def y(self, Value):
         self._lib.XYCurves_Set_y(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

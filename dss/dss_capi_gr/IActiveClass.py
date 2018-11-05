@@ -43,6 +43,7 @@ class IActiveClass(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.ActiveClass_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):

@@ -62,6 +62,7 @@ class ISolution(Base):
     @AddType.setter
     def AddType(self, Value):
         self._lib.Solution_Set_AddType(Value)
+        self.CheckForError()
 
     @property
     def Algorithm(self):
@@ -71,6 +72,7 @@ class ISolution(Base):
     @Algorithm.setter
     def Algorithm(self, Value):
         self._lib.Solution_Set_Algorithm(Value)
+        self.CheckForError()
 
     @property
     def Capkvar(self):
@@ -80,6 +82,7 @@ class ISolution(Base):
     @Capkvar.setter
     def Capkvar(self, Value):
         self._lib.Solution_Set_Capkvar(Value)
+        self.CheckForError()
 
     @property
     def ControlActionsDone(self):
@@ -89,6 +92,7 @@ class ISolution(Base):
     @ControlActionsDone.setter
     def ControlActionsDone(self, Value):
         self._lib.Solution_Set_ControlActionsDone(Value)
+        self.CheckForError()
 
     @property
     def ControlIterations(self):
@@ -98,6 +102,7 @@ class ISolution(Base):
     @ControlIterations.setter
     def ControlIterations(self, Value):
         self._lib.Solution_Set_ControlIterations(Value)
+        self.CheckForError()
 
     @property
     def ControlMode(self):
@@ -107,6 +112,7 @@ class ISolution(Base):
     @ControlMode.setter
     def ControlMode(self, Value):
         self._lib.Solution_Set_ControlMode(Value)
+        self.CheckForError()
 
     @property
     def Converged(self):
@@ -116,6 +122,7 @@ class ISolution(Base):
     @Converged.setter
     def Converged(self, Value):
         self._lib.Solution_Set_Converged(Value)
+        self.CheckForError()
 
     @property
     def DefaultDaily(self):
@@ -128,6 +135,7 @@ class ISolution(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Solution_Set_DefaultDaily(Value)
+        self.CheckForError()
 
     @property
     def DefaultYearly(self):
@@ -140,6 +148,7 @@ class ISolution(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Solution_Set_DefaultYearly(Value)
+        self.CheckForError()
 
     @property
     def EventLog(self):
@@ -154,6 +163,7 @@ class ISolution(Base):
     @Frequency.setter
     def Frequency(self, Value):
         self._lib.Solution_Set_Frequency(Value)
+        self.CheckForError()
 
     @property
     def GenMult(self):
@@ -163,6 +173,7 @@ class ISolution(Base):
     @GenMult.setter
     def GenMult(self, Value):
         self._lib.Solution_Set_GenMult(Value)
+        self.CheckForError()
 
     @property
     def GenPF(self):
@@ -172,6 +183,7 @@ class ISolution(Base):
     @GenPF.setter
     def GenPF(self, Value):
         self._lib.Solution_Set_GenPF(Value)
+        self.CheckForError()
 
     @property
     def GenkW(self):
@@ -181,6 +193,7 @@ class ISolution(Base):
     @GenkW.setter
     def GenkW(self, Value):
         self._lib.Solution_Set_GenkW(Value)
+        self.CheckForError()
 
     @property
     def Hour(self):
@@ -190,6 +203,7 @@ class ISolution(Base):
     @Hour.setter
     def Hour(self, Value):
         self._lib.Solution_Set_Hour(Value)
+        self.CheckForError()
 
     @property
     def IntervalHrs(self):
@@ -202,6 +216,7 @@ class ISolution(Base):
     @IntervalHrs.setter
     def IntervalHrs(self, Value):
         self._lib.Solution_Set_IntervalHrs(Value)
+        self.CheckForError()
 
     @property
     def Iterations(self):
@@ -219,6 +234,7 @@ class ISolution(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Solution_Set_LDCurve(Value)
+        self.CheckForError()
 
     @property
     def LoadModel(self):
@@ -228,6 +244,7 @@ class ISolution(Base):
     @LoadModel.setter
     def LoadModel(self, Value):
         self._lib.Solution_Set_LoadModel(Value)
+        self.CheckForError()
 
     @property
     def LoadMult(self):
@@ -237,6 +254,7 @@ class ISolution(Base):
     @LoadMult.setter
     def LoadMult(self, Value):
         self._lib.Solution_Set_LoadMult(Value)
+        self.CheckForError()
 
     @property
     def MaxControlIterations(self):
@@ -246,6 +264,7 @@ class ISolution(Base):
     @MaxControlIterations.setter
     def MaxControlIterations(self, Value):
         self._lib.Solution_Set_MaxControlIterations(Value)
+        self.CheckForError()
 
     @property
     def MaxIterations(self):
@@ -255,6 +274,7 @@ class ISolution(Base):
     @MaxIterations.setter
     def MaxIterations(self, Value):
         self._lib.Solution_Set_MaxIterations(Value)
+        self.CheckForError()
 
     @property
     def MinIterations(self):
@@ -267,6 +287,7 @@ class ISolution(Base):
     @MinIterations.setter
     def MinIterations(self, Value):
         self._lib.Solution_Set_MinIterations(Value)
+        self.CheckForError()
 
     @property
     def Mode(self):
@@ -276,6 +297,7 @@ class ISolution(Base):
     @Mode.setter
     def Mode(self, Mode):
         self._lib.Solution_Set_Mode(Mode)
+        self.CheckForError()
 
     @property
     def ModeID(self):
@@ -295,6 +317,7 @@ class ISolution(Base):
     @Number.setter
     def Number(self, Value):
         self._lib.Solution_Set_Number(Value)
+        self.CheckForError()
 
     @property
     def Process_Time(self):
@@ -309,6 +332,7 @@ class ISolution(Base):
     @Random.setter
     def Random(self, Random):
         self._lib.Solution_Set_Random(Random)
+        self.CheckForError()
 
     @property
     def Seconds(self):
@@ -318,6 +342,7 @@ class ISolution(Base):
     @Seconds.setter
     def Seconds(self, Value):
         self._lib.Solution_Set_Seconds(Value)
+        self.CheckForError()
 
     @property
     def StepSize(self):
@@ -327,6 +352,7 @@ class ISolution(Base):
     @StepSize.setter
     def StepSize(self, Value):
         self._lib.Solution_Set_StepSize(Value)
+        self.CheckForError()
 
     @property
     def SystemYChanged(self):
@@ -346,6 +372,7 @@ class ISolution(Base):
     @Tolerance.setter
     def Tolerance(self, Value):
         self._lib.Solution_Set_Tolerance(Value)
+        self.CheckForError()
 
     @property
     def Total_Time(self):
@@ -358,6 +385,7 @@ class ISolution(Base):
     @Total_Time.setter
     def Total_Time(self, Value):
         self._lib.Solution_Set_Total_Time(Value)
+        self.CheckForError()
 
     @property
     def Totaliterations(self):
@@ -372,6 +400,7 @@ class ISolution(Base):
     @Year.setter
     def Year(self, Value):
         self._lib.Solution_Set_Year(Value)
+        self.CheckForError()
 
     @property
     def dblHour(self):
@@ -381,6 +410,7 @@ class ISolution(Base):
     @dblHour.setter
     def dblHour(self, Value):
         self._lib.Solution_Set_dblHour(Value)
+        self.CheckForError()
 
     @property
     def pctGrowth(self):
@@ -390,6 +420,7 @@ class ISolution(Base):
     @pctGrowth.setter
     def pctGrowth(self, Value):
         self._lib.Solution_Set_pctGrowth(Value)
+        self.CheckForError()
 
     @property
     def StepsizeHr(self):
@@ -399,6 +430,7 @@ class ISolution(Base):
     @StepsizeHr.setter
     def StepsizeHr(self, Value):
         self._lib.Solution_Set_StepsizeHr(Value)
+        self.CheckForError()
 
     @property
     def StepsizeMin(self):
@@ -408,6 +440,7 @@ class ISolution(Base):
     @StepsizeMin.setter
     def StepsizeMin(self, Value):
         self._lib.Solution_Set_StepsizeMin(Value)
+        self.CheckForError()
 
     # The following are available only in v8
     @property

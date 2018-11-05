@@ -38,6 +38,7 @@ class IPVSystems(Base):
     @Irradiance.setter
     def Irradiance(self, Value):
         self._lib.PVSystems_Set_Irradiance(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -53,6 +54,7 @@ class IPVSystems(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.PVSystems_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -70,6 +72,7 @@ class IPVSystems(Base):
     @PF.setter
     def PF(self, Value):
         self._lib.PVSystems_Set_PF(Value)
+        self.CheckForError()
 
     @property
     def RegisterNames(self):
@@ -92,6 +95,7 @@ class IPVSystems(Base):
     @idx.setter
     def idx(self, Value):
         self._lib.PVSystems_Set_idx(Value)
+        self.CheckForError()
 
     @property
     def kVArated(self):
@@ -104,6 +108,7 @@ class IPVSystems(Base):
     @kVArated.setter
     def kVArated(self, Value):
         self._lib.PVSystems_Set_kVArated(Value)
+        self.CheckForError()
 
     @property
     def kW(self):
@@ -121,6 +126,7 @@ class IPVSystems(Base):
     @kvar.setter
     def kvar(self, Value):
         self._lib.PVSystems_Set_kvar(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

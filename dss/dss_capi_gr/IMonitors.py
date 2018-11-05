@@ -98,6 +98,7 @@ class IMonitors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Monitors_Set_Element(Value)
+        self.CheckForError()
 
     @property
     def FileName(self):
@@ -127,6 +128,7 @@ class IMonitors(Base):
     @Mode.setter
     def Mode(self, Value):
         self._lib.Monitors_Set_Mode(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -139,6 +141,7 @@ class IMonitors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Monitors_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -168,6 +171,7 @@ class IMonitors(Base):
     @Terminal.setter
     def Terminal(self, Value):
         self._lib.Monitors_Set_Terminal(Value)
+        self.CheckForError()
 
     @property
     def dblFreq(self):

@@ -34,6 +34,7 @@ class ITransformers(Base):
     @IsDelta.setter
     def IsDelta(self, Value):
         self._lib.Transformers_Set_IsDelta(Value)
+        self.CheckForError()
 
     @property
     def MaxTap(self):
@@ -43,6 +44,7 @@ class ITransformers(Base):
     @MaxTap.setter
     def MaxTap(self, Value):
         self._lib.Transformers_Set_MaxTap(Value)
+        self.CheckForError()
 
     @property
     def MinTap(self):
@@ -52,6 +54,7 @@ class ITransformers(Base):
     @MinTap.setter
     def MinTap(self, Value):
         self._lib.Transformers_Set_MinTap(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -64,6 +67,7 @@ class ITransformers(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Transformers_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -78,6 +82,7 @@ class ITransformers(Base):
     @NumTaps.setter
     def NumTaps(self, Value):
         self._lib.Transformers_Set_NumTaps(Value)
+        self.CheckForError()
 
     @property
     def NumWindings(self):
@@ -87,6 +92,7 @@ class ITransformers(Base):
     @NumWindings.setter
     def NumWindings(self, Value):
         self._lib.Transformers_Set_NumWindings(Value)
+        self.CheckForError()
 
     @property
     def R(self):
@@ -96,6 +102,7 @@ class ITransformers(Base):
     @R.setter
     def R(self, Value):
         self._lib.Transformers_Set_R(Value)
+        self.CheckForError()
 
     @property
     def Rneut(self):
@@ -105,6 +112,7 @@ class ITransformers(Base):
     @Rneut.setter
     def Rneut(self, Value):
         self._lib.Transformers_Set_Rneut(Value)
+        self.CheckForError()
 
     @property
     def Tap(self):
@@ -114,6 +122,7 @@ class ITransformers(Base):
     @Tap.setter
     def Tap(self, Value):
         self._lib.Transformers_Set_Tap(Value)
+        self.CheckForError()
 
     @property
     def Wdg(self):
@@ -123,6 +132,7 @@ class ITransformers(Base):
     @Wdg.setter
     def Wdg(self, Value):
         self._lib.Transformers_Set_Wdg(Value)
+        self.CheckForError()
 
     @property
     def XfmrCode(self):
@@ -135,6 +145,7 @@ class ITransformers(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Transformers_Set_XfmrCode(Value)
+        self.CheckForError()
 
     @property
     def Xhl(self):
@@ -144,6 +155,7 @@ class ITransformers(Base):
     @Xhl.setter
     def Xhl(self, Value):
         self._lib.Transformers_Set_Xhl(Value)
+        self.CheckForError()
 
     @property
     def Xht(self):
@@ -153,6 +165,7 @@ class ITransformers(Base):
     @Xht.setter
     def Xht(self, Value):
         self._lib.Transformers_Set_Xht(Value)
+        self.CheckForError()
 
     @property
     def Xlt(self):
@@ -162,6 +175,7 @@ class ITransformers(Base):
     @Xlt.setter
     def Xlt(self, Value):
         self._lib.Transformers_Set_Xlt(Value)
+        self.CheckForError()
 
     @property
     def Xneut(self):
@@ -171,6 +185,7 @@ class ITransformers(Base):
     @Xneut.setter
     def Xneut(self, Value):
         self._lib.Transformers_Set_Xneut(Value)
+        self.CheckForError()
 
     @property
     def kV(self):
@@ -180,6 +195,7 @@ class ITransformers(Base):
     @kV.setter
     def kV(self, Value):
         self._lib.Transformers_Set_kV(Value)
+        self.CheckForError()
 
     @property
     def kVA(self):
@@ -189,6 +205,7 @@ class ITransformers(Base):
     @kVA.setter
     def kVA(self, Value):
         self._lib.Transformers_Set_kVA(Value)
+        self.CheckForError()
 
     kva = kVA
 
@@ -217,6 +234,7 @@ class ITransformers(Base):
     @CoreType.setter
     def CoreType(self, Value):
         self._lib.Transformers_Set_CoreType(Value)
+        self.CheckForError()
 
     @property
     def RdcOhms(self):
@@ -226,6 +244,7 @@ class ITransformers(Base):
     @RdcOhms.setter
     def RdcOhms(self, Value):
         self._lib.Transformers_Set_RdcOhms(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First

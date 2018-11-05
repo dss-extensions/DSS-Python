@@ -52,6 +52,7 @@ class ICapacitors(Base):
     @IsDelta.setter
     def IsDelta(self, Value):
         self._lib.Capacitors_Set_IsDelta(Value)
+        self.CheckForError()
 
     @property
     def Name(self):
@@ -64,6 +65,7 @@ class ICapacitors(Base):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Capacitors_Set_Name(Value)
+        self.CheckForError()
 
     @property
     def Next(self):
@@ -78,6 +80,7 @@ class ICapacitors(Base):
     @NumSteps.setter
     def NumSteps(self, Value):
         self._lib.Capacitors_Set_NumSteps(Value)
+        self.CheckForError()
 
     @property
     def States(self):
@@ -92,6 +95,7 @@ class ICapacitors(Base):
     def States(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
         self._lib.Capacitors_Set_States(ValuePtr, ValueCount)
+        self.CheckForError()
 
     @property
     def kV(self):
@@ -101,6 +105,7 @@ class ICapacitors(Base):
     @kV.setter
     def kV(self, Value):
         self._lib.Capacitors_Set_kV(Value)
+        self.CheckForError()
 
     @property
     def kvar(self):
@@ -110,6 +115,7 @@ class ICapacitors(Base):
     @kvar.setter
     def kvar(self, Value):
         self._lib.Capacitors_Set_kvar(Value)
+        self.CheckForError()
 
     def __iter__(self):
         idx = self.First
