@@ -78,6 +78,9 @@ class CffiApiUtil(object):
         self.codec = 'ascii' #TODO: check which encoding FreePascal defaults to, on Linux
         self.ffi = ffi
         self.lib = lib
+        self.init_buffers()
+        
+    def init_buffers(self):
         tmp_string_pointers = (self.ffi.new('char****'), self.ffi.new('int32_t**'))
         tmp_float64_pointers = (self.ffi.new('double***'), self.ffi.new('int32_t**'))
         tmp_int32_pointers = (self.ffi.new('int32_t***'), self.ffi.new('int32_t**'))
@@ -96,11 +99,11 @@ class CffiApiUtil(object):
         self.gr_float64_pointers = (tmp_float64_pointers[0][0], tmp_float64_pointers[1][0])
         self.gr_int32_pointers = (tmp_int32_pointers[0][0], tmp_int32_pointers[1][0])
         self.gr_int8_pointers = (tmp_int8_pointers[0][0], tmp_int8_pointers[1][0])
-        
 
-    def clear_buffers():
+    def clear_buffers(self):
         self.lib.DSS_DisposeGRData()
         self.lib.DSS_ResetStringBuffer()
+        self.init_buffers()
 
     def get_string(self, b):
         return self.ffi.string(b).decode(self.codec)

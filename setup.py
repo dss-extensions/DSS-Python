@@ -59,7 +59,7 @@ setup(
     author_email="pmeira@ieee.org",
     version=package_version,
     license="BSD",
-    packages=['dss', 'dss.v7', 'dss.v8'],
+    packages=['dss', 'dss.UserModels', 'dss.dss_capi_gr', 'dss.dss_capi_ir'],
     setup_requires=["cffi>=1.11.2"],
     cffi_modules=["dss_build.py:ffi_builder_{}".format(version) for version in DSS_VERSIONS] + 
         [
