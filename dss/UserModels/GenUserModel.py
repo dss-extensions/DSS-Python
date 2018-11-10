@@ -52,7 +52,7 @@ class GenUserModelWrapper(object):
         cV = [complex(V[2*i], V[2*i + 1]) for i in range(num)]
         cI = [complex(I[2*i], I[2*i + 1]) for i in range(num)]
         
-        self.active_instance.init(cV, cI)
+        self.active_instance.init_state_vars(cV, cI)
 
         for i in range(num):
             V[2*i], V[2*i + 1] = cV[i].real, cV[i].imag

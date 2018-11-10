@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from .GenUserModel import GenUserModel
+import numpy as np
 
 lib = GenUserModel.lib
 ffi = GenUserModel.ffi
@@ -116,11 +117,18 @@ class GenUserModelBase(object):
 
     def get_all_outputs(self, var_vector):
         for i, v in enumerate(self.output_vars):
-            var_vector[i] = getattr(self, v)
-
+            value = getattr(self, v)
+            if isinstance(value, complex):
+                var_vector[i] = abs(value)
+            else:
+                var_vector[i] = value
             
     def get_output(self, i):
-        return getattr(self, self.output_vars[i - 1])
+        value = getattr(self, self.output_vars[i - 1])
+        if isinstance(value, complex):
+            return abs(value)
+        
+        return value
 
         
     def set_input_param(self, i, value):
@@ -191,7 +199,12 @@ class GenUserModelBase(object):
             elif param_pointer == num_vars + 2:
                 help_str = u"option={Debug | NoDebug }\n";
                 help_str += u"Help: this help message."
-                lib.strcpy(param_str, help_str.encode('ascii'))
+                
+                tmp = help_str.encode('ascii')[:max_len]
+                max_len_ = min(max_len, len(tmp))
+                param_str[0:max_len_] = tmp[0:max_len_]
+                param_str[max_len_max_len] = b'\0'
+                
                 self.callBacks.MsgCallBack(param_str, len(help_str) + 1)
         
         if changed:
@@ -204,19 +217,19 @@ class GenUserModelBase(object):
     def restore(self):
         pass
 
-    def init(self, V, I):
+    def init_state_vars(self, V, I):
         raise NotImplementedError
 
     def calc(self, V, I):
         raise NotImplementedError
         
     def integrate(self):
-        h2 = self.dyn.h * 0.5
+        h_2 = self.dyn.h * 0.5
         for name in self.state_vars:
             value_n = getattr(self, '{}n'.format(name))
             value_d = getattr(self, 'd{}_dt'.format(name))
             value_dn = getattr(self, 'd{}n_dt'.format(name))
-            value = value_n + h2 * (value_d + value_dn)
+            value = value_n + h_2 * (value_d + value_dn)
             setattr(self, name, value)
             
     def saturate(self):
