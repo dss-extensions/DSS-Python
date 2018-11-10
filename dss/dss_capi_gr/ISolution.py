@@ -11,48 +11,63 @@ class ISolution(Base):
 
     def BuildYMatrix(self, BuildOption, AllocateVI):
         self._lib.Solution_BuildYMatrix(BuildOption, AllocateVI)
+        self.CheckForError()
 
     def CheckControls(self):
         self._lib.Solution_CheckControls()
+        self.CheckForError()
 
     def CheckFaultStatus(self):
         self._lib.Solution_CheckFaultStatus()
+        self.CheckForError()
 
     def Cleanup(self):
         self._lib.Solution_Cleanup()
+        self.CheckForError()
 
     def DoControlActions(self):
         self._lib.Solution_DoControlActions()
+        self.CheckForError()
 
     def FinishTimeStep(self):
         self._lib.Solution_FinishTimeStep()
+        self.CheckForError()
 
     def InitSnap(self):
         self._lib.Solution_InitSnap()
+        self.CheckForError()
 
     def SampleControlDevices(self):
         self._lib.Solution_SampleControlDevices()
+        self.CheckForError()
 
     def Sample_DoControlActions(self):
         self._lib.Solution_Sample_DoControlActions()
+        self.CheckForError()
 
     def Solve(self):
         self._lib.Solution_Solve()
+        self.CheckForError()
 
     def SolveDirect(self):
         self._lib.Solution_SolveDirect()
+        self.CheckForError()
 
     def SolveNoControl(self):
         self._lib.Solution_SolveNoControl()
+        self.CheckForError()
 
     def SolvePflow(self):
         self._lib.Solution_SolvePflow()
+        self.CheckForError()
 
     def SolvePlusControl(self):
         self._lib.Solution_SolvePlusControl()
+        self.CheckForError()
 
     def SolveSnap(self):
         self._lib.Solution_SolveSnap()
+        self.CheckForError()
 
     @property
     def AddType(self):
@@ -442,7 +457,7 @@ class ISolution(Base):
         self._lib.Solution_Set_StepsizeMin(Value)
         self.CheckForError()
 
-    # The following are available only in v8
+    # The following are officially available only in v8
     @property
     def BusLevels(self):
         self._lib.Solution_Get_BusLevels_GR()
@@ -468,4 +483,5 @@ class ISolution(Base):
 
     def SolveAll(self):
         self._lib.Solution_SolveAll()
+        self.CheckForError()
         
