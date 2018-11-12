@@ -152,11 +152,18 @@ class ValidatingTest:
         A = self.com.ActiveCircuit.ActiveElement
         B = self.capi.ActiveCircuit.ActiveElement
 
-        for field in 'AllPropertyNames,AllVariableNames,BusNames'.split(','):
+        for field in ['AllPropertyNames']:
+            fA = set(x.lower() for x in getattr(A, field))
+            fB = set(x.lower() for x in getattr(B, field))
+            for propA in fA:
+                assert propA in fB, propA
+            #if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
+            
+        for field in 'AllVariableNames,BusNames'.split(','):
             fA = getattr(A, field)
             fB = getattr(B, field)
             if fA == ('',) and fB == [None]: continue # comtypes and win32com results are a bit different here
-            if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), field
+            if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
             
           
         # Check if setting bus names works
@@ -208,10 +215,10 @@ class ValidatingTest:
                 if not (is_equal or val_A == val_B or A.Properties(prop_name).Val == B.Properties(prop_name).Val):
                     print('ERROR: CktElement.Properties({}).Val'.format(prop_name), A.Properties(prop_name).Val, B.Properties(prop_name).Val)
             
-            if not USE_V8:
-                if not SAVE_COM_OUTPUT: assert (A.Properties(prop_name).Description == B.Properties(prop_name).Description), ('Properties({}).Description'.format(prop_name), A.Properties(prop_name).Description, B.Properties(prop_name).Description)
+#            if not USE_V8:
+#                if not SAVE_COM_OUTPUT: assert (A.Properties(prop_name).Description == B.Properties(prop_name).Description), ('Properties({}).Description'.format(prop_name), A.Properties(prop_name).Description, B.Properties(prop_name).Description)
                 
-            if not SAVE_COM_OUTPUT: assert (A.Properties(prop_name).Name == B.Properties(prop_name).Name), ('Properties({}).name'.format(prop_name), A.Properties(prop_name).Name, B.Properties(prop_name).Name)
+            if not SAVE_COM_OUTPUT: assert (A.Properties(prop_name).Name.lower() == B.Properties(prop_name).Name.lower()), ('Properties({}).name'.format(prop_name), A.Properties(prop_name).Name, B.Properties(prop_name).Name)
 
             if not SAVE_COM_OUTPUT: assert (B.Properties(prop_name).Val == B.Properties[prop_name].Val)
             if not SAVE_COM_OUTPUT: assert (B.Properties(prop_name).Description == B.Properties[prop_name].Description)
@@ -732,9 +739,8 @@ class ValidatingTest:
                 fA = np.array(fA, dtype=fB.dtype)
                 if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
-            #TODO: FileVersion,Header
-            print(header)
-            for field in 'Element,FileName,Mode,Name,NumChannels,RecordSize,SampleCount,Terminal'.split(','):
+            #TODO: FileVersion
+            for field in 'Element,Header,FileName,Mode,Name,NumChannels,RecordSize,SampleCount,Terminal'.split(','):
                 if field == 'FileName': continue # the path will be different on purpose
                 fA = output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
@@ -842,16 +848,16 @@ class ValidatingTest:
             A = self.com.ActiveCircuit.Solution
 
         for field in 'AddType,Algorithm,Capkvar,ControlActionsDone,ControlIterations,ControlMode,Converged,DefaultDaily,DefaultYearly,Frequency,GenMult,GenPF,GenkW,Hour,Iterations,LDCurve,LoadModel,LoadMult,MaxControlIterations,MaxIterations,Mode,ModeID,MostIterationsDone,Number,Random,Seconds,StepSize,SystemYChanged,Tolerance,Totaliterations,Year,dblHour,pctGrowth'.split(','): #TODO: EventLog, IntervalHrs, MinIterations, Process_Time, Total_Time, Time_of_Step
-            if LOAD_COM_OUTPUT and field == 'SystemYChanged':
-                continue
+            # if LOAD_COM_OUTPUT and field == 'SystemYChanged':
+                # continue
         
             fA = output['ActiveCircuit.Solution.{}'.format(field)] if LOAD_COM_OUTPUT else getattr(A, field)
             fB = getattr(B, field)
             if SAVE_COM_OUTPUT: output['ActiveCircuit.Solution.{}'.format(field)] = fA
             if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
-            if field == 'SystemYChanged':
-                print('SystemYChanged', fA, fB)
+            # if field == 'SystemYChanged':
+                # print('SystemYChanged', fA, fB)
             
 
     def _get_circuit_fields(self, imin=0, imax=2):
@@ -1024,6 +1030,10 @@ def run_tests(fns):
         import win32com.client
         com = win32com.client.Dispatch("OpenDSSEngine.DSS")
         com = win32com.client.gencache.EnsureDispatch("OpenDSSEngine.DSS")
+        
+        import dss
+        com = dss.patch_dss_com(com)
+        
     else:
         com = None
 
