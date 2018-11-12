@@ -195,7 +195,7 @@ class CffiApiUtil(object):
         cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
         if not cnt[0]:
-            res = None
+            res = []
         else:
             res = self.ffi.unpack(ptr[0], cnt[0])
 
