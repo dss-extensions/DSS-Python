@@ -760,24 +760,30 @@ class ValidatingTest:
                 if field == 'FileName': continue # the path will be different on purpose
                 fA = output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
-                print(fA)
-                print(fB)
                 if SAVE_COM_OUTPUT: output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] = fA
                 
                 #if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
-            print()
-                
             for channel in range(B.NumChannels):
-                if header[channel] in (' SolveSnap_uSecs', ' TimeStep_uSecs'): continue # there can't be equal
+                if header[channel] in (' SolveSnap_uSecs', ' TimeStep_uSecs'): continue # these can't be equal
                 field = 'Channel({})'.format(channel + 1)
                 fA = output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else A.Channel(channel + 1)
                 fB = B.Channel(channel + 1)
                 if SAVE_COM_OUTPUT: output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] = fA
                 if not SAVE_COM_OUTPUT: 
                     # assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Channel', channel + 1)
+                    header_lower = header[channel].lower()
+                    if any(x in header_lower for x in ['ang']): # 'q1', 'q2', 'q3'
+                        # Angles for very small values have no meaning
+                        # We just skip any angle comparison for the time being
+                        # TODO: add a complete validation using the two channels from the monitor
+                        #       like what is done with WdgCurrents
+                        continue 
+                    
                     if not np.allclose(fA, fB, atol=self.atol, rtol=self.rtol):
-                        print('CHANNEL ERROR')
+                        # 'q1', 'q2', 'q3' may be different. This is expected since
+                        # we use a different/better transformation matrix
+                        print('Possible channel error', header[channel], np.array(fA), np.array(fB))
 
 
             nB = B.Next
