@@ -201,7 +201,7 @@ class ValidatingTest:
                     val_B = B.Properties(prop_name).Val
 
                     # Try as matrices of floats                    
-                    if val_A.startswith('[') and val_A.endswith(']'):
+                    if (val_A.startswith('[') and val_A.endswith(']')) or (val_A.startswith('(') and val_A.endswith(')')):
                         val_A = parse_dss_matrix(val_A)
                         val_B = parse_dss_matrix(val_B)
                         if not isinstance(val_A, str):
@@ -211,9 +211,25 @@ class ValidatingTest:
                                     is_equal = False
                                     break
                     
-                
+                # special treatment for WdgCurrents, which uses a CSV of %.7g, (%.5g) -- Mag (Ang)
+                if prop_name == 'WdgCurrents': 
+                    val_A = A.Properties(prop_name).Val.replace('(', ' ').replace(')', ' ').strip(' ').strip(',')
+                    val_B = B.Properties(prop_name).Val.replace('(', ' ').replace(')', ' ').strip(' ').strip(',')
+                    nval_A = np.fromstring(val_A, dtype=float, sep=',')
+                    nval_B = np.fromstring(val_B, dtype=float, sep=',')
+                    
+                    mag_A = nval_A[::2]
+                    mag_B = nval_B[::2]
+                    rad_A = np.radians(nval_A[1::2])
+                    rad_B = np.radians(nval_B[1::2])
+                    
+                    c_A = mag_A * (np.cos(rad_A) + 1j * np.sin(rad_A))
+                    c_B = mag_B * (np.cos(rad_B) + 1j * np.sin(rad_B))
+                    
+                    is_equal = np.allclose(c_A, c_B, atol=1e-5, rtol=1e-4)
+
                 if not (is_equal or val_A == val_B or A.Properties(prop_name).Val == B.Properties(prop_name).Val):
-                    print('ERROR: CktElement.Properties({}).Val'.format(prop_name), A.Properties(prop_name).Val, B.Properties(prop_name).Val)
+                    print('ERROR: CktElement.Properties({}).Val'.format(prop_name), repr(A.Properties(prop_name).Val), repr(B.Properties(prop_name).Val))
             
 #            if not USE_V8:
 #                if not SAVE_COM_OUTPUT: assert (A.Properties(prop_name).Description == B.Properties(prop_name).Description), ('Properties({}).Description'.format(prop_name), A.Properties(prop_name).Description, B.Properties(prop_name).Description)
