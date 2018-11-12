@@ -4,6 +4,8 @@ import os
 
 # The codec was changed to ASCII in version 0.10.0. 
 # A rewrite of DSS C-API is expected to return UTF8Strings in the future
+codec = 'ascii'
+
 interface_classes = set()
 
 def use_com_compat(value=True):
@@ -75,7 +77,7 @@ class Base(object):
     
 class CffiApiUtil(object):
     def __init__(self, ffi, lib):
-        self.codec = 'ascii' #TODO: check which encoding FreePascal defaults to, on Linux
+        self.codec = codec #TODO: check which encoding FreePascal defaults to, on Linux
         self.ffi = ffi
         self.lib = lib
         self.init_buffers()
