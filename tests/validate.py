@@ -968,9 +968,22 @@ class ValidatingTest:
             A = self.com.ActiveCircuit.CktElements('NONEXISTENT_123456789')
             if not SAVE_COM_OUTPUT: assert A.Name == B.Name
         
+        element_names = all_fields['AllElementNames'][0]
         for k, v in all_fields.items():
-            #TODO: special case for AllElementLosses?
-            if type(v[1]) == np.ndarray:
+            if k == 'AllElementLosses':
+                # Special case for AllElementLosses
+                s_a = np.asarray(v[0]).view(dtype=complex)
+                s_b = np.asarray(v[1]).view(dtype=complex)
+                s_d = abs(s_a - s_b)
+                idx = np.argmax(s_d)
+                print(k, np.max(s_d), element_names[idx], s_a[idx], s_b[idx])
+            elif k == 'LineLosses':
+                # Special case for LineLosses
+                s_a = complex(*v[0])
+                s_b = complex(*v[1])
+                p_d = (abs(s_a - s_b))
+                print(k, p_d, '' if p_d < self.atol else '!!!')
+            elif type(v[1]) == np.ndarray:
                 print(k, max(abs(v[1] - v[0])))
                 if not SAVE_COM_OUTPUT: assert np.allclose(*v, atol=self.atol, rtol=self.rtol), (k, type(v[1]))#, v[0], v[1])
             elif type(v[1]) == list:
