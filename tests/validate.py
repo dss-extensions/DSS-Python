@@ -1148,6 +1148,7 @@ def run_tests(fns):
             print('!!!!!!!!!!!!!!!!!!!!!!')
             print('ERROR:', fn, ex)
             print('!!!!!!!!!!!!!!!!!!!!!!')
+            raise
 
             
         if WIN32 and SAVE_COM_OUTPUT:
@@ -1167,6 +1168,13 @@ def run_tests(fns):
             round(100 * total_capi_time / total_com_time, 1)
         ))
             
+    
+    if not LOAD_COM_OUTPUT:
+        for dss in com, capi:
+            if USE_V8:
+                dss.Text.Command = 'ClearAll'
+            else:
+                dss.Text.Command = 'Clear'
             
 if __name__ == '__main__':
     from common import test_filenames
