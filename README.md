@@ -1,26 +1,25 @@
-# dss_python: Unofficial bindings for EPRI's OpenDSS
+# DSS Python: Unofficial bindings for EPRI's OpenDSS
 
-Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simulator). Based on CFFI and `dss_capi`, aiming for full COM compatibility on Windows, Linux and MacOS.
+Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simulator). Based on CFFI and DSS C-API, aiming for full COM compatibility on Windows, Linux and MacOS.
 
 <p align="center">
     <img alt="Overview of related repositories" src="https://raw.githubusercontent.com/PMeira/dss_python/master/docs/images/repomap.svg?sanitize=true" width=600>
 </p>
 
-If you are looking for the custom OpenDSS C-API library, see [`dss_capi`](http://github.com/PMeira/dss_capi/).
+If you are looking for the custom OpenDSS C-API library, see [`DSS C-API`](http://github.com/PMeira/dss_capi/).
 
-Version 0.10.0 (**unreleased**), based on OpenDSS revision 2246. For version 0.9.8, see [here](https://github.com/PMeira/dss_python/tree/0.9.8).
-This is a work-in-progress but it's deemed stable enough to be made public. The main goal of creating a COM-compatible API was reached!
+Version 0.10.0, based on OpenDSS revision 2395. While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached.
 
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level.
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange. 
 
 The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the sparse system admittance matrix.
 
-If you are not bound to the COM API and its quirks, you might be insterested in OpenDSSDirect.py. [OpenDSSDirect.py](https://github.com/NREL/OpenDSSDirect.py/) exposes a more Pythonic API and contains extra utilities. Thanks to @kdheepak, OpenDSSDirect.py v0.3+ uses dss_python's backend -- this means you can use both modules at once. For example, if you have old code using the official COM objects, you could quickly switch to dss_python with very few code changes, and then use [`opendssdirect.utils`](https://nrel.github.io/OpenDSSDirect.py/opendssdirect.html#module-opendssdirect.utils) to generate some DataFrames.
+If you are not bound to the COM API and its quirks, you might be insterested in OpenDSSDirect.py. [OpenDSSDirect.py](https://github.com/NREL/OpenDSSDirect.py/) exposes a more Pythonic API and contains extra utilities. Thanks to @kdheepak, OpenDSSDirect.py v0.3+ uses DSS Python's backend -- this means you can use both modules at once. For example, if you have old code using the official COM objects, you could quickly switch to DSS Python with very few code changes, and then use [`opendssdirect.utils`](https://nrel.github.io/OpenDSSDirect.py/opendssdirect.html#module-opendssdirect.utils) to generate some DataFrames.
 
 ## Recent changes
 
-- version 0.10.0 **(WIP)**: Introduce a faster but less compatible module and add optional warnings for the traditional version (e.g. warn when using `DSS.activecircuit` instead of `DSS.ActiveCircuit`).
+- 2018-11-17 / version 0.10.0: Lots of changes, fixes and new features. Check the new [changelog](docs/changelog.md) document for a list.
 - 2018-08-12 / version 0.9.8: Reorganize modules (v7 and v8), adds 8 missing methods and new backend methods for OpenDSSDirect.py v0.3+. Integrates many fixes from DSS_CAPI and the upstream OpenDSS.
 - 2018-04-30 / version 0.9.7: Fix some of the setters that used array data.
 - 2018-04-05 / version 0.9.6: Adds missing `ActiveCircuit.CktElements[index]` (or `...CktElements(index)`) and `ActiveCircuit.Buses[index]` (or `...Buses(index)`).
@@ -72,7 +71,7 @@ Get this repository:
     git clone https://github.com/PMeira/dss_python.git
 ```    
     
-Assuming you successfully built or downloaded the `dss_capi` (check [its repository](http://github.com/PMeira/dss_capi/) for instructions), keep the folder organization as follows:
+Assuming you successfully built or downloaded the DSS C-API DLLs (check [its repository](http://github.com/PMeira/dss_capi/) for instructions), keep the folder organization as follows:
 
 ```
 dss_capi/
@@ -86,6 +85,8 @@ Open a command prompt in the `dss_python` subfolder and run the build process:
 python setup.py build
 python setup.py install
 ```
+
+If you are familiar with `conda-build`, there is a complete recipe to build DSS C-API, KLUSolve and DSS Python in the `conda` subfolder.
 
 Example usage
 =============
@@ -126,18 +127,17 @@ for i in range(len(voltages) // 2):
     print('node %d: %f + j%f' % (i, voltages[2*i], voltages[2*i + 1]))
 ```
 
-If you do not need the mixed-cased handling, you can omit the call to `use_com_compat()` and use the casing used in this project.
-
+If you do not need the mixed-cased handling, omit the call to `use_com_compat()` and use the casing used in this project, which should make most of the COM instance conventions.
 
 If you want to play with the experimental OpenDSS-PM interface (from OpenDSS v8), it is installed side-by-side and you can import it as:
 
 ```
 import dss.v8
-dss.v8.use_com_compat()
 dss_engine = dss.v8.DSS
 ```
 
-*All validation tests succeed with `dss.v8` but beware those don't include parallel machine tests yet!*
+Although it is experimental, most of its funcionality is working. Depending on your use-case, the parallel interface can be an easy way of better using your machine resources. Otherwise, you can always use general distributed computing resources via Python.
+
 
 Testing
 =======
@@ -145,7 +145,7 @@ Since the DLL is built using the Free Pascal compiler, which is not officially s
 
 The validation scripts is `tests/validation.py` and requires the same folder structure as the building process. You need `win32com` to run it.
 
-Currently, the following sample files from the official OpenDSS repository are used:
+Currently, at least the following sample files from the official OpenDSS repository are used:
 
 ```
     Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss
@@ -192,7 +192,7 @@ Currently, the following sample files from the official OpenDSS repository are u
 
 On Windows 10, remember to set the compatibility layer to Windows 7 (set the environment variable `__COMPAT_LAYER=WIN7RTM`), otherwise you may encounter issues with COM due to [ASLR](https://en.wikipedia.org/wiki/Address_space_layout_randomization) on Python 3.6+.
 
-There is no validation on Linux yet since we cannot run the COM module there. The most likely solution will be to pickle the data on Windows and load them on Linux.
+There is no full validation on Linux yet since we cannot run the COM module there. There is an ongoing effort on pickling the data on Windows and loading on Linux for comparison (for the full test suite, it results in 8+GB of data and can be time-consuming).
 
 Roadmap
 =======
@@ -209,7 +209,7 @@ Please allow me a few days to respond.
 
 Credits / Acknowlegement
 ========================
-`dss_python` is based on EPRI's OpenDSS via the [`dss_capi`](http://github.com/PMeira/dss_capi/) project, check its licensing information.
+DSS Python is based on EPRI's OpenDSS via the [`dss_capi`](http://github.com/PMeira/dss_capi/) project, check its licensing information.
 
 This project is licensed under the (new) BSD, available in the `LICENSE` file. It's the same license OpenDSS uses (`OPENDSS_LICENSE`). OpenDSS itself uses KLUSolve and SuiteSparse, licensed under the GNU LGPL 2.1.
 
