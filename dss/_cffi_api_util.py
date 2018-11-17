@@ -1,24 +1,33 @@
 from __future__ import absolute_import
 import numpy as np
-import os
+import os, warnings
 
-# The codec was changed to ASCII in version 0.10.0. 
+# The codec was changed to ASCII in version 0.10.0.
 # A rewrite of DSS C-API is expected to return UTF8Strings in the future
 codec = 'ascii'
 
 interface_classes = set()
 
-def use_com_compat(value=True):
-    if value:
-        Base.__getattr__ = Base._getattr
-        Base.__setattr__ = Base._setattr
-    elif Base.__getattr__ == Base._getattr:
+warn_wrong_case = False
+
+def use_com_compat(use=True, warn=False):
+    if use:
+        global warn_wrong_case
+        warn_wrong_case = warn
+        if warn_wrong_case:
+            Base.__getattr__ = Base._getattr_case_check
+            Base.__setattr__ = Base._setattr_case_check
+        else:
+            Base.__getattr__ = Base._getattr
+            Base.__setattr__ = Base._setattr
+
+    elif Base.__getattr__ == Base._getattr or Base.__getattr__ == Base._getattr_case_check:
         del Base.__setattr__
-        del Base.__getattr__ 
+        del Base.__getattr__
 
 class DssException(Exception):
     pass
-        
+
 class Base(object):
     __slots__ = [
         '_lib',
@@ -35,7 +44,7 @@ class Base(object):
         '_prepare_int32_array',
         '_prepare_string_array',
     ]
-    
+
     def __init__(self, api_util):
         self._lib = api_util.lib
         self._api_util = api_util
@@ -50,7 +59,7 @@ class Base(object):
         self._prepare_float64_array = api_util.prepare_float64_array
         self._prepare_int32_array = api_util.prepare_int32_array
         self._prepare_string_array = api_util.prepare_string_array
-    
+
         cls = type(self)
         if cls not in interface_classes:
             interface_classes.add(cls)
@@ -62,7 +71,7 @@ class Base(object):
         error_num = self._lib.Error_Get_Number()
         if error_num:
             raise DssException(error_num, self._get_string(self._lib.Error_Get_Description()))
-            
+
     def _getattr(self, key):
         if key.startswith('_'):
             return object.__getattribute__(self, key)
@@ -70,18 +79,37 @@ class Base(object):
         key = self.__class__._dss_attributes.get(key.lower(), key)
         return object.__getattribute__(self, key)
 
+    def _getattr_case_check(self, key):
+        if key.startswith('_'):
+            return object.__getattribute__(self, key)
+
+        correct_key = self.__class__._dss_attributes.get(key.lower(), key)
+        if key != correct_key:
+            warnings.warn('Wrong case for getter {}.{}: {}'.format(self.__class__.__name__, correct_key, key))
+
+        return object.__getattribute__(self, correct_key)
+
     def _setattr(self, key, value):
         key = self.__class__._dss_attributes.get(key.lower(), key)
         object.__setattr__(self, key, value)
-    
-    
+
+    def _setattr_case_check(self, key, value):
+        correct_key = self.__class__._dss_attributes.get(key.lower(), key)
+        if key != correct_key:
+            warnings.warn('Wrong case for setter {}.{}: {}'.format(self.__class__.__name__, correct_key, key))
+
+        key = self.__class__._dss_attributes.get(key.lower(), key)
+        object.__setattr__(self, key, value)
+
+
+
 class CffiApiUtil(object):
     def __init__(self, ffi, lib):
         self.codec = codec #TODO: check which encoding FreePascal defaults to, on Linux
         self.ffi = ffi
         self.lib = lib
         self.init_buffers()
-        
+
     def init_buffers(self):
         tmp_string_pointers = (self.ffi.new('char****'), self.ffi.new('int32_t**'))
         tmp_float64_pointers = (self.ffi.new('double***'), self.ffi.new('int32_t**'))
@@ -90,7 +118,7 @@ class CffiApiUtil(object):
 
         # reorder pointers so data pointers are first, count pointers last
         ptr_args = [
-            ptr 
+            ptr
             for ptrs in zip(tmp_string_pointers, tmp_float64_pointers, tmp_int32_pointers, tmp_int8_pointers)
             for ptr in ptrs
         ]
@@ -121,7 +149,7 @@ class CffiApiUtil(object):
     def get_float64_gr_array(self):
         ptr, cnt = self.gr_float64_pointers
         return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float)
-        
+
     def get_int32_array(self, func, *args):
         ptr = self.ffi.new('int32_t**')
         cnt = self.ffi.new('int32_t[2]')
@@ -129,7 +157,7 @@ class CffiApiUtil(object):
         res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32)
         self.lib.DSS_Dispose_PInteger(ptr)
         return res
-        
+
     def get_int32_gr_array(self):
         ptr, cnt = self.gr_int32_pointers
         return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32)
@@ -145,7 +173,7 @@ class CffiApiUtil(object):
     def get_int8_gr_array(self):
         ptr, cnt = self.gr_int8_pointers
         return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8)
-        
+
     def get_string_array(self, func, *args):
         ptr = self.ffi.new('char***')
         cnt = self.ffi.new('int32_t[2]')
@@ -164,7 +192,7 @@ class CffiApiUtil(object):
 
         self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
         return res
-        
+
     def get_string_array2(self, func, *args): # for compatibility with OpenDSSDirect.py
         ptr = self.ffi.new('char***')
         cnt = self.ffi.new('int32_t[2]')
@@ -205,7 +233,7 @@ class CffiApiUtil(object):
     def get_float64_gr_array2(self):
         ptr, cnt = self.gr_float64_pointers
         return self.ffi.unpack(ptr[0], cnt[0])
-        
+
     def get_int32_array2(self, func, *args):
         ptr = self.ffi.new('int32_t**')
         cnt = self.ffi.new('int32_t[2]')
@@ -221,7 +249,7 @@ class CffiApiUtil(object):
     def get_int32_gr_array2(self):
         ptr, cnt = self.gr_int32_pointers
         return self.ffi.unpack(ptr[0], cnt[0])
-        
+
     def get_int8_array2(self, func, *args):
         ptr = self.ffi.new('int8_t**')
         cnt = self.ffi.new('int32_t[2]')
@@ -233,12 +261,12 @@ class CffiApiUtil(object):
 
         self.lib.DSS_Dispose_PByte(ptr)
         return res
-        
+
     def get_int8_gr_array2(self):
         ptr, cnt = self.gr_int8_pointers
         return self.ffi.unpack(ptr[0], cnt[0])
 
-        
+
     def prepare_float64_array(self, value):
         if type(value) is not np.ndarray or value.dtype != np.float64:
             value = np.array(value, dtype=np.float64)
