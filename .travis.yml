@@ -1,0 +1,51 @@
+language: cpp
+
+matrix:
+  include:
+    - name: "linux_x64"
+      os: linux
+      sudo: required
+      env: DOCKER_IMAGE=pmeira/manylinux_wheel_cmake_fpc
+      services:
+        - docker
+      install:
+        - docker pull $DOCKER_IMAGE
+      script: 
+        - cd ..
+        - mkdir artifacts
+        - mkdir artifacts/linux-64
+        - git clone https://github.com/PMeira/electricdss-src electricdss-src
+        - git clone https://github.com/PMeira/dss_capi dss_capi
+        - wget http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O suitesparse.tar.gz -q
+        - tar zxf suitesparse.tar.gz
+        - export SUITESPARSE_SRC=`realpath ./SuiteSparse`
+        - docker run --rm -v `pwd`:/io $DOCKER_IMAGE bash /io/dss_python/ci/build_linux.sh
+        - bash dss_python/ci/build_linux_conda.sh
+        - ls -lR artifacts
+
+    - name: "osx_x64"
+      os: osx
+      script: 
+        - git clone https://github.com/PMeira/electricdss-src ../electricdss-src
+        - git clone https://github.com/PMeira/dss_capi ../dss_capi
+        - bash ci/build_osx.sh
+        - ls -lR ../artifacts
+
+    # - name: "windows_x64"
+      # os: windows
+      # script: 
+        # - git clone https://github.com/PMeira/electricdss-src ../electricdss-src
+        # - git clone https://github.com/PMeira/dss_capi ../dss_capi
+        # - bash ci/build_windows.sh
+        # - ls -lR ../artifacts
+
+# deploy:
+  # provider: releases
+  # api_key:
+    # secure: gteKiE+9iIOJm4/zvsF1kJolU5lFTwVvF7HGW6UZ/aGymcjueE257EXGHc+isOkXyFd8qdyUlCBB9O70pFKMPIB4R5Nn+T59TuiyMWKya42ToyKbJDYSXs5g1tadHOA1NEJKBAq8etvIbTtS7QxoLa+Nl/bqNCfNI+g85zUyyraiyAuSx3LaN+98QXAckFNysripuGIYzN9T6XKg1bpQB2htJNoq/e9xZM7WwANp0ce1Kjd7kU9iHX0+BEqeLTZNuJT+2FGHfl9hKtek5V23ZZre419Azo1HP3voK+mCzqOobVrUUKHK2Pc/npBs+4bQhCr7tClWm/ixQmOC66WBUhzVHrnMZASd5GwS5H3dDUcG6sv8vstohTaw+EGKtXWVxO6atCGCgHL9QOEwBnKv85BPLJq8aS3fE2I1M17J0+OjNp7bN3ldCnTPZOs7+5DwbhMiMhFc9iOVxmjXkoBVgsBzODcH6iXOOZBDHcO5CuJzhJq64sDKsQ/Nm5qEV64QwqtZigbktb3OFbqAu7aZc4FUYmyGt4OnmJVK0l3d0EBJORVmiwtedw0KFSOwoBXQbEN7hWfaqlCMD/8tbxIyEtGFDah3F+Jte56ShMZuMd2wOQsvifsV2DejWagdWHi9ZZJQVFeqlYRfc9rHj8F0fUoqapWbk2folkWi503g2Bc=
+  # file_glob: true
+  # file: ../artifacts/*
+  # on:
+    # repo: PMeira/dss_python
+    # tags: true
+    

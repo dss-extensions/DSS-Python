@@ -2,29 +2,33 @@
 # filtering interactive commands
 
 test_filenames = [
+    "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
+    "../../electricdss-tst/Test/IEEE13_CDPSM.dss",
+    "../../electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss",
+    "L!../../electricdss-tst/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
+    "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/IEEE123Master.dss",
+    "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/SolarRamp.DSS",
+    "../../electricdss-tst/Distrib/IEEETestCases/37Bus/ieee37.dss",
+
     "../../electricdss-tst/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
-    "../../electricdss-tst/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss",
-    "../../electricdss-tst/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss",
-    "../../electricdss-tst/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/J1/Master_withPV.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/K1/Master_NoPV.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/M1/Master_NoPV.dss",
+    "../../electricdss-tst/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss",
+    "../../electricdss-tst/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss",
+    "../../electricdss-tst/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss",
     "../../electricdss-tst/Distrib/IEEETestCases/8500-Node/Master-unbal.dss",
     "../../electricdss-tst/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS",
-    "../../electricdss-tst/Distrib/IEEETestCases/37Bus/ieee37.dss",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4Bus-OYOD-UnBal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS",
-    "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/IEEE123Master.dss",
-    "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/SolarRamp.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss",
 
     "../../electricdss-tst/Test/IEEE13_LineSpacing.dss",
     "../../electricdss-tst/Test/IEEE13_LineGeometry.dss",
-    "../../electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss",
     "../../electricdss-tst/Test/IEEE13_Assets.dss",
     "L!../../electricdss-tst/Test/CableParameters.dss",
     "L!../../electricdss-tst/Test/Cable_constants.DSS",
@@ -36,7 +40,6 @@ test_filenames = [
     "L!../../electricdss-tst/Test/PVSystemTestHarm.dss",
     "L!../../electricdss-tst/Test/TestAuto.dss",
     "L!../../electricdss-tst/Test/Stevenson.dss",
-    "L!../../electricdss-tst/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
     "../../electricdss-tst/Test/Master_TestCapInterface.DSS",
     "../../electricdss-tst/Test/LoadTest.DSS",
     "L!../../electricdss-tst/Test/IEEELineGeometry.dss",
@@ -46,9 +49,6 @@ test_filenames = [
     "L!../../electricdss-tst/Test/PVSystemTest-Duty.dss",
     "L!../../electricdss-tst/Test/PVSystemTest.dss",
     "L!../../electricdss-tst/Test/REACTORTest.DSS",
-
-    # "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
-    "../../electricdss-tst/Test/IEEE13_CDPSM.dss",
 
     #"L!../../electricdss-tst/Test/Run_SimpleStorageTest.DSS", # Missing DLL?
     #"L!../../electricdss-tst/Test/Run_SimpleStorageTest-1ph.DSS", # Missing DLL?
@@ -80,7 +80,7 @@ api_fields = {
     'ActiveCircuit.Reclosers': 'RecloseIntervals,GroundInst,GroundTrip,MonitoredObj,MonitoredTerm,Name,NumFast,PhaseInst,PhaseTrip,Shots,SwitchedObj,SwitchedTerm,idx', 
     'ActiveCircuit.Transformers': 'IsDelta,MaxTap,MinTap,Name,NumTaps,NumWindings,R,Rneut,Tap,Wdg,XfmrCode,Xhl,Xht,Xlt,Xneut,kV,kva', 
     'ActiveCircuit.Vsources': 'AngleDeg,BasekV,Frequency,Name,Phases,pu', 
-#    'ActiveCircuit.XYCurves': 'Xarray,Yarray,Name,Npts,Xscale,Xshift,Yscale,Yshift,x,y',
+    'ActiveCircuit.XYCurves': 'Xarray,Yarray,Name,Npts,Xscale,Xshift,Yscale,Yshift,x,y',
 }
 
 ckt_elements = {

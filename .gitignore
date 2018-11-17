@@ -109,3 +109,5 @@ ENV/
 *.dll
 
 README.rst
+
+conda_wheels/

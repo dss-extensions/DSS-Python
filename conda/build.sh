@@ -1,7 +1,7 @@
 BLD_PREV_DIR=`pwd`
 BLD_PREV_PATH=$PATH
-ELECTRICDSS_SRC_VERSION=0.9.8
-DSS_CAPI_VERSION=0.9.8
+ELECTRICDSS_SRC_VERSION=0.10.0
+DSS_CAPI_VERSION=0.10.0
 
 echo "Building in $BLD_PREV_DIR"
 
@@ -9,26 +9,28 @@ echo "Building in $BLD_PREV_DIR"
 echo "Checking for FPC..."
 if [[ ! -x "`which fpc`" ]]; then
     echo "Downloading FPC..."
-    if [ `uname` == Linux ]; then
-        wget https://sourceforge.net/projects/freepascal/files/Linux/3.0.4/fpc-3.0.4.x86_64-linux.tar/download -Ofpc.tar
-        tar xf fpc.tar
-        cd fpc-3.0.4.x86_64-linux
-        echo > fpc_install_options.txt
-        echo n >> fpc_install_options.txt
-        echo n >> fpc_install_options.txt
-        echo n >> fpc_install_options.txt
-        echo "Installing FPC..."
-        sh ./install.sh < fpc_install_options.txt
-        cd ..
-        rm -rf fpc-3.0.4.x86_64-linux
-        export PATH=$PATH:~/fpc-3.0.4/bin
+    export PATH=$PATH:~/fpc-3.0.4/bin
+    if [[ ! -x "`which fpc`" ]]; then
+        if [ `uname` == Linux ]; then
+            wget https://sourceforge.net/projects/freepascal/files/Linux/3.0.4/fpc-3.0.4.x86_64-linux.tar/download -Ofpc.tar -q
+            tar xf fpc.tar
+            cd fpc-3.0.4.x86_64-linux
+            echo > fpc_install_options.txt
+            echo n >> fpc_install_options.txt
+            echo n >> fpc_install_options.txt
+            echo n >> fpc_install_options.txt
+            echo "Installing FPC..."
+            sh ./install.sh < fpc_install_options.txt
+            cd ..
+            rm -rf fpc-3.0.4.x86_64-linux
+            export PATH=$PATH:~/fpc-3.0.4/bin
+        fi
     fi
     if [ `uname` == Darwin ]; then
-        wget https://sourceforge.net/projects/freepascal/files/Mac%20OS%20X/3.0.4/fpc-3.0.4.intel-macosx.dmg/download -Ofpc.dmg
+        wget https://sourceforge.net/projects/freepascal/files/Mac%20OS%20X/3.0.4/fpc-3.0.4.intel-macosx.dmg/download -Ofpc.dmg -q
         sudo hdiutil attach fpc.dmg
         sudo installer -package /Volumes/fpc-3.0.4.intel-macosx/fpc-3.0.4.intel-macosx.pkg -target /
     fi
-    
 fi
 
 # Clone dependency repositories
@@ -51,17 +53,18 @@ rm -rf build
 mkdir build
 cd build
 
-cmake .. -DUSE_SYSTEM_SUITESPARSE=OFF -G "$CMAKE_GENERATOR"
+cmake .. -DUSE_SYSTEM_SUITESPARSE=OFF -G "$CMAKE_GENERATOR" -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release
-
-# Build dss_capi
 cd ../..
 
+
+# Build dss_capi
+bash make_metadata.sh
 if [ `uname` == Linux ]; then
-    sh build_linux_x64.sh
+    bash build_linux_x64.sh
 fi
 if [ `uname` == Darwin ]; then
-    sh build_macos_x64.sh
+    bash build_macos_x64.sh
 fi
 
 # Restore potential changes in PATH
@@ -70,4 +73,5 @@ export PATH=$BLD_PREV_PATH
 # Finally build dss_python
 echo "Building dss_python"
 cd $BLD_PREV_DIR
+rm -rf build dist .eggs
 $PYTHON setup.py install --single-version-externally-managed --record=record.txt

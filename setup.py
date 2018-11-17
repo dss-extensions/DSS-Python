@@ -14,10 +14,11 @@ with open('dss/__init__.py', 'r') as f:
     
     
 # Copy the DLLs
+src_path = os.environ.get('SRC_DIR', '')
 
 # KLUSolve DLL
-base_dll_path_out = 'dss/'
-base_dll_path_in = '../dss_capi/lib/{}'.format(PLATFORM_FOLDER)
+base_dll_path_in = os.path.join(src_path, '..', 'dss_capi', 'lib', PLATFORM_FOLDER)
+dll_path_out = os.path.join(src_path, 'dss')
 
 if sys.platform == 'win32':
     libklusolve = 'libklusolve'
@@ -26,18 +27,18 @@ else:
     
 shutil.copy(
     os.path.join(base_dll_path_in, DLL_PREFIX + libklusolve + DLL_SUFFIX), 
-    os.path.join(base_dll_path_out, DLL_PREFIX + libklusolve + DLL_SUFFIX)
+    os.path.join(dll_path_out, DLL_PREFIX + libklusolve + DLL_SUFFIX)
 )
 
 # DSS_CAPI DLLs
 for i, version in enumerate(DSS_VERSIONS):
-    base_dll_path_in = '../dss_capi/lib/{}/{}'.format(PLATFORM_FOLDER, version)
+    dll_path_version_in = os.path.join(base_dll_path_in, version)
     file_list = ['dss_capi_{}'.format(version)]
     
     for fn in file_list:
         shutil.copy(
-            os.path.join(base_dll_path_in, DLL_PREFIX + fn + DLL_SUFFIX), 
-            os.path.join(base_dll_path_out, DLL_PREFIX + fn + DLL_SUFFIX)
+            os.path.join(dll_path_version_in, DLL_PREFIX + fn + DLL_SUFFIX), 
+            os.path.join(dll_path_out, DLL_PREFIX + fn + DLL_SUFFIX)
         )
 
 if os.environ.get('DSS_PYTHON_MANYLINUX', '0') == '1':
