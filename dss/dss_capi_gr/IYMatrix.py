@@ -103,10 +103,10 @@ class IYMatrix(Base):
     def getI(self):
         '''Get the data from the internal Current pointer'''
         IvectorPtr = self.IVector()
-        return self._api_util.ffi.unpack(IvectorPtr, self._lib.Circuit_Get_NumNodes() + 1)
+        return self._api_util.ffi.unpack(IvectorPtr, 2 * (self._lib.Circuit_Get_NumNodes() + 1))
 
     def getV(self):
         '''Get the data from the internal Voltage pointer'''
         VvectorPtr = self.VVector()
-        return self._api_util.ffi.unpack(VvectorPtr, self._lib.Circuit_Get_NumNodes() + 1)
+        return self._api_util.ffi.unpack(VvectorPtr, 2 * (self._lib.Circuit_Get_NumNodes() + 1))
 
