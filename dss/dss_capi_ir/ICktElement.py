@@ -4,7 +4,7 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 Copyright (c) 2016-2018 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Base, DssException
 from .IDSSProperty import IDSSProperty
 
 class ICktElement(Base):
@@ -23,16 +23,26 @@ class ICktElement(Base):
         '''(read-only) Full name of the i-th controller attached to this element. Ex: str = Controller(2).  See NumControls to determine valid index range'''
         return self._get_string(self._lib.CktElement_Get_Controller(idx))
 
-    def Variable(self, MyVarName, Code):
-        '''(read-only) For PCElement, get the value of a variable by name. If Code>0 Then no variable by this name or not a PCelement.'''
+    def Variable(self, MyVarName):
+        '''(read-only) Returns (value, Code). For PCElement, get the value of a variable by name. If Code>0 Then no variable by this name or not a PCelement.'''
         if type(MyVarName) is not bytes:
             MyVarName = MyVarName.encode(self._api_util.codec)
 
-        return self._lib.CktElement_Get_Variable(MyVarName, Code)
+        Code = self._api_util.ffi.new('int32_t*')
+        result = self._lib.CktElement_Get_Variable(MyVarName, Code)
+        # if Code[0] == 1:
+        #     raise DssException('No variable by this name or not a PCelement')
+        return result, Code[0]
+    
 
-    def Variablei(self, Idx, Code):
-        '''(read-only) For PCElement, get the value of a variable by integer index.'''
-        return self._lib.CktElement_Get_Variablei(Idx, Code)
+    def Variablei(self, Idx):
+        '''(read-only) Returns (value, Code). For PCElement, get the value of a variable by integer index. If Code>0 Then no variable by this index or not a PCelement.'''
+        Code = self._api_util.ffi.new('int32_t*')
+        result = self._lib.CktElement_Get_Variablei(Idx, Code)
+        # if Code[0] == 1:
+        #     raise DssException('Invalid variavle index or not a PCelement')
+        return result, Code[0]
+
 
     def IsOpen(self, Term, Phs):
         return self._lib.CktElement_IsOpen(Term, Phs) != 0
