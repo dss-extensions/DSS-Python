@@ -43,6 +43,7 @@ class Base(object):
         '_prepare_float64_array',
         '_prepare_int32_array',
         '_prepare_string_array',
+        '_errorPtr',
     ]
 
     def __init__(self, api_util):
@@ -59,6 +60,7 @@ class Base(object):
         self._prepare_float64_array = api_util.prepare_float64_array
         self._prepare_int32_array = api_util.prepare_int32_array
         self._prepare_string_array = api_util.prepare_string_array
+        self._errorPtr = self._lib.Error_Get_NumberPtr()
 
         cls = type(self)
         if cls not in interface_classes:
@@ -68,8 +70,9 @@ class Base(object):
             cls._dss_attributes = lowercase_map
 
     def CheckForError(self):
-        error_num = self._lib.Error_Get_Number()
-        if error_num:
+        if self._errorPtr[0]:
+            error_num = self._errorPtr[0]
+            self._errorPtr[0] = 0
             raise DssException(error_num, self._get_string(self._lib.Error_Get_Description()))
 
     def _getattr(self, key):

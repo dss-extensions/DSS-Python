@@ -16,7 +16,7 @@ class IError(Base):
 
     @property
     def Number(self):
-        '''(read-only) Error Number'''
+        '''(read-only) Error Number (returns current value and then resets to zero)'''
         return self._lib.Error_Get_Number()
 
 
