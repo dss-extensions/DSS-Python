@@ -19,4 +19,13 @@ class IError(Base):
         '''(read-only) Error Number (returns current value and then resets to zero)'''
         return self._lib.Error_Get_Number()
 
-
+    @property
+    def EarlyAbort(self):
+        '''
+        EarlyAbort controls whether all errors halts the DSS script processing (Compile/Redirect), defaults to True.
+        '''
+        return self._lib.Error_Get_EarlyAbort() != 0
+        
+    @EarlyAbort.setter
+    def EarlyAbort(self, Value):
+        self._lib.Error_Set_EarlyAbort(Value)
