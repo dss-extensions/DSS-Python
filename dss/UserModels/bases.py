@@ -1,11 +1,4 @@
-from __future__ import absolute_import
-from .GenUserModel import GenUserModel
-import numpy as np
-
-lib = GenUserModel.lib
-ffi = GenUserModel.ffi
-
-class GenUserModelBase(object):
+class CommonBase(object):
     @classmethod
     def extract_names(cls):
         names = []
@@ -15,7 +8,6 @@ class GenUserModelBase(object):
         for v in st_vars:
             names.extend([v, '{}n'.format(name), 'd{}_dt'.format(name), 'd{}n_dt'.format(name)])
         
-        
         for v in getattr(cls, '_var_limits', []):
             assert v['var'] in cls._outputs
             assert v['min'] in names
@@ -24,30 +16,24 @@ class GenUserModelBase(object):
         names.extend(v[k] for k in ('min', 'max') for v in getattr(cls, '_var_limits', []))
         
         return names
-    
-    
-    def __init__(self, gen, dyn, callbacks, populate=None):
-        self.gen = gen
-        self.dyn = dyn
+
+
+    def __init__(self, callbacks, populate=None):
         self.callbacks = callbacks
         self.input_vars = []
         self.input_types = []
-        self.output_vars = []
-        self.state_vars = []
         self.input_to_index = {}
-        self.limits = {}
         self.debug = False
-        
         self.add_input('pymodel', '')
         
         if populate or (populate is None and hasattr(self, '_inputs')):
             self.add_inputs(self._inputs)
-            self.add_outputs(self._outputs)
-            self.add_state_vars(self._state_vars)
-            for lim in self._var_limits:
-                self.set_var_limits(lim['var'], lim['min'], lim['max'])
-        
-    
+
+
+    def update(self):
+        pass #raise NotImplementedError
+
+
     def add_input(self, name, value=0.0):
         setattr(self, name, value)
         self.input_vars.append(name)
@@ -63,24 +49,6 @@ class GenUserModelBase(object):
                 self.input_to_index[partial] = param_pointer
                 
                 
-    def add_output(self, name, init_value=0.0):
-        if not hasattr(type(self), name) and not hasattr(self, name):
-            setattr(self, name, init_value)
-            
-        self.output_vars.append(name)
-        
-        
-    def add_state_var(self, name, init_value=0.0):
-        if not hasattr(type(self), name) and not hasattr(self, name):
-            setattr(self, name, init_value)
-            
-        setattr(self, '{}n'.format(name), getattr(self, name))
-        setattr(self, 'd{}_dt'.format(name), 0.0)
-        setattr(self, 'd{}n_dt'.format(name), 0.0)
-            
-        self.state_vars.append(name)
-        
-        
     def add_inputs(self, *args):
         for arg in args:
             if isinstance(arg, (list, tuple)):
@@ -89,65 +57,16 @@ class GenUserModelBase(object):
                 self.add_input(arg)
         
         
-    def add_state_vars(self, *args):
-        for arg in args:
-            self.add_state_var(arg)
-
-            
-    def add_outputs(self, *args):
-        for arg in args:
-            self.add_output(arg)
-        
-    
-    def set_var_limits(self, name, min=None, max=None):
-        self.limits[name] = (min, max)
-        
-        
-    def init_dstate(self):
-        for name in self.state_vars:
-            setattr(self, 'd{}_dt'.format(name), 0.0)
-            setattr(self, 'd{}n_dt'.format(name), 0.0)
-        
-        
-    def copy_state(self):
-        for name in self.state_vars:
-            setattr(self, '{}n'.format(name), getattr(self, name))
-            setattr(self, 'd{}n_dt'.format(name), getattr(self, 'd{}_dt'.format(name)))
-        
-
-    def get_all_outputs(self, var_vector):
-        for i, v in enumerate(self.output_vars):
-            value = getattr(self, v)
-            if isinstance(value, complex):
-                var_vector[i] = abs(value)
-            else:
-                var_vector[i] = value
-            
-    def get_output(self, i):
-        value = getattr(self, self.output_vars[i - 1])
-        if isinstance(value, complex):
-            return abs(value)
-        
-        return value
-
-        
     def set_input_param(self, i, value):
         return setattr(self, self.input_vars[i - 1], value)
 
-        
-    def get_output_name(self, i):
-        return self.output_vars[i - 1]
-
-        
-    def get_num_outputs(self):
-        return len(self.output_vars)
-        
         
     def edit(self, edit_str, max_len):
         self.callbacks.LoadParser(edit_str, max_len)
         
         BUFFER_SIZE = 4095
         param_pointer = 0
+        ffi = self.ffi
         param_str = ffi.new('char[%d]'%(BUFFER_SIZE + 1,), b'')
         param_name = ffi.new('char[%d]'%(BUFFER_SIZE + 1,), b'')
         dbl_value = ffi.new('double*')
@@ -210,12 +129,22 @@ class GenUserModelBase(object):
         if changed:
             self.update()
         
-        
-    def save(self):
-        pass
 
-    def restore(self):
-        pass
+
+class DynamicsBase(CommonBase):
+    def __init__(self, dyn, callbacks, populate=None):
+        CommonBase.__init__(self, callbacks, populate=populate)
+        
+        self.dyn = dyn
+        self.output_vars = []
+        self.state_vars = []
+        self.limits = {}
+        
+        if populate or (populate is None and hasattr(self, '_inputs')):
+            self.add_outputs(self._outputs)
+            self.add_state_vars(self._state_vars)
+            for lim in self._var_limits:
+                self.set_var_limits(lim['var'], lim['min'], lim['max'])
 
     def init_state_vars(self, V, I):
         raise NotImplementedError
@@ -242,10 +171,109 @@ class GenUserModelBase(object):
                 setattr(self, name, vmax)
             elif value < vmin:
                 setattr(self, name, vmin)
+
+    def add_state_vars(self, *args):
+        for arg in args:
+            self.add_state_var(arg)
+
+    def add_output(self, name, init_value=0.0):
+        if not hasattr(type(self), name) and not hasattr(self, name):
+            setattr(self, name, init_value)
             
-    def update(self):
-        pass #raise NotImplementedError
+        self.output_vars.append(name)
+        
+        
+    def add_state_var(self, name, init_value=0.0):
+        if not hasattr(type(self), name) and not hasattr(self, name):
+            setattr(self, name, init_value)
+            
+        setattr(self, '{}n'.format(name), getattr(self, name))
+        setattr(self, 'd{}_dt'.format(name), 0.0)
+        setattr(self, 'd{}n_dt'.format(name), 0.0)
+            
+        self.state_vars.append(name)
+            
+    def add_outputs(self, *args):
+        for arg in args:
+            self.add_output(arg)
+        
+    
+    def set_var_limits(self, name, min=None, max=None):
+        self.limits[name] = (min, max)
+        
+        
+    def init_dstate(self):
+        for name in self.state_vars:
+            setattr(self, 'd{}_dt'.format(name), 0.0)
+            setattr(self, 'd{}n_dt'.format(name), 0.0)
+        
+        
+    def copy_state(self):
+        for name in self.state_vars:
+            setattr(self, '{}n'.format(name), getattr(self, name))
+            setattr(self, 'd{}n_dt'.format(name), getattr(self, 'd{}_dt'.format(name)))
         
 
+    def get_all_outputs(self, var_vector):
+        for i, v in enumerate(self.output_vars):
+            value = getattr(self, v)
+            if isinstance(value, complex):
+                var_vector[i] = abs(value)
+            else:
+                var_vector[i] = value
+            
+    def get_output(self, i):
+        value = getattr(self, self.output_vars[i - 1])
+        if isinstance(value, complex):
+            return abs(value)
+        
+        return value
 
-GenUserModel.Base = GenUserModelBase
+        
+    def set_input_param(self, i, value):
+        return setattr(self, self.input_vars[i - 1], value)
+
+        
+    def get_output_name(self, i):
+        return self.output_vars[i - 1]
+
+
+    def get_num_outputs(self):
+        return len(self.output_vars)
+
+
+class SaveRestoreMixin(object):
+    def save(self):
+        pass
+
+    def restore(self):
+        pass
+    
+        
+
+class CapUserControlBase(CommonBase):
+    def sample(self):
+        pass
+
+class GenUserModelBase(DynamicsBase, SaveRestoreMixin):
+    def __init__(self, gen, dyn, callbacks, populate=None):
+        DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
+        self.gen = gen
+
+class PVSystemUserModelBase(DynamicsBase, SaveRestoreMixin):
+    def __init__(self, gen, dyn, callbacks, populate=None):
+        DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
+        self.gen = gen
+
+class StoreUserModelBase(DynamicsBase, SaveRestoreMixin):
+    def __init__(self, dyn, callbacks, populate=None):
+        DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
+
+class StoreUserModelBase(DynamicsBase, SaveRestoreMixin):
+    def __init__(self, dyn, callbacks, populate=None):
+        DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
+
+class StoreDynaModelBase(DynamicsBase):
+    def __init__(self, dyn, callbacks, populate=None):
+        DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
+
