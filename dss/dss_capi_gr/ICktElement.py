@@ -298,8 +298,8 @@ class ICktElement(Base):
                 index = index.encode(self._api_util.codec)
 
             self._lib.Circuit_SetCktElementName(index)
-
-        return self
+            
+        return self.CheckForError(self)
 
     def __call__(self, index):
         return self.__getitem__(index)

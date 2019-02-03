@@ -208,7 +208,7 @@ class ICircuit(Base):
         if type(BusName) is not bytes:
             BusName = BusName.encode(self._api_util.codec)
 
-        return self._lib.Circuit_SetActiveBus(BusName)
+        return self.CheckForError(self._lib.Circuit_SetActiveBus(BusName))
 
     def SetActiveBusi(self, BusIndex):
         return self._lib.Circuit_SetActiveBusi(BusIndex)
@@ -217,13 +217,13 @@ class ICircuit(Base):
         if type(ClassName) is not bytes:
             ClassName = ClassName.encode(self._api_util.codec)
 
-        return self._lib.Circuit_SetActiveClass(ClassName)
+        return self.CheckForError(self._lib.Circuit_SetActiveClass(ClassName))
 
     def SetActiveElement(self, FullName):
         if type(FullName) is not bytes:
             FullName = FullName.encode(self._api_util.codec)
 
-        return self._lib.Circuit_SetActiveElement(FullName)
+        return self.CheckForError(self._lib.Circuit_SetActiveElement(FullName))
 
     def UpdateStorage(self):
         self._lib.Circuit_UpdateStorage()

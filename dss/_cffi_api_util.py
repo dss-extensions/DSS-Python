@@ -69,11 +69,14 @@ class Base(object):
             lowercase_map = {a.lower(): a for a in cls._dss_original_attributes}
             cls._dss_attributes = lowercase_map
 
-    def CheckForError(self):
+    def CheckForError(self, result=None):
+        '''Checks for an OpenDSS error. Raises an exception if any, otherwise returns the `result` parameter.'''
         if self._errorPtr[0]:
             error_num = self._errorPtr[0]
             self._errorPtr[0] = 0
             raise DssException(error_num, self._get_string(self._lib.Error_Get_Description()))
+            
+        return result
 
     def _getattr(self, key):
         if key.startswith('_'):
