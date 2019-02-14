@@ -5,12 +5,12 @@ set DSS_CAPI_VERSION=0.10.0
 
 REM Clone dependency repositories
 if not exist ..\electricdss-src (
-    git clone -b "%ELECTRICDSS_SRC_VERSION%" --single-branch https://github.com/PMeira/electricdss-src.git ..\electricdss-src
+    git clone -b "%ELECTRICDSS_SRC_VERSION%" --single-branch https://github.com/dss-extensions/electricdss-src.git ..\electricdss-src
     if errorlevel 1 exit 1
 )
 
 if not exist ..\dss_capi (
-    git clone -b "%DSS_CAPI_VERSION%" --single-branch https://github.com/PMeira/dss_capi.git ..\dss_capi
+    git clone -b "%DSS_CAPI_VERSION%" --single-branch https://github.com/dss-extensions/dss_capi.git ..\dss_capi
     if errorlevel 1 exit 1
 )
 

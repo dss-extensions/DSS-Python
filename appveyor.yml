@@ -1,0 +1,22 @@
+version: '{build}'
+skip_non_tags: true
+image: Previous Visual Studio 2017
+clone_folder: c:\projects\dss_python
+environment:
+  ANACONDA_API_TOKEN: 
+    secure: 78d9aslKXYoP2gVc7p5A5BJj3bSDPd2kZjQAlvEd64cCcxaf185CexeDNYNeNPuU
+    
+build_script:
+- cmd: >-
+    rd /s /q c:\cygwin
+
+    git clone https://github.com/dss-extensions/electricdss-src ../electricdss-src
+
+    git clone https://github.com/dss-extensions/dss_capi ../dss_capi
+
+    set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;c:\miniconda3-x64;c:\miniconda3-x64\scripts;%path%
+
+    c:\cygwin64\bin\bash ci/build_windows.sh
+
+    dir ..\artifacts\*.whl ..\artifacts\*.tar.bz2 /s
+test: off

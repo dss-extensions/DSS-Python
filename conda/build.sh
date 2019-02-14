@@ -36,12 +36,12 @@ fi
 # Clone dependency repositories
 echo "Cloning electricdss-src..."
 if [ ! -d "../electricdss-src" ]; then
-    git clone -b "$ELECTRICDSS_SRC_VERSION" --single-branch https://github.com/PMeira/electricdss-src.git ../electricdss-src
+    git clone -b "$ELECTRICDSS_SRC_VERSION" --single-branch https://github.com/dss-extensions/electricdss-src.git ../electricdss-src
 fi
 
 echo "Cloning dss_capi..."
 if [ ! -d "../dss_capi" ]; then
-    git clone -b "$DSS_CAPI_VERSION" --single-branch https://github.com/PMeira/dss_capi.git ../dss_capi
+    git clone -b "$DSS_CAPI_VERSION" --single-branch https://github.com/dss-extensions/dss_capi.git ../dss_capi
 fi
 
 # Build KLUSolve

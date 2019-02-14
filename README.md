@@ -3,10 +3,10 @@
 Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simulator). Based on CFFI and DSS C-API, aiming for full COM compatibility on Windows, Linux and MacOS.
 
 <p align="center">
-    <img alt="Overview of related repositories" src="https://raw.githubusercontent.com/PMeira/dss_python/master/docs/images/repomap.svg?sanitize=true" width=600>
+    <img alt="Overview of related repositories" src="https://raw.githubusercontent.com/dss-extensions/dss_python/master/docs/images/repomap.svg?sanitize=true" width=600>
 </p>
 
-If you are looking for the custom OpenDSS C-API library, see [`DSS C-API`](http://github.com/PMeira/dss_capi/).
+If you are looking for the custom OpenDSS C-API library, see [`DSS C-API`](http://github.com/dss-extensions/dss_capi/).
 
 Version 0.10.0, based on OpenDSS revision 2395. While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached.
 
@@ -68,10 +68,10 @@ After a successful installation, you can then import the `dss` module from your 
 Get this repository:
 
 ```
-    git clone https://github.com/PMeira/dss_python.git
+    git clone https://github.com/dss-extensions/dss_python.git
 ```    
     
-Assuming you successfully built or downloaded the DSS C-API DLLs (check [its repository](http://github.com/PMeira/dss_capi/) for instructions), keep the folder organization as follows:
+Assuming you successfully built or downloaded the DSS C-API DLLs (check [its repository](http://github.com/dss-extensions/dss_capi/) for instructions), keep the folder organization as follows:
 
 ```
 dss_capi/
@@ -209,7 +209,7 @@ Please allow me a few days to respond.
 
 Credits / Acknowlegement
 ========================
-DSS Python is based on EPRI's OpenDSS via the [`dss_capi`](http://github.com/PMeira/dss_capi/) project, check its licensing information.
+DSS Python is based on EPRI's OpenDSS via the [`dss_capi`](http://github.com/dss-extensions/dss_capi/) project, check its licensing information.
 
 This project is licensed under the (new) BSD, available in the `LICENSE` file. It's the same license OpenDSS uses (`OPENDSS_LICENSE`). OpenDSS itself uses KLUSolve and SuiteSparse, licensed under the GNU LGPL 2.1.
 

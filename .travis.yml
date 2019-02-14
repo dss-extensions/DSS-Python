@@ -14,8 +14,8 @@ matrix:
         - cd ..
         - mkdir artifacts
         - mkdir artifacts/linux-64
-        - git clone https://github.com/PMeira/electricdss-src electricdss-src
-        - git clone https://github.com/PMeira/dss_capi dss_capi
+        - git clone https://github.com/dss-extensions/electricdss-src electricdss-src
+        - git clone https://github.com/dss-extensions/dss_capi dss_capi
         - wget http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O suitesparse.tar.gz -q
         - tar zxf suitesparse.tar.gz
         - export SUITESPARSE_SRC=`realpath ./SuiteSparse`
@@ -26,16 +26,16 @@ matrix:
     - name: "osx_x64"
       os: osx
       script: 
-        - git clone https://github.com/PMeira/electricdss-src ../electricdss-src
-        - git clone https://github.com/PMeira/dss_capi ../dss_capi
+        - git clone https://github.com/dss-extensions/electricdss-src ../electricdss-src
+        - git clone https://github.com/dss-extensions/dss_capi ../dss_capi
         - bash ci/build_osx.sh
         - ls -lR ../artifacts
 
     # - name: "windows_x64"
       # os: windows
       # script: 
-        # - git clone https://github.com/PMeira/electricdss-src ../electricdss-src
-        # - git clone https://github.com/PMeira/dss_capi ../dss_capi
+        # - git clone https://github.com/dss-extensions/electricdss-src ../electricdss-src
+        # - git clone https://github.com/dss-extensions/dss_capi ../dss_capi
         # - bash ci/build_windows.sh
         # - ls -lR ../artifacts
 
@@ -46,6 +46,6 @@ matrix:
   # file_glob: true
   # file: ../artifacts/*
   # on:
-    # repo: PMeira/dss_python
+    # repo: dss-extensions/dss_python
     # tags: true
     
