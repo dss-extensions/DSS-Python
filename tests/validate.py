@@ -5,6 +5,7 @@ import numpy as np
 from scipy.sparse import csc_matrix
 from dss import enums
 import pickle
+from dss import DssException
 
 original_working_dir = os.getcwd()
 NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
@@ -370,7 +371,7 @@ class ValidatingTest:
                 fA = output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
                 if SAVE_COM_OUTPUT: output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert fA == fB, field
+                if not SAVE_COM_OUTPUT: assert fA == fB or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             nB = B.Next
             if not LOAD_COM_OUTPUT: 
@@ -959,12 +960,20 @@ class ValidatingTest:
                 if not SAVE_COM_OUTPUT: assert A.Name == B.Name
 
             # Try to use an invalid index
-            B = self.capi.ActiveCircuit.CktElements(999999)
+            try:
+                B = self.capi.ActiveCircuit.CktElements(999999)
+            except DssException:
+                pass
+                
             A = self.com.ActiveCircuit.CktElements(999999)
             if not SAVE_COM_OUTPUT: assert A.Name == B.Name
 
             # Try to use an invalid name
-            B = self.capi.ActiveCircuit.CktElements('NONEXISTENT_123456789')
+            try:
+                B = self.capi.ActiveCircuit.CktElements('NONEXISTENT_123456789')
+            except DssException:
+                pass
+
             A = self.com.ActiveCircuit.CktElements('NONEXISTENT_123456789')
             if not SAVE_COM_OUTPUT: assert A.Name == B.Name
         

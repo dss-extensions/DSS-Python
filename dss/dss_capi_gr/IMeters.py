@@ -11,48 +11,58 @@ class IMeters(Base):
 
     def CloseAllDIFiles(self):
         self._lib.Meters_CloseAllDIFiles()
+        self.CheckForError()
 
     def DoReliabilityCalc(self, AssumeRestoration):
         self._lib.Meters_DoReliabilityCalc(AssumeRestoration)
+        self.CheckForError()
 
     def OpenAllDIFiles(self):
         self._lib.Meters_OpenAllDIFiles()
+        self.CheckForError()
 
     def Reset(self):
         self._lib.Meters_Reset()
+        self.CheckForError()
 
     def ResetAll(self):
         self._lib.Meters_ResetAll()
+        self.CheckForError()
 
     def Sample(self):
         self._lib.Meters_Sample()
+        self.CheckForError()
 
     def SampleAll(self):
         self._lib.Meters_SampleAll()
+        self.CheckForError()
 
     def Save(self):
         self._lib.Meters_Save()
+        self.CheckForError()
 
     def SaveAll(self):
         self._lib.Meters_SaveAll()
+        self.CheckForError()
 
     def SetActiveSection(self, SectIdx):
         self._lib.Meters_SetActiveSection(SectIdx)
+        self.CheckForError()
 
     @property
     def AllBranchesInZone(self):
         '''(read-only) Wide string list of all branches in zone of the active energymeter object.'''
-        return self._get_string_array(self._lib.Meters_Get_AllBranchesInZone)
+        return self._get_string_array(self.CheckForError(self._lib.Meters_Get_AllBranchesInZone))
 
     @property
     def AllEndElements(self):
         '''(read-only) Array of names of all zone end elements.'''
-        return self._get_string_array(self._lib.Meters_Get_AllEndElements)
+        return self._get_string_array(self.CheckForError(self._lib.Meters_Get_AllEndElements))
 
     @property
     def AllNames(self):
         '''(read-only) Array of all energy Meter names'''
-        return self._get_string_array(self._lib.Meters_Get_AllNames)
+        return self._get_string_array(self.CheckForError(self._lib.Meters_Get_AllNames))
 
     @property
     def AllocFactors(self):
@@ -69,7 +79,7 @@ class IMeters(Base):
     @property
     def AvgRepairTime(self):
         '''(read-only) Average Repair time in this section of the meter zone'''
-        return self._lib.Meters_Get_AvgRepairTime()
+        return self.CheckForError(self._lib.Meters_Get_AvgRepairTime())
 
     @property
     def CalcCurrent(self):
@@ -168,7 +178,7 @@ class IMeters(Base):
     @property
     def NumSectionBranches(self):
         '''(read-only) Number of branches (lines) in this section'''
-        return self._lib.Meters_Get_NumSectionBranches()
+        return self.CheckForError(self._lib.Meters_Get_NumSectionBranches())
 
     @property
     def NumSectionCustomers(self):
@@ -183,7 +193,7 @@ class IMeters(Base):
     @property
     def OCPDeviceType(self):
         '''(read-only) Type of OCP device. 1=Fuse; 2=Recloser; 3=Relay'''
-        return self._lib.Meters_Get_OCPDeviceType()
+        return self.CheckForError(self._lib.Meters_Get_OCPDeviceType())
 
     @property
     def Peakcurrent(self):
