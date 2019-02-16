@@ -1,6 +1,6 @@
 package:
     name: dss_python
-    version: "0.10.1-dev"
+    version: "0.10.1dev"
     
 source:
     git_rev: "0.10.1-dev"

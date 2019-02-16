@@ -26,7 +26,7 @@ $WGET http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O 
 tar zxf suitesparse.tar.gz
 export SUITESPARSE_SRC=`cygpath -a -w ./SuiteSparse`
 
-BUILD_WHEELS=1
+BUILD_WHEELS=0
 if [ "$BUILD_WHEELS" == "1" ]; then
     # Build KLUSolve
     mkdir dss_capi/klusolve/build_x86
