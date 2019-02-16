@@ -22,13 +22,15 @@ build_script:
 
     set path=c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;c:\miniconda3-x64;c:\miniconda3-x64\scripts;%originalpath%
 
+    c:\miniconda3-x64\scripts\activate c:\miniconda3-x64
+    
     set CONDA_SUBDIR=win-32
     
-    conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
+    conda-build --no-test --output-folder "c:\projects\artifacts" conda
     
     set CONDA_SUBDIR=win-64
     
-    conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
+    conda-build --no-test --output-folder "c:\projects\artifacts" conda
 
     dir ..\artifacts\*.whl ..\artifacts\*.tar.bz2 /s
 test: off

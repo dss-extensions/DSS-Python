@@ -129,7 +129,7 @@ else
     fi
     conda config --set always_yes yes
     conda install conda-build anaconda-client
-    conda install -q conda-build=3.10.9
+    # conda install -q conda-build=3.10.9
 fi # BUILD_WHEELS
 
 # # Build conda packages
