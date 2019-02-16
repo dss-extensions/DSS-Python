@@ -26,7 +26,7 @@ $WGET http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O 
 tar zxf suitesparse.tar.gz
 export SUITESPARSE_SRC=`cygpath -a -w ./SuiteSparse`
 
-BUILD_WHEELS=0
+BUILD_WHEELS=1
 if [ "$BUILD_WHEELS" == "1" ]; then
     # Build KLUSolve
     mkdir dss_capi/klusolve/build_x86
@@ -138,19 +138,19 @@ fi # BUILD_WHEELS
 # export CONDA_SUBDIR=win-64
 # conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
 
-# # Build wheels with conda
-# # (if we keep the output section always, the default package
-# # is ignored, uses wrong names, etc.)
-# rm -rf conda_wheels
-# cp -R conda conda_wheels
-# cat conda/meta_wheels.yaml >> conda_wheels/meta.yaml
-# export CONDA_SUBDIR=win-32
-# conda-build --output-folder ../artifacts conda_wheels
-# export CONDA_SUBDIR=win-64
-# conda-build --output-folder ../artifacts conda_wheels
+# # # Build wheels with conda
+# # # (if we keep the output section always, the default package
+# # # is ignored, uses wrong names, etc.)
+# # rm -rf conda_wheels
+# # cp -R conda conda_wheels
+# # cat conda/meta_wheels.yaml >> conda_wheels/meta.yaml
+# # export CONDA_SUBDIR=win-32
+# # conda-build --output-folder ../artifacts conda_wheels
+# # export CONDA_SUBDIR=win-64
+# # conda-build --output-folder ../artifacts conda_wheels
 
-# # undo the change, just in case
-# git checkout conda/meta.yaml
+# # # undo the change, just in case
+# # git checkout conda/meta.yaml
 
 # if [ -n "$ANACONDA_API_TOKEN" ]; then 
     # echo Upload artifacts to anaconda.org...

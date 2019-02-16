@@ -16,7 +16,7 @@ build_script:
 
     set originalpath=%path%
     
-    set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;c:\miniconda3-x64;c:\miniconda3-x64\scripts;%path%
+    set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;c:\miniconda3-x64;c:\miniconda3-x64\scripts;%originalpathpath%
 
     c:\cygwin64\bin\bash ci/build_windows.sh
 
@@ -24,13 +24,21 @@ build_script:
 
     c:\miniconda3-x64\scripts\activate c:\miniconda3-x64
     
-    set CONDA_SUBDIR=win-32
-    
-    conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
+    conda config --set always_yes yes
     
     set CONDA_SUBDIR=win-64
     
     conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
+
+    conda-build purge
+    
+    set CONDA_SUBDIR=win-32
+    
+    conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
+    
+    set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;c:\miniconda3-x64;c:\miniconda3-x64\scripts;%originalpathpath%
+
+    c:\cygwin64\bin\bash ci/upload_windows.sh
 
     dir ..\artifacts\*.whl ..\artifacts\*.tar.bz2 /s
 test: off
