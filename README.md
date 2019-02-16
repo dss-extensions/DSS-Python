@@ -8,7 +8,7 @@ Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simul
 
 If you are looking for the custom OpenDSS C-API library, see [`DSS C-API`](http://github.com/dss-extensions/dss_capi/).
 
-Version 0.10.0, based on OpenDSS revision 2395. While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached.
+Version 0.10.1, based on OpenDSS revision 2504. While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached.
 
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level.
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange. 
@@ -19,7 +19,8 @@ If you are not bound to the COM API and its quirks, you might be insterested in 
 
 ## Recent changes
 
-- **2018-11-17 / version 0.10.0: Lots of changes, fixes and new features. Check the new [changelog](docs/changelog.md#0100) document for a list.**
+- **2019-02-17 / version 0.10.1: Under development. Check the new [changelog](docs/changelog.md#0101) document for a list.**
+- 2018-11-17 / version 0.10.0: Lots of changes, fixes and new features. Check the new [changelog](docs/changelog.md#0100) document for a list.
 - 2018-08-12 / version 0.9.8: Reorganize modules (v7 and v8), adds 8 missing methods and new backend methods for OpenDSSDirect.py v0.3+. Integrates many fixes from DSS_CAPI and the upstream OpenDSS.
 - 2018-04-30 / version 0.9.7: Fix some of the setters that used array data.
 - 2018-04-05 / version 0.9.6: Adds missing `ActiveCircuit.CktElements[index]` (or `...CktElements(index)`) and `ActiveCircuit.Buses[index]` (or `...Buses(index)`).
