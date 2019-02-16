@@ -1,28 +1,36 @@
 set -e -x
 
 WGET=wget
+ln -s /cygdrive/c /c
 
 cd ..
 export ARTIFACTS_FOLDER=`cygpath -a -w ./artifacts`
 
 # Install Visual Studio Compiler for Python 2.7
 #choco install -y vcpython27 
+if [ ! -f "/c/projects/VCForPython27.msi" ]; then
+    $WGET https://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi -q -O /c/projects/VCForPython27.msi
+fi
 cd dss_python/ci
-$WGET https://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi -q
 cmd "/c install_vcforpython27.bat"
-rm -rf VCForPython27.msi
+# rm -rf /c/projects/VCForPython27.msi
 cd ../..
 
 # Install the FreePascal compiler
-$WGET https://sourceforge.net/projects/dss-capi/files/FPC/FPC-win32-win64-3.0.4.7z/download -O FPC-win32-win64-3.0.4.7z -q
-7z x -oC:/ FPC-win32-win64-3.0.4.7z
+if [ ! -f "/c/projects/FPC-win32-win64-3.0.4.7z" ]; then
+    $WGET https://sourceforge.net/projects/dss-capi/files/FPC/FPC-win32-win64-3.0.4.7z/download -q -O /c/projects/FPC-win32-win64-3.0.4.7z
+fi    
+7z x -oC:/ c:/projects/FPC-win32-win64-3.0.4.7z
+    
 export PATH="$PATH:/c/FPC/3.0.4/bin/i386-win32"
 export PATH="$PATH:/c/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin"
 
 
 # Download SuiteSparse (once, otherwise the CMake script will download it multiple times)
-$WGET http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O suitesparse.tar.gz -q
-tar zxf suitesparse.tar.gz
+if [ ! -f "/c/projects/SuiteSparse-5.3.0.tar.gz" ]; then
+    $WGET http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O /c/projects/SuiteSparse-5.3.0.tar.gz -q
+fi
+tar zxf /c/projects/SuiteSparse-5.3.0.tar.gz
 export SUITESPARSE_SRC=`cygpath -a -w ./SuiteSparse`
 
 BUILD_WHEELS=1
@@ -37,7 +45,7 @@ if [ "$BUILD_WHEELS" == "1" ]; then
     else
         ## x64
         mkdir dss_capi/klusolve/build_x64
-        cd dss_capi/klusolve/build_x86
+        cd dss_capi/klusolve/build_x64
         cmake .. -DUSE_SYSTEM_SUITESPARSE=OFF -G"Visual Studio 15 2017 Win64"
         cmake --build . --config Release
     fi
@@ -87,7 +95,7 @@ if [ "$BUILD_WHEELS" == "1" ]; then
         # export PATH="/c/miniconda3-x64:/c/miniconda3-x64/scripts:$PATH"
         conda config --set always_yes yes
         conda install conda-build anaconda-client
-        conda update -q conda-build
+        # conda update -q conda-build
     else
         # Install Miniconda
         cd dss_python/ci
@@ -98,9 +106,9 @@ if [ "$BUILD_WHEELS" == "1" ]; then
         export PATH="/c/miniconda:/c/miniconda/scripts:$PATH"
         conda config --set always_yes yes
         conda install conda-build anaconda-client
-        conda update -q conda-build
-        #conda update -q conda
-        #conda info -a
+        # conda update -q conda-build
+        # conda update -q conda
+        # conda info -a
 
         PYTHON_VERSIONS="2.7 3.5 3.6 3.7"
         
