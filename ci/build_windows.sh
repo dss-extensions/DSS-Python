@@ -132,11 +132,11 @@ else
     conda install -q conda-build=3.10.9
 fi # BUILD_WHEELS
 
-# Build conda packages
-export CONDA_SUBDIR=win-32
-cmd /c conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
-export CONDA_SUBDIR=win-64
-cmd /c conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
+# # Build conda packages
+# export CONDA_SUBDIR=win-32
+# conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
+# export CONDA_SUBDIR=win-64
+# conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
 
 # # Build wheels with conda
 # # (if we keep the output section always, the default package
@@ -152,7 +152,7 @@ cmd /c conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
 # # undo the change, just in case
 # git checkout conda/meta.yaml
 
-if [ -n "$ANACONDA_API_TOKEN" ]; then 
-    echo Upload artifacts to anaconda.org...
-    find ../artifacts -name "*.whl" -or -name "*.tar.bz2" | xargs -I {} anaconda upload --no-progress -l main -u pmeira {}
-fi
+# if [ -n "$ANACONDA_API_TOKEN" ]; then 
+    # echo Upload artifacts to anaconda.org...
+    # find ../artifacts -name "*.whl" -or -name "*.tar.bz2" | xargs -I {} anaconda upload --no-progress -l main -u pmeira {}
+# fi
