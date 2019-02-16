@@ -26,11 +26,11 @@ build_script:
     
     set CONDA_SUBDIR=win-32
     
-    conda-build --no-test --output-folder "c:\projects\artifacts" conda
+    conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
     
     set CONDA_SUBDIR=win-64
     
-    conda-build --no-test --output-folder "c:\projects\artifacts" conda
+    conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
 
     dir ..\artifacts\*.whl ..\artifacts\*.tar.bz2 /s
 test: off
