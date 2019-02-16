@@ -101,13 +101,13 @@ if [ "$BUILD_WHEELS" == "1" ]; then
         for A in $PYTHON_VERSIONS
         do
             echo Building for Python $A x86...
-            export CONDA_FORCE_32BIT=1
+            export CONDA_SUBDIR=win-32
             conda create -p ../py${A}_x86 python=$A cffi
             rm -rf .eggs build
             ../py$A_x86/python setup.py --quiet bdist_wheel --dist-dir="$ARTIFACTS_FOLDER"
             
             echo Building for Python $A x64...
-            export CONDA_FORCE_32BIT=
+            export CONDA_SUBDIR=win-64
             conda create -p ../py${A} python=$A cffi
             rm -rf .eggs build
             ../py$A/python setup.py --quiet bdist_wheel --dist-dir="$ARTIFACTS_FOLDER"
@@ -133,9 +133,9 @@ else
 fi # BUILD_WHEELS
 
 # Build conda packages
-export CONDA_FORCE_32BIT=1
+export CONDA_SUBDIR=win-32
 conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
-export CONDA_FORCE_32BIT=
+export CONDA_SUBDIR=win-64
 conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
 
 # # Build wheels with conda
@@ -144,9 +144,9 @@ conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
 # rm -rf conda_wheels
 # cp -R conda conda_wheels
 # cat conda/meta_wheels.yaml >> conda_wheels/meta.yaml
-# export CONDA_FORCE_32BIT=1
+# export CONDA_SUBDIR=win-32
 # conda-build --output-folder ../artifacts conda_wheels
-# export CONDA_FORCE_32BIT=
+# export CONDA_SUBDIR=win-64
 # conda-build --output-folder ../artifacts conda_wheels
 
 # # undo the change, just in case
