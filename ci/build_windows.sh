@@ -13,7 +13,6 @@ cmd "/c install_vcforpython27.bat"
 rm -rf VCForPython27.msi
 cd ../..
 
-
 # Install the FreePascal compiler
 $WGET https://sourceforge.net/projects/dss-capi/files/FPC/FPC-win32-win64-3.0.4.7z/download -O FPC-win32-win64-3.0.4.7z -q
 7z x -oC:/ FPC-win32-win64-3.0.4.7z
@@ -29,24 +28,30 @@ export SUITESPARSE_SRC=`cygpath -a -w ./SuiteSparse`
 BUILD_WHEELS=1
 if [ "$BUILD_WHEELS" == "1" ]; then
     # Build KLUSolve
-    mkdir dss_capi/klusolve/build_x86
-    mkdir dss_capi/klusolve/build_x64
+    if [ "$CONDA_SUBDIR" == "win-32" ]; then
+        ## x86
+        mkdir dss_capi/klusolve/build_x86
+        cd dss_capi/klusolve/build_x86
+        cmake .. -DUSE_SYSTEM_SUITESPARSE=OFF -G"Visual Studio 15 2017"
+        cmake --build . --config Release
+    else
+        ## x64
+        mkdir dss_capi/klusolve/build_x64
+        cd dss_capi/klusolve/build_x86
+        cmake .. -DUSE_SYSTEM_SUITESPARSE=OFF -G"Visual Studio 15 2017 Win64"
+        cmake --build . --config Release
+    fi
 
-    ## x86
-    cd dss_capi/klusolve/build_x86
-    cmake .. -DUSE_SYSTEM_SUITESPARSE=OFF -G"Visual Studio 15 2017"
-    cmake --build . --config Release
-
-    ## x64
-    cd ../build_x64
-    cmake .. -DUSE_SYSTEM_SUITESPARSE=OFF -G"Visual Studio 15 2017 Win64"
-    cmake --build . --config Release
 
     # Build DSS C-API
     cd ../..
     bash ./make_metadata.sh
-    cmd "/c build_win_x86.bat"
-    cmd "/c build_win_x64.bat"
+    if [ "$CONDA_SUBDIR" == "win-32" ]; then
+        cmd "/c build_win_x86.bat"
+    else
+        cmd "/c build_win_x64.bat"
+    fi
+    
     cd ..
 
 
@@ -57,7 +62,12 @@ if [ "$BUILD_WHEELS" == "1" ]; then
         cd dss_python
 
         # Python 27 is kept last since we rebuild klusolve for it
-        PYTHON_VERSIONS="35 36 37 27"
+        if [ "$CONDA_SUBDIR" == "win-32" ]; then
+            PYTHON_VERSIONS="35 36 37 27"
+        else
+            PYTHON_VERSIONS="35-x64 36-x64 37-x64 27-x64"
+        fi
+        
         for A in $PYTHON_VERSIONS
         do
             if [ "$A" == "27" ]; then
@@ -67,15 +77,10 @@ if [ "$BUILD_WHEELS" == "1" ]; then
                 cd "$OLD_DIR"
             fi
         
-            echo Building for Python $A x86...
+            echo Building for Python $A $CONDA_SUBDIR...
             c:/Python${A}/scripts/pip install cffi wheel
             rm -rf .eggs build
             c:/Python${A}/python setup.py --quiet bdist_wheel --dist-dir="$ARTIFACTS_FOLDER"
-            
-            echo Building for Python $A x64...
-            c:/Python${A}-x64/scripts/pip install cffi wheel
-            rm -rf .eggs build
-            c:/Python${A}-x64/python setup.py --quiet bdist_wheel --dist-dir="$ARTIFACTS_FOLDER"
         done
         
         # Add Miniconda to PATH and install conda-build
@@ -98,16 +103,10 @@ if [ "$BUILD_WHEELS" == "1" ]; then
         #conda info -a
 
         PYTHON_VERSIONS="2.7 3.5 3.6 3.7"
+        
         for A in $PYTHON_VERSIONS
         do
-            echo Building for Python $A x86...
-            export CONDA_SUBDIR=win-32
-            conda create -p ../py${A}_x86 python=$A cffi
-            rm -rf .eggs build
-            ../py$A_x86/python setup.py --quiet bdist_wheel --dist-dir="$ARTIFACTS_FOLDER"
-            
-            echo Building for Python $A x64...
-            export CONDA_SUBDIR=win-64
+            echo Building for Python $A $CONDA_SUBDIR...
             conda create -p ../py${A} python=$A cffi
             rm -rf .eggs build
             ../py$A/python setup.py --quiet bdist_wheel --dist-dir="$ARTIFACTS_FOLDER"
