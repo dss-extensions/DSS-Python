@@ -10,9 +10,9 @@ build_script:
 - cmd: >-
     rd /s /q c:\cygwin
 
-    git clone https://github.com/dss-extensions/electricdss-src ../electricdss-src
+    git clone --branch 0.10.1 https://github.com/dss-extensions/electricdss-src ../electricdss-src
 
-    git clone https://github.com/dss-extensions/dss_capi ../dss_capi
+    git clone --branch 0.10.1 https://github.com/dss-extensions/dss_capi ../dss_capi
 
     set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;c:\miniconda3-x64;c:\miniconda3-x64\scripts;%path%
 

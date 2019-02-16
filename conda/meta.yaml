@@ -1,9 +1,9 @@
 package:
     name: dss_python
-    version: "0.10.0"
+    version: "0.10.1"
     
 source:
-    git_rev: "0.10.0"
+    git_rev: "0.10.1"
     git_url: https://github.com/dss-extensions/dss_python.git
     #path: ..
     
