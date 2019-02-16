@@ -134,9 +134,9 @@ fi # BUILD_WHEELS
 
 # Build conda packages
 export CONDA_SUBDIR=win-32
-conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
+cmd /c conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
 export CONDA_SUBDIR=win-64
-conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
+cmd /c conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
 
 # # Build wheels with conda
 # # (if we keep the output section always, the default package
