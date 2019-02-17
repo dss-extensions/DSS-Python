@@ -62,6 +62,8 @@ conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
 # git checkout conda/meta.yaml
 
 # Upload artifacts to anaconda.org
-if [ -n "$ANACONDA_API_TOKEN" ]; then 
-    find ../artifacts -name "*.whl" -or -name "*.tar.bz2" | xargs -I {} anaconda upload --no-progress -l main -u pmeira {}
+if [ -n "$TRAVIS_TAG" ]; then
+    if [ -n "$ANACONDA_API_TOKEN" ]; then 
+        find ../artifacts -name "*.whl" -or -name "*.tar.bz2" | xargs -I {} anaconda upload --no-progress -l main -u pmeira {}
+    fi
 fi
