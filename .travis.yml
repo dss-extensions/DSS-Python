@@ -11,6 +11,8 @@ matrix:
       install:
         - docker pull $DOCKER_IMAGE
       script: 
+        - export TRAVIS_TAG_DSS_PYTHON=$TRAVIS_TAG
+        - export TRAVIS_TAG=
         - cd ..
         - mkdir artifacts
         - mkdir artifacts/linux-64
@@ -26,6 +28,8 @@ matrix:
     - name: "osx_x64"
       os: osx
       script: 
+        - export TRAVIS_TAG_DSS_PYTHON=$TRAVIS_TAG
+        - export TRAVIS_TAG=
         - git clone --branch 0.10.1 https://github.com/dss-extensions/electricdss-src ../electricdss-src
         - git clone --branch 0.10.1 https://github.com/dss-extensions/dss_capi ../dss_capi
         - bash ci/build_osx.sh

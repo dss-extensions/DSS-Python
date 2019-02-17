@@ -50,7 +50,7 @@ for PYVERSION in 2.7 3.4 3.5 3.6 3.7; do
 done
 
 # Build conda packages
-if [ -n "$TRAVIS_TAG" ]; then  # only run conda-build on tags, takes too long
+if [ -n "$TRAVIS_TAG_DSS_PYTHON" ]; then  # only run conda-build on tags, takes too long
     conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda 
 fi
 
@@ -64,7 +64,7 @@ fi
 # git checkout conda/meta.yaml
 
 # Upload artifacts to anaconda.org
-if [ -n "$TRAVIS_TAG" ]; then
+if [ -n "$TRAVIS_TAG_DSS_PYTHON" ]; then
     if [ -n "$ANACONDA_API_TOKEN" ]; then 
         find ../artifacts -name "*.whl" -or -name "*.tar.bz2" | xargs -I {} anaconda upload --no-progress -l main -u pmeira {}
     fi

@@ -14,35 +14,6 @@ environment:
     - CONDA_SUBDIR: win-64
     
 build_script:
-- cmd: >-
-    rd /s /q c:\cygwin
-
-    git clone --branch 0.10.1 https://github.com/dss-extensions/electricdss-src ../electricdss-src
-
-    git clone --branch 0.10.1 https://github.com/dss-extensions/dss_capi ../dss_capi
-
-    set originalpath=%path%
-    
-    IF "%CONDA_SUBDIR%"=="win-32" SET MINICONDA_DIR=c:\miniconda3
-    
-    IF "%CONDA_SUBDIR%"=="win-64" SET MINICONDA_DIR=c:\miniconda3-x64
-    
-    set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;%MINICONDA_DIR%;%MINICONDA_DIR%\scripts;%originalpath%
-
-    c:\cygwin64\bin\bash ci/build_windows.sh
-
-    set path=c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;%MINICONDA_DIR%;%MINICONDA_DIR%\scripts;%originalpath%
-
-    %MINICONDA_DIR%\scripts\activate %MINICONDA_DIR%
-    
-    conda config --set always_yes yes
-    
-    IF DEFINED APPVEYOR_REPO_TAG_NAME conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
-    
-    set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;%MINICONDA_DIR%;%MINICONDA_DIR%\scripts;%originalpath%
-
-    c:\cygwin64\bin\bash ci/upload_windows.sh
-
-    dir ..\artifacts\*.whl ..\artifacts\*.tar.bz2 /s
+- cmd: call ci\build_appveyor.bat
     
 test: off

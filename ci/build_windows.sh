@@ -1,5 +1,7 @@
 set -e -x
 
+APPVEYOR_REPO_TAG_NAME=
+
 WGET=wget
 ln -s /cygdrive/c /c
 

@@ -1,4 +1,4 @@
-if [ -n "$TRAVIS_TAG" ]; then # only run conda-build on tags, takes too long
+if [ -n "$TRAVIS_TAG_DSS_PYTHON" ]; then # only run conda-build on tags, takes too long
     # Install Miniconda
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh -q
     bash miniconda.sh -b -p $HOME/miniconda
