@@ -1,5 +1,5 @@
 version: '{build}'
-skip_non_tags: false
+skip_non_tags: true
 image: Visual Studio 2017
 clone_folder: c:\projects\dss_python
 cache:
