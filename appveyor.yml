@@ -1,5 +1,5 @@
 version: '{build}'
-skip_non_tags: true
+skip_non_tags: false
 image: Visual Studio 2017
 clone_folder: c:\projects\dss_python
 cache:
@@ -37,7 +37,7 @@ build_script:
     
     conda config --set always_yes yes
     
-    conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
+    IF DEFINED APPVEYOR_REPO_TAG_NAME conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
     
     set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;%MINICONDA_DIR%;%MINICONDA_DIR%\scripts;%originalpath%
 

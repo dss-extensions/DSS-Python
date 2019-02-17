@@ -50,7 +50,9 @@ for PYVERSION in 2.7 3.4 3.5 3.6 3.7; do
 done
 
 # Build conda packages
-conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda 
+if [ -n "$TRAVIS_TAG" ]; then  # only run conda-build on tags, takes too long
+    conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda 
+fi
 
 # # Build wheels with conda
 # # (if we keep the output section always, the default package
