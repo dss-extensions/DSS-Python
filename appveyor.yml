@@ -23,9 +23,9 @@ build_script:
 
     set originalpath=%path%
     
-    IF "%CONDA_SUBDIR%"="win-32" SET MINICONDA_DIR=c:\miniconda3
+    IF %CONDA_SUBDIR%=win-32 SET MINICONDA_DIR=c:\miniconda3
     
-    IF "%CONDA_SUBDIR%"="win-64" SET MINICONDA_DIR=c:\miniconda3-x64
+    IF %CONDA_SUBDIR%=win-64 SET MINICONDA_DIR=c:\miniconda3-x64
     
     set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;%MINICONDA_DIR%;%MINICONDA_DIR%\scripts;%originalpath%
 
