@@ -1,7 +1,5 @@
 set -e -x
 
-# This will run in the docker environment, we need to install CMake
-
 cd /io
 
 if [ ! -f /io/dss_capi/lib/linux_x64/libklusolve.so ]; then

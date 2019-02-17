@@ -1,10 +1,17 @@
 version: '{build}'
-skip_non_tags: true
-image: Previous Visual Studio 2017
+skip_non_tags: false
+image: Visual Studio 2017
 clone_folder: c:\projects\dss_python
+cache:
+  - c:\projects\VCForPython27.msi
+  - c:\projects\FPC-win32-win64-3.0.4.7z
+  - c:\projects\SuiteSparse-5.3.0.tar.gz
 environment:
   ANACONDA_API_TOKEN: 
     secure: 78d9aslKXYoP2gVc7p5A5BJj3bSDPd2kZjQAlvEd64cCcxaf185CexeDNYNeNPuU
+  matrix:
+    - CONDA_SUBDIR: win-32
+    - CONDA_SUBDIR: win-64
     
 build_script:
 - cmd: >-
@@ -14,9 +21,28 @@ build_script:
 
     git clone --branch 0.10.1 https://github.com/dss-extensions/dss_capi ../dss_capi
 
-    set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;c:\miniconda3-x64;c:\miniconda3-x64\scripts;%path%
+    set originalpath=%path%
+    
+    IF "%CONDA_SUBDIR%"=="win-32" SET MINICONDA_DIR=c:\miniconda3
+    
+    IF "%CONDA_SUBDIR%"=="win-64" SET MINICONDA_DIR=c:\miniconda3-x64
+    
+    set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;%MINICONDA_DIR%;%MINICONDA_DIR%\scripts;%originalpath%
 
     c:\cygwin64\bin\bash ci/build_windows.sh
 
+    set path=c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;%MINICONDA_DIR%;%MINICONDA_DIR%\scripts;%originalpath%
+
+    %MINICONDA_DIR%\scripts\activate %MINICONDA_DIR%
+    
+    conda config --set always_yes yes
+    
+    IF DEFINED APPVEYOR_REPO_TAG_NAME conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
+    
+    set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;%MINICONDA_DIR%;%MINICONDA_DIR%\scripts;%originalpath%
+
+    c:\cygwin64\bin\bash ci/upload_windows.sh
+
     dir ..\artifacts\*.whl ..\artifacts\*.tar.bz2 /s
+    
 test: off

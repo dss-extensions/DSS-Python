@@ -1,3 +1,13 @@
+# 0.10.1
+
+Released on 2019-02-17.
+
+See also the [changes from DSS C-API](https://github.com/dss-extensions/dss_capi/blob/ed2a6b322a5e102ba61c6565e5e0eb23247b9221/docs/changelog.md#version-0101) for detailed changes, including changes from the official OpenDSS code since 0.10.0.
+
+## Major changes:
+- More and faster error checking.
+
+
 # 0.10.0
 
 Released on 2018-11-17.
