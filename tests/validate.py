@@ -119,6 +119,15 @@ class ValidatingTest:
             dss.ActiveCircuit.Solution.Mode = enums.SolveModes.Daily
             dss.ActiveCircuit.Solution.Solve()
 
+        self.realibity_ran = True
+        try:
+            dss.ActiveCircuit.Meters.DoReliabilityCalc(False)
+        except DssException as ex:
+            if ex.args[0] == 52902:
+                self.realibity_ran = False
+            
+                
+
         self.atol = dss.ActiveCircuit.Solution.Tolerance
 
         self.AllBusDistances.append(dss.ActiveCircuit.AllBusDistances)
@@ -823,14 +832,15 @@ class ValidatingTest:
 
 
             # NOTE: CalcCurrent and AllocFactors removed since it seemed to contain (maybe?) uninitialized values in certain situations
-            for field in 'AvgRepairTime,Peakcurrent,RegisterValues,Totals'.split(','):
+            fields = 'AvgRepairTime,Peakcurrent,RegisterValues,Totals' if self.realibity_ran else 'Peakcurrent,RegisterValues'
+            for field in fields.split(','):
                 fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
                 if SAVE_COM_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
                 if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Meters("{}").{}'.format(A.Name, field), fA, fB)
 
-
-            for field in 'CountBranches,CountEndElements,CustInterrupts,DIFilesAreOpen,FaultRateXRepairHrs,MeteredElement,MeteredTerminal,Name,NumSectionBranches,NumSectionCustomers,NumSections,OCPDeviceType,SAIDI,SAIFI,SAIFIKW,SectSeqIdx,SectTotalCust,SeqListSize,SequenceIndex,SumBranchFltRates,TotalCustomers'.split(','):
+            fields = 'CountBranches,CountEndElements,CustInterrupts,DIFilesAreOpen,FaultRateXRepairHrs,MeteredElement,MeteredTerminal,Name,NumSectionBranches,NumSectionCustomers,NumSections,OCPDeviceType,SAIDI,SAIFI,SAIFIKW,SectSeqIdx,SectTotalCust,SeqListSize,SequenceIndex,SumBranchFltRates,TotalCustomers' if self.realibity_ran else 'MeteredElement,MeteredTerminal,Name'
+            for field in fields.split(','):
                 fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
                 if SAVE_COM_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA

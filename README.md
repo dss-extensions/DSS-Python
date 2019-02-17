@@ -2,11 +2,13 @@
 
 Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simulator). Based on CFFI and DSS C-API, aiming for full COM compatibility on Windows, Linux and MacOS.
 
-<p align="center">
-    <img alt="Overview of related repositories" src="https://raw.githubusercontent.com/dss-extensions/dss_python/master/docs/images/repomap.svg?sanitize=true" width=600>
-</p>
+See also the other projects from [DSS-Extensions.org](https://dss-extensions.org/):
 
-If you are looking for the custom OpenDSS C-API library, see [`DSS C-API`](http://github.com/dss-extensions/dss_capi/).
+- [DSS C-API library](http://github.com/dss-extensions/dss_capi/): the base library that exposes a slightly modified version of EPRI's OpenDSS through a more traditional C interface, built with the open-source Free Pascal compiler instead of Delphi.
+- [OpenDSSDirect.py](http://github.com/dss-extensions/OpenDSSDirect.py/): if you don't need COM compatibility, or just would like to check its extra funcionalities. You can mix DSS Python and OpenDSSDirect.py -- for example, if you have old code using the official COM objects, you could quickly switch to DSS Python with very few code changes, and then use [`opendssdirect.utils`](https://dss-extensions.org/OpenDSSDirect.py/opendssdirect.html#module-opendssdirect.utils) to generate some DataFrames.
+- [OpenDSSDirect.jl](http://github.com/dss-extensions/OpenDSSDirect.jl/): a Julia module, created by Tom Short (@tshort), recently migrated with the help of Dheepak Krishnamurthy (@kdheepak) to DSS C-API instead of the DDLL.
+- [DSS Sharp](http://github.com/dss-extensions/dss_sharp/): available for .NET/C#, also mimics the COM classes, but Windows-only at the moment. Soon it will be possible to use it via COM too.
+- [DSS MATLAB](http://github.com/dss-extensions/dss_matlab/): presents multi-platform integration (Windows, Linux, MacOS) with DSS C-API and is also very compatible with the COM classes.
 
 Version 0.10.1, based on OpenDSS revision 2504. While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached.
 
@@ -15,11 +17,9 @@ Most of the COM documentation can be used as-is, but instead of returning tuples
 
 The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the sparse system admittance matrix.
 
-If you are not bound to the COM API and its quirks, you might be insterested in OpenDSSDirect.py. [OpenDSSDirect.py](https://github.com/NREL/OpenDSSDirect.py/) exposes a more Pythonic API and contains extra utilities. Thanks to @kdheepak, OpenDSSDirect.py v0.3+ uses DSS Python's backend -- this means you can use both modules at once. For example, if you have old code using the official COM objects, you could quickly switch to DSS Python with very few code changes, and then use [`opendssdirect.utils`](https://nrel.github.io/OpenDSSDirect.py/opendssdirect.html#module-opendssdirect.utils) to generate some DataFrames.
-
 ## Recent changes
 
-- **2019-02-17 / version 0.10.1: Under development. Check the new [changelog](docs/changelog.md#0101) document for a list.**
+- **2019-02-17 / version 0.10.1: Integrate DSS C-API changes/fix, some small fixes, and more error-checking. Check the new [changelog](docs/changelog.md#0101) document for a list.**
 - 2018-11-17 / version 0.10.0: Lots of changes, fixes and new features. Check the new [changelog](docs/changelog.md#0100) document for a list.
 - 2018-08-12 / version 0.9.8: Reorganize modules (v7 and v8), adds 8 missing methods and new backend methods for OpenDSSDirect.py v0.3+. Integrates many fixes from DSS_CAPI and the upstream OpenDSS.
 - 2018-04-30 / version 0.9.7: Fix some of the setters that used array data.
@@ -128,7 +128,7 @@ for i in range(len(voltages) // 2):
     print('node %d: %f + j%f' % (i, voltages[2*i], voltages[2*i + 1]))
 ```
 
-If you do not need the mixed-cased handling, omit the call to `use_com_compat()` and use the casing used in this project, which should make most of the COM instance conventions.
+If you do not need the mixed-cased handling, omit the call to `use_com_compat()` and use the casing used in this project, which should use most of the COM instance conventions.
 
 If you want to play with the experimental OpenDSS-PM interface (from OpenDSS v8), it is installed side-by-side and you can import it as:
 
@@ -204,8 +204,7 @@ Besides bug fixes, the main funcionality of this library is mostly done. Notable
 
 Questions?
 ==========
-If you have any question, feel free to open a ticket on GitHub, or contact directly me through email (pmeira at ieee.org) or [Twitter](https://twitter.com/PCMMeira).
-Please allow me a few days to respond.
+If you have any question, feel free to open a ticket on GitHub, or contact directly me through email (pmeira at ieee.org). Please allow me a few days to respond.
 
 
 Credits / Acknowlegement

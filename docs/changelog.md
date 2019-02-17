@@ -2,11 +2,16 @@
 
 Released on 2019-02-17.
 
-See also the [changes from DSS C-API](https://github.com/dss-extensions/dss_capi/blob/ed2a6b322a5e102ba61c6565e5e0eb23247b9221/docs/changelog.md#version-0101) for detailed changes, including changes from the official OpenDSS code since 0.10.0.
+This is a minor DSS Python release that contains lots of changes from DSS C-API. See also the [changes from DSS C-API](https://github.com/dss-extensions/dss_capi/blob/ed2a6b322a5e102ba61c6565e5e0eb23247b9221/docs/changelog.md#version-0101) for details, including changes from the official OpenDSS code since 0.10.0.
+
+DSS Python has recently moved from https://github.com/PMeira/dss_python/ to the new https://dss-extensions.org/ and https://github.com/dss-extensions/dss_python/
 
 ## Major changes:
-- More and faster error checking.
 
+- More and faster error-checking! Python exception will be raised for more errors and with a lower overhead.
+- Fix for `YMatrix.getI` and `YMatrix.getV` (ported from OpenDSSDirect.py)
+- Fix for `ActiveCircuit.ActiveCktElement.Variable` and `ActiveCircuit.ActiveCktElement.Variablei`: now returns a tuple of `(value, errorcode)`, compatible with COM.
+- New `DSS.Error.EarlyAbort`: controls whether all errors halts the DSS script processing (Compile/Redirect), defaults to True.
 
 # 0.10.0
 
