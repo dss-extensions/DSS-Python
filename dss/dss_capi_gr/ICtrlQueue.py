@@ -39,6 +39,10 @@ class ICtrlQueue(Base):
         '''(read-only) Number of Actions on the current actionlist (that have been popped off the control queue by CheckControlActions)'''
         return self._lib.CtrlQueue_Get_NumActions()
 
+    def Push(self, Hour, Second, ActionCode, DeviceHandle):
+        '''Push a control action onto the DSS control queue by time, action code, and device handle (user defined). Returns Control Queue handle.'''
+        return self.CheckForError(self._lib.CtrlQueue_Push(Hour, Seconds, ActionCode, DeviceHandle))
+
     @property
     def PopAction(self):
         '''(read-only) Pops next action off the action list and makes it the active action. Returns zero if none.'''
