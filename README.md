@@ -51,13 +51,13 @@ Since no GUI components are used in the FreePascal DLL, we are experimenting wit
 On all major platforms, you can install directly from pip:
 
 ```
-pip install dss_python
+    pip install dss_python
 ```
 
 Or, if you're using the Anaconda distribution, you can use:
 
 ```
-conda install -c pmeira dss_python
+    conda install -c pmeira dss_python
 ```
 
 Binary wheels are provided for all major platforms (Windows, Linux and MacOS) and many combinations of Python versions (2.7, 3.4 to 3.7). If you have issues with a specific version, please open an issue about it. Conda packages support at least Python 2.7, 3.5, 3.6 and 3.7.
@@ -94,20 +94,20 @@ Example usage
 
 If you were using `win32com` in code like:
 
-```
+```python
 import win32com.client 
 dss_engine = win32com.client.Dispatch("OpenDSSEngine.DSS")
 ```
 
 or `comtypes`:
 
-```
+```python
 import comtypes.client
 dss_engine = comtypes.client.CreateObject("OpenDSSEngine.DSS")
 ```
 
 you can replace that fragment with:
-```
+```python
 import dss
 dss.use_com_compat()
 dss_engine = dss.DSS
@@ -115,7 +115,7 @@ dss_engine = dss.DSS
 
 Assuming you have a DSS script named `master.dss`, you should be able to run it as shown below:
 
-```
+```python
 import dss
 dss.use_com_compat()
 dss_engine = dss.DSS
@@ -132,7 +132,7 @@ If you do not need the mixed-cased handling, omit the call to `use_com_compat()`
 
 If you want to play with the experimental OpenDSS-PM interface (from OpenDSS v8), it is installed side-by-side and you can import it as:
 
-```
+```python
 import dss.v8
 dss_engine = dss.v8.DSS
 ```
