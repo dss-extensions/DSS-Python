@@ -33,6 +33,10 @@ shutil.copy(
 # DSS_CAPI DLLs
 for i, version in enumerate(DSS_VERSIONS):
     dll_path_version_in = os.path.join(base_dll_path_in, version)
+    if not os.path.exists(dll_path_version_in):
+        # try the parent folder
+        dll_path_version_in = base_dll_path_in
+        
     file_list = ['dss_capi_{}'.format(version)]
     
     for fn in file_list:

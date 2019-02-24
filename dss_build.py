@@ -92,7 +92,10 @@ for version in DSS_VERSIONS:
 
     ffi_builder_dss.set_source("_dss_capi_{}".format(version), extra_source_dss,
         libraries=["dss_capi_{}".format(version)],
-        library_dirs=[os.path.join(src_path, '../dss_capi/lib/{}/{}'.format(PLATFORM_FOLDER, version))],
+        library_dirs=[
+            os.path.join(src_path, '../dss_capi/lib/{}/{}'.format(PLATFORM_FOLDER, version)), 
+            os.path.join(src_path, '../dss_capi/lib/{}'.format(PLATFORM_FOLDER))
+        ],
         include_dirs=[os.path.join(src_path, '../dss_capi/include/{}'.format(version))],
         source_extension='.c',
         **extra
