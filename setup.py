@@ -55,6 +55,12 @@ else:
     })
 
 
+# (2019-02-24) PEP 496 didn't work, using a workaround
+if (sys.version_info.major, sys.version_info.minor) < (3, 5):
+    compat_requires = ['enum34']
+else:
+    compat_requires = []
+
 setup(
     name="dss_python",
     description="OpenDSS bindings and tools based on the DSS C-API project",
@@ -75,7 +81,7 @@ setup(
             'dss_build.py:ffi_builder_CapUserControl'
         ],
     ext_package="dss",
-    install_requires=["cffi>=1.11.2", "numpy>=1.0"],
+    install_requires=["cffi>=1.11.2", "numpy>=1.0"] + compat_requires,
     zip_safe=False,
     classifiers=[
         'Intended Audience :: Science/Research',

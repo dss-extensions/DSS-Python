@@ -3,7 +3,8 @@
 (not released)
 
 - `CtrlQueue`: Add the missing function `Push`.
-
+- The `enum34` module was added as a dependency for Python < 3.5.
+- The `Options` enumeration was split into several new enumerations (`AutoAddTypes`, `CktModels`, `ControlModes`, `SolutionLoadModels`, `SolutionAlgorithms`, `RandomModes`). It is now marked as deprecated for future removal.
 
 # 0.10.1
 

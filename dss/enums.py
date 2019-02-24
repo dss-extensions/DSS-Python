@@ -1,94 +1,126 @@
 import sys
-if (sys.version_info.major, sys.version_info.minor) >= (3, 4):
-    import enum
-    Base = enum.IntEnum
-else:
-    Base = object
+from enum import IntEnum
 
-class MonitorModes(Base):
-    VI = 0x00000000
-    Power = 0x00000001
-    Sequence = 0x00000010
-    Magnitude = 0x00000020
-    PosOnly = 0x00000040
-    Taps = 0x00000002
-    States = 0x00000003
+class MonitorModes(IntEnum):
+    VI = 0x00 # Monitor records Voltage and Current at the terminal (Default)
+    Power = 0x01 # Monitor records kW, kvar or kVA, angle values, etc. at the terminal to which it is connected.
+    Taps = 0x02 # For monitoring Regulator and Transformer taps
+    States = 0x03 # For monitoring State Variables (for PC Elements only)
+    Sequence = 0x10 # Reports the monitored quantities as sequence quantities
+    Magnitude = 0x20 # Reports the monitored quantities in Magnitude Only
+    PosOnly = 0x40 # Reports the Positive Seq only or avg of all phases
 
-class SolveModes(Base):
-    SnapShot = 0x00000000
-    DutyCycle = 0x00000006
-    Direct = 0x00000007
-    Daily = 0x00000001
-    Monte1 = 0x00000003
-    Monte2 = 0x0000000A
-    Monte3 = 0x0000000B
-    FaultStudy = 0x00000009
-    Yearly = 0x00000002
-    MonteFault = 0x00000008
-    PeakDay = 0x00000005
-    LD1 = 0x00000004
-    LD2 = 0x0000000C
-    AutoAdd = 0x0000000D
-    Harmonic = 0x0000000F
-    Dynamic = 0x0000000E
+class SolveModes(IntEnum):
+    SnapShot = 0 # Solve a single snapshot power flow
+    Daily = 1 # Solve following Daily load shapes
+    Yearly = 2 # Solve following Yearly load shapes
+    Monte1 = 3 # Monte Carlo Mode 1
+    LD1 = 4 # Load-duration Mode 1
+    PeakDay = 5 # Solves for Peak Day using Daily load curve
+    DutyCycle = 6 # Solve following Duty Cycle load shapes
+    Direct = 7 # Solve direct (forced admittance model)
+    MonteFault = 8 # Monte carlo Fault Study
+    FaultStudy = 9 # Fault study at all buses
+    Monte2 = 10 # Monte Carlo Mode 2
+    Monte3 = 11 # Monte Carlo Mode 3
+    LD2 = 12 # Load-Duration Mode 2
+    AutoAdd = 13 # Auto add generators or capacitors
+    Dynamic = 14 # Solve for dynamics
+    Harmonic = 15 # Harmonic solution mode
 
-class Options(Base):
-    PowerFlow = 0x00000001
-    Admittance = 0x00000002
-    NormalSolve = 0x00000000
-    NewtonSolve = 0x00000001
-    Static = 0x00000000
-    Event = 0x00000001
-    Time = 0x00000002
-    Multiphase = 0x00000000
-    PositiveSeq = 0x00000001
-    Gaussian = 0x00000001
-    Uniform = 0x00000002
-    LogNormal = 0x00000003
-    AddGen = 0x00000001
-    AddCap = 0x00000002
-    ControlOFF = 0xFFFFFFFF
+class Options(IntEnum):
+    '''Deprecated. Please use instead: 
+        - AutoAddTypes
+        - CktModels
+        - ControlModes
+        - SolutionLoadModels
+        - SolutionAlgorithms
+        - RandomModes
+    '''
+    
+    PowerFlow = 1
+    Admittance = 2
+    NormalSolve = 0
+    NewtonSolve = 1
+    Static = 0
+    Event = 1
+    Time = 2
+    Multiphase = 0
+    PositiveSeq = 1
+    Gaussian = 1
+    Uniform = 2
+    LogNormal = 3
+    AddGen = 1
+    AddCap = 2
+    ControlOFF = -1
+    
+class SolutionLoadModels(IntEnum):
+    PowerFlow = 1 # Power Flow load model option
+    Admittance = 2 # Admittance load model option
 
-class CapControlModes(Base):
-    Voltage = 0x00000001
-    KVAR = 0x00000002
-    Current = 0x00000000
-    PF = 0x00000004
-    Time = 0x00000003
+class SolutionAlgorithms(IntEnum):
+    NormalSolve = 0 # Solution algorithm option - Normal solution
+    NewtonSolve = 1 # Solution algorithm option - Newton solution
+
+class ControlModes(IntEnum):
+    Static = 0 # Control Mode option - Static
+    Event = 1 # Control Mode Option - Event driven solution mode
+    Time = 2 # Control mode option - Time driven mode
+    Multirate = 3 # Control mode option - Multirate mode
+    Off = -1 # Control Mode OFF
+
+class CktModels(IntEnum):
+    Multiphase = 0 # Circuit model is multiphase (default)
+    PositiveSeq = 1 # Circuit model is positive sequence model only
+
+class RandomModes(IntEnum):
+    Gaussian = 1 # Gaussian
+    Uniform = 2 # Uniform
+    LogNormal = 3 # Log normal
+    
+class AutoAddTypes(IntEnum):
+    AddGen = 1 # Add generators in AutoAdd mode
+    AddCap = 2 # Add capacitors in AutoAdd mode
+
+class CapControlModes(IntEnum):
+    Current = 0 # Current control, ON and OFF settings on CT secondary
+    Voltage = 1 # Voltage control, ON and OFF settings on the PT secondary base
+    KVAR = 2 # kVAR control, ON and OFF settings on PT / CT base
+    Time = 3 # Time control, ON and OFF settings are seconds from midnight
+    PF = 4 # ON and OFF settings are power factor, negative for leading
 
 class ActionCodes:
-    none = 0x00000000
-    Open = 0x00000001
-    Close = 0x00000002
-    Reset = 0x00000003
-    Lock = 0x00000004
-    Unlock = 0x00000005
-    TapUp = 0x00000006
-    TapDown = 0x00000007
+    none = 0 # No action
+    Open = 1 # Open a switch
+    Close = 2 # Close a switch
+    Reset = 3 # Reset to the shelf state (unlocked, closed for a switch)
+    Lock = 4 # Lock a switch, prventing both manual and automatic operation
+    Unlock = 5 # Unlock a switch, permitting both manual and automatic operation
+    TapUp = 6 # Move a regulator tap up
+    TapDown = 7 # Move a regulator tap down
 
-class LoadStatus(Base):
-    Variable = 0x00000000
-    Fixed = 0x00000001
-    Exempt = 0x00000002
+class LoadStatus(IntEnum):
+    Variable = 0
+    Fixed = 1
+    Exempt = 2
 
-class LoadModels(Base):
-    ConstPQ = 0x00000001
-    ConstZ = 0x00000002
-    Motor = 0x00000003
-    CVR = 0x00000004
-    ConstI = 0x00000005
-    ConstPFixedQ = 0x00000006
-    ConstPFixedX = 0x00000007
-    ZIPV = 0x00000008
+class LoadModels(IntEnum):
+    ConstPQ = 1
+    ConstZ = 2
+    Motor = 3
+    CVR = 4
+    ConstI = 5
+    ConstPFixedQ = 6
+    ConstPFixedX = 7
+    ZIPV = 8
 
-class LineUnits(Base):
-    none = 0x00000000
-    Miles = 0x00000001
-    kFt = 0x00000002
-    km = 0x00000003
-    meter = 0x00000004
-    ft = 0x00000005
-    inch = 0x00000006
-    cm = 0x00000007
-    mm = 0x00000008
-    Maxnum = 0x00000009
+class LineUnits(IntEnum):
+    none = 0 # No line length unit
+    Miles = 1 # Line length units in miles
+    kFt = 2 # Line length units are in thousand feet
+    km = 3 # Line length units are km
+    meter = 4 # Line length units are meters
+    ft = 5 # Line units in feet
+    inch = 6 # Line length units are inches
+    cm = 7 # Line units are cm
+    mm = 8 # Line length units are mm
