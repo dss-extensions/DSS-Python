@@ -126,6 +126,21 @@ class IDSS(Base):
         self._lib.DSS_Set_AllowForms(value)
         self.CheckForError()
 
+    @property
+    def AllowEditor(self):
+        '''Gets/sets whether running the external editor for "Show" is allowed
+        
+        AllowEditor controls whether the external editor is used in commands like "Show".
+        If you set to 0 (false), the editor is not executed. Note that other side effects,
+        such as the creation of files, are not affected.
+        '''
+        return self._lib.DSS_Get_AllowEditor() != 0
+
+    @AllowEditor.setter
+    def AllowEditor(self, value):
+        self._lib.DSS_Set_AllowEditor(value)
+        self.CheckForError()
+
     def ShowPanel(self):
         warnings.warn('ShowPanel is not implemented.')
 

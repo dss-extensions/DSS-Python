@@ -3,6 +3,7 @@
 (not released)
 
 - `CtrlQueue`: Add the missing function `Push`.
+- New `DSS.AllowEditor`: this new property controls if the external editor is called on DSS commands like `Show`. If set to `False`, the editor is not called, but other side effects should not be affected (e.g. files can be created).
 - The `enum34` module was added as a dependency for Python < 3.5.
 - The `Options` enumeration was split into several new enumerations (`AutoAddTypes`, `CktModels`, `ControlModes`, `SolutionLoadModels`, `SolutionAlgorithms`, `RandomModes`). It is now marked as deprecated for future removal.
 

@@ -25,8 +25,11 @@ def use_com_compat(use=True, warn=False):
         del Base.__setattr__
         del Base.__getattr__
 
-class DssException(Exception):
+class DSSException(Exception):
     pass
+
+# For backwards compatibility
+DssException = DSSException
 
 class Base(object):
     __slots__ = [
