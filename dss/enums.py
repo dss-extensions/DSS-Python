@@ -89,7 +89,7 @@ class CapControlModes(IntEnum):
     Time = 3 # Time control, ON and OFF settings are seconds from midnight
     PF = 4 # ON and OFF settings are power factor, negative for leading
 
-class ActionCodes:
+class ActionCodes(IntEnum):
     none = 0 # No action
     Open = 1 # Open a switch
     Close = 2 # Close a switch
