@@ -1,7 +1,7 @@
 set BLD_PREV_DIR=%cd%
 set BLD_PREV_PATH=%path%
-set ELECTRICDSS_SRC_VERSION=0.10.1
-set DSS_CAPI_VERSION=0.10.1
+set ELECTRICDSS_SRC_VERSION=0.10.2
+set DSS_CAPI_VERSION=0.10.2
 
 REM Clone dependency repositories
 if not exist ..\electricdss-src (

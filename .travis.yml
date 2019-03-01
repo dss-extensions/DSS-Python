@@ -16,8 +16,8 @@ matrix:
         - cd ..
         - mkdir artifacts
         - mkdir artifacts/linux-64
-        - git clone --branch 0.10.1 https://github.com/dss-extensions/electricdss-src electricdss-src
-        - git clone --branch 0.10.1 https://github.com/dss-extensions/dss_capi dss_capi
+        - git clone --branch 0.10.2 https://github.com/dss-extensions/electricdss-src electricdss-src
+        - git clone --branch 0.10.2 https://github.com/dss-extensions/dss_capi dss_capi
         - wget http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O suitesparse.tar.gz -q
         - tar zxf suitesparse.tar.gz
         - export SUITESPARSE_SRC=`realpath ./SuiteSparse`
@@ -30,8 +30,8 @@ matrix:
       script: 
         - export TRAVIS_TAG_DSS_PYTHON=$TRAVIS_TAG
         - export TRAVIS_TAG=
-        - git clone --branch 0.10.1 https://github.com/dss-extensions/electricdss-src ../electricdss-src
-        - git clone --branch 0.10.1 https://github.com/dss-extensions/dss_capi ../dss_capi
+        - git clone --branch 0.10.2 https://github.com/dss-extensions/electricdss-src ../electricdss-src
+        - git clone --branch 0.10.2 https://github.com/dss-extensions/dss_capi ../dss_capi
         - bash ci/build_osx.sh
         - ls -lR ../artifacts
 

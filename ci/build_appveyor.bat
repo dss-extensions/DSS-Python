@@ -9,9 +9,9 @@ IF DEFINED APPVEYOR_REPO_TAG_NAME set DSS_PYTHON_BUILD_TAG=1
 set APPVEYOR_REPO_TAG_NAME=
 setx DSS_PYTHON_BUILD_TAG %DSS_PYTHON_BUILD_TAG%
 
-git clone --branch 0.10.1 https://github.com/dss-extensions/electricdss-src ../electricdss-src
+git clone --branch 0.10.2 https://github.com/dss-extensions/electricdss-src ../electricdss-src
 
-git clone --branch 0.10.1 https://github.com/dss-extensions/dss_capi ../dss_capi
+git clone --branch 0.10.2 https://github.com/dss-extensions/dss_capi ../dss_capi
 
 set originalpath=%path%
 
