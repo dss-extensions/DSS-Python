@@ -10,7 +10,7 @@ See also the other projects from [DSS-Extensions.org](https://dss-extensions.org
 - [DSS Sharp](http://github.com/dss-extensions/dss_sharp/): available for .NET/C#, also mimics the COM classes, but Windows-only at the moment. Soon it will be possible to use it via COM too.
 - [DSS MATLAB](http://github.com/dss-extensions/dss_matlab/): presents multi-platform integration (Windows, Linux, MacOS) with DSS C-API and is also very compatible with the COM classes.
 
-Development version 0.10.2 (unreleased), based on OpenDSS revision 2504. While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached.
+Version 0.10.2, based on OpenDSS revision 2504. While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached. If you find an unexpected missing feature, please report it!
 
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level.
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange. 
@@ -19,7 +19,10 @@ The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the 
 
 ## Recent changes
 
-- **2019-02-17 / version 0.10.1: Integrate DSS C-API changes/fix, some small fixes, and more error-checking. Check the [changelog](docs/changelog.md#0101) document for a list.**
+Check the [changelog](docs/changelog.md#0101) document for a more detailed list.
+
+- **2019-02-28 / version 0.10.2: Some small fixes, adds the missing `CtrlQueue.Push`, faster LoadShapes and new property `DSS.AllowEditor` to toggle editor calls.**
+- 2019-02-17 / version 0.10.1: Integrate DSS C-API changes/fix, some small fixes, and more error-checking. 
 - 2018-11-17 / version 0.10.0: Lots of changes, fixes and new features. Check the new [changelog](docs/changelog.md#0100) document for a list.
 - 2018-08-12 / version 0.9.8: Reorganize modules (v7 and v8), adds 8 missing methods and new backend methods for OpenDSSDirect.py v0.3+. Integrates many fixes from DSS_CAPI and the upstream OpenDSS.
 - 2018-04-30 / version 0.9.7: Fix some of the setters that used array data.
