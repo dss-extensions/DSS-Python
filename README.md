@@ -1,3 +1,6 @@
+[![Travis-CI: Linux and macOS build status](https://travis-ci.com/dss-extensions/dss_python.svg?branch=master)](https://travis-ci.com/dss-extensions/dss_python) 
+[![AppVeyor: Windows build status](https://ci.appveyor.com/api/projects/status/bvcbel63n5uf4yjk/branch/master?svg=true)](https://ci.appveyor.com/project/PMeira/dss-python-yyx2r/branch/master)
+
 # DSS Python: Unofficial bindings for EPRI's OpenDSS
 
 Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simulator). Based on CFFI and DSS C-API, aiming for full COM compatibility on Windows, Linux and MacOS.
