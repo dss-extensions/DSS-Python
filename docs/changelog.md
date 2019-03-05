@@ -1,4 +1,14 @@
+# 0.10.3
+
+**in development, not released**
+
+- Use prebuilt binaries for DSS C-API and KLUSolve
+- Build wheels for 32-bit Linux are now available
+
+
 # 0.10.2
+
+Released on 2019-02-28.
 
 - `CtrlQueue`: Add the missing function `Push`. See [CtrlQueueTest.py](https://github.com/dss-extensions/electricdss-tst/blob/master/Test/CtrlQueueTest.py) for an example ported from the Excel VBA example.
 - New `DSS.AllowEditor`: this new property controls if the external editor is called on DSS commands like `Show`. If set to `False`, the editor is not called, but other side effects should not be affected (e.g. files can be created).

@@ -1,6 +1,6 @@
 package:
     name: dss_python
-    version: "0.10.2"
+    version: "0.10.3a1"
     
 source:
     #git_rev: "0.10.2"
@@ -9,7 +9,7 @@ source:
     
 build:
     script_env:
-        - SUITESPARSE_SRC
+        - DSS_CAPI_PATH
 
 requirements:
     build:
@@ -20,7 +20,6 @@ requirements:
         - setuptools
         - wheel
         - cmake [osx]
-        # - {{ compiler('pascal') }}
         # - git
         
     host:

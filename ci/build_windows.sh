@@ -18,53 +18,10 @@ cmd "/c install_vcforpython27.bat"
 # rm -rf /c/projects/VCForPython27.msi
 cd ../..
 
-# Install the FreePascal compiler
-if [ ! -f "/c/projects/FPC-win32-win64-3.0.4.7z" ]; then
-    $WGET https://sourceforge.net/projects/dss-capi/files/FPC/FPC-win32-win64-3.0.4.7z/download -q -O /c/projects/FPC-win32-win64-3.0.4.7z
-fi    
-7z x -oC:/ c:/projects/FPC-win32-win64-3.0.4.7z
-    
-export PATH="$PATH:/c/FPC/3.0.4/bin/i386-win32"
 export PATH="$PATH:/c/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin"
-
-
-# Download SuiteSparse (once, otherwise the CMake script will download it multiple times)
-if [ ! -f "/c/projects/SuiteSparse-5.3.0.tar.gz" ]; then
-    $WGET http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O /c/projects/SuiteSparse-5.3.0.tar.gz -q
-fi
-tar zxf /c/projects/SuiteSparse-5.3.0.tar.gz
-export SUITESPARSE_SRC=`cygpath -a -w ./SuiteSparse`
 
 BUILD_WHEELS=1
 if [ "$BUILD_WHEELS" == "1" ]; then
-    # Build KLUSolve
-    if [ "$CONDA_SUBDIR" == "win-32" ]; then
-        ## x86
-        mkdir dss_capi/klusolve/build_x86
-        cd dss_capi/klusolve/build_x86
-        cmake .. -DUSE_SYSTEM_SUITESPARSE=OFF -G"Visual Studio 15 2017"
-        cmake --build . --config Release
-    else
-        ## x64
-        mkdir dss_capi/klusolve/build_x64
-        cd dss_capi/klusolve/build_x64
-        cmake .. -DUSE_SYSTEM_SUITESPARSE=OFF -G"Visual Studio 15 2017 Win64"
-        cmake --build . --config Release
-    fi
-
-
-    # Build DSS C-API
-    cd ../..
-    bash ./make_metadata.sh
-    if [ "$CONDA_SUBDIR" == "win-32" ]; then
-        cmd "/c build_win_x86.bat"
-    else
-        cmd "/c build_win_x64.bat"
-    fi
-    
-    cd ..
-
-
     # conda-build with wheels doesn't seem consistent so
     # we build the wheels manually
     if [[ -v APPVEYOR ]]; then 
@@ -80,13 +37,6 @@ if [ "$BUILD_WHEELS" == "1" ]; then
         
         for A in $PYTHON_VERSIONS
         do
-            if [ "$A" == "27" ]; then
-                OLD_DIR="`pwd`"
-                cd ci
-                cmd "/c build_klusolve_py27.bat"
-                cd "$OLD_DIR"
-            fi
-        
             echo Building for Python $A $CONDA_SUBDIR...
             c:/Python${A}/scripts/pip install cffi wheel
             rm -rf .eggs build

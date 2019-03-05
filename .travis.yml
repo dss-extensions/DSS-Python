@@ -5,7 +5,11 @@ matrix:
     - name: "linux_x64"
       os: linux
       sudo: required
-      env: DOCKER_IMAGE=pmeira/manylinux_wheel_cmake_fpc
+      env: 
+        - DOCKER_IMAGE=pmeira/manylinux_wheel_cmake_fpc
+        - DSS_CAPI_TAG=0.10.3a1
+        - LINUX_X64=1
+        - CONDA_SUBDIR=linux-64
       services:
         - docker
       install:
@@ -14,24 +18,49 @@ matrix:
         - export TRAVIS_TAG_DSS_PYTHON=$TRAVIS_TAG
         - export TRAVIS_TAG=
         - cd ..
+        - wget https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_linux_x64.tar.gz -q -O dss_capi.tar.gz
+        - tar zxf dss_capi.tar.gz
         - mkdir artifacts
         - mkdir artifacts/linux-64
-        - git clone --branch 0.10.2 https://github.com/dss-extensions/electricdss-src electricdss-src
-        - git clone --branch 0.10.2 https://github.com/dss-extensions/dss_capi dss_capi
-        - wget http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O suitesparse.tar.gz -q
-        - tar zxf suitesparse.tar.gz
-        - export SUITESPARSE_SRC=`realpath ./SuiteSparse`
         - docker run --rm -v `pwd`:/io $DOCKER_IMAGE bash /io/dss_python/ci/build_linux.sh
+        - export DSS_CAPI_PATH=`pwd`/dss_capi
         - bash dss_python/ci/build_linux_conda.sh
+        - ls -lR artifacts
+        
+    - name: "linux_x86"
+      os: linux
+      sudo: required
+      env: 
+        - DOCKER_IMAGE=pmeira/manylinux_wheel_cmake_fpc_i686
+        - DSS_CAPI_TAG=0.10.3a1
+        - CONDA_SUBDIR=linux-32
+      services:
+        - docker
+      install:
+        - docker pull $DOCKER_IMAGE
+      script: 
+        - export TRAVIS_TAG_DSS_PYTHON=$TRAVIS_TAG
+        - export TRAVIS_TAG=
+        - cd ..
+        - wget https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_linux_x86.tar.gz -q -O dss_capi.tar.gz
+        - tar zxf dss_capi.tar.gz
+        - mkdir artifacts
+        - mkdir artifacts/linux-32
+        - docker run --rm -v `pwd`:/io $DOCKER_IMAGE bash /io/dss_python/ci/build_linux.sh
         - ls -lR artifacts
 
     - name: "osx_x64"
       os: osx
+      env: 
+        - DSS_CAPI_TAG=0.10.3a1
       script: 
         - export TRAVIS_TAG_DSS_PYTHON=$TRAVIS_TAG
         - export TRAVIS_TAG=
-        - git clone --branch 0.10.2 https://github.com/dss-extensions/electricdss-src ../electricdss-src
-        - git clone --branch 0.10.2 https://github.com/dss-extensions/dss_capi ../dss_capi
+        - cd ..
+        - wget https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_darwin_x64.tar.gz -q -O dss_capi.tar.gz
+        - tar zxf dss_capi.tar.gz
+        - export DSS_CAPI_PATH=`pwd`/dss_capi
+        - cd dss_python
         - bash ci/build_osx.sh
         - ls -lR ../artifacts
 

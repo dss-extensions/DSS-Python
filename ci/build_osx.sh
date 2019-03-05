@@ -15,28 +15,7 @@ conda update -q conda-build
 mkdir ./artifacts
 export ARTIFACTS_FOLDER=`python -c 'import os,sys;print(os.path.realpath(sys.argv[1]))' ./artifacts`
 
-# Install the FreePascal compiler
-wget https://sourceforge.net/projects/freepascal/files/Mac%20OS%20X/3.0.4/fpc-3.0.4a.intel-macosx.dmg/download -Ofpc.dmg -q
-sudo hdiutil attach fpc.dmg
-sudo installer -package /Volumes/fpc-3.0.4a.intel-macosx/fpc-3.0.4a.intel-macosx.pkg -target /
-
-# Download SuiteSparse (once, otherwise the CMake script will download it multiple times)
-wget http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.3.0.tar.gz -O suitesparse.tar.gz -q
-tar zxf suitesparse.tar.gz
-export SUITESPARSE_SRC=`python -c 'import os,sys;print(os.path.realpath(sys.argv[1]))' ./SuiteSparse`
-
-# Build KLUSolve
-mkdir ./dss_capi/klusolve/build
-cd ./dss_capi/klusolve/build
-cmake -DUSE_SYSTEM_SUITESPARSE=OFF ..
-cmake --build . --config Release
-
-# Build DSS C-API
-cd ../../../dss_capi
-bash make_metadata.sh
-bash build_macos_x64.sh
-
-cd ../dss_python
+cd dss_python
 
 # conda-build with wheels doesn't seem consistent so
 # we build the wheels manually

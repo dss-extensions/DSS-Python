@@ -72,12 +72,12 @@ if sys.platform == 'linux':
 ffi_builders = {}    
 
 src_path = os.environ.get('SRC_DIR', '')
-
+DSS_CAPI_PATH = os.environ.get('DSS_CAPI_PATH', os.path.join(src_path, '..', 'dss_capi'))
     
 for version in DSS_VERSIONS:    
     ffi_builder_dss = FFI()
 
-    with open(os.path.join(src_path, '../dss_capi/include/{}/dss_capi.h'.format(version)), 'r') as f:
+    with open(os.path.join(DSS_CAPI_PATH, 'include', version, 'dss_capi.h'), 'r') as f:
         cffi_header_dss = process_header(f.read())
         
     with open('cffi/dss_capi_custom.h', 'r') as f:
@@ -93,10 +93,10 @@ for version in DSS_VERSIONS:
     ffi_builder_dss.set_source("_dss_capi_{}".format(version), extra_source_dss,
         libraries=["dss_capi_{}".format(version)],
         library_dirs=[
-            os.path.join(src_path, '../dss_capi/lib/{}/{}'.format(PLATFORM_FOLDER, version)), 
-            os.path.join(src_path, '../dss_capi/lib/{}'.format(PLATFORM_FOLDER))
+            os.path.join(DSS_CAPI_PATH, 'lib/{}/{}'.format(PLATFORM_FOLDER, version)), 
+            os.path.join(DSS_CAPI_PATH, 'lib/{}'.format(PLATFORM_FOLDER))
         ],
-        include_dirs=[os.path.join(src_path, '../dss_capi/include/{}'.format(version))],
+        include_dirs=[os.path.join(DSS_CAPI_PATH, 'include/{}'.format(version))],
         source_extension='.c',
         **extra
     )
@@ -109,7 +109,7 @@ for version in DSS_VERSIONS:
 # since some functions are different. Some could probably be 
 # merged in a single DLL, but there's not much benefit.
 
-with open(os.path.join(src_path, '../dss_capi/include/dss_UserModels.h'), 'r') as f:
+with open(os.path.join(DSS_CAPI_PATH, 'include/dss_UserModels.h'), 'r') as f:
     cffi_header_um = process_header(f.read())
     
 user_models = [
@@ -121,7 +121,7 @@ user_models = [
 ]    
 
 for user_model in user_models:    
-    with open(os.path.join(src_path, '../dss_capi/include/dss_{}.h'.format(user_model)), 'r') as f:
+    with open(os.path.join(DSS_CAPI_PATH, 'include', 'dss_{}.h'.format(user_model)), 'r') as f:
         func_def = f.read()
         
     prefix = "py{}_".format(user_model)
@@ -133,7 +133,7 @@ for user_model in user_models:
     ffi_builder.set_source("_dss_{}".format(user_model), user_model_src,
         libraries=[],
         library_dirs=[],
-        include_dirs=[os.path.join(src_path, '../dss_capi/include')],
+        include_dirs=[os.path.join(DSS_CAPI_PATH, 'include')],
         source_extension='.c',
         #extra_compile_args=['/DYNAMICBASE:NO'],
         #extra_link_args=['/DYNAMICBASE:NO', '/NXCOMPAT:NO']
