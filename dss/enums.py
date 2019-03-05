@@ -124,3 +124,7 @@ class LineUnits(IntEnum):
     inch = 6 # Line length units are inches
     cm = 7 # Line units are cm
     mm = 8 # Line length units are mm
+
+class YMatrixModes(IntEnum):
+    SeriesOnly = 0
+    WholeMatrix = 1
