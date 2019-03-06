@@ -1,6 +1,6 @@
 package:
     name: dss_python
-    version: "0.10.3a1"
+    version: "{{ load_setup_py_data().version }}"
     
 source:
     #git_rev: "0.10.2"
@@ -13,8 +13,8 @@ build:
 
 requirements:
     build:
-        - {{ compiler('c') }} # [linux]
-        - {{ compiler('cxx') }} # [linux]
+        - {{ compiler('c') }}
+#        - {{ compiler('cxx') }}
         - python {{ python }}
         - cffi
         - setuptools
