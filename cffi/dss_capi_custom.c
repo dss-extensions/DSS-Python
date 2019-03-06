@@ -1,33 +1,8 @@
 #include <dss_capi.h>
 
-void decompress_complex_csc_matrix(int32_t nrows, int32_t ncols, int32_t *col_ptrs, int32_t *col_indices, double* complex_vals, double* complex_output)
-{
-    int32_t col_ptr, col_ptr_next;
-    int32_t output_step = nrows * 2;
-    double *col_out = complex_output;
-    int32_t row, col;
-    
-    for (col = 0; col < ncols; ++col)
-    {
-        col_ptr = col_ptrs[col];
-        col_ptr_next = col_ptrs[col + 1];
-        
-        while (col_ptr < col_ptr_next)
-        {
-            row = col_indices[col_ptr];
-            col_out[row * 2] = complex_vals[2 * col_ptr];
-            col_out[row * 2 + 1] = complex_vals[2 * col_ptr + 1];
-            ++col_ptr;
-        }
-        
-        col_out += output_step;
-    }
-}
-
 void dss_custom_update_loads(int *idx, double *kw, size_t count)
 {
     int i;
-    
     for (i = 0; i < count; ++i)
     {
         Loads_Set_idx(idx[i]);
