@@ -4,7 +4,7 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 Copyright (c) 2016-2018 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Base, DSSException
 import numpy as np
 
 class IMonitors(Base):
@@ -12,6 +12,13 @@ class IMonitors(Base):
 
     def Channel(self, Index):
         '''(read-only) Array of float32 for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
+
+        num_channels = self._lib.Monitors_Get_NumChannels()
+        if Index < 1 or Index > num_channels:
+            raise DSSException(
+                'Monitors.Channel: Invalid channel index ({}), monitor "{}" has {} channels.'.format(
+                Index, self.Name, num_channels
+            ))
         
         ffi = self._api_util.ffi
         self._lib.Monitors_Get_ByteStream_GR()

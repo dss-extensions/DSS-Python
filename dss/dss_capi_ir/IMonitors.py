@@ -12,8 +12,8 @@ class IMonitors(Base):
 
     def Channel(self, Index):
         '''(read-only) Array of float32 for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
-        
-        return self._get_float64_array(self._lib.Monitors_Get_Channel, Index)
+
+        return self.CheckForError(self._get_float64_array(self._lib.Monitors_Get_Channel, Index))
 
     def AsMatrix(self):
         '''(read-only) Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1)'''
