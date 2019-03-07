@@ -1,12 +1,12 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class IFuses(Base):
+class IFuses(Iterable):
     __slots__ = []
 
     def Close(self):
@@ -17,19 +17,6 @@ class IFuses(Base):
 
     def Open(self):
         self._lib.Fuses_Open()
-
-    @property
-    def AllNames(self):
-        '''(read-only) Array of strings containing names of all Fuses in the circuit'''
-        return self._get_string_array(self._lib.Fuses_Get_AllNames)
-
-    @property
-    def Count(self):
-        '''(read-only) Number of Fuse elements in the circuit'''
-        return self._lib.Fuses_Get_Count()
-
-    def __len__(self):
-        return self._lib.Fuses_Get_Count()
 
     @property
     def Delay(self):
@@ -43,11 +30,6 @@ class IFuses(Base):
     def Delay(self, Value):
         self._lib.Fuses_Set_Delay(Value)
         self.CheckForError()
-
-    @property
-    def First(self):
-        '''(read-only) Set the first Fuse to be the active fuse. Returns 0 if none.'''
-        return self._lib.Fuses_Get_First()
 
     @property
     def MonitoredObj(self):
@@ -74,27 +56,6 @@ class IFuses(Base):
     def MonitoredTerm(self, Value):
         self._lib.Fuses_Set_MonitoredTerm(Value)
         self.CheckForError()
-
-    @property
-    def Name(self):
-        '''
-        (read) Get the name of the active Fuse element
-        (write) Set the active Fuse element by name.
-        '''
-        return self._get_string(self._lib.Fuses_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Fuses_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Advance the active Fuse element pointer to the next fuse. Returns 0 if no more fuses.'''
-        return self._lib.Fuses_Get_Next()
 
     @property
     def NumPhases(self):
@@ -155,24 +116,3 @@ class IFuses(Base):
 
         self._lib.Fuses_Set_TCCcurve(Value)
         self.CheckForError()
-
-    @property
-    def idx(self):
-        '''
-        (read) Get/set active fuse by index into the list of fuses. 1 based: 1..count
-        (write) Set Fuse active by index into the list of fuses. 1..count
-        '''
-        return self._lib.Fuses_Get_idx()
-
-    @idx.setter
-    def idx(self, Value):
-        self._lib.Fuses_Set_idx(Value)
-        self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
-
-

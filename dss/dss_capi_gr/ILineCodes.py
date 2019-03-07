@@ -1,18 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class ILineCodes(Base):
+class ILineCodes(Iterable):
     __slots__ = []
-
-    @property
-    def AllNames(self):
-        '''(read-only) Array of strings with names of all devices'''
-        return self._get_string_array(self._lib.LineCodes_Get_AllNames)
 
     @property
     def C0(self):
@@ -47,14 +42,6 @@ class ILineCodes(Base):
         self.CheckForError()
 
     @property
-    def Count(self):
-        '''(read-only) Number of LineCodes'''
-        return self._lib.LineCodes_Get_Count()
-
-    def __len__(self):
-        return self._lib.LineCodes_Get_Count()
-
-    @property
     def EmergAmps(self):
         '''Emergency ampere rating'''
         return self._lib.LineCodes_Get_EmergAmps()
@@ -65,30 +52,9 @@ class ILineCodes(Base):
         self.CheckForError()
 
     @property
-    def First(self):
-        return self._lib.LineCodes_Get_First()
-
-    @property
     def IsZ1Z0(self):
         '''(read-only) Flag denoting whether impedance data were entered in symmetrical components'''
         return self._lib.LineCodes_Get_IsZ1Z0() != 0
-
-    @property
-    def Name(self):
-        '''Name of active LineCode'''
-        return self._get_string(self._lib.LineCodes_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.LineCodes_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        return self._lib.LineCodes_Get_Next()
 
     @property
     def NormAmps(self):
@@ -182,11 +148,3 @@ class ILineCodes(Base):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineCodes_Set_Xmatrix(ValuePtr, ValueCount)
         self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
-
-

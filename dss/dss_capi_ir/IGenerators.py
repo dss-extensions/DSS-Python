@@ -1,31 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class IGenerators(Base):
+class IGenerators(Iterable):
     __slots__ = []
-
-    @property
-    def AllNames(self):
-        '''(read-only) Array of names of all Generator objects.'''
-        return self._get_string_array(self._lib.Generators_Get_AllNames)
-
-    @property
-    def Count(self):
-        '''(read-only) Number of Generator Objects in Active Circuit'''
-        return self._lib.Generators_Get_Count()
-
-    def __len__(self):
-        return self._lib.Generators_Get_Count()
-
-    @property
-    def First(self):
-        '''(read-only) Sets first Generator to be active.  Returns 0 if none.'''
-        return self._lib.Generators_Get_First()
 
     @property
     def ForcedON(self):
@@ -46,24 +28,6 @@ class IGenerators(Base):
     def Model(self, Value):
         self._lib.Generators_Set_Model(Value)
         self.CheckForError()
-
-    @property
-    def Name(self):
-        '''Sets a generator active by name.'''
-        return self._get_string(self._lib.Generators_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Generators_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Sets next Generator to be active.  Returns 0 if no more.'''
-        return self._lib.Generators_Get_Next()
 
     @property
     def PF(self):
@@ -116,16 +80,6 @@ class IGenerators(Base):
         self.CheckForError()
 
     @property
-    def idx(self):
-        '''Get/Set active Generator by index into generators list.  1..Count'''
-        return self._lib.Generators_Get_idx()
-
-    @idx.setter
-    def idx(self, Value):
-        self._lib.Generators_Set_idx(Value)
-        self.CheckForError()
-
-    @property
     def kV(self):
         '''Voltage base for the active generator, kV'''
         return self._lib.Generators_Get_kV()
@@ -164,10 +118,3 @@ class IGenerators(Base):
     def kvar(self, Value):
         self._lib.Generators_Set_kvar(Value)
         self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
-

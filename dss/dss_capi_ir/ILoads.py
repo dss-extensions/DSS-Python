@@ -1,18 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class ILoads(Base):
+class ILoads(Iterable):
     __slots__ = []
-
-    @property
-    def AllNames(self):
-        '''(read-only) Array of strings containing all Load names'''
-        return self._get_string_array(self._lib.Loads_Get_AllNames)
 
     @property
     def AllocationFactor(self):
@@ -76,19 +71,6 @@ class ILoads(Base):
         self.CheckForError()
 
     @property
-    def Count(self):
-        '''(read-only) Number of Load objects in active circuit.'''
-        return self._lib.Loads_Get_Count()
-
-    def __len__(self):
-        return self._lib.Loads_Get_Count()
-
-    @property
-    def First(self):
-        '''(read-only) Set first Load element to be active; returns 0 if none.'''
-        return self._lib.Loads_Get_First()
-
-    @property
     def Growth(self):
         '''Name of the growthshape curve for yearly load growth factors.'''
         return self._get_string(self._lib.Loads_Get_Growth())
@@ -122,24 +104,6 @@ class ILoads(Base):
         self.CheckForError()
 
     @property
-    def Name(self):
-        '''Set active load by name.'''
-        return self._get_string(self._lib.Loads_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Loads_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Sets next Load element to be active; returns 0 of none else index of active load.'''
-        return self._lib.Loads_Get_Next()
-
-    @property
     def NumCust(self):
         '''Number of customers in this load, defaults to one.'''
         return self._lib.Loads_Get_NumCust()
@@ -151,10 +115,7 @@ class ILoads(Base):
 
     @property
     def PF(self):
-        '''
-        (read) Set Power Factor for Active Load. Specify leading PF as negative. Updates kvar based on kW value
-        (write) Set Power Factor for Active Load. Specify leading PF as negative. Updates kvar based on present value of kW.
-        '''
+        '''Get or set Power Factor for Active Load. Specify leading PF as negative. Updates kvar based on present value of kW'''
         return self._lib.Loads_Get_PF()
 
     @PF.setter
@@ -326,15 +287,6 @@ class ILoads(Base):
         self.CheckForError()
 
     @property
-    def idx(self):
-        return self._lib.Loads_Get_idx()
-
-    @idx.setter
-    def idx(self, Value):
-        self._lib.Loads_Set_idx(Value)
-        self.CheckForError()
-
-    @property
     def kV(self):
         '''Set kV rating for active Load. For 2 or more phases set Line-Line kV. Else actual kV across terminals.'''
         return self._lib.Loads_Get_kV()
@@ -424,10 +376,3 @@ class ILoads(Base):
     def Phases(self, Value):
         self._lib.Loads_Set_Phases(Value)
         self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
-

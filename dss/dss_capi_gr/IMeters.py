@@ -1,12 +1,12 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class IMeters(Base):
+class IMeters(Iterable):
     __slots__ = []
 
     def CloseAllDIFiles(self):
@@ -60,11 +60,6 @@ class IMeters(Base):
         return self._get_string_array(self.CheckForError(self._lib.Meters_Get_AllEndElements))
 
     @property
-    def AllNames(self):
-        '''(read-only) Array of all energy Meter names'''
-        return self._get_string_array(self.CheckForError(self._lib.Meters_Get_AllNames))
-
-    @property
     def AllocFactors(self):
         '''Array of doubles: set the phase allocation factors for the active meter.'''
         self._lib.Meters_Get_AllocFactors_GR()
@@ -94,14 +89,6 @@ class IMeters(Base):
         self.CheckForError()
 
     @property
-    def Count(self):
-        '''(read-only) Number of Energy Meters in the Active Circuit'''
-        return self._lib.Meters_Get_Count()
-
-    def __len__(self):
-        return self._lib.Meters_Get_Count()
-
-    @property
     def CountBranches(self):
         '''(read-only) Number of branches in Active energymeter zone. (Same as sequencelist size)'''
         return self._lib.Meters_Get_CountBranches()
@@ -127,11 +114,6 @@ class IMeters(Base):
         return self._lib.Meters_Get_FaultRateXRepairHrs()
 
     @property
-    def First(self):
-        '''(read-only) Set the first energy Meter active. Returns 0 if none.'''
-        return self._lib.Meters_Get_First()
-
-    @property
     def MeteredElement(self):
         '''Set Name of metered element'''
         return self._get_string(self._lib.Meters_Get_MeteredElement())
@@ -153,27 +135,6 @@ class IMeters(Base):
     def MeteredTerminal(self, Value):
         self._lib.Meters_Set_MeteredTerminal(Value)
         self.CheckForError()
-
-    @property
-    def Name(self):
-        '''
-        (read) Get/Set the active meter  name.
-        (write) Set a meter to be active by name.
-        '''
-        return self._get_string(self._lib.Meters_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Meters_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Sets the next energy Meter active.  Returns 0 if no more.'''
-        return self._lib.Meters_Get_Next()
 
     @property
     def NumSectionBranches(self):
@@ -273,11 +234,3 @@ class IMeters(Base):
         '''(read-only) Totals of all registers of all meters'''
         self._lib.Meters_Get_Totals_GR()
         return self._get_float64_gr_array()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
-
-

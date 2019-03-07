@@ -1,12 +1,12 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class IReclosers(Base):
+class IReclosers(Iterable):
     __slots__ = []
 
     def Close(self):
@@ -14,24 +14,6 @@ class IReclosers(Base):
 
     def Open(self):
         self._lib.Reclosers_Open()
-
-    @property
-    def AllNames(self):
-        '''(read-only) Array of strings with names of all Reclosers in Active Circuit'''
-        return self._get_string_array(self._lib.Reclosers_Get_AllNames)
-
-    @property
-    def Count(self):
-        '''(read-only) Number of Reclosers in active circuit.'''
-        return self._lib.Reclosers_Get_Count()
-
-    def __len__(self):
-        return self._lib.Reclosers_Get_Count()
-
-    @property
-    def First(self):
-        '''(read-only) Set First Recloser to be Active Ckt Element. Returns 0 if none.'''
-        return self._lib.Reclosers_Get_First()
 
     @property
     def GroundInst(self):
@@ -81,24 +63,6 @@ class IReclosers(Base):
     def MonitoredTerm(self, Value):
         self._lib.Reclosers_Set_MonitoredTerm(Value)
         self.CheckForError()
-
-    @property
-    def Name(self):
-        '''Get Name of active Recloser or set the active Recloser by name.'''
-        return self._get_string(self._lib.Reclosers_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Reclosers_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Iterate to the next recloser in the circuit. Returns zero if no more.'''
-        return self._lib.Reclosers_Get_Next()
 
     @property
     def NumFast(self):
@@ -170,21 +134,4 @@ class IReclosers(Base):
     def SwitchedTerm(self, Value):
         self._lib.Reclosers_Set_SwitchedTerm(Value)
         self.CheckForError()
-
-    @property
-    def idx(self):
-        '''Get/Set the active Recloser by index into the recloser list.  1..Count'''
-        return self._lib.Reclosers_Get_idx()
-
-    @idx.setter
-    def idx(self, Value):
-        self._lib.Reclosers_Set_idx(Value)
-        self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
-
 

@@ -1,60 +1,20 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class IReactors(Base):
+class IReactors(Iterable):
     '''Experimental API extension exposing Reactor objects'''
-
+    
     __slots__ = []
-
-    @property
-    def AllNames(self):
-        '''(read-only) Array of strings with names of all devices'''
-        return self._get_string_array(self._lib.Reactors_Get_AllNames)
 
     @property
     def Conductors(self):
         '''(read-only) Array of strings with names of all conductors in the active Reactor object'''
         return self._get_string_array(self._lib.Reactors_Get_Conductors)
-
-    @property
-    def Count(self):
-        '''(read-only) Number of Reactors'''
-        return self._lib.Reactors_Get_Count()
-
-    @property
-    def First(self):
-        return self._lib.Reactors_Get_First()
-
-    @property
-    def Next(self):
-        return self._lib.Reactors_Get_Next()
-
-    @property
-    def Name(self):
-        '''Name of active Reactor'''
-        return self._get_string(self._lib.Reactors_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Reactors_Set_Name(Value)
-        self.CheckForError()
-
-    def __len__(self):
-        return self._lib.Reactors_Get_Count()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
 
     @property
     def SpecType(self):

@@ -1,47 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class IXYCurves(Base):
+class IXYCurves(Iterable):
     __slots__ = []
-
-    @property
-    def Count(self):
-        '''(read-only) Number of XYCurve Objects'''
-        return self._lib.XYCurves_Get_Count()
-
-    def __len__(self):
-        return self._lib.XYCurves_Get_Count()
-
-    @property
-    def First(self):
-        '''(read-only) Sets first XYcurve object active; returns 0 if none.'''
-        return self._lib.XYCurves_Get_First()
-
-    @property
-    def Name(self):
-        '''
-        (read) Name of active XYCurve Object
-        (write) Get Name of active XYCurve Object
-        '''
-        return self._get_string(self._lib.XYCurves_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.XYCurves_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Advances to next XYCurve object; returns 0 if no more objects of this class'''
-        return self._lib.XYCurves_Get_Next()
 
     @property
     def Npts(self):
@@ -140,10 +106,3 @@ class IXYCurves(Base):
     def y(self, Value):
         self._lib.XYCurves_Set_y(Value)
         self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
-

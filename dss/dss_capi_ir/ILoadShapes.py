@@ -1,12 +1,12 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class ILoadShapes(Base):
+class ILoadShapes(Iterable):
     __slots__ = []
 
     def New(self, Name):
@@ -17,24 +17,6 @@ class ILoadShapes(Base):
 
     def Normalize(self):
         self._lib.LoadShapes_Normalize()
-
-    @property
-    def AllNames(self):
-        '''(read-only) Array of strings containing names of all Loadshape objects currently defined.'''
-        return self._get_string_array(self._lib.LoadShapes_Get_AllNames)
-
-    @property
-    def Count(self):
-        '''(read-only) Number of Loadshape objects currently defined in Loadshape collection'''
-        return self._lib.LoadShapes_Get_Count()
-
-    def __len__(self):
-        return self._lib.LoadShapes_Get_Count()
-
-    @property
-    def First(self):
-        '''(read-only) Set the first loadshape active and return integer index of the loadshape. Returns 0 if none.'''
-        return self._lib.LoadShapes_Get_First()
 
     @property
     def HrInterval(self):
@@ -55,27 +37,6 @@ class ILoadShapes(Base):
     def MinInterval(self, Value):
         self._lib.LoadShapes_Set_MinInterval(Value)
         self.CheckForError()
-
-    @property
-    def Name(self):
-        '''
-        (read) Get the Name of the active Loadshape
-        (write) Set the active Loadshape by name
-        '''
-        return self._get_string(self._lib.LoadShapes_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.LoadShapes_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Advance active Loadshape to the next on in the collection. Returns 0 if no more loadshapes.'''
-        return self._lib.LoadShapes_Get_Next()
 
     @property
     def Npts(self):
@@ -103,10 +64,7 @@ class ILoadShapes(Base):
 
     @property
     def Pmult(self):
-        '''
-        (read) Array of Doubles for the P multiplier in the Loadshape.
-        (write) Array of doubles containing the P array for the Loadshape.
-        '''
+        '''Array of doubles for the P multiplier in the Loadshape.'''
         return self._get_float64_array(self._lib.LoadShapes_Get_Pmult)
 
     @Pmult.setter
@@ -169,10 +127,3 @@ class ILoadShapes(Base):
         self.CheckForError()
 
     Sinterval = sInterval
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
-

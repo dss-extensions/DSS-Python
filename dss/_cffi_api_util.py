@@ -72,6 +72,7 @@ class Base(object):
             lowercase_map = {a.lower(): a for a in cls._dss_original_attributes}
             cls._dss_attributes = lowercase_map
 
+
     def CheckForError(self, result=None):
         '''Checks for an OpenDSS error. Raises an exception if any, otherwise returns the `result` parameter.'''
         if self._errorPtr[0]:
@@ -309,3 +310,78 @@ class CffiApiUtil(object):
         return value, ptrs, len(ptrs)
 
 
+class Iterable(Base):
+    __slots__ = [
+        '_Get_First',
+        '_Get_Next',
+        '_Get_Count',
+        '_Get_AllNames',
+        '_Get_Name',
+        '_Set_Name',
+        '_Get_idx',
+        '_Set_idx'
+    ]
+    
+    def __init__(self, api_util):
+        Base.__init__(self, api_util)
+        
+        prefix = type(self).__name__[1:]
+        self._Get_First = getattr(self._lib, '{}_Get_First'.format(prefix))
+        self._Get_Next = getattr(self._lib, '{}_Get_Next'.format(prefix))
+        self._Get_Count = getattr(self._lib, '{}_Get_Count'.format(prefix))
+        self._Get_AllNames = getattr(self._lib, '{}_Get_AllNames'.format(prefix))
+        self._Get_Name = getattr(self._lib, '{}_Get_Name'.format(prefix))
+        self._Set_Name = getattr(self._lib, '{}_Set_Name'.format(prefix))
+        self._Get_idx = getattr(self._lib, '{}_Get_idx'.format(prefix))
+        self._Set_idx = getattr(self._lib, '{}_Set_idx'.format(prefix))
+
+    @property
+    def First(self):
+        '''Sets the first object of this type active. Returns 0 if none.'''
+        return self._Get_First()
+
+    @property
+    def Next(self):
+        '''(read-only) Sets next object of this type active. Returns 0 if no more.'''
+        return self._Get_Next()
+
+    @property
+    def Count(self):
+        '''Number of objects of this type'''
+        return self._Get_Count()
+
+    def __len__(self):
+        return self._Get_Count()
+
+    def __iter__(self):
+        idx = self._Get_First()
+        while idx != 0:
+            yield self
+            idx = self._Get_Next()
+
+    @property
+    def AllNames(self):
+        '''Array of all names of this object type'''
+        return self._get_string_array(self._Get_AllNames)
+
+    @property
+    def Name(self):
+        '''Gets the current name or sets the active object of this type by name'''
+        return self._get_string(self._Get_Name())
+
+    @Name.setter
+    def Name(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self._api_util.codec)
+
+        self.CheckForError(self._Set_Name(Value))
+        
+    @property
+    def idx(self):
+        '''Gets the current index or sets the active object of this type by index'''
+        return self._Get_idx()
+
+    @idx.setter
+    def idx(self, Value):
+        self.CheckForError(self._Set_idx(Value))
+        

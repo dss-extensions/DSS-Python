@@ -1,12 +1,12 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class ICapacitors(Base):
+class ICapacitors(Iterable):
     __slots__ = []
 
     def AddStep(self):
@@ -22,27 +22,9 @@ class ICapacitors(Base):
         return self._lib.Capacitors_SubtractStep() != 0
 
     @property
-    def AllNames(self):
-        '''(read-only) Array of strings with all Capacitor names in the circuit.'''
-        return self._get_string_array(self._lib.Capacitors_Get_AllNames)
-
-    @property
     def AvailableSteps(self):
         '''(read-only) Number of Steps available in cap bank to be switched ON.'''
         return self._lib.Capacitors_Get_AvailableSteps()
-
-    @property
-    def Count(self):
-        '''(read-only) Number of Capacitor objects in active circuit.'''
-        return self._lib.Capacitors_Get_Count()
-
-    def __len__(self):
-        return self._lib.Capacitors_Get_Count()
-
-    @property
-    def First(self):
-        '''(read-only) Sets the first Capacitor active. Returns 0 if no more.'''
-        return self._lib.Capacitors_Get_First()
 
     @property
     def IsDelta(self):
@@ -53,24 +35,6 @@ class ICapacitors(Base):
     def IsDelta(self, Value):
         self._lib.Capacitors_Set_IsDelta(Value)
         self.CheckForError()
-
-    @property
-    def Name(self):
-        '''Sets the active Capacitor by Name.'''
-        return self._get_string(self._lib.Capacitors_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Capacitors_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Sets the next Capacitor active. Returns 0 if no more.'''
-        return self._lib.Capacitors_Get_Next()
 
     @property
     def NumSteps(self):
@@ -84,10 +48,7 @@ class ICapacitors(Base):
 
     @property
     def States(self):
-        '''
-        (read) A array of  integer [0..numsteps-1] indicating state of each step. If value is -1 an error has occurred.
-        (write) Array of integer [0 ..numSteps-1] indicating the state of each step
-        '''
+        '''A array of  integer [0..numsteps-1] indicating state of each step. If the read value is -1 an error has occurred.'''
         return self._get_int32_array(self._lib.Capacitors_Get_States)
 
     @States.setter
@@ -115,9 +76,3 @@ class ICapacitors(Base):
     def kvar(self, Value):
         self._lib.Capacitors_Set_kvar(Value)
         self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next

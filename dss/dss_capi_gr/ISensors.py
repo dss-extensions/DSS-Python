@@ -1,12 +1,12 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class ISensors(Base):
+class ISensors(Iterable):
     __slots__ = []
 
     def Reset(self):
@@ -14,19 +14,6 @@ class ISensors(Base):
 
     def ResetAll(self):
         self._lib.Sensors_ResetAll()
-
-    @property
-    def AllNames(self):
-        '''(read-only) Array of Sensor names.'''
-        return self._get_string_array(self._lib.Sensors_Get_AllNames)
-
-    @property
-    def Count(self):
-        '''(read-only) Number of Sensors in Active Circuit.'''
-        return self._lib.Sensors_Get_Count()
-
-    def __len__(self):
-        return self._lib.Sensors_Get_Count()
 
     @property
     def Currents(self):
@@ -39,11 +26,6 @@ class ISensors(Base):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Sensors_Set_Currents(ValuePtr, ValueCount)
         self.CheckForError()
-
-    @property
-    def First(self):
-        '''(read-only) Sets the first sensor active. Returns 0 if none.'''
-        return self._lib.Sensors_Get_First()
 
     @property
     def IsDelta(self):
@@ -77,27 +59,6 @@ class ISensors(Base):
     def MeteredTerminal(self, Value):
         self._lib.Sensors_Set_MeteredTerminal(Value)
         self.CheckForError()
-
-    @property
-    def Name(self):
-        '''
-        (read) Name of the active sensor.
-        (write) Set the active Sensor by name.
-        '''
-        return self._get_string(self._lib.Sensors_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Sensors_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Sets the next Sensor active. Returns 0 if no more.'''
-        return self._lib.Sensors_Get_Next()
 
     @property
     def PctError(self):
@@ -174,10 +135,3 @@ class ISensors(Base):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Sensors_Set_kWS(ValuePtr, ValueCount)
         self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
-

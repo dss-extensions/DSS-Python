@@ -1,21 +1,16 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class IRegControls(Base):
+class IRegControls(Iterable):
     __slots__ = []
 
     def Reset(self):
         self._lib.RegControls_Reset()
-
-    @property
-    def AllNames(self):
-        '''(read-only) Array of strings containing all RegControl names'''
-        return self._get_string_array(self._lib.RegControls_Get_AllNames)
 
     @property
     def CTPrimary(self):
@@ -28,14 +23,6 @@ class IRegControls(Base):
         self.CheckForError()
 
     @property
-    def Count(self):
-        '''(read-only) Number of RegControl objects in Active Circuit'''
-        return self._lib.RegControls_Get_Count()
-
-    def __len__(self):
-        return self._lib.RegControls_Get_Count()
-
-    @property
     def Delay(self):
         '''Time delay [s] after arming before the first tap change. Control may reset before actually changing taps.'''
         return self._lib.RegControls_Get_Delay()
@@ -44,11 +31,6 @@ class IRegControls(Base):
     def Delay(self, Value):
         self._lib.RegControls_Set_Delay(Value)
         self.CheckForError()
-
-    @property
-    def First(self):
-        '''(read-only) Sets the first RegControl active. Returns 0 if none.'''
-        return self._lib.RegControls_Get_First()
 
     @property
     def ForwardBand(self):
@@ -132,27 +114,6 @@ class IRegControls(Base):
 
         self._lib.RegControls_Set_MonitoredBus(Value)
         self.CheckForError()
-
-    @property
-    def Name(self):
-        '''
-        (read) Get/set Active RegControl  name
-        (write) Sets a RegControl active by name
-        '''
-        return self._get_string(self._lib.RegControls_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.RegControls_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Sets the next RegControl active. Returns 0 if none.'''
-        return self._lib.RegControls_Get_Next()
 
     @property
     def PTratio(self):
@@ -266,11 +227,5 @@ class IRegControls(Base):
     def Winding(self, Value):
         self._lib.RegControls_Set_Winding(Value)
         self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
 
 

@@ -1,13 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 import numpy as np
 
-class IMonitors(Base):
+class IMonitors(Iterable):
     __slots__ = []
 
     def Channel(self, Index):
@@ -55,22 +55,9 @@ class IMonitors(Base):
         self._lib.Monitors_Show()
 
     @property
-    def AllNames(self):
-        '''(read-only) Array of all Monitor Names'''
-        return self._get_string_array(self._lib.Monitors_Get_AllNames)
-
-    @property
     def ByteStream(self):
         '''(read-only) Byte Array containing monitor stream values. Make sure a "save" is done first (standard solution modes do this automatically)'''
         return self._get_int8_array(self._lib.Monitors_Get_ByteStream)
-
-    @property
-    def Count(self):
-        '''(read-only) Number of Monitors'''
-        return self._lib.Monitors_Get_Count()
-
-    def __len__(self):
-        return self._lib.Monitors_Get_Count()
 
     @property
     def Element(self):
@@ -95,11 +82,6 @@ class IMonitors(Base):
         return self._lib.Monitors_Get_FileVersion()
 
     @property
-    def First(self):
-        '''(read-only) Sets the first Monitor active.  Returns 0 if no monitors.'''
-        return self._lib.Monitors_Get_First()
-
-    @property
     def Header(self):
         '''(read-only) Header string;  Array of strings containing Channel names'''
         return self._get_string_array(self._lib.Monitors_Get_Header)
@@ -112,23 +94,6 @@ class IMonitors(Base):
     @Mode.setter
     def Mode(self, Value):
         self._lib.Monitors_Set_Mode(Value)
-
-    @property
-    def Name(self):
-        '''Sets the active Monitor object by name'''
-        return self._get_string(self._lib.Monitors_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Monitors_Set_Name(Value)
-
-    @property
-    def Next(self):
-        '''(read-only) Sets next monitor active.  Returns 0 if no more.'''
-        return self._lib.Monitors_Get_Next()
 
     @property
     def NumChannels(self):
@@ -163,9 +128,3 @@ class IMonitors(Base):
     def dblHour(self):
         '''(read-only) Array of doubles containgin time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution  (see dblFreq)'''
         return self._get_float64_array(self._lib.Monitors_Get_dblHour)
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next

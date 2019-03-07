@@ -1,12 +1,12 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2018 Paulo Meira
+Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Base
+from .._cffi_api_util import Iterable
 
-class ILines(Base):
+class ILines(Iterable):
     __slots__ = []
 
     def New(self, Name):
@@ -14,11 +14,6 @@ class ILines(Base):
             Name = Name.encode(self._api_util.codec)
 
         return self._lib.Lines_New(Name)
-
-    @property
-    def AllNames(self):
-        '''(read-only) Names of all Line Objects'''
-        return self._get_string_array(self._lib.Lines_Get_AllNames)
 
     @property
     def Bus1(self):
@@ -77,14 +72,6 @@ class ILines(Base):
         self.CheckForError()
 
     @property
-    def Count(self):
-        '''(read-only) Number of Line objects in Active Circuit.'''
-        return self._lib.Lines_Get_Count()
-
-    def __len__(self):
-        return self._lib.Lines_Get_Count()
-
-    @property
     def EmergAmps(self):
         '''Emergency (maximum) ampere rating of Line.'''
         return self._lib.Lines_Get_EmergAmps()
@@ -93,11 +80,6 @@ class ILines(Base):
     def EmergAmps(self, Value):
         self._lib.Lines_Set_EmergAmps(Value)
         self.CheckForError()
-
-    @property
-    def First(self):
-        '''(read-only) Invoking this property sets the first element active.  Returns 0 if no lines.  Otherwise, index of the line element.'''
-        return self._lib.Lines_Get_First()
 
     @property
     def Geometry(self):
@@ -134,24 +116,6 @@ class ILines(Base):
 
         self._lib.Lines_Set_LineCode(Value)
         self.CheckForError()
-
-    @property
-    def Name(self):
-        '''Specify the name of the Line element to set it active.'''
-        return self._get_string(self._lib.Lines_Get_Name())
-
-    @Name.setter
-    def Name(self, Value):
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
-
-        self._lib.Lines_Set_Name(Value)
-        self.CheckForError()
-
-    @property
-    def Next(self):
-        '''(read-only) Invoking this property advances to the next Line element active.  Returns 0 if no more lines.  Otherwise, index of the line element.'''
-        return self._lib.Lines_Get_Next()
 
     @property
     def NormAmps(self):
@@ -311,10 +275,4 @@ class ILines(Base):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Lines_Set_Yprim(ValuePtr, ValueCount)
         self.CheckForError()
-
-    def __iter__(self):
-        idx = self.First
-        while idx != 0:
-            yield self
-            idx = self.Next
 
