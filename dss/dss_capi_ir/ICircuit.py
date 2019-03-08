@@ -8,7 +8,6 @@ from .._cffi_api_util import Base
 
 from .IBus import IBus
 from .ICktElement import ICktElement
-from .ICktElement import ICktElement
 from .ISolution import ISolution
 from .IBus import IBus
 from .IGenerators import IGenerators
@@ -18,7 +17,6 @@ from .ISettings import ISettings
 from .ILines import ILines
 from .ICtrlQueue import ICtrlQueue
 from .ILoads import ILoads
-from .ICktElement import ICktElement
 from .IDSSElement import IDSSElement
 from .IActiveClass import IActiveClass
 from .ICapControls import ICapControls
@@ -46,6 +44,7 @@ from .ICNData import ICNData
 from .ITSData import ITSData
 from .IReactors import IReactors
 from .IParallel import IParallel
+from .IReduceCkt import IReduceCkt
 
 class ICircuit(Base):
     __slots__ = [
@@ -90,6 +89,7 @@ class ICircuit(Base):
         'TSData',
         'Reactors',
         'Parallel',
+        'ReduceCkt'
     ]
     
     def __init__(self, api_util):
@@ -135,6 +135,7 @@ class ICircuit(Base):
         self.CNData = ICNData(api_util)
         self.TSData = ITSData(api_util)
         self.Reactors = IReactors(api_util)
+        self.ReduceCkt = IReduceCkt(api_util) #: Circuit Reduction Interface
 
         if hasattr(api_util.lib, 'Parallel_CreateActor'):
             self.Parallel = IParallel(api_util)

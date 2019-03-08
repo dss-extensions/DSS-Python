@@ -3,7 +3,8 @@
 **in development, not released**
 
 - Use prebuilt binaries for DSS C-API and KLUSolve
-- Build wheels for 32-bit Linux are now available
+- Prebuilt wheels for 32-bit Linux are now available
+- `ReduceCkt` ported from COM: new circuit reduction methods available in `DSS.ActiveCircuit.ReduceCkt`
 
 
 # 0.10.2

@@ -19,6 +19,9 @@ from .IDSSimComs import IDSSimComs
 from .IYMatrix import IYMatrix
 
 class IDSS(Base):
+    '''
+    Main OpenDSS interface
+    '''
     __slots__ = [
         'ActiveCircuit',
         'Circuits',
@@ -37,6 +40,8 @@ class IDSS(Base):
 
     def __init__(self, api_util):
         self.ActiveCircuit = ICircuit(api_util)
+        '''ActiveCircuit: provides access to the circuit attributes and objects. '''
+        
         self.Circuits = ICircuit(api_util)
         self.Error = IError(api_util)
         self.Text = IText(api_util)

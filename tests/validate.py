@@ -357,8 +357,17 @@ class ValidatingTest:
 
         if not LOAD_COM_OUTPUT: 
             A = self.com.ActiveCircuit.LineCodes
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
+            
+            has_AllNames = True
+            try:
+                _ = A.AllNames
+            except:
+                has_AllNames = False
+               
+            if has_AllNames:
+                if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                
+            if not SAVE_COM_OUTPUT: assert A.Count == B.Count, (A.Count, B.Count)
             if not SAVE_COM_OUTPUT: assert len(A) == len(B)
             nA = A.First
             nB = B.First

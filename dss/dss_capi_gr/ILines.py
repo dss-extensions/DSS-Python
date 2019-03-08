@@ -280,3 +280,7 @@ class ILines(Iterable):
         self._lib.Lines_Set_Yprim(ValuePtr, ValueCount)
         self.CheckForError()
 
+    @property
+    def SeasonRating(self):
+        '''Delivers the rating for the current season (in Amps)  if the "SeasonalRatings" option is active'''
+        return self._lib.Lines_Get_SeasonRating()
