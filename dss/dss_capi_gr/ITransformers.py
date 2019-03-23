@@ -210,3 +210,15 @@ class ITransformers(Iterable):
     def RdcOhms(self, Value):
         self._lib.Transformers_Set_RdcOhms(Value)
         self.CheckForError()
+
+    @property
+    def LossesByType(self):
+        '''Complex array with the losses by type (total losses, load losses, no-load losses), in VA'''
+        self._lib.Transformers_Get_LossesByType_GR()
+        return self._get_float64_gr_array()
+
+    @property
+    def AllLossesByType(self):
+        '''Complex array with the losses by type (total losses, load losses, no-load losses), in VA, concatenated for ALL transformers'''
+        self._lib.Transformers_Get_AllLossesByType_GR()
+        return self._get_float64_gr_array()

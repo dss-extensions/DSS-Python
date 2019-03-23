@@ -524,7 +524,17 @@ class ValidatingTest:
 
     def validate_Transformers(self):
         B = self.capi.ActiveCircuit.Transformers
+        B_element = self.capi.ActiveCircuit.CktElements
         
+        # Validate the LossesByType extension
+        AllLossesByType = B.AllLossesByType.view(dtype=complex).reshape((B.Count, 3))
+        for tr, losses in zip(B, AllLossesByType):
+            assert np.all(losses == B.LossesByType.view(dtype=complex))
+            assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
+            assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
+            assert B_element.Losses.view(dtype=complex) == losses[0]
+
+
         if not LOAD_COM_OUTPUT: 
             A = self.com.ActiveCircuit.Transformers
             if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))

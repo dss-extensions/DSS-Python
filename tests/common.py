@@ -2,7 +2,7 @@
 # filtering interactive commands
 
 test_filenames = [
-    "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
+    # "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
     "../../electricdss-tst/Test/IEEE13_CDPSM.dss",
     "../../electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss",
     "L!../../electricdss-tst/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
