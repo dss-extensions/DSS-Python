@@ -25,17 +25,17 @@ include_path_out = os.path.join(dll_path_out, 'include')
 for fn in glob.glob(os.path.join(base_dll_path_in, '*{}'.format(DLL_SUFFIX))):
     shutil.copy(fn, dll_path_out)
 
-extra_files = glob.glob(include_path_out + '/**/*', recursive=True) + glob.glob(include_path_out + '*.lib')
+extra_files = glob.glob(include_path_out + '/**/*') + glob.glob(include_path_out + '/*') + glob.glob(include_path_out + '*.lib')
 
 if os.environ.get('DSS_PYTHON_MANYLINUX', '0') == '1':
     # Do not pack .so files when building manylinux wheels
     # (auditwheel will copy them anyway)
     extra_args = dict(package_data={
-        'dss': [*extra_files]
+        'dss': extra_files
     })
 else:
     extra_args = dict(package_data={
-        'dss': ['*{}'.format(DLL_SUFFIX), *extra_files]
+        'dss': ['*{}'.format(DLL_SUFFIX)] + extra_files
     })
 
 # Copy libs (easier to build custom extensions with a default DSS Python installation)
