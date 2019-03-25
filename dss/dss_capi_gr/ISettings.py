@@ -200,3 +200,15 @@ class ISettings(Base):
     def AllocationFactors(self, Value):
         self._lib.Settings_Set_AllocationFactors(Value)
         self.CheckForError()
+
+    @property
+    def LoadsTerminalCheck(self):
+        '''
+        Controls whether the terminals are checked when updating the currents in Load component. Defaults to True.
+        If the loads are guaranteed to have their terminals closed throughout the simulation, this can be set to False to save some time.
+        '''
+        return self._lib.Settings_Get_LoadsTerminalCheck() != 0
+
+    @LoadsTerminalCheck.setter
+    def LoadsTerminalCheck(self, Value):
+        return self._lib.Settings_Set_LoadsTerminalCheck(Value)
