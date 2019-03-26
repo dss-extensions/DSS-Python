@@ -25,7 +25,7 @@ for fn in glob.glob(os.path.join(base_dll_path_in, '*{}'.format(DLL_SUFFIX))):
     shutil.copy(fn, dll_path_out)
 
 # Copy libs (easier to build custom extensions with a default DSS Python installation)
-for fn in glob.glob(os.path.join(base_dll_path_in, '*.lib')):
+for fn in glob.glob(os.path.join(base_dll_path_in, '*.lib')) + glob.glob(os.path.join(base_dll_path_in, '*.a')):
     shutil.copy(fn, dll_path_out)
 
 # Copy headers
@@ -38,7 +38,8 @@ shutil.copytree(os.path.join(DSS_CAPI_PATH, 'include'), include_path_out)
 extra_files = (
     glob.glob(os.path.join(include_path_out, '**', '*')) + 
     glob.glob(os.path.join(include_path_out, '*')) + 
-    glob.glob(os.path.join(dll_path_out, '*.lib'))
+    glob.glob(os.path.join(dll_path_out, '*.lib')) + 
+    glob.glob(os.path.join(dll_path_out, '*.a'))
 )
 
 if os.environ.get('DSS_PYTHON_MANYLINUX', '0') == '1':
