@@ -111,3 +111,5 @@ ENV/
 README.rst
 
 conda_wheels/
+/dss/*.lib
+/dss/**/*.h

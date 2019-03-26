@@ -12,8 +12,8 @@ with io.open('README.md', encoding='utf8') as readme_md:
 with open('dss/__init__.py', 'r') as f:
     match = re.search("__version__ = '(.*?)'", f.read())
     package_version = match.group(1)
-    
-    
+
+
 # Copy all the DLLs from DSS C-API
 src_path = os.environ.get('SRC_DIR', '')
 DSS_CAPI_PATH = os.environ.get('DSS_CAPI_PATH', os.path.join(src_path, '..', 'dss_capi'))
@@ -21,11 +21,25 @@ base_dll_path_in = os.path.join(DSS_CAPI_PATH, 'lib', PLATFORM_FOLDER)
 dll_path_out = os.path.abspath(os.path.join(src_path, 'dss'))
 include_path_out = os.path.join(dll_path_out, 'include')
 
-    
 for fn in glob.glob(os.path.join(base_dll_path_in, '*{}'.format(DLL_SUFFIX))):
     shutil.copy(fn, dll_path_out)
 
-extra_files = glob.glob(include_path_out + '/**/*') + glob.glob(include_path_out + '/*') + glob.glob(include_path_out + '*.lib')
+# Copy libs (easier to build custom extensions with a default DSS Python installation)
+for fn in glob.glob(os.path.join(base_dll_path_in, '*.lib')):
+    shutil.copy(fn, dll_path_out)
+
+# Copy headers
+if os.path.exists(include_path_out):
+    shutil.rmtree(include_path_out)
+
+shutil.copytree(os.path.join(DSS_CAPI_PATH, 'include'), include_path_out)
+
+# Filter files to include in the Python package
+extra_files = (
+    glob.glob(os.path.join(include_path_out, '**', '*')) + 
+    glob.glob(os.path.join(include_path_out, '*')) + 
+    glob.glob(os.path.join(dll_path_out, '*.lib'))
+)
 
 if os.environ.get('DSS_PYTHON_MANYLINUX', '0') == '1':
     # Do not pack .so files when building manylinux wheels
@@ -37,16 +51,6 @@ else:
     extra_args = dict(package_data={
         'dss': ['*{}'.format(DLL_SUFFIX)] + extra_files
     })
-
-# Copy libs (easier to build custom extensions with a default DSS Python installation)
-for fn in glob.glob(os.path.join(base_dll_path_in, '*.lib')):
-    shutil.copy(fn, dll_path_out)
-
-# Copy headers
-if os.path.exists(include_path_out):
-    shutil.rmtree(include_path_out)
-
-shutil.copytree(os.path.join(DSS_CAPI_PATH, 'include'), include_path_out)
 
 # (2019-02-24) PEP 496 didn't work, using a workaround
 if (sys.version_info.major, sys.version_info.minor) < (3, 5):
