@@ -1040,6 +1040,54 @@ class ValidatingTest:
         ydense = self.capi.ActiveCircuit.SystemY.view(dtype=complex).reshape((NN, NN))
         if not SAVE_COM_OUTPUT: assert (np.allclose(ydense, ysparse.todense(), atol=self.atol, rtol=self.rtol))
         
+        
+    def validate_AllNames(self):
+        clss = [
+            'Generators',
+            'Meters',
+            'Monitors',
+            'Lines',
+            'Loads',
+            'CapControls',
+            'RegControls',
+            'SwtControls',
+            'Transformers',
+            'Capacitors',
+            'Sensors',
+            'Reclosers',
+            'Relays',
+            'LoadShapes',
+            'Fuses',
+            'ISources',
+            'PVSystems',
+            'Vsources',
+            'LineCodes',
+            'LineGeometries',
+            'LineSpacings',
+            'WireData',
+            'CNData',
+            'TSData',
+            'XYCurves',
+            'Reactors',
+        ]
+
+        def check_cls_allnames(name, DSS):
+            l = getattr(DSS.ActiveCircuit, name)
+            l.First
+            l.Next
+            before = l.Name
+            l.AllNames
+            after = l.Name
+            #assert before == after, (name, before, after)
+            return before == after
+
+        for cls in clss:
+            try:
+                assert (check_cls_allnames(cls, self.com) == check_cls_allnames(cls, self.capi)), cls
+            except AttributeError:
+                # COM doesn't expose 
+                pass
+    
                 
     def validate_all(self):
         self.rtol = 1e-5
@@ -1076,6 +1124,8 @@ class ValidatingTest:
         self.validate_Reclosers()
         # print('YMatrix')
         self.validate_YMatrix()
+        
+        self.validate_AllNames()
 
         #self.atol = 1e-5
         # print('Buses')
