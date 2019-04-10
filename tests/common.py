@@ -2,7 +2,15 @@
 # filtering interactive commands
 
 test_filenames = [
+    # This one is expected to have different results (C-API should be more precise)
     # "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
+    
+    # This one was checked manually. There is a small difference but the relative 
+    # difference in voltage is still <3x10^-7
+    # It should be uncommented when all complex number comparisons are rewritten.
+    # Currently the re and im parts are compared separatly, which is misleading.
+    # "../../electricdss-tst/Version8/Distrib/IEEETestCases/LVTestCaseNorthAmerican/Master.dss",
+    
     "../../electricdss-tst/Test/IEEE13_CDPSM.dss",
     "../../electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss",
     "L!../../electricdss-tst/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
@@ -49,6 +57,8 @@ test_filenames = [
     "L!../../electricdss-tst/Test/PVSystemTest-Duty.dss",
     "L!../../electricdss-tst/Test/PVSystemTest.dss",
     "L!../../electricdss-tst/Test/REACTORTest.DSS",
+
+    "../../electricdss-tst/Version7/Distrib/Examples/UPFC_Test/UPFC_test_3.dss",
 
     #"L!../../electricdss-tst/Test/Run_SimpleStorageTest.DSS", # Missing DLL?
     #"L!../../electricdss-tst/Test/Run_SimpleStorageTest-1ph.DSS", # Missing DLL?

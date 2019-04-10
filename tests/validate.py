@@ -167,7 +167,10 @@ class ValidatingTest:
             fB = set(x.lower() for x in getattr(B, field))
             for propA in fA:
                 assert propA in fB, propA
-            #if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
+                
+            # Since the list of properties vary in releases, 
+            # we don't check it the list is the same anymore.
+            # if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
             
         for field in 'AllVariableNames,BusNames'.split(','):
             fA = getattr(A, field)
@@ -190,7 +193,7 @@ class ValidatingTest:
           
           
         if NO_PROPERTIES: return
-            
+        
         all_props = list(A.AllPropertyNames)
         for prop_name in all_props:
             is_equal = False
@@ -239,7 +242,7 @@ class ValidatingTest:
                     is_equal = np.allclose(c_A, c_B, atol=1e-5, rtol=1e-4)
 
                 if not (is_equal or val_A == val_B or A.Properties(prop_name).Val == B.Properties(prop_name).Val):
-                    print('ERROR: CktElement.Properties({}).Val'.format(prop_name), repr(A.Properties(prop_name).Val), repr(B.Properties(prop_name).Val))
+                    print('ERROR: CktElement({}).Properties({}).Val'.format(A.Name, prop_name), repr(A.Properties(prop_name).Val), repr(B.Properties(prop_name).Val))
             
 #            if not USE_V8:
 #                if not SAVE_COM_OUTPUT: assert (A.Properties(prop_name).Description == B.Properties(prop_name).Description), ('Properties({}).Description'.format(prop_name), A.Properties(prop_name).Description, B.Properties(prop_name).Description)
@@ -349,7 +352,7 @@ class ValidatingTest:
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        # if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_LineCodes(self):
@@ -366,7 +369,7 @@ class ValidatingTest:
                
             if has_AllNames:
                 if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-                
+
             if not SAVE_COM_OUTPUT: assert A.Count == B.Count, (A.Count, B.Count)
             if not SAVE_COM_OUTPUT: assert len(A) == len(B)
             nA = A.First
@@ -776,6 +779,7 @@ class ValidatingTest:
         while nA != 0:
             count += 1
             header = B.Header
+            monitor_name = B.Name
             
             for field in 'dblFreq,dblHour'.split(','): # Skipped ByteStream since it's indirectly compared through Channel()
                 fA = output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
@@ -784,7 +788,7 @@ class ValidatingTest:
                 fA = np.array(fA, dtype=fB.dtype)
                 if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
-            #TODO: FileVersion
+            #TODO: FileVersion (broken in COM)
             for field in 'Element,Header,FileName,Mode,Name,NumChannels,RecordSize,SampleCount,Terminal'.split(','):
                 if field == 'FileName': continue # the path will be different on purpose
                 fA = output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
@@ -796,9 +800,10 @@ class ValidatingTest:
             for channel in range(B.NumChannels):
                 if header[channel] in (' SolveSnap_uSecs', ' TimeStep_uSecs'): continue # these can't be equal
                 field = 'Channel({})'.format(channel + 1)
-                fA = output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else A.Channel(channel + 1)
+                output_key = 'ActiveCircuit.Monitors[{}].{}'.format(monitor_name, field)
+                fA = output[output_key] if LOAD_COM_OUTPUT else A.Channel(channel + 1)
                 fB = B.Channel(channel + 1)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] = fA
+                if SAVE_COM_OUTPUT: output[output_key] = fA
                 if not SAVE_COM_OUTPUT: 
                     # assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Channel', channel + 1)
                     header_lower = header[channel].lower()
@@ -812,7 +817,7 @@ class ValidatingTest:
                     if not np.allclose(fA, fB, atol=self.atol, rtol=self.rtol):
                         # 'q1', 'q2', 'q3' may be different. This is expected since
                         # we use a different/better transformation matrix
-                        print('Possible channel error', header[channel], np.array(fA), np.array(fB))
+                        print('Possible channel error', output_key, header[channel], np.array(fA), np.array(fB))
 
 
             nB = B.Next
@@ -899,7 +904,7 @@ class ValidatingTest:
         if not LOAD_COM_OUTPUT: 
             A = self.com.ActiveCircuit.Solution
 
-        for field in 'AddType,Algorithm,Capkvar,ControlActionsDone,ControlIterations,ControlMode,Converged,DefaultDaily,DefaultYearly,Frequency,GenMult,GenPF,GenkW,Hour,Iterations,LDCurve,LoadModel,LoadMult,MaxControlIterations,MaxIterations,Mode,ModeID,MostIterationsDone,Number,Random,Seconds,StepSize,SystemYChanged,Tolerance,Totaliterations,Year,dblHour,pctGrowth'.split(','): #TODO: EventLog, IntervalHrs, MinIterations, Process_Time, Total_Time, Time_of_Step
+        for field in 'AddType,Algorithm,Capkvar,ControlActionsDone,ControlIterations,ControlMode,Converged,DefaultDaily,DefaultYearly,Frequency,GenMult,GenPF,GenkW,Hour,Iterations,LDCurve,LoadModel,LoadMult,MaxControlIterations,MaxIterations,Mode,ModeID,MostIterationsDone,Number,Random,Seconds,StepSize,Tolerance,Totaliterations,Year,dblHour,pctGrowth'.split(','): #TODO: EventLog, IntervalHrs, MinIterations, Process_Time, Total_Time, Time_of_Step, SystemYChanged
             # if LOAD_COM_OUTPUT and field == 'SystemYChanged':
                 # continue
         
@@ -982,8 +987,8 @@ class ValidatingTest:
                 if not SAVE_COM_OUTPUT: assert A.Name == B.Name
             
             # Test Circuit_SetCktElementIndex
-            for idx in range(len(self.AllBusNames[-1])):
-                # Note: idx is not the bus index but it is a valid CktElement index 
+            num_cktelements = len(self.com.ActiveCircuit.AllElementNames)
+            for idx in range(num_cktelements):
                 B = self.capi.ActiveCircuit.CktElements(idx)
                 A = self.com.ActiveCircuit.CktElements(idx)
                 if not SAVE_COM_OUTPUT: assert A.Name == B.Name
@@ -1156,7 +1161,7 @@ def run_tests(fns):
         
         import dss
         com = dss.patch_dss_com(com)
-        
+        print('COM Version:', com.Version)
     else:
         com = None
 
@@ -1164,6 +1169,13 @@ def run_tests(fns):
     #com = comtypes.client.CreateObject("OpenDSSEngine.DSS")
 
     capi = DSS
+    print('C-API Version:', capi.Version)
+
+    for dss in [com, capi]:
+        if dss is not None:
+            dss.Text.Command = r'set editor=ignore_me_invalid_executable'
+        
+    capi.AllowEditor = False
 
     # Test toggling console output with C-API, COM can only be disabled
     if not LOAD_COM_OUTPUT:
