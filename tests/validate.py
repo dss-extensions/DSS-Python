@@ -1176,6 +1176,7 @@ def run_tests(fns):
             dss.Text.Command = r'set editor=ignore_me_invalid_executable'
         
     capi.AllowEditor = False
+    assert capi.Error.EarlyAbort # check the default value, should be True
 
     # Test toggling console output with C-API, COM can only be disabled
     if not LOAD_COM_OUTPUT:
