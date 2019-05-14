@@ -18,7 +18,7 @@ class IMonitors(Iterable):
     def AsMatrix(self):
         '''(read-only) Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1)'''
         
-        buffer = self._get_int8_array(self._lib.Monitors_Get_ByteStream, Index)
+        buffer = self._get_int8_array(self._lib.Monitors_Get_ByteStream)
         if len(buffer) <= 1:
             return None #np.zeros((0,), dtype=np.float32)
             
