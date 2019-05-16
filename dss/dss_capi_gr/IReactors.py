@@ -12,11 +12,6 @@ class IReactors(Iterable):
     __slots__ = []
 
     @property
-    def Conductors(self):
-        '''(read-only) Array of strings with names of all conductors in the active Reactor object'''
-        return self._get_string_array(self._lib.Reactors_Get_Conductors)
-
-    @property
     def SpecType(self):
         '''
         How the reactor data was provided: 1=kvar, 2=R+jX, 3=R and X matrices, 4=sym components.

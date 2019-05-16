@@ -12,11 +12,6 @@ class ICNData(Iterable):
     __slots__ = []
 
     @property
-    def Conductors(self):
-        '''(read-only) Array of strings with names of all conductors in the active CNData object'''
-        return self._get_string_array(self._lib.CNData_Get_Conductors)
-
-    @property
     def EmergAmps(self):
         '''Emergency ampere rating'''
         return self._lib.CNData_Get_EmergAmps()

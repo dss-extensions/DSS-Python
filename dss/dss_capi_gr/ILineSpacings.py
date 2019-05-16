@@ -12,11 +12,6 @@ class ILineSpacings(Iterable):
     __slots__ = []
 
     @property
-    def Conductors(self):
-        '''(read-only) Array of strings with names of all conductors in the active LineSpacing object'''
-        return self._get_string_array(self._lib.LineSpacings_Get_Conductors)
-
-    @property
     def Phases(self):
         '''Number of Phases'''
         return self._lib.LineSpacings_Get_Phases()
