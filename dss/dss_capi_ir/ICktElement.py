@@ -273,6 +273,14 @@ class ICktElement(Base):
         '''(read-only) YPrim matrix, column order, complex numbers (paired)'''
         return self._get_float64_array(self._lib.CktElement_Get_Yprim)
 
+    @property
+    def IsIsolated(self):
+        '''
+        Returns true if the current active element is isolated.
+        Note that this only fetches the current value. See also the Topology interface.
+        '''
+        return self._lib.CktElement_Get_IsIsolated() != 0
+
     def __getitem__(self, index):
         if isinstance(index, int):
             # index is zero based, pass it directly

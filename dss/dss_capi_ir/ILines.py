@@ -280,3 +280,13 @@ class ILines(Iterable):
     def SeasonRating(self):
         '''Delivers the rating for the current season (in Amps)  if the "SeasonalRatings" option is active'''
         return self._lib.Lines_Get_SeasonRating()
+
+    @property
+    def IsSwitch(self):
+        '''Sets/gets the Line element switch status. Setting it has side-effects to the line parameters.'''
+        return self._lib.Lines_Get_IsSwitch() != 0
+        
+    @IsSwitch.setter
+    def IsSwitch(self, Value):
+        self._lib.Lines_Set_IsSwitch(Value)
+
