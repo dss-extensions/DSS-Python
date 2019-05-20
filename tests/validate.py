@@ -530,12 +530,13 @@ class ValidatingTest:
         B_element = self.capi.ActiveCircuit.CktElements
         
         # Validate the LossesByType extension
-        AllLossesByType = B.AllLossesByType.view(dtype=complex).reshape((B.Count, 3))
-        for tr, losses in zip(B, AllLossesByType):
-            assert np.all(losses == B.LossesByType.view(dtype=complex))
-            assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
-            assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
-            assert B_element.Losses.view(dtype=complex) == losses[0]
+        if B.Count:
+            AllLossesByType = B.AllLossesByType.view(dtype=complex).reshape((B.Count, 3))
+            for tr, losses in zip(B, AllLossesByType):
+                assert np.all(losses == B.LossesByType.view(dtype=complex))
+                assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
+                assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
+                assert B_element.Losses.view(dtype=complex) == losses[0]
 
 
         if not LOAD_COM_OUTPUT: 
