@@ -1,11 +1,24 @@
+
+
 # 0.10.3
 
-**in development, not released**
+Released on 2019-05-22. This is the last release to provide pre-built binaries for Python 3.4.
 
-- Use prebuilt binaries for DSS C-API and KLUSolve
-- Prebuilt wheels for 32-bit Linux are now available
+- Includes fix for issue with the line parameters on Linux and macOS due to memory-address aliasing issues.
+- Prebuilt binaries for DSS C-API and KLUSolve are used instead of rebuilding everything from source.
+- Prebuilt packages (wheels) for 32-bit Linux are now available.
+- Development artifacts are now included in the distribution package. This enables advanced usage and easier integration with compiled languages (examples pending, please open an issue if you'd like to know more).
 - `ReduceCkt` ported from COM: new circuit reduction methods available in `DSS.ActiveCircuit.ReduceCkt`
-
+- `Lines`: ported from COM, new seasonal ratings mechanism that allows changing the current rating through the simulation
+- Optimization and extended error-checking in many properties
+- Includes new `Settings.LoadsTerminalCheck`: on static scenarios (no open terminals for loads) to toggle the costly checks for open terminals. If set to false, it can save around 25% of simulation time, depending on the circuit characteristics.
+- All components now can be accessed by index (`idx` property)
+- All components now have faster `Name` iteration
+- Ported to v7/default interface: the DSS commands `CalcIncMatrix`, `CalcIncMatrix_O`, `Refine_BusLevels`, `CalcLaplacian`, and related export options: `IncMatrix`, `IncMatrixRows`, `IncMatrixCols`, `BusLevels`, `Laplacian`, `ZLL`, `ZCC`, `Contours`, `Y4`. Also includes related Python-level properties.
+- Some other new properties:
+    - `CktElement.IsIsolated`
+    - `Lines.IsSwitch`
+    - `Transformers.LossesByType` and `Transformers.AllLossesByType`
 
 # 0.10.2
 

@@ -13,7 +13,7 @@ See also the other projects from [DSS-Extensions.org](https://dss-extensions.org
 - [DSS Sharp](http://github.com/dss-extensions/dss_sharp/): available for .NET/C#, also mimics the COM classes, but Windows-only at the moment. Soon it will be possible to use it via COM too.
 - [DSS MATLAB](http://github.com/dss-extensions/dss_matlab/): presents multi-platform integration (Windows, Linux, MacOS) with DSS C-API and is also very compatible with the COM classes.
 
-Version 0.10.3 **in development**, based on OpenDSS revision 2504. While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached. If you find an unexpected missing feature, please report it!
+Version 0.10.3, based on OpenDSS revision 2609 (which is slightly newer than OpenDSS v8.5.9.1 and v7.6.5.86). While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached. If you find an unexpected missing feature, please report it!
 
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level.
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange. 
@@ -22,9 +22,10 @@ The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the 
 
 ## Recent changes
 
-Check the [changelog](docs/changelog.md#0101) document for a more detailed list.
+Check the [changelog](docs/changelog.md#0103) document for a detailed list.
 
-- **2019-02-28 / version 0.10.2: Some small fixes, adds the missing `CtrlQueue.Push`, faster LoadShapes and new property `DSS.AllowEditor` to toggle editor calls.**
+- **2019-05-22 / version 0.10.3: Some important fixes, better general performance, new API extensions, new features ported from COM and the OpenDSS version 8 codebase.**
+- 2019-02-28 / version 0.10.2: Some small fixes, adds the missing `CtrlQueue.Push`, faster LoadShapes and new property `DSS.AllowEditor` to toggle editor calls.
 - 2019-02-17 / version 0.10.1: Integrate DSS C-API changes/fix, some small fixes, and more error-checking. 
 - 2018-11-17 / version 0.10.0: Lots of changes, fixes and new features. Check the new [changelog](docs/changelog.md#0100) document for a list.
 - 2018-08-12 / version 0.9.8: Reorganize modules (v7 and v8), adds 8 missing methods and new backend methods for OpenDSSDirect.py v0.3+. Integrates many fixes from DSS_CAPI and the upstream OpenDSS.
@@ -66,13 +67,13 @@ Or, if you're using the Anaconda distribution, you can use:
     conda install -c pmeira dss_python
 ```
 
-Binary wheels are provided for all major platforms (Windows, Linux and MacOS) and many combinations of Python versions (2.7, 3.4 to 3.7). If you have issues with a specific version, please open an issue about it. Conda packages support at least Python 2.7, 3.5, 3.6 and 3.7.
+Binary wheels are provided for all major platforms (Windows, Linux and MacOS) and many combinations of Python versions (2.7, 3.5 to 3.7). If you have issues with a specific version, please open an issue about it. Conda packages support at least Python 2.7, 3.5, 3.6 and 3.7.
 
 After a successful installation, you can then import the `dss` module from your Python interpreter.
 
 ## Building
 
-Get this repository:
+Get the repository:
 
 ```
     git clone https://github.com/dss-extensions/dss_python.git
@@ -102,7 +103,7 @@ If you were using `win32com` in code like:
 
 ```python
 import win32com.client 
-dss_engine = win32com.client.Dispatch("OpenDSSEngine.DSS")
+dss_engine = win32com.client.gencache.EnsureDispatch("OpenDSSEngine.DSS")
 ```
 
 or `comtypes`:
@@ -115,15 +116,15 @@ dss_engine = comtypes.client.CreateObject("OpenDSSEngine.DSS")
 you can replace that fragment with:
 ```python
 import dss
-dss.use_com_compat()
 dss_engine = dss.DSS
 ```
+
+If you need the mixed-cased handling (that is, you were not using early bindings with win32com), add a call to `dss.use_com_compat()`.
 
 Assuming you have a DSS script named `master.dss`, you should be able to run it as shown below:
 
 ```python
 import dss
-dss.use_com_compat()
 dss_engine = dss.DSS
 
 dss_engine.Text.Command = "compile c:/dss_files/master.dss"
@@ -134,7 +135,6 @@ for i in range(len(voltages) // 2):
     print('node %d: %f + j%f' % (i, voltages[2*i], voltages[2*i + 1]))
 ```
 
-If you do not need the mixed-cased handling, omit the call to `use_com_compat()` and use the casing used in this project, which should use most of the COM instance conventions.
 
 If you want to play with the experimental OpenDSS-PM interface (from OpenDSS v8), it is installed side-by-side and you can import it as:
 
@@ -145,68 +145,25 @@ dss_engine = dss.v8.DSS
 
 Although it is experimental, most of its funcionality is working. Depending on your use-case, the parallel interface can be an easy way of better using your machine resources. Otherwise, you can always use general distributed computing resources via Python.
 
+Beware the v8 alternative can present issues and it should be removed as soon as all OpenDSS 8+ features are integrated into the default version.
 
 Testing
 =======
-Since the DLL is built using the Free Pascal compiler, which is not officially supported by EPRI, the results are validated running sample networks provided in the official OpenDSS distribution. The only modifications are done directly by the script, removing interactive features and some other minor issues.
+Since the DLL is built using the Free Pascal compiler, which is not officially supported by EPRI, the results are validated running sample networks provided in the official OpenDSS distribution. The only modifications are done directly by the script, removing interactive features and some other minor issues. Most of the sample files from the official OpenDSS repository are used for validation.
 
-The validation scripts is `tests/validation.py` and requires the same folder structure as the building process. You need `win32com` to run it.
+The validation scripts is `tests/validation.py` and requires the same folder structure as the building process. You need `win32com` to run it on Windows.
 
-Currently, at least the following sample files from the official OpenDSS repository are used:
 
-```
-    Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss
-    Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss
-    Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss
-    Distrib/IEEETestCases/8500-Node/Master-unbal.dss
-    Distrib/IEEETestCases/IEEE 30 Bus/Master.dss
-    Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS
-    Distrib/IEEETestCases/37Bus/ieee37.dss
-    Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS
-    Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS
-    Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS
-    Distrib/IEEETestCases/4Bus-OYOD-UnBal/4Bus-OYOD-UnBal.DSS
-    Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS
-    Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS
-    Distrib/IEEETestCases/123Bus/IEEE123Master.dss
-    Distrib/IEEETestCases/123Bus/SolarRamp.DSS
-    Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss
-    Test/IEEE13_LineSpacing.dss
-    Test/IEEE13_LineGeometry.dss
-    Test/IEEE13_LineAndCableSpacing.dss
-    Test/IEEE13_Assets.dss
-    Test/CableParameters.dss
-    Test/Cable_constants.DSS
-    Test/BundleDemo.DSS
-    Test/IEEE13_SpacingGeometry.dss
-    Test/TextTsCable750MCM.dss
-    Test/TestDDRegulator.dss
-    Test/XYCurvetest.dss
-    Test/PVSystemTestHarm.dss
-    Test/TestAuto.dss
-    Test/Stevenson.dss
-    Test/YgD-Test.dss 
-    Test/Master_TestCapInterface.DSS  
-    Test/LoadTest.DSS
-    Test/IEEELineGeometry.dss
-    Test/ODRegTest.dss
-    Test/MultiCircuitTest.DSS
-    Test/TriplexLineCodeCalc.DSS
-    Test/PVSystemTest-Duty.dss
-    Test/PVSystemTest.dss 
-    Test/REACTORTest.DSS
-```
-
-On Windows 10, remember to set the compatibility layer to Windows 7 (set the environment variable `__COMPAT_LAYER=WIN7RTM`), otherwise you may encounter issues with COM due to [ASLR](https://en.wikipedia.org/wiki/Address_space_layout_randomization) on Python 3.6+.
-
-There is no full validation on Linux yet since we cannot run the COM module there. There is an ongoing effort on pickling the data on Windows and loading on Linux for comparison (for the full test suite, it results in 8+GB of data and can be time-consuming).
+As of version 0.11, the full validation suite can be run on the three supported platforms. This is possible by saving the official COM DLL output and loading it on macOS and Linux. We hope to automate this validation in the future.
 
 Roadmap
 =======
 Besides bug fixes, the main funcionality of this library is mostly done. Notable desirable features that may be implemented are:
 
 - More and better documentation
-- Plotting and reports integrated in Python
+- Plotting and reports integrated in Python.
+
+Expect news about these items by version 0.11.
 
 Questions?
 ==========
