@@ -1,0 +1,94 @@
+// This is a slightly simplified version of the InductionMachine example from
+// the official OpenDSS distribution (found in Examples/InductionMachine)
+// to illustrate UserModels in DSS Python.
+// Since it's a small system, all files were merged into this one.
+Clear
+
+New Circuit.IndMach012Test
+
+!Redirect Vsource.dss
+Edit "Vsource.source" bus1=Bx basekv=115 pu=1.0475 angle=0 frequency=60 phases=3 MVAsc3=20000 MVAsc1=21000 x1r1=4 x0r0=3
+
+!Redirect LineCode.dss
+New "LineCode.unbalanced 336 acsr" nphases=3 baseFreq=60 normamps=570.4 emergamps=713 rmatrix="0.0868455 | 0.0298305 0.0887966 | 0.0288883 0.0298305 0.0868455" xmatrix="0.2025449 | 0.084721 0.1961452 | 0.0719161 0.084721 0.2025449" cmatrix="2.74 | -0.7 2.96 | -0.34 -0.71 2.74" units=kft
+
+!Redirect LoadShape.dss
+New "LoadShape.default" interval=1.0 mult=(0.677, 0.6256, 0.6087, 0.5833, 0.58028, 0.6025, 0.657, 0.7477, 0.832, 0.88, 0.94, 0.989, 0.985, 0.98, 0.9898, 0.999, 1, 0.958, 0.936, 0.913, 0.876, 0.876, 0.828, 0.756, ) npts=24 mean=0.826 stddev=0.2
+!New "LoadShape.wind2400" npts=2501 interval=0.000277778 csvfile=WPWind2400.csv action=normalize mean=0.603 stddev=0.2
+
+!Redirect TCC_Curve.dss
+New "TCC_Curve.a" npts=15 C_array=(1.1, 1.3, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 50, 100, ) T_array=(7.1769, 2.2079, 1.234, 0.534, 0.2215, 0.134, 0.0965, 0.0769, 0.0653, 0.0578, 0.0528, 0.0492, 0.0378, 0.0346, 0.0342, )
+New "TCC_Curve.c" npts=15 C_array=(1.1, 1.3, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 50, 100, ) T_array=(125.2574, 38.0345, 20.962, 8.7258, 3.3034, 1.802, 1.1647, 0.8336, 0.6394, 0.5156, 0.432, 0.3728, 0.1882, 0.1389, 0.1321, )
+New "TCC_Curve.tlink" npts=7 C_array=(2, 2.1, 3, 4, 6, 22, 50, ) T_array=(300, 100, 10.1, 4, 1.4, 0.1, 0.02, )
+New "TCC_Curve.klink" npts=6 C_array=(2, 2.2, 3, 4, 6, 30, ) T_array=(300, 20, 4, 1.3, 0.41, 0.02, )
+New "TCC_Curve.ext_inv" npts=15 C_array=(1.1, 1.3, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 50, 100, ) T_array=(134.4074, 40.9913, 22.6817, 9.5217, 3.6467, 2.0017, 1.2967, 0.9274, 0.7092, 0.5693, 0.4742, 0.4065, 0.1924, 0.133, 0.1245, )
+
+!Redirect line.dss
+New "line.l1" bus1=B0 bus2=B1 linecode="Unbalanced 336 ACSR" length=10 units=kft
+New "line.l2" bus1=B1 bus2=B2 linecode="Unbalanced 336 ACSR" length=10 units=kft
+New "line.l3" bus1=Bm bus2=B3 linecode="Unbalanced 336 ACSR" length=10 units=kft
+New "line.l4" bus1=B3 bus2=B4 linecode="Unbalanced 336 ACSR" length=10 units=kft
+New "line.l5" bus1=B2 bus2=B5 linecode="Unbalanced 336 ACSR" length=10 units=kft
+New "line.l6" bus1=B3 bus2=B6 linecode="Unbalanced 336 ACSR" length=10 units=kft
+New "line.l7" bus1=B0 bus2=B7 linecode="Unbalanced 336 ACSR" length=10 units=kft
+
+!Redirect Load.dss
+New "Load.ldb0" bus1=B0 conn=wye phases=3 kW=0.1 pf=1 model=2 kV=12.47
+New "Load.ldb1" bus1=B1 conn=wye phases=3 kW=0.1 pf=1 model=2 kV=12.47
+New "Load.ldb2" bus1=B2 conn=wye phases=3 kW=0.1 pf=1 model=2 kV=12.47
+New "Load.ldb3" bus1=B3 conn=wye phases=3 kW=0.1 pf=1 model=2 kV=12.47
+New "Load.ldb4" bus1=B4 conn=wye phases=3 kW=0.1 pf=1 model=2 kV=12.47
+New "Load.ldb5" bus1=B5 conn=wye phases=3 kW=0.1 pf=1 model=2 kV=12.47
+New "Load.ldb6" bus1=B6 conn=wye phases=3 kW=0.1 pf=1 model=2 kV=12.47
+New "Load.ldb7" bus1=B7 conn=wye phases=3 kW=0.1 pf=1 model=2 kV=12.47
+
+!Redirect Transformer.dss
+New "Transformer.sub" phases=3 windings=2 buses=(bx, b0, ) conns=(delta, wye, ) kVs=(115, 12.47, ) kVAs=(20000, 20000, ) taps=(1, 1, ) Xhl=7
+New "Transformer.tg" phases=3 windings=2 buses=(b4, bg, ) conns=(wye, wye, ) kVs=(12.47, 0.48, ) kVAs=(1500, 1500, ) taps=(1, 1, ) Xhl=5
+New "Transformer.reg1a" phases=1 windings=2 buses=(b2.1, bm.1, ) conns=(wye, wye, ) kVs=(12.47, 12.47, ) kVAs=(2000, 2000, ) Xhl=1
+New "Transformer.reg1b" phases=1 windings=2 buses=(b2.2, bm.2, ) conns=(wye, wye, ) kVs=(12.47, 12.47, ) kVAs=(2000, 2000, ) Xhl=1
+New "Transformer.reg1c" phases=1 windings=2 buses=(b2.3, bm.3, ) conns=(wye, wye, ) kVs=(12.47, 12.47, ) kVAs=(2000, 2000, ) Xhl=1
+
+!Redirect RegControl.dss
+New "RegControl.reg1a" transformer=Reg1a winding=2 vreg=119.9926 band=3 ptratio=60 delay=15 tapdelay=2 reversible=yes revvreg=119.9926 revband=3 CTprim=600 R=5 X=3 revR=5 revX=3
+New "RegControl.reg1b" transformer=Reg1b winding=2 vreg=119.9926 band=3 ptratio=60 delay=15 tapdelay=2 reversible=yes revvreg=119.9926 revband=3 CTprim=600 R=5 X=3 revR=5 revX=3
+New "RegControl.reg1c" transformer=Reg1c winding=2 vreg=119.9926 band=3 ptratio=60 delay=15 tapdelay=2 reversible=yes revvreg=119.9926 revband=3 CTprim=600 R=5 X=3 revR=5 revX=3
+New "RegControl.sub" transformer=sub winding=2 vreg=119.9926 band=3 ptratio=60 delay=10 tapdelay=2
+
+!Redirect Capacitor.dss
+New "Capacitor.c1" conn=wye bus1=B1 phases=3 kvar=( 600) kv=12.47
+New "Capacitor.c2" conn=wye bus1=B3 phases=3 kvar=( 600) kv=12.47
+New "Capacitor.cg" conn=wye bus1=Bg phases=3 kvar=( 600) kv=0.48
+
+!Redirect Fault.dss
+New "Fault.thefault"  bus1=B3.1 bus2=B3.0 phases=1 r=0.0001 ONtime=.3 temporary=yes
+
+!Redirect IndMach012.dss 
+// short line to Induction Motor
+New Line.MotorLeads Bus1=bg bus2=bg2 length=.010
+
+// We'll create the actual machine in Python later
+!New "IndMach012.Motor1" bus1=Bg2 kW=1200 conn=delta kVA=1500.000 H=6 duty=Wind2400 purs=0.048 puxs=0.075 purr=0.018 puxr=0.12 puxm=3.8 slip=0.02 SlipOption=variableslip kv=0.48
+
+!Redirect Relay.dss
+New "Relay.mfrov/uv" MonitoredObj=line.MotorLeads MonitoredTerm=1 type=voltage RecloseIntervals=(5.0) kvbase=0.48 Shots=1 Delay=0
+New "Relay.mfr46" MonitoredObj=line.MotorLeads MonitoredTerm=1 type=46 46BaseAmps=1800 46%Pickup=20 46isqt=1 Delay=0.1
+New "Relay.mfr47" MonitoredObj=line.MotorLeads MonitoredTerm=1 type=47 kvbase=0.48 47%Pickup=2 Delay=0.1
+
+!Redirect Recloser.dss
+New "Recloser.cb1" MonitoredObj=Line.L1 MonitoredTerm=1 NumFast=4 PhaseFast=Ext_Inv PhaseDelayed=Ext_Inv PhaseTrip=800 TDPhFast=1 TDPhDelayed=1 PhaseInst=2400 GroundFast=Ext_Inv GroundDelayed=Ext_Inv GroundTrip=800 TDGrFast=1 TDGrDelayed=1 GroundInst=1200 Shots=4 RecloseIntervals=(0.5, 2, 2, )
+New "Recloser.cb2" MonitoredObj=Line.L7 MonitoredTerm=1 NumFast=4 PhaseFast=Ext_Inv PhaseDelayed=Ext_Inv PhaseTrip=800 TDPhFast=1 TDPhDelayed=1 PhaseInst=2400 GroundFast=Ext_Inv GroundDelayed=Ext_Inv GroundTrip=800 TDGrFast=1 TDGrDelayed=1 GroundInst=1200 Shots=4 RecloseIntervals=(0.5, 2, 2, )
+New "Recloser.rec1" MonitoredObj=Line.L3 MonitoredTerm=1 NumFast=1 PhaseFast=A PhaseDelayed=C PhaseTrip=280 TDPhFast=1 TDPhDelayed=1 Shots=4 RecloseIntervals=(0.5, 2, 2, )
+New "Recloser.rec2" MonitoredObj=Line.L5 MonitoredTerm=1 NumFast=1 PhaseFast=A PhaseDelayed=C PhaseTrip=400 TDPhFast=1 TDPhDelayed=1 Shots=4 RecloseIntervals=(0.5, 2, 2, )
+
+!Redirect Fuse.dss
+New "Fuse.f1" MonitoredObj=Line.L6 MonitoredTerm=1 FuseCurve=Klink RatedCurrent=65
+New "Fuse.f2" MonitoredObj=Transformer.Tg MonitoredTerm=1 FuseCurve=Tlink RatedCurrent=65
+
+!Redirect Monitor.dss
+// We'll create a single monitor in Python
+
+Set VoltageBases=(115 12.47 .48)
+
+Set Maxcontroliter=20
+Set maxiterations=20
