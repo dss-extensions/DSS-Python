@@ -30,7 +30,7 @@ class IMonitors(Iterable):
         ptr = ptr[0]
         record_size = ffi.cast('int32_t*', ptr)[2] + 2
         data = np.frombuffer(ffi.buffer(ptr, cnt), dtype=np.float32, offset=272)
-        return data[(Index + 1)::record_size]
+        return data[(Index + 1)::record_size].copy()
 
     def AsMatrix(self):
         '''(read-only) Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1)'''
