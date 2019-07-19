@@ -3,7 +3,7 @@ from cffi import FFI
 import sys, re, os
 from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS
 
-def process_header(src, extern_py=False, implement_py=False, prefix=''):
+def process_header(src, extern_py=False, implement_py=False, prefix='', v8=False):
     '''Prepare the DSS C-API headers for parsing and building with CFFI'''
     
     call_convention = '__stdcall ' if (sys.platform == 'win32') else ''
@@ -11,13 +11,15 @@ def process_header(src, extern_py=False, implement_py=False, prefix=''):
     if not implement_py:
         src = re.sub('^extern .*', '', src, flags=re.MULTILINE)
         src = re.sub('^.*extern .*$', '', src, flags=re.MULTILINE)
-        src = re.sub('^#.*', '', src, flags=re.MULTILINE)
-        src = re.sub('DSS_CAPI_.*_DLL', '', src)
+        src = re.sub(r'^\s*#.*', '', src, flags=re.MULTILINE)
+        src = src.replace('DSS_CAPI_DLL', '')
         src = re.sub(
             r'DSS_MODEL_CALLBACK\(([^,]+), ([^\)]+)\)', 
             r'\1 ({call_convention}*\2)'.format(call_convention=call_convention), 
             src
         )
+        if not v8:
+            src = re.sub(r'.*/\*V8\*/', '', src)
     
     if extern_py:
         src = re.sub(
@@ -77,8 +79,8 @@ DSS_CAPI_PATH = os.environ.get('DSS_CAPI_PATH', os.path.join(src_path, '..', 'ds
 for version in DSS_VERSIONS:    
     ffi_builder_dss = FFI()
 
-    with open(os.path.join(DSS_CAPI_PATH, 'include', version, 'dss_capi.h'), 'r') as f:
-        cffi_header_dss = process_header(f.read())
+    with open(os.path.join(DSS_CAPI_PATH, 'include', 'dss_capi.h'), 'r') as f:
+        cffi_header_dss = process_header(f.read(), v8='version' == 'v8')
         
     with open('cffi/dss_capi_custom.h', 'r') as f:
         extra_header_dss = f.read()
