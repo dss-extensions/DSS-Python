@@ -281,6 +281,12 @@ class ICktElement(Base):
         '''
         return self._lib.CktElement_Get_IsIsolated() != 0
 
+    def __iter__(self):
+        idx = self._lib.Circuit_FirstElement()
+        while idx != 0:
+            yield self
+            idx = self._lib.Circuit_NextElement()
+
     def __getitem__(self, index):
         if isinstance(index, int):
             # index is zero based, pass it directly
