@@ -298,10 +298,9 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_IsIsolated() != 0
 
     def __iter__(self):
-        idx = self._lib.Circuit_FirstElement()
-        while idx != 0:
+        for index in range(self._lib.Circuit_Get_NumCktElements()):
+            self._lib.Circuit_SetCktElementIndex(index)
             yield self
-            idx = self._lib.Circuit_NextElement()
 
     def __getitem__(self, index):
         if isinstance(index, int):
