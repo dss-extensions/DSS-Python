@@ -5,10 +5,10 @@ clone_folder: c:\projects\dss_python
 cache:
   - c:\projects\VCForPython27.msi
 environment:
-  DSS_CAPI_TAG: 0.10.3
+  DSS_CAPI_TAG: 0.10.4rc2
   DSS_CAPI_PATH: c:\projects\dss_capi
   ANACONDA_API_TOKEN: 
-    secure: 78d9aslKXYoP2gVc7p5A5BJj3bSDPd2kZjQAlvEd64cCcxaf185CexeDNYNeNPuU
+    secure: Pcm5IXFi4ZUsi1ue5QvPNASDo1Ns1REYbAwDJXRd3FRn2CfKbNPgnPda6fxoN6wG
   matrix:
     - CONDA_SUBDIR: win-32
     - CONDA_SUBDIR: win-64

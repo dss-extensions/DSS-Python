@@ -892,8 +892,16 @@ class ValidatingTest:
             fB = getattr(B, field)
             if SAVE_COM_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
             if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
-
-        for field in 'AllowDuplicates,AutoBusList,CktModel,ControlTrace,EmergVmaxpu,EmergVminpu,LossWeight,NormVmaxpu,NormVminpu,PriceCurve,PriceSignal,Trapezoidal,UEweight,ZoneLock'.split(','):
+        
+        
+        # AutoBusList is broken in COM, doesn't clear the GlobalResult first.
+        # for field in 'AutoBusList'.split(','):
+        #     fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_COM_OUTPUT else getattr(A, field)
+        #     fB = getattr(B, field)
+        #     if SAVE_COM_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
+        #     if not SAVE_COM_OUTPUT: assert fA == fB, (field, (fA, fB))
+        
+        for field in 'AllowDuplicates,CktModel,ControlTrace,EmergVmaxpu,EmergVminpu,LossWeight,NormVmaxpu,NormVminpu,PriceCurve,PriceSignal,Trapezoidal,UEweight,ZoneLock'.split(','):
             fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_COM_OUTPUT else getattr(A, field)
             fB = getattr(B, field)
             if SAVE_COM_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA

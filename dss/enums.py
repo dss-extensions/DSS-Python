@@ -1,5 +1,10 @@
-import sys
-from enum import IntEnum
+try:
+    from enum import IntEnum
+except:
+    try:
+        from aenum import IntEnum
+    except:
+        IntEnum = object
 
 class MonitorModes(IntEnum):
     VI = 0x00 # Monitor records Voltage and Current at the terminal (Default)
@@ -126,5 +131,5 @@ class LineUnits(IntEnum):
     mm = 8 # Line length units are mm
 
 class YMatrixModes(IntEnum):
-    SeriesOnly = 0
-    WholeMatrix = 1
+    SeriesOnly = 1
+    WholeMatrix = 2
