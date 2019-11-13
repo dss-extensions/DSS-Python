@@ -19,7 +19,7 @@ cd dss_python
 
 # conda-build with wheels doesn't seem consistent so
 # we build the wheels manually
-for PYVERSION in 2.7 3.4 3.5 3.6 3.7; do 
+for PYVERSION in 2.7 3.5 3.6 3.7 3.8; do 
     echo Building for Python $PYVERSION...
     conda create -n py$PYVERSION python=$PYVERSION cffi
     source activate py$PYVERSION

@@ -30,9 +30,9 @@ if [ "$BUILD_WHEELS" == "1" ]; then
 
         # Python 27 is kept last since we rebuild klusolve for it
         if [ "$CONDA_SUBDIR" == "win-32" ]; then
-            PYTHON_VERSIONS="35 36 37 27"
+            PYTHON_VERSIONS="35 36 37 38 27"
         else
-            PYTHON_VERSIONS="35-x64 36-x64 37-x64 27-x64"
+            PYTHON_VERSIONS="35-x64 36-x64 37-x64 38-x64 27-x64"
         fi
         
         for A in $PYTHON_VERSIONS
@@ -62,7 +62,7 @@ if [ "$BUILD_WHEELS" == "1" ]; then
         # conda update -q conda
         # conda info -a
 
-        PYTHON_VERSIONS="2.7 3.5 3.6 3.7"
+        PYTHON_VERSIONS="2.7 3.5 3.6 3.7 3.8"
         
         for A in $PYTHON_VERSIONS
         do
