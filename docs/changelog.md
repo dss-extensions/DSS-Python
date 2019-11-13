@@ -103,6 +103,7 @@ DSS C-API 0.10.4 changes include:
 - This version should be fully compatible with 0.10.3.
 - Fixes issue with long paths on Linux, potentially other platforms too.
 
+To be released on 2019-11-XX. 
 
 # 0.10.3
 
