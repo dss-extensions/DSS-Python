@@ -38,9 +38,9 @@ echo POST ACTIVATE
 
 echo DSS_PYTHON_BUILD_TAG=%DSS_PYTHON_BUILD_TAG%
 
-IF "%DSS_PYTHON_BUILD_TAG%"=="1" conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
+REM IF "%DSS_PYTHON_BUILD_TAG%"=="1" conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
 
-echo CONDA-BUILD CALLED 
+REM echo CONDA-BUILD CALLED 
 
 set path=c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\FPC\3.0.4\bin\i386-win32;c:\Program Files (x86)\Microsoft Visual Studio 14.0\vc\bin;%MINICONDA_DIR%;%MINICONDA_DIR%\scripts;%originalpath%
 
