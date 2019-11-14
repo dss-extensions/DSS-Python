@@ -16,7 +16,7 @@ if [ -n "$TRAVIS_TAG_DSS_PYTHON" ]; then # only run conda-build on tags, takes t
     # Build conda packages (no wheels with conda on Linux)
     export ARTIFACTS_FOLDER=`readlink -f ./artifacts`
     cd dss_python
-    conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda 
+    # conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda 
 
     # Upload artifacts to anaconda.org
     if [ -n "$ANACONDA_API_TOKEN" ]; then 

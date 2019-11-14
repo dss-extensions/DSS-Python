@@ -69,6 +69,7 @@ if [ "$BUILD_WHEELS" == "1" ]; then
             echo Building for Python $A $CONDA_SUBDIR...
             conda create -p ../py${A} python=$A cffi
             rm -rf .eggs build
+            ../py$A/conda update -q setuptools pip wheel
             ../py$A/python setup.py --quiet bdist_wheel --dist-dir="$ARTIFACTS_FOLDER"
         done
     fi
