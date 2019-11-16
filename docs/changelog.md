@@ -1,6 +1,18 @@
 # 0.10.4
 
-To be released on 2019-11-XX. 
+Released on 2019-11-16. This is a maintenance release.
+
+- Updated to DSS C-API 0.10.4.
+- Fix `dss.enums.YMatrixModes`
+- Make `DSS.ActiveCircuit.CktElements` iterable (e.g. `for element in DSS.ActiveCircuit.CktElements: ...`);
+
+
+DSS C-API 0.10.4 changes include:
+
+- Updated up to revision 2761 of the official OpenDSS code. The changes affect at least the following components: CIMXML export, `Capacitor`, `InvControl`, `LineGeometry`, `PVsystem`, `StorageController`, `Storage`, `Vsource`, `VCCS`.
+- This version should be fully compatible with 0.10.3.
+- Fixes issue with long paths on Linux, potentially other platforms too.
+
 
 # 0.10.3
 
