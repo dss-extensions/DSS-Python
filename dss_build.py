@@ -143,7 +143,7 @@ for user_model in user_models:
 # Is there a better way to do this? Unfortunately setup(cffi_modules=...)
 # needs a list of strings and cannot handle objects directly
 ffi_builder_v7 = ffi_builders['v7']
-ffi_builder_v8 = ffi_builders['v8']
+# ffi_builder_v8 = ffi_builders['v8']
 ffi_builder_GenUserModel = ffi_builders['GenUserModel']
 ffi_builder_PVSystemUserModel = ffi_builders['PVSystemUserModel']
 ffi_builder_StoreDynaModel = ffi_builders['StoreDynaModel']
