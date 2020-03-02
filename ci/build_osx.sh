@@ -19,7 +19,7 @@ cd dss_python
 
 # conda-build with wheels doesn't seem consistent so
 # we build the wheels manually
-for PYVERSION in 2.7 3.5 3.6 3.7; do 
+for PYVERSION in 2.7 3.5 3.6 3.7 3.8; do 
     echo Building for Python $PYVERSION...
     conda create -n py$PYVERSION python=$PYVERSION cffi
     source activate py$PYVERSION
@@ -29,9 +29,9 @@ for PYVERSION in 2.7 3.5 3.6 3.7; do
 done
 
 # Build conda packages
-# if [ -n "$TRAVIS_TAG_DSS_PYTHON" ]; then  # only run conda-build on tags, takes too long
-#     conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda 
-# fi
+if [ -n "$TRAVIS_TAG_DSS_PYTHON" ]; then  # only run conda-build on tags, takes too long
+    conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda 
+fi
 
 # # Build wheels with conda
 # # (if we keep the output section always, the default package
