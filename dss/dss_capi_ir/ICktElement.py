@@ -178,7 +178,9 @@ class ICktElement(Base):
     @property
     def NodeOrder(self):
         '''(read-only) Array of integer containing the node numbers (representing phases, for example) for each conductor of each terminal. '''
-        return self._get_int32_array(self._lib.CktElement_Get_NodeOrder)
+        result = self._get_int32_array(self._lib.CktElement_Get_NodeOrder)
+        self.CheckForError()
+        return result
 
     @property
     def NormalAmps(self):
