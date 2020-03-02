@@ -7,7 +7,7 @@ matrix:
       sudo: required
       env: 
         - DOCKER_IMAGE=pmeira/manylinux_wheel_cmake_fpc
-        - DSS_CAPI_TAG=0.10.5rc1
+        - DSS_CAPI_TAG=0.10.5rc2
         - LINUX_X64=1
         - CONDA_SUBDIR=linux-64
       services:
@@ -32,7 +32,7 @@ matrix:
       sudo: required
       env: 
         - DOCKER_IMAGE=pmeira/manylinux_wheel_cmake_fpc_i686
-        - DSS_CAPI_TAG=0.10.5rc1
+        - DSS_CAPI_TAG=0.10.5rc2
         - CONDA_SUBDIR=linux-32
       services:
         - docker
@@ -52,7 +52,7 @@ matrix:
     - name: "osx_x64"
       os: osx
       env: 
-        - DSS_CAPI_TAG=0.10.5rc1
+        - DSS_CAPI_TAG=0.10.5rc2
       script: 
         - export TRAVIS_TAG_DSS_PYTHON=$TRAVIS_TAG
         - export TRAVIS_TAG=
