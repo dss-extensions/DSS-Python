@@ -38,7 +38,7 @@ echo POST ACTIVATE
 
 echo DSS_PYTHON_BUILD_TAG=%DSS_PYTHON_BUILD_TAG%
 
-IF "%DSS_PYTHON_BUILD_TAG%"=="1" conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
+REM IF "%DSS_PYTHON_BUILD_TAG%"=="1" conda-build --quiet --no-test --output-folder "c:\projects\artifacts" conda
 
 REM echo CONDA-BUILD CALLED 
 
