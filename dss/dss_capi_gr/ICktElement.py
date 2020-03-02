@@ -185,6 +185,7 @@ class ICktElement(Base):
     def NodeOrder(self):
         '''(read-only) Array of integer containing the node numbers (representing phases, for example) for each conductor of each terminal. '''
         self._lib.CktElement_Get_NodeOrder_GR()
+        self.CheckForError()
         return self._get_int32_gr_array()
 
     @property
