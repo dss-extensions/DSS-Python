@@ -12,6 +12,8 @@ NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
 USE_V8 = (os.getenv('DSS_PYTHON_V8') == '1')
 WIN32 = (sys.platform == 'win32')
 
+COM_VLL_BROKEN = False
+
 # COM Output
 SAVE_COM_OUTPUT = 'save' in sys.argv
 LOAD_COM_OUTPUT = (not WIN32) or ('load' in sys.argv)
@@ -276,8 +278,13 @@ class ValidatingTest:
                 if not SAVE_COM_OUTPUT: assert A.Name == B.Name
                 
             for field in ('Coorddefined', 'Cust_Duration', 'Cust_Interrupts', 'Distance', 'Int_Duration', 'Isc', 'Lambda', 'N_Customers', 'N_interrupts', 'Nodes', 'NumNodes', 'SectionID', 'TotalMiles', 'VLL', 'VMagAngle', 'Voc', 'Voltages', 'YscMatrix', 'Zsc0', 'Zsc1', 'ZscMatrix', 'kVBase', 'puVLL', 'puVmagAngle', 'puVoltages', 'x', 'y',  'SeqVoltages', 'CplxSeqVoltages'):
-                fA = output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
+                if COM_VLL_BROKEN and field in ('VLL', 'puVLL') and len(fB) == 1:
+                    print('Bus.{}: this COM version could freeze, skipping; bus = {}, nodes = {}'.format(field, name, A.Nodes))
+                    fA = fB
+                else:
+                    fA = output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] if LOAD_COM_OUTPUT else getattr(A, field)
+                    
                 if SAVE_COM_OUTPUT: output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] = fA
                 
                 if type(fA) == tuple and len(fA) == 0:
@@ -1171,6 +1178,8 @@ def run_tests(fns):
         import dss
         com = dss.patch_dss_com(com)
         print('COM Version:', com.Version)
+        global COM_VLL_BROKEN
+        COM_VLL_BROKEN = 'Version 8.6.7.1' in com.Version
     else:
         com = None
 
