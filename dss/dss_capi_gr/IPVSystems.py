@@ -184,3 +184,24 @@ class IPVSystems(Iterable):
 
         self._lib.PVSystems_Set_Tyearly(Value)
         self.CheckForError()
+
+    @property 
+    def IrradianceNow(self):
+        '''
+        Returns the current irradiance value for the active PVSystem. Use it to 
+        know what's the current irradiance value for the PV during a simulation.
+        '''
+        self._lib.PVSystems_Get_IrradianceNow()
+
+    @property 
+    def Pmpp(self):
+        '''
+        Gets/sets the rated max power of the PV array for 1.0 kW/sq-m irradiance 
+        and a user-selected array temperature of the active PVSystem.
+        '''
+        self._lib.PVSystems_Get_Pmpp()
+
+    @Pmpp.setter
+    def Pmpp(self, Value):
+        self._lib.PVSystems_Set_Pmpp(Value)
+        self.CheckForError()

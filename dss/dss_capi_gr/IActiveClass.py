@@ -54,3 +54,8 @@ class IActiveClass(Base):
     def NumElements(self):
         '''(read-only) Number of elements in this class. Same as Count property.'''
         return self._lib.ActiveClass_Get_NumElements()
+
+    @property
+    def ActiveClassParent(self):
+        '''Get the name of the parent class of the active class'''
+        return self._get_string(self._lib.ActiveClass_Get_ActiveClassParent())
