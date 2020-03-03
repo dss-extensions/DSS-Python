@@ -1,5 +1,5 @@
-[![Travis-CI: Linux and macOS build status](https://travis-ci.com/dss-extensions/dss_python.svg?branch=master)](https://travis-ci.com/dss-extensions/dss_python) 
-[![AppVeyor: Windows build status](https://ci.appveyor.com/api/projects/status/bvcbel63n5uf4yjk/branch/master?svg=true)](https://ci.appveyor.com/project/PMeira/dss-python-yyx2r/branch/master)
+[![Travis-CI: Linux and macOS build status](https://travis-ci.com/dss-extensions/dss_python.svg?branch=0.10.x)](https://travis-ci.com/dss-extensions/dss_python) 
+[![AppVeyor: Windows build status](https://ci.appveyor.com/api/projects/status/bvcbel63n5uf4yjk/branch/0.10.x?svg=true)](https://ci.appveyor.com/project/PMeira/dss-python-yyx2r/branch/0.10.x)
 
 # DSS Python: Unofficial bindings for EPRI's OpenDSS
 
@@ -13,7 +13,7 @@ See also the other projects from [DSS-Extensions.org](https://dss-extensions.org
 - [DSS Sharp](http://github.com/dss-extensions/dss_sharp/): available for .NET/C#, also mimics the COM classes, but Windows-only at the moment. Soon it will be possible to use it via COM too.
 - [DSS MATLAB](http://github.com/dss-extensions/dss_matlab/): presents multi-platform integration (Windows, Linux, MacOS) with DSS C-API and is also very compatible with the COM classes.
 
-Version 0.10.3, based on OpenDSS revision 2609 (which is slightly newer than OpenDSS v8.5.9.1 and v7.6.5.86). While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached. If you find an unexpected missing feature, please report it!
+Version 0.10.5, based on OpenDSS revision 2837 (which is slightly newer than OpenDSS v8.6.7.1). While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached. If you find an unexpected missing feature, please report it!
 
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level.
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange. 
@@ -22,9 +22,11 @@ The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the 
 
 ## Recent changes
 
-Check the [changelog](docs/changelog.md#0103) document for a detailed list.
+Check the [changelog](docs/changelog.md#0105) document for a detailed list.
 
-- **2019-05-22 / version 0.10.3: Some important fixes, better general performance, new API extensions, new features ported from COM and the OpenDSS version 8 codebase.**
+- *2020-03-03 / version 0.10.5: Maintenance release to match DSS C-API 0.10.5, basedon on OpenDSS revision 2837. Temporarily drops the v8 parallel-machine functions, as well as conda packages on Windows.*
+- 2019-11-16 / version 0.10.4: Maintenance release to match DSS C-API 0.10.4.
+- 2019-05-22 / version 0.10.3: Some important fixes, better general performance, new API extensions, new features ported from COM and the OpenDSS version 8 codebase.
 - 2019-02-28 / version 0.10.2: Some small fixes, adds the missing `CtrlQueue.Push`, faster LoadShapes and new property `DSS.AllowEditor` to toggle editor calls.
 - 2019-02-17 / version 0.10.1: Integrate DSS C-API changes/fix, some small fixes, and more error-checking. 
 - 2018-11-17 / version 0.10.0: Lots of changes, fixes and new features. Check the new [changelog](docs/changelog.md#0100) document for a list.
@@ -136,16 +138,16 @@ for i in range(len(voltages) // 2):
 ```
 
 
-If you want to play with the experimental OpenDSS-PM interface (from OpenDSS v8), it is installed side-by-side and you can import it as:
+~~If you want to play with the experimental OpenDSS-PM interface (from OpenDSS v8), it is installed side-by-side and you can import it as:~~ -- temporarily disabled in DSS Python 0.10.5. Check back in a few months.
 
 ```python
 import dss.v8
 dss_engine = dss.v8.DSS
 ```
 
-Although it is experimental, most of its funcionality is working. Depending on your use-case, the parallel interface can be an easy way of better using your machine resources. Otherwise, you can always use general distributed computing resources via Python.
+~~Although it is experimental, most of its funcionality is working. Depending on your use-case, the parallel interface can be an easy way of better using your machine resources. Otherwise, you can always use general distributed computing resources via Python.~~
 
-Beware the v8 alternative can present issues and it should be removed as soon as all OpenDSS 8+ features are integrated into the default version.
+~~Beware the v8 alternative can present issues and it should be removed as soon as all OpenDSS 8+ features are integrated into the default version.~~
 
 Testing
 =======
@@ -162,6 +164,7 @@ Besides bug fixes, the main funcionality of this library is mostly done. Notable
 
 - More and better documentation
 - Plotting and reports integrated in Python.
+- Parallel-machine properties (disabled in DSS Python 0.10.5, to be reworked).
 
 Expect news about these items by version 0.11.
 
