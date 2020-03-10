@@ -107,7 +107,7 @@ class IBus(Base):
 
     @property
     def VMagAngle(self):
-        '''(read-only) Variant Array of doubles containing voltages in Magnitude (VLN), angle (deg) '''
+        '''(read-only) Array of doubles containing voltages in Magnitude (VLN), angle (deg) '''
         self._lib.Bus_Get_VMagAngle_GR()
         return self._get_float64_gr_array()
 

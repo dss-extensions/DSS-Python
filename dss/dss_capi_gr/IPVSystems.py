@@ -38,7 +38,7 @@ class IPVSystems(Iterable):
 
     @property
     def RegisterNames(self):
-        '''(read-only) Variant Array of PVSYSTEM energy meter register names'''
+        '''(read-only) Array of PVSYSTEM energy meter register names'''
         return self._get_string_array(self._lib.PVSystems_Get_RegisterNames)
 
     @property
