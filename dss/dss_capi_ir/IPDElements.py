@@ -44,7 +44,7 @@ class IPDElements(Base):
 
     @property
     def IsShunt(self):
-        '''(read-only) Variant boolean indicating of PD element should be treated as a shunt element rather than a series element. Applies to Capacitor and Reactor elements in particular.'''
+        '''(read-only) Boolean indicating of PD element should be treated as a shunt element rather than a series element. Applies to Capacitor and Reactor elements in particular.'''
         return self._lib.PDElements_Get_IsShunt() != 0
 
     @property
