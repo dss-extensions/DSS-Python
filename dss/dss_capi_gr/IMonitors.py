@@ -11,7 +11,10 @@ class IMonitors(Iterable):
     __slots__ = []
     
     def Channel(self, Index):
-        '''(read-only) Array of float32 for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
+        '''(read-only) Array of float32 for the specified channel (usage: MyArray = DSSMonitor.Channel(i)).
+        A Save or SaveAll should be executed first. Done automatically by most standard solution modes.
+        Channels start at index 1.
+        '''
 
         num_channels = self._lib.Monitors_Get_NumChannels()
         if Index < 1 or Index > num_channels:
@@ -33,7 +36,10 @@ class IMonitors(Iterable):
         return data[(Index + 1)::record_size].copy()
 
     def AsMatrix(self):
-        '''(read-only) Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1)'''
+        '''
+        Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1).
+        If you need multiple channels, prefer using this function as it processes the monitor byte-stream once.
+        '''
         
         ffi = self._api_util.ffi
         self._lib.Monitors_Get_ByteStream_GR()
@@ -152,6 +158,6 @@ class IMonitors(Iterable):
 
     @property
     def dblHour(self):
-        '''(read-only) Array of doubles containgin time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution  (see dblFreq)'''
+        '''(read-only) Array of doubles containing time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution (see dblFreq)'''
         self._lib.Monitors_Get_dblHour_GR()
         return self._get_float64_gr_array()

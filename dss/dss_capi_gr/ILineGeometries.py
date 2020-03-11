@@ -28,7 +28,7 @@ class ILineGeometries(Iterable):
 
     @property
     def NormAmps(self):
-        '''Normal Ampere rating'''
+        '''Normal ampere rating'''
         return self._lib.LineGeometries_Get_NormAmps()
 
     @NormAmps.setter

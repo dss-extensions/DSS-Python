@@ -7,6 +7,12 @@ from __future__ import absolute_import
 from .._cffi_api_util import Base
 
 class ICmathLib(Base):
+    '''
+    The CmathLib interface is exposed only for backwards compatibility with
+    the official OpenDSS COM interface. Please avoid using it, prefer the
+    native methods.
+    '''
+
     __slots__ = []
 
     def cabs(self, realpart, imagpart):

@@ -303,7 +303,7 @@ class ICircuit(Base):
 
     @property
     def ParentPDElement(self):
-        '''(read-only) Sets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
+        '''(read-only) Gets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
         return self._lib.Circuit_Get_ParentPDElement()
 
     @property
@@ -313,7 +313,11 @@ class ICircuit(Base):
 
     @property
     def SystemY(self):
-        '''(read-only) System Y matrix (after a solution has been performed)'''
+        '''
+        (read-only) System Y matrix (after a solution has been performed). 
+        This is deprecated as it returns a dense matrix. Only use it for small systems.
+        For large scale systems, prefer YMatrix.GetCompressedYMatrix.
+        '''
         return self._get_float64_array(self._lib.Circuit_Get_SystemY)
 
     @property

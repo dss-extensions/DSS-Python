@@ -21,7 +21,7 @@ class IXYCurves(Iterable):
 
     @property
     def Xarray(self):
-        '''Get/Set X values as a Array of doubles. Set Npts to max number expected if setting'''
+        '''Get/set X values as a Array of doubles. Set Npts to max number expected if setting'''
         return self._get_float64_array(self._lib.XYCurves_Get_Xarray)
 
     @Xarray.setter
@@ -63,10 +63,7 @@ class IXYCurves(Iterable):
 
     @property
     def Yscale(self):
-        '''
-        (read) Factor to scale Y values from original curve
-        (write) Amount to scale Y values from original curve. Represents a curve shift.
-        '''
+        '''Factor to scale Y values from original curve'''
         return self._lib.XYCurves_Get_Yscale()
 
     @Yscale.setter
@@ -76,7 +73,7 @@ class IXYCurves(Iterable):
 
     @property
     def Yshift(self):
-        '''amount to shift Y valiue from original curve'''
+        '''Amount to shift Y valiue from original curve'''
         return self._lib.XYCurves_Get_Yshift()
 
     @Yshift.setter
@@ -96,10 +93,7 @@ class IXYCurves(Iterable):
 
     @property
     def y(self):
-        '''
-        (read) Y value for present X or set this value then get corresponding X
-        (write) Set Y value or get interpolated Y value after setting X
-        '''
+        '''Set Y value or get interpolated Y value after setting X'''
         return self._lib.XYCurves_Get_y()
 
     @y.setter

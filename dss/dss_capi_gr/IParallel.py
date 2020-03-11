@@ -19,10 +19,7 @@ class IParallel(Base):
 
     @property
     def ActiveActor(self):
-        '''
-        (read) Gets the ID of the Active Actor
-        (write) Sets the Active Actor
-        '''
+        '''Gets/sets the ID of the Active Actor'''
         return self._lib.Parallel_Get_ActiveActor()
 
     @ActiveActor.setter
@@ -45,10 +42,7 @@ class IParallel(Base):
 
     @property
     def ActorCPU(self):
-        '''
-        (read) Gets the CPU of the Active Actor
-        (write) Sets the CPU for the Active Actor
-        '''
+        '''Gets/sets the CPU of the Active Actor'''
         return self._lib.Parallel_Get_ActorCPU()
 
     @ActorCPU.setter

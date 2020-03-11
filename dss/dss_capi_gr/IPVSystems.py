@@ -12,10 +12,7 @@ class IPVSystems(Iterable):
 
     @property
     def Irradiance(self):
-        '''
-        (read) Get the present value of the Irradiance property in W/sq-m
-        (write) Set the present Irradiance value in W/sq-m
-        '''
+        '''Get/set the present value of the Irradiance property in W/m²'''
         return self._lib.PVSystems_Get_Irradiance()
 
     @Irradiance.setter
@@ -25,10 +22,7 @@ class IPVSystems(Iterable):
 
     @property
     def PF(self):
-        '''
-        (read) Get Power factor
-        (write) Set PF
-        '''
+        '''Get/set the power factor for the active PVSystem'''
         return self._lib.PVSystems_Get_PF()
 
     @PF.setter
@@ -49,10 +43,7 @@ class IPVSystems(Iterable):
 
     @property
     def kVArated(self):
-        '''
-        (read) Get Rated kVA of the PVSystem
-        (write) Set kva rated
-        '''
+        '''Get/set Rated kVA of the PVSystem'''
         return self._lib.PVSystems_Get_kVArated()
 
     @kVArated.setter
@@ -67,10 +58,7 @@ class IPVSystems(Iterable):
 
     @property
     def kvar(self):
-        '''
-        (read) Get kvar value
-        (write) Set kvar output value
-        '''
+        '''Get/set kvar output value'''
         return self._lib.PVSystems_Get_kvar()
 
     @kvar.setter

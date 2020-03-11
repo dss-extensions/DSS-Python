@@ -17,10 +17,7 @@ class IReclosers(Iterable):
 
     @property
     def GroundInst(self):
-        '''
-        (read) Ground (3I0) instantaneous trip setting - curve multipler or actual amps.
-        (write) Ground (3I0) trip instantaneous multiplier or actual amps
-        '''
+        '''Ground (3I0) instantaneous trip setting - curve multipler or actual amps.'''
         return self._lib.Reclosers_Get_GroundInst()
 
     @GroundInst.setter
@@ -40,10 +37,7 @@ class IReclosers(Iterable):
 
     @property
     def MonitoredObj(self):
-        '''
-        (read) Full name of object this Recloser is monitoring.
-        (write) Set monitored object by full name.
-        '''
+        '''Full name of object this Recloser to be monitored.'''
         return self._get_string(self._lib.Reclosers_Get_MonitoredObj())
 
     @MonitoredObj.setter
@@ -86,10 +80,7 @@ class IReclosers(Iterable):
 
     @property
     def PhaseTrip(self):
-        '''
-        (read) Phase trip curve multiplier or actual amps
-        (write) Phase Trip multiplier or actual amps
-        '''
+        '''Phase trip curve multiplier or actual amps'''
         return self._lib.Reclosers_Get_PhaseTrip()
 
     @PhaseTrip.setter

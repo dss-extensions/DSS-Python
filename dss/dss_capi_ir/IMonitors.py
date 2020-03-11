@@ -4,19 +4,26 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 Copyright (c) 2016-2019 Paulo Meira
 '''
 from __future__ import absolute_import
-from .._cffi_api_util import Iterable
+from .._cffi_api_util import DSSException, Iterable
 import numpy as np
 
 class IMonitors(Iterable):
     __slots__ = []
 
     def Channel(self, Index):
-        '''(read-only) Array of float32 for the specified channel  (usage: MyArray = DSSMonitor.Channel(i)) A Save or SaveAll  should be executed first. Done automatically by most standard solution modes.'''
+        '''
+        (read-only) Array of float32 for the specified channel (usage: MyArray = DSSMonitor.Channel(i)).
+        A Save or SaveAll should be executed first. Done automatically by most standard solution modes.
+        Channels start at index 1.
+        '''
 
         return self.CheckForError(self._get_float64_array(self._lib.Monitors_Get_Channel, Index))
 
     def AsMatrix(self):
-        '''(read-only) Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1)'''
+        '''
+        Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1).
+        If you need multiple channels, prefer using this function as it processes the monitor byte-stream once.
+        '''
         
         buffer = self._get_int8_array(self._lib.Monitors_Get_ByteStream)
         if len(buffer) <= 1:
@@ -70,6 +77,7 @@ class IMonitors(Iterable):
             Value = Value.encode(self._api_util.codec)
 
         self._lib.Monitors_Set_Element(Value)
+        self.CheckForError()
 
     @property
     def FileName(self):
@@ -94,6 +102,7 @@ class IMonitors(Iterable):
     @Mode.setter
     def Mode(self, Value):
         self._lib.Monitors_Set_Mode(Value)
+        self.CheckForError()
 
     @property
     def NumChannels(self):
@@ -118,6 +127,7 @@ class IMonitors(Iterable):
     @Terminal.setter
     def Terminal(self, Value):
         self._lib.Monitors_Set_Terminal(Value)
+        self.CheckForError()
 
     @property
     def dblFreq(self):
@@ -126,5 +136,5 @@ class IMonitors(Iterable):
 
     @property
     def dblHour(self):
-        '''(read-only) Array of doubles containgin time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution  (see dblFreq)'''
+        '''(read-only) Array of doubles containing time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution (see dblFreq)'''
         return self._get_float64_array(self._lib.Monitors_Get_dblHour)
