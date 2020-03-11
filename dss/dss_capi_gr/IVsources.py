@@ -11,6 +11,16 @@ class IVsources(Iterable):
 
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Phases',
+        'BasekV',
+        'AngleDeg',
+        'Frequency',
+        'pu',
+    ]
+
     @property
     def AngleDeg(self):
         '''Phase angle of first phase in degrees'''

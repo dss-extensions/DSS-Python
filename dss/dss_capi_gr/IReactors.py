@@ -11,6 +11,30 @@ class IReactors(Iterable):
     
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Phases',
+        'Bus1',
+        'Bus2',
+        'SpecType',
+        'kV',
+        'kvar',
+        'IsDelta',
+        'Parallel',
+        'LCurve',
+        'RCurve',
+        'R',
+        'Rp',
+        'X',
+        'Z0',
+        'Z1',
+        'Z2',
+        'Z',
+        'Rmatrix',
+        'Xmatrix',
+    ]
+
     @property
     def SpecType(self):
         '''

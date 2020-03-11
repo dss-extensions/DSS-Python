@@ -9,6 +9,31 @@ from .._cffi_api_util import Iterable
 class ITransformers(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'XfmrCode',
+        'IsDelta',
+        'CoreType',
+        'NumWindings',
+        'Wdg',
+        'NumTaps',
+        'MinTap',
+        'MaxTap',
+        'Tap',
+        'kV',
+        'kVA',
+        'R',
+        'Xht',
+        'Xlt',
+        'Rneut',
+        'Xneut',
+        'RdcOhms',
+        'WdgCurrents',
+        'WdgVoltages',
+        'LossesByType',
+    ]
+
     @property
     def IsDelta(self):
         '''Active Winding delta or wye connection?'''

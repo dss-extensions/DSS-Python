@@ -9,6 +9,20 @@ from .._cffi_api_util import Iterable
 class ICapControls(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Capacitor',
+        'CTratio',
+        'PTratio',
+        'DeadTime',
+        'Delay',
+        'DelayOff',
+        'Vmin',
+        'Vmax',
+        'UseVoltOverride',
+    ]
+
     def Reset(self):
         self._lib.CapControls_Reset()
 

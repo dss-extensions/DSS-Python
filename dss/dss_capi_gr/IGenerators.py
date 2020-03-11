@@ -9,6 +9,23 @@ from .._cffi_api_util import Iterable
 class IGenerators(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'ForcedON',
+        'Model',
+        'Phases',
+        'PF',
+        'kVArated',
+        'kV',
+        'kW',
+        'kvar',
+        'Vminpu',
+        'Vmaxpu',
+        'RegisterNames',
+        'RegisterValues',
+    ]
+
     @property
     def ForcedON(self):
         '''Indicates whether the generator is forced ON regardles of other dispatch criteria.'''

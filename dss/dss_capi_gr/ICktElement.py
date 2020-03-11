@@ -12,6 +12,44 @@ class ICktElement(Base):
         'Properties'
     ]
 
+    _columns = [
+        'DisplayName',
+        'Handle',
+        'GUID',
+        'Enabled',
+        'NumTerminals',
+        'NumPhases',
+        'NumConductors',
+        'NumControls',
+        'NumProperties',
+        'BusNames',
+        'NormalAmps',
+        'EmergAmps',
+        'HasVoltControl',
+        'HasSwitchControl',
+        'HasOCPDevice',
+        'OCPDevType',
+        'OCPDevIndex',
+        'IsIsolated',
+        'EnergyMeter',
+
+        'Yprim',
+        'NodeOrder',
+        'Voltages',
+        'VoltagesMagAng',
+        'SeqVoltages',
+        'CplxSeqVoltages',
+        'Powers',
+        'SeqPowers',
+        'Currents',
+        'CurrentsMagAng',
+        'SeqCurrents',
+        'CplxSeqCurrents',
+        'Residuals',
+        'PhaseLosses',
+    ]
+
+
     def __init__(self, api_util):
         self.Properties = IDSSProperty(api_util)
         Base.__init__(self, api_util)    

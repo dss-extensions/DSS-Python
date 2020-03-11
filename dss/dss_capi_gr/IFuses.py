@@ -9,6 +9,19 @@ from .._cffi_api_util import Iterable
 class IFuses(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'MonitoredObj',
+        'Delay',
+        'IsBlown',
+        'TCCcurve',
+        'RatedCurrent',
+        'SwitchedObj',
+        'SwitchedTerm',
+    ]
+
+
     def Close(self):
         self._lib.Fuses_Close()
 

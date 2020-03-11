@@ -9,6 +9,16 @@ from .._cffi_api_util import Iterable
 class ICapacitors(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'kV',
+        'AvailableSteps',
+        'IsDelta',
+        'States',
+        'kvar',
+    ]
+
     def AddStep(self):
         return self._lib.Capacitors_AddStep() != 0
 

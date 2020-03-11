@@ -9,6 +9,32 @@ from .._cffi_api_util import Iterable
 class IRegControls(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Transformer',
+        'Winding',
+        'MonitoredBus',
+        'CTPrimary',
+        'PTratio',
+        'Delay',
+        'IsInverseTime',
+        'IsReversible',
+        'MaxTapChange',
+        'TapDelay',
+        'TapNumber',
+        'TapWinding',
+        'VoltageLimit',
+        'ForwardBand',
+        'ForwardR',
+        'ForwardX',
+        'ForwardVreg',
+        'ReverseBand',
+        'ReverseR',
+        'ReverseX',
+        'ReverseVreg',
+    ]
+
     def Reset(self):
         self._lib.RegControls_Reset()
 

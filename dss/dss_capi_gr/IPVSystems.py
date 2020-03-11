@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
@@ -9,6 +10,26 @@ from .._cffi_api_util import Iterable
 
 class IPVSystems(Iterable):
     __slots__ = []    
+
+    _columns = [
+        'Name',
+        'idx',
+        'PF',
+        'Irradiance',
+        'IrradianceNow',
+        'Pmpp',
+        'RegisterNames',
+        'RegisterValues',
+        'kVArated',
+        'kW',
+        'kvar',
+        'daily',
+        'duty',
+        'yearly',
+        'Tdaily',
+        'Tduty',
+        'Tyearly',
+    ]
 
     @property
     def Irradiance(self):

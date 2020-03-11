@@ -9,6 +9,20 @@ from .._cffi_api_util import Iterable
 class IXYCurves(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Npts',
+        'Xarray',
+        'Xscale',
+        'Xshift',
+        'Yarray',
+        'Yscale',
+        'Yshift',
+        'x',
+        'y',
+    ]
+
     @property
     def Npts(self):
         '''Get/Set Number of points in X-Y curve'''

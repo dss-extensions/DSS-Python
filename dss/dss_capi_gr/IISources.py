@@ -9,6 +9,14 @@ from .._cffi_api_util import Iterable
 class IISources(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Amps',
+        'AngleDeg',
+        'Frequency',
+    ]
+
     @property
     def Amps(self):
         '''Magnitude of the ISource in amps'''
