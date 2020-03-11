@@ -40,10 +40,7 @@ class ILoadShapes(Iterable):
 
     @property
     def Npts(self):
-        '''
-        (read) Get Number of points in active Loadshape.
-        (write) Set number of points to allocate for active Loadshape.
-        '''
+        '''Get/set Number of points in active Loadshape.'''
         return self._lib.LoadShapes_Get_Npts()
 
     @Npts.setter
@@ -109,7 +106,7 @@ class ILoadShapes(Iterable):
 
     @property
     def UseActual(self):
-        '''T/F flag to let Loads know to use the actual value in the curve rather than use the value as a multiplier.'''
+        '''Boolean flag to let Loads know to use the actual value in the curve rather than use the value as a multiplier.'''
         return self._lib.LoadShapes_Get_UseActual() != 0
 
     @UseActual.setter

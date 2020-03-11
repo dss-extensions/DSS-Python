@@ -21,8 +21,8 @@ class IFuses(Iterable):
     @property
     def Delay(self):
         '''
-        (read) A fixed delay time in seconds added to the fuse blowing time determined by the TCC curve. Default is 0.
-        (write) Fixed delay time in seconds added to the fuse blowing time to represent fuse clear or other delay.
+        A fixed delay time in seconds added to the fuse blowing time determined by the TCC curve. Default is 0.
+        This represents a fuse clear or other delay.
         '''
         return self._lib.Fuses_Get_Delay()
 
@@ -65,8 +65,8 @@ class IFuses(Iterable):
     @property
     def RatedCurrent(self):
         '''
-        (read) Multiplier or actual amps for the TCCcurve object. Defaults to 1.0.  Multipliy current values of TCC curve by this to get actual amps.
-        (write) Multiplier or actual fuse amps for the TCC curve. Defaults to 1.0. Has to correspond to the Current axis of TCCcurve object.
+        Multiplier or actual amps for the TCCcurve object. Defaults to 1.0. 
+        Multiply current values of TCC curve by this to get actual amps.
         '''
         return self._lib.Fuses_Get_RatedCurrent()
 
@@ -78,8 +78,8 @@ class IFuses(Iterable):
     @property
     def SwitchedObj(self):
         '''
-        (read) Full name of the circuit element switch that the fuse controls. Defaults to the MonitoredObj.
-        (write) Full name of the circuit element switch that the fuse controls. Defaults to MonitoredObj.
+        Full name of the circuit element switch that the fuse controls. 
+        Defaults to the MonitoredObj.
         '''
         return self._get_string(self._lib.Fuses_Get_SwitchedObj())
 
@@ -94,8 +94,7 @@ class IFuses(Iterable):
     @property
     def SwitchedTerm(self):
         '''
-        (read) Number of the terminal containing the switch controlled by the fuse.
-        (write) Number of the terminal of the controlled element containing the switch controlled by the fuse.
+        Number of the terminal of the controlled element containing the switch controlled by the fuse.
         '''
         return self._lib.Fuses_Get_SwitchedTerm()
 

@@ -13,10 +13,7 @@ class IVsources(Iterable):
 
     @property
     def AngleDeg(self):
-        '''
-        (read) Phase angle of first phase in degrees
-        (write) phase angle in degrees
-        '''
+        '''Phase angle of first phase in degrees'''
         return self._lib.Vsources_Get_AngleDeg()
 
     @AngleDeg.setter

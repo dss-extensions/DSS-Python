@@ -45,8 +45,7 @@ class ISwtControls(Iterable):
     @property
     def NormalState(self):
         '''
-        (read) Get Normal state of switch
-        (write) set Normal state of switch  (see actioncodes) dssActionOpen or dssActionClose
+        Get/set Normal state of switch (see actioncodes) dssActionOpen or dssActionClose
         '''
         return self._lib.SwtControls_Get_NormalState()
 
@@ -57,10 +56,7 @@ class ISwtControls(Iterable):
 
     @property
     def State(self):
-        '''
-        (read) Force switch to specified state
-        (write) Get Present state of switch
-        '''
+        '''Set it to force the switch to a specified state, otherwise read its present state.'''
         return self._lib.SwtControls_Get_State()
 
     @State.setter

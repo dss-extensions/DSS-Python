@@ -53,7 +53,7 @@ class ILoads(Iterable):
 
     @property
     def Cfactor(self):
-        '''Factor relates average to peak kw.  Used for allocation with kwh and kwhdays/'''
+        '''Factor relates average to peak kw.  Used for allocation with kwh and kwhdays'''
         return self._lib.Loads_Get_Cfactor()
 
     @Cfactor.setter
@@ -251,7 +251,7 @@ class ILoads(Iterable):
 
     @property
     def ZIPV(self):
-        '''Array of 7  doubles with values for ZIPV property of the LOAD object'''
+        '''Array of 7 doubles with values for ZIPV property of the load object'''
         self._lib.Loads_Get_ZIPV_GR()
         return self._get_float64_gr_array()
 
