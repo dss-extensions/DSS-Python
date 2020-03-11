@@ -27,6 +27,12 @@ class IActiveClass(Base):
     def __len__(self):
         return self._lib.ActiveClass_Get_Count()
 
+    def __iter__(self):
+        n = self.First
+        while n:
+            yield self
+            n = self.Next
+
     @property
     def First(self):
         '''(read-only) Sets first element in the active class to be the active DSS object. If object is a CktElement, ActiveCktELment also points to this element. Returns 0 if none.'''
