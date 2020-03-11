@@ -194,7 +194,7 @@ class ITransformers(Iterable):
     @property
     def CoreType(self):
         '''Transformer Core Type: 0=shell;1 = 1-phase; 3= 3-leg; 5= 5-leg'''
-        return self._lib.Transformers_Get_CoreType()
+        return self._lib.Transformers_Get_CoreType() #TODO: use enum
 
     @CoreType.setter
     def CoreType(self, Value):

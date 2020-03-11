@@ -108,7 +108,7 @@ class ILineCodes(Iterable):
 
     @property
     def Units(self):
-        return self._lib.LineCodes_Get_Units()
+        return self._lib.LineCodes_Get_Units() # TODO: use enum
 
     @Units.setter
     def Units(self, Value):

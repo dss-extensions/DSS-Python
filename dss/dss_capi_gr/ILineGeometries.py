@@ -87,7 +87,7 @@ class ILineGeometries(Iterable):
     @property
     def Units(self):
         self._lib.LineGeometries_Get_Units_GR()
-        return self._get_int32_gr_array()
+        return self._get_int32_gr_array() #TODO: use enum
 
     @Units.setter
     def Units(self, Value):

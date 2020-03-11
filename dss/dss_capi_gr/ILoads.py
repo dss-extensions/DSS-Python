@@ -179,7 +179,7 @@ class ILoads(Iterable):
     @property
     def Status(self):
         '''Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).'''
-        return self._lib.Loads_Get_Status()
+        return self._lib.Loads_Get_Status() #TODO: use enum
 
     @Status.setter
     def Status(self, Value):

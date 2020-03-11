@@ -47,7 +47,7 @@ class ISwtControls(Iterable):
         '''
         Get/set Normal state of switch (see actioncodes) dssActionOpen or dssActionClose
         '''
-        return self._lib.SwtControls_Get_NormalState()
+        return self._lib.SwtControls_Get_NormalState() #TODO: use enumm
 
     @NormalState.setter
     def NormalState(self, Value):

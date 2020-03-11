@@ -64,7 +64,7 @@ class IWireData(Iterable):
 
     @GMRUnits.setter
     def GMRUnits(self, Value):
-        self._lib.WireData_Set_GMRUnits(Value)
+        self._lib.WireData_Set_GMRUnits(Value) #TODO: use enum
         self.CheckForError()
 
     @property
@@ -87,7 +87,7 @@ class IWireData(Iterable):
 
     @property
     def ResistanceUnits(self):
-        return self._lib.WireData_Get_ResistanceUnits()
+        return self._lib.WireData_Get_ResistanceUnits() #TODO: use enum
 
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value):

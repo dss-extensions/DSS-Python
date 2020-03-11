@@ -33,7 +33,7 @@ class IParallel(Base):
         (read) Sets ON/OFF (1/0) Parallel features of the Engine
         (write) Delivers if the Parallel features of the Engine are Active
         '''
-        return self._lib.Parallel_Get_ActiveParallel()
+        return self._lib.Parallel_Get_ActiveParallel()  #TODO: use boolean for consistency
 
     @ActiveParallel.setter
     def ActiveParallel(self, Value):
@@ -66,7 +66,7 @@ class IParallel(Base):
         (read) Reads the values of the ConcatenateReports option (1=enabled, 0=disabled)
         (write) Enable/Disable (1/0) the ConcatenateReports option for extracting monitors data
         '''
-        return self._lib.Parallel_Get_ConcatenateReports()
+        return self._lib.Parallel_Get_ConcatenateReports() #TODO: use boolean for consistency
 
     @ConcatenateReports.setter
     def ConcatenateReports(self, Value):

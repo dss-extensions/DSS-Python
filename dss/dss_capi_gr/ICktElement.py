@@ -234,7 +234,7 @@ class ICktElement(Base):
     @property
     def OCPDevType(self):
         '''(read-only) 0=None; 1=Fuse; 2=Recloser; 3=Relay;  Type of OCP controller device'''
-        return self._lib.CktElement_Get_OCPDevType()
+        return self._lib.CktElement_Get_OCPDevType() #TODO: use enum
 
     @property
     def PhaseLosses(self):
