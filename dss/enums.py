@@ -133,3 +133,9 @@ class LineUnits(IntEnum):
 class YMatrixModes(IntEnum):
     SeriesOnly = 1
     WholeMatrix = 2
+
+class OCPDevType(IntEnum):
+    none = 0
+    Fuse = 1
+    Recloser = 2
+    Relay = 3
