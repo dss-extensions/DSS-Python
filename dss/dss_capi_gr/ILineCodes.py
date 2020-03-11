@@ -9,6 +9,25 @@ from .._cffi_api_util import Iterable
 class ILineCodes(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Phases',
+        'Units',
+        'IsZ1Z0',
+        'R0',
+        'R1',
+        'X0',
+        'X1',
+        'C0',
+        'C1',
+        'Rmatrix',
+        'Xmatrix',
+        'Cmatrix',
+        'EmergAmps',
+        'NormAmps',
+    ]
+
     @property
     def C0(self):
         '''Zero-sequence capacitance, nF per unit length'''

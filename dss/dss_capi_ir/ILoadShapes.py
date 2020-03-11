@@ -9,6 +9,21 @@ from .._cffi_api_util import Iterable
 class ILoadShapes(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'UseActual',
+        'Npts',
+        'HrInterval',
+        'MinInterval',
+        'sInterval',
+        'PBase',
+        'Pmult',
+        'QBase',
+        'Qmult',
+        'TimeArray',
+    ]
+
     def New(self, Name):
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)

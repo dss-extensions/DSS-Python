@@ -9,6 +9,22 @@ from .._cffi_api_util import Iterable
 class IReclosers(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'GroundInst',
+        'GroundTrip',
+        'MonitoredObj',
+        'MonitoredTerm',
+        'SwitchedObj',
+        'SwitchedTerm',
+        'NumFast',
+        'PhaseInst',
+        'PhaseTrip',
+        'RecloseIntervals',
+        'Shots',
+    ]
+
     def Close(self):
         self._lib.Reclosers_Close()
 

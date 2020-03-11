@@ -9,6 +9,45 @@ from .._cffi_api_util import Iterable
 class ILoads(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Phases',
+        'Class',
+        'Model',
+        'NumCust',
+        'IsDelta',
+        'Rneut',
+        'Xneut',
+        'PF',
+        'ZIPV',
+        'CVRcurve',
+        'CVRvars',
+        'CVRwatts',
+        'Cfactor',
+        'Growth',
+        'daily',
+        'duty',
+        'Yearly',
+        'PctMean',
+        'PctStdDev',
+        'RelWeight',
+        'Spectrum',
+        'Status',
+        'Vminnorm',
+        'Vminemerg',
+        'Vminpu',
+        'Vmaxpu',
+        'kV',
+        'kW',
+        'kva',
+        'kwh',
+        'kwhdays',
+        'AllocationFactor',
+        'xfkVA',
+        'pctSeriesRL',
+    ]
+
     @property
     def AllocationFactor(self):
         '''Factor for allocating loads by connected xfkva'''

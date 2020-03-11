@@ -9,6 +9,22 @@ from .._cffi_api_util import Iterable
 class ISensors(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'MeteredElement',
+        'MeteredTerminal',
+        'IsDelta',
+        'ReverseDelta',
+        'Currents',
+        'PctError',
+        'Weight',
+        'kVbase',
+        'kVARS',
+        'kVS',
+        'kWS',
+    ]
+
     def Reset(self):
         self._lib.Sensors_Reset()
 

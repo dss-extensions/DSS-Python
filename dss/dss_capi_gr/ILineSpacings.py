@@ -11,6 +11,16 @@ class ILineSpacings(Iterable):
 
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Nconds',
+        'Phases',
+        'Units',
+        'Xcoords',
+        'Ycoords',
+    ]
+
     @property
     def Phases(self):
         '''Number of Phases'''

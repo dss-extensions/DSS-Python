@@ -9,6 +9,21 @@ from .._cffi_api_util import Base
 class IPDElements(Base):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'AccumulatedL',
+        'ParentPDElement',
+        'FromTerminal',
+        'IsShunt',
+        'Numcustomers',
+        'SectionID',
+        'FaultRate',
+        'RepairTime',
+        'TotalMiles',
+        'Totalcustomers',
+        'pctPermanent',
+    ]
+
     @property
     def AccumulatedL(self):
         '''(read-only) accummulated failure rate for this branch on downline'''

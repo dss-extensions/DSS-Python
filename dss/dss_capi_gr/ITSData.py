@@ -11,6 +11,28 @@ class ITSData(Iterable):
 
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'NormAmps',
+        'EmergAmps',
+        'Rdc',
+        'Rac',
+        'GMRac',
+        'GMRUnits',
+        'Radius',
+        'RadiusUnits',
+        'ResistanceUnits',
+        'Diameter',
+        'TapeLayer',
+        'TapeLap',
+        'DiaShield',
+        'DiaCable',
+        'DiaIns',
+        'InsLayer',
+        'EpsR',
+    ]
+
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''

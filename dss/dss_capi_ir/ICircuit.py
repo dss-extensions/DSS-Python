@@ -91,7 +91,32 @@ class ICircuit(Base):
         'Parallel',
         'ReduceCkt'
     ]
-    
+
+    _columns = [
+        'Name',
+        'NumBuses',
+        'NumNodes',
+        'NumCktElements',
+
+        'AllBusDistances',
+        'AllBusNames',
+        'AllBusVmag',
+        'AllBusVmagPu',
+        'AllBusVolts',
+
+        'AllNodeDistances',
+        'AllElementNames',
+        'YNodeOrder',
+        'YNodeVarray',
+        'YCurrents',
+        
+        'AllElementLosses',
+        'LineLosses',
+        'Losses',
+        'SubstationLosses',
+        'TotalPower',
+    ]
+   
     def __init__(self, api_util):
         self.Buses = IBus(api_util)
         self.CktElements = ICktElement(api_util)

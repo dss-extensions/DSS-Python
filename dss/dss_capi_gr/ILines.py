@@ -9,6 +9,35 @@ from .._cffi_api_util import Iterable
 class ILines(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Phases',
+        'Bus1',
+        'Bus2',
+        'LineCode',
+        'Geometry',
+        'Length',
+        'IsSwitch',
+        'Parent',
+        'Spacing',
+        'SeasonRating',
+        'Yprim',
+        'NumCust',
+        'TotalCust',
+        'Rho',
+        'R0',
+        'R1',
+        'X0',
+        'X1',
+        'Xg',
+        'C0',
+        'C1',
+        'Rmatrix',
+        'Xmatrix',
+        'Cmatrix',
+    ]
+
     def New(self, Name):
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)

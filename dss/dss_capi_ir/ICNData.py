@@ -11,6 +11,28 @@ class ICNData(Iterable):
     
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'NormAmps',
+        'EmergAmps',
+        'Rdc',
+        'Rac',
+        'ResistanceUnits',
+        'GMRac',
+        'GMRUnits',
+        'Radius',
+        'Diameter',
+        'RadiusUnits',
+        'EpsR',
+        'InsLayer',
+        'DiaIns',
+        'DiaCable',
+        'DiaStrand',
+        'RStrand',
+        'k',
+    ]
+
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''

@@ -9,6 +9,18 @@ from .._cffi_api_util import Iterable
 class ISwtControls(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'Action',
+        'Delay',
+        'IsLocked',
+        'NormalState',
+        'State',
+        'SwitchedObj',
+        'SwitchedTerm',
+    ]
+
     def Reset(self):
         self._lib.SwtControls_Reset()
 

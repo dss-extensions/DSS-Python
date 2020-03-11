@@ -9,6 +9,13 @@ from .._cffi_api_util import Base
 class IActiveClass(Base):
     __slots__ = []
 
+    _columns = [
+        'ActiveClassName',
+        'ActiveClassParent',
+        'Name',
+        'NumElements',
+    ]
+
     @property
     def ActiveClassName(self):
         '''(read-only) Returns name of active class.'''

@@ -11,6 +11,21 @@ class IWireData(Iterable):
 
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'NormAmps',
+        'EmergAmps',
+        'Rdc',
+        'Rac',
+        'ResistanceUnits',
+        'GMRac',
+        'GMRUnits',
+        'Radius',
+        'Diameter',
+        'RadiusUnits',
+    ]
+
     @property
     def EmergAmps(self):
         '''Emergency ampere rating'''

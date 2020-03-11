@@ -10,6 +10,23 @@ class ILineGeometries(Iterable):
     '''Experimental API extension exposing part of the LineGeometry objects'''
 
     __slots__ = []
+
+    _columns = [
+        'Name',
+        'idx',
+        'Phases',
+        'RhoEarth',
+        'Reduce',
+        'Units',
+        'Conductors',
+        'Xcoords',
+        'Ycoords',
+        'Rmatrix',
+        'Xmatrix',
+        'Zmatrix',
+        'NormAmps',
+        'EmergAmps',
+    ]
     
     @property
     def Conductors(self):

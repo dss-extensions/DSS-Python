@@ -9,6 +9,15 @@ from .._cffi_api_util import Iterable
 class IRelays(Iterable):
     __slots__ = []
 
+    _columns = [
+        'Name',
+        'idx',
+        'MonitoredObj',
+        'MonitoredTerm',
+        'SwitchedObj',
+        'SwitchedTerm',
+    ]
+
     @property
     def MonitoredObj(self):
         '''Full name of object this Relay is monitoring.'''

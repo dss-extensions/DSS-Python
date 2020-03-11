@@ -8,6 +8,40 @@ from .._cffi_api_util import Base
 
 class IBus(Base):
     __slots__ = []
+    
+    _columns = [
+        'Name',
+        'NumNodes',
+        'Nodes',
+        'Coorddefined',
+        'CplxSeqVoltages',
+        'Cust_Duration',
+        'Cust_Interrupts',
+        'Cust_Interrupts',
+        'Distance',
+        'Int_Duration',
+        'Isc',
+        'Lambda',
+        'N_Customers',
+        'N_interrupts',
+        'SectionID',
+        'SeqVoltages',
+        'TotalMiles',
+        'VLL',
+        'VMagAngle',
+        'Voc',
+        'Voltages',
+        'YscMatrix' 
+        'Zsc0',
+        'Zsc1',
+        'ZscMatrix',
+        'kVBase',
+        'puVLL',
+        'puVmagAngle',
+        'puVoltages',
+        'x',
+        'y',
+    ]
 
     def GetUniqueNodeNumber(self, StartNumber):
         return self._lib.Bus_GetUniqueNodeNumber(StartNumber)
