@@ -22,7 +22,7 @@ class IGenerators(Iterable):
     @property
     def Model(self):
         '''Generator Model'''
-        return self._lib.Generators_Get_Model()
+        return self._lib.Generators_Get_Model() #TODO: use enum
 
     @Model.setter
     def Model(self, Value):

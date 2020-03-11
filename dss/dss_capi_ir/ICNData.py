@@ -60,7 +60,7 @@ class ICNData(Iterable):
 
     @property
     def GMRUnits(self):
-        return self._lib.CNData_Get_GMRUnits()
+        return self._lib.CNData_Get_GMRUnits() #TODO: use enum
 
     @GMRUnits.setter
     def GMRUnits(self, Value):
@@ -78,7 +78,7 @@ class ICNData(Iterable):
 
     @property
     def RadiusUnits(self):
-        return self._lib.CNData_Get_RadiusUnits()
+        return self._lib.CNData_Get_RadiusUnits() #TODO: use enum
 
     @RadiusUnits.setter
     def RadiusUnits(self, Value):
@@ -87,7 +87,7 @@ class ICNData(Iterable):
 
     @property
     def ResistanceUnits(self):
-        return self._lib.CNData_Get_ResistanceUnits()
+        return self._lib.CNData_Get_ResistanceUnits() #TODO: use enum
 
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value):

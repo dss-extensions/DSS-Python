@@ -17,7 +17,7 @@ class IReactors(Iterable):
         How the reactor data was provided: 1=kvar, 2=R+jX, 3=R and X matrices, 4=sym components.
         Depending on this value, only some properties are filled or make sense in the context.
         '''
-        return self._lib.Reactors_Get_SpecType()
+        return self._lib.Reactors_Get_SpecType() #TODO: use enum
 
     @property
     def IsDelta(self):
