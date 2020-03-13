@@ -13,6 +13,7 @@ class ICapacitors(Iterable):
         'Name',
         'idx',
         'kV',
+        'NumSteps',
         'AvailableSteps',
         'IsDelta',
         'States',

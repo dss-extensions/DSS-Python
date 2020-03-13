@@ -31,7 +31,7 @@ class IBus(Base):
         'VMagAngle',
         'Voc',
         'Voltages',
-        'YscMatrix' 
+        'YscMatrix',
         'Zsc0',
         'Zsc1',
         'ZscMatrix',

@@ -9,9 +9,25 @@ import numpy as np
 
 class IMonitors(Iterable):
     __slots__ = []
-    
+
+    _columns = [
+        'Name',
+        'FileVersion',
+        'NumChannels',
+        'RecordSize',
+        'dblFreq',
+        'Mode',
+        'FileName',
+        'Element',
+        'Header',
+        'Terminal',
+        'dblHour',
+        'SampleCount',
+    ]
+
     def Channel(self, Index):
-        '''(read-only) Array of float32 for the specified channel (usage: MyArray = DSSMonitor.Channel(i)).
+        '''
+        (read-only) Array of float32 for the specified channel (usage: MyArray = DSSMonitor.Channel(i)).
         A Save or SaveAll should be executed first. Done automatically by most standard solution modes.
         Channels start at index 1.
         '''
@@ -118,7 +134,7 @@ class IMonitors(Iterable):
     @property
     def Mode(self):
         '''Set Monitor mode (bitmask integer - see DSS Help)'''
-        return self._lib.Monitors_Get_Mode()
+        return self._lib.Monitors_Get_Mode() # TODO: expose this better
 
     @Mode.setter
     def Mode(self, Value):

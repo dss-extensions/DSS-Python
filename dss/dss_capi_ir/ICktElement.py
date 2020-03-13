@@ -13,6 +13,7 @@ class ICktElement(Base):
     ]
 
     _columns = [
+        'Name', 
         'DisplayName',
         'Handle',
         'GUID',
@@ -22,6 +23,9 @@ class ICktElement(Base):
         'NumConductors',
         'NumControls',
         'NumProperties',
+        'AllPropertyNames', 
+        'AllVariableValues', 
+        'AllVariableNames', 
         'BusNames',
         'NormalAmps',
         'EmergAmps',
@@ -46,6 +50,7 @@ class ICktElement(Base):
         'SeqCurrents',
         'CplxSeqCurrents',
         'Residuals',
+        'Losses',
         'PhaseLosses',
     ]
 

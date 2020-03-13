@@ -22,6 +22,7 @@ class IPDElements(Base):
         'TotalMiles',
         'Totalcustomers',
         'pctPermanent',
+        'Lambda',
     ]
 
     @property

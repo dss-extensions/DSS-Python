@@ -37,6 +37,17 @@ class IDSS(Base):
         'DSSim_Coms',
         'YMatrix',
     ]
+    
+    _columns = [
+        'Version', 
+        'Classes', 
+        'NumUserClasses', 
+        'DataPath', 
+        'NumClasses', 
+        'NumCircuits', 
+        'UserClasses', 
+        'DefaultEditor',
+    ]
 
     def __init__(self, api_util):
         self.ActiveCircuit = ICircuit(api_util)
@@ -133,7 +144,8 @@ class IDSS(Base):
 
     @property
     def AllowEditor(self):
-        '''Gets/sets whether running the external editor for "Show" is allowed
+        '''
+        Gets/sets whether running the external editor for "Show" is allowed
         
         AllowEditor controls whether the external editor is used in commands like "Show".
         If you set to 0 (false), the editor is not executed. Note that other side effects,

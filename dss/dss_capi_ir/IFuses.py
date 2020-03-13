@@ -12,7 +12,9 @@ class IFuses(Iterable):
     _columns = [
         'Name',
         'idx',
+        'NumPhases',
         'MonitoredObj',
+        'MonitoredTerm',
         'Delay',
         'IsBlown',
         'TCCcurve',
@@ -59,10 +61,7 @@ class IFuses(Iterable):
 
     @property
     def MonitoredTerm(self):
-        '''
-        (read) Terminal number to which the fuse is connected.
-        (write) Number of the terminal to which the fuse is connected
-        '''
+        '''Terminal number to which the fuse is connected.'''
         return self._lib.Fuses_Get_MonitoredTerm()
 
     @MonitoredTerm.setter

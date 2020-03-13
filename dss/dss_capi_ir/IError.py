@@ -9,6 +9,12 @@ from .._cffi_api_util import Base
 class IError(Base):
     __slots__ = []
 
+    _columns = [
+        'Description',
+        'Number',
+        'EarlyAbort',
+    ]
+    
     @property
     def Description(self):
         '''(read-only) Description of error for last operation'''

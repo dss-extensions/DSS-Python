@@ -104,6 +104,7 @@ class ICircuit(Base):
         'AllBusVmagPu',
         'AllBusVolts',
 
+        'AllNodeNames',
         'AllNodeDistances',
         'AllElementNames',
         'YNodeOrder',
@@ -328,7 +329,7 @@ class ICircuit(Base):
 
     @property
     def ParentPDElement(self):
-        '''(read-only) Gets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
+        '''(read-only) Sets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
         return self._lib.Circuit_Get_ParentPDElement()
 
     @property
