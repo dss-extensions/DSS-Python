@@ -9,6 +9,12 @@ from .._cffi_api_util import Base
 class IDSSProperty(Base):
     __slots__ = []
 
+    _columns = [
+        'Description', 
+        'Name', 
+        'Val',
+    ]
+    
     @property
     def Description(self):
         '''(read-only) Description of the property.'''

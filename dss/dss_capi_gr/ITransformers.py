@@ -24,6 +24,7 @@ class ITransformers(Iterable):
         'kV',
         'kVA',
         'R',
+        'Xhl',
         'Xht',
         'Xlt',
         'Rneut',

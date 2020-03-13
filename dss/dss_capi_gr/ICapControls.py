@@ -21,6 +21,11 @@ class ICapControls(Iterable):
         'Vmin',
         'Vmax',
         'UseVoltOverride',
+        'Mode',
+        'MonitoredObj',
+        'MonitoredTerm',
+        'OFFSetting',
+        'ONSetting',
     ]
 
     def Reset(self):
@@ -81,7 +86,7 @@ class ICapControls(Iterable):
     @property
     def Mode(self):
         '''Type of automatic controller.'''
-        return self._lib.CapControls_Get_Mode()
+        return self._lib.CapControls_Get_Mode() #TODO: use enum
 
     @Mode.setter
     def Mode(self, Value):

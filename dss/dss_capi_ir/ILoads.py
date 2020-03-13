@@ -41,6 +41,7 @@ class ILoads(Iterable):
         'kV',
         'kW',
         'kva',
+        'kvar',
         'kwh',
         'kwhdays',
         'AllocationFactor',
@@ -357,7 +358,7 @@ class ILoads(Iterable):
 
     @property
     def kvar(self):
-        '''Set kvar for active Load. Updates PF based on present kW.'''
+        '''Get/set kvar for active Load. If set, updates PF based on present kW.'''
         return self._lib.Loads_Get_kvar()
 
     @kvar.setter

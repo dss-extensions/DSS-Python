@@ -9,6 +9,11 @@ from .._cffi_api_util import Base
 class IDSS_Executive(Base):
     __slots__ = []
 
+    _columns = [
+        'NumCommands', 
+        'NumOptions',
+    ]
+
     def Command(self, i):
         '''(read-only) Get i-th command'''
         return self._get_string(self._lib.DSS_Executive_Get_Command(i))

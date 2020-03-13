@@ -9,6 +9,18 @@ from .._cffi_api_util import Base
 class ITopology(Base):
     __slots__ = []
 
+    _columns = [
+        'NumIsolatedLoads',
+        'AllIsolatedBranches',
+        'NumIsolatedBranches',
+        'AllIsolatedLoads',
+        'ActiveLevel',
+        'BranchName',
+        'AllLoopedPairs',
+        'NumLoops',
+        'ActiveBranch'
+    ]
+
     @property
     def ActiveBranch(self):
         '''(read-only) Returns index of the active branch'''

@@ -8,6 +8,38 @@ from .._cffi_api_util import Iterable
 
 class IMeters(Iterable):
     __slots__ = []
+    
+    _columns = [
+        'Name',
+        'Totals',
+        'MeteredTerminal',
+        'NumSectionCustomers',
+        'SectSeqIdx',
+        'SumBranchFltRates',
+        'SeqListSize',
+        'AvgRepairTime',
+        'RegisterNames',
+        'SectTotalCust',
+        'SequenceList',
+        'MeteredElement',
+        'Peakcurrent',
+        'AllocFactors',
+        'AllEndElements',
+        'OCPDeviceType',
+        'SAIFIKW',
+        'CountEndElements',
+        'NumSections',
+        'SAIDI',
+        'TotalCustomers',
+        'RegisterValues',
+        'SAIFI',
+        'CustInterrupts',
+        'CountBranches',
+        'CalcCurrent',
+        'AllBranchesInZone',
+        'FaultRateXRepairHrs',
+        'NumSectionBranches'
+    ]
 
     def CloseAllDIFiles(self):
         self._lib.Meters_CloseAllDIFiles()

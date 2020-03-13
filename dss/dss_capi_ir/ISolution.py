@@ -8,6 +8,48 @@ from .._cffi_api_util import Base
 
 class ISolution(Base):
     __slots__ = []
+    
+    _columns = [
+        'MinIterations',
+        'MaxIterations',
+        'MaxControlIterations',
+        'TotalIterations',
+        'ControlIterations',
+        'MostIterationsDone',
+        'Number',
+        'Process_Time',
+        'AddType',
+        'GenkW',
+        'dblHour',
+        'Capkvar',
+        'Seconds',
+        'GenMult',
+        'DefaultYearly',
+        'IntervalHrs',
+        'Converged',
+        'ModeID',
+        'Time_of_Step',
+        'Total_Time',
+        'LoadModel',
+        'EventLog',
+        'Iterations',
+        'GenPF',
+        'Frequency',
+        'LoadMult',
+        'Random',
+        'pctGrowth',
+        'Year',
+        'Algorithm',
+        'Hour',
+        'Tolerance',
+        'ControlMode',
+        'LDCurve',
+        'StepSize',
+        'DefaultDaily',
+        'ControlActionsDone',
+        'Mode',
+        'SystemYChanged',
+    ]
 
     def BuildYMatrix(self, BuildOption, AllocateVI):
         self._lib.Solution_BuildYMatrix(BuildOption, AllocateVI)
@@ -82,7 +124,7 @@ class ISolution(Base):
     @property
     def Algorithm(self):
         '''Base Solution algorithm: {dssNormalSolve | dssNewtonSolve}'''
-        return self._lib.Solution_Get_Algorithm()
+        return self._lib.Solution_Get_Algorithm() #TODO: use enum
 
     @Algorithm.setter
     def Algorithm(self, Value):
@@ -122,7 +164,7 @@ class ISolution(Base):
     @property
     def ControlMode(self):
         '''{dssStatic* | dssEvent | dssTime}  Modes for control devices'''
-        return self._lib.Solution_Get_ControlMode()
+        return self._lib.Solution_Get_ControlMode() #TODO: use enum
 
     @ControlMode.setter
     def ControlMode(self, Value):
@@ -293,10 +335,7 @@ class ISolution(Base):
 
     @property
     def MinIterations(self):
-        '''
-        (read) Minimum number of iterations required for a power flow solution.
-        (write) Mininum number of iterations required for a power flow solution.
-        '''
+        '''Minimum number of iterations required for a power flow solution.'''
         return self._lib.Solution_Get_MinIterations()
 
     @MinIterations.setter
@@ -311,7 +350,7 @@ class ISolution(Base):
 
     @Mode.setter
     def Mode(self, Mode):
-        self._lib.Solution_Set_Mode(Mode)
+        self._lib.Solution_Set_Mode(Mode) #TODO: use enum
         self.CheckForError()
 
     @property

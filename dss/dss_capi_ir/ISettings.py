@@ -9,6 +9,26 @@ from .._cffi_api_util import Base
 class ISettings(Base):
     __slots__ = []
 
+    _columns = [
+        'Trapezoidal',
+        'LossRegs',
+        'VoltageBases',
+        'ZoneLock',
+        'EmergVminpu',
+        'PriceSignal',
+        'CktModel',
+        'UEregs',
+        'UEweight',
+        'PriceCurve',
+        'NormVminpu',
+        'LossWeight',
+        'EmergVmaxpu',
+        'AutoBusList',
+        'NormVmaxpu',
+        'AllowDuplicates',
+        'ControlTrace',
+    ]
+
     @property
     def AllowDuplicates(self):
         '''{True | False*} Designates whether to allow duplicate names of objects'''

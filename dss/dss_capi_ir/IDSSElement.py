@@ -12,6 +12,12 @@ class IDSSElement(Base):
         'Properties'
     ]
     
+    _columns = [
+        'AllPropertyNames', 
+        'Name', 
+        'NumProperties',
+    ]
+    
     def __init__(self, api_util):
         self.Properties = IDSSProperty(api_util)
         Base.__init__(self, api_util)    

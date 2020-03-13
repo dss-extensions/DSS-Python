@@ -8,6 +8,10 @@ from .._cffi_api_util import Base
 
 class IParser(Base):
     __slots__ = []
+    
+    _columns = [
+        'Delimiters', 'EndQuote', 'CmdString', 'BeginQuote', 'WhiteSpace', 'AutoIncrement',
+    ]
 
     def Matrix(self, ExpectedOrder):
         '''(read-only) Use this property to parse a Matrix token in OpenDSS format.  Returns square matrix of order specified. Order same as default Fortran order: column by column.'''

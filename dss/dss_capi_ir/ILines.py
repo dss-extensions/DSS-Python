@@ -21,6 +21,8 @@ class ILines(Iterable):
         'IsSwitch',
         'Parent',
         'Spacing',
+        'EmergAmps', 
+        'NormAmps',
         'SeasonRating',
         'Yprim',
         'NumCust',
@@ -30,12 +32,14 @@ class ILines(Iterable):
         'R1',
         'X0',
         'X1',
+        'Rg', 
         'Xg',
         'C0',
         'C1',
         'Rmatrix',
         'Xmatrix',
         'Cmatrix',
+        'Units', 
     ]
 
     def New(self, Name):

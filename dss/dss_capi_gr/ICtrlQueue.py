@@ -8,6 +8,14 @@ from .._cffi_api_util import Base
 
 class ICtrlQueue(Base):
     __slots__ = []
+    
+    _columns = [
+        'Queue', 
+        'DeviceHandle', 
+        'QueueSize', 
+        'ActionCode', 
+        'NumActions',  
+    ]
 
     def ClearActions(self):
         self._lib.CtrlQueue_ClearActions()
