@@ -2,7 +2,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2019 Paulo Meira
+Copyright (c) 2016-2020 Paulo Meira
 '''
 from __future__ import absolute_import
 from .._cffi_api_util import Iterable
@@ -34,72 +34,66 @@ class IPVSystems(Iterable):
     @property
     def Irradiance(self):
         '''Get/set the present value of the Irradiance property in W/m²'''
-        return self._lib.PVSystems_Get_Irradiance()
+        return self.CheckForError(self._lib.PVSystems_Get_Irradiance())
 
     @Irradiance.setter
     def Irradiance(self, Value):
-        self._lib.PVSystems_Set_Irradiance(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_Irradiance(Value))
 
     @property
     def PF(self):
         '''Get/set the power factor for the active PVSystem'''
-        return self._lib.PVSystems_Get_PF()
+        return self.CheckForError(self._lib.PVSystems_Get_PF())
 
     @PF.setter
     def PF(self, Value):
-        self._lib.PVSystems_Set_PF(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_PF(Value))
 
     @property
     def RegisterNames(self):
         '''(read-only) Array of PVSYSTEM energy meter register names'''
-        return self._get_string_array(self._lib.PVSystems_Get_RegisterNames)
+        return self.CheckForError(self._get_string_array(self._lib.PVSystems_Get_RegisterNames))
 
     @property
     def RegisterValues(self):
         '''(read-only) Array of doubles containing values in PVSystem registers.'''
-        self._lib.PVSystems_Get_RegisterValues_GR()
+        self.CheckForError(self._lib.PVSystems_Get_RegisterValues_GR())
         return self._get_float64_gr_array()
 
     @property
     def kVArated(self):
         '''Get/set Rated kVA of the PVSystem'''
-        return self._lib.PVSystems_Get_kVArated()
+        return self.CheckForError(self._lib.PVSystems_Get_kVArated())
 
     @kVArated.setter
     def kVArated(self, Value):
-        self._lib.PVSystems_Set_kVArated(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_kVArated(Value))
 
     @property
     def kW(self):
         '''(read-only) get kW output'''
-        return self._lib.PVSystems_Get_kW()
+        return self.CheckForError(self._lib.PVSystems_Get_kW())
 
     @property
     def kvar(self):
         '''Get/set kvar output value'''
-        return self._lib.PVSystems_Get_kvar()
+        return self.CheckForError(self._lib.PVSystems_Get_kvar())
 
     @kvar.setter
     def kvar(self, Value):
-        self._lib.PVSystems_Set_kvar(Value)
-        self.CheckForError()
-
+        self.CheckForError(self._lib.PVSystems_Set_kvar(Value))
 
     @property
     def daily(self):
         '''Name of the loadshape for a daily PVSystem profile.'''
-        return self._get_string(self._lib.PVSystems_Get_daily())
+        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_daily()))
 
     @daily.setter
     def daily(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.PVSystems_Set_daily(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_daily(Value))
 
     @property
     def duty(self):
@@ -108,15 +102,14 @@ class IPVSystems(Iterable):
         for solar ramp rate studies. Must be previously defined as a Loadshape
         object. Typically would have time intervals of 1-5 seconds.
         '''
-        return self._get_string(self._lib.PVSystems_Get_duty())
+        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_duty()))
 
     @duty.setter
     def duty(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.PVSystems_Set_duty(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_duty(Value))
 
     @property
     def yearly(self):
@@ -126,15 +119,14 @@ class IPVSystems(Iterable):
         if any, is repeated during Yearly solution modes. In the default dispatch
         mode, the PVSystem element uses this loadshape to trigger State changes.
         '''
-        return self._get_string(self._lib.PVSystems_Get_yearly())
+        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_yearly()))
 
     @yearly.setter
     def yearly(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.PVSystems_Set_yearly(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_yearly(Value))
         
     @property
     def Tdaily(self):
@@ -144,15 +136,14 @@ class IPVSystems(Iterable):
         TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree
         with the Pmpp vs T curve.
         '''
-        return self._get_string(self._lib.PVSystems_Get_Tdaily())
+        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Tdaily()))
 
     @Tdaily.setter
     def Tdaily(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.PVSystems_Set_Tdaily(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_Tdaily(Value))
 
     @property
     def Tduty(self):
@@ -165,15 +156,14 @@ class IPVSystems(Iterable):
         model uses this TShape to determine the Pmpp from the Pmpp vs T curve.
         Units must agree with the Pmpp vs T curve.
         '''
-        return self._get_string(self._lib.PVSystems_Get_Tduty())
+        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Tduty()))
 
     @Tduty.setter
     def Tduty(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.PVSystems_Set_Tduty(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_Tduty(Value))
 
     @property
     def Tyearly(self):
@@ -184,15 +174,14 @@ class IPVSystems(Iterable):
         this TShape to determine the Pmpp from the Pmpp vs T curve. Units must
         agree with the Pmpp vs T curve.
         '''
-        return self._get_string(self._lib.PVSystems_Get_Tyearly())
+        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Tyearly()))
 
     @Tyearly.setter
     def Tyearly(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.PVSystems_Set_Tyearly(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_Tyearly(Value))
 
     @property 
     def IrradianceNow(self):
@@ -200,7 +189,7 @@ class IPVSystems(Iterable):
         Returns the current irradiance value for the active PVSystem. Use it to 
         know what's the current irradiance value for the PV during a simulation.
         '''
-        return self._lib.PVSystems_Get_IrradianceNow()
+        return self.CheckForError(self._lib.PVSystems_Get_IrradianceNow())
 
     @property 
     def Pmpp(self):
@@ -208,9 +197,8 @@ class IPVSystems(Iterable):
         Gets/sets the rated max power of the PV array for 1.0 kW/sq-m irradiance 
         and a user-selected array temperature of the active PVSystem.
         '''
-        return self._lib.PVSystems_Get_Pmpp()
+        return self.CheckForError(self._lib.PVSystems_Get_Pmpp())
 
     @Pmpp.setter
     def Pmpp(self, Value):
-        self._lib.PVSystems_Set_Pmpp(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.PVSystems_Set_Pmpp(Value))

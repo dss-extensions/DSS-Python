@@ -41,6 +41,7 @@ class IMonitors(Iterable):
         '''
         
         buffer = self._get_int8_array(self._lib.Monitors_Get_ByteStream)
+        self.CheckForError()
         if len(buffer) <= 1:
             return None #np.zeros((0,), dtype=np.float32)
             

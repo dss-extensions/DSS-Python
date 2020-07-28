@@ -1,7 +1,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2019 Paulo Meira
+Copyright (c) 2016-2020 Paulo Meira
 '''
 from __future__ import absolute_import
 from .._cffi_api_util import Iterable
@@ -38,165 +38,149 @@ class ITransformers(Iterable):
     @property
     def IsDelta(self):
         '''Active Winding delta or wye connection?'''
-        return self._lib.Transformers_Get_IsDelta() != 0
+        return self.CheckForError(self._lib.Transformers_Get_IsDelta()) != 0
 
     @IsDelta.setter
     def IsDelta(self, Value):
-        self._lib.Transformers_Set_IsDelta(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_IsDelta(Value))
 
     @property
     def MaxTap(self):
         '''Active Winding maximum tap in per-unit.'''
-        return self._lib.Transformers_Get_MaxTap()
+        return self.CheckForError(self._lib.Transformers_Get_MaxTap())
 
     @MaxTap.setter
     def MaxTap(self, Value):
-        self._lib.Transformers_Set_MaxTap(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_MaxTap(Value))
 
     @property
     def MinTap(self):
         '''Active Winding minimum tap in per-unit.'''
-        return self._lib.Transformers_Get_MinTap()
+        return self.CheckForError(self._lib.Transformers_Get_MinTap())
 
     @MinTap.setter
     def MinTap(self, Value):
-        self._lib.Transformers_Set_MinTap(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_MinTap(Value))
 
     @property
     def NumTaps(self):
         '''Active Winding number of tap steps betwein MinTap and MaxTap.'''
-        return self._lib.Transformers_Get_NumTaps()
+        return self.CheckForError(self._lib.Transformers_Get_NumTaps())
 
     @NumTaps.setter
     def NumTaps(self, Value):
-        self._lib.Transformers_Set_NumTaps(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_NumTaps(Value))
 
     @property
     def NumWindings(self):
         '''Number of windings on this transformer. Allocates memory; set or change this property first.'''
-        return self._lib.Transformers_Get_NumWindings()
+        return self.CheckForError(self._lib.Transformers_Get_NumWindings())
 
     @NumWindings.setter
     def NumWindings(self, Value):
-        self._lib.Transformers_Set_NumWindings(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_NumWindings(Value))
 
     @property
     def R(self):
         '''Active Winding resistance in %'''
-        return self._lib.Transformers_Get_R()
+        return self.CheckForError(self._lib.Transformers_Get_R())
 
     @R.setter
     def R(self, Value):
-        self._lib.Transformers_Set_R(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_R(Value))
 
     @property
     def Rneut(self):
         '''Active Winding neutral resistance [ohms] for wye connections. Set less than zero for ungrounded wye.'''
-        return self._lib.Transformers_Get_Rneut()
+        return self.CheckForError(self._lib.Transformers_Get_Rneut())
 
     @Rneut.setter
     def Rneut(self, Value):
-        self._lib.Transformers_Set_Rneut(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_Rneut(Value))
 
     @property
     def Tap(self):
         '''Active Winding tap in per-unit.'''
-        return self._lib.Transformers_Get_Tap()
+        return self.CheckForError(self._lib.Transformers_Get_Tap())
 
     @Tap.setter
     def Tap(self, Value):
-        self._lib.Transformers_Set_Tap(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_Tap(Value))
 
     @property
     def Wdg(self):
         '''Active Winding Number from 1..NumWindings. Update this before reading or setting a sequence of winding properties (R, Tap, kV, kVA, etc.)'''
-        return self._lib.Transformers_Get_Wdg()
+        return self.CheckForError(self._lib.Transformers_Get_Wdg())
 
     @Wdg.setter
     def Wdg(self, Value):
-        self._lib.Transformers_Set_Wdg(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_Wdg(Value))
 
     @property
     def XfmrCode(self):
         '''Name of an XfrmCode that supplies electircal parameters for this Transformer.'''
-        return self._get_string(self._lib.Transformers_Get_XfmrCode())
+        return self._get_string(self.CheckForError(self._lib.Transformers_Get_XfmrCode()))
 
     @XfmrCode.setter
     def XfmrCode(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.Transformers_Set_XfmrCode(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_XfmrCode(Value))
 
     @property
     def Xhl(self):
         '''Percent reactance between windings 1 and 2, on winding 1 kVA base. Use for 2-winding or 3-winding transformers.'''
-        return self._lib.Transformers_Get_Xhl()
+        return self.CheckForError(self._lib.Transformers_Get_Xhl())
 
     @Xhl.setter
     def Xhl(self, Value):
-        self._lib.Transformers_Set_Xhl(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_Xhl(Value))
 
     @property
     def Xht(self):
         '''Percent reactance between windigns 1 and 3, on winding 1 kVA base.  Use for 3-winding transformers only.'''
-        return self._lib.Transformers_Get_Xht()
+        return self.CheckForError(self._lib.Transformers_Get_Xht())
 
     @Xht.setter
     def Xht(self, Value):
-        self._lib.Transformers_Set_Xht(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_Xht(Value))
 
     @property
     def Xlt(self):
         '''Percent reactance between windings 2 and 3, on winding 1 kVA base. Use for 3-winding transformers only.'''
-        return self._lib.Transformers_Get_Xlt()
+        return self.CheckForError(self._lib.Transformers_Get_Xlt())
 
     @Xlt.setter
     def Xlt(self, Value):
-        self._lib.Transformers_Set_Xlt(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_Xlt(Value))
 
     @property
     def Xneut(self):
         '''Active Winding neutral reactance [ohms] for wye connections.'''
-        return self._lib.Transformers_Get_Xneut()
+        return self.CheckForError(self._lib.Transformers_Get_Xneut())
 
     @Xneut.setter
     def Xneut(self, Value):
-        self._lib.Transformers_Set_Xneut(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_Xneut(Value))
 
     @property
     def kV(self):
         '''Active Winding kV rating.  Phase-phase for 2 or 3 phases, actual winding kV for 1 phase transformer.'''
-        return self._lib.Transformers_Get_kV()
+        return self.CheckForError(self._lib.Transformers_Get_kV())
 
     @kV.setter
     def kV(self, Value):
-        self._lib.Transformers_Set_kV(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_kV(Value))
 
     @property
     def kVA(self):
         '''Active Winding kVA rating. On winding 1, this also determines normal and emergency current ratings for all windings.'''
-        return self._lib.Transformers_Get_kVA()
+        return self.CheckForError(self._lib.Transformers_Get_kVA())
 
     @kVA.setter
     def kVA(self, Value):
-        self._lib.Transformers_Set_kVA(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_kVA(Value))
 
     kva = kVA
 
@@ -213,27 +197,25 @@ class ITransformers(Iterable):
     @property
     def strWdgCurrents(self):
         '''(read-only) All winding currents in CSV string form like the WdgCurrents property'''
-        return self._get_string(self._lib.Transformers_Get_strWdgCurrents())
+        return self._get_string(self.CheckForError(self._lib.Transformers_Get_strWdgCurrents()))
 
     @property
     def CoreType(self):
         '''Transformer Core Type: 0=shell;1 = 1-phase; 3= 3-leg; 5= 5-leg'''
-        return self._lib.Transformers_Get_CoreType() #TODO: use enum
+        return self.CheckForError(self._lib.Transformers_Get_CoreType()) #TODO: use enum
 
     @CoreType.setter
     def CoreType(self, Value):
-        self._lib.Transformers_Set_CoreType(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_CoreType(Value))
 
     @property
     def RdcOhms(self):
         '''dc Resistance of active winding in ohms for GIC analysis'''
-        return self._lib.Transformers_Get_RdcOhms()
+        return self.CheckForError(self._lib.Transformers_Get_RdcOhms())
 
     @RdcOhms.setter
     def RdcOhms(self, Value):
-        self._lib.Transformers_Set_RdcOhms(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Transformers_Set_RdcOhms(Value))
 
     @property
     def LossesByType(self):

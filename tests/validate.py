@@ -5,7 +5,7 @@ import numpy as np
 from scipy.sparse import csc_matrix
 from dss import enums
 import pickle
-from dss import DssException
+from dss import DSSException
 
 original_working_dir = os.getcwd()
 NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
@@ -124,7 +124,7 @@ class ValidatingTest:
         self.realibity_ran = True
         try:
             dss.ActiveCircuit.Meters.DoReliabilityCalc(False)
-        except DssException as ex:
+        except DSSException as ex:
             if ex.args[0] == 52902:
                 self.realibity_ran = False
             
@@ -318,6 +318,16 @@ class ValidatingTest:
 
                     continue
 
+                if field in ('VMagAngle', 'puVmagAngle'):
+                    fA = np.asarray(fA)
+                    fB = np.asarray(fB)
+                    
+                    aa = np.deg2rad(fA[1::2])
+                    fA = fA[::2] * (np.cos(aa) + 1j * np.sin(aa))
+                    ab = np.deg2rad(fB[1::2])
+                    fB = fB[::2] * (np.cos(ab) + 1j * np.sin(ab))
+                
+
                 if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('ActiveBus.' + field, name, fA, fB)
 
 
@@ -393,7 +403,7 @@ class ValidatingTest:
                 fA = output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
                 if SAVE_COM_OUTPUT: output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, A.Name, B.Name)
 
             for field in 'C0,C1,EmergAmps,IsZ1Z0,Name,NormAmps,Phases,R0,R1,Units,X0,X1'.split(','):
                 fA = output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
@@ -428,12 +438,6 @@ class ValidatingTest:
         count = 0
         while nA != 0:
             count += 1
-            for field in 'Cmatrix,Rmatrix,Xmatrix,Yprim'.split(','):
-                fA = output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
-
             # Notes: - removed property Parent from the analysis since it raises a popup
             #        - temporarily removed R1/X1/C1 since COM is broken    
             #for field in 'Bus1,Bus2,C0,C1,EmergAmps,Geometry,Length,LineCode,Name,NormAmps,NumCust,Phases,R0,R1,Rg,Rho,Spacing,TotalCust,Units,X0,X1,Xg'.split(','):
@@ -442,6 +446,12 @@ class ValidatingTest:
                 fB = getattr(B, field)
                 if SAVE_COM_OUTPUT: output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
                 if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+
+            for field in 'Cmatrix,Rmatrix,Xmatrix,Yprim'.split(','):
+                fA = output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
+                fB = getattr(B, field)
+                if SAVE_COM_OUTPUT: output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
+                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, max(abs(fA - fB)), A.Name, B.Name)
 
             self.validate_CktElement()
 
@@ -1012,7 +1022,7 @@ class ValidatingTest:
             # Try to use an invalid index
             try:
                 B = self.capi.ActiveCircuit.CktElements(999999)
-            except DssException:
+            except DSSException:
                 pass
                 
             A = self.com.ActiveCircuit.CktElements(999999)
@@ -1021,7 +1031,7 @@ class ValidatingTest:
             # Try to use an invalid name
             try:
                 B = self.capi.ActiveCircuit.CktElements('NONEXISTENT_123456789')
-            except DssException:
+            except DSSException:
                 pass
 
             A = self.com.ActiveCircuit.CktElements('NONEXISTENT_123456789')
@@ -1044,7 +1054,14 @@ class ValidatingTest:
                 print(k, p_d, '' if p_d < self.atol else '!!!')
             elif type(v[1]) == np.ndarray:
                 print(k, max(abs(v[1] - v[0])))
-                if not SAVE_COM_OUTPUT: assert np.allclose(*v, atol=self.atol, rtol=self.rtol), (k, type(v[1]))#, v[0], v[1])
+                if k == 'TotalPower':
+                    if not SAVE_COM_OUTPUT: 
+                        cv = [np.asarray(v[0]).view(dtype=complex), np.asarray(v[1]).view(dtype=complex)]
+                        assert np.allclose(cv[0], cv[1], atol=self.atol, rtol=self.rtol), (k, cv[0], cv[1])
+                        # else:
+                            # assert np.allclose(v[0]/v[1], 1, atol=self.atol, rtol=100), (k, type(v[1]), v[0], v[1])
+                else:
+                    if not SAVE_COM_OUTPUT: assert np.allclose(*v, atol=self.atol, rtol=self.rtol), (k, type(v[1]))#, v[0], v[1])
             elif type(v[1]) == list:
                 if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(*v)), (k, type(v[1]))
             elif type(v[1]) == int:
@@ -1094,6 +1111,8 @@ class ValidatingTest:
 
         def check_cls_allnames(name, DSS):
             l = getattr(DSS.ActiveCircuit, name)
+            if not l.Count:
+                return
             l.First
             l.Next
             before = l.Name
@@ -1149,9 +1168,9 @@ class ValidatingTest:
         self.validate_AllNames()
 
         #self.atol = 1e-5
-        # print('Buses')
+        print('Buses')
         self.validate_Buses()
-        # print('Circuit')
+        print('Circuit')
         self.validate_Circuit()
 
         self.capi.ShowPanel()
@@ -1179,7 +1198,7 @@ def run_tests(fns):
         com = dss.patch_dss_com(com)
         print('COM Version:', com.Version)
         global COM_VLL_BROKEN
-        COM_VLL_BROKEN = 'Version 8.6.7.1' in com.Version
+        COM_VLL_BROKEN = ('Version 8.6.7.1 ' in com.Version) or ('Version 9.0.0.8 ' in com.Version)
     else:
         com = None
 
@@ -1194,6 +1213,7 @@ def run_tests(fns):
             dss.Text.Command = r'set editor=ignore_me_invalid_executable'
         
     capi.AllowEditor = False
+    capi.Error.ExtendedErrors = False
     assert capi.Error.EarlyAbort # check the default value, should be True
 
     # Test toggling console output with C-API, COM can only be disabled
@@ -1236,8 +1256,9 @@ def run_tests(fns):
         line_by_line = fn.startswith('L!')
         if line_by_line:
             fn = fn[2:]
-
         print("> File", fn)
+        assert os.path.exists(os.path.join(original_working_dir, fn)), os.path.join(original_working_dir, fn)
+        
         test = ValidatingTest(fn, com, capi, line_by_line)
 
         if not LOAD_COM_OUTPUT:
