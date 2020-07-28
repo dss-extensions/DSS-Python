@@ -340,48 +340,48 @@ class Iterable(Base):
     @property
     def First(self):
         '''Sets the first object of this type active. Returns 0 if none.'''
-        return self._Get_First()
+        return self.CheckForError(self._Get_First())
 
     @property
     def Next(self):
         '''(read-only) Sets next object of this type active. Returns 0 if no more.'''
-        return self._Get_Next()
+        return self.CheckForError(self._Get_Next())
 
     @property
     def Count(self):
         '''Number of objects of this type'''
-        return self._Get_Count()
+        return self.CheckForError(self._Get_Count())
 
     def __len__(self):
-        return self._Get_Count()
+        return self.CheckForError(self._Get_Count())
 
     def __iter__(self):
-        idx = self._Get_First()
+        idx = self.CheckForError(self._Get_First())
         while idx != 0:
             yield self
-            idx = self._Get_Next()
+            idx = self.CheckForError(self._Get_Next())
 
     @property
     def AllNames(self):
         '''Array of all names of this object type'''
-        return self._get_string_array(self._Get_AllNames)
+        return self.CheckForError(self._get_string_array(self._Get_AllNames))
 
     @property
     def Name(self):
         '''Gets the current name or sets the active object of this type by name'''
-        return self._get_string(self._Get_Name())
+        return self._get_string(self.CheckForError(self._Get_Name()))
 
     @Name.setter
     def Name(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._Set_Name(Value))
+        self.CheckForError(self.CheckForError(self._Set_Name(Value)))
         
     @property
     def idx(self):
         '''Gets the current index or sets the active object of this type by index'''
-        return self._Get_idx()
+        return self.CheckForError(self._Get_idx())
 
     @idx.setter
     def idx(self, Value):

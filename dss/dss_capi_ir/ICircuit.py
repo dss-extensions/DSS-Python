@@ -1,7 +1,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2019 Paulo Meira
+Copyright (c) 2016-2020 Paulo Meira
 '''
 from __future__ import absolute_import
 from .._cffi_api_util import Base
@@ -171,62 +171,62 @@ class ICircuit(Base):
         Base.__init__(self, api_util)
             
     def Capacity(self, Start, Increment):
-        return self._lib.Circuit_Capacity(Start, Increment)
+        return self.CheckForError(self._lib.Circuit_Capacity(Start, Increment))
 
     def Disable(self, Name):
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)
 
-        self._lib.Circuit_Disable(Name)
+        self.CheckForError(self._lib.Circuit_Disable(Name))
 
     def Enable(self, Name):
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)
 
-        self._lib.Circuit_Enable(Name)
+        self.CheckForError(self._lib.Circuit_Enable(Name))
 
     def EndOfTimeStepUpdate(self):
-        self._lib.Circuit_EndOfTimeStepUpdate()
+        self.CheckForError(self._lib.Circuit_EndOfTimeStepUpdate())
 
     def FirstElement(self):
-        return self._lib.Circuit_FirstElement()
+        return self.CheckForError(self._lib.Circuit_FirstElement())
 
     def FirstPCElement(self):
-        return self._lib.Circuit_FirstPCElement()
+        return self.CheckForError(self._lib.Circuit_FirstPCElement())
 
     def FirstPDElement(self):
-        return self._lib.Circuit_FirstPDElement()
+        return self.CheckForError(self._lib.Circuit_FirstPDElement())
 
     def AllNodeDistancesByPhase(self, Phase):
         '''(read-only) Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.'''
-        return self._get_float64_array(self._lib.Circuit_Get_AllNodeDistancesByPhase, Phase)
+        return self.CheckForError(self._get_float64_array(self._lib.Circuit_Get_AllNodeDistancesByPhase, Phase))
 
     def AllNodeNamesByPhase(self, Phase):
         '''(read-only) Return array of strings of the node names for the By Phase criteria. Sequence corresponds to other ByPhase properties.'''
-        return self._get_string_array(self._lib.Circuit_Get_AllNodeNamesByPhase, Phase)
+        return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllNodeNamesByPhase, Phase))
 
     def AllNodeVmagByPhase(self, Phase):
         '''(read-only) Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.'''
-        return self._get_float64_array(self._lib.Circuit_Get_AllNodeVmagByPhase, Phase)
+        return self.CheckForError(self._get_float64_array(self._lib.Circuit_Get_AllNodeVmagByPhase, Phase))
 
     def AllNodeVmagPUByPhase(self, Phase):
         '''(read-only) Returns array of per unit voltage magnitudes for each node by phase'''
-        return self._get_float64_array(self._lib.Circuit_Get_AllNodeVmagPUByPhase, Phase)
+        return self.CheckForError(self._get_float64_array(self._lib.Circuit_Get_AllNodeVmagPUByPhase, Phase))
 
     def NextElement(self):
-        return self._lib.Circuit_NextElement()
+        return self.CheckForError(self._lib.Circuit_NextElement())
 
     def NextPCElement(self):
-        return self._lib.Circuit_NextPCElement()
+        return self.CheckForError(self._lib.Circuit_NextPCElement())
 
     def NextPDElement(self):
-        return self._lib.Circuit_NextPDElement()
+        return self.CheckForError(self._lib.Circuit_NextPDElement())
 
     def Sample(self):
-        self._lib.Circuit_Sample()
+        self.CheckForError(self._lib.Circuit_Sample())
 
     def SaveSample(self):
-        self._lib.Circuit_SaveSample()
+        self.CheckForError(self._lib.Circuit_SaveSample())
 
     def SetActiveBus(self, BusName):
         if type(BusName) is not bytes:
@@ -235,7 +235,7 @@ class ICircuit(Base):
         return self.CheckForError(self._lib.Circuit_SetActiveBus(BusName))
 
     def SetActiveBusi(self, BusIndex):
-        return self._lib.Circuit_SetActiveBusi(BusIndex)
+        return self.CheckForError(self._lib.Circuit_SetActiveBusi(BusIndex))
 
     def SetActiveClass(self, ClassName):
         if type(ClassName) is not bytes:
@@ -250,7 +250,7 @@ class ICircuit(Base):
         return self.CheckForError(self._lib.Circuit_SetActiveElement(FullName))
 
     def UpdateStorage(self):
-        self._lib.Circuit_UpdateStorage()
+        self.CheckForError(self._lib.Circuit_UpdateStorage())
 
     @property
     def AllBusDistances(self):
@@ -260,7 +260,7 @@ class ICircuit(Base):
     @property
     def AllBusNames(self):
         '''(read-only) Array of strings containing names of all buses in circuit (see AllNodeNames).'''
-        return self._get_string_array(self._lib.Circuit_Get_AllBusNames)
+        return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllBusNames))
 
     @property
     def AllBusVmag(self):
@@ -285,7 +285,7 @@ class ICircuit(Base):
     @property
     def AllElementNames(self):
         '''(read-only) Array of strings containing Full Name of all elements.'''
-        return self._get_string_array(self._lib.Circuit_Get_AllElementNames)
+        return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllElementNames))
 
     @property
     def AllNodeDistances(self):
@@ -295,7 +295,7 @@ class ICircuit(Base):
     @property
     def AllNodeNames(self):
         '''(read-only) Array of strings containing full name of each node in system in same order as returned by AllBusVolts, etc.'''
-        return self._get_string_array(self._lib.Circuit_Get_AllNodeNames)
+        return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllNodeNames))
 
     @property
     def LineLosses(self):
@@ -310,27 +310,27 @@ class ICircuit(Base):
     @property
     def Name(self):
         '''(read-only) Name of the active circuit.'''
-        return self._get_string(self._lib.Circuit_Get_Name())
+        return self._get_string(self.CheckForError(self._lib.Circuit_Get_Name()))
 
     @property
     def NumBuses(self):
         '''(read-only) Total number of Buses in the circuit.'''
-        return self._lib.Circuit_Get_NumBuses()
+        return self.CheckForError(self._lib.Circuit_Get_NumBuses())
 
     @property
     def NumCktElements(self):
         '''(read-only) Number of CktElements in the circuit.'''
-        return self._lib.Circuit_Get_NumCktElements()
+        return self.CheckForError(self._lib.Circuit_Get_NumCktElements())
 
     @property
     def NumNodes(self):
         '''(read-only) Total number of nodes in the circuit.'''
-        return self._lib.Circuit_Get_NumNodes()
+        return self.CheckForError(self._lib.Circuit_Get_NumNodes())
 
     @property
     def ParentPDElement(self):
         '''(read-only) Sets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
-        return self._lib.Circuit_Get_ParentPDElement()
+        return self.CheckForError(self._lib.Circuit_Get_ParentPDElement())
 
     @property
     def SubstationLosses(self):
@@ -359,7 +359,7 @@ class ICircuit(Base):
     @property
     def YNodeOrder(self):
         '''(read-only) Array of strings containing the names of the nodes in the same order as the Y matrix'''
-        return self._get_string_array(self._lib.Circuit_Get_YNodeOrder)
+        return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_YNodeOrder))
 
     @property
     def YNodeVarray(self):

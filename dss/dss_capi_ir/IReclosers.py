@@ -1,7 +1,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2019 Paulo Meira
+Copyright (c) 2016-2020 Paulo Meira
 '''
 from __future__ import absolute_import
 from .._cffi_api_util import Iterable
@@ -26,83 +26,76 @@ class IReclosers(Iterable):
     ]
 
     def Close(self):
-        self._lib.Reclosers_Close()
+        self.CheckForError(self._lib.Reclosers_Close())
 
     def Open(self):
-        self._lib.Reclosers_Open()
+        self.CheckForError(self._lib.Reclosers_Open())
 
     @property
     def GroundInst(self):
         '''Ground (3I0) instantaneous trip setting - curve multipler or actual amps.'''
-        return self._lib.Reclosers_Get_GroundInst()
+        return self.CheckForError(self._lib.Reclosers_Get_GroundInst())
 
     @GroundInst.setter
     def GroundInst(self, Value):
-        self._lib.Reclosers_Set_GroundInst(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_GroundInst(Value))
 
     @property
     def GroundTrip(self):
         '''Ground (3I0) trip multiplier or actual amps'''
-        return self._lib.Reclosers_Get_GroundTrip()
+        return self.CheckForError(self._lib.Reclosers_Get_GroundTrip())
 
     @GroundTrip.setter
     def GroundTrip(self, Value):
-        self._lib.Reclosers_Set_GroundTrip(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_GroundTrip(Value))
 
     @property
     def MonitoredObj(self):
         '''Full name of object this Recloser to be monitored.'''
-        return self._get_string(self._lib.Reclosers_Get_MonitoredObj())
+        return self._get_string(self.CheckForError(self._lib.Reclosers_Get_MonitoredObj()))
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.Reclosers_Set_MonitoredObj(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_MonitoredObj(Value))
 
     @property
     def MonitoredTerm(self):
         '''Terminal number of Monitored object for the Recloser '''
-        return self._lib.Reclosers_Get_MonitoredTerm()
+        return self.CheckForError(self._lib.Reclosers_Get_MonitoredTerm())
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
-        self._lib.Reclosers_Set_MonitoredTerm(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_MonitoredTerm(Value))
 
     @property
     def NumFast(self):
         '''Number of fast shots'''
-        return self._lib.Reclosers_Get_NumFast()
+        return self.CheckForError(self._lib.Reclosers_Get_NumFast())
 
     @NumFast.setter
     def NumFast(self, Value):
-        self._lib.Reclosers_Set_NumFast(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_NumFast(Value))
 
     @property
     def PhaseInst(self):
         '''Phase instantaneous curve multipler or actual amps'''
-        return self._lib.Reclosers_Get_PhaseInst()
+        return self.CheckForError(self._lib.Reclosers_Get_PhaseInst())
 
     @PhaseInst.setter
     def PhaseInst(self, Value):
-        self._lib.Reclosers_Set_PhaseInst(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_PhaseInst(Value))
 
     @property
     def PhaseTrip(self):
         '''Phase trip curve multiplier or actual amps'''
-        return self._lib.Reclosers_Get_PhaseTrip()
+        return self.CheckForError(self._lib.Reclosers_Get_PhaseTrip())
 
     @PhaseTrip.setter
     def PhaseTrip(self, Value):
-        self._lib.Reclosers_Set_PhaseTrip(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_PhaseTrip(Value))
 
     @property
     def RecloseIntervals(self):
@@ -112,33 +105,30 @@ class IReclosers(Iterable):
     @property
     def Shots(self):
         '''Number of shots to lockout (fast + delayed)'''
-        return self._lib.Reclosers_Get_Shots()
+        return self.CheckForError(self._lib.Reclosers_Get_Shots())
 
     @Shots.setter
     def Shots(self, Value):
-        self._lib.Reclosers_Set_Shots(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_Shots(Value))
 
     @property
     def SwitchedObj(self):
         '''Full name of the circuit element that is being switched by the Recloser.'''
-        return self._get_string(self._lib.Reclosers_Get_SwitchedObj())
+        return self._get_string(self.CheckForError(self._lib.Reclosers_Get_SwitchedObj()))
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.Reclosers_Set_SwitchedObj(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_SwitchedObj(Value))
 
     @property
     def SwitchedTerm(self):
         '''Terminal number of the controlled device being switched by the Recloser'''
-        return self._lib.Reclosers_Get_SwitchedTerm()
+        return self.CheckForError(self._lib.Reclosers_Get_SwitchedTerm())
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
-        self._lib.Reclosers_Set_SwitchedTerm(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Reclosers_Set_SwitchedTerm(Value))
 

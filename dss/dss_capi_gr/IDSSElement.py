@@ -1,7 +1,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2019 Paulo Meira
+Copyright (c) 2016-2020 Paulo Meira
 '''
 from __future__ import absolute_import
 from .._cffi_api_util import Base
@@ -25,15 +25,15 @@ class IDSSElement(Base):
     @property
     def AllPropertyNames(self):
         '''(read-only) Array of strings containing the names of all properties for the active DSS object.'''
-        return self._get_string_array(self._lib.DSSElement_Get_AllPropertyNames)
+        return self.CheckForError(self._get_string_array(self._lib.DSSElement_Get_AllPropertyNames))
 
     @property
     def Name(self):
         '''(read-only) Full Name of Active DSS Object (general element or circuit element).'''
-        return self._get_string(self._lib.DSSElement_Get_Name())
+        return self._get_string(self.CheckForError(self._lib.DSSElement_Get_Name()))
 
     @property
     def NumProperties(self):
         '''(read-only) Number of Properties for the active DSS object.'''
-        return self._lib.DSSElement_Get_NumProperties()
+        return self.CheckForError(self._lib.DSSElement_Get_NumProperties())
 

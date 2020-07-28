@@ -1,7 +1,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2019 Paulo Meira
+Copyright (c) 2016-2020 Paulo Meira
 '''
 from __future__ import absolute_import
 from .._cffi_api_util import Base
@@ -12,20 +12,19 @@ class IParallel(Base):
     __slots__ = []
 
     def CreateActor(self):
-        self._lib.Parallel_CreateActor()
+        self.CheckForError(self._lib.Parallel_CreateActor())
 
     def Wait(self):
-        self._lib.Parallel_Wait()
+        self.CheckForError(self._lib.Parallel_Wait())
 
     @property
     def ActiveActor(self):
         '''Gets/sets the ID of the Active Actor'''
-        return self._lib.Parallel_Get_ActiveActor()
+        return self.CheckForError(self._lib.Parallel_Get_ActiveActor())
 
     @ActiveActor.setter
     def ActiveActor(self, Value):
-        self._lib.Parallel_Set_ActiveActor(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Parallel_Set_ActiveActor(Value))
 
     @property
     def ActiveParallel(self):
@@ -33,22 +32,20 @@ class IParallel(Base):
         (read) Sets ON/OFF (1/0) Parallel features of the Engine
         (write) Delivers if the Parallel features of the Engine are Active
         '''
-        return self._lib.Parallel_Get_ActiveParallel()  #TODO: use boolean for consistency
+        return self.CheckForError(self._lib.Parallel_Get_ActiveParallel())  #TODO: use boolean for consistency
 
     @ActiveParallel.setter
     def ActiveParallel(self, Value):
-        self._lib.Parallel_Set_ActiveParallel(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Parallel_Set_ActiveParallel(Value))
 
     @property
     def ActorCPU(self):
         '''Gets/sets the CPU of the Active Actor'''
-        return self._lib.Parallel_Get_ActorCPU()
+        return self.CheckForError(self._lib.Parallel_Get_ActorCPU())
 
     @ActorCPU.setter
     def ActorCPU(self, Value):
-        self._lib.Parallel_Set_ActorCPU(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Parallel_Set_ActorCPU(Value))
 
     @property
     def ActorProgress(self):
@@ -66,26 +63,25 @@ class IParallel(Base):
         (read) Reads the values of the ConcatenateReports option (1=enabled, 0=disabled)
         (write) Enable/Disable (1/0) the ConcatenateReports option for extracting monitors data
         '''
-        return self._lib.Parallel_Get_ConcatenateReports() #TODO: use boolean for consistency
+        return self.CheckForError(self._lib.Parallel_Get_ConcatenateReports()) #TODO: use boolean for consistency
 
     @ConcatenateReports.setter
     def ConcatenateReports(self, Value):
-        self._lib.Parallel_Set_ConcatenateReports(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Parallel_Set_ConcatenateReports(Value))
 
     @property
     def NumCPUs(self):
         '''(read-only) Delivers the number of CPUs on the current PC'''
-        return self._lib.Parallel_Get_NumCPUs()
+        return self.CheckForError(self._lib.Parallel_Get_NumCPUs())
 
     @property
     def NumCores(self):
         '''(read-only) Delivers the number of Cores of the local PC'''
-        return self._lib.Parallel_Get_NumCores()
+        return self.CheckForError(self._lib.Parallel_Get_NumCores())
 
     @property
     def NumOfActors(self):
         '''(read-only) Gets the number of Actors created'''
-        return self._lib.Parallel_Get_NumOfActors()
+        return self.CheckForError(self._lib.Parallel_Get_NumOfActors())
 
 

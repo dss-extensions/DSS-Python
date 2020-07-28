@@ -11,9 +11,11 @@ else:
     warnings.warn('Environment variable DSS_EXTENSIONS_DEBUG=1 is set, loading the debug version of DSS C-API')
     from ._dss_capi_v7d import ffi, lib
 
-from ._cffi_api_util import CffiApiUtil, use_com_compat, DssException
+from ._cffi_api_util import CffiApiUtil, use_com_compat, DSSException
 from . import dss_capi_gr, dss_capi_ir, enums
 from .enums import *
+
+DssException = DSSException
 
 # Bind to the FFI module instance for OpenDSS-v7
 api_util = CffiApiUtil(ffi, lib) #: API utility functions and low-level access for the Version 7 library

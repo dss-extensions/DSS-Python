@@ -1,7 +1,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2019 Paulo Meira
+Copyright (c) 2016-2020 Paulo Meira
 '''
 from __future__ import absolute_import
 from .._cffi_api_util import Base
@@ -39,34 +39,36 @@ class IYMatrix(Base):
         self._lib.DSS_Dispose_PInteger(ColPtr)
         self._lib.DSS_Dispose_PInteger(RowIdxPtr)
         self._lib.DSS_Dispose_PDouble(cValsPtr)
+        
+        self.CheckForError()
 
         return res
 
     def ZeroInjCurr(self):
-        self._lib.YMatrix_ZeroInjCurr()
+        self.CheckForError(self._lib.YMatrix_ZeroInjCurr())
 
     def GetSourceInjCurrents(self):
-        self._lib.YMatrix_GetSourceInjCurrents()
+        self.CheckForError(self._lib.YMatrix_GetSourceInjCurrents())
 
     def GetPCInjCurr(self):
-        self._lib.YMatrix_GetPCInjCurr()
+        self.CheckForError(self._lib.YMatrix_GetPCInjCurr())
 
     def BuildYMatrixD(self, BuildOps, AllocateVI):
-        self._lib.YMatrix_BuildYMatrixD(BuildOps, AllocateVI)
+        self.CheckForError(self._lib.YMatrix_BuildYMatrixD(BuildOps, AllocateVI))
 
     def AddInAuxCurrents(self, SType):
-        self._lib.YMatrix_AddInAuxCurrents(SType)
+        self.CheckForError(self._lib.YMatrix_AddInAuxCurrents(SType))
 
     def GetIPointer(self):
         '''Get access to the internal Current pointer'''
         IvectorPtr = self._api_util.ffi.new('double**')
-        self._lib.YMatrix_getIpointer(IvectorPtr)
+        self.CheckForError(self._lib.YMatrix_getIpointer(IvectorPtr))
         return IvectorPtr[0]
 
     def GetVPointer(self):
         '''Get access to the internal Voltage pointer'''
         VvectorPtr = self._api_util.ffi.new('double**')
-        self._lib.YMatrix_getVpointer(VvectorPtr)
+        self.CheckForError(self._lib.YMatrix_getVpointer(VvectorPtr))
         return VvectorPtr[0]
 
     def SolveSystem(self, NodeV):
@@ -76,26 +78,24 @@ class IYMatrix(Base):
         NodeV = self._api_util.ffi.cast("double *", NodeV.ctypes.data)
         NodeVPtr = self._api_util.ffi.new('double**')
         NodeVPtr[0] = NodeV
-        result = self._lib.YMatrix_SolveSystem(NodeVPtr)
+        result = self.CheckForError(self._lib.YMatrix_SolveSystem(NodeVPtr))
         return result
 
     @property
     def SystemYChanged(self):
-        return self._lib.YMatrix_Get_SystemYChanged()
+        return self.CheckForError(self._lib.YMatrix_Get_SystemYChanged())
 
     @SystemYChanged.setter
     def SystemYChanged(self, value):
-        self._lib.YMatrix_Set_SystemYChanged(value)
-        self.CheckForError()
+        self.CheckForError(self._lib.YMatrix_Set_SystemYChanged(value))
 
     @property
     def UseAuxCurrents(self):
-        return self._lib.YMatrix_Get_UseAuxCurrents()
+        return self.CheckForError(self._lib.YMatrix_Get_UseAuxCurrents())
 
     @UseAuxCurrents.setter
     def UseAuxCurrents(self, value):
-        self._lib.YMatrix_Set_UseAuxCurrents(value)
-        self.CheckForError()
+        self.CheckForError(self._lib.YMatrix_Set_UseAuxCurrents(value))
 
     # for better compatibility with OpenDSSDirect.py
     getYSparse = GetCompressedYMatrix
@@ -103,10 +103,10 @@ class IYMatrix(Base):
     def getI(self):
         '''Get the data from the internal Current pointer'''
         IvectorPtr = self.GetIPointer()
-        return self._api_util.ffi.unpack(IvectorPtr, 2 * (self._lib.Circuit_Get_NumNodes() + 1))
+        return self._api_util.ffi.unpack(IvectorPtr, 2 * (self.CheckForError(self._lib.Circuit_Get_NumNodes() + 1)))
 
     def getV(self):
         '''Get the data from the internal Voltage pointer'''
         VvectorPtr = self.GetVPointer()
-        return self._api_util.ffi.unpack(VvectorPtr, 2 * (self._lib.Circuit_Get_NumNodes() + 1))
+        return self._api_util.ffi.unpack(VvectorPtr, 2 * (self.CheckForError(self._lib.Circuit_Get_NumNodes() + 1)))
 

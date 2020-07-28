@@ -1,7 +1,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2019 Paulo Meira
+Copyright (c) 2016-2020 Paulo Meira
 '''
 from __future__ import absolute_import
 from .._cffi_api_util import Iterable
@@ -25,13 +25,13 @@ class IFuses(Iterable):
 
 
     def Close(self):
-        self._lib.Fuses_Close()
+        self.CheckForError(self._lib.Fuses_Close())
 
     def IsBlown(self):
-        return self._lib.Fuses_IsBlown() != 0
+        return self.CheckForError(self._lib.Fuses_IsBlown()) != 0
 
     def Open(self):
-        self._lib.Fuses_Open()
+        self.CheckForError(self._lib.Fuses_Open())
 
     @property
     def Delay(self):
@@ -39,40 +39,37 @@ class IFuses(Iterable):
         A fixed delay time in seconds added to the fuse blowing time determined by the TCC curve. Default is 0.
         This represents a fuse clear or other delay.
         '''
-        return self._lib.Fuses_Get_Delay()
+        return self.CheckForError(self._lib.Fuses_Get_Delay())
 
     @Delay.setter
     def Delay(self, Value):
-        self._lib.Fuses_Set_Delay(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Fuses_Set_Delay(Value))
 
     @property
     def MonitoredObj(self):
         '''Full name of the circuit element to which the fuse is connected.'''
-        return self._get_string(self._lib.Fuses_Get_MonitoredObj())
+        return self._get_string(self.CheckForError(self._lib.Fuses_Get_MonitoredObj()))
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.Fuses_Set_MonitoredObj(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Fuses_Set_MonitoredObj(Value))
 
     @property
     def MonitoredTerm(self):
         '''Terminal number to which the fuse is connected.'''
-        return self._lib.Fuses_Get_MonitoredTerm()
+        return self.CheckForError(self._lib.Fuses_Get_MonitoredTerm())
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value):
-        self._lib.Fuses_Set_MonitoredTerm(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Fuses_Set_MonitoredTerm(Value))
 
     @property
     def NumPhases(self):
         '''(read-only) Number of phases, this fuse. '''
-        return self._lib.Fuses_Get_NumPhases()
+        return self.CheckForError(self._lib.Fuses_Get_NumPhases())
 
     @property
     def RatedCurrent(self):
@@ -80,12 +77,11 @@ class IFuses(Iterable):
         Multiplier or actual amps for the TCCcurve object. Defaults to 1.0. 
         Multiply current values of TCC curve by this to get actual amps.
         '''
-        return self._lib.Fuses_Get_RatedCurrent()
+        return self.CheckForError(self._lib.Fuses_Get_RatedCurrent())
 
     @RatedCurrent.setter
     def RatedCurrent(self, Value):
-        self._lib.Fuses_Set_RatedCurrent(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Fuses_Set_RatedCurrent(Value))
 
     @property
     def SwitchedObj(self):
@@ -93,37 +89,34 @@ class IFuses(Iterable):
         Full name of the circuit element switch that the fuse controls. 
         Defaults to the MonitoredObj.
         '''
-        return self._get_string(self._lib.Fuses_Get_SwitchedObj())
+        return self._get_string(self.CheckForError(self._lib.Fuses_Get_SwitchedObj()))
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.Fuses_Set_SwitchedObj(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Fuses_Set_SwitchedObj(Value))
 
     @property
     def SwitchedTerm(self):
         '''
         Number of the terminal of the controlled element containing the switch controlled by the fuse.
         '''
-        return self._lib.Fuses_Get_SwitchedTerm()
+        return self.CheckForError(self._lib.Fuses_Get_SwitchedTerm())
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
-        self._lib.Fuses_Set_SwitchedTerm(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Fuses_Set_SwitchedTerm(Value))
 
     @property
     def TCCcurve(self):
         '''Name of the TCCcurve object that determines fuse blowing.'''
-        return self._get_string(self._lib.Fuses_Get_TCCcurve())
+        return self._get_string(self.CheckForError(self._lib.Fuses_Get_TCCcurve()))
 
     @TCCcurve.setter
     def TCCcurve(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self._lib.Fuses_Set_TCCcurve(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.Fuses_Set_TCCcurve(Value))

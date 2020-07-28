@@ -1,7 +1,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2019 Paulo Meira
+Copyright (c) 2016-2020 Paulo Meira
 '''
 from __future__ import absolute_import
 from .._cffi_api_util import Iterable
@@ -28,49 +28,45 @@ class ILoadShapes(Iterable):
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)
 
-        return self._lib.LoadShapes_New(Name)
+        return self.CheckForError(self._lib.LoadShapes_New(Name))
 
     def Normalize(self):
-        self._lib.LoadShapes_Normalize()
+        self.CheckForError(self._lib.LoadShapes_Normalize())
 
     @property
     def HrInterval(self):
         '''Fixed interval time value, hours.'''
-        return self._lib.LoadShapes_Get_HrInterval()
+        return self.CheckForError(self._lib.LoadShapes_Get_HrInterval())
 
     @HrInterval.setter
     def HrInterval(self, Value):
-        self._lib.LoadShapes_Set_HrInterval(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_HrInterval(Value))
 
     @property
     def MinInterval(self):
         '''Fixed Interval time value, in minutes'''
-        return self._lib.LoadShapes_Get_MinInterval()
+        return self.CheckForError(self._lib.LoadShapes_Get_MinInterval())
 
     @MinInterval.setter
     def MinInterval(self, Value):
-        self._lib.LoadShapes_Set_MinInterval(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_MinInterval(Value))
 
     @property
     def Npts(self):
         '''Get/set Number of points in active Loadshape.'''
-        return self._lib.LoadShapes_Get_Npts()
+        return self.CheckForError(self._lib.LoadShapes_Get_Npts())
 
     @Npts.setter
     def Npts(self, Value):
-        self._lib.LoadShapes_Set_Npts(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_Npts(Value))
 
     @property
     def PBase(self):
-        return self._lib.LoadShapes_Get_PBase()
+        return self.CheckForError(self._lib.LoadShapes_Get_PBase())
 
     @PBase.setter
     def PBase(self, Value):
-        self._lib.LoadShapes_Set_PBase(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_PBase(Value))
 
     Pbase = PBase
 
@@ -82,18 +78,16 @@ class ILoadShapes(Iterable):
     @Pmult.setter
     def Pmult(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self._lib.LoadShapes_Set_Pmult(ValuePtr, ValueCount)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_Pmult(ValuePtr, ValueCount))
 
     @property
     def QBase(self):
         '''Base for normalizing Q curve. If left at zero, the peak value is used.'''
-        return self._lib.LoadShapes_Get_Qbase()
+        return self.CheckForError(self._lib.LoadShapes_Get_Qbase())
 
     @QBase.setter
     def QBase(self, Value):
-        self._lib.LoadShapes_Set_Qbase(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_Qbase(Value))
 
     Qbase = QBase
 
@@ -105,8 +99,7 @@ class ILoadShapes(Iterable):
     @Qmult.setter
     def Qmult(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self._lib.LoadShapes_Set_Qmult(ValuePtr, ValueCount)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_Qmult(ValuePtr, ValueCount))
 
     @property
     def TimeArray(self):
@@ -116,26 +109,23 @@ class ILoadShapes(Iterable):
     @TimeArray.setter
     def TimeArray(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self._lib.LoadShapes_Set_TimeArray(ValuePtr, ValueCount)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_TimeArray(ValuePtr, ValueCount))
 
     @property
     def UseActual(self):
         '''Boolean flag to let Loads know to use the actual value in the curve rather than use the value as a multiplier.'''
-        return self._lib.LoadShapes_Get_UseActual() != 0
+        return self.CheckForError(self._lib.LoadShapes_Get_UseActual()) != 0
 
     @UseActual.setter
     def UseActual(self, Value):
-        self._lib.LoadShapes_Set_UseActual(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_UseActual(Value))
 
     @property
     def sInterval(self):
-        return self._lib.LoadShapes_Get_sInterval()
+        return self.CheckForError(self._lib.LoadShapes_Get_sInterval())
 
     @sInterval.setter
     def sInterval(self, Value):
-        self._lib.LoadShapes_Set_Sinterval(Value)
-        self.CheckForError()
+        self.CheckForError(self._lib.LoadShapes_Set_Sinterval(Value))
 
     Sinterval = sInterval
