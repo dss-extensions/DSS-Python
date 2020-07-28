@@ -144,7 +144,9 @@ class CffiApiUtil(object):
         self.init_buffers()
 
     def get_string(self, b):
-        return self.ffi.string(b).decode(self.codec)
+        if b != self.ffi.NULL:
+            return self.ffi.string(b).decode(self.codec)
+        return ''
 
     def get_float64_array(self, func, *args):
         ptr = self.ffi.new('double**')
