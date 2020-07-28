@@ -78,7 +78,7 @@ class Base(object):
         if self._errorPtr[0]:
             error_num = self._errorPtr[0]
             self._errorPtr[0] = 0
-            raise DssException(error_num, self._get_string(self._lib.Error_Get_Description()))
+            raise DSSException(error_num, self._get_string(self._lib.Error_Get_Description()))
             
         return result
 

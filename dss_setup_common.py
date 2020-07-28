@@ -5,7 +5,7 @@ arch = 'x64' if (sys.maxsize > (1 << 32)) else 'x86'
 platform_short = ''.join(filter(lambda ch: ch.isalpha(), sys.platform))
 PLATFORM_FOLDER = '{}_{}'.format(platform_short, arch)
 
-DSS_VERSIONS = ('v7', )
+DSS_VERSIONS = ('v7', 'v7d')
 
 if sys.platform == 'win32':
     DLL_SUFFIX = '.dll'
