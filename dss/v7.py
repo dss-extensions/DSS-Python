@@ -3,7 +3,14 @@ This module presents instances for the OpenDSS Version 7 implementation. It is t
 '''
 
 from __future__ import absolute_import
-from ._dss_capi_v7 import ffi, lib
+import os
+if os.environ.get('DSS_EXTENSIONS_DEBUG', '') != '1':
+    from ._dss_capi_v7 import ffi, lib
+else:
+    import warnings
+    warnings.warn('Environment variable DSS_EXTENSIONS_DEBUG=1 is set, loading the debug version of DSS C-API')
+    from ._dss_capi_v7d import ffi, lib
+
 from ._cffi_api_util import CffiApiUtil, use_com_compat, DssException
 from . import dss_capi_gr, dss_capi_ir, enums
 from .enums import *

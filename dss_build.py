@@ -74,10 +74,12 @@ ffi_builders = {}
 src_path = os.environ.get('SRC_DIR', '')
 DSS_CAPI_PATH = os.environ.get('DSS_CAPI_PATH', os.path.join(src_path, '..', 'dss_capi'))
     
-for version in DSS_VERSIONS:    
+for version in DSS_VERSIONS:
     ffi_builder_dss = FFI()
 
-    with open(os.path.join(DSS_CAPI_PATH, 'include', version, 'dss_capi.h'), 'r') as f:
+    base_version = version.rstrip('d')
+
+    with open(os.path.join(DSS_CAPI_PATH, 'include', base_version, 'dss_capi.h'), 'r') as f:
         cffi_header_dss = process_header(f.read())
         
     with open('cffi/dss_capi_custom.h', 'r') as f:
@@ -93,10 +95,10 @@ for version in DSS_VERSIONS:
     ffi_builder_dss.set_source("_dss_capi_{}".format(version), extra_source_dss,
         libraries=["dss_capi_{}".format(version)],
         library_dirs=[
-            os.path.join(DSS_CAPI_PATH, 'lib/{}/{}'.format(PLATFORM_FOLDER, version)), 
+            os.path.join(DSS_CAPI_PATH, 'lib/{}/{}'.format(PLATFORM_FOLDER, base_version)), 
             os.path.join(DSS_CAPI_PATH, 'lib/{}'.format(PLATFORM_FOLDER))
         ],
-        include_dirs=[os.path.join(DSS_CAPI_PATH, 'include/{}'.format(version))],
+        include_dirs=[os.path.join(DSS_CAPI_PATH, 'include/{}'.format(base_version))],
         source_extension='.c',
         **extra
     )
@@ -143,6 +145,7 @@ for user_model in user_models:
 # Is there a better way to do this? Unfortunately setup(cffi_modules=...)
 # needs a list of strings and cannot handle objects directly
 ffi_builder_v7 = ffi_builders['v7']
+ffi_builder_v7d = ffi_builders['v7d']
 # ffi_builder_v8 = ffi_builders['v8']
 ffi_builder_GenUserModel = ffi_builders['GenUserModel']
 ffi_builder_PVSystemUserModel = ffi_builders['PVSystemUserModel']
