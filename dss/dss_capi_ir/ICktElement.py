@@ -111,8 +111,7 @@ class ICktElement(Base):
     @property
     def BusNames(self):
         '''
-        (read) Array of strings. Get  Bus definitions to which each terminal is connected. 0-based array.
-        (write) Array of strings. Set Bus definitions for each terminal is connected.
+        Array of strings. Get  Bus definitions to which each terminal is connected. 0-based array.
         '''
         return self.CheckForError(self._get_string_array(self._lib.CktElement_Get_BusNames))
 
@@ -218,10 +217,7 @@ class ICktElement(Base):
 
     @property
     def NormalAmps(self):
-        '''
-        (read) Normal ampere rating for PD Elements
-        (write) Normal ampere rating
-        '''
+        '''Normal ampere rating for PD Elements'''
         return self.CheckForError(self._lib.CktElement_Get_NormalAmps())
 
     @NormalAmps.setter
@@ -235,7 +231,10 @@ class ICktElement(Base):
 
     @property
     def NumControls(self):
-        '''(read-only) Number of controls connected to this device. Use to determine valid range for index into Controller array.'''
+        '''
+        (read-only) Number of controls connected to this device. 
+        Use to determine valid range for index into Controller array.
+        '''
         return self.CheckForError(self._lib.CktElement_Get_NumControls())
 
     @property

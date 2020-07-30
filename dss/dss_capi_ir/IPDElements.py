@@ -40,7 +40,10 @@ class IPDElements(Base):
 
     @property
     def FaultRate(self):
-        '''Get/Set Number of failures per year. For LINE elements: Number of failures per unit length per year. '''
+        '''
+        Get/Set Number of failures per year. 
+        For LINE elements: Number of failures per unit length per year.
+        '''
         return self.CheckForError(self._lib.PDElements_Get_FaultRate())
 
     @FaultRate.setter
@@ -49,17 +52,27 @@ class IPDElements(Base):
 
     @property
     def First(self):
-        '''(read-only) Set the first enabled PD element to be the active element.  Returns 0 if none found.'''
+        '''
+        (read-only) Set the first enabled PD element to be the active element.
+        Returns 0 if none found.
+        '''
         return self.CheckForError(self._lib.PDElements_Get_First())
 
     @property
     def FromTerminal(self):
-        '''(read-only) Number of the terminal of active PD element that is on the "from" side. This is set after the meter zone is determined.'''
+        '''
+        (read-only) Number of the terminal of active PD element that is on the "from" 
+        side. This is set after the meter zone is determined.
+        '''
         return self.CheckForError(self._lib.PDElements_Get_FromTerminal())
 
     @property
     def IsShunt(self):
-        '''(read-only) Boolean indicating of PD element should be treated as a shunt element rather than a series element. Applies to Capacitor and Reactor elements in particular.'''
+        '''
+        (read-only) Boolean indicating of PD element should be treated as a shunt 
+        element rather than a series element. Applies to Capacitor and Reactor 
+        elements in particular.
+        '''
         return self.CheckForError(self._lib.PDElements_Get_IsShunt()) != 0
 
     @property
@@ -69,7 +82,10 @@ class IPDElements(Base):
 
     @property
     def Name(self):
-        '''Get/Set name of active PD Element. Returns null string if active element is not PDElement type.'''
+        '''
+        Get/Set name of active PD Element. Returns null string if active element 
+        is not PDElement type.
+        '''
         return self._get_string(self.CheckForError(self._lib.PDElements_Get_Name()))
 
     @Name.setter
@@ -81,7 +97,10 @@ class IPDElements(Base):
 
     @property
     def Next(self):
-        '''(read-only) Advance to the next PD element in the circuit. Enabled elements only. Returns 0 when no more elements.'''
+        '''
+        (read-only) Advance to the next PD element in the circuit. Enabled elements 
+        only. Returns 0 when no more elements.
+        '''
         return self.CheckForError(self._lib.PDElements_Get_Next())
 
     @property
@@ -91,7 +110,10 @@ class IPDElements(Base):
 
     @property
     def ParentPDElement(self):
-        '''(read-only) Sets the parent PD element to be the active circuit element.  Returns 0 if no more elements upline.'''
+        '''
+        (read-only) Sets the parent PD element to be the active circuit element.
+        Returns 0 if no more elements upline.
+        '''
         return self.CheckForError(self._lib.PDElements_Get_ParentPDElement())
 
     @property
@@ -142,32 +164,53 @@ class IPDElements(Base):
         '''
         return self.CheckForError(self._get_string_array(self._lib.PDElements_Get_AllNames))
 
-    @property
-    def AllMaxCurrents(self):
+    def AllMaxCurrents(self, AllNodes=False):
         '''
-        Array of doubles with the maximum current across the conductors, for each PD element.
+        Array of doubles with the maximum current across the conductors, for each PD 
+        element.
+        
+        By default, only the *first terminal* is used for the maximum current, matching
+        the behavior of the "export capacity" command. Pass `AllNodes=True` to 
+        force the analysis to all terminals.
+        
+        See also: 
+        https://sourceforge.net/p/electricdss/discussion/beginners/thread/da5b93ca/
         
         (API Extension)
         '''
-        return self._get_float64_array(self._lib.PDElements_Get_AllMaxCurrents)
+        return self.CheckForError(self._get_float64_array(self._lib.PDElements_Get_AllMaxCurrents, AllNodes))
 
-    @property
-    def AllPctNorm(self):
+    def AllPctNorm(self, AllNodes=False):
         '''
-        Array of doubles with the maximum current across the conductors as a percentage of the Normal Ampere Rating, for each PD element.
-        
-        (API Extension)
-        '''
-        return self._get_float64_array(self._lib.PDElements_Get_AllPctNorm)
+        Array of doubles with the maximum current across the conductors as a percentage 
+        of the Normal Ampere Rating, for each PD element.
 
-    @property
-    def AllPctEmerg(self):
-        '''
-        Array of doubles with the maximum current across the conductors as a percentage of the Emergency Ampere Rating, for each PD element.
+        By default, only the *first terminal* is used for the maximum current, matching
+        the behavior of the "export capacity" command. Pass `AllNodes=True` to 
+        force the analysis to all terminals.
+        
+        See also: 
+        https://sourceforge.net/p/electricdss/discussion/beginners/thread/da5b93ca/
         
         (API Extension)
         '''
-        return self._get_float64_array(self._lib.PDElements_Get_AllPctEmerg)
+        return self.CheckForError(self._get_float64_array(self._lib.PDElements_Get_AllPctNorm, AllNodes))
+
+    def AllPctEmerg(self, AllNodes=False):
+        '''
+        Array of doubles with the maximum current across the conductors as a percentage
+        of the Emergency Ampere Rating, for each PD element.
+
+        By default, only the *first terminal* is used for the maximum current, matching
+        the behavior of the "export capacity" command. Pass `AllNodes=True` to 
+        force the analysis to all terminals.
+        
+        See also: 
+        https://sourceforge.net/p/electricdss/discussion/beginners/thread/da5b93ca/
+        
+        (API Extension)
+        '''
+        return self.CheckForError(self._get_float64_array(self._lib.PDElements_Get_AllPctEmerg, AllNodes))
 
     @property
     def AllCurrents(self):
