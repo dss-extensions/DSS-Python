@@ -113,29 +113,51 @@ L!../../electricdss-tst/Version8/Distrib/Examples/Microgrid/Master.DSS
 test_filenames = [
     # This one is expected to have different results (C-API should be more precise)
     # "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
-    
-    # This one was checked manually. There is a small difference but the relative 
-    # difference in voltage is still <3x10^-7
-    # It should be uncommented when all complex number comparisons are rewritten.
-    # Currently the re and im parts are compared separatly, which is misleading.
-    # "../../electricdss-tst/Version8/Distrib/IEEETestCases/LVTestCaseNorthAmerican/Master.dss",
-    
+
+    #"L!../../electricdss-tst/Test/Source012Test.dss",
+    "L!../../electricdss-tst/Test/PVSystemTest.dss",
+    "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/SolarRamp.DSS",
     "../../electricdss-tst/Test/IEEE13_CDPSM.dss",
+    "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/J1/Master_withPV.dss",
+    
+    "L!../../electricdss-tst/Test/CableParameters.dss",
+    "../../electricdss-tst/Test/TextTsCable750MCM.dss",
+    "L!../../electricdss-tst/Test/TriplexLineCodeCalc.DSS",
+    "../../electricdss-tst/Test/XYCurvetest.dss",
+    "L!../../electricdss-tst/Test/PVSystemTestHarm.dss",
+    "L!../../electricdss-tst/Test/IEEELineGeometry.dss",
+    "L!../../electricdss-tst/Test/MultiCircuitTest.DSS",
+    
+    "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/M1/Master_NoPV.dss",
+    "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/K1/Master_NoPV.dss",
+
+    "../../electricdss-tst/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS",
+    "../../electricdss-tst/Version8/Distrib/IEEETestCases/LVTestCaseNorthAmerican/Master.dss",
+    
+    "L!../../electricdss-tst/Test/Cable_constants.DSS",
+    "L!../../electricdss-tst/Test/BundleDemo.DSS",
+    "../../electricdss-tst/Test/IEEE13_SpacingGeometry.dss",
+    "L!../../electricdss-tst/Test/TestDDRegulator.dss",
+    "L!../../electricdss-tst/Test/TestAuto.dss",
+    "L!../../electricdss-tst/Test/Stevenson.dss",
+    "../../electricdss-tst/Test/Master_TestCapInterface.DSS",
+    "../../electricdss-tst/Test/LoadTest.DSS",
+    "L!../../electricdss-tst/Test/ODRegTest.dss",
+    "L!../../electricdss-tst/Test/PVSystemTest-Duty.dss",
+    "L!../../electricdss-tst/Test/REACTORTest.DSS",
+
+    "../../electricdss-tst/Version7/Distrib/Examples/UPFC_Test/UPFC_test_3.dss",
+
     "../../electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss",
     "L!../../electricdss-tst/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
     "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/IEEE123Master.dss",
-    "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/SolarRamp.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/37Bus/ieee37.dss",
 
     "../../electricdss-tst/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
-    "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/J1/Master_withPV.dss",
-    "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/K1/Master_NoPV.dss",
-    "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/M1/Master_NoPV.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss",
     "../../electricdss-tst/Distrib/IEEETestCases/8500-Node/Master-unbal.dss",
-    "../../electricdss-tst/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS",
@@ -147,31 +169,9 @@ test_filenames = [
     "../../electricdss-tst/Test/IEEE13_LineSpacing.dss",
     "../../electricdss-tst/Test/IEEE13_LineGeometry.dss",
     "../../electricdss-tst/Test/IEEE13_Assets.dss",
-    "L!../../electricdss-tst/Test/CableParameters.dss",
-    "L!../../electricdss-tst/Test/Cable_constants.DSS",
-    "L!../../electricdss-tst/Test/BundleDemo.DSS",
-    "../../electricdss-tst/Test/IEEE13_SpacingGeometry.dss",
-    "../../electricdss-tst/Test/TextTsCable750MCM.dss",
-    "L!../../electricdss-tst/Test/TestDDRegulator.dss",
-    "../../electricdss-tst/Test/XYCurvetest.dss",
-    "L!../../electricdss-tst/Test/PVSystemTestHarm.dss",
-    "L!../../electricdss-tst/Test/TestAuto.dss",
-    "L!../../electricdss-tst/Test/Stevenson.dss",
-    "../../electricdss-tst/Test/Master_TestCapInterface.DSS",
-    "../../electricdss-tst/Test/LoadTest.DSS",
-    "L!../../electricdss-tst/Test/IEEELineGeometry.dss",
-    "L!../../electricdss-tst/Test/ODRegTest.dss",
-    "L!../../electricdss-tst/Test/MultiCircuitTest.DSS",
-    "L!../../electricdss-tst/Test/TriplexLineCodeCalc.DSS",
-    "L!../../electricdss-tst/Test/PVSystemTest-Duty.dss",
-    "L!../../electricdss-tst/Test/PVSystemTest.dss",
-    "L!../../electricdss-tst/Test/REACTORTest.DSS",
-
-    "../../electricdss-tst/Version7/Distrib/Examples/UPFC_Test/UPFC_test_3.dss",
 
     #"L!../../electricdss-tst/Test/Run_SimpleStorageTest.DSS", # Missing DLL?
     #"L!../../electricdss-tst/Test/Run_SimpleStorageTest-1ph.DSS", # Missing DLL?
-    #"L!../../electricdss-tst/Test/Source012Test.dss", # Different encoding, skipping
 
     # 'Generator User Model IndMach012a Not Loaded.'
     #"L!../../electricdss-tst/Distrib/IEEETestCases/4wire-Delta/Kersting4wire_Lagging.dss",
