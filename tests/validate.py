@@ -277,6 +277,14 @@ class ValidatingTest:
                 self.com.ActiveCircuit.SetActiveBus(name)
                 if not SAVE_COM_OUTPUT: assert A.Name == B.Name
                 
+            if self.capi.ActiveCircuit.NumNodes < 1000:
+                for field in ('LoadList', 'LineList'):
+                    fB = getattr(B, field)
+                    fA = output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] if LOAD_COM_OUTPUT else getattr(A, field)
+                    if SAVE_COM_OUTPUT: output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] = fA
+                    if not SAVE_COM_OUTPUT: assert list(fA) == list(fB), (fA, fB)
+                    
+                
             for field in ('Coorddefined', 'Cust_Duration', 'Cust_Interrupts', 'Distance', 'Int_Duration', 'Isc', 'Lambda', 'N_Customers', 'N_interrupts', 'Nodes', 'NumNodes', 'SectionID', 'TotalMiles', 'VLL', 'VMagAngle', 'Voc', 'Voltages', 'YscMatrix', 'Zsc0', 'Zsc1', 'ZscMatrix', 'kVBase', 'puVLL', 'puVmagAngle', 'puVoltages', 'x', 'y',  'SeqVoltages', 'CplxSeqVoltages'):
                 fB = getattr(B, field)
                 if COM_VLL_BROKEN and field in ('VLL', 'puVLL') and len(fB) == 1:

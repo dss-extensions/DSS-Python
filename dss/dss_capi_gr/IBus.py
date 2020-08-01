@@ -222,6 +222,16 @@ class IBus(Base):
     def y(self, Value):
         self.CheckForError(self._lib.Bus_Set_y(Value))
 
+    @property
+    def LoadList(self):
+        '''List of strings: Full Names of LOAD elements connected to the active bus.'''
+        return self.CheckForError(self._get_string_array(self._lib.Bus_Get_LoadList))
+    
+    @property
+    def LineList(self):
+        '''List of strings: Full Names of LINE elements connected to the active bus.'''
+        return self.CheckForError(self._get_string_array(self._lib.Bus_Get_LineList))
+
     def __getitem__(self, index):
         if isinstance(index, int):
             # bus index is zero based, pass it directly
