@@ -148,7 +148,7 @@ class CffiApiUtil(object):
     def get_string(self, b):
         if b != self.ffi.NULL:
             return self.ffi.string(b).decode(self.codec)
-        return ''
+        return u''
 
     def get_float64_array(self, func, *args):
         ptr = self.ffi.new('double**')
@@ -200,7 +200,7 @@ class CffiApiUtil(object):
                 codec = self.codec
                 str_ptrs = self.ffi.unpack(actual_ptr, cnt[0])
                 #res = [(str(self.ffi.string(str_ptr).decode(codec)) if (str_ptr != self.ffi.NULL) else None) for str_ptr in str_ptrs]
-                res = [(self.ffi.string(str_ptr).decode(codec) if (str_ptr != self.ffi.NULL) else None) for str_ptr in str_ptrs]
+                res = [(self.ffi.string(str_ptr).decode(codec) if (str_ptr != self.ffi.NULL) else u'') for str_ptr in str_ptrs]
 
         self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
         return res
@@ -219,7 +219,7 @@ class CffiApiUtil(object):
             else:
                 codec = self.codec
                 res = [(str(self.ffi.string(actual_ptr[i]).decode(codec)) if (actual_ptr[i] != self.ffi.NULL) else '') for i in range(cnt[0])]
-                if res == ['']:
+                if res == [u'']:
                     # most COM methods return an empty array as an
                     # array with an empty string
                     res = []
