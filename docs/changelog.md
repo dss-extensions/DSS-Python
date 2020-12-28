@@ -1,3 +1,10 @@
+# 0.10.7
+
+- Simple maintenance release. 
+- Updated to DSS C-API 0.10.7, which includes most changes up to OpenDSS v9.1.3.4.
+- Includes tweaks related to the `CapRadius` property.
+- New properties ported from the official COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, and `CktElement.TotalPowers`.
+
 # 0.10.6
 
 - Updated to DSS C-API 0.10.6, which includes most changes up to OpenDSS v9.0.0.3.

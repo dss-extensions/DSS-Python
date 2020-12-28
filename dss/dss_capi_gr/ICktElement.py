@@ -36,6 +36,7 @@ class ICktElement(Base):
         'OCPDevIndex',
         'IsIsolated',
         'EnergyMeter',
+        'TotalPowers',
 
         'Yprim',
         'NodeOrder',
@@ -330,6 +331,12 @@ class ICktElement(Base):
         Note that this only fetches the current value. See also the Topology interface.
         '''
         return self.CheckForError(self._lib.CktElement_Get_IsIsolated()) != 0
+
+    @property
+    def TotalPowers(self):
+        '''Returns the total powers (complex) at ALL terminals of the active circuit element.'''
+        self.CheckForError(self._lib.CktElement_Get_TotalPowers_GR())
+        return self._get_float64_gr_array()
 
     def __iter__(self):
         for index in range(self.CheckForError(self._lib.Circuit_Get_NumCktElements())):

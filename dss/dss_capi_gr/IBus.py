@@ -41,6 +41,8 @@ class IBus(Base):
         'puVoltages',
         'x',
         'y',
+        'AllPCEatBus',
+        'AllPDEatBus'
     ]
 
     def GetUniqueNodeNumber(self, StartNumber):
@@ -231,6 +233,16 @@ class IBus(Base):
     def LineList(self):
         '''List of strings: Full Names of LINE elements connected to the active bus.'''
         return self.CheckForError(self._get_string_array(self._lib.Bus_Get_LineList))
+
+    @property
+    def AllPCEatBus(self):
+        '''Returns an array with the names of all PCE connected to the active bus'''
+        return self.CheckForError(self._get_string_array(self._lib.Bus_Get_AllPCEatBus))
+
+    @property
+    def AllPDEatBus(self):
+        '''Returns an array with the names of all PDE connected to the active bus'''
+        return self.CheckForError(self._get_string_array(self._lib.Bus_Get_AllPDEatBus))
 
     def __getitem__(self, index):
         if isinstance(index, int):

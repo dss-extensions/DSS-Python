@@ -169,10 +169,15 @@ class ValidatingTest:
             fB = set(x.lower() for x in getattr(B, field))
             for propA in fA:
                 assert propA in fB, propA
+
+        for field in ['TotalPowers']:
+            fA = getattr(A, field)
+            fB = getattr(B, field)
+            if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, A.Name, B.Name)
                 
-            # Since the list of properties vary in releases, 
-            # we don't check it the list is the same anymore.
-            # if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
+        # Since the list of properties vary in releases, 
+        # we don't check it the list is the same anymore.
+        # if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
             
         for field in 'AllVariableNames,BusNames'.split(','):
             fA = getattr(A, field)
@@ -278,13 +283,13 @@ class ValidatingTest:
                 if not SAVE_COM_OUTPUT: assert A.Name == B.Name
                 
             if self.capi.ActiveCircuit.NumNodes < 1000:
-                for field in ('LoadList', 'LineList'):
+                for field in ('LoadList', 'LineList', 'AllPCEatBus', 'AllPDEatBus'):
                     fB = getattr(B, field)
                     fA = output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                     if SAVE_COM_OUTPUT: output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] = fA
                     if not SAVE_COM_OUTPUT: assert list(fA) == list(fB), (fA, fB)
                     
-                
+
             for field in ('Coorddefined', 'Cust_Duration', 'Cust_Interrupts', 'Distance', 'Int_Duration', 'Isc', 'Lambda', 'N_Customers', 'N_interrupts', 'Nodes', 'NumNodes', 'SectionID', 'TotalMiles', 'VLL', 'VMagAngle', 'Voc', 'Voltages', 'YscMatrix', 'Zsc0', 'Zsc1', 'ZscMatrix', 'kVBase', 'puVLL', 'puVmagAngle', 'puVoltages', 'x', 'y',  'SeqVoltages', 'CplxSeqVoltages'):
                 fB = getattr(B, field)
                 if COM_VLL_BROKEN and field in ('VLL', 'puVLL') and len(fB) == 1:
@@ -1206,7 +1211,7 @@ def run_tests(fns):
         com = dss.patch_dss_com(com)
         print('COM Version:', com.Version)
         global COM_VLL_BROKEN
-        COM_VLL_BROKEN = ('Version 8.6.7.1 ' in com.Version) or ('Version 9.0.0.8 ' in com.Version)
+        COM_VLL_BROKEN = ('Version 8.6.7.1 ' in com.Version) or ('Version 9.0.0.8 ' in com.Version) or ('Version 9.1.3.4 ' in com.Version) 
     else:
         com = None
 
