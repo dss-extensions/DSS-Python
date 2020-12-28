@@ -13,7 +13,7 @@ See also the other projects from [DSS-Extensions.org](https://dss-extensions.org
 - [DSS Sharp](http://github.com/dss-extensions/dss_sharp/): available for .NET/C#, also mimics the COM classes, but Windows-only at the moment. Soon it will be possible to use it via COM too.
 - [DSS MATLAB](http://github.com/dss-extensions/dss_matlab/): presents multi-platform integration (Windows, Linux, MacOS) with DSS C-API and is also very compatible with the COM classes.
 
-Version 0.10.6, based on OpenDSS revision 2909 (around OpenDSS v9.0.0.3). While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached. If you find an unexpected missing feature, please report it!
+Version 0.10.7, based on OpenDSS revision 2963 (OpenDSS v9.1.3.4). While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached. If you find an unexpected missing feature, please report it!
 
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level.
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange. 
@@ -22,7 +22,8 @@ The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the 
 
 ## Brief release history
 
-- **2020-07-31 / version 0.10.6: Maintenance release to match DSS C-API 0.10.6, based on on OpenDSS revision 2909. New important settings: `DSS.LegacyModels` and `DSS.Error.ExtendedErrors`.**
+- **2020-12-28 / version 0.10.7: Maintenance release to match DSS C-API 0.10.7, based on on OpenDSS revision 2963. Includes fixes and new features from the official OpenDSS.**
+- 2020-07-31 / version 0.10.6: Maintenance release to match DSS C-API 0.10.6, based on on OpenDSS revision 2909. New important settings: `DSS.LegacyModels` and `DSS.Error.ExtendedErrors`.
 - 2020-03-03 / version 0.10.5: Maintenance release to match DSS C-API 0.10.5, based on on OpenDSS revision 2837. Temporarily drops the v8 parallel-machine functions, as well as conda packages on Windows.
 - 2019-11-16 / version 0.10.4: Maintenance release to match DSS C-API 0.10.4.
 - 2019-05-22 / version 0.10.3: Some important fixes, better general performance, new API extensions, new features ported from COM and the OpenDSS version 8 codebase.
@@ -39,48 +40,14 @@ The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the 
 
 ## Recent changes
 
-**Changes in 0.10.6, since 0.10.5**
+**Changes in 0.10.7, since 0.10.6**
 
-Check the [changelog](docs/changelog.md#0105) document for a detailed list for all releases.
+Check the [changelog](docs/changelog.md#0107) document for a detailed list for all releases.
 
-- Updated to DSS C-API 0.10.6, which includes most changes up to OpenDSS v9.0.0.3.
-- Debug builds of DSS C-API are now included. See the [Debugging](https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/debug.md) document.
-- New `DSS.LegacyModels`: allow using the legacy/deprecated models for `PVsystem`, `Storage`, `InvControl`, and `StorageController`. 
-- New `DSS.Error.ExtendedErrors`: controls if the new extended error messages are used.
-- Many new properties and functions in `DSS.ActiveCircuit.PDElements`.
-- Now most of the low-level API calls are checked, mapping the errors from the `DSS.Error` interface to Python exceptions more frequently.
-
-DSS C-API 0.10.6 changes:
-
-- This version should be fully API compatible with 0.10.3+. The behavior of some functions changed with the new extensions. Especially, empty strings are explicitely return as nulls instead of "\0". This conforms to the behavior already seen in arrays of strings.
-- The binary releases now use Free Pascal 3.2.0. We observed the solution process is around 6% faster, and results are even closer to the official OpenDSS.
-- The releases now include both the optimized/default binary and a non-optimized/debug version. See the [Debugging](https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/debug.md) document for more.
-- Extended API validation and **Extended Errors** mechanism: 
-    - The whole API was reviewed to add basic checks for active circuit and element access. 
-    - By default, invalid accesses now result in errors reported through the Error interface. This can be disabled to achieve the previous behavior, more compatible with the official COM implementation -- that is, ignore the error, just return a default/invalid value and assume the user has handled it.
-    - The mechanism can be toggled by API functions `DSS_Set_ExtendedErrors` and `DSS_Get_ExtendedErrors`, or environment variable `DSS_CAPI_EXTENDED_ERRORS=0` to disable (defaults to enabled state).
-- New **Legacy Models** mechanism:
-    - OpenDSS 9.0+ dropped the old `PVsystem`, `Storage`, `InvControl`, and `StorageController` models, replacing with the new versions previously known as `PVsystem2`, `Storage2`, `InvControl2` and `StorageController2`.
-    - The behavior and parameters from the new models are different -- they are better, more complete and versatile models. Check the official OpenDSS docs and examples for further information. 
-    - The implementation of the new models in DSS C-API was validated successfully with all test cases available. As such, we mirror the decision to make them the default models.
-    - As an extension, we implemented the Legacy Models option. By toggling it, a `clear` command will be issued and the alternative models will be loaded. This should allow users to migrate to the new version but, if something that used to work with the old models stopped working somehow, the user can toggle the old models. The idea is to keep reproducibility of results while we keep updating the engine and the API.
-    - Since EPRI dropped/deprecated the old models, we might drop them too, in a future release. Please open an issue on GitHub or send a message if those old models are important to you.
-    - The mechanism can be controlled by API functions `DSS_Set_LegacyModels` and `DSS_Get_LegacyModels`, or environment variable `DSS_CAPI_LEGACY_MODELS=1` to enable (defaults to disabled state).
-- WireData API: expose the `CapRadius` property as a new pair of functions.
-- PDElements API: extended with many batch functions exposing equivalents to some CSV reports: `AllNames`, `AllMaxCurrents`, `AllPctNorm`, `AllPctEmerg`, `AllCurrents`, `AllCurrentsMagAng`, `AllCplxSeqCurrents`, `AllSeqCurrents`, `AllPowers`, `AllSeqPowers`, `AllNumPhases`, `AllNumConductors`, `AllNumTerminals`.
-- `CktElement_Get_SeqPowers`: fix issue for positive sequence circuits (wrong results could corrupt memory).
-- Many API functions were optimized to avoid unnecessary allocations and copies.
-- Some bugs found in DSS C-API and also reported upstream (already fixed in SVN):
-    - `CapRadius` DSS property: if the radius was initialized using `GMRac`, `CapRadius` was left uninitialized, resulting in invalid/NaN values.
-    - `Sensors` API: some functions edited capacitors instead of sensors.
-- Updated to the official OpenDSS revision 2903, corresponding to versions 9.0.0+. Changes include:
-    - ExportCIMXML: updated.
-    - Relay: Fix in `GetPropertyValue`.
-    - Line: In `DumpProperties` and `MakePosSequence`, the length is handled differently for lines with `LineGeometry` or `LineSpacing`.
-    - Bus API: new `LineList`, `LoadList` functions.
-    - Lines API: SeasonRating now returns NormAmps if there's no SeasonSignal.
-    - New command DSS `Zsc012`: "Returns symmetrical component short circuit impedances Z0, Z1, and Z2 for the ACTIVE 3-PHASE BUS. Determined from Zsc matrix."
-    - `PVsystem2`, `Storage2`, `InvControl2`, `StorageController2` updated and renamed.
+- Simple maintenance release. 
+- Updated to DSS C-API 0.10.7, which includes most changes up to OpenDSS v9.1.3.4.
+- Includes tweaks related to the `CapRadius` property.
+- New properties ported from the official COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, and `CktElement.TotalPowers`.
 
 ## Missing features and limitations
 
@@ -88,6 +55,7 @@ Most limitations are inherited from `dss_capi`, i.e., these are not implemented:
 
 - `DSSEvents` from `DLL/ImplEvents.pas`: seems too dependent on COM.
 - `DSSProgress` from `DLL/ImplDSSProgress.pas`: would need a reimplementation depending on the target UI (GUI, text, headless, etc.).
+- OpenDSS-GIS features are not implemented since they're not open-source.
 
 In general, the DLL from `dss_capi` provides more features than both the official Direct DLL and the COM object.
     
