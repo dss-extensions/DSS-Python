@@ -1,9 +1,7 @@
 version: '{build}'
 skip_non_tags: false
-image: Visual Studio 2017
+image: Visual Studio 2019
 clone_folder: c:\projects\dss_python
-cache:
-  - c:\projects\VCForPython27.msi
 environment:
   DSS_CAPI_TAG: 0.10.7rc1
   DSS_CAPI_PATH: c:\projects\dss_capi

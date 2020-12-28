@@ -8,8 +8,6 @@ ln -s /cygdrive/c /c
 cd ..
 export ARTIFACTS_FOLDER=`cygpath -a -w ./artifacts`
 
-export PATH="$PATH:/c/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin"
-
 BUILD_WHEELS=1
 if [ "$BUILD_WHEELS" == "1" ]; then
     # conda-build with wheels doesn't seem consistent so
@@ -18,16 +16,16 @@ if [ "$BUILD_WHEELS" == "1" ]; then
         # Use the official Python already installed in AppVeyor
         cd dss_python
 
-        # Python 27 is kept last since we rebuild klusolve for it
         if [ "$CONDA_SUBDIR" == "win-32" ]; then
-            PYTHON_VERSIONS="35 36 37 38"
+            PYTHON_VERSIONS="39 38 35 36 37"
         else
-            PYTHON_VERSIONS="35-x64 36-x64 37-x64 38-x64"
+            PYTHON_VERSIONS="39-x64 38-x64 35-x64 36-x64 37-x64"
         fi
         
         for A in $PYTHON_VERSIONS
         do
             echo Building for Python $A $CONDA_SUBDIR...
+            c:/Python${A}/python -m pip install --upgrade pip
             c:/Python${A}/scripts/pip install cffi wheel
             rm -rf .eggs build
             c:/Python${A}/python setup.py --quiet bdist_wheel --dist-dir="$ARTIFACTS_FOLDER"
@@ -82,27 +80,5 @@ else
     # conda install -q conda-build=3.10.9
 fi # BUILD_WHEELS
 
-# # Build conda packages
-# export CONDA_SUBDIR=win-32
-# conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
-# export CONDA_SUBDIR=win-64
-# conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
-
-# # # Build wheels with conda
-# # # (if we keep the output section always, the default package
-# # # is ignored, uses wrong names, etc.)
-# # rm -rf conda_wheels
-# # cp -R conda conda_wheels
-# # cat conda/meta_wheels.yaml >> conda_wheels/meta.yaml
-# # export CONDA_SUBDIR=win-32
-# # conda-build --output-folder ../artifacts conda_wheels
-# # export CONDA_SUBDIR=win-64
-# # conda-build --output-folder ../artifacts conda_wheels
-
-# # # undo the change, just in case
-# # git checkout conda/meta.yaml
-
-# if [ -n "$ANACONDA_API_TOKEN" ]; then 
-    # echo Upload artifacts to anaconda.org...
-    # find ../artifacts -name "*.whl" -or -name "*.tar.bz2" | xargs -I {} anaconda upload --no-progress -l main -u pmeira {}
-# fi
+# Build conda packages
+conda-build --quiet --no-test --output-folder "$ARTIFACTS_FOLDER" conda
