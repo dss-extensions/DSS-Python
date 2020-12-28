@@ -1303,7 +1303,7 @@ def run_tests(fns):
             os.chdir(original_working_dir)
             pickle_fn = fn + '.pickle'
             with open(pickle_fn, 'wb') as com_output_file:
-                pickle.dump(output, com_output_file, protocol=pickle.HIGHEST_PROTOCOL)
+                pickle.dump(output, com_output_file, protocol=4)
                 print('COM output pickled to', pickle_fn)
             
             output = type(output)()

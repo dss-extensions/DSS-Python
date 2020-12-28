@@ -8,16 +8,6 @@ ln -s /cygdrive/c /c
 cd ..
 export ARTIFACTS_FOLDER=`cygpath -a -w ./artifacts`
 
-# Install Visual Studio Compiler for Python 2.7
-#choco install -y vcpython27 
-if [ ! -f "/c/projects/VCForPython27.msi" ]; then
-    $WGET https://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi -q -O /c/projects/VCForPython27.msi
-fi
-cd dss_python/ci
-cmd "/c install_vcforpython27.bat"
-# rm -rf /c/projects/VCForPython27.msi
-cd ../..
-
 export PATH="$PATH:/c/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin"
 
 BUILD_WHEELS=1
@@ -30,9 +20,9 @@ if [ "$BUILD_WHEELS" == "1" ]; then
 
         # Python 27 is kept last since we rebuild klusolve for it
         if [ "$CONDA_SUBDIR" == "win-32" ]; then
-            PYTHON_VERSIONS="35 36 37 38 27"
+            PYTHON_VERSIONS="35 36 37 38"
         else
-            PYTHON_VERSIONS="35-x64 36-x64 37-x64 38-x64 27-x64"
+            PYTHON_VERSIONS="35-x64 36-x64 37-x64 38-x64"
         fi
         
         for A in $PYTHON_VERSIONS
@@ -62,7 +52,7 @@ if [ "$BUILD_WHEELS" == "1" ]; then
         # conda update -q conda
         # conda info -a
 
-        PYTHON_VERSIONS="2.7 3.5 3.6 3.7 3.8"
+        PYTHON_VERSIONS="3.5 3.6 3.7 3.8 3.9"
         
         for A in $PYTHON_VERSIONS
         do

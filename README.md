@@ -106,13 +106,13 @@ On all major platforms, you can install directly from pip:
     pip install dss_python
 ```
 
-Or, if you're using the Anaconda distribution, you can use:
+Or, if you're using the Anaconda distribution, you can try:
 
 ```
     conda install -c pmeira dss_python
 ```
 
-Binary wheels are provided for all major platforms (Windows, Linux and MacOS) and many combinations of Python versions (2.7, 3.5 to 3.7). If you have issues with a specific version, please open an issue about it. Conda packages support at least Python 2.7, 3.5, 3.6 and 3.7.
+Binary wheels are provided for all major platforms (Windows, Linux and MacOS) and many combinations of Python versions (3.5 to 3.9). If you have issues with a specific version, please open an issue about it. Conda packages support at least Python 3.6, 3.7 and 3.8 (varying according to the release).
 
 After a successful installation, you can then import the `dss` module from your Python interpreter.
 

@@ -30,7 +30,7 @@ void dss_custom_line_currents(double *line_norm_amps, int *all_line_nodes, doubl
     int n, node;
     
     int32_t idx = Lines_Get_First();
-    int32_t resultCount = 0;
+    int32_t resultCount[2] = {0, 0};
     
     while (idx > 0)
     {
@@ -39,7 +39,7 @@ void dss_custom_line_currents(double *line_norm_amps, int *all_line_nodes, doubl
         
         norm_amps = line_norm_amps[idx - 1];
         
-        CktElement_Get_Currents(&currents, &resultCount);
+        CktElement_Get_Currents(&currents, &resultCount[0]);
         
         for (n = 0; n < 4; ++n)
         {
