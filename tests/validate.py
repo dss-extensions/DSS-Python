@@ -13,6 +13,7 @@ USE_V8 = (os.getenv('DSS_PYTHON_V8') == '1')
 WIN32 = (sys.platform == 'win32')
 
 COM_VLL_BROKEN = False
+NO_V9 = False
 
 # COM Output
 SAVE_COM_OUTPUT = 'save' in sys.argv
@@ -108,7 +109,7 @@ class ValidatingTest:
                             continue
                         else:
                             input_line = input_line.replace('C:\\Users\\prdu001\\OpenDSS\\Test\\', '')
-                            input_line = input_line.replace('C:\\Users\\prdu001\\OpenDSS\\Distrib\\Examples\\Scripts\\', '../Distrib/Examples/Scripts/')
+                            input_line = input_line.replace('C:\\Users\\prdu001\\OpenDSS\\Distrib\\Examples\\Scripts\\', '../Version8/Distrib/Examples/Scripts/')
                             #print(input_line)
                             dss.Text.Command = input_line
                 except StopIteration:
@@ -170,10 +171,11 @@ class ValidatingTest:
             for propA in fA:
                 assert propA in fB, propA
 
-        for field in ['TotalPowers']:
-            fA = getattr(A, field)
-            fB = getattr(B, field)
-            if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, A.Name, B.Name)
+        if not NO_V9:
+            for field in ['TotalPowers']:
+                fA = getattr(A, field)
+                fB = getattr(B, field)
+                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, A.Name, B.Name)
                 
         # Since the list of properties vary in releases, 
         # we don't check it the list is the same anymore.
@@ -282,8 +284,8 @@ class ValidatingTest:
                 self.com.ActiveCircuit.SetActiveBus(name)
                 if not SAVE_COM_OUTPUT: assert A.Name == B.Name
                 
-            if self.capi.ActiveCircuit.NumNodes < 1000:
-                for field in ('LoadList', 'LineList', 'AllPCEatBus', 'AllPDEatBus'):
+            if self.capi.ActiveCircuit.NumNodes < 1000 and not NO_V9:
+                for field in ['LoadList', 'LineList']:#, 'AllPCEatBus', 'AllPDEatBus']:
                     fB = getattr(B, field)
                     fA = output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                     if SAVE_COM_OUTPUT: output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] = fA
@@ -878,12 +880,18 @@ class ValidatingTest:
         count = 0
         while nA != 0:
             count += 1
-            for field in 'AllBranchesInZone,AllEndElements,RegisterNames'.split(','):
+            for field in 'AllBranchesInZone,AllEndElements,RegisterNames,ZonePCE'.split(','):
+                if field == 'ZonePCE' and NO_V9:
+                    continue
+                    
                 fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
                 if SAVE_COM_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
                 if fA == ('',) and fB == [None]: continue # Comtypes and win32com results are a bit different here
-                if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), field
+                fA = [x for x in fA if x]
+                fB = [x for x in fB if x]
+                assert len(fA) == len(fB), (fA, fB)
+                if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
 
 
             # NOTE: CalcCurrent and AllocFactors removed since it seemed to contain (maybe?) uninitialized values in certain situations
@@ -1210,8 +1218,9 @@ def run_tests(fns):
         import dss
         com = dss.patch_dss_com(com)
         print('COM Version:', com.Version)
-        global COM_VLL_BROKEN
-        COM_VLL_BROKEN = ('Version 8.6.7.1 ' in com.Version) or ('Version 9.0.0.8 ' in com.Version) or ('Version 9.1.3.4 ' in com.Version) 
+        global COM_VLL_BROKEN, NO_V9
+        NO_V9 = ('Version 7' in com.Version) or ('Version 8' in com.Version)
+        COM_VLL_BROKEN = ('Version 7' in com.Version) or ('Version 8.6.7.1 ' in com.Version) or ('Version 9.0.0.8 ' in com.Version) or ('Version 9.1.3.4 ' in com.Version) 
     else:
         com = None
 

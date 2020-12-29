@@ -3,7 +3,7 @@ skip_non_tags: false
 image: Visual Studio 2019
 clone_folder: c:\projects\dss_python
 environment:
-  DSS_CAPI_TAG: 0.10.7rc1
+  DSS_CAPI_TAG: 0.10.7rc4
   DSS_CAPI_PATH: c:\projects\dss_capi
   ANACONDA_API_TOKEN: 
     secure: Pcm5IXFi4ZUsi1ue5QvPNASDo1Ns1REYbAwDJXRd3FRn2CfKbNPgnPda6fxoN6wG
