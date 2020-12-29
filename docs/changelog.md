@@ -1,9 +1,26 @@
 # 0.10.7
 
-- Simple maintenance release. 
+- Maintenance release. 
 - Updated to DSS C-API 0.10.7, which includes most changes up to OpenDSS v9.1.3.4.
-- Includes tweaks related to the `CapRadius` property.
-- New properties ported from the official COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, and `CktElement.TotalPowers`.
+- Includes an important bug fix related to the `CapRadius` DSS property. If your DSS scripts included the pattern `GMRac=... rad=...` or `GMRac=... diam=...` (in this order and without specifying `CapRadius`), you should upgrade and re-evaluate the results. 
+- New API properties ported from the official COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, `CktElement.TotalPowers`, `Meters.ZonePCE`
+
+DSS C-API 0.10.7 changes:
+
+- Simple maintenance release, which includes most changes up to OpenDSS v9.1.3.4 (revision 2963).
+- Includes an important bug fix related to the `CapRadius` DSS property. If your DSS scripts included the pattern `GMRac=... rad=...` or `GMRac=... diam=...` (in this order and without specifying `CapRadius`), you should upgrade and re-evaluate the results. 
+- This version should be fully API compatible with 0.10.3+.
+- A reference document listing the DSS commands and properties for all DSS elements is now available at https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/dss_properties.md
+- New functions API ported from the official OpenDSS include: `Bus_Get_AllPCEatBus`, `Bus_Get_AllPDEatBus`, `CktElement_Get_TotalPowers`, `Meters_Get_ZonePCE`.
+- The changes ported from the official OpenDSS include the following (check the repository for more details):
+    - "Adds LineType property to LineCode and LineGeometry objects."
+    - "Correcting bug found in storage device when operating in idling mode. It was preventing the solution of other test feeders (IEEE 9500)"
+    - "Enabling fuel option for generator, fixing bug found in TotalPower command."
+    - "Adding kvar compensation calculation for normalizing reactive power at feeder head. v 9.1.2.4"
+    - "Adding: - Line type variable to line definition. - AllPCEatBus and AllPDEatBus commands to the executive command set. - AllPCEatBus and AllPDEatBus commands to bus interface in COM/DLL. (...)"
+    - "Adding capability to energy meter for getting the list of all PCE (shunt) within a zone. Interface "AllPCEatZone" for COM/DLL created."
+    - "Fixing bug found when calculating voltage bases with large amount of numbers (large array)."
+
 
 # 0.10.6
 
