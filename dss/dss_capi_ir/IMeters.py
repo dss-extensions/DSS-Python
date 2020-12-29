@@ -245,3 +245,13 @@ class IMeters(Iterable):
     def Totals(self):
         '''(read-only) Totals of all registers of all meters'''
         return self._get_float64_array(self._lib.Meters_Get_Totals)
+
+    @property
+    def ZonePCE(self):
+        '''Returns the list of all PCE within the area covered by the energy meter'''
+        result = self.CheckForError(self._get_string_array(self._lib.Meters_Get_ZonePCE))
+        if not result:
+            result = ['NONE'] #TODO: remove
+            
+        return result
+        

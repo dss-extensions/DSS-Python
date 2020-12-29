@@ -222,12 +222,24 @@ class IBus(Base):
     @property
     def AllPCEatBus(self):
         '''Returns an array with the names of all PCE connected to the active bus'''
-        return self.CheckForError(self._get_string_array(self._lib.Bus_Get_AllPCEatBus))
+        result = self.CheckForError(self._get_string_array(self._lib.Bus_Get_AllPCEatBus))
+        if result:
+            result.append('') #TODO: remove this -- added for full compatibility with COM
+        else:
+            result = ['None']
+
+        return result
 
     @property
     def AllPDEatBus(self):
         '''Returns an array with the names of all PDE connected to the active bus'''
-        return self.CheckForError(self._get_string_array(self._lib.Bus_Get_AllPDEatBus))
+        result = self.CheckForError(self._get_string_array(self._lib.Bus_Get_AllPDEatBus))
+        if result:
+            result.append('') #TODO: remove this -- added for full compatibility with COM
+        else:
+            result = ['None']
+
+        return result
 
     def __getitem__(self, index):
         if isinstance(index, int):
