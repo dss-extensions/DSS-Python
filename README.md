@@ -46,8 +46,8 @@ Check the [changelog](docs/changelog.md#0107) document for a detailed list for a
 
 - Simple maintenance release. 
 - Updated to DSS C-API 0.10.7, which includes most changes up to OpenDSS v9.1.3.4.
-- Includes tweaks related to the `CapRadius` property.
-- New properties ported from the official COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, and `CktElement.TotalPowers`.
+- Includes an important bug fix related to the `CapRadius` DSS property. If your DSS scripts included the pattern `GMRac=... rad=...` or `GMRac=... diam=...` (in this order and without specifying `CapRadius`), you should upgrade and re-evaluate the results. 
+- New API properties ported from the official COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, `CktElement.TotalPowers`, `Meters.ZonePCE`
 
 ## Missing features and limitations
 
