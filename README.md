@@ -1,5 +1,5 @@
 [![Travis-CI: Linux and macOS build status](https://travis-ci.com/dss-extensions/dss_python.svg?branch=0.10.x)](https://travis-ci.com/dss-extensions/dss_python) 
-[![AppVeyor: Windows build status](https://ci.appveyor.com/api/projects/status/bvcbel63n5uf4yjk/branch/0.10.x?svg=true)](https://ci.appveyor.com/project/PMeira/dss-python-yyx2r/branch/0.10.x)
+[![AppVeyor: Windows build status](https://ci.appveyor.com/api/projects/status/bvcbel63n5uf4yjk/branch/0.10.x?svg=true)](https://ci.appveyor.com/project/PMeira/dss-python-yyx2r/branch/0.10.x) [![Install with conda](https://anaconda.org/dss-extensions/dss_python/badges/installer/conda.svg)](https://anaconda.org/dss-extensions/dss_python) [![conda package version](https://anaconda.org/dss-extensions/dss_python/badges/version.svg)](https://anaconda.org/dss-extensions/dss_python)
 
 # DSS Python: Unofficial bindings for EPRI's OpenDSS
 
@@ -77,10 +77,10 @@ On all major platforms, you can install directly from pip:
 Or, if you're using the Anaconda distribution, you can try:
 
 ```
-    conda install -c pmeira dss_python
+    conda install -c dss-extensions dss_python
 ```
 
-Binary wheels are provided for all major platforms (Windows, Linux and MacOS) and many combinations of Python versions (3.5 to 3.9). If you have issues with a specific version, please open an issue about it. Conda packages support at least Python 3.6, 3.7 and 3.8 (varying according to the release).
+Binary wheels are provided for all major platforms (Windows, Linux and MacOS) and many combinations of Python versions (3.5 to 3.9). If you have issues with a specific version, please open an issue about it. Conda packages support at least Python 3.6 to 3.9 (varying according to the release).
 
 After a successful installation, you can then import the `dss` module from your Python interpreter.
 
@@ -97,7 +97,6 @@ Assuming you successfully built or downloaded the DSS C-API DLLs (check [its rep
 ```
 dss_capi/
 dss_python/
-electricdss-src/
 ```
 
 Open a command prompt in the `dss_python` subfolder and run the build process:
