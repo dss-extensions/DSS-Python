@@ -22,7 +22,8 @@ The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the 
 
 ## Brief release history
 
-- **2020-12-28 / version 0.10.7: Maintenance release to match DSS C-API 0.10.7, based on on OpenDSS revision 2963. Includes fixes and new features from the official OpenDSS.**
+- **2021-03-09 / version 0.10.7-1: Very minor release to fix issues with some of the energy meter reports.**
+- 2020-12-28 / version 0.10.7: Maintenance release to match DSS C-API 0.10.7, based on on OpenDSS revision 2963. Includes fixes and new features from the official OpenDSS.
 - 2020-07-31 / version 0.10.6: Maintenance release to match DSS C-API 0.10.6, based on on OpenDSS revision 2909. New important settings: `DSS.LegacyModels` and `DSS.Error.ExtendedErrors`.
 - 2020-03-03 / version 0.10.5: Maintenance release to match DSS C-API 0.10.5, based on on OpenDSS revision 2837. Temporarily drops the v8 parallel-machine functions, as well as conda packages on Windows.
 - 2019-11-16 / version 0.10.4: Maintenance release to match DSS C-API 0.10.4.
