@@ -186,3 +186,25 @@ class IDSS(Base):
     @LegacyModels.setter
     def LegacyModels(self, Value):
         return self.CheckForError(self._lib.DSS_Set_LegacyModels(Value))
+
+    @property
+    def AllowChangeDir(self):
+        '''
+        If disabled, the engine will not change the active working directory during execution. E.g. a "compile"
+        command will not "chdir" to the file path.
+        
+        If you have issues with long paths, enabling this might help in some scenarios.
+        
+        Defaults to True (allow changes, backwards compatible) in the 0.10.x versions of DSS C-API. 
+        This might change to False in future versions.
+        
+        This can also be set through the environment variable DSS_CAPI_ALLOW_CHANGE_DIR. Set it to 0 to
+        disallow changing the active working directory.
+        
+        (API Extension)
+        '''
+        return self.CheckForError(self._lib.DSS_Get_AllowChangeDir()) != 0
+
+    @AllowChangeDir.setter
+    def AllowChangeDir(self, Value):
+        return self.CheckForError(self._lib.DSS_Set_AllowChangeDir(Value))
