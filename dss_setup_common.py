@@ -1,7 +1,19 @@
-import sys
+import sys, os
 
 # Not complete but should suffice for the moment
-arch = 'x64' if (sys.maxsize > (1 << 32)) else 'x86'
+if 'linux' in sys.platform.lower():
+    uname = os.uname()
+    if uname.machine == 'aarch64':
+        arch = 'arm64'
+    elif uname.machine == 'x86_64':
+        arch = 'x64'
+    elif 'arm' in uname.machine:
+        arch = 'arm32'
+    else:
+        arch = 'x86'
+else:
+    arch = 'x64' if (sys.maxsize > (1 << 32)) else 'x86'
+
 platform_short = ''.join(filter(lambda ch: ch.isalpha(), sys.platform))
 PLATFORM_FOLDER = '{}_{}'.format(platform_short, arch)
 
