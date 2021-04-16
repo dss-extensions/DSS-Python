@@ -1,4 +1,3 @@
-from __future__ import print_function
 from cffi import FFI
 import sys, re, os
 from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS

@@ -53,12 +53,6 @@ else:
         'dss': ['*{}'.format(DLL_SUFFIX)] + extra_files
     })
 
-# (2019-02-24) PEP 496 didn't work, using a workaround
-if (sys.version_info.major, sys.version_info.minor) < (3, 5):
-    compat_requires = ['enum34']
-else:
-    compat_requires = []
-
 setup(
     name="dss_python",
     description="OpenDSS bindings and tools based on the DSS C-API project",
@@ -79,12 +73,11 @@ setup(
             'dss_build.py:ffi_builder_CapUserControl'
         ],
     ext_package="dss",
-    install_requires=["cffi>=1.11.2", "numpy>=1.0"] + compat_requires,
+    install_requires=["cffi>=1.11.2", "numpy>=1.0"],
     zip_safe=False,
     classifiers=[
         'Intended Audience :: Science/Research',
         'Intended Audience :: Education',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
