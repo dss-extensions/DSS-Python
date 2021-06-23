@@ -201,7 +201,11 @@ class CffiApiUtil(object):
                 str_ptrs = self.ffi.unpack(actual_ptr, cnt[0])
                 #res = [(str(self.ffi.string(str_ptr).decode(codec)) if (str_ptr != self.ffi.NULL) else None) for str_ptr in str_ptrs]
                 res = [(self.ffi.string(str_ptr).decode(codec) if (str_ptr != self.ffi.NULL) else u'') for str_ptr in str_ptrs]
-
+                if res == [u'']:
+                    # most COM methods return an empty array as an
+                    # array with an empty string
+                    res = []
+                    
         self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
         return res
 
