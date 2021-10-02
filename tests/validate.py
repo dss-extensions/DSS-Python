@@ -1238,7 +1238,7 @@ class ValidatingTest:
             elif type(v[1]) == int:
                 assert v[0] == v[1], (k, type(v[1]))
             elif type(v[1]) == float:
-                assert abs(v[0] - v[1]) < self.atol, (k, type(v[1]))
+                if not SAVE_COM_OUTPUT: assert abs(v[0] - v[1]) < self.atol, (k, type(v[1]))
 
     def validate_YMatrix(self):
         if SAVE_OUTPUT:
