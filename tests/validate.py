@@ -1,4 +1,3 @@
-from __future__ import print_function
 import os, sys
 from time import time
 import numpy as np
@@ -1088,7 +1087,7 @@ class ValidatingTest:
             elif type(v[1]) == int:
                 if not SAVE_COM_OUTPUT: assert v[0] == v[1], (k, type(v[1]))
             elif type(v[1]) == float:
-                if not SAVE_COM_OUTPUT: assert abs(v[0] - v[1]) < atol, (k, type(v[1]))
+                if not SAVE_COM_OUTPUT: assert abs(v[0] - v[1]) < self.atol, (k, type(v[1]))
 
     def validate_YMatrix(self):
         NN = self.capi.ActiveCircuit.NumNodes
@@ -1220,7 +1219,7 @@ def run_tests(fns):
         print('COM Version:', com.Version)
         global COM_VLL_BROKEN, NO_V9
         NO_V9 = ('Version 7' in com.Version) or ('Version 8' in com.Version)
-        COM_VLL_BROKEN = ('Version 7' in com.Version) or ('Version 8.6.7.1 ' in com.Version) or ('Version 9.0.0.8 ' in com.Version) or ('Version 9.1.3.4 ' in com.Version) 
+        COM_VLL_BROKEN = True # until there is some change...
     else:
         com = None
 

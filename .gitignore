@@ -106,10 +106,20 @@ ENV/
 # mypy
 .mypy_cache/
 
-*.dll
+*.dll*
 
 README.rst
 
 conda_wheels/
 /dss/*.lib
 /dss/**/*.h
+
+*.CSV
+*.lib
+*.exp
+*.orig
+*.obj
+*.pickle
+*.dbl
+*.sng
+*.pdb

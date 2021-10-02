@@ -10,8 +10,8 @@ def process_header(src, extern_py=False, implement_py=False, prefix='', v8=False
     if not implement_py:
         src = re.sub('^extern .*', '', src, flags=re.MULTILINE)
         src = re.sub('^.*extern .*$', '', src, flags=re.MULTILINE)
-        src = re.sub(r'^\s*#.*', '', src, flags=re.MULTILINE)
-        src = src.replace('DSS_CAPI_DLL', '')
+        src = re.sub('^#.*', '', src, flags=re.MULTILINE)
+        src = re.sub('DSS_CAPI_.*DLL', '', src)
         src = re.sub(
             r'DSS_MODEL_CALLBACK\(([^,]+), ([^\)]+)\)', 
             r'\1 ({call_convention}*\2)'.format(call_convention=call_convention), 
@@ -77,9 +77,15 @@ DSS_CAPI_PATH = os.environ.get('DSS_CAPI_PATH', os.path.join(src_path, '..', 'ds
     
 for version in DSS_VERSIONS:
     ffi_builder_dss = FFI()
+    debug = 'd' if version.endswith('d') else ''
 
     with open(os.path.join(DSS_CAPI_PATH, 'include', 'dss_capi.h'), 'r') as f:
-        cffi_header_dss = process_header(f.read(), v8='version' == 'v8')
+        cffi_header_dss = process_header(f.read())
+        
+    dss_capi_ctx_path = os.path.join(DSS_CAPI_PATH, 'include', 'dss_capi_ctx.h')
+    if os.path.exists(dss_capi_ctx_path):
+        with open(dss_capi_ctx_path, 'r') as f:
+            cffi_header_dss += process_header(f.read())
         
     with open('cffi/dss_capi_custom.h', 'r') as f:
         extra_header_dss = f.read()
@@ -87,17 +93,20 @@ for version in DSS_VERSIONS:
     cffi_header_dss += extra_header_dss
     
     with open('cffi/dss_capi_custom.c', 'r') as f:
-        extra_source_dss = f.read()
+        if os.path.exists(dss_capi_ctx_path):
+            extra_source_dss = '#include <dss_capi_ctx.h>\n'
+            extra_source_dss += f.read()
+        else:
+            extra_source_dss = f.read()
     
     ffi_builder_dss.cdef(cffi_header_dss)
 
-    ffi_builder_dss.set_source("_dss_capi_{}".format(version), extra_source_dss,
-        libraries=["dss_capi_{}".format(version)],
+    ffi_builder_dss.set_source("_dss_capi{}".format(debug), extra_source_dss,
+        libraries=["dss_capi{}".format(debug)],
         library_dirs=[
-            os.path.join(DSS_CAPI_PATH, 'lib/{}/{}'.format(PLATFORM_FOLDER, base_version)), 
             os.path.join(DSS_CAPI_PATH, 'lib/{}'.format(PLATFORM_FOLDER))
         ],
-        include_dirs=[os.path.join(DSS_CAPI_PATH, 'include/{}'.format(base_version))],
+        include_dirs=[os.path.join(DSS_CAPI_PATH, 'include')],
         source_extension='.c',
         **extra
     )
