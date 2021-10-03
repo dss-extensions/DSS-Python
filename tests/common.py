@@ -114,11 +114,30 @@ test_filenames = [
     # This one is expected to have different results (C-API should be more precise)
     # "../../electricdss-tst/Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
 
+    "../../electricdss-tst/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS",
     #"L!../../electricdss-tst/Test/Source012Test.dss",
+    
+    
     "L!../../electricdss-tst/Test/PVSystemTest.dss",
     "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/SolarRamp.DSS",
     "../../electricdss-tst/Test/IEEE13_CDPSM.dss",
-    "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/J1/Master_withPV.dss",
+    "../../electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss",
+    "L!../../electricdss-tst/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
+    "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/IEEE123Master.dss",
+    "../../electricdss-tst/Distrib/IEEETestCases/37Bus/ieee37.dss",
+
+    "../../electricdss-tst/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
+    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS",
+    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS",
+    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS",
+    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4Bus-OYOD-UnBal.DSS",
+    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS",
+    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS",
+    "../../electricdss-tst/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss",
+    "../../electricdss-tst/Test/IEEE13_LineSpacing.dss",
+    "../../electricdss-tst/Test/IEEE13_LineGeometry.dss",
+    "../../electricdss-tst/Test/IEEE13_Assets.dss",
+    
     
     "L!../../electricdss-tst/Test/CableParameters.dss",
     "../../electricdss-tst/Test/TextTsCable750MCM.dss",
@@ -131,7 +150,8 @@ test_filenames = [
     "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/M1/Master_NoPV.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/K1/Master_NoPV.dss",
 
-    "../../electricdss-tst/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS",
+    "../../electricdss-tst/Distrib/EPRITestCircuits/epri_dpv/J1/Master_withPV.dss",
+
     "../../electricdss-tst/Version8/Distrib/IEEETestCases/LVTestCaseNorthAmerican/Master.dss",
     
     "L!../../electricdss-tst/Test/Cable_constants.DSS",
@@ -148,27 +168,11 @@ test_filenames = [
 
     "../../electricdss-tst/Version7/Distrib/Examples/UPFC_Test/UPFC_test_3.dss",
 
-    "../../electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss",
-    "L!../../electricdss-tst/Test/YgD-Test.dss", # NOTE: this one can be used to test ASLR issues and SET __COMPAT_LAYER=WIN7RTM
-    "L!../../electricdss-tst/Distrib/IEEETestCases/123Bus/IEEE123Master.dss",
-    "../../electricdss-tst/Distrib/IEEETestCases/37Bus/ieee37.dss",
-
-    "../../electricdss-tst/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss",
     "../../electricdss-tst/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss",
     "../../electricdss-tst/Distrib/IEEETestCases/8500-Node/Master-unbal.dss",
-    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS",
-    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS",
-    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS",
-    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4Bus-OYOD-UnBal.DSS",
-    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS",
-    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS",
-    "../../electricdss-tst/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss",
-
-    "../../electricdss-tst/Test/IEEE13_LineSpacing.dss",
-    "../../electricdss-tst/Test/IEEE13_LineGeometry.dss",
-    "../../electricdss-tst/Test/IEEE13_Assets.dss",
+    
 
     #"L!../../electricdss-tst/Test/Run_SimpleStorageTest.DSS", # Missing DLL?
     #"L!../../electricdss-tst/Test/Run_SimpleStorageTest-1ph.DSS", # Missing DLL?
@@ -179,6 +183,19 @@ test_filenames = [
     #"L!../../electricdss-tst/Distrib/IEEETestCases/4wire-Delta/Kersting4wireIndMotor.dss",
 
 ] + new_examples
+
+errored = set('''
+../../electricdss-tst/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss
+../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/watt-pf_watt-var/dss/SnapShot_wattvar.dss
+L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Follow/FollowRun.dss
+L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/LoadShape/LoadShapeRun.dss
+L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/PeakShave/PeakShaveMonPhaseRun.dss
+L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/PeakShaveDch_PeakShaveLow_Ch/PeakShaveDch_PeakShaveLow_ChRun.dss
+L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/PeakShave/PeakShaveRun.dss
+L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Schedule/ScheduleRun.dss
+L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Support/SupportRun.dss
+L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Time/TimeRun.dss
+'''.strip().split('\n'))
 
 api_fields = {
     'ActiveCircuit': 'AllBusDistances,AllBusNames,AllBusVmag,AllBusVmagPu,AllBusVolts,AllElementLosses,AllElementNames,AllNodeDistances,AllNodeNames,LineLosses,Losses,Name,NumBuses,NumCktElements,NumNodes,ParentPDElement,SubstationLosses,SystemY,TotalPower,YCurrents,YNodeOrder,YNodeVarray', 

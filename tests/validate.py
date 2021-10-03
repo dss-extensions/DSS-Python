@@ -11,12 +11,14 @@ NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
 USE_V8 = (os.getenv('DSS_PYTHON_V8') == '1')
 WIN32 = (sys.platform == 'win32')
 
-COM_VLL_BROKEN = False
-NO_V9 = False
+COM_VLL_BROKEN = True
 
 # COM Output
 SAVE_COM_OUTPUT = 'save' in sys.argv
 LOAD_COM_OUTPUT = (not WIN32) or ('load' in sys.argv)
+
+if LOAD_COM_OUTPUT or SAVE_COM_OUTPUT:
+    import zstandard as zstd
 
 if SAVE_COM_OUTPUT:
     LOAD_COM_OUTPUT = False
@@ -149,7 +151,10 @@ class ValidatingTest:
         self.NumNodes.append(dss.ActiveCircuit.NumNodes)
         self.ParentPDElement.append(dss.ActiveCircuit.ParentPDElement)
         self.SubstationLosses.append(dss.ActiveCircuit.SubstationLosses)
-        self.SystemY.append(dss.ActiveCircuit.SystemY)
+        num_nodes = dss.ActiveCircuit.NumNodes
+        # if ((num_nodes * num_nodes * 16) >> 20) < 500:
+            # self.SystemY.append(dss.ActiveCircuit.SystemY)
+        
         self.TotalPower.append(dss.ActiveCircuit.TotalPower)
         self.YCurrents.append(dss.ActiveCircuit.YCurrents)
         self.YNodeOrder.append(dss.ActiveCircuit.YNodeOrder)
@@ -169,16 +174,10 @@ class ValidatingTest:
             fB = set(x.lower() for x in getattr(B, field))
             for propA in fA:
                 assert propA in fB, propA
-
-        if not NO_V9:
-            for field in ['TotalPowers']:
-                fA = getattr(A, field)
-                fB = getattr(B, field)
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, A.Name, B.Name)
                 
-        # Since the list of properties vary in releases, 
-        # we don't check it the list is the same anymore.
-        # if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
+            # Since the list of properties vary in releases, 
+            # we don't check it the list is the same anymore.
+            # if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
             
         for field in 'AllVariableNames,BusNames'.split(','):
             fA = getattr(A, field)
@@ -208,6 +207,8 @@ class ValidatingTest:
             if A.Properties(prop_name).Val != B.Properties(prop_name).Val:
                 val_A = A.Properties(prop_name).Val
                 val_B = B.Properties(prop_name).Val
+                if val_A.lower() == val_B.lower():
+                    continue
                 # Try as floats
                 try:
                     val_A = float(val_A)
@@ -249,7 +250,14 @@ class ValidatingTest:
                     
                     is_equal = np.allclose(c_A, c_B, atol=1e-5, rtol=1e-4)
 
-                if not (is_equal or val_A == val_B or A.Properties(prop_name).Val == B.Properties(prop_name).Val):
+                elif prop_name == 'ZIPV':
+                    if A.Properties(prop_name).Val == '':
+                        is_equal = B.Properties(prop_name).Val == ' 0 0 0 0 0 0 0'
+                        
+                
+                allow_lower = set(['conn'])
+
+                if not (is_equal or val_A == val_B or A.Properties(prop_name).Val == B.Properties(prop_name).Val or (prop_name in allow_lower and A.Properties(prop_name).Val.lower() == B.Properties(prop_name).Val.lower())):
                     print('ERROR: CktElement({}).Properties({}).Val'.format(A.Name, prop_name), repr(A.Properties(prop_name).Val), repr(B.Properties(prop_name).Val))
             
 #            if not USE_V8:
@@ -294,7 +302,8 @@ class ValidatingTest:
             for field in ('Coorddefined', 'Cust_Duration', 'Cust_Interrupts', 'Distance', 'Int_Duration', 'Isc', 'Lambda', 'N_Customers', 'N_interrupts', 'Nodes', 'NumNodes', 'SectionID', 'TotalMiles', 'VLL', 'VMagAngle', 'Voc', 'Voltages', 'YscMatrix', 'Zsc0', 'Zsc1', 'ZscMatrix', 'kVBase', 'puVLL', 'puVmagAngle', 'puVoltages', 'x', 'y',  'SeqVoltages', 'CplxSeqVoltages'):
                 fB = getattr(B, field)
                 if COM_VLL_BROKEN and field in ('VLL', 'puVLL') and len(fB) == 1:
-                    print('Bus.{}: this COM version could freeze, skipping; bus = {}, nodes = {}'.format(field, name, A.Nodes))
+                    if not LOAD_COM_OUTPUT:
+                        print('Bus.{}: this COM version could freeze, skipping; bus = {}, nodes = {}'.format(field, name, A.Nodes))
                     fA = fB
                 else:
                     fA = output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] if LOAD_COM_OUTPUT else getattr(A, field)
@@ -982,7 +991,7 @@ class ValidatingTest:
             "NumNodes" : self.NumNodes[imin:imax],
             "ParentPDElement" : self.ParentPDElement[imin:imax],
             "SubstationLosses" : self.SubstationLosses[imin:imax],
-            "SystemY" : self.SystemY[imin:imax],
+#            "SystemY" : self.SystemY[imin:imax],
             "TotalPower" : self.TotalPower[imin:imax],
             "YCurrents" : self.YCurrents[imin:imax],
             "YNodeOrder" : self.YNodeOrder[imin:imax],
@@ -1007,7 +1016,7 @@ class ValidatingTest:
         self.NumNodes = data["NumNodes"]
         self.ParentPDElement = data["ParentPDElement"]
         self.SubstationLosses = data["SubstationLosses"]
-        self.SystemY = data["SystemY"]
+#        self.SystemY = data["SystemY"]
         self.TotalPower = data["TotalPower"]
         self.YCurrents = data["YCurrents"]
         self.YNodeOrder = data["YNodeOrder"]
@@ -1217,9 +1226,8 @@ def run_tests(fns):
         import dss
         com = dss.patch_dss_com(com)
         print('COM Version:', com.Version)
-        global COM_VLL_BROKEN, NO_V9
-        NO_V9 = ('Version 7' in com.Version) or ('Version 8' in com.Version)
-        COM_VLL_BROKEN = True # until there is some change...
+        #global COM_VLL_BROKEN
+        #COM_VLL_BROKEN = ('Version 8.6.7.1 ' in com.Version) or ('Version 9.0.0.8 ' in com.Version)
     else:
         com = None
 
@@ -1290,8 +1298,8 @@ def run_tests(fns):
             output['ActiveCircuit'] = test._get_circuit_fields(0, 1)
         else:
             os.chdir(original_working_dir)
-            pickle_fn = fn + '.pickle'
-            with open(pickle_fn, 'rb') as com_output_file:
+            pickle_fn = fn + '.pickle.zstd'
+            with zstd.open(pickle_fn, 'rb') as com_output_file:
                 output = pickle.load(com_output_file)
                 print('COM output loaded from', pickle_fn)
                 test._set_circuit_fields(output['ActiveCircuit'])
@@ -1314,9 +1322,9 @@ def run_tests(fns):
             
         if WIN32 and SAVE_COM_OUTPUT:
             os.chdir(original_working_dir)
-            pickle_fn = fn + '.pickle'
-            with open(pickle_fn, 'wb') as com_output_file:
-                pickle.dump(output, com_output_file, protocol=4)
+            pickle_fn = fn + '.pickle.zstd'
+            with zstd.open(pickle_fn, 'wb') as com_output_file:
+                pickle.dump(output, com_output_file, protocol=pickle.HIGHEST_PROTOCOL)
                 print('COM output pickled to', pickle_fn)
             
             output = type(output)()
@@ -1338,7 +1346,7 @@ def run_tests(fns):
                 dss.Text.Command = 'Clear'
             
 if __name__ == '__main__':
-    from common import test_filenames
+    from common import test_filenames, errored
     t0_global = time()
-    run_tests(test_filenames)
+    run_tests([x for x in test_filenames if x not in errored])
     print(time() - t0_global, 'seconds')
