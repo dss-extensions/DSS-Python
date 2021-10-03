@@ -9,6 +9,7 @@ from dss import DSSException
 original_working_dir = os.getcwd()
 NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
 USE_V8 = (os.getenv('DSS_PYTHON_V8') == '1')
+NO_V9 = False
 WIN32 = (sys.platform == 'win32')
 
 COM_VLL_BROKEN = True
@@ -1348,5 +1349,9 @@ def run_tests(fns):
 if __name__ == '__main__':
     from common import test_filenames, errored
     t0_global = time()
-    run_tests([x for x in test_filenames if x not in errored])
+    if SAVE_COM_OUTPUT:
+        # Always save all results, even the broken ones
+        run_tests(test_filenames)
+    else:
+        run_tests([x for x in test_filenames if x not in errored])
     print(time() - t0_global, 'seconds')
