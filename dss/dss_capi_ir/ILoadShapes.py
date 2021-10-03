@@ -122,10 +122,11 @@ class ILoadShapes(Iterable):
 
     @property
     def sInterval(self):
-        return self.CheckForError(self._lib.LoadShapes_Get_sInterval())
+        return self.CheckForError(self._lib.LoadShapes_Get_SInterval())
 
     @sInterval.setter
     def sInterval(self, Value):
-        self.CheckForError(self._lib.LoadShapes_Set_Sinterval(Value))
+        self.CheckForError(self._lib.LoadShapes_Set_SInterval(Value))
 
     Sinterval = sInterval
+    SInterval = sInterval
