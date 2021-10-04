@@ -827,20 +827,23 @@ class ValidatingTest:
             monitor_name = B.Name
             
             for field in 'dblFreq,dblHour'.split(','): # Skipped ByteStream since it's indirectly compared through Channel()
-                fA = output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
+                fA = output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] = fA
+                if SAVE_COM_OUTPUT: output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] = fA
                 fA = np.array(fA, dtype=fB.dtype)
                 if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
             #TODO: FileVersion (broken in COM)
             for field in 'Element,Header,FileName,Mode,Name,NumChannels,RecordSize,SampleCount,Terminal'.split(','):
                 if field == 'FileName': continue # the path will be different on purpose
-                fA = output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
+                fA = output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_COM_OUTPUT else getattr(A, field)
                 fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Monitors[{}].{}'.format(nA, field)] = fA
-                
-                #if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                if not SAVE_COM_OUTPUT: 
+                    if field == 'Header':
+                        fAmod = [x.strip() for x in fA]
+                        assert fAmod == fB, (field, fA, fB)
+                    else:
+                        assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             for channel in range(B.NumChannels):
                 if header[channel].strip() in ('SolveSnap_uSecs', 'TimeStep_uSecs'): continue # these can't be equal
