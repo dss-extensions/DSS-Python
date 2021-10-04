@@ -844,6 +844,8 @@ class ValidatingTest:
                         assert fAmod == fB, (field, fA, fB)
                     else:
                         assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                else:
+                    output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] = fA
 
             for channel in range(B.NumChannels):
                 if header[channel].strip() in ('SolveSnap_uSecs', 'TimeStep_uSecs'): continue # these can't be equal
