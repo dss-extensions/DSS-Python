@@ -843,7 +843,7 @@ class ValidatingTest:
                 #if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             for channel in range(B.NumChannels):
-                if header[channel] in (' SolveSnap_uSecs', ' TimeStep_uSecs'): continue # these can't be equal
+                if header[channel].strip() in ('SolveSnap_uSecs', 'TimeStep_uSecs'): continue # these can't be equal
                 field = 'Channel({})'.format(channel + 1)
                 output_key = 'ActiveCircuit.Monitors[{}].{}'.format(monitor_name, field)
                 fA = output[output_key] if LOAD_COM_OUTPUT else A.Channel(channel + 1)
