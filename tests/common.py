@@ -185,16 +185,7 @@ test_filenames = [
 ] + new_examples
 
 errored = set('''
-../../electricdss-tst/Distrib/EPRITestCircuits/ckt24/Master_ckt24.dss
-../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/watt-pf_watt-var/dss/SnapShot_wattvar.dss
-L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Follow/FollowRun.dss
-L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/LoadShape/LoadShapeRun.dss
-L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/PeakShave/PeakShaveMonPhaseRun.dss
-L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/PeakShaveDch_PeakShaveLow_Ch/PeakShaveDch_PeakShaveLow_ChRun.dss
-L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/PeakShave/PeakShaveRun.dss
-L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Schedule/ScheduleRun.dss
-L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Support/SupportRun.dss
-L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Time/TimeRun.dss
+../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/NewFeatures/ConstantPF/SnapShot_PFP_pctPmpplimitation-PV2.dss
 '''.strip().split('\n'))
 
 api_fields = {

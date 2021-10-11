@@ -1,28 +1,30 @@
-import os, sys
+import os, sys, platform, traceback, pickle
 from time import time
 import numpy as np
 from scipy.sparse import csc_matrix
 from dss import enums
-import pickle
 from dss import DSSException
+
 
 original_working_dir = os.getcwd()
 NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
-USE_V8 = (os.getenv('DSS_PYTHON_V8') == '1')
 NO_V9 = False
 WIN32 = (sys.platform == 'win32')
 
 COM_VLL_BROKEN = True
 
-# COM Output
-SAVE_COM_OUTPUT = 'save' in sys.argv
-LOAD_COM_OUTPUT = (not WIN32) or ('load' in sys.argv)
+SAVE_OUTPUT = 'save' in sys.argv
+LOAD_OUTPUT = (not WIN32) or ('load' in sys.argv) 
+SAVE_DSSX_OUTPUT = SAVE_OUTPUT and ('dss-extensions' in sys.argv)
+LOAD_PLATFORM = None
+if LOAD_OUTPUT:
+    LOAD_PLATFORM = sys.argv[-1] 
 
-if LOAD_COM_OUTPUT or SAVE_COM_OUTPUT:
+if LOAD_OUTPUT or SAVE_OUTPUT:
     import zstandard as zstd
 
-if SAVE_COM_OUTPUT:
-    LOAD_COM_OUTPUT = False
+if SAVE_OUTPUT:
+    LOAD_OUTPUT = False
     output = {}
 else:
     class FakeDict:
@@ -54,10 +56,16 @@ def parse_dss_matrix(m):
     
 
 class ValidatingTest:
-    def __init__(self, fn, com, capi, line_by_line):
+    def __init__(self, fn, dss_variants, line_by_line):
         self.fn = fn
-        self.com = com
-        self.capi = capi
+        if len(dss_variants) == 2:
+            self.dss_a, self.dss_b = dss_variants
+        else:
+            if SAVE_OUTPUT:
+                self.dss_a, self.dss_b = dss_variants[0], None
+            else:
+                self.dss_a, self.dss_b = None, dss_variants[0]
+
         self.line_by_line = line_by_line
 
         self.AllBusDistances = []
@@ -163,12 +171,12 @@ class ValidatingTest:
 
 
     def validate_CktElement(self):
-        if LOAD_COM_OUTPUT: 
+        if LOAD_OUTPUT or SAVE_OUTPUT: 
             #TODO: not implemented
             return
         
-        A = self.com.ActiveCircuit.ActiveElement
-        B = self.capi.ActiveCircuit.ActiveElement
+        A = self.dss_a.ActiveCircuit.ActiveElement
+        B = self.dss_b.ActiveCircuit.ActiveElement
 
         for field in ['AllPropertyNames']:
             fA = set(x.lower() for x in getattr(A, field))
@@ -178,13 +186,14 @@ class ValidatingTest:
                 
             # Since the list of properties vary in releases, 
             # we don't check it the list is the same anymore.
-            # if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
+            # if not SAVE_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
             
         for field in 'AllVariableNames,BusNames'.split(','):
             fA = getattr(A, field)
-            fB = getattr(B, field)
-            if fA == ('',) and fB == [None]: continue # comtypes and win32com results are a bit different here
-            if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
+            if not SAVE_OUTPUT: 
+                fB = getattr(B, field)
+                if fA == ('',) and fB == [None]: continue # comtypes and win32com results are a bit different here
+                assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
             
           
         # Check if setting bus names works
@@ -195,9 +204,10 @@ class ValidatingTest:
         # Check if they match again
         field = 'BusNames'
         fA = getattr(A, field)
-        fB = getattr(B, field)
-        if not (fA == ('',) and fB == [None]): # comtypes and win32com results are a bit different here
-            if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), field
+        if not SAVE_OUTPUT: 
+            fB = getattr(B, field)
+            if not (fA == ('',) and fB == [None]): # comtypes and win32com results are a bit different here
+                assert all(x[0] == x[1] for x in zip(fA, fB)), field
           
           
         if NO_PROPERTIES: return
@@ -261,69 +271,78 @@ class ValidatingTest:
                 if not (is_equal or val_A == val_B or A.Properties(prop_name).Val == B.Properties(prop_name).Val or (prop_name in allow_lower and A.Properties(prop_name).Val.lower() == B.Properties(prop_name).Val.lower())):
                     print('ERROR: CktElement({}).Properties({}).Val'.format(A.Name, prop_name), repr(A.Properties(prop_name).Val), repr(B.Properties(prop_name).Val))
             
-#            if not USE_V8:
-#                if not SAVE_COM_OUTPUT: assert (A.Properties(prop_name).Description == B.Properties(prop_name).Description), ('Properties({}).Description'.format(prop_name), A.Properties(prop_name).Description, B.Properties(prop_name).Description)
-                
-            if not SAVE_COM_OUTPUT: assert (A.Properties(prop_name).Name.lower() == B.Properties(prop_name).Name.lower()), ('Properties({}).name'.format(prop_name), A.Properties(prop_name).Name, B.Properties(prop_name).Name)
+            if not SAVE_OUTPUT: assert (A.Properties(prop_name).Name.lower() == B.Properties(prop_name).Name.lower()), ('Properties({}).name'.format(prop_name), A.Properties(prop_name).Name, B.Properties(prop_name).Name)
 
-            if not SAVE_COM_OUTPUT: assert (B.Properties(prop_name).Val == B.Properties[prop_name].Val)
-            if not SAVE_COM_OUTPUT: assert (B.Properties(prop_name).Description == B.Properties[prop_name].Description)
-            if not SAVE_COM_OUTPUT: assert (B.Properties(prop_name).Name == B.Properties[prop_name].Name)
+            if not SAVE_OUTPUT: assert (B.Properties(prop_name).Val == B.Properties[prop_name].Val)
+            if not SAVE_OUTPUT: assert (B.Properties(prop_name).Description == B.Properties[prop_name].Description)
+            if not SAVE_OUTPUT: assert (B.Properties(prop_name).Name == B.Properties[prop_name].Name)
 
 
     def validate_Buses(self):
-        if not LOAD_COM_OUTPUT:
+        if not LOAD_OUTPUT:
             for idx in range(len(self.AllBusNames)):
-                A = self.com.ActiveCircuit.Buses(idx)
-                B = self.capi.ActiveCircuit.Buses(idx)
-                if not SAVE_COM_OUTPUT: assert A.Name == B.Name
+                A = self.dss_a.ActiveCircuit.Buses(idx)
+                if not SAVE_OUTPUT: 
+                    B = self.dss_b.ActiveCircuit.Buses(idx)
+                    assert A.Name == B.Name
                 
             for name in self.AllBusNames[-1]:
-                A = self.com.ActiveCircuit.Buses(name)
-                B = self.capi.ActiveCircuit.Buses(name)
-                if not SAVE_COM_OUTPUT: assert A.Name == B.Name
+                A = self.dss_a.ActiveCircuit.Buses(name)
+                if not SAVE_OUTPUT: 
+                    B = self.dss_b.ActiveCircuit.Buses(name)
+                    assert A.Name == B.Name
             
-            A = self.com.ActiveCircuit.ActiveBus
+            A = self.dss_a.ActiveCircuit.ActiveBus
         
-        B = self.capi.ActiveCircuit.ActiveBus
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.ActiveBus
+
         for name in self.AllBusNames[-1]:
-            self.capi.ActiveCircuit.SetActiveBus(name)
-            if not LOAD_COM_OUTPUT:
-                self.com.ActiveCircuit.SetActiveBus(name)
-                if not SAVE_COM_OUTPUT: assert A.Name == B.Name
+            if not LOAD_OUTPUT:
+                self.dss_a.ActiveCircuit.SetActiveBus(name)
+
+            if not SAVE_OUTPUT:
+                self.dss_b.ActiveCircuit.SetActiveBus(name)
+
+            if not LOAD_OUTPUT and not SAVE_OUTPUT: 
+                assert A.Name == B.Name
                 
-            if self.capi.ActiveCircuit.NumNodes < 1000 and not NO_V9:
+            if (self.dss_b if self.dss_b is not None else self.dss_a).ActiveCircuit.NumNodes < 1000 and not NO_V9:
                 for field in ['LoadList', 'LineList']:#, 'AllPCEatBus', 'AllPDEatBus']:
-                    fB = getattr(B, field)
-                    fA = output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                    if SAVE_COM_OUTPUT: output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] = fA
-                    if not SAVE_COM_OUTPUT: assert list(fA) == list(fB), (fA, fB)
+                    fA = output[f'ActiveCircuit.ActiveBus[{name}].{field}'] if LOAD_OUTPUT else getattr(A, field)
+                    if SAVE_OUTPUT: 
+                        output[f'ActiveCircuit.ActiveBus[{name}].{field}'] = fA
+                    else:
+                        fB = getattr(B, field)
+                        assert list(fA) == list(fB), (fA, fB)
                     
 
             for field in ('Coorddefined', 'Cust_Duration', 'Cust_Interrupts', 'Distance', 'Int_Duration', 'Isc', 'Lambda', 'N_Customers', 'N_interrupts', 'Nodes', 'NumNodes', 'SectionID', 'TotalMiles', 'VLL', 'VMagAngle', 'Voc', 'Voltages', 'YscMatrix', 'Zsc0', 'Zsc1', 'ZscMatrix', 'kVBase', 'puVLL', 'puVmagAngle', 'puVoltages', 'x', 'y',  'SeqVoltages', 'CplxSeqVoltages'):
-                fB = getattr(B, field)
-                if COM_VLL_BROKEN and field in ('VLL', 'puVLL') and len(fB) == 1:
-                    if not LOAD_COM_OUTPUT:
-                        print('Bus.{}: this COM version could freeze, skipping; bus = {}, nodes = {}'.format(field, name, A.Nodes))
-                    fA = fB
-                else:
-                    fA = output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                    
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.ActiveBus[{}].{}'.format(name, field)] = fA
-                
+                if COM_VLL_BROKEN and field in ('VLL', 'puVLL'):
+                    continue
+
+                fA = output[f'ActiveCircuit.ActiveBus[{name}].{field}'] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT:
+                    output[f'ActiveCircuit.ActiveBus[{name}].{field}'] = fA
+
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+
                 if type(fA) == tuple and len(fA) == 0:
-                    if not SAVE_COM_OUTPUT: assert fB is None or len(fB) == 0, ('ActiveBus.{}'.format(field), fA, fB)
+                    if not SAVE_OUTPUT:
+                        assert fB is None or len(fB) == 0, ('ActiveBus.{}'.format(field), fA, fB)
                     continue
 
                 if field in ('SeqVoltages', 'CplxSeqVoltages', 'VLL'): continue # skip
 
                 if field == 'CplxSeqVoltages':
                     vA = np.array(A.Voltages).view(dtype=complex)
-                    vB = B.Voltages.view(dtype=complex)
 
                     if len(vA) < 3: continue
 
-                    if not SAVE_COM_OUTPUT: assert np.allclose(vA, vB, atol=self.atol, rtol=self.rtol), (vA, vB)
+                    if not SAVE_OUTPUT: 
+                        vB = B.Voltages.view(dtype=complex)                        
+                        assert np.allclose(vA, vB, atol=self.atol, rtol=self.rtol), (vA, vB)
 
                     # a = np.exp(1j*2*np.pi/3)
                     # T012 = float(1)/3*np.array([[1,1,1], [1,a,a**2] ,[1,a**2,a]])
@@ -334,73 +353,89 @@ class ValidatingTest:
                         # B.CplxSeqVoltages.view(dtype=complex)
                     # ):
                         # assert np.isclose(pyB, pyA, atol=self.atol, rtol=1e-5), ('pyB, pyA =', pyB, pyA)
-                    for pasA, pasB in zip(
-                        np.array(A.CplxSeqVoltages).view(dtype=complex),
-                        np.array(B.CplxSeqVoltages).view(dtype=complex)
-                    ):
-                        if not SAVE_COM_OUTPUT: assert np.isclose(pasA, pasB, atol=self.atol, rtol=self.rtol), ('ActiveBus.' + field, name, pasA, pasB)
+                        for pasA, pasB in zip(
+                            np.array(A.CplxSeqVoltages).view(dtype=complex),
+                            np.array(B.CplxSeqVoltages).view(dtype=complex)
+                        ):
+                            assert np.isclose(pasA, pasB, atol=self.atol, rtol=self.rtol), ('ActiveBus.' + field, name, pasA, pasB)
 
                     continue
 
                 if field in ('VMagAngle', 'puVmagAngle'):
                     fA = np.asarray(fA)
-                    fB = np.asarray(fB)
-                    
                     aa = np.deg2rad(fA[1::2])
                     fA = fA[::2] * (np.cos(aa) + 1j * np.sin(aa))
-                    ab = np.deg2rad(fB[1::2])
-                    fB = fB[::2] * (np.cos(ab) + 1j * np.sin(ab))
+
+                    if not SAVE_OUTPUT:
+                        fB = np.asarray(fB)                    
+                        ab = np.deg2rad(fB[1::2])
+                        fB = fB[::2] * (np.cos(ab) + 1j * np.sin(ab))
+               
+                elif field in ('Voltages', 'puVLL', 'puVoltages') and (len(fA) % 2 == 0):
+                    fA = np.asarray(fA).view(dtype=complex)
+                    if not SAVE_OUTPUT: 
+                        fB = np.asarray(fB).view(dtype=complex)
                 
 
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('ActiveBus.' + field, name, fA, fB)
+                if not SAVE_OUTPUT: 
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('ActiveBus.' + field, name, fA, fB)
 
 
     def validate_Capacitors(self):
-        B = self.capi.ActiveCircuit.Capacitors
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Capacitors
         
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Capacitors
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Capacitors
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                nB = B.First
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
 
         count = 0
         while nA != 0:
             count += 1
             for field in ('States',):
-                fA = output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+                fA = output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
             for field in ('AvailableSteps', 'NumSteps', 'kvar', 'kV', 'Name', 'IsDelta'):
-                fA = output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert fA == fB, field
+                fA = output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert fA == fB, field
 
             self.validate_CktElement()
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        # if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        # if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_LineCodes(self):
-        B = self.capi.ActiveCircuit.LineCodes
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.LineCodes
 
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.LineCodes
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.LineCodes
             
             has_AllNames = True
             try:
@@ -409,55 +444,64 @@ class ValidatingTest:
                 has_AllNames = False
                
             if has_AllNames:
-                if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                if not SAVE_OUTPUT: 
+                    assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
 
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count, (A.Count, B.Count)
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert A.Count == B.Count, (A.Count, B.Count)
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
             
             
         count = 0
         while nA != 0:
             count += 1
             for field in 'Cmatrix,Rmatrix,Xmatrix'.split(','):
-                fA = output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, A.Name, B.Name)
+                fA = output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, A.Name, B.Name)
 
             for field in 'C0,C1,EmergAmps,IsZ1Z0,Name,NormAmps,Phases,R0,R1,Units,X0,X1'.split(','):
-                fA = output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert fA == fB or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert fA == fB or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT:
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
         
     def validate_Lines(self):
-        B = self.capi.ActiveCircuit.Lines
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Lines
         
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Lines
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Lines
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
             
         count = 0
         while nA != 0:
@@ -466,379 +510,437 @@ class ValidatingTest:
             #        - temporarily removed R1/X1/C1 since COM is broken    
             #for field in 'Bus1,Bus2,C0,C1,EmergAmps,Geometry,Length,LineCode,Name,NormAmps,NumCust,Phases,R0,R1,Rg,Rho,Spacing,TotalCust,Units,X0,X1,Xg'.split(','):
             for field in 'Bus1,Bus2,C0,EmergAmps,Geometry,Length,LineCode,Name,NormAmps,NumCust,Phases,R0,Rg,Rho,Spacing,TotalCust,Units,X0,Xg'.split(','):
-                fA = output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             for field in 'Cmatrix,Rmatrix,Xmatrix,Yprim'.split(','):
-                fA = output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, max(abs(fA - fB)), A.Name, B.Name)
+                fA = output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, max(abs(fA - fB)), A.Name, B.Name)
 
             self.validate_CktElement()
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT:
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_Loads(self):
-        B = self.capi.ActiveCircuit.Loads
+        A = B = None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Loads
         
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Loads
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Loads
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
             
         count = 0
         while nA != 0:
             count += 1
             for field in 'AllocationFactor,CVRcurve,CVRvars,CVRwatts,Cfactor,Class,Growth,IsDelta,Model,Name,NumCust,PF,PctMean,PctStdDev,RelWeight,Rneut,Spectrum,Status,Vmaxpu,Vminemerg,Vminnorm,Vminpu,Xneut,Yearly,daily,duty,idx,kV,kW,kva,kvar,kwh,kwhdays,pctSeriesRL,xfkVA'.split(','): #TODO: ZIPV
-                fA = output['ActiveCircuit.Loads[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Loads[{}].{}'.format(nA, field)] = fA
-                if type(fB) == float:
-                    if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
-                else:
-                    if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.Loads[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Loads[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    if type(fB) == float:
+                        assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+                    else:
+                        assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             self.validate_CktElement()
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_Loadshapes(self):
-        B = self.capi.ActiveCircuit.LoadShapes
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.LoadShapes
         
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.LoadShapes
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.LoadShapes
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                nB = B.First
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
             
         count = 0
         while nA != 0:
             count += 1
-            for field in 'Pmult,Qmult,TimeArray'.split(','):
-                fA = output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
-
             for field in 'HrInterval,MinInterval,Name,Npts,Pbase,Qbase,UseActual,Sinterval'.split(','): #TODO: ZIPV
-                fA = output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            for field in 'Pmult,Qmult,TimeArray'.split(','):
+                fA = output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, list(fB), B.Name)
+
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_Transformers(self):
-        B = self.capi.ActiveCircuit.Transformers
-        B_element = self.capi.ActiveCircuit.CktElements
-        
-        # Validate the LossesByType extension
-        if B.Count:
-            AllLossesByType = B.AllLossesByType.view(dtype=complex).reshape((B.Count, 3))
-            for tr, losses in zip(B, AllLossesByType):
-                assert np.all(losses == B.LossesByType.view(dtype=complex))
-                assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
-                assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
-                assert B_element.Losses.view(dtype=complex) == losses[0]
+        A = B = None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Transformers
+            B_element = self.dss_b.ActiveCircuit.CktElements
+            
+            # Validate the LossesByType extension
+            if B.Count:
+                AllLossesByType = B.AllLossesByType.view(dtype=complex).reshape((B.Count, 3))
+                for tr, losses in zip(B, AllLossesByType):
+                    assert np.all(losses == B.LossesByType.view(dtype=complex))
+                    assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
+                    assert np.allclose(losses[0], losses[1] + losses[2], atol=self.atol, rtol=self.rtol) 
+                    assert B_element.Losses.view(dtype=complex) == losses[0]
 
 
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Transformers
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Transformers
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
         
         count = 0
         while nA != 0:
             count += 1
             for field in 'IsDelta,MaxTap,MinTap,Name,NumTaps,NumWindings,R,Rneut,Tap,Wdg,XfmrCode,Xhl,Xht,Xlt,Xneut,kV,kva'.split(','):
-                if field in ('Xhl', 'Xht', 'Xlt'):
-                    continue #TODO: fixed v9.x still not compiled in SVN?
-                    
-                fA = output['ActiveCircuit.Transformers[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Transformers[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.Transformers[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: 
+                    output['ActiveCircuit.Transformers[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             self.validate_CktElement()
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_Generators(self):
-        B = self.capi.ActiveCircuit.Generators
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Generators
 
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Generators
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Generators
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
         
         count = 0
         while nA != 0:
             count += 1
 
             for field in 'RegisterNames'.split(','):
-                fA = output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
-                if fA == ('',) and fB == [None]: continue # Comtypes and win32com results are a bit different here
-                if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), field
+                fA = output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    if fA == ('',) and fB == [None]: continue # Comtypes and win32com results are a bit different here
+                    fB = getattr(B, field)
+                    assert all(x[0] == x[1] for x in zip(fA, fB)), field
 
             for field in 'RegisterValues,kvar'.split(','):
-                fA = output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+                fA = output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
 
             for field in 'ForcedON,Model,Name,PF,Phases,Vmaxpu,Vminpu,idx,kV,kVArated,kW'.split(','):
-                fA = output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
 
     def validate_Isources(self):
-        B = self.capi.ActiveCircuit.Isources
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Isources
 
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.ISources
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.ISources
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
         
         count = 0
         while nA != 0:
             count += 1
             for field in 'Amps,AngleDeg,Frequency,Name'.split(','):
-                fA = output['ActiveCircuit.ISources[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.ISources[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.ISources[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.ISources[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
-
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
         
     def validate_Vsources(self):
-        B = self.capi.ActiveCircuit.Vsources
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Vsources
         
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Vsources
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Vsources
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
         
         count = 0
         while nA != 0:
             count += 1
             for field in 'AngleDeg,BasekV,Frequency,Name,Phases,pu'.split(','):
-                fA = output['ActiveCircuit.Vsources[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Vsources[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.Vsources[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Vsources[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_Reclosers(self):
-        B = self.capi.ActiveCircuit.Reclosers
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Reclosers
 
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Reclosers
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Reclosers
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
         
         count = 0
         while nA != 0:
             count += 1
             for field in 'RecloseIntervals'.split(','):
-                fA = output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] = fA
-                fA = np.array(fA, dtype=fB.dtype)
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+                fA = output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    fA = np.array(fA, dtype=fB.dtype)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
             for field in 'GroundInst,GroundTrip,MonitoredObj,MonitoredTerm,Name,NumFast,PhaseInst,PhaseTrip,Shots,SwitchedObj,SwitchedTerm,idx'.split(','):
-                fA = output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
-                
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+                fA = output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_XYCurves(self):
-        B = self.capi.ActiveCircuit.XYCurves
-        
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.XYCurves
-#            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.XYCurves
+
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.XYCurves
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+#            if not SAVE_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
         
         count = 0
         while nA != 0:
             count += 1
             for field in 'Xarray,Yarray'.split(','):
-                fA = output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+                fA = output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
             for field in 'Name,Npts,Xscale,Xshift,Yscale,Yshift,x,y'.split(','):
-                fA = output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_Monitors(self):
-        B = self.capi.ActiveCircuit.Monitors
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Monitors
         
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Monitors
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Monitors
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
         
         count = 0
         while nA != 0:
             count += 1
-            header = B.Header
-            monitor_name = B.Name
+            header = (B if B is not None else A).Header
+            monitor_name = (B if B is not None else A).Name
             
             for field in 'dblFreq,dblHour'.split(','): # Skipped ByteStream since it's indirectly compared through Channel()
-                fA = output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] = fA
-                fA = np.array(fA, dtype=fB.dtype)
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+                fA = output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    fA = np.array(fA, dtype=fB.dtype)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
             #TODO: FileVersion (broken in COM)
             for field in 'Element,Header,FileName,Mode,Name,NumChannels,RecordSize,SampleCount,Terminal'.split(','):
                 if field == 'FileName': continue # the path will be different on purpose
-                fA = output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if not SAVE_COM_OUTPUT: 
+                fA = output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_OUTPUT else getattr(A, field)
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
                     if field == 'Header':
                         fAmod = [x.strip() for x in fA]
                         assert fAmod == fB, (field, fA, fB)
@@ -847,14 +949,14 @@ class ValidatingTest:
                 else:
                     output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] = fA
 
-            for channel in range(B.NumChannels):
+            for channel in range((B if B is not None else A).NumChannels):
                 if header[channel].strip() in ('SolveSnap_uSecs', 'TimeStep_uSecs'): continue # these can't be equal
                 field = 'Channel({})'.format(channel + 1)
                 output_key = 'ActiveCircuit.Monitors[{}].{}'.format(monitor_name, field)
-                fA = output[output_key] if LOAD_COM_OUTPUT else A.Channel(channel + 1)
-                fB = B.Channel(channel + 1)
-                if SAVE_COM_OUTPUT: output[output_key] = fA
-                if not SAVE_COM_OUTPUT: 
+                fA = output[output_key] if LOAD_OUTPUT else A.Channel(channel + 1)
+                if SAVE_OUTPUT: output[output_key] = fA
+                if not SAVE_OUTPUT: 
+                    fB = B.Channel(channel + 1)
                     # assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Channel', channel + 1)
                     header_lower = header[channel].lower()
                     if any(x in header_lower for x in ['ang']): # 'q1', 'q2', 'q3'
@@ -869,30 +971,34 @@ class ValidatingTest:
                         # we use a different/better transformation matrix
                         print('Possible channel error', output_key, header[channel], np.array(fA), np.array(fB))
 
-
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
 
     def validate_Meters(self):
-        B = self.capi.ActiveCircuit.Meters
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Meters
         
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Meters
-            if not SAVE_COM_OUTPUT: assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
-            if not SAVE_COM_OUTPUT: assert A.Count == B.Count
-            if not SAVE_COM_OUTPUT: assert len(A) == len(B)
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Meters
             nA = A.First
-            nB = B.First
-            if not SAVE_COM_OUTPUT: assert nA == nB
+            if not SAVE_OUTPUT: 
+                nB = B.First
+                assert (all(x[0] == x[1] for x in zip(A.AllNames, B.AllNames)))
+                assert A.Count == B.Count
+                assert len(A) == len(B)
+                assert nA == nB
         else:
-            nA = nB = B.First
+            nA = nB = (B if B is not None else A).First
         
         count = 0
         while nA != 0:
@@ -901,81 +1007,93 @@ class ValidatingTest:
                 if field == 'ZonePCE' and NO_V9:
                     continue
                     
-                fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
-                if fA == ('',) and fB == [None]: continue # Comtypes and win32com results are a bit different here
-                fA = [x for x in fA if x]
-                fB = [x for x in fB if x]
-                assert len(fA) == len(fB), (fA, fB)
-                if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
+                fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    if fA == ('',) and fB == [None]: continue # Comtypes and win32com results are a bit different here
+                    fA = [x for x in fA if x]
+                    fB = [x for x in fB if x]
+                    assert len(fA) == len(fB), (fA, fB)
+                    assert all(x[0] == x[1] for x in zip(fA, fB)), (field, fA, fB)
 
 
             # NOTE: CalcCurrent and AllocFactors removed since it seemed to contain (maybe?) uninitialized values in certain situations
             fields = 'AvgRepairTime,Peakcurrent,RegisterValues,Totals' if self.realibity_ran else 'Peakcurrent,RegisterValues'
             for field in fields.split(','):
-                fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Meters("{}").{}'.format(A.Name, field), fA, fB)
+                fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Meters("{}").{}'.format(A.Name, field), fA, fB)
 
             fields = 'CountBranches,CountEndElements,CustInterrupts,DIFilesAreOpen,FaultRateXRepairHrs,MeteredElement,MeteredTerminal,Name,NumSectionBranches,NumSectionCustomers,NumSections,OCPDeviceType,SAIDI,SAIFI,SAIFIKW,SectSeqIdx,SectTotalCust,SeqListSize,SequenceIndex,SumBranchFltRates,TotalCustomers' if self.realibity_ran else 'MeteredElement,MeteredTerminal,Name'
             for field in fields.split(','):
-                fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_COM_OUTPUT else getattr(A, field)
-                fB = getattr(B, field)
-                if SAVE_COM_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
-                if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
+                if not SAVE_OUTPUT: 
+                    fB = getattr(B, field)
+                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
-            nB = B.Next
-            if not LOAD_COM_OUTPUT: 
+            if not SAVE_OUTPUT: 
+                nB = B.Next
+            if not LOAD_OUTPUT: 
                 nA = A.Next
-                if not SAVE_COM_OUTPUT: assert nA == nB
+                if not SAVE_OUTPUT: 
+                    assert nA == nB
             else:
                 nA = nB
 
-        if not LOAD_COM_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
+        if not LOAD_OUTPUT and count != A.Count: print("!!! WARNING: Iterated count ({}) != Count ({}) property on {}".format(count, A.Count, sys._getframe().f_code.co_name))
 
         
     def validate_Settings(self):
-        B = self.capi.ActiveCircuit.Settings
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Settings
         
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Settings
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Settings
 
         for field in 'LossRegs,UEregs,VoltageBases'.split(','):
-            fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_COM_OUTPUT else getattr(A, field)
-            fB = getattr(B, field)
-            if SAVE_COM_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
-            if not SAVE_COM_OUTPUT: assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+            fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
+            if SAVE_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
+            if not SAVE_OUTPUT: 
+                fB = getattr(B, field)
+                assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
         
         
         # AutoBusList is broken in COM, doesn't clear the GlobalResult first.
         # for field in 'AutoBusList'.split(','):
-        #     fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_COM_OUTPUT else getattr(A, field)
+        #     fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
         #     fB = getattr(B, field)
-        #     if SAVE_COM_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
-        #     if not SAVE_COM_OUTPUT: assert fA == fB, (field, (fA, fB))
+        #     if SAVE_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
+        #     if not SAVE_OUTPUT: assert fA == fB, (field, (fA, fB))
         
         for field in 'AllowDuplicates,CktModel,ControlTrace,EmergVmaxpu,EmergVminpu,LossWeight,NormVmaxpu,NormVminpu,PriceCurve,PriceSignal,Trapezoidal,UEweight,ZoneLock'.split(','):
-            fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_COM_OUTPUT else getattr(A, field)
-            fB = getattr(B, field)
-            if SAVE_COM_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
-            if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+            fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
+            if SAVE_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
+            if not SAVE_OUTPUT: 
+                fB = getattr(B, field)
+                assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
     def validate_Solution(self):
-        B = self.capi.ActiveCircuit.Solution
+        A, B = None, None
+        if not SAVE_OUTPUT:
+            B = self.dss_b.ActiveCircuit.Solution
         
-        if not LOAD_COM_OUTPUT: 
-            A = self.com.ActiveCircuit.Solution
+        if not LOAD_OUTPUT: 
+            A = self.dss_a.ActiveCircuit.Solution
 
         for field in 'AddType,Algorithm,Capkvar,ControlActionsDone,ControlIterations,ControlMode,Converged,DefaultDaily,DefaultYearly,Frequency,GenMult,GenPF,GenkW,Hour,Iterations,LDCurve,LoadModel,LoadMult,MaxControlIterations,MaxIterations,Mode,ModeID,MostIterationsDone,Number,Random,Seconds,StepSize,Tolerance,Totaliterations,Year,dblHour,pctGrowth'.split(','): #TODO: EventLog, IntervalHrs, MinIterations, Process_Time, Total_Time, Time_of_Step, SystemYChanged
-            # if LOAD_COM_OUTPUT and field == 'SystemYChanged':
+            # if LOAD_OUTPUT and field == 'SystemYChanged':
                 # continue
         
-            fA = output['ActiveCircuit.Solution.{}'.format(field)] if LOAD_COM_OUTPUT else getattr(A, field)
-            fB = getattr(B, field)
-            if SAVE_COM_OUTPUT: output['ActiveCircuit.Solution.{}'.format(field)] = fA
-            if not SAVE_COM_OUTPUT: assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+            fA = output['ActiveCircuit.Solution.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
+            if SAVE_OUTPUT: output['ActiveCircuit.Solution.{}'.format(field)] = fA
+            if not SAVE_OUTPUT: 
+                fB = getattr(B, field)
+                assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             # if field == 'SystemYChanged':
                 # print('SystemYChanged', fA, fB)
@@ -1036,45 +1154,54 @@ class ValidatingTest:
         all_fields = self._get_circuit_fields()
         
         # Test Circuit_SetCktElementName with line names
-        if not LOAD_COM_OUTPUT:
+        if not LOAD_OUTPUT:
             # Get all line names
             lines_names = []
-            LA = self.com.ActiveCircuit.Lines
+            LA = self.dss_a.ActiveCircuit.Lines
             nA = LA.First
             while nA != 0:
                 lines_names.append(LA.Name)
                 nA = LA.Next
         
             for name in lines_names:
-                B = self.capi.ActiveCircuit.CktElements('Line.' + name)
-                A = self.com.ActiveCircuit.CktElements('Line.' + name)
-                if not SAVE_COM_OUTPUT: assert A.Name == B.Name
+                A = self.dss_a.ActiveCircuit.CktElements('Line.' + name)
+                if not SAVE_OUTPUT: 
+                    B = self.dss_b.ActiveCircuit.CktElements('Line.' + name)
+                    assert A.Name == B.Name
             
             # Test Circuit_SetCktElementIndex
-            num_cktelements = len(self.com.ActiveCircuit.AllElementNames)
+            num_cktelements = len(self.dss_a.ActiveCircuit.AllElementNames)
             for idx in range(num_cktelements):
-                B = self.capi.ActiveCircuit.CktElements(idx)
-                A = self.com.ActiveCircuit.CktElements(idx)
-                if not SAVE_COM_OUTPUT: assert A.Name == B.Name
+                A = self.dss_a.ActiveCircuit.CktElements(idx)
+                if not SAVE_OUTPUT:
+                    B = self.dss_b.ActiveCircuit.CktElements(idx)
+                    assert A.Name == B.Name
 
             # Try to use an invalid index
             try:
-                B = self.capi.ActiveCircuit.CktElements(999999)
+                if not SAVE_OUTPUT:
+                    B = self.dss_b.ActiveCircuit.CktElements(999999)
             except DSSException:
                 pass
                 
-            A = self.com.ActiveCircuit.CktElements(999999)
-            if not SAVE_COM_OUTPUT: assert A.Name == B.Name
+            if not SAVE_OUTPUT: 
+                A = self.dss_a.ActiveCircuit.CktElements(999999)
+                assert A.Name == B.Name
 
             # Try to use an invalid name
             try:
-                B = self.capi.ActiveCircuit.CktElements('NONEXISTENT_123456789')
+                if not SAVE_OUTPUT: 
+                    B = self.dss_b.ActiveCircuit.CktElements('NONEXISTENT_123456789')
             except DSSException:
                 pass
 
-            A = self.com.ActiveCircuit.CktElements('NONEXISTENT_123456789')
-            if not SAVE_COM_OUTPUT: assert A.Name == B.Name
-        
+            if not SAVE_OUTPUT:
+                A = self.dss_a.ActiveCircuit.CktElements('NONEXISTENT_123456789')
+                assert A.Name == B.Name
+
+        if SAVE_OUTPUT:
+            return
+
         element_names = all_fields['AllElementNames'][0]
         for k, v in all_fields.items():
             if k == 'AllElementLosses':
@@ -1093,28 +1220,31 @@ class ValidatingTest:
             elif type(v[1]) == np.ndarray:
                 print(k, max(abs(v[1] - v[0])))
                 if k == 'TotalPower':
-                    if not SAVE_COM_OUTPUT: 
-                        cv = [np.asarray(v[0]).view(dtype=complex), np.asarray(v[1]).view(dtype=complex)]
-                        assert np.allclose(cv[0], cv[1], atol=self.atol, rtol=self.rtol), (k, cv[0], cv[1])
-                        # else:
-                            # assert np.allclose(v[0]/v[1], 1, atol=self.atol, rtol=100), (k, type(v[1]), v[0], v[1])
+                    cv = [np.asarray(v[0]).view(dtype=complex), np.asarray(v[1]).view(dtype=complex)]
+                    assert np.allclose(cv[0], cv[1], atol=self.atol, rtol=self.rtol), (k, cv[0], cv[1])
+                    # else:
+                        # assert np.allclose(v[0]/v[1], 1, atol=self.atol, rtol=100), (k, type(v[1]), v[0], v[1])
                 else:
-                    if not SAVE_COM_OUTPUT: assert np.allclose(*v, atol=self.atol, rtol=self.rtol), (k, type(v[1]))#, v[0], v[1])
+                    assert np.allclose(*v, atol=self.atol, rtol=self.rtol), (k, type(v[1]))#, v[0], v[1])
             elif type(v[1]) == list:
-                if not SAVE_COM_OUTPUT: assert all(x[0] == x[1] for x in zip(*v)), (k, type(v[1]))
+                assert all(x[0] == x[1] for x in zip(*v)), (k, type(v[1]))
             elif type(v[1]) == int:
-                if not SAVE_COM_OUTPUT: assert v[0] == v[1], (k, type(v[1]))
+                assert v[0] == v[1], (k, type(v[1]))
             elif type(v[1]) == float:
-                if not SAVE_COM_OUTPUT: assert abs(v[0] - v[1]) < self.atol, (k, type(v[1]))
+                assert abs(v[0] - v[1]) < self.atol, (k, type(v[1]))
 
     def validate_YMatrix(self):
-        NN = self.capi.ActiveCircuit.NumNodes
+        if SAVE_OUTPUT:
+            return
+
+        NN = self.dss_b.ActiveCircuit.NumNodes
         if NN > 2000: # test only on small strings
             return
-            
-        ysparse = csc_matrix(self.capi.YMatrix.GetCompressedYMatrix(factor=False))
-        ydense = self.capi.ActiveCircuit.SystemY.view(dtype=complex).reshape((NN, NN))
-        if not SAVE_COM_OUTPUT: assert (np.allclose(ydense, ysparse.todense(), atol=self.atol, rtol=self.rtol))
+
+        ysparse = csc_matrix(self.dss_b.YMatrix.GetCompressedYMatrix(factor=False))
+        ydense = self.dss_b.ActiveCircuit.SystemY.view(dtype=complex).reshape((NN, NN))
+        if not SAVE_OUTPUT: 
+            assert (np.allclose(ydense, ysparse.todense(), atol=self.atol, rtol=self.rtol))
         
         
     def validate_AllNames(self):
@@ -1161,7 +1291,7 @@ class ValidatingTest:
 
         for cls in clss:
             try:
-                assert (check_cls_allnames(cls, self.com) == check_cls_allnames(cls, self.capi)), cls
+                assert (check_cls_allnames(cls, self.dss_a) == check_cls_allnames(cls, self.dss_b)), cls
             except AttributeError:
                 # COM doesn't expose 
                 pass
@@ -1206,39 +1336,34 @@ class ValidatingTest:
         self.validate_AllNames()
 
         #self.atol = 1e-5
-        print('Buses')
+        #print('Buses')
         self.validate_Buses()
-        print('Circuit')
+        #print('Circuit')
         self.validate_Circuit()
 
-        self.capi.ShowPanel()
+        # self.dss_b.ShowPanel()
         
         print('Done')
 
 
 def run_tests(fns):
-    if USE_V8:
-        from dss.v8 import DSS, use_com_compat
-        print("Imported DSS V8 version")
-    else:
-        from dss.v7 import DSS, use_com_compat
-        print("Imported DSS V7 version")
-        
+    from dss import DSS, use_com_compat
     use_com_compat()
 
     # NOTE: if win32com errors out, rerun until all files are generated
-    if not LOAD_COM_OUTPUT:
-        import win32com.client
-        com = win32com.client.Dispatch("OpenDSSEngine.DSS")
-        com = win32com.client.gencache.EnsureDispatch("OpenDSSEngine.DSS")
-        
-        import dss
-        com = dss.patch_dss_com(com)
-        print('COM Version:', com.Version)
+    com = None
+    if not LOAD_OUTPUT:
+        if not SAVE_DSSX_OUTPUT:
+            import win32com.client
+            com = win32com.client.Dispatch("OpenDSSEngine.DSS")
+            com = win32com.client.gencache.EnsureDispatch("OpenDSSEngine.DSS")
+            
+            import dss
+            com = dss.patch_dss_com(com)
+            print('COM Version:', com.Version)
         #global COM_VLL_BROKEN
         #COM_VLL_BROKEN = ('Version 8.6.7.1 ' in com.Version) or ('Version 9.0.0.8 ' in com.Version)
-    else:
-        com = None
+        
 
     #import comtypes.client
     #com = comtypes.client.CreateObject("OpenDSSEngine.DSS")
@@ -1246,7 +1371,12 @@ def run_tests(fns):
     capi = DSS
     print('C-API Version:', capi.Version)
 
-    for dss in [com, capi]:
+    if com is None:
+        assert LOAD_OUTPUT or SAVE_OUTPUT
+        dss_variants = [capi]
+    else:
+        dss_variants = [com, capi]
+    for dss in dss_variants:
         if dss is not None:
             dss.Text.Command = r'set editor=ignore_me_invalid_executable'
         
@@ -1255,33 +1385,33 @@ def run_tests(fns):
     assert capi.Error.EarlyAbort # check the default value, should be True
 
     # Test toggling console output with C-API, COM can only be disabled
-    if not LOAD_COM_OUTPUT:
-        for dss in com, capi:
+    if not LOAD_OUTPUT:
+        for dss in dss_variants:
             dss.AllowForms = True
-            if not SAVE_COM_OUTPUT: assert dss.AllowForms == True
+            if not SAVE_OUTPUT: assert dss.AllowForms == True
 
             dss.AllowForms = False
-            if not SAVE_COM_OUTPUT: assert dss.AllowForms == False
+            if not SAVE_OUTPUT: assert dss.AllowForms == False
             
             dss.AllowForms = True
             if dss != com:
-                if not SAVE_COM_OUTPUT: assert dss.AllowForms == True
+                if not SAVE_OUTPUT: assert dss.AllowForms == True
 
             dss.AllowForms = False
-            if not SAVE_COM_OUTPUT: assert dss.AllowForms == False
+            if not SAVE_OUTPUT: assert dss.AllowForms == False
     else:
         for dss in [capi]:
             dss.AllowForms = True
-            if not SAVE_COM_OUTPUT: assert dss.AllowForms == True
+            if not SAVE_OUTPUT: assert dss.AllowForms == True
 
             dss.AllowForms = False
-            if not SAVE_COM_OUTPUT: assert dss.AllowForms == False
+            if not SAVE_OUTPUT: assert dss.AllowForms == False
             
             dss.AllowForms = True
-            if not SAVE_COM_OUTPUT: assert dss.AllowForms == True
+            if not SAVE_OUTPUT: assert dss.AllowForms == True
 
             dss.AllowForms = False
-            if not SAVE_COM_OUTPUT: assert dss.AllowForms == False
+            if not SAVE_OUTPUT: assert dss.AllowForms == False
     
 
             
@@ -1297,26 +1427,26 @@ def run_tests(fns):
         print("> File", fn)
         assert os.path.exists(os.path.join(original_working_dir, fn)), os.path.join(original_working_dir, fn)
         
-        test = ValidatingTest(fn, com, capi, line_by_line)
+        test = ValidatingTest(fn, dss_variants, line_by_line)
 
-        if not LOAD_COM_OUTPUT:
-            print("Running using COM")
-            t0 = time()
-            test.run(com, solve=True)
-            total_com_time += time() - t0
+        if not LOAD_OUTPUT:
+            if SAVE_OUTPUT and not SAVE_DSSX_OUTPUT:
+                print("Running using OpenDSS COM")
+            else:
+                print("Running using DSS Extensions")
+            test.run(dss_variants[0], solve=True)
             output['ActiveCircuit'] = test._get_circuit_fields(0, 1)
         else:
             os.chdir(original_working_dir)
-            pickle_fn = fn + '.pickle.zstd'
-            with zstd.open(pickle_fn, 'rb') as com_output_file:
-                output = pickle.load(com_output_file)
-                print('COM output loaded from', pickle_fn)
+            pickle_fn = fn + f'.{LOAD_PLATFORM}.pickle.zstd'
+            with zstd.open(pickle_fn, 'rb') as pickled_output_file:
+                output = pickle.load(pickled_output_file)
+                print('Output loaded from', pickle_fn)
                 test._set_circuit_fields(output['ActiveCircuit'])
         
-        print("Running using CAPI")
-        t0 = time()
-        test.run(capi, solve=True)
-        total_capi_time += time() - t0  
+        if not SAVE_OUTPUT:
+            print("Running using DSS Extensions")
+            test.run(capi, solve=True)
         
         
         print("Validating")
@@ -1326,40 +1456,49 @@ def run_tests(fns):
             print('!!!!!!!!!!!!!!!!!!!!!!')
             print('ERROR:', fn, ex)
             print('!!!!!!!!!!!!!!!!!!!!!!')
-            raise
+            if colorizer is None:
+                traceback.print_exc()
+            else:
+                colorizer.colorize_traceback(*sys.exc_info())
+            print('-'*40)
+            print()
+            #raise
+            continue
 
             
-        if WIN32 and SAVE_COM_OUTPUT:
+        if SAVE_OUTPUT:
             os.chdir(original_working_dir)
-            pickle_fn = fn + '.pickle.zstd'
-            with zstd.open(pickle_fn, 'wb') as com_output_file:
-                pickle.dump(output, com_output_file, protocol=pickle.HIGHEST_PROTOCOL)
-                print('COM output pickled to', pickle_fn)
+            if SAVE_DSSX_OUTPUT:
+                pickle_fn = fn + f'.{sys.platform}-{platform.machine()}-dssx.pickle.zstd'
+            else:
+                pickle_fn = fn + '-win32com.pickle.zstd'
+
+            with zstd.open(pickle_fn, 'wb') as pickled_output_file:
+                pickle.dump(output, pickled_output_file, protocol=4) # use protocol 4 to allow testing under Python 3.7
+                print('Output pickled to', pickle_fn)
             
             output = type(output)()
-            
-           
-    if not LOAD_COM_OUTPUT:
-        print("Total COM running time: {} seconds".format(int(total_com_time)))
-        print("Total C-API running time: {} seconds ({}% of COM)".format(
-            int(total_capi_time), 
-            round(100 * total_capi_time / total_com_time, 1)
-        ))
-            
     
-    if not LOAD_COM_OUTPUT:
-        for dss in com, capi:
-            if USE_V8:
-                dss.Text.Command = 'ClearAll'
-            else:
-                dss.Text.Command = 'Clear'
+    if not LOAD_OUTPUT:
+        for dss in dss_variants:
+            dss.Text.Command = 'Clear'
             
 if __name__ == '__main__':
     from common import test_filenames, errored
+    try:
+        import colored_traceback
+        colored_traceback.add_hook()
+        colorizer = colored_traceback.Colorizer('default', False)
+    except:
+        colorizer = None
+
+    
     t0_global = time()
-    if SAVE_COM_OUTPUT:
+    if SAVE_OUTPUT:
         # Always save all results, even the broken ones
         run_tests(test_filenames)
     else:
         run_tests([x for x in test_filenames if x not in errored])
+        #run_tests(sorted(errored))
+        
     print(time() - t0_global, 'seconds')
