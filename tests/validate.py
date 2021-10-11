@@ -1472,7 +1472,7 @@ def run_tests(fns):
             if SAVE_DSSX_OUTPUT:
                 pickle_fn = fn + f'.{sys.platform}-{platform.machine()}-dssx.pickle.zstd'
             else:
-                pickle_fn = fn + '-win32com.pickle.zstd'
+                pickle_fn = fn + '.win32com.pickle.zstd'
 
             with zstd.open(pickle_fn, 'wb') as pickled_output_file:
                 pickle.dump(output, pickled_output_file, protocol=4) # use protocol 4 to allow testing under Python 3.7
