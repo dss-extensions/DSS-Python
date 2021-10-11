@@ -1289,12 +1289,13 @@ class ValidatingTest:
             #assert before == after, (name, before, after)
             return before == after
 
-        for cls in clss:
-            try:
-                assert (check_cls_allnames(cls, self.dss_a) == check_cls_allnames(cls, self.dss_b)), cls
-            except AttributeError:
-                # COM doesn't expose 
-                pass
+        if not SAVE_OUTPUT and not LOAD_OUTPUT:
+            for cls in clss:
+                try:
+                    assert (check_cls_allnames(cls, self.dss_a) == check_cls_allnames(cls, self.dss_b)), cls
+                except AttributeError:
+                    # COM doesn't expose 
+                    pass
     
                 
     def validate_all(self):
