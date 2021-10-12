@@ -184,9 +184,7 @@ test_filenames = [
 
 ] + new_examples
 
-errored = set('''
-../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/NewFeatures/ConstantPF/SnapShot_PFP_pctPmpplimitation-PV2.dss
-'''.strip().split('\n'))
+errored = set()
 
 api_fields = {
     'ActiveCircuit': 'AllBusDistances,AllBusNames,AllBusVmag,AllBusVmagPu,AllBusVolts,AllElementLosses,AllElementNames,AllNodeDistances,AllNodeNames,LineLosses,Losses,Name,NumBuses,NumCktElements,NumNodes,ParentPDElement,SubstationLosses,SystemY,TotalPower,YCurrents,YNodeOrder,YNodeVarray', 

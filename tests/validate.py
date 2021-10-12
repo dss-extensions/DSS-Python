@@ -1225,7 +1225,14 @@ class ValidatingTest:
                     # else:
                         # assert np.allclose(v[0]/v[1], 1, atol=self.atol, rtol=100), (k, type(v[1]), v[0], v[1])
                 else:
-                    assert np.allclose(*v, atol=self.atol, rtol=self.rtol), (k, type(v[1]))#, v[0], v[1])
+                    vA, vB = (np.asarray(vx) for vx in v)
+                    if k in ('AllBusVolts', 'YNodeVarray'):
+                        vA = vA.view(dtype=complex)
+                        vB = vB.view(dtype=complex)
+                        #vA[np.abs(vA) < 1e-7] = 0
+                        #vB[np.abs(vB) < 1e-7] = 0
+
+                    assert np.allclose(vA, vB, atol=self.atol, rtol=self.rtol), (k, type(v[1]))#, v[0], v[1])
             elif type(v[1]) == list:
                 assert all(x[0] == x[1] for x in zip(*v)), (k, type(v[1]))
             elif type(v[1]) == int:
