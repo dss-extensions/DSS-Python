@@ -4,6 +4,8 @@ import subprocess
 from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS, DLL_SUFFIX, DLL_PREFIX
 import glob
 
+MANYLINUX = os.environ.get('DSS_PYTHON_MANYLINUX', '0') == '1'
+
 # Copy README.md contents
 with io.open('README.md', encoding='utf8') as readme_md:
     long_description = readme_md.read()
@@ -13,7 +15,6 @@ with open('dss/__init__.py', 'r') as f:
     match = re.search("__version__ = '(.*?)'", f.read())
     package_version = match.group(1)
 
-
 # Copy all the DLLs from DSS C-API
 src_path = os.environ.get('SRC_DIR', '')
 DSS_CAPI_PATH = os.environ.get('DSS_CAPI_PATH', os.path.join(src_path, '..', 'dss_capi'))
@@ -21,8 +22,10 @@ base_dll_path_in = os.path.join(DSS_CAPI_PATH, 'lib', PLATFORM_FOLDER)
 dll_path_out = os.path.abspath(os.path.join(src_path, 'dss'))
 include_path_out = os.path.join(dll_path_out, 'include')
 
-for fn in glob.glob(os.path.join(base_dll_path_in, '*{}'.format(DLL_SUFFIX))):
-    shutil.copy(fn, dll_path_out)
+if not MANYLINUX:
+    # for manylinux wheels, auditwheel handles copying the libs later
+    for fn in glob.glob(os.path.join(base_dll_path_in, '*{}'.format(DLL_SUFFIX))):
+        shutil.copy(fn, dll_path_out)
 
 # Copy libs (easier to build custom extensions with a default DSS Python installation)
 for fn in glob.glob(os.path.join(base_dll_path_in, '*.lib')) + glob.glob(os.path.join(base_dll_path_in, '*.a')):
@@ -42,9 +45,9 @@ extra_files = (
     glob.glob(os.path.join(dll_path_out, '*.a'))
 )
 
-if os.environ.get('DSS_PYTHON_MANYLINUX', '0') == '1':
+if MANYLINUX:
     # Do not pack .so files when building manylinux wheels
-    # (auditwheel will copy them anyway)
+    # (auditwheel will copy and adjust them anyway)
     extra_args = dict(package_data={
         'dss': extra_files
     })
@@ -55,7 +58,7 @@ else:
 
 setup(
     name="dss_python",
-    description="OpenDSS bindings and tools based on the DSS C-API project",
+    description="Python bindings and tools based on the DSS C-API project, a customized OpenDSS implementation",
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="Paulo Meira",
@@ -74,6 +77,7 @@ setup(
         ],
     ext_package="dss",
     install_requires=["cffi>=1.11.2", "numpy>=1.0"],
+    tests_require=["zstandard", "scipy"],
     zip_safe=False,
     classifiers=[
         'Intended Audience :: Science/Research',
@@ -82,9 +86,9 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
-#        'Programming Language :: SQL', -- not yet!
         'Development Status :: 4 - Beta',
         'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: BSD License'

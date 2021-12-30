@@ -110,7 +110,7 @@ python setup.py build
 python setup.py install
 ```
 
-If you are familiar with `conda-build`, there is a complete recipe to build DSS C-API, KLUSolve and DSS Python in the `conda` subfolder.
+If you are familiar with `conda-build`, there is a complete recipe to build DSS C-API, KLUSolve(X) and DSS Python in the `conda` subfolder.
 
 Example usage
 =============
