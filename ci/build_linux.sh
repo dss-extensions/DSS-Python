@@ -1,24 +1,14 @@
 set -e -x
-
-# Compile wheels
+export PATH=/opt/python/cp39-cp39/bin/:$PATH
 export DSS_PYTHON_MANYLINUX=1
-cd /io/dss_python
-for PYBIN in /opt/python/*/bin; do
-    if [[ $PYBIN == *"cp27"* ]]
-    then
-        continue
-    fi
-    if [[ $PYBIN == *"cp34"* ]]
-    then
-        continue
-    fi
-    rm -rf /io/dss_python/.eggs/
-    rm -rf /io/dss_python/build
-    "${PYBIN}/python" setup.py --quiet bdist_wheel
-done
+
+cd dss_python
+python3 -m pip install --upgrade pip cffi wheel
+python3 setup.py --quiet bdist_wheel --py-limited-api cp36 --dist-dir="../artifacts_raw"
+cd ..
 
 # Bundle external shared libraries into the wheels
-export LD_LIBRARY_PATH=/io/dss_python/dss:$LD_LIBRARY_PATH
-for whl in dist/*.whl; do
-    auditwheel repair "$whl" -w /io/artifacts
+export LD_LIBRARY_PATH=${DSS_CAPI_PATH}/lib/linux_$1:$LD_LIBRARY_PATH
+for whl in artifacts_raw/*.whl; do
+    auditwheel repair "$whl" -w artifacts
 done

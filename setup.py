@@ -10,10 +10,38 @@ MANYLINUX = os.environ.get('DSS_PYTHON_MANYLINUX', '0') == '1'
 with io.open('README.md', encoding='utf8') as readme_md:
     long_description = readme_md.read()
 
-# Extract version from the source files
-with open('dss/__init__.py', 'r') as f:
-    match = re.search("__version__ = '(.*?)'", f.read())
-    package_version = match.group(1)
+# Handle the version string
+# 1. Try env var DSS_PYTHON_VERSION
+# 2. Try GITHUB_REF for a Git tag
+# 3. Otherwise, just use the version the hardcoded version
+package_version = os.environ.get('DSS_PYTHON_VERSION')
+github_ref = os.environ.get('GITHUB_REF')
+if package_version is None and github_ref is not None:
+    package_version = github_ref[len("refs/tags/"):]
+
+if package_version is not None:
+    if re.match(r'^\d+\.\d+\.\d+(((a|b|(rc))\d*)|(\.dev\d+)){0,1}$', package_version) is None:
+        package_version = None
+
+if package_version is None:
+    # Extract version from the source files
+    with open('dss/__init__.py', 'r') as f:
+        match = re.search("__version__ = '(.*?)'", f.read())
+        package_version = match.group(1)
+else:
+    with open('dss/__init__.py', 'r') as f:
+        init_py_orig = f.read()
+
+    init_py = re.sub("__version__ = '(.*?)'", f"__version__ = '{package_version}'", init_py_orig)
+    if init_py_orig != init_py:
+        with open('dss/__init__.py', 'w') as f:
+            f.write(init_py)
+
+if os.environ.get('DSS_PYTHON_PREPARE_BOA') == '1':
+    with open('conda/meta.yaml', 'r') as fin, open('conda/recipe.yaml', 'w') as fout:
+        fout.write(fin.read().replace('{{ load_setup_py_data().version }}', package_version))
+
+    exit()
 
 # Copy all the DLLs from DSS C-API
 src_path = os.environ.get('SRC_DIR', '')

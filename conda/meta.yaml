@@ -10,16 +10,17 @@ source:
 build:
     script_env:
         - DSS_CAPI_PATH
-
+        - SDKROOT
 requirements:
     build:
-        - {{ compiler('c') }}
+        - "{{ compiler('c') }}"
 #        - {{ compiler('cxx') }}
-        - python {{ python }}
+        - "python {{ python }}"
         - cffi
         - setuptools
         - wheel
-        - cmake [osx]
+        # - pip
+        # - cmake [osx]
         # - git
         
     host:

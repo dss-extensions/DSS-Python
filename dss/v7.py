@@ -2,7 +2,6 @@
 This module presents instances for the OpenDSS Version 7 implementation. It is the classic version, without parallel machine functionality. If you want to handle parallel and distributed computations with third-party modules, this is the recommended version. It is also more stable and tested.
 '''
 
-from __future__ import absolute_import
 import os
 if os.environ.get('DSS_EXTENSIONS_DEBUG', '') != '1':
     from ._dss_capi import ffi, lib
