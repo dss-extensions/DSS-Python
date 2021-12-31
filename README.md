@@ -1,5 +1,4 @@
-[![Travis-CI: Linux and macOS build status](https://travis-ci.com/dss-extensions/dss_python.svg?branch=0.10.x)](https://travis-ci.com/dss-extensions/dss_python) 
-[![AppVeyor: Windows build status](https://ci.appveyor.com/api/projects/status/bvcbel63n5uf4yjk/branch/0.10.x?svg=true)](https://ci.appveyor.com/project/PMeira/dss-python-yyx2r/branch/0.10.x) 
+[![Builds](https://github.com/dss-extensions/dss_python/actions/workflows/builds.yml/badge.svg)](https://github.com/dss-extensions/dss_python/actions/workflows/builds.yml)
 [![PyPI](https://img.shields.io/pypi/v/dss_python)](https://pypi.org/project/dss-python/)
 [![Install with conda](https://anaconda.org/dss-extensions/dss_python/badges/installer/conda.svg)](https://anaconda.org/dss-extensions/dss_python)
 [![conda package version](https://anaconda.org/dss-extensions/dss_python/badges/version.svg)](https://anaconda.org/dss-extensions/dss_python)
