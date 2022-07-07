@@ -1,4 +1,6 @@
 import os, sys, platform, traceback, pickle
+import concurrent.futures
+from threading import current_thread, local
 from time import time
 import numpy as np
 from scipy.sparse import csc_matrix
@@ -13,27 +15,29 @@ WIN32 = (sys.platform == 'win32')
 
 COM_VLL_BROKEN = True
 
+num_failures = 0
+
+USE_THREADS = True
+
 SAVE_OUTPUT = 'save' in sys.argv
 LOAD_OUTPUT = (not WIN32) or ('load' in sys.argv) 
 SAVE_DSSX_OUTPUT = SAVE_OUTPUT and ('dss-extensions' in sys.argv)
 LOAD_PLATFORM = None
-if LOAD_OUTPUT:
-    LOAD_PLATFORM = sys.argv[-1] 
-
-if LOAD_OUTPUT or SAVE_OUTPUT:
-    import zstandard as zstd
 
 if SAVE_OUTPUT:
     LOAD_OUTPUT = False
-    output = {}
-else:
+
     class FakeDict:
         def __setitem__(self, key, value):
             # ignore the value
             pass
 
-    output = FakeDict()
     
+if LOAD_OUTPUT:
+    LOAD_PLATFORM = sys.argv[-1] 
+
+if LOAD_OUTPUT or SAVE_OUTPUT:
+    import zstandard as zstd
 
 def parse_dss_matrix(m):
     try:
@@ -93,13 +97,24 @@ class ValidatingTest:
 
 
     def run(self, dss, solve=False):
-        os.chdir(original_working_dir)
+        dss.Text.Command = f'cd "{original_working_dir}"'
         dss.Start(0)
+        
+        # Reset script -- EarthModel is not properly reset with just a Clear
+        dss.Text.Command = 'Clear'
+        dss.Text.Command = 'new circuit.RESET'
+        dss.Text.Command = 'Set DefaultBaseFreq=60'
+        dss.Text.Command = 'Set EarthModel=deri'
+        dss.Text.Command = 'new wiredata.wire Runits=mi Rac=0.306 GMRunits=ft GMRac=0.0244  Radunits=in Diam=0.721'
+        dss.Text.Command = 'new linegeometry.reset nconds=1 nphases=1 cond=1 wire=wire units=ft x=-4 h=28'
+        dss.Text.Command = 'new line.line1 geometry=reset length=2000 units=ft bus1=sourcebus bus2=n2'
+        dss.Text.Command = 'solve'
         dss.Text.Command = 'Clear'
 
         if self.line_by_line:
             with open(self.fn, 'r') as f:
-                os.chdir(os.path.dirname(self.fn))
+
+                dss.Text.Command = f'cd "{os.path.dirname(self.fn)}"'
                 iter_f = iter(f)
                 try:
                     while True:
@@ -309,9 +324,9 @@ class ValidatingTest:
                 
             if (self.dss_b if self.dss_b is not None else self.dss_a).ActiveCircuit.NumNodes < 1000 and not NO_V9:
                 for field in ['LoadList', 'LineList']:#, 'AllPCEatBus', 'AllPDEatBus']:
-                    fA = output[f'ActiveCircuit.ActiveBus[{name}].{field}'] if LOAD_OUTPUT else getattr(A, field)
+                    fA = self.output[f'ActiveCircuit.ActiveBus[{name}].{field}'] if LOAD_OUTPUT else getattr(A, field)
                     if SAVE_OUTPUT: 
-                        output[f'ActiveCircuit.ActiveBus[{name}].{field}'] = fA
+                        self.output[f'ActiveCircuit.ActiveBus[{name}].{field}'] = fA
                     else:
                         fB = getattr(B, field)
                         assert list(fA) == list(fB), (fA, fB)
@@ -321,9 +336,9 @@ class ValidatingTest:
                 if COM_VLL_BROKEN and field in ('VLL', 'puVLL'):
                     continue
 
-                fA = output[f'ActiveCircuit.ActiveBus[{name}].{field}'] if LOAD_OUTPUT else getattr(A, field)
+                fA = self.output[f'ActiveCircuit.ActiveBus[{name}].{field}'] if LOAD_OUTPUT else getattr(A, field)
                 if SAVE_OUTPUT:
-                    output[f'ActiveCircuit.ActiveBus[{name}].{field}'] = fA
+                    self.output[f'ActiveCircuit.ActiveBus[{name}].{field}'] = fA
 
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
@@ -402,15 +417,15 @@ class ValidatingTest:
         while nA != 0:
             count += 1
             for field in ('States',):
-                fA = output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
             for field in ('AvailableSteps', 'NumSteps', 'kvar', 'kV', 'Name', 'IsDelta'):
-                fA = output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Capacitors[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert fA == fB, field
@@ -461,18 +476,19 @@ class ValidatingTest:
         while nA != 0:
             count += 1
             for field in 'Cmatrix,Rmatrix,Xmatrix'.split(','):
-                fA = output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
-                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, A.Name, B.Name)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, B.Name)
 
-            for field in 'C0,C1,EmergAmps,IsZ1Z0,Name,NormAmps,Phases,R0,R1,Units,X0,X1'.split(','):
-                fA = output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
+#            for field in 'C0,C1,EmergAmps,IsZ1Z0,Name,NormAmps,Phases,R0,R1,Units,X0,X1'.split(','):
+            for field in 'EmergAmps,IsZ1Z0,Name,NormAmps,Phases,R0,R1,Units,X0,X1'.split(','):
+                fA = self.output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.LineCodes[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
-                    assert fA == fB or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                    assert fA == fB or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, B.Name)
 
             if not SAVE_OUTPUT:
                 nB = B.Next
@@ -510,18 +526,19 @@ class ValidatingTest:
             #        - temporarily removed R1/X1/C1 since COM is broken    
             #for field in 'Bus1,Bus2,C0,C1,EmergAmps,Geometry,Length,LineCode,Name,NormAmps,NumCust,Phases,R0,R1,Rg,Rho,Spacing,TotalCust,Units,X0,X1,Xg'.split(','):
             for field in 'Bus1,Bus2,C0,EmergAmps,Geometry,Length,LineCode,Name,NormAmps,NumCust,Phases,R0,Rg,Rho,Spacing,TotalCust,Units,X0,Xg'.split(','):
-                fA = output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             for field in 'Cmatrix,Rmatrix,Xmatrix,Yprim'.split(','):
-                fA = output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
+                key = 'ActiveCircuit.Lines[{}].{}'.format(nA, field)
+                fA = self.output[key] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Lines[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
-                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, max(abs(fA - fB)), A.Name, B.Name)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB, max(abs(fA - fB)), B.Name)
 
             self.validate_CktElement()
 
@@ -557,15 +574,22 @@ class ValidatingTest:
         count = 0
         while nA != 0:
             count += 1
-            for field in 'AllocationFactor,CVRcurve,CVRvars,CVRwatts,Cfactor,Class,Growth,IsDelta,Model,Name,NumCust,PF,PctMean,PctStdDev,RelWeight,Rneut,Spectrum,Status,Vmaxpu,Vminemerg,Vminnorm,Vminpu,Xneut,Yearly,daily,duty,idx,kV,kW,kva,kvar,kwh,kwhdays,pctSeriesRL,xfkVA'.split(','): #TODO: ZIPV
-                fA = output['ActiveCircuit.Loads[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Loads[{}].{}'.format(nA, field)] = fA
+            # yearly was removed, duty is broken everywhere before 2021-10 (at least)
+            for field in 'AllocationFactor,CVRcurve,CVRvars,CVRwatts,Cfactor,Class,Growth,IsDelta,Model,Name,NumCust,PF,PctMean,PctStdDev,RelWeight,Rneut,Spectrum,Status,Vmaxpu,Vminemerg,Vminnorm,Vminpu,Xneut,daily,idx,kV,kW,kva,kvar,kwh,kwhdays,pctSeriesRL,xfkVA'.split(','): #TODO: ZIPV
+                fA = self.output['ActiveCircuit.Loads[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Loads[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     if type(fB) == float:
-                        assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
+                        assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, B.Name, fA, fB)
                     else:
-                        assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                        if type(fB) == str:
+                            if fA is None:
+                                assert fB == '', (field, fA, fB)
+                            else:
+                                assert fA.lower() == fB.lower(), (field, fA, fB)
+                        else:
+                            assert (fA == fB) or (type(fB) == str and ((fA is None and fB == '') or (fA.lower() == fB.lower()))) or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             self.validate_CktElement()
 
@@ -602,15 +626,15 @@ class ValidatingTest:
         while nA != 0:
             count += 1
             for field in 'HrInterval,MinInterval,Name,Npts,Pbase,Qbase,UseActual,Sinterval'.split(','): #TODO: ZIPV
-                fA = output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             for field in 'Pmult,Qmult,TimeArray'.split(','):
-                fA = output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.LoadShapes[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, list(fB), B.Name)
@@ -658,10 +682,12 @@ class ValidatingTest:
         count = 0
         while nA != 0:
             count += 1
-            for field in 'IsDelta,MaxTap,MinTap,Name,NumTaps,NumWindings,R,Rneut,Tap,Wdg,XfmrCode,Xhl,Xht,Xlt,Xneut,kV,kva'.split(','):
-                fA = output['ActiveCircuit.Transformers[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+
+            #for field in 'IsDelta,MaxTap,MinTap,Name,NumTaps,NumWindings,R,Rneut,Tap,Wdg,XfmrCode,Xhl,Xht,Xlt,Xneut,kV,kva'.split(','):
+            for field in 'IsDelta,MaxTap,MinTap,Name,NumTaps,NumWindings,R,Rneut,Tap,Wdg,XfmrCode,Xneut,kV,kva'.split(','):
+                fA = self.output['ActiveCircuit.Transformers[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
                 if SAVE_OUTPUT: 
-                    output['ActiveCircuit.Transformers[{}].{}'.format(nA, field)] = fA
+                    self.output['ActiveCircuit.Transformers[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -702,24 +728,24 @@ class ValidatingTest:
             count += 1
 
             for field in 'RegisterNames'.split(','):
-                fA = output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     if fA == ('',) and fB == [None]: continue # Comtypes and win32com results are a bit different here
                     fB = getattr(B, field)
                     assert all(x[0] == x[1] for x in zip(fA, fB)), field
 
             for field in 'RegisterValues,kvar'.split(','):
-                fA = output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
 
             for field in 'ForcedON,Model,Name,PF,Phases,Vmaxpu,Vminpu,idx,kV,kVArated,kW'.split(','):
-                fA = output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Generators[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -755,8 +781,8 @@ class ValidatingTest:
         while nA != 0:
             count += 1
             for field in 'Amps,AngleDeg,Frequency,Name'.split(','):
-                fA = output['ActiveCircuit.ISources[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.ISources[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.ISources[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.ISources[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -793,8 +819,8 @@ class ValidatingTest:
         while nA != 0:
             count += 1
             for field in 'AngleDeg,BasekV,Frequency,Name,Phases,pu'.split(','):
-                fA = output['ActiveCircuit.Vsources[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Vsources[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Vsources[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Vsources[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -832,19 +858,19 @@ class ValidatingTest:
         while nA != 0:
             count += 1
             for field in 'RecloseIntervals'.split(','):
-                fA = output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     fA = np.array(fA, dtype=fB.dtype)
                     assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
             for field in 'GroundInst,GroundTrip,MonitoredObj,MonitoredTerm,Name,NumFast,PhaseInst,PhaseTrip,Shots,SwitchedObj,SwitchedTerm,idx'.split(','):
-                fA = output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Reclosers[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
-                    assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
+                    assert (fA == fB) or (type(fA) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
 
             if not SAVE_OUTPUT: 
                 nB = B.Next
@@ -879,15 +905,15 @@ class ValidatingTest:
         while nA != 0:
             count += 1
             for field in 'Xarray,Yarray'.split(','):
-                fA = output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
             for field in 'Name,Npts,Xscale,Xshift,Yscale,Yshift,x,y'.split(','):
-                fA = output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.XYCurves[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -928,17 +954,19 @@ class ValidatingTest:
             monitor_name = (B if B is not None else A).Name
             
             for field in 'dblFreq,dblHour'.split(','): # Skipped ByteStream since it's indirectly compared through Channel()
-                fA = output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] = fA
+                fA = self.output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     fA = np.array(fA, dtype=fB.dtype)
                     assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
 
             #TODO: FileVersion (broken in COM)
-            for field in 'Element,Header,FileName,Mode,Name,NumChannels,RecordSize,SampleCount,Terminal'.split(','):
+#            for field in 'Element,Header,FileName,Mode,Name,NumChannels,RecordSize,SampleCount,Terminal'.split(','):
+           
+            for field in 'Element,FileName,Mode,Name,NumChannels,RecordSize,SampleCount,Terminal'.split(','):
                 if field == 'FileName': continue # the path will be different on purpose
-                fA = output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_OUTPUT else getattr(A, field)
+                fA = self.output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] if LOAD_OUTPUT else getattr(A, field)
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     if field == 'Header':
@@ -947,14 +975,14 @@ class ValidatingTest:
                     else:
                         assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
                 else:
-                    output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] = fA
+                    self.output['ActiveCircuit.Monitors[{}].{}'.format(count, field)] = fA
 
             for channel in range((B if B is not None else A).NumChannels):
                 if header[channel].strip() in ('SolveSnap_uSecs', 'TimeStep_uSecs'): continue # these can't be equal
                 field = 'Channel({})'.format(channel + 1)
                 output_key = 'ActiveCircuit.Monitors[{}].{}'.format(monitor_name, field)
-                fA = output[output_key] if LOAD_OUTPUT else A.Channel(channel + 1)
-                if SAVE_OUTPUT: output[output_key] = fA
+                fA = self.output[output_key] if LOAD_OUTPUT else A.Channel(channel + 1)
+                if SAVE_OUTPUT: self.output[output_key] = fA
                 if not SAVE_OUTPUT: 
                     fB = B.Channel(channel + 1)
                     # assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Channel', channel + 1)
@@ -1007,8 +1035,8 @@ class ValidatingTest:
                 if field == 'ZonePCE' and NO_V9:
                     continue
                     
-                fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     if fA == ('',) and fB == [None]: continue # Comtypes and win32com results are a bit different here
@@ -1021,16 +1049,16 @@ class ValidatingTest:
             # NOTE: CalcCurrent and AllocFactors removed since it seemed to contain (maybe?) uninitialized values in certain situations
             fields = 'AvgRepairTime,Peakcurrent,RegisterValues,Totals' if self.realibity_ran else 'Peakcurrent,RegisterValues'
             for field in fields.split(','):
-                fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Meters("{}").{}'.format(A.Name, field), fA, fB)
 
             fields = 'CountBranches,CountEndElements,CustInterrupts,DIFilesAreOpen,FaultRateXRepairHrs,MeteredElement,MeteredTerminal,Name,NumSectionBranches,NumSectionCustomers,NumSections,OCPDeviceType,SAIDI,SAIFI,SAIFIKW,SectSeqIdx,SectTotalCust,SeqListSize,SequenceIndex,SumBranchFltRates,TotalCustomers' if self.realibity_ran else 'MeteredElement,MeteredTerminal,Name'
             for field in fields.split(','):
-                fA = output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
-                if SAVE_OUTPUT: output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
+                fA = self.output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] if LOAD_OUTPUT else getattr(A, field)
+                if SAVE_OUTPUT: self.output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
                     assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -1056,8 +1084,8 @@ class ValidatingTest:
             A = self.dss_a.ActiveCircuit.Settings
 
         for field in 'LossRegs,UEregs,VoltageBases'.split(','):
-            fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
-            if SAVE_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
+            fA = self.output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
+            if SAVE_OUTPUT: self.output['ActiveCircuit.Settings.{}'.format(field)] = fA
             if not SAVE_OUTPUT: 
                 fB = getattr(B, field)
                 assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), field
@@ -1065,14 +1093,14 @@ class ValidatingTest:
         
         # AutoBusList is broken in COM, doesn't clear the GlobalResult first.
         # for field in 'AutoBusList'.split(','):
-        #     fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
+        #     fA = self.output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
         #     fB = getattr(B, field)
-        #     if SAVE_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
+        #     if SAVE_OUTPUT: self.output['ActiveCircuit.Settings.{}'.format(field)] = fA
         #     if not SAVE_OUTPUT: assert fA == fB, (field, (fA, fB))
         
         for field in 'AllowDuplicates,CktModel,ControlTrace,EmergVmaxpu,EmergVminpu,LossWeight,NormVmaxpu,NormVminpu,PriceCurve,PriceSignal,Trapezoidal,UEweight,ZoneLock'.split(','):
-            fA = output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
-            if SAVE_OUTPUT: output['ActiveCircuit.Settings.{}'.format(field)] = fA
+            fA = self.output['ActiveCircuit.Settings.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
+            if SAVE_OUTPUT: self.output['ActiveCircuit.Settings.{}'.format(field)] = fA
             if not SAVE_OUTPUT: 
                 fB = getattr(B, field)
                 assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -1089,8 +1117,8 @@ class ValidatingTest:
             # if LOAD_OUTPUT and field == 'SystemYChanged':
                 # continue
         
-            fA = output['ActiveCircuit.Solution.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
-            if SAVE_OUTPUT: output['ActiveCircuit.Solution.{}'.format(field)] = fA
+            fA = self.output['ActiveCircuit.Solution.{}'.format(field)] if LOAD_OUTPUT else getattr(A, field)
+            if SAVE_OUTPUT: self.output['ActiveCircuit.Solution.{}'.format(field)] = fA
             if not SAVE_OUTPUT: 
                 fB = getattr(B, field)
                 assert (fA == fB) or (type(fB) == str and fA is None and fB == '') or np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), (field, fA, fB)
@@ -1354,8 +1382,92 @@ class ValidatingTest:
         print('Done')
 
 
+
+local_info = local()
+
+# def init_thread(dss_workers):
+#     local_info.capi = dss_workers.pop()
+#     print(current_thread().name, local_info.capi, local_info.capi._api_util.ctx)
+
+def init_thread(capi):
+    local_info.capi = capi.NewContext()
+    print(current_thread().name, local_info.capi, local_info.capi._api_util.ctx)
+
+def run_fn(fn, dss_variants=None, capi=None):
+    if LOAD_OUTPUT and USE_THREADS:
+        capi = local_info.capi
+        dss_variants = [capi]
+
+    line_by_line = fn.startswith('L!')
+    if line_by_line:
+        fn = fn[2:]
+    print("> File", fn)
+    assert os.path.exists(os.path.join(original_working_dir, fn)), os.path.join(original_working_dir, fn)
+    
+    test = ValidatingTest(fn, dss_variants, line_by_line)
+
+    if not LOAD_OUTPUT:
+        if SAVE_OUTPUT and not SAVE_DSSX_OUTPUT:
+            print("Running using OpenDSS COM")
+        else:
+            print("Running using DSS Extensions")
+
+        if SAVE_OUTPUT:
+            output = test.output = {}
+        else:
+            output = test.output = FakeDict()
+
+        test.run(dss_variants[0], solve=True)
+        output['ActiveCircuit'] = test._get_circuit_fields(0, 1)
+    else:
+        os.chdir(original_working_dir)
+        pickle_fn = fn + f'.{LOAD_PLATFORM}.pickle.zstd'
+        with zstd.open(pickle_fn, 'rb') as pickled_output_file:
+            output = test.output = pickle.load(pickled_output_file)
+            print('Output loaded from', pickle_fn)
+            test._set_circuit_fields(output['ActiveCircuit'])
+    
+    if not SAVE_OUTPUT:
+        print("Running using DSS Extensions")
+        test.run(capi, solve=True)
+    
+    
+    print("Validating")
+    try:
+        test.validate_all()
+    except (AssertionError, TypeError) as ex:
+        global num_failures
+        num_failures += 1
+        print('!!!!!!!!!!!!!!!!!!!!!!')
+        print('ERROR:', fn, ex)
+        print('!!!!!!!!!!!!!!!!!!!!!!')
+        if colorizer is None:
+            traceback.print_exc()
+        else:
+            colorizer.colorize_traceback(*sys.exc_info())
+        print('-'*40)
+        print()
+        #raise
+        return
+
+        
+    if SAVE_OUTPUT:
+        os.chdir(original_working_dir)
+        if SAVE_DSSX_OUTPUT:
+            pickle_fn = fn + f'.{sys.platform}-{platform.machine()}-dssx.pickle.zstd'
+        else:
+            pickle_fn = fn + '.win32com.pickle.zstd'
+
+        with zstd.open(pickle_fn, 'wb') as pickled_output_file:
+            pickle.dump(output, pickled_output_file, protocol=4) # use protocol 4 to allow testing under Python 3.7
+            print('Output pickled to', pickle_fn)
+        
+        output = type(output)()
+
+
 def run_tests(fns):
     from dss import DSS, use_com_compat
+    DSS.AllowChangeDir = False
     use_com_compat()
 
     # NOTE: if win32com errors out, rerun until all files are generated
@@ -1422,70 +1534,18 @@ def run_tests(fns):
             if not SAVE_OUTPUT: assert dss.AllowForms == False
     
 
+    import time
+    if USE_THREADS and LOAD_OUTPUT:
+        num_workers = 10
             
-    total_com_time = 0.0
-    total_capi_time = 0.0
-            
-    global output
-    
-    for fn in fns:
-        line_by_line = fn.startswith('L!')
-        if line_by_line:
-            fn = fn[2:]
-        print("> File", fn)
-        assert os.path.exists(os.path.join(original_working_dir, fn)), os.path.join(original_working_dir, fn)
-        
-        test = ValidatingTest(fn, dss_variants, line_by_line)
-
-        if not LOAD_OUTPUT:
-            if SAVE_OUTPUT and not SAVE_DSSX_OUTPUT:
-                print("Running using OpenDSS COM")
-            else:
-                print("Running using DSS Extensions")
-            test.run(dss_variants[0], solve=True)
-            output['ActiveCircuit'] = test._get_circuit_fields(0, 1)
-        else:
-            os.chdir(original_working_dir)
-            pickle_fn = fn + f'.{LOAD_PLATFORM}.pickle.zstd'
-            with zstd.open(pickle_fn, 'rb') as pickled_output_file:
-                output = pickle.load(pickled_output_file)
-                print('Output loaded from', pickle_fn)
-                test._set_circuit_fields(output['ActiveCircuit'])
-        
-        if not SAVE_OUTPUT:
-            print("Running using DSS Extensions")
-            test.run(capi, solve=True)
-        
-        
-        print("Validating")
-        try:
-            test.validate_all()
-        except (AssertionError, TypeError) as ex:
-            print('!!!!!!!!!!!!!!!!!!!!!!')
-            print('ERROR:', fn, ex)
-            print('!!!!!!!!!!!!!!!!!!!!!!')
-            if colorizer is None:
-                traceback.print_exc()
-            else:
-                colorizer.colorize_traceback(*sys.exc_info())
-            print('-'*40)
-            print()
-            #raise
-            continue
-
-            
-        if SAVE_OUTPUT:
-            os.chdir(original_working_dir)
-            if SAVE_DSSX_OUTPUT:
-                pickle_fn = fn + f'.{sys.platform}-{platform.machine()}-dssx.pickle.zstd'
-            else:
-                pickle_fn = fn + '.win32com.pickle.zstd'
-
-            with zstd.open(pickle_fn, 'wb') as pickled_output_file:
-                pickle.dump(output, pickled_output_file, protocol=4) # use protocol 4 to allow testing under Python 3.7
-                print('Output pickled to', pickle_fn)
-            
-            output = type(output)()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=num_workers, initializer=init_thread, initargs=(capi,)) as executor:
+            futures = [executor.submit(run_fn, fn) for fn in fns]
+            for future in concurrent.futures.as_completed(futures):
+                fn = fns[futures.index(future)]
+                print(fn, future.result())
+    else:
+        for fn in fns:
+            run_fn(fn, dss_variants)
     
     if not LOAD_OUTPUT:
         for dss in dss_variants:
@@ -1510,3 +1570,4 @@ if __name__ == '__main__':
         #run_tests(sorted(errored))
         
     print(time() - t0_global, 'seconds')
+    print("Failures:", num_failures)
