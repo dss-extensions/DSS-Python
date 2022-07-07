@@ -148,4 +148,4 @@ class SparseSolverOptions(IntEnum):
     ReuseSymbolicFactorization = 2 # Reuse the symbolic factorization, implies ReuseCompressedMatrix
     ReuseNumericFactorization = 3 # Reuse the numeric factorization, implies ReuseSymbolicFactorization
     
-    AlwaysResetYPrimInvalid = 0x100000000 # Bit flag, see CktElement.pas for details
+    AlwaysResetYPrimInvalid = 0x10000000 # Bit flag, see CktElement.pas for details
