@@ -343,6 +343,12 @@ class ICktElement(Base):
             self.CheckForError(self._lib.Circuit_SetCktElementIndex(index))
             yield self
 
+    def __iter__(self):
+        idx = self._lib.Circuit_FirstElement()
+        while idx != 0:
+            yield self
+            idx = self._lib.Circuit_NextElement()
+
     def __getitem__(self, index):
         if isinstance(index, int):
             # index is zero based, pass it directly
