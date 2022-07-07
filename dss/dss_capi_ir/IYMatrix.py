@@ -71,13 +71,15 @@ class IYMatrix(Base):
         self.CheckForError(self._lib.YMatrix_getVpointer(VvectorPtr))
         return VvectorPtr[0]
 
-    def SolveSystem(self, NodeV):
-        if type(NodeV) is not np.ndarray:
+    def SolveSystem(self, NodeV=None):
+        if NodeV is not None and type(NodeV) is not np.ndarray:
             NodeV = np.array(NodeV)
 
-        NodeV = self._api_util.ffi.cast("double *", NodeV.ctypes.data)
-        NodeVPtr = self._api_util.ffi.new('double**')
-        NodeVPtr[0] = NodeV
+        if NodeV is None:
+            NodeVPtr = self._api_util.ffi.NULL
+        else:
+            NodeVPtr = self._api_util.ffi.cast("double *", NodeV.ctypes.data)
+
         result = self.CheckForError(self._lib.YMatrix_SolveSystem(NodeVPtr))
         return result
 
@@ -119,3 +121,23 @@ class IYMatrix(Base):
         VvectorPtr = self.GetVPointer()
         return self._api_util.ffi.unpack(VvectorPtr, 2 * (self.CheckForError(self._lib.Circuit_Get_NumNodes() + 1)))
 
+    def CheckConvergence(self):
+        return self.CheckForError(self._lib.YMatrix_CheckConvergence())
+
+    @property
+    def LoadsNeedUpdating(self):
+        return self.CheckForError(self._lib.YMatrix_Get_LoadsNeedUpdating() != 0)
+
+    @LoadsNeedUpdating.setter
+    def LoadsNeedUpdating(self, value):
+        return self.CheckForError(self._lib.YMatrix_Set_LoadsNeedUpdating(value))
+
+    @property
+    def SolutionInitialized(self):
+        return self.CheckForError(self._lib.YMatrix_Get_SolutionInitialized() != 0)
+
+    @SolutionInitialized.setter
+    def SolutionInitialized(self, value):
+        return self.CheckForError(self._lib.YMatrix_Set_SolutionInitialized(value))
+
+ 
