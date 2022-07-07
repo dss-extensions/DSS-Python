@@ -33,7 +33,7 @@ class IPVSystems(Iterable):
 
     @property
     def Irradiance(self):
-        '''Get/set the present value of the Irradiance property in W/m²'''
+        '''Get/set the present value of the Irradiance property in kW/m²'''
         return self.CheckForError(self._lib.PVSystems_Get_Irradiance())
 
     @Irradiance.setter
