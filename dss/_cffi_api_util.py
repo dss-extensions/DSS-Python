@@ -120,7 +120,7 @@ class Base(object):
             cls._dss_attributes = lowercase_map
 
 
-    def CheckForError(self, result=None):
+    def _check_for_error(self, result=None):
         '''Checks for an OpenDSS error. Raises an exception if any, otherwise returns the `result` parameter.'''
         if self._errorPtr[0]:
             error_num = self._errorPtr[0]
@@ -128,6 +128,9 @@ class Base(object):
             raise DSSException(error_num, self._get_string(self._lib.Error_Get_Description()))
             
         return result
+
+    # for backwards compatibility
+    CheckForError = _check_for_error
 
     def _getattr(self, key):
         if key.startswith('_'):
@@ -158,6 +161,11 @@ class Base(object):
         key = self.__class__._dss_attributes.get(key.lower(), key)
         object.__setattr__(self, key, value)
 
+    def _decode_and_free_string(self, s) -> str:
+        res = self._ffi.string(s).decode(self._api_util.codec)
+        self._lib.DSS_Dispose_String(s)
+        self._check_for_error()
+        return res
 
 
 class CffiApiUtil(object):
@@ -368,16 +376,18 @@ class CffiApiUtil(object):
             raise ValueError("Value cannot be None!")
 
         ptrs = []
+        value_enc = []
         codec = self.codec
         for v in value:
             if type(v) is not bytes:
                 v = v.encode(codec)
+                value_enc.append(v)
 
             ptrs.append(self.ffi.new("char[]", v))
 
         # Need to keep reference to every pointer to they don't get
         # garbage collected too early
-        return value, ptrs, len(ptrs)
+        return value_enc or value, ptrs, len(ptrs)
 
 
 class Iterable(Base):
