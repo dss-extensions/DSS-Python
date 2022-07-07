@@ -111,6 +111,10 @@ class LoadStatus(IntEnum):
     Fixed = 1
     Exempt = 2
 
+class GeneratorStatus(IntEnum):
+    Variable = 0
+    Fixed = 1
+
 class LoadModels(IntEnum):
     ConstPQ = 1
     ConstZ = 2
