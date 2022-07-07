@@ -29,7 +29,7 @@ class IZIP(Base):
         '''
         self.CheckForError(self._lib.ZIP_Close())
 
-    def Redirect(self, Value):
+    def Redirect(self, FileName):
         '''
         Runs a "Redirect" command inside the current (open) ZIP file.
         In the current implementation, all files required by the script must
@@ -37,7 +37,26 @@ class IZIP(Base):
 
         (API Extension)
         '''
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
+        if type(FileName) is not bytes:
+            FileName = FileName.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.ZIP_Redirect(Value))
+        self.CheckForError(self._lib.ZIP_Redirect(FileName))
+
+    def Extract(self, FileName):
+        '''
+        Extracts the contents of the file "FileName" from the current (open) ZIP file.
+        Returns a byte-string.
+
+        (API Extension)
+        '''
+        api_util = self._api_util
+        ptr = api_util.ffi.new('int8_t**')
+        cnt = api_util.ffi.new('int32_t[2]')
+        if type(FileName) is not bytes:
+            FileName = FileName.encode(api_util.codec)
+
+        self.CheckForError(self._lib.ZIP_Extract(ptr, cnt, FileName))
+        result = bytes(api_util.ffi.buffer(ptr[0], cnt[0]))
+        self._lib.DSS_Dispose_PByte(ptr)
+        return result
+
