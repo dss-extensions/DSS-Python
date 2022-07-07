@@ -1,5 +1,6 @@
-import numpy as np
 import os, warnings
+from functools import partial
+import numpy as np
 
 # The codec was changed to ASCII in version 0.10.0.
 # A rewrite of DSS C-API is expected to return UTF8Strings in the future
@@ -10,6 +11,7 @@ interface_classes = set()
 warn_wrong_case = False
 
 def use_com_compat(use=True, warn=False):
+    #TODO: rename to avoid confusion
     if use:
         global warn_wrong_case
         warn_wrong_case = warn
@@ -29,6 +31,36 @@ class DSSException(Exception):
 
 # For backwards compatibility
 DssException = DSSException
+
+class CtxLib:
+    '''
+    Exposes a CFFI Lib object pre-binding the DSSContext (`ctx`) object to the
+    `ctx_*` functions.
+    '''
+    def __init__(self, ctx, lib):
+        done = set()
+
+        # First, process all `ctx_*`` functions
+        for name, value in vars(lib).items():
+            if not name.startswith('ctx_'):
+                continue
+
+            # Keep the basic management functions alone
+            if name not in ('ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', ):
+                name = name[4:]
+                setattr(self, name, partial(value, ctx))
+            else:            
+                setattr(self, name, value)
+
+            done.add(name)
+
+        # Then the remaining fields
+        for name, value in vars(lib).items():
+            if name.startswith('ctx_') or name in done:
+                continue
+
+            setattr(self, name, value)
+
 
 class Base(object):
     __slots__ = [
@@ -113,11 +145,24 @@ class Base(object):
 
 
 class CffiApiUtil(object):
-    def __init__(self, ffi, lib):
+    def __init__(self, ffi, lib, ctx=None):
         self.codec = codec #TODO: check which encoding FreePascal defaults to, on Linux
+        self.ctx = ctx
         self.ffi = ffi
-        self.lib = lib
+        self.lib_unpatched = lib
+        if ctx is None:
+            self.lib = lib
+        else:
+            self.lib = CtxLib(ctx, lib)
+
         self.init_buffers()
+
+    def __delete__(self):
+        if self.ctx is None:
+            return
+             
+        if self.lib.ctx_Get_Prime() != self.ctx:
+            self.lib.ctx_Dispose(self.ctx)
 
     def init_buffers(self):
         tmp_string_pointers = (self.ffi.new('char****'), self.ffi.new('int32_t**'))
@@ -153,6 +198,14 @@ class CffiApiUtil(object):
         ptr = self.ffi.new('double**')
         cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
+        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float)
+        self.lib.DSS_Dispose_PDouble(ptr)
+        return res
+        
+    def get_float64_array_ctx(self, func, ctx, *args):
+        ptr = self.ffi.new('double**')
+        cnt = self.ffi.new('int32_t[2]')
+        func(ctx, ptr, cnt, *args)
         res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float)
         self.lib.DSS_Dispose_PDouble(ptr)
         return res

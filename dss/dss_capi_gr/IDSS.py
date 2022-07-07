@@ -1,11 +1,11 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2020 Paulo Meira
+Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2018-2022 DSS Python contributors
 '''
-from __future__ import absolute_import
-from .._cffi_api_util import Base
 import warnings
+from .._cffi_api_util import Base, CffiApiUtil
 from .ICircuit import ICircuit
 from .IError import IError
 from .IText import IText
@@ -68,7 +68,6 @@ class IDSS(Base):
 
         Base.__init__(self, api_util)    
 
-        
     def ClearAll(self):
         self.CheckForError(self._lib.DSS_ClearAll())
 
@@ -208,3 +207,16 @@ class IDSS(Base):
     @AllowChangeDir.setter
     def AllowChangeDir(self, Value):
         return self.CheckForError(self._lib.DSS_Set_AllowChangeDir(Value))
+
+    def NewContext(self):
+        '''
+        Creates a new DSS engine context.
+        A DSS Context encapsulates most of the global state of the original OpenDSS engine,
+        allowing the user to create multiple instances in the same process. By creating contexts
+        manually, the management of threads and potential issues should be handled by the user.
+        '''
+        ffi = self._api_util.ffi
+        lib = self._api_util.lib_unpatched
+        new_ctx = lib.ctx_New()
+        new_api_util = CffiApiUtil(ffi, lib, new_ctx)
+        return IDSS(new_api_util)
