@@ -5,8 +5,10 @@ from time import time
 import numpy as np
 from scipy.sparse import csc_matrix
 from dss import enums
-from dss import DSSException
-
+try:
+    from dss import DSSException
+except:
+    from dss import DssException as DSSException
 
 original_working_dir = os.getcwd()
 NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
@@ -15,9 +17,9 @@ WIN32 = (sys.platform == 'win32')
 
 COM_VLL_BROKEN = True
 
-num_failures = 0
+failures = []
 
-USE_THREADS = True
+USE_THREADS = False
 
 SAVE_OUTPUT = 'save' in sys.argv
 LOAD_OUTPUT = (not WIN32) or ('load' in sys.argv) 
@@ -1053,7 +1055,7 @@ class ValidatingTest:
                 if SAVE_OUTPUT: self.output['ActiveCircuit.Meters[{}].{}'.format(nA, field)] = fA
                 if not SAVE_OUTPUT: 
                     fB = getattr(B, field)
-                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Meters("{}").{}'.format(A.Name, field), fA, fB)
+                    assert np.allclose(fA, fB, atol=self.atol, rtol=self.rtol), ('Meters("{}").{}'.format(B.Name, field), fA, fB)
 
             fields = 'CountBranches,CountEndElements,CustInterrupts,DIFilesAreOpen,FaultRateXRepairHrs,MeteredElement,MeteredTerminal,Name,NumSectionBranches,NumSectionCustomers,NumSections,OCPDeviceType,SAIDI,SAIFI,SAIFIKW,SectSeqIdx,SectTotalCust,SeqListSize,SequenceIndex,SumBranchFltRates,TotalCustomers' if self.realibity_ran else 'MeteredElement,MeteredTerminal,Name'
             for field in fields.split(','):
@@ -1422,11 +1424,15 @@ def run_fn(fn, dss_variants=None, capi=None):
     else:
         os.chdir(original_working_dir)
         pickle_fn = fn + f'.{LOAD_PLATFORM}.pickle.zstd'
-        with zstd.open(pickle_fn, 'rb') as pickled_output_file:
-            output = test.output = pickle.load(pickled_output_file)
-            print('Output loaded from', pickle_fn)
-            test._set_circuit_fields(output['ActiveCircuit'])
-    
+        try:
+            with zstd.open(pickle_fn, 'rb') as pickled_output_file:
+                output = test.output = pickle.load(pickled_output_file)
+                print('Output loaded from', pickle_fn)
+                test._set_circuit_fields(output['ActiveCircuit'])
+        except FileNotFoundError:
+            print('File not found, skipping:', pickle_fn)
+            return
+            
     if not SAVE_OUTPUT:
         print("Running using DSS Extensions")
         test.run(capi, solve=True)
@@ -1436,8 +1442,8 @@ def run_fn(fn, dss_variants=None, capi=None):
     try:
         test.validate_all()
     except (AssertionError, TypeError) as ex:
-        global num_failures
-        num_failures += 1
+        global failures
+        failures.append(fn)
         print('!!!!!!!!!!!!!!!!!!!!!!')
         print('ERROR:', fn, ex)
         print('!!!!!!!!!!!!!!!!!!!!!!')
@@ -1467,7 +1473,8 @@ def run_fn(fn, dss_variants=None, capi=None):
 
 def run_tests(fns):
     from dss import DSS, use_com_compat
-    DSS.AllowChangeDir = False
+    if USE_THREADS:
+        DSS.AllowChangeDir = False
     use_com_compat()
 
     # NOTE: if win32com errors out, rerun until all files are generated
@@ -1501,7 +1508,11 @@ def run_tests(fns):
             dss.Text.Command = r'set editor=ignore_me_invalid_executable'
         
     capi.AllowEditor = False
-    capi.Error.ExtendedErrors = False
+    try:
+        capi.Error.ExtendedErrors = False
+    except:
+        pass # probably not supported in this version
+
     assert capi.Error.EarlyAbort # check the default value, should be True
 
     # Test toggling console output with C-API, COM can only be disabled
@@ -1544,8 +1555,9 @@ def run_tests(fns):
                 fn = fns[futures.index(future)]
                 print(fn, future.result())
     else:
+        # print(dss_variants, 'dss_variants')
         for fn in fns:
-            run_fn(fn, dss_variants)
+            run_fn(fn, dss_variants, capi=capi)
     
     if not LOAD_OUTPUT:
         for dss in dss_variants:
@@ -1560,7 +1572,6 @@ if __name__ == '__main__':
     except:
         colorizer = None
 
-    
     t0_global = time()
     if SAVE_OUTPUT:
         # Always save all results, even the broken ones
@@ -1570,4 +1581,7 @@ if __name__ == '__main__':
         #run_tests(sorted(errored))
         
     print(time() - t0_global, 'seconds')
-    print("Failures:", num_failures)
+    print(f"{len(failures)} Failures")
+    print(failures)
+    for fn in failures:
+        print(fn)
