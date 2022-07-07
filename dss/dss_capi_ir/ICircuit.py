@@ -348,7 +348,7 @@ class ICircuit(Base):
 
     @property
     def TotalPower(self):
-        '''(read-only) Total power, watts delivered to the circuit'''
+        '''(read-only) Total power, kW delivered to the circuit'''
         return self._get_float64_array(self._lib.Circuit_Get_TotalPower)
 
     @property

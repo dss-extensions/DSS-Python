@@ -361,7 +361,7 @@ class ICircuit(Base):
 
     @property
     def TotalPower(self):
-        '''(read-only) Total power, watts delivered to the circuit'''
+        '''(read-only) Total power, kW delivered to the circuit'''
         self.CheckForError(self._lib.Circuit_Get_TotalPower_GR())
         return self._get_float64_gr_array()
 
