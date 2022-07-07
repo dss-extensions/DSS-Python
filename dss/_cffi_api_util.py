@@ -214,19 +214,19 @@ class CffiApiUtil(object):
         ptr = self.ffi.new('double**')
         cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
-        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float)
+        res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
         self.lib.DSS_Dispose_PDouble(ptr)
         return res
         
     def get_float64_gr_array(self):
         ptr, cnt = self.gr_float64_pointers
-        return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float)
+        return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
 
     def get_int32_array(self, func, *args):
         ptr = self.ffi.new('int32_t**')
         cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
-        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32)
+        res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
         self.lib.DSS_Dispose_PInteger(ptr)
         return res
 
@@ -234,25 +234,25 @@ class CffiApiUtil(object):
         ptr = self.ffi.new('void***')
         cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
-        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * np.dtype(np.uintp).itemsize), dtype=np.uintp)
+        res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * np.dtype(np.uintp).itemsize), dtype=np.uintp).copy()
         self.lib.DSS_Dispose_PPointer(ptr)
         return res
 
     def get_int32_gr_array(self):
         ptr, cnt = self.gr_int32_pointers
-        return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32)
+        return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
 
     def get_int8_array(self, func, *args):
         ptr = self.ffi.new('int8_t**')
         cnt = self.ffi.new('int32_t[2]')
         func(ptr, cnt, *args)
-        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8)
+        res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
         self.lib.DSS_Dispose_PByte(ptr)
         return res
 
     def get_int8_gr_array(self):
         ptr, cnt = self.gr_int8_pointers
-        return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8)
+        return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
 
     def get_string_array(self, func, *args):
         ptr = self.ffi.new('char***')
