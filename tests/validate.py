@@ -314,6 +314,9 @@ class ValidatingTest:
         if not SAVE_OUTPUT:
             B = self.dss_b.ActiveCircuit.ActiveBus
 
+
+        skip_coorddef = 'epri_dpv/J1/Master_withPV.dss' in self.fn
+
         for name in self.AllBusNames[-1]:
             if not LOAD_OUTPUT:
                 self.dss_a.ActiveCircuit.SetActiveBus(name)
@@ -333,11 +336,14 @@ class ValidatingTest:
                         fB = getattr(B, field)
                         assert list(fA) == list(fB), (fA, fB)
                     
-
             for field in ('Coorddefined', 'Cust_Duration', 'Cust_Interrupts', 'Distance', 'Int_Duration', 'Isc', 'Lambda', 'N_Customers', 'N_interrupts', 'Nodes', 'NumNodes', 'SectionID', 'TotalMiles', 'VLL', 'VMagAngle', 'Voc', 'Voltages', 'YscMatrix', 'Zsc0', 'Zsc1', 'ZscMatrix', 'kVBase', 'puVLL', 'puVmagAngle', 'puVoltages', 'x', 'y',  'SeqVoltages', 'CplxSeqVoltages'):
                 if COM_VLL_BROKEN and field in ('VLL', 'puVLL'):
                     continue
-
+                
+                if skip_coorddef and field in ('x', 'y', 'Coorddefined'):
+                    #TODO: check bus "s" in COM in the next update
+                    continue
+                
                 fA = self.output[f'ActiveCircuit.ActiveBus[{name}].{field}'] if LOAD_OUTPUT else getattr(A, field)
                 if SAVE_OUTPUT:
                     self.output[f'ActiveCircuit.ActiveBus[{name}].{field}'] = fA
@@ -1275,7 +1281,7 @@ class ValidatingTest:
             return
 
         NN = self.dss_b.ActiveCircuit.NumNodes
-        if NN > 2000: # test only on small strings
+        if NN > 2000: # test only on small circuits
             return
 
         ysparse = csc_matrix(self.dss_b.YMatrix.GetCompressedYMatrix(factor=False))
@@ -1423,7 +1429,7 @@ def run_fn(fn, dss_variants=None, capi=None):
         output['ActiveCircuit'] = test._get_circuit_fields(0, 1)
     else:
         os.chdir(original_working_dir)
-        pickle_fn = fn + f'.{LOAD_PLATFORM}.pickle.zstd'
+        pickle_fn = fn + f'.{LOAD_PLATFORM}.pickle.zst'
         try:
             with zstd.open(pickle_fn, 'rb') as pickled_output_file:
                 output = test.output = pickle.load(pickled_output_file)
@@ -1460,9 +1466,9 @@ def run_fn(fn, dss_variants=None, capi=None):
     if SAVE_OUTPUT:
         os.chdir(original_working_dir)
         if SAVE_DSSX_OUTPUT:
-            pickle_fn = fn + f'.{sys.platform}-{platform.machine()}-dssx.pickle.zstd'
+            pickle_fn = fn + f'.{sys.platform}-{platform.machine()}-dssx.pickle.zst'
         else:
-            pickle_fn = fn + '.win32com.pickle.zstd'
+            pickle_fn = fn + '.win32com.pickle.zst'
 
         with zstd.open(pickle_fn, 'wb') as pickled_output_file:
             pickle.dump(output, pickled_output_file, protocol=4) # use protocol 4 to allow testing under Python 3.7
