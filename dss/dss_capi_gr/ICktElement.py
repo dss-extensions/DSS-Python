@@ -338,6 +338,12 @@ class ICktElement(Base):
         self.CheckForError(self._lib.CktElement_Get_TotalPowers_GR())
         return self._get_float64_gr_array()
 
+    @property
+    def NodeRef(self):
+        '''Array of integers, a copy of the internal NodeRef of the CktElement.'''
+        self._lib.CktElement_Get_NodeRef_GR()
+        return self._get_int32_gr_array()
+
     def __iter__(self):
         for index in range(self.CheckForError(self._lib.Circuit_Get_NumCktElements())):
             self.CheckForError(self._lib.Circuit_SetCktElementIndex(index))
