@@ -2,16 +2,25 @@ import os, warnings
 from functools import partial
 import numpy as np
 
-# The codec was changed to ASCII in version 0.10.0.
-# A rewrite of DSS C-API is expected to return UTF8Strings in the future
-codec = 'ascii'
+# UTF8 under testing
+codec = 'UTF8'
 
 interface_classes = set()
 
 warn_wrong_case = False
 
-def use_com_compat(use=True, warn=False):
-    #TODO: rename to avoid confusion
+def set_case_insensitive_attributes(use=True, warn=False):
+    '''
+    This function is provided to allow easier migration from `win32com.client`.
+    
+    When used with late bindings, `win32com` allows using mixed-case names for
+    any of the COM-related items. When migrating or testing with DSS Python,
+    users can then use this function to continue using the same code, optionally
+    emitting warnings when the canonical casing is different from the one used.
+    Note that there is a small overhead for allowing case-insensitive names,
+    thus is not recommended to continue using it after migration/adjustments to
+    the user code.
+    '''
     if use:
         global warn_wrong_case
         warn_wrong_case = warn
@@ -26,11 +35,15 @@ def use_com_compat(use=True, warn=False):
         del Base.__setattr__
         del Base.__getattr__
 
+
 class DSSException(Exception):
-    pass
+    def __str__(self):
+        return f'(#{self.args[0]}) {self.args[1]}'
+
 
 # For backwards compatibility
 DssException = DSSException
+use_com_compat = set_case_insensitive_attributes
 
 class CtxLib:
     '''
@@ -42,12 +55,15 @@ class CtxLib:
 
         # First, process all `ctx_*`` functions
         for name, value in vars(lib).items():
-            if not name.startswith('ctx_'):
+            is_ctx = name.startswith('ctx_')
+            if not is_ctx and not name.startswith('Batch_Create'):
                 continue
 
             # Keep the basic management functions alone
             if name not in ('ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', ):
-                name = name[4:]
+                if is_ctx:
+                    name = name[4:]
+
                 setattr(self, name, partial(value, ctx))
             else:            
                 setattr(self, name, value)
@@ -202,14 +218,6 @@ class CffiApiUtil(object):
         self.lib.DSS_Dispose_PDouble(ptr)
         return res
         
-    def get_float64_array_ctx(self, func, ctx, *args):
-        ptr = self.ffi.new('double**')
-        cnt = self.ffi.new('int32_t[2]')
-        func(ctx, ptr, cnt, *args)
-        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float)
-        self.lib.DSS_Dispose_PDouble(ptr)
-        return res
-
     def get_float64_gr_array(self):
         ptr, cnt = self.gr_float64_pointers
         return np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float)
@@ -220,6 +228,14 @@ class CffiApiUtil(object):
         func(ptr, cnt, *args)
         res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32)
         self.lib.DSS_Dispose_PInteger(ptr)
+        return res
+
+    def get_ptr_array(self, func, *args):
+        ptr = self.ffi.new('void***')
+        cnt = self.ffi.new('int32_t[2]')
+        func(ptr, cnt, *args)
+        res = np.fromstring(self.ffi.buffer(ptr[0], cnt[0] * np.dtype(np.uintp).itemsize), dtype=np.uintp)
+        self.lib.DSS_Dispose_PPointer(ptr)
         return res
 
     def get_int32_gr_array(self):

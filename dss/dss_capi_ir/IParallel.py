@@ -1,9 +1,9 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2020 Paulo Meira
+Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2018-2022 DSS Extensions contributors
 '''
-from __future__ import absolute_import
 from .._cffi_api_util import Base
 
 class IParallel(Base):
@@ -60,8 +60,7 @@ class IParallel(Base):
     @property
     def ConcatenateReports(self):
         '''
-        (read) Reads the values of the ConcatenateReports option (1=enabled, 0=disabled)
-        (write) Enable/Disable (1/0) the ConcatenateReports option for extracting monitors data
+        Controls the ConcatenateReports option (1=enabled, 0=disabled)
         '''
         return self.CheckForError(self._lib.Parallel_Get_ConcatenateReports()) #TODO: use boolean for consistency
 

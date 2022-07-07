@@ -1,9 +1,9 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2020 Paulo Meira
+Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2018-2022 DSS Extensions contributors
 '''
-from __future__ import absolute_import
 from .._cffi_api_util import Base
 import warnings
 from .ICircuit import ICircuit
@@ -13,10 +13,10 @@ from .IDSSProgress import IDSSProgress
 from .IActiveClass import IActiveClass
 from .IDSS_Executive import IDSS_Executive
 from .IDSSEvents import IDSSEvents
-from .ICmathLib import ICmathLib
 from .IParser import IParser
 from .IDSSimComs import IDSSimComs
 from .IYMatrix import IYMatrix
+from .IZIP import IZIP
 
 class IDSS(Base):
     '''
@@ -36,6 +36,7 @@ class IDSS(Base):
         'Parser',
         'DSSim_Coms',
         'YMatrix',
+        'ZIP',
     ]
     
     _columns = [
@@ -61,10 +62,10 @@ class IDSS(Base):
         self.ActiveClass = IActiveClass(api_util)
         self.Executive = IDSS_Executive(api_util)
         self.Events = IDSSEvents(api_util)
-        self.CmathLib = ICmathLib(api_util)
         self.Parser = IParser(api_util)
         self.DSSim_Coms = IDSSimComs(api_util)
         self.YMatrix = IYMatrix(api_util)
+        self.ZIP = IZIP(api_util)
 
         Base.__init__(self, api_util)    
 

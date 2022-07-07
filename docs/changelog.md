@@ -1,3 +1,8 @@
+# 0.12.0
+
+- Removed CmathLib: not useful in Python or most programming languages targetted by DSS Extensions.
+
+
 # 0.10.7
 
 - Maintenance release. 
