@@ -148,6 +148,8 @@ class IDSS(Base):
         AllowEditor controls whether the external editor is used in commands like "Show".
         If you set to 0 (false), the editor is not executed. Note that other side effects,
         such as the creation of files, are not affected.
+
+        (API Extension)
         '''
         return self.CheckForError(self._lib.DSS_Get_AllowEditor()) != 0
 
@@ -215,6 +217,8 @@ class IDSS(Base):
         A DSS Context encapsulates most of the global state of the original OpenDSS engine,
         allowing the user to create multiple instances in the same process. By creating contexts
         manually, the management of threads and potential issues should be handled by the user.
+
+        (API Extension)
         '''
         ffi = self._api_util.ffi
         lib = self._api_util.lib_unpatched
