@@ -14,6 +14,9 @@ if 'linux' in sys.platform.lower():
 else:
     arch = 'x64' if (sys.maxsize > (1 << 32)) else 'x86'
 
+if '-arm64' in os.environ.get('_PYTHON_HOST_PLATFORM', ''):
+    arch = 'arm64'
+
 platform_short = ''.join(filter(lambda ch: ch.isalpha(), sys.platform))
 PLATFORM_FOLDER = '{}_{}'.format(platform_short, arch)
 

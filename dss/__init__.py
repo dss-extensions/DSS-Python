@@ -5,4 +5,4 @@
 from .v7 import *
 from .patch_dss_com import patch_dss_com
 
-__version__ = '0.12.0.dev0'
+__version__ = '0.12.0.dev'

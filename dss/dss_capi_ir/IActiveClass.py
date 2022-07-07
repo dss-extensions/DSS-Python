@@ -40,12 +40,6 @@ class IActiveClass(Base):
             yield self
             n = self.Next
 
-    def __iter__(self):
-        n = self.First
-        while n:
-            yield self
-            n = self.Next
-
     @property
     def First(self):
         '''(read-only) Sets first element in the active class to be the active DSS object. If object is a CktElement, ActiveCktELment also points to this element. Returns 0 if none.'''
