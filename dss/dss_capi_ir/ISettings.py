@@ -27,6 +27,8 @@ class ISettings(Base):
         'NormVmaxpu',
         'AllowDuplicates',
         'ControlTrace',
+        'LoadsTerminalCheck',
+        'IterateDisabled',
     ]
 
     @property
@@ -52,7 +54,7 @@ class ISettings(Base):
 
     @property
     def CktModel(self):
-        '''{dssMultiphase * | dssPositiveSeq} IIndicate if the circuit model is positive sequence.'''
+        '''{dssMultiphase (0) * | dssPositiveSeq (1) } IIndicate if the circuit model is positive sequence.'''
         return self.CheckForError(self._lib.Settings_Get_CktModel())
 
     @CktModel.setter
@@ -214,3 +216,21 @@ class ISettings(Base):
     def LoadsTerminalCheck(self, Value):
         self.CheckForError(self._lib.Settings_Set_LoadsTerminalCheck(Value))
         
+    @property
+    def IterateDisabled(self):
+        '''
+        Controls whether `First`/`Next` iteration includes or skips disabled circuit elements.
+        The default behavior from OpenDSS is to skip those. The user can still activate the element by name or index.
+        
+        The default value for IterateDisabled is 0, keeping the original behavior.
+        Set it to 1 (or `True`) to include disabled elements.
+        Other numeric values are reserved for other potential behaviors.
+        
+        (API Extension)
+        '''
+        return self.CheckForError(self._lib.Settings_Set_IterateDisabled())
+
+    @IterateDisabled.setter
+    def IterateDisabled(self, Value):
+        self.CheckForError(self._lib.Settings_Set_IterateDisabled(int(Value)))
+
