@@ -3,7 +3,6 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 
 Copyright (c) 2019-2020 Paulo Meira
 '''
-from __future__ import absolute_import
 from .._cffi_api_util import Base
 
 class IReduceCkt(Base):

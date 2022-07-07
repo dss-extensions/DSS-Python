@@ -3,5 +3,4 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 
 Copyright (c) 2016-2019 Paulo Meira
 '''
-from __future__ import absolute_import
 from .IDSS import IDSS

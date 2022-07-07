@@ -1,4 +1,3 @@
-from __future__ import print_function, absolute_import
 import re
 from .. import (
     _dss_CapUserControl, 
@@ -178,7 +177,7 @@ class CapUserControlWrapper(CommonWrapper):
         'UpdateModel'
     )
 
-    def Sample(sel):
+    def Sample(self):
         if not self.active_instance:
             return
    
