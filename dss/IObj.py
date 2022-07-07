@@ -8,6 +8,7 @@ Copyright (c) 2021-2022 DSS Extensions contributors
 from typing import Union, List, AnyStr
 import numpy as np
 import numpy.typing as npt
+from .enums import DSSJSONFlags
 
 try:
     from enum import IntEnum
@@ -273,7 +274,7 @@ class DSSObj(Base):
         Base.__init__(self, api_util)
         self._ptr = ptr
         self._ffi = api_util.ffi
-        self._get_int32_list = api_util._get_int32_array2
+        self._get_int32_list = api_util.get_int32_array2
 
     # def __getitem__(self, name_or_idx):
     #     if isinstance(name_or_idx, int):
@@ -292,8 +293,35 @@ class DSSObj(Base):
     #         for (name, (idx, funcname, *_)) in self._properties_by_name.items()
     #     }
 
-    # def to_json(self):
-    #     return json.dumps(self.to_dict())
+    def to_json(self, options: Union[int, DSSJSONFlags] = 0):
+        '''
+        Returns an element's data as a JSON-encoded string.
+
+        The `options` parameter contains bit-flags to toggle specific features.
+
+        By default (`options = 0`), only the properties explicitly set. The properties are returned in the order they are set in the input.
+        As a reminder, OpenDSS is sensitive to the order of the properties.
+
+        The `options` bit-flags are available in the `DSSJSONFlags` enum.
+        Values used by this function are:
+
+        - `Full`: if set, all properties are returned, ordered by property index instead.
+        - `SkipRedundant`: if used with `Full`, all properties except redundant and unused ones are returned.
+        - `EnumAsInt`: enumerated properties are returned as integer values instead of strings.
+        - `FullNames`: any element reference will use the full name (`{class name}.{element name}`) even if not required.
+        - `Pretty`: more whitespace is used in the output for a "prettier" format.
+
+        **NOT IMPLEMENTED YET**:
+        - `State`: include run-time state information
+        - `Debug`: include debug information
+
+        Other bit-flags are reserved for future uses. Please use `DSSJSONFlags` enum to avoid potential conflicts.
+
+        (API Extension)
+        '''
+        s = self._lib.Obj_ToJSON(self._ptr, options)
+        self._check_for_error()
+        return self._ffi.string(s).decode(self._api_util.codec)
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and (other._ptr == self._ptr)
@@ -453,6 +481,21 @@ class DSSBatch(Base):
             raise ValueError('Invalid property name "{}"'.format(prop_name))
         self._lib.Batch_CreateByInt32Property(self.pointer, self.count, self._cls_idx, prop_idx, intval)
         self._check_for_error()
+
+    def to_json(self, options: Union[int, DSSJSONFlags] = 0):
+        '''
+        Returns the data (as a list) of the elements in a batch as a JSON-encoded string.
+
+        The `options` parameter contains bit-flags to toggle specific features.
+        See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
+        
+        Additionally, the `ExcludeDisabled` flag can be used to excluded disabled elements from the output.
+
+        (API Extension)
+        '''
+        s = self._lib.Batch_ToJSON(self.pointer[0], self.count[0], options)
+        self._check_for_error()
+        return self._ffi.string(s).decode(self._api_util.codec)
 
     def __eq__(self, other):
         return self is other

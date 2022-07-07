@@ -37,3 +37,13 @@ class IDSSElement(Base):
         '''(read-only) Number of Properties for the active DSS object.'''
         return self.CheckForError(self._lib.DSSElement_Get_NumProperties())
 
+    def ToJSON(self, options=0):
+        '''
+        Returns the properties of the active DSS object as a JSON-encoded string.
+
+        The `options` parameter contains bit-flags to toggle specific features.
+        See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
+
+        (API Extension)
+        '''
+        return self._get_string(self.CheckForError(self._lib.DSSElement_ToJSON(options)))
