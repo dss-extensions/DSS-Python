@@ -348,11 +348,6 @@ class ICktElement(Base):
             self.CheckForError(self._lib.Circuit_SetCktElementIndex(index))
             yield self
 
-    def __iter__(self):
-        for index in range(self._lib.Circuit_Get_NumCktElements()):
-            self._lib.Circuit_SetCktElementIndex(index)
-            yield self
-
     def __getitem__(self, index):
         if isinstance(index, int):
             # index is zero based, pass it directly

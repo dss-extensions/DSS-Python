@@ -5,7 +5,7 @@
 
 # DSS Python: Extended bindings for an implementation of EPRI's OpenDSS
 
-Python bindings and misc tools for using the OpenDSS (EPRI Distribution System Simulator) engine through the alternative/unofficial implementation from the DSS C-API implementation. Based on DSS C-API, CFFI and NumPy, aiming for full COM compatibility on Windows, Linux and MacOS.
+Python bindings and misc tools for using the OpenDSS (EPRI Distribution System Simulator) engine through the alternative/unofficial implementation from the DSS C-API library. Based on DSS C-API, CFFI and NumPy, aiming for full COM compatibility on Windows, Linux and MacOS.
 
 See also the other projects from [DSS-Extensions.org](https://dss-extensions.org/):
 

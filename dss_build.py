@@ -2,7 +2,7 @@ from cffi import FFI
 import sys, re, os
 from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS
 
-def process_header(src, extern_py=False, implement_py=False, prefix='', v8=False):
+def process_header(src, extern_py=False, implement_py=False, prefix=''):
     '''Prepare the DSS C-API headers for parsing and building with CFFI'''
     
     call_convention = '__stdcall ' if (sys.platform == 'win32') else ''
@@ -19,8 +19,6 @@ def process_header(src, extern_py=False, implement_py=False, prefix='', v8=False
             r'\1 ({call_convention}*\2)'.format(call_convention=call_convention), 
             src
         )
-        if not v8:
-            src = re.sub(r'.*/\*V8\*/', '', src)
     
     if extern_py:
         src = re.sub(

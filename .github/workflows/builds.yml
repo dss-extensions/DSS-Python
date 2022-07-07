@@ -3,7 +3,7 @@ name: Builds
 # TODO: generalize steps
 
 env:
-  DSS_CAPI_TAG: 0.12.0a1
+  DSS_CAPI_TAG: 0.12.0b8
   ARTIFACTS_FOLDER: '${{ github.workspace }}/artifacts'
 
 on: 
@@ -96,6 +96,43 @@ jobs:
         run: |
           curl -s -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.13.sdk.tar.xz -o macOSsdk.tar.xz
           tar xf macOSsdk.tar.xz
+      - name: Build wheel
+        run: |
+          bash dss_python/ci/build_wheel.sh
+      # - name: Build conda packages
+      #   continue-on-error: true
+      #   run: |
+      #     sudo chown -R $UID $CONDA
+      #     bash dss_python/ci/build_conda.sh
+      - name: 'Upload artifacts'
+        uses: "actions/upload-artifact@v2"
+        with:
+          name: 'packages'
+          path: '${{ github.workspace }}/artifacts'
+
+  build_macos_arm64:
+    name: 'macOS ARM64'
+    runs-on: 'macos-11'
+    env:
+      DSS_CAPI_PATH: '${{ github.workspace }}/dss_capi'
+      # SDKROOT: '${{ github.workspace }}/MacOSX10.13.sdk'
+      PYTHON: python3
+      _PYTHON_HOST_PLATFORM: macosx-11.0-arm64
+      ARCHFLAGS: '-arch arm64'
+
+    steps:
+      - uses: actions/checkout@v2
+        with: 
+          fetch-depth: 0
+          path: 'dss_python'
+      - name: 'Download/extract DSS C-API binaries'
+        run: |
+          curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_darwin_arm64.tar.gz -o dss_capi.tar.gz
+          tar zxf dss_capi.tar.gz
+      # - name: 'Download macOS SDK 10.13'
+      #   run: |
+      #     curl -s -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.13.sdk.tar.xz -o macOSsdk.tar.xz
+      #     tar xf macOSsdk.tar.xz
       - name: Build wheel
         run: |
           bash dss_python/ci/build_wheel.sh
