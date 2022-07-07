@@ -17,6 +17,7 @@ from .IParser import IParser
 from .IDSSimComs import IDSSimComs
 from .IYMatrix import IYMatrix
 from .IZIP import IZIP
+from ..IObj import IObj
 
 class IDSS(Base):
     '''
@@ -37,6 +38,7 @@ class IDSS(Base):
         'DSSim_Coms',
         'YMatrix',
         'ZIP',
+        'Obj',
     ]
     
     _columns = [
@@ -66,6 +68,7 @@ class IDSS(Base):
         self.DSSim_Coms = IDSSimComs(api_util)
         self.YMatrix = IYMatrix(api_util)
         self.ZIP = IZIP(api_util)
+        self.Obj = IObj(api_util)
 
         Base.__init__(self, api_util)    
 
@@ -179,6 +182,8 @@ class IDSS(Base):
         Defaults to False. 
         
         This can also be enabled by setting the environment variable DSS_CAPI_LEGACY_MODELS to 1.
+
+        NOTE: this option will be removed in a future release.
         
         (API Extension)
         '''
