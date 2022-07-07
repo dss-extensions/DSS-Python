@@ -66,7 +66,6 @@ new_examples = '''
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/VV_DRC/Daily_VVDRC_kVAlimitation_P-2.dss
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/VV_DRC/Daily_VVDRC_kVAlimitation_Q-2.dss
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/VV_DRC/Daily_VVDRC_kvarlimitation-2.dss
-../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/VV_DRC/Daily_VVDRC_kvarlimitation-2.dss
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/VV_DRC/Daily_VVDRC_ravg-2.dss
 ../../electricdss-tst/Version8/Distrib/Examples/StorageTechNote/Example_9_1_Default/Storage_default.dss
 ../../electricdss-tst/Version8/Distrib/Examples/StorageTechNote/Example_9_2_Follow/Storage_follow.dss
