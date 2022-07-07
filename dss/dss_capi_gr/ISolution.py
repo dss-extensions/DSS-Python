@@ -369,7 +369,7 @@ class ISolution(Base):
     @property
     def SystemYChanged(self):
         '''(read-only) Flag that indicates if elements of the System Y have been changed by recent activity.'''
-        return self.CheckForError(self._lib.Solution_Get_SystemYChanged()) != 0
+        return self.CheckForError(self._lib.Solution_Get_SystemYChanged() != 0)
 
     @property
     def Time_of_Step(self):

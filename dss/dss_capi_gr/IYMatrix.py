@@ -83,7 +83,7 @@ class IYMatrix(Base):
 
     @property
     def SystemYChanged(self):
-        return self.CheckForError(self._lib.YMatrix_Get_SystemYChanged())
+        return self.CheckForError(self._lib.YMatrix_Get_SystemYChanged() != 0)
 
     @SystemYChanged.setter
     def SystemYChanged(self, value):
@@ -91,7 +91,7 @@ class IYMatrix(Base):
 
     @property
     def UseAuxCurrents(self):
-        return self.CheckForError(self._lib.YMatrix_Get_UseAuxCurrents())
+        return self.CheckForError(self._lib.YMatrix_Get_UseAuxCurrents() != 0)
 
     @UseAuxCurrents.setter
     def UseAuxCurrents(self, value):
