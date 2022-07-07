@@ -3,9 +3,9 @@
 [![Install with conda](https://anaconda.org/dss-extensions/dss_python/badges/installer/conda.svg)](https://anaconda.org/dss-extensions/dss_python)
 [![conda package version](https://anaconda.org/dss-extensions/dss_python/badges/version.svg)](https://anaconda.org/dss-extensions/dss_python)
 
-# DSS Python: Unofficial bindings for EPRI's OpenDSS
+# DSS Python: Extended bindings for an implementation of EPRI's OpenDSS
 
-Python bindings and misc tools for using OpenDSS (EPRI Distribution System Simulator). Based on CFFI and DSS C-API, aiming for full COM compatibility on Windows, Linux and MacOS.
+Python bindings and misc tools for using the OpenDSS (EPRI Distribution System Simulator) engine through the alternative/unofficial implementation from the DSS C-API implementation. Based on DSS C-API, CFFI and NumPy, aiming for full COM compatibility on Windows, Linux and MacOS.
 
 See also the other projects from [DSS-Extensions.org](https://dss-extensions.org/):
 
@@ -15,16 +15,17 @@ See also the other projects from [DSS-Extensions.org](https://dss-extensions.org
 - [DSS Sharp](http://github.com/dss-extensions/dss_sharp/): available for .NET/C#, also mimics the COM classes, but Windows-only at the moment. Soon it will be possible to use it via COM too.
 - [DSS MATLAB](http://github.com/dss-extensions/dss_matlab/): presents multi-platform integration (Windows, Linux, MacOS) with DSS C-API and is also very compatible with the COM classes.
 
-Version 0.10.7, based on OpenDSS revision 2963 (OpenDSS v9.1.3.4). While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached. If you find an unexpected missing feature, please report it!
+Version 0.12.0, based on OpenDSS revision 3363 (OpenDSS v9.4.0.6). While we plan to add a lot more funcionality into DSS Python, the main goal of creating a COM-compatible API has been reached. If you find an unexpected missing feature, please report it! Currently missing features that will be implemented eventualy are plotting and diakoptics.
 
-This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level.
-Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange. 
+This module mimics the COM structure (as exposed via `win32com` or `comtypes`), effectively enabling multi-platform compatibility at Python level. Compared to other options, it provides easier migration from code that uses the official OpenDSS through COM.
+Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange, which is usually preferred by the users.
 
-The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the sparse system admittance matrix.
+The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the sparse system admittance matrix. In future versions, Pandas and matplotlib might be added as optional dependencies to enable plotting and other features. 
 
 ## Brief release history
 
-- **2021-03-09 / version 0.10.7-1: Very minor release to fix issues with some of the energy meter reports.**
+- **2022-03-XX / version 0.12.0:** Major release merging parallel features, multiple DSS engine instances, ZIP file support, incremental Y matrix updates, new API functions and so on.
+- 2021-03-09 / version 0.10.7-1: Very minor release to fix issues with some of the energy meter reports.
 - 2020-12-28 / version 0.10.7: Maintenance release to match DSS C-API 0.10.7, based on on OpenDSS revision 2963. Includes fixes and new features from the official OpenDSS.
 - 2020-07-31 / version 0.10.6: Maintenance release to match DSS C-API 0.10.6, based on on OpenDSS revision 2909. New important settings: `DSS.LegacyModels` and `DSS.Error.ExtendedErrors`.
 - 2020-03-03 / version 0.10.5: Maintenance release to match DSS C-API 0.10.5, based on on OpenDSS revision 2837. Temporarily drops the v8 parallel-machine functions, as well as conda packages on Windows.
@@ -150,18 +151,6 @@ for i in range(len(voltages) // 2):
     print('node %d: %f + j%f' % (i, voltages[2*i], voltages[2*i + 1]))
 ```
 
-
-~~If you want to play with the experimental OpenDSS-PM interface (from OpenDSS v8), it is installed side-by-side and you can import it as:~~ -- temporarily disabled in DSS Python 0.10.5. Check back in a few months.
-
-```python
-import dss.v8
-dss_engine = dss.v8.DSS
-```
-
-~~Although it is experimental, most of its funcionality is working. Depending on your use-case, the parallel interface can be an easy way of better using your machine resources. Otherwise, you can always use general distributed computing resources via Python.~~
-
-~~Beware the v8 alternative can present issues and it should be removed as soon as all OpenDSS 8+ features are integrated into the default version.~~
-
 Testing
 =======
 Since the DLL is built using the Free Pascal compiler, which is not officially supported by EPRI, the results are validated running sample networks provided in the official OpenDSS distribution. The only modifications are done directly by the script, removing interactive features and some other minor issues. Most of the sample files from the official OpenDSS repository are used for validation.
@@ -177,9 +166,8 @@ Besides bug fixes, the main funcionality of this library is mostly done. Notable
 
 - More and better documentation
 - Plotting and reports integrated in Python.
-- Parallel-machine properties (disabled in DSS Python 0.10.5, to be reworked).
 
-Expect news about these items by version 0.11.
+Expect news about these items by version 0.13.
 
 Questions?
 ==========

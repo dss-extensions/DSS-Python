@@ -6,6 +6,8 @@ except:
     except:
         IntEnum = object
 
+#TODO: add missing enums
+
 class MonitorModes(IntEnum):
     VI = 0x00 # Monitor records Voltage and Current at the terminal (Default)
     Power = 0x01 # Monitor records kW, kvar or kVA, angle values, etc. at the terminal to which it is connected.
@@ -99,7 +101,7 @@ class ActionCodes(IntEnum):
     Open = 1 # Open a switch
     Close = 2 # Close a switch
     Reset = 3 # Reset to the shelf state (unlocked, closed for a switch)
-    Lock = 4 # Lock a switch, prventing both manual and automatic operation
+    Lock = 4 # Lock a switch, preventing both manual and automatic operation
     Unlock = 5 # Unlock a switch, permitting both manual and automatic operation
     TapUp = 6 # Move a regulator tap up
     TapDown = 7 # Move a regulator tap down
@@ -139,3 +141,11 @@ class OCPDevType(IntEnum):
     Fuse = 1
     Recloser = 2
     Relay = 3
+
+class SparseSolverOptions(IntEnum):
+    ReuseNothing = 0 
+    ReuseCompressedMatrix = 1 # Reuse only the prepared CSC matrix
+    ReuseSymbolicFactorization = 2 # Reuse the symbolic factorization, implies ReuseCompressedMatrix
+    ReuseNumericFactorization = 3 # Reuse the numeric factorization, implies ReuseSymbolicFactorization
+    
+    AlwaysResetYPrimInvalid = 0x100000000 # Bit flag, see CktElement.pas for details
