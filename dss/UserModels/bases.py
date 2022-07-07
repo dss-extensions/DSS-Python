@@ -251,29 +251,29 @@ class SaveRestoreMixin(object):
     
         
 
-class CapUserControlBase(CommonBase):
-    def sample(self):
-        pass
+# class CapUserControlBase(CommonBase):
+#     def sample(self):
+#         pass
 
 class GenUserModelBase(DynamicsBase, SaveRestoreMixin):
     def __init__(self, gen, dyn, callbacks, populate=None):
         DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
         self.gen = gen
 
-class PVSystemUserModelBase(DynamicsBase, SaveRestoreMixin):
-    def __init__(self, gen, dyn, callbacks, populate=None):
-        DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
-        self.gen = gen
+# class PVSystemUserModelBase(DynamicsBase, SaveRestoreMixin):
+#     def __init__(self, gen, dyn, callbacks, populate=None):
+#         DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
+#         self.gen = gen
 
-class StoreUserModelBase(DynamicsBase, SaveRestoreMixin):
-    def __init__(self, dyn, callbacks, populate=None):
-        DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
+# class StoreUserModelBase(DynamicsBase, SaveRestoreMixin):
+#     def __init__(self, dyn, callbacks, populate=None):
+#         DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
 
-class StoreUserModelBase(DynamicsBase, SaveRestoreMixin):
-    def __init__(self, dyn, callbacks, populate=None):
-        DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
+# class StoreUserModelBase(DynamicsBase, SaveRestoreMixin):
+#     def __init__(self, dyn, callbacks, populate=None):
+#         DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
 
-class StoreDynaModelBase(DynamicsBase):
-    def __init__(self, dyn, callbacks, populate=None):
-        DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
+# class StoreDynaModelBase(DynamicsBase):
+#     def __init__(self, dyn, callbacks, populate=None):
+#         DynamicsBase.__init__(self, dyn, callbacks, populate=populate)
 

@@ -98,10 +98,10 @@ setup(
     cffi_modules=["dss_build.py:ffi_builder_{}".format(version) for version in DSS_VERSIONS] + 
         [
             'dss_build.py:ffi_builder_GenUserModel', 
-            'dss_build.py:ffi_builder_PVSystemUserModel', 
-            'dss_build.py:ffi_builder_StoreDynaModel', 
-            'dss_build.py:ffi_builder_StoreUserModel', 
-            'dss_build.py:ffi_builder_CapUserControl'
+            #'dss_build.py:ffi_builder_PVSystemUserModel', 
+            #'dss_build.py:ffi_builder_StoreDynaModel', 
+            #'dss_build.py:ffi_builder_StoreUserModel', 
+            #'dss_build.py:ffi_builder_CapUserControl'
         ],
     ext_package="dss",
     install_requires=["cffi>=1.11.2", "numpy>=1.0"],

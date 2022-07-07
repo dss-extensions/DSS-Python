@@ -1,10 +1,10 @@
 import re
 from .. import (
-    _dss_CapUserControl, 
+    # _dss_CapUserControl, 
     _dss_GenUserModel, 
-    _dss_PVSystemUserModel, 
-    _dss_StoreDynaModel, 
-    _dss_StoreUserModel
+    # _dss_PVSystemUserModel, 
+    # _dss_StoreDynaModel, 
+    # _dss_StoreUserModel
 )
 from . import bases
 
@@ -165,27 +165,27 @@ class SaveRestoreMixin(object):
         self.active_instance.restore()
 
 
-class CapUserControlWrapper(CommonWrapper):
-    Base = bases.CapUserControlBase
-    cffi_module = _dss_CapUserControl
-    function_prefix = 'pyCapUserControl'
-    function_names = (
-        'New',
-        'Delete',
-        'Select',
-        'Edit',
-        'UpdateModel'
-    )
+# class CapUserControlWrapper(CommonWrapper):
+#     Base = bases.CapUserControlBase
+#     cffi_module = _dss_CapUserControl
+#     function_prefix = 'pyCapUserControl'
+#     function_names = (
+#         'New',
+#         'Delete',
+#         'Select',
+#         'Edit',
+#         'UpdateModel'
+#     )
 
-    def Sample(self):
-        if not self.active_instance:
-            return
+#     def Sample(self):
+#         if not self.active_instance:
+#             return
    
-    def New(self, CallBacks):
-        # Create a base instance to be replaced in Edit
-        self.active_instance = self.Base(CallBacks)
-        self.models.append(self.active_instance)
-        return len(self.models)
+#     def New(self, CallBacks):
+#         # Create a base instance to be replaced in Edit
+#         self.active_instance = self.Base(CallBacks)
+#         self.models.append(self.active_instance)
+#         return len(self.models)
 
 
 class GenUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
@@ -217,96 +217,97 @@ class GenUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
         return len(self.models)
 
         
-class PVSystemUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
-    Base = bases.PVSystemUserModelBase
-    cffi_module = _dss_PVSystemUserModel
-    function_prefix = 'pyPVSystemUserModel'
-    function_names = (
-        'New',
-        'Delete',
-        'Select',
-        'Init',
-        'Calc',
-        'Integrate',
-        'Edit',
-        'UpdateModel',
-        'NumVars',
-        'GetAllVars',
-        'GetVariable',
-        'SetVariable',
-        'GetVarName',
-        'Save',
-        'Restore'
-    )
+# class PVSystemUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
+#     Base = bases.PVSystemUserModelBase
+#     cffi_module = _dss_PVSystemUserModel
+#     function_prefix = 'pyPVSystemUserModel'
+#     function_names = (
+#         'New',
+#         'Delete',
+#         'Select',
+#         'Init',
+#         'Calc',
+#         'Integrate',
+#         'Edit',
+#         'UpdateModel',
+#         'NumVars',
+#         'GetAllVars',
+#         'GetVariable',
+#         'SetVariable',
+#         'GetVarName',
+#         'Save',
+#         'Restore'
+#     )
 
-    def New(self, GenData, DynaData, CallBacks):
-        # Create a base instance to be replaced in Edit
-        self.active_instance = self.Base(GenData, DynaData, CallBacks)
-        self.models.append(self.active_instance)
-        return len(self.models)
-
-
-class StoreUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
-    Base = bases.StoreUserModelBase
-    cffi_module = _dss_StoreUserModel
-    function_prefix = 'pyStoreUserModel'
-    function_names = (
-        'New',
-        'Delete',
-        'Select',
-        'Init',
-        'Calc',
-        'Integrate',
-        'Edit',
-        'UpdateModel',
-        'NumVars',
-        'GetAllVars',
-        'GetVariable',
-        'SetVariable',
-        'GetVarName',
-        'Save',
-        'Restore'
-    )
-
-    def New(self, DynaData, CallBacks):
-        # Create a base instance to be replaced in Edit
-        self.active_instance = self.Base(DynaData, CallBacks)
-        self.models.append(self.active_instance)
-        return len(self.models)
+#     def New(self, GenData, DynaData, CallBacks):
+#         # Create a base instance to be replaced in Edit
+#         self.active_instance = self.Base(GenData, DynaData, CallBacks)
+#         self.models.append(self.active_instance)
+#         return len(self.models)
 
 
-class StoreDynaModelWrapper(DynamicsWrapper):
-    Base = bases.StoreDynaModelBase
-    cffi_module = _dss_StoreDynaModel
-    function_prefix = 'pyStoreDynaModel'
-    function_names = (
-        'New',
-        'Delete',
-        'Select',
-        'Init',
-        'Calc',
-        'Integrate',
-        'Edit',
-        'UpdateModel',
-        'NumVars',
-        'GetAllVars',
-        'GetVariable',
-        'SetVariable',
-        'GetVarName',
-    )
+# class StoreUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
+#     Base = bases.StoreUserModelBase
+#     cffi_module = _dss_StoreUserModel
+#     function_prefix = 'pyStoreUserModel'
+#     function_names = (
+#         'New',
+#         'Delete',
+#         'Select',
+#         'Init',
+#         'Calc',
+#         'Integrate',
+#         'Edit',
+#         'UpdateModel',
+#         'NumVars',
+#         'GetAllVars',
+#         'GetVariable',
+#         'SetVariable',
+#         'GetVarName',
+#         'Save',
+#         'Restore'
+#     )
 
-    def New(self, DynaData, CallBacks):
-        # Create a base instance to be replaced in Edit
-        self.active_instance = self.Base(DynaData, CallBacks)
-        self.models.append(self.active_instance)
-        return len(self.models)
+#     def New(self, DynaData, CallBacks):
+#         # Create a base instance to be replaced in Edit
+#         self.active_instance = self.Base(DynaData, CallBacks)
+#         self.models.append(self.active_instance)
+#         return len(self.models)
+
+
+# class StoreDynaModelWrapper(DynamicsWrapper):
+#     Base = bases.StoreDynaModelBase
+#     cffi_module = _dss_StoreDynaModel
+#     function_prefix = 'pyStoreDynaModel'
+#     function_names = (
+#         'New',
+#         'Delete',
+#         'Select',
+#         'Init',
+#         'Calc',
+#         'Integrate',
+#         'Edit',
+#         'UpdateModel',
+#         'NumVars',
+#         'GetAllVars',
+#         'GetVariable',
+#         'SetVariable',
+#         'GetVarName',
+#     )
+
+#     def New(self, DynaData, CallBacks):
+#         # Create a base instance to be replaced in Edit
+#         self.active_instance = self.Base(DynaData, CallBacks)
+#         self.models.append(self.active_instance)
+#         return len(self.models)
 
 
 # Instantiate the wrappers to link the DLLs to the the Python code
-CapUserControl = CapUserControlWrapper()
+# CapUserControl = CapUserControlWrapper()
 GenUserModel = GenUserModelWrapper()
-PVSystemUserModel = PVSystemUserModelWrapper()
-StoreDynaModel = StoreDynaModelWrapper()
-StoreUserModel = StoreUserModelWrapper()
+# PVSystemUserModel = PVSystemUserModelWrapper()
+# StoreDynaModel = StoreDynaModelWrapper()
+# StoreUserModel = StoreUserModelWrapper()
 
-__all__ = ['CapUserControl', 'GenUserModel', 'PVSystemUserModel', 'StoreDynaModel', 'StoreUserModel']
+#__all__ = ['CapUserControl', 'GenUserModel', 'PVSystemUserModel', 'StoreDynaModel', 'StoreUserModel']
+__all__ = ['GenUserModel']

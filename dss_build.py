@@ -7,6 +7,8 @@ def process_header(src, extern_py=False, implement_py=False, prefix='', v8=False
     
     call_convention = '__stdcall ' if (sys.platform == 'win32') else ''
     
+    src  = src.replace('dss_long_bool', 'int32_t')
+
     if not implement_py:
         src = re.sub('^extern .*', '', src, flags=re.MULTILINE)
         src = re.sub('^.*extern .*$', '', src, flags=re.MULTILINE)
@@ -124,10 +126,10 @@ with open(os.path.join(DSS_CAPI_PATH, 'include/dss_UserModels.h'), 'r') as f:
     
 user_models = [
     'GenUserModel',
-    'PVSystemUserModel',
-    'StoreDynaModel',
-    'StoreUserModel',
-    'CapUserControl',
+    # 'PVSystemUserModel',
+    # 'StoreDynaModel',
+    # 'StoreUserModel',
+    # 'CapUserControl',
 ]    
 
 for user_model in user_models:    
@@ -156,10 +158,10 @@ ffi_builder_v7 = ffi_builders['v7']
 ffi_builder_v7d = ffi_builders['v7d']
 # ffi_builder_v8 = ffi_builders['v8']
 ffi_builder_GenUserModel = ffi_builders['GenUserModel']
-ffi_builder_PVSystemUserModel = ffi_builders['PVSystemUserModel']
-ffi_builder_StoreDynaModel = ffi_builders['StoreDynaModel']
-ffi_builder_StoreUserModel = ffi_builders['StoreUserModel']
-ffi_builder_CapUserControl = ffi_builders['CapUserControl']
+#ffi_builder_PVSystemUserModel = ffi_builders['PVSystemUserModel']
+#ffi_builder_StoreDynaModel = ffi_builders['StoreDynaModel']
+#ffi_builder_StoreUserModel = ffi_builders['StoreUserModel']
+#ffi_builder_CapUserControl = ffi_builders['CapUserControl']
         
 if __name__ == "__main__":
     for version, builder in ffi_builders.items():
