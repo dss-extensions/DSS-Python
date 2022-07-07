@@ -31,9 +31,9 @@ class IYMatrix(Base):
         else:
             # return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix
             res = (
-                np.fromstring(ffi.buffer(cValsPtr[0], nNz[0] * 16), dtype=complex),
-                np.fromstring(ffi.buffer(RowIdxPtr[0], nNz[0] * 4), dtype=np.int32),
-                np.fromstring(ffi.buffer(ColPtr[0], (nBus[0] + 1) * 4), dtype=np.int32)
+                np.frombuffer(ffi.buffer(cValsPtr[0], nNz[0] * 16), dtype=np.complex).copy(),
+                np.frombuffer(ffi.buffer(RowIdxPtr[0], nNz[0] * 4), dtype=np.int32).copy(),
+                np.frombuffer(ffi.buffer(ColPtr[0], (nBus[0] + 1) * 4), dtype=np.int32).copy()
             )
 
         self._lib.DSS_Dispose_PInteger(ColPtr)
