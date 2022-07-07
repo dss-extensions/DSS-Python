@@ -130,7 +130,7 @@ class IYMatrix(Base):
 
     @LoadsNeedUpdating.setter
     def LoadsNeedUpdating(self, value):
-        return self.CheckForError(self._lib.YMatrix_Set_LoadsNeedUpdating(value))
+        self.CheckForError(self._lib.YMatrix_Set_LoadsNeedUpdating(value))
 
     @property
     def SolutionInitialized(self):
@@ -138,5 +138,5 @@ class IYMatrix(Base):
 
     @SolutionInitialized.setter
     def SolutionInitialized(self, value):
-        return self.CheckForError(self._lib.YMatrix_Set_SolutionInitialized(value))
+        self.CheckForError(self._lib.YMatrix_Set_SolutionInitialized(value))
 

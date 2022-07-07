@@ -312,8 +312,8 @@ class ISolution(Base):
         return self.CheckForError(self._lib.Solution_Get_Mode())
 
     @Mode.setter
-    def Mode(self, Mode):
-        self.CheckForError(self._lib.Solution_Set_Mode(Mode)) #TODO: use enum
+    def Mode(self, Value):
+        self.CheckForError(self._lib.Solution_Set_Mode(Value)) #TODO: use enum
 
     @property
     def ModeID(self):
@@ -345,8 +345,8 @@ class ISolution(Base):
         return self.CheckForError(self._lib.Solution_Get_Random())
 
     @Random.setter
-    def Random(self, Random):
-        self.CheckForError(self._lib.Solution_Set_Random(Random))
+    def Random(self, Value):
+        self.CheckForError(self._lib.Solution_Set_Random(Value))
 
     @property
     def Seconds(self):

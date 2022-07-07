@@ -231,7 +231,7 @@ class ISettings(Base):
         
         (API Extension)
         '''
-        return self.CheckForError(self._lib.Settings_Set_IterateDisabled())
+        return self.CheckForError(self._lib.Settings_Get_IterateDisabled())
 
     @IterateDisabled.setter
     def IterateDisabled(self, Value):
