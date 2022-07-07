@@ -87,6 +87,23 @@ class ICktElement(Base):
         #     raise DssException('Invalid variable index or not a PCelement')
         return result, Code[0]
 
+    # for compatibility with OpenDSS 9.4.1.1
+    VariableByIndex = Variablei
+    VariableByName = Variable
+
+    def setVariableByIndex(self, Idx, Value):
+        Code = self._api_util.ffi.new('int32_t*')
+        self.CheckForError(self._lib.CktElement_Set_Variablei(Idx, Code, Value))
+        # if Code[0] == 1:
+        #     raise DSSException('Invalid variable index or not a PCelement')
+        return Code[0]
+
+    def setVariableByName(self, Idx, Value):
+        Code = self._api_util.ffi.new('int32_t*')
+        self.CheckForError(self._lib.CktElement_Set_Variable(Idx, Code, Value))
+        # if Code[0] == 1:
+        #     raise DSSException('Invalid variable index or not a PCelement')
+        return Code[0]
 
     def IsOpen(self, Term, Phs):
         return self.CheckForError(self._lib.CktElement_IsOpen(Term, Phs)) != 0
