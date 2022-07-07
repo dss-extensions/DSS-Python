@@ -104,7 +104,7 @@ setup(
             #'dss_build.py:ffi_builder_CapUserControl'
         ],
     ext_package="dss",
-    install_requires=["cffi>=1.11.2", "numpy>=1.0"],
+    install_requires=["cffi>=1.11.2", "numpy>=1.21"],
     tests_require=["zstandard", "scipy"],
     zip_safe=False,
     classifiers=[
