@@ -10,7 +10,7 @@ class IZIP(Base):
 
     _columns = []
 
-    def Open(self, Value):
+    def Open(self, FileName):
         '''
         Opens and prepares a ZIP file to be used by the DSS text parser.
         Currently, the ZIP format support is limited by what is provided in the Free Pascal distribution.
@@ -19,10 +19,10 @@ class IZIP(Base):
         
         (API Extension)
         '''
-        if type(Value) is not bytes:
-            Value = Value.encode(self._api_util.codec)
+        if type(FileName) is not bytes:
+            FileName = FileName.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.ZIP_Open(Value))
+        self.CheckForError(self._lib.ZIP_Open(FileName))
 
     def Close(self):
         '''
@@ -32,7 +32,7 @@ class IZIP(Base):
         '''
         self.CheckForError(self._lib.ZIP_Close())
 
-    def Redirect(self, FileName):
+    def Redirect(self, FileInZip):
         '''
         Runs a "Redirect" command inside the current (open) ZIP file.
         In the current implementation, all files required by the script must
@@ -41,10 +41,10 @@ class IZIP(Base):
 
         (API Extension)
         '''
-        if type(FileName) is not bytes:
-            FileName = FileName.encode(self._api_util.codec)
+        if type(FileInZip) is not bytes:
+            FileName = FileInZip.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.ZIP_Redirect(FileName))
+        self.CheckForError(self._lib.ZIP_Redirect(FileInZip))
 
     def Extract(self, FileName):
         '''
