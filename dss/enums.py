@@ -1,10 +1,11 @@
 try:
-    from enum import IntEnum
+    from enum import IntEnum, IntFlag
 except:
     try:
-        from aenum import IntEnum
+        from aenum import IntEnum, IntFlag
     except:
         IntEnum = object
+        IntFlag = object
 
 #TODO: add missing enums
 
@@ -153,3 +154,11 @@ class SparseSolverOptions(IntEnum):
     ReuseNumericFactorization = 3 # Reuse the numeric factorization, implies ReuseSymbolicFactorization
     
     AlwaysResetYPrimInvalid = 0x10000000 # Bit flag, see CktElement.pas for details
+
+class DSSJSONFlags(IntFlag):
+    Full = 0x00000001
+    SkipRedundant = 0x00000002
+    EnumAsInt = 0x00000004
+    FullNames = 0x00000008
+    Pretty = 0x00000010
+    ExcludeDisabled = 0x00000020

@@ -77,3 +77,16 @@ class IActiveClass(Base):
     def ActiveClassParent(self):
         '''Get the name of the parent class of the active class'''
         return self._get_string(self.CheckForError(self._lib.ActiveClass_Get_ActiveClassParent()))
+
+    def ToJSON(self, options=0):
+        '''
+        Returns the data (as a list) of all elements from the active class as a JSON-encoded string.
+
+        The `options` parameter contains bit-flags to toggle specific features.
+        See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
+        
+        Additionally, the `ExcludeDisabled` flag can be used to excluded disabled elements from the output.
+
+        (API Extension)
+        '''
+        return self._get_string(self.CheckForError(self._lib.ActiveClass_ToJSON(options)))
