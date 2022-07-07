@@ -24,6 +24,14 @@ class IGenerators(Iterable):
         'Vmaxpu',
         'RegisterNames',
         'RegisterValues',
+        'Bus1',
+        'Class',
+        'kva',
+        'IsDelta',
+        'Status',
+        'daily',
+        'duty',
+        'Yearly',
     ]
 
     @property
@@ -125,3 +133,122 @@ class IGenerators(Iterable):
     @kvar.setter
     def kvar(self, Value):
         self.CheckForError(self._lib.Generators_Set_kvar(Value))
+
+    @property
+    def daily(self):
+        '''
+        Name of the loadshape for a daily generation profile.
+
+        (API Extension)
+        '''
+        return self._get_string(self.CheckForError(self._lib.Generators_Get_daily()))
+
+    @daily.setter
+    def daily(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self._api_util.codec)
+
+        self.CheckForError(self._lib.Generators_Set_daily(Value))
+
+    @property
+    def duty(self):
+        '''
+        Name of the loadshape for a duty cycle simulation.
+
+        (API Extension)
+        '''
+        return self._get_string(self.CheckForError(self._lib.Generators_Get_duty()))
+
+    @duty.setter
+    def duty(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self._api_util.codec)
+
+        self.CheckForError(self._lib.Generators_Set_duty(Value))
+
+    @property
+    def Yearly(self):
+        '''
+        Name of yearly loadshape
+
+        (API Extension)
+        '''
+        return self._get_string(self.CheckForError(self._lib.Generators_Get_Yearly()))
+
+    @Yearly.setter
+    def Yearly(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self._api_util.codec)
+
+        self.CheckForError(self._lib.Generators_Set_Yearly(Value))
+
+    @property
+    def Status(self):
+        '''
+        Response to dispatch multipliers: Fixed=1 (dispatch multipliers do not apply), Variable=0 (follows curves).
+
+        Related enumeration: GeneratorStatus
+
+        (API Extension)
+        '''
+        return self.CheckForError(self._lib.Generators_Get_Status()) #TODO: use enum
+
+    @Status.setter
+    def Status(self, Value):
+        self.CheckForError(self._lib.Generators_Set_Status(Value))
+
+    @property
+    def IsDelta(self):
+        '''
+        Generator connection. True/1 if delta connection, False/0 if wye.
+
+        (API Extension)
+        '''
+        return self.CheckForError(self._lib.Generators_Get_IsDelta()) != 0
+
+    @IsDelta.setter
+    def IsDelta(self, Value):
+        self.CheckForError(self._lib.Generators_Set_IsDelta(Value))
+
+    @property
+    def kva(self):
+        '''
+        kVA rating of electrical machine. Applied to machine or inverter definition for Dynamics mode solutions.
+
+        (API Extension)
+        '''
+        return self.CheckForError(self._lib.Generators_Get_kva())
+
+    @kva.setter
+    def kva(self, Value):
+        self.CheckForError(self._lib.Generators_Set_kva(Value))
+
+    @property
+    def Class(self):
+        '''
+        An arbitrary integer number representing the class of Generator so that Generator values may be segregated by class.
+
+        (API Extension)
+        '''
+        return self.CheckForError(self._lib.Generators_Get_Class_())
+
+    @Class.setter
+    def Class(self, Value):
+        self.CheckForError(self._lib.Generators_Set_Class_(Value))
+
+    @property
+    def Bus1(self):
+        '''
+        Bus to which the Generator is connected. May include specific node specification.
+
+        (API Extension)
+        '''
+        return self._get_string(self.CheckForError(self._lib.Generators_Get_Bus1()))
+
+    @Bus1.setter
+    def Bus1(self, Value):
+        if type(Value) is not bytes:
+            Value = Value.encode(self._api_util.codec)
+
+        self.CheckForError(self._lib.Generators_Set_Bus1(Value))
+
