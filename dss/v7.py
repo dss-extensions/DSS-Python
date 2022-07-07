@@ -19,8 +19,13 @@ DssException = DSSException
 # Bind to the FFI module instance for OpenDSS-v7
 api_util = CffiApiUtil(ffi, lib) #: API utility functions and low-level access for the Version 7 library
 
-DSS_GR = dss_capi_gr.IDSS(api_util) #: GR (Global Result) interface to the Version 7 library
-DSS_IR = dss_capi_ir.IDSS(api_util) #: IR (Immediate Result) interface to the Version 7 library
+# DSS_GR = dss_capi_gr.IDSS(api_util) #: GR (Global Result) interface to the Version 7 library
+# DSS_IR = dss_capi_ir.IDSS(api_util) #: IR (Immediate Result) interface to the Version 7 library
+# DSS = DSS_GR #: Same as DSS_GR
+
+prime_api_util = CffiApiUtil(ffi, lib, lib.ctx_Get_Prime()) #: API utility functions and low-level access for the Version 7 library
+DSS_GR = dss_capi_gr.IDSS(prime_api_util) #: GR (Global Result) interface using the new DSSContext API
+DSS_IR = dss_capi_ir.IDSS(prime_api_util) #: IR (Immediate Result) interface using the new DSSContext API
 DSS = DSS_GR #: Same as DSS_GR
 
 #__all__ = ['DSS', 'DSS_GR', 'DSS_IR', 'api_util']
