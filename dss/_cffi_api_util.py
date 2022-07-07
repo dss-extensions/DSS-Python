@@ -181,7 +181,6 @@ class CffiApiUtil(object):
             self.lib.ctx_Dispose(self.ctx)
 
     def init_buffers(self):
-        tmp_string_pointers = (self.ffi.new('char****'), self.ffi.new('int32_t**'))
         tmp_float64_pointers = (self.ffi.new('double***'), self.ffi.new('int32_t**'))
         tmp_int32_pointers = (self.ffi.new('int32_t***'), self.ffi.new('int32_t**'))
         tmp_int8_pointers = (self.ffi.new('int8_t***'), self.ffi.new('int32_t**'))
@@ -189,13 +188,12 @@ class CffiApiUtil(object):
         # reorder pointers so data pointers are first, count pointers last
         ptr_args = [
             ptr
-            for ptrs in zip(tmp_string_pointers, tmp_float64_pointers, tmp_int32_pointers, tmp_int8_pointers)
+            for ptrs in zip(tmp_float64_pointers, tmp_int32_pointers, tmp_int8_pointers)
             for ptr in ptrs
         ]
         self.lib.DSS_GetGRPointers(*ptr_args)
 
         # we don't need to keep the extra indirections
-        self.gr_string_pointers = (tmp_string_pointers[0][0], tmp_string_pointers[1][0])
         self.gr_float64_pointers = (tmp_float64_pointers[0][0], tmp_float64_pointers[1][0])
         self.gr_int32_pointers = (tmp_int32_pointers[0][0], tmp_int32_pointers[1][0])
         self.gr_int8_pointers = (tmp_int8_pointers[0][0], tmp_int8_pointers[1][0])
