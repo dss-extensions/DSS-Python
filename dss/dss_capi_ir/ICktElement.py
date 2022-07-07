@@ -321,6 +321,11 @@ class ICktElement(Base):
         '''Returns the total powers (complex) at ALL terminals of the active circuit element.'''
         return self._get_float64_array(self._lib.CktElement_Get_TotalPowers)
 
+    @property
+    def NodeRef(self):
+        '''Array of integers, a copy of the internal NodeRef of the CktElement.'''
+        return self._get_int32_array(self._lib.CktElement_Get_NodeRef)
+
     def __iter__(self):
         for index in range(self.CheckForError(self._lib.Circuit_Get_NumCktElements())):
             self.CheckForError(self._lib.Circuit_SetCktElementIndex(index))
