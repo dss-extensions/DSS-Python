@@ -12,6 +12,10 @@ else:
     warnings.warn('Environment variable DSS_EXTENSIONS_DEBUG=1 is set: loading the debug version of the DSS C-API library')
     from ._dss_capid import ffi, lib
 
+# Ensure this is called at least once. This was moved from 
+# CffiApiUtil so we call it as soon as the DLL/so is loaded.
+lib.DSS_Start(0)
+
 from ._cffi_api_util import CffiApiUtil, set_case_insensitive_attributes, use_com_compat, DSSException
 from . import dss_capi_gr, dss_capi_ir, enums
 from .enums import *

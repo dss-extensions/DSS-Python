@@ -179,7 +179,6 @@ class CffiApiUtil(object):
         else:
             self.lib = CtxLib(ctx, lib)
 
-        lib.DSS_Start(0) # ensure this is called at least once after the lib is loaded
         self.init_buffers()
 
     def __delete__(self):
