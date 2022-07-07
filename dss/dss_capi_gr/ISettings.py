@@ -215,5 +215,5 @@ class ISettings(Base):
 
     @LoadsTerminalCheck.setter
     def LoadsTerminalCheck(self, Value):
-        return self.CheckForError(self._lib.Settings_Set_LoadsTerminalCheck(Value))
+        self.CheckForError(self._lib.Settings_Set_LoadsTerminalCheck(Value))
         

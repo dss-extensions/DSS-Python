@@ -185,7 +185,7 @@ class IDSS(Base):
 
     @LegacyModels.setter
     def LegacyModels(self, Value):
-        return self.CheckForError(self._lib.DSS_Set_LegacyModels(Value))
+        self.CheckForError(self._lib.DSS_Set_LegacyModels(Value))
 
     @property
     def AllowChangeDir(self):
@@ -207,4 +207,4 @@ class IDSS(Base):
 
     @AllowChangeDir.setter
     def AllowChangeDir(self, Value):
-        return self.CheckForError(self._lib.DSS_Set_AllowChangeDir(Value))
+        self.CheckForError(self._lib.DSS_Set_AllowChangeDir(Value))
