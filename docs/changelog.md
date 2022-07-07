@@ -1,7 +1,9 @@
 # 0.12.0
 
 - Removed CmathLib: not useful in Python or most programming languages targetted by DSS Extensions.
-
+- Allow creating multiple DSS engine instances via `DSS.NewContext()`.
+- Reenabled Parallel interface and PM functions (actors and so on), based on a new implementation.
+- Enable incremental Y matrix options -- controlled by `DSS.YMatrix.SolverOptions`, options listed in `SparseSolverOptions`.
 
 # 0.10.7
 

@@ -100,6 +100,15 @@ class IYMatrix(Base):
     # for better compatibility with OpenDSSDirect.py
     getYSparse = GetCompressedYMatrix
 
+    @property
+    def SolverOptions(self):
+        '''Sparse solver options. See the enumeration SparseSolverOptions'''
+        return self._lib.YMatrix_Get_SolverOptions()
+
+    @SolverOptions.setter
+    def SolverOptions(self, Value):
+        self._lib.YMatrix_Set_SolverOptions(Value)
+
     def getI(self):
         '''Get the data from the internal Current pointer'''
         IvectorPtr = self.GetIPointer()
