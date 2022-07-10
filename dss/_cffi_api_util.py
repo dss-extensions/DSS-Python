@@ -220,27 +220,44 @@ class CffiApiUtil(object):
 
     def get_float64_array(self, func, *args):
         ptr = self.ffi.new('double**')
-        cnt = self.ffi.new('int32_t[2]')
+        cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
         self.lib.DSS_Dispose_PDouble(ptr)
+
+        if cnt[3] != 0:
+            # If the last element is filled, we have a matrix.  Otherwise, the 
+            # matrix feature is disabled or the result is indeed a vector
+            return res.reshape((cnt[2], cnt[3]))
+
         return res
-        
+
+
     def get_float64_gr_array(self):
         ptr, cnt = self.gr_float64_pointers
+        if cnt[3] != 0:
+            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy().reshape((cnt[2], cnt[3]))
+        
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
 
     def get_int32_array(self, func, *args):
         ptr = self.ffi.new('int32_t**')
-        cnt = self.ffi.new('int32_t[2]')
+        cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
         self.lib.DSS_Dispose_PInteger(ptr)
+
+        if cnt[3] != 0:
+            # If the last element is filled, we have a matrix.  Otherwise, the 
+            # matrix feature is disabled or the result is indeed a vector
+            return res.reshape((cnt[2], cnt[3]))
+
         return res
+
 
     def get_ptr_array(self, func, *args):
         ptr = self.ffi.new('void***')
-        cnt = self.ffi.new('int32_t[2]')
+        cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * np.dtype(np.uintp).itemsize), dtype=np.uintp).copy()
         self.lib.DSS_Dispose_PPointer(ptr)
@@ -248,23 +265,36 @@ class CffiApiUtil(object):
 
     def get_int32_gr_array(self):
         ptr, cnt = self.gr_int32_pointers
+        if cnt[3] != 0:
+            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy().reshape((cnt[2], cnt[3]))
+
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
+
 
     def get_int8_array(self, func, *args):
         ptr = self.ffi.new('int8_t**')
-        cnt = self.ffi.new('int32_t[2]')
+        cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
         self.lib.DSS_Dispose_PByte(ptr)
+
+        if cnt[3] != 0:
+            # If the last element is filled, we have a matrix.  Otherwise, the 
+            # matrix feature is disabled or the result is indeed a vector
+            return res.reshape((cnt[2], cnt[3]))
+
         return res
 
     def get_int8_gr_array(self):
         ptr, cnt = self.gr_int8_pointers
+        if cnt[3] != 0:
+            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy().reshape((cnt[2], cnt[3]))
+
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
 
     def get_string_array(self, func, *args):
         ptr = self.ffi.new('char***')
-        cnt = self.ffi.new('int32_t[2]')
+        cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
         if not cnt[0]:
             res = []
@@ -283,7 +313,7 @@ class CffiApiUtil(object):
 
     def get_string_array2(self, func, *args): # for compatibility with OpenDSSDirect.py
         ptr = self.ffi.new('char***')
-        cnt = self.ffi.new('int32_t[2]')
+        cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
 
         if not cnt[0]:
@@ -308,7 +338,7 @@ class CffiApiUtil(object):
 
     def get_float64_array2(self, func, *args):
         ptr = self.ffi.new('double**')
-        cnt = self.ffi.new('int32_t[2]')
+        cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
         if not cnt[0]:
             res = []
@@ -324,7 +354,7 @@ class CffiApiUtil(object):
 
     def get_int32_array2(self, func, *args):
         ptr = self.ffi.new('int32_t**')
-        cnt = self.ffi.new('int32_t[2]')
+        cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
         if not cnt[0]:
             res = None
@@ -340,7 +370,7 @@ class CffiApiUtil(object):
 
     def get_int8_array2(self, func, *args):
         ptr = self.ffi.new('int8_t**')
-        cnt = self.ffi.new('int32_t[2]')
+        cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
         if not cnt[0]:
             res = None

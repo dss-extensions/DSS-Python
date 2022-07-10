@@ -55,7 +55,7 @@ class IZIP(Base):
         '''
         api_util = self._api_util
         ptr = api_util.ffi.new('int8_t**')
-        cnt = api_util.ffi.new('int32_t[2]')
+        cnt = api_util.ffi.new('int32_t[4]')
         if type(FileName) is not bytes:
             FileName = FileName.encode(api_util.codec)
 

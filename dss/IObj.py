@@ -404,7 +404,7 @@ class DSSObj(Base):
 
     def _get_obj_array(self, idx: int, pycls):
         ptr = self._ffi.new('void***')
-        cnt = self._ffi.new('int32_t[2]')
+        cnt = self._ffi.new('int32_t[4]')
         self._lib.Obj_GetObjectArray(ptr, cnt, self._ptr, idx)
         if not cnt[0]:
             self._lib.DSS_Dispose_PPointer(ptr)
@@ -453,7 +453,7 @@ class DSSBatch(Base):
         self._ffi = api_util.ffi
 
         self.pointer = self._ffi.new('void***')
-        self.count = self._ffi.new('int32_t[2]')
+        self.count = self._ffi.new('int32_t[4]')
         if len(kwargs) == 0:
             self._lib.Batch_CreateByClass(self.pointer, self.count, self._cls_idx)
             self._check_for_error()
