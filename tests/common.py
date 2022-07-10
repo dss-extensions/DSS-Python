@@ -129,7 +129,7 @@ test_filenames = [
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS",
-    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4Bus-OYOD-UnBal.DSS",
+    "../../electricdss-tst/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4Bus-OYOD-UnBal.dss",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS",
     "../../electricdss-tst/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss",
