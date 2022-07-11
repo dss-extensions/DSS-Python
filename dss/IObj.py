@@ -7,13 +7,20 @@ Copyright (c) 2021-2022 DSS Extensions contributors
 '''
 from typing import Union, List, AnyStr
 import numpy as np
-import numpy.typing as npt
 from .enums import DSSJSONFlags
 
 try:
     from enum import IntEnum
 except:
     from aenum import IntEnum
+
+try:
+    import numpy.typing as npt
+    npt.NDArray[np.float64]
+except:
+    class npt:
+        NDArray = List
+
 
 from ._cffi_api_util import Base
 

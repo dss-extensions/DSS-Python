@@ -104,7 +104,8 @@ setup(
             #'dss_build.py:ffi_builder_CapUserControl'
         ],
     ext_package="dss",
-    install_requires=["cffi>=1.11.2", "numpy>=1.21"],
+    install_requires=["cffi>=1.11.2", "numpy>=1.19.5"],
+    extras_require={'plot': ["matplotlib", "scipy"]}, #TODO: test which versions should work
     tests_require=["zstandard", "scipy"],
     zip_safe=False,
     classifiers=[
