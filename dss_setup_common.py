@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, platform
 
 # Not complete but should suffice for the moment
 if 'linux' in sys.platform.lower():
@@ -14,7 +14,7 @@ if 'linux' in sys.platform.lower():
 else:
     arch = 'x64' if (sys.maxsize > (1 << 32)) else 'x86'
 
-if '-arm64' in os.environ.get('_PYTHON_HOST_PLATFORM', ''):
+if ('-arm64' in os.environ.get('_PYTHON_HOST_PLATFORM', '')) or platform.machine() == 'arm64':
     arch = 'arm64'
 
 platform_short = ''.join(filter(lambda ch: ch.isalpha(), sys.platform))
