@@ -170,6 +170,7 @@ class Base(object):
 
 class CffiApiUtil(object):
     def __init__(self, ffi, lib, ctx=None):
+        self.owns_ctx = True
         self.codec = codec
         self.ctx = ctx
         self.ffi = ffi
@@ -185,7 +186,7 @@ class CffiApiUtil(object):
         if self.ctx is None:
             return
              
-        if self.lib.ctx_Get_Prime() != self.ctx:
+        if self.lib.ctx_Get_Prime() != self.ctx and self.owns_ctx:
             self.lib.ctx_Dispose(self.ctx)
 
     def init_buffers(self):

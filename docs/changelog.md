@@ -5,10 +5,12 @@
 - Reenabled Parallel interface and PM functions (actors and so on), based on a new implementation.
 - Enable incremental Y matrix options -- controlled by `DSS.YMatrix.SolverOptions`, options listed in `SparseSolverOptions`.
 - New `ToJSON` functions to dump object properties (power flow state is not included at the moment)
-- Initial implementation `DSS.Obj` API for direct DSS object and uniform batch manipulation, covering all DSS classes implemented in DSS C-API. The shape of this API may change for the next releases. At the moment it is intended for advanced users. For example, if you get an object handle from the engine and load a new circuit, the handle is invalid and you should not access it anymore (otherwise, crashes are expected).
+- Initial implementation of the new `DSS.Obj` API for direct DSS object and uniform batch manipulation, covering all DSS classes implemented in DSS C-API. The shape of this API may change for the next releases. At the moment it is intended for advanced users. For example, if you get an object handle from the engine and load a new circuit, the handle is invalid and you should not access it anymore (otherwise, crashes are expected).
+- Initial (work-in-progress) implementation of plotting functions. This will also be finished and polished in following releases.
 - Due to some changes ported from the official OpenDSS since 0.10.7, some results may change, especially for circuits that used miles as length units. The same is observed across the official OpenDSS releases.
 
-DSS C-API 0.10.7 changes:
+
+DSS C-API 0.12.0 changes:
 
 **Includes porting of most official OpenDSS features up to revision 3460.** Check the OpenDSS SVN commits for details.
 
@@ -60,7 +62,7 @@ This version still maintains basic compatibility with the 0.10.x series of relea
 - The C headers for our library were updated to include the `const` modifier for various of the parameters. A few function declarations were fixed.
 - Initial batch of i18n changes.
 
-Due to the high number of IO changes, we recommend checking the performance before and after the upgrade to ensure your use case is not affected negatively. If issues are found, please do report.
+Due to the high number of IO changes, we recommend checking the performance before and after the upgrade to ensure your use case is not affected negatively, especially if your application relies heavily on OpenDSS text output. If issues are found, please do report.
 
 
 # 0.10.7
