@@ -7,8 +7,6 @@ Copyright (c) 2018-2022 DSS Extensions contributors
 from .._cffi_api_util import Iterable
 
 class IVsources(Iterable):
-    '''Experimental API extension exposing part of the WireData objects'''
-
     __slots__ = []
 
     _columns = [
