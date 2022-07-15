@@ -45,6 +45,7 @@ from .ITSData import ITSData
 from .IReactors import IReactors
 from .IParallel import IParallel
 from .IReduceCkt import IReduceCkt
+from .IStorages import IStorages
 
 class ICircuit(Base):
     __slots__ = [
@@ -89,7 +90,8 @@ class ICircuit(Base):
         'TSData',
         'Reactors',
         'Parallel',
-        'ReduceCkt'
+        'ReduceCkt',
+        'Storages'
     ]
 
     _columns = [
@@ -162,6 +164,7 @@ class ICircuit(Base):
         self.TSData = ITSData(api_util)
         self.Reactors = IReactors(api_util)
         self.ReduceCkt = IReduceCkt(api_util) #: Circuit Reduction Interface
+        self.Storages = IStorages(api_util)
 
         if hasattr(api_util.lib, 'Parallel_CreateActor'):
             self.Parallel = IParallel(api_util)
