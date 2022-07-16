@@ -1,3 +1,9 @@
+# 0.12.1
+
+- Expose `Storages` in Python
+- Include the missing property descriptions from 0.12.0
+- Use DSS C-API v0.12.1 for some incremental fixes
+
 # 0.12.0
 
 - Removed CmathLib: not useful in Python or most programming languages targetted by DSS Extensions.
