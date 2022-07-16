@@ -30,7 +30,10 @@ jobs:
       - name: 'Download/extract DSS C-API binaries'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_linux_x64.tar.gz -o dss_capi.tar.gz
+          curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           tar zxf dss_capi.tar.gz
+          cd dss_python/dss
+          tar zxf ../../messages.tar.gz
       - name: Build wheel
         run: |
           mkdir -p artifacts
@@ -64,7 +67,10 @@ jobs:
       - name: 'Download/extract DSS C-API binaries'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_linux_x86.tar.gz -o dss_capi.tar.gz
+          curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           tar zxf dss_capi.tar.gz
+          cd dss_python/dss
+          tar zxf ../../messages.tar.gz
       - name: Build wheel
         run: |
           mkdir -p artifacts
@@ -91,7 +97,10 @@ jobs:
       - name: 'Download/extract DSS C-API binaries'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_darwin_x64.tar.gz -o dss_capi.tar.gz
+          curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           tar zxf dss_capi.tar.gz
+          cd dss_python/dss
+          tar zxf ../../messages.tar.gz
       - name: 'Download macOS SDK 10.13'
         run: |
           curl -s -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.13.sdk.tar.xz -o macOSsdk.tar.xz
@@ -128,7 +137,10 @@ jobs:
       - name: 'Download/extract DSS C-API binaries'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_darwin_arm64.tar.gz -o dss_capi.tar.gz
+          curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           tar zxf dss_capi.tar.gz
+          cd dss_python/dss
+          tar zxf ../../messages.tar.gz
       # - name: 'Download macOS SDK 10.13'
       #   run: |
       #     curl -s -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.13.sdk.tar.xz -o macOSsdk.tar.xz
@@ -163,7 +175,10 @@ jobs:
         shell: cmd
         run: |
           "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/dss_capi_%DSS_CAPI_TAG%_win_x64.zip -o dss_capi.zip
+          "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/messages.zip -o messages.zip
           7z x -y -o. dss_capi.zip
+          cd dss_python\dss
+          tar zxf ..\..\messages.zip
       - name: Build wheel
         shell: bash
         run: |
@@ -199,7 +214,10 @@ jobs:
         shell: cmd
         run: |
           "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/dss_capi_%DSS_CAPI_TAG%_win_x86.zip -o dss_capi.zip
+          "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/messages.zip -o messages.zip
           7z x -y -o. dss_capi.zip
+          cd dss_python\dss
+          tar zxf ..\..\messages.zip
       - name: Build wheel
         shell: bash
         run: |

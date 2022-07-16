@@ -48,6 +48,7 @@ src_path = os.environ.get('SRC_DIR', '')
 DSS_CAPI_PATH = os.environ.get('DSS_CAPI_PATH', os.path.join(src_path, '..', 'dss_capi'))
 base_dll_path_in = os.path.join(DSS_CAPI_PATH, 'lib', PLATFORM_FOLDER)
 dll_path_out = os.path.abspath(os.path.join(src_path, 'dss'))
+mo_path_out = os.path.abspath(os.path.join(src_path, 'dss', 'messages'))
 include_path_out = os.path.join(dll_path_out, 'include')
 
 if not MANYLINUX:
@@ -70,7 +71,8 @@ extra_files = (
     glob.glob(os.path.join(include_path_out, '**', '*')) + 
     glob.glob(os.path.join(include_path_out, '*')) + 
     glob.glob(os.path.join(dll_path_out, '*.lib')) + 
-    glob.glob(os.path.join(dll_path_out, '*.a'))
+    glob.glob(os.path.join(dll_path_out, '*.a')) +
+    glob.glob(os.path.join(mo_path_out, '*.mo'))
 )
 
 if MANYLINUX:

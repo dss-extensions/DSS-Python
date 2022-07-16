@@ -15,6 +15,9 @@ else:
 # Ensure this is called at least once. This was moved from 
 # CffiApiUtil so we call it as soon as the DLL/so is loaded.
 lib.DSS_Start(0)
+_properties_mo = os.path.join(os.path.dirname(__file__), 'messages', 'properties-en-US.mo')
+if os.path.exists(_properties_mo):
+    lib.DSS_SetPropertiesMO(_properties_mo.encode())
 
 from ._cffi_api_util import CffiApiUtil, set_case_insensitive_attributes, use_com_compat, DSSException
 from . import dss_capi_gr, dss_capi_ir, enums
