@@ -46,6 +46,7 @@ from .IReactors import IReactors
 from .IParallel import IParallel
 from .IReduceCkt import IReduceCkt
 from .IStorages import IStorages
+from .IGICSources import IGICSources
 
 class ICircuit(Base):
     __slots__ = [
@@ -91,7 +92,8 @@ class ICircuit(Base):
         'Reactors',
         'Parallel',
         'ReduceCkt',
-        'Storages'
+        'Storages',
+        'GICSources',
     ]
 
     _columns = [
@@ -112,7 +114,7 @@ class ICircuit(Base):
         'YNodeOrder',
         'YNodeVarray',
         'YCurrents',
-
+        
         'AllElementLosses',
         'LineLosses',
         'Losses',
@@ -165,6 +167,7 @@ class ICircuit(Base):
         self.Reactors = IReactors(api_util)
         self.ReduceCkt = IReduceCkt(api_util) #: Circuit Reduction Interface
         self.Storages = IStorages(api_util)
+        self.GICSources = IGICSources(api_util)
 
         if hasattr(api_util.lib, 'Parallel_CreateActor'):
             self.Parallel = IParallel(api_util)
@@ -368,3 +371,13 @@ class ICircuit(Base):
     def YNodeVarray(self):
         '''(read-only) Complex array of actual node voltages in same order as SystemY matrix.'''
         return self._get_float64_array(self._lib.Circuit_Get_YNodeVarray)
+
+    def ElementLosses(self, Value):
+        '''
+        Array of total losses (complex) in a selection of elements.
+        Use the element indices (starting at 1) as parameter.
+
+        (API Extension)
+        '''
+        Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
+        return self.CheckForError(self._get_float64_array(self._lib.Circuit_Get_ElementLosses, ValuePtr, ValueCount))        

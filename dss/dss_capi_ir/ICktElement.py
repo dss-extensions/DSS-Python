@@ -129,7 +129,7 @@ class ICktElement(Base):
     @property
     def BusNames(self):
         '''
-        Array of strings. Get  Bus definitions to which each terminal is connected. 0-based array.
+        Array of strings. Get  Bus definitions to which each terminal is connected.
         '''
         return self.CheckForError(self._get_string_array(self._lib.CktElement_Get_BusNames))
 

@@ -4,8 +4,8 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 Copyright (c) 2016-2022 Paulo Meira
 Copyright (c) 2018-2022 DSS Extensions contributors
 '''
-from .._cffi_api_util import Base
 import warnings
+from .._cffi_api_util import Base, CffiApiUtil, DSSException
 from .ICircuit import ICircuit
 from .IError import IError
 from .IText import IText
@@ -72,7 +72,6 @@ class IDSS(Base):
 
         Base.__init__(self, api_util)    
 
-        
     def ClearAll(self):
         self.CheckForError(self._lib.DSS_ClearAll())
 
@@ -152,6 +151,8 @@ class IDSS(Base):
         AllowEditor controls whether the external editor is used in commands like "Show".
         If you set to 0 (false), the editor is not executed. Note that other side effects,
         such as the creation of files, are not affected.
+
+        (API Extension)
         '''
         return self.CheckForError(self._lib.DSS_Get_AllowEditor()) != 0
 
@@ -214,3 +215,100 @@ class IDSS(Base):
     @AllowChangeDir.setter
     def AllowChangeDir(self, Value):
         self.CheckForError(self._lib.DSS_Set_AllowChangeDir(Value))
+
+    @property
+    def AllowDOScmd(self):
+        '''
+        If enabled, the `DOScmd` command is allowed. Otherwise, an error is reported if the user tries to use it.
+        
+        Defaults to False/0 (disabled state). Users should consider DOScmd deprecated on DSS Extensions.
+        
+        This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
+        the command.
+        
+        (API Extension)
+        '''
+        return self.CheckForError(self._lib.DSS_Get_AllowDOScmd()) != 0
+
+    @AllowDOScmd.setter
+    def AllowDOScmd(self, Value):
+        self.CheckForError(self._lib.DSS_Set_AllowDOScmd(Value))
+
+    @property
+    def COMErrorResults(self):
+        '''
+        If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the 
+        official OpenDSS COM interface. 
+        
+        For example, consider the function `Loads_Get_ZIPV`. If there is no active circuit or active load element:
+        - In the disabled state (COMErrorResults=False), the function will return "[]", an array with 0 elements.
+        - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
+        be compatible with the return value of the official COM interface.
+        
+        Defaults to True/1 (enabled state) in the v0.12.x series. This will change to false in future series.
+        
+        This can also be set through the environment variable DSS_CAPI_COM_DEFAULTS. Setting it to 0 disables
+        the legacy/COM behavior. The value can be toggled through the API at any time.
+        
+        (API Extension)
+        '''
+        return self.CheckForError(self._lib.DSS_Get_COMErrorResults()) != 0
+
+    @COMErrorResults.setter
+    def COMErrorResults(self, Value):
+        self.CheckForError(self._lib.DSS_Set_COMErrorResults(Value))
+
+    def NewContext(self):
+        '''
+        Creates a new DSS engine context.
+        A DSS Context encapsulates most of the global state of the original OpenDSS engine,
+        allowing the user to create multiple instances in the same process. By creating contexts
+        manually, the management of threads and potential issues should be handled by the user.
+
+        (API Extension)
+        '''
+        ffi = self._api_util.ffi
+        lib = self._api_util.lib_unpatched
+        new_ctx = lib.ctx_New()
+        new_api_util = CffiApiUtil(ffi, lib, new_ctx)
+        return IDSS(new_api_util)
+
+    def __call__(self, single=None, block=None):
+        '''
+        Shortcut to pass text commands.
+
+        If `single` is set and is a string, a normal `DSS.Text.Command = single` is called.
+        Otherwise, the value is passed to `DSS.Text.Commands`.
+
+        Examples:
+
+            # single command
+            DSS("new Circuit.test") 
+            DSS(single="new Circuit.test")
+
+            # list of commands (either will work)
+            DSS(["new Circuit.test", "new Line.line1 bus1=a bus2=b"])
+            DSS(single=["new circuit.test", "new Line.line1 bus1=a bus2=b"])
+            DSS(block=["new circuit.test", "new Line.line1 bus1=a bus2=b"])
+
+            # block of commands in a big string
+            DSS(block="""
+                clear
+                new Circuit.test
+                new Line.line1 bus1=a bus2=b
+                new Load.load1 bus1=a bus2=b
+            """)
+
+        (API Extension)
+        '''
+        if (single is not None) and (block is not None):
+           raise DSSException("Only a single argument is accepted.")
+
+        if (single is None) and (block is None):
+           raise DSSException("A value is required.")
+
+        if single is not None:
+            self.Text.Command = single
+            return
+
+        self.Text.Commands(single or block)

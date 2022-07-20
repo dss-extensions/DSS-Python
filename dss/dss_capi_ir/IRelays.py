@@ -16,6 +16,8 @@ class IRelays(Iterable):
         'MonitoredTerm',
         'SwitchedObj',
         'SwitchedTerm',
+        'State',
+        'NormalState'
     ]
 
     @property
@@ -59,3 +61,41 @@ class IRelays(Iterable):
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value):
         self.CheckForError(self._lib.Relays_Set_SwitchedTerm(Value))
+
+    def Open(self):
+        '''Open relay's controlled element and lock out the relay.'''
+        self.CheckForError(self._lib.Relays_Open())
+
+    def Close(self):
+        '''Close the switched object controlled by the relay. Resets relay to first operation.'''
+        self.CheckForError(self._lib.Relays_Close())
+
+    def Reset(self):
+        '''
+        Reset relay to normal state. 
+        If open, lock out the relay. 
+        If closed, resets relay to first operation.
+        '''
+        self.CheckForError(self._lib.Relays_Reset())
+
+    @property
+    def State(self):
+        '''
+        Get/Set present state of relay. 
+        If set to open, open relay's controlled element and lock out the relay. 
+        If set to close, close relay's controlled element and resets relay to first operation.
+        '''
+        return self.CheckForError(self._lib.Relays_Get_State())
+
+    @State.setter
+    def State(self, Value):
+        self.CheckForError(self._lib.Relays_Set_State(Value))
+
+    @property
+    def NormalState(self):
+        '''Normal state of relay.'''
+        return self.CheckForError(self._lib.Relays_Get_NormalState())
+
+    @NormalState.setter
+    def NormalState(self, Value):
+        self.CheckForError(self._lib.Relays_Set_NormalState(Value))

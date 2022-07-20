@@ -207,6 +207,12 @@ class IBus(Base):
         return self._get_float64_gr_array()
 
     @property
+    def ZSC012Matrix(self):
+        '''Array of doubles (complex) containing the complete 012 Zsc matrix'''
+        self.CheckForError(self._lib.Bus_Get_ZSC012Matrix_GR())
+        return self._get_float64_gr_array()
+
+    @property
     def x(self):
         '''X Coordinate for bus (double)'''
         return self.CheckForError(self._lib.Bus_Get_x())

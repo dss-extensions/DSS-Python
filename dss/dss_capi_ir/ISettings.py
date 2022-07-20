@@ -54,7 +54,7 @@ class ISettings(Base):
 
     @property
     def CktModel(self):
-        '''{dssMultiphase (0) * | dssPositiveSeq (1) } IIndicate if the circuit model is positive sequence.'''
+        '''{dssMultiphase (0) * | dssPositiveSeq (1) } Indicate if the circuit model is positive sequence.'''
         return self.CheckForError(self._lib.Settings_Get_CktModel())
 
     @CktModel.setter
@@ -232,5 +232,5 @@ class ISettings(Base):
 
     @IterateDisabled.setter
     def IterateDisabled(self, Value):
-        self.CheckForError(self._lib.Settings_Set_IterateDisabled(int(Value)))
+        self.CheckForError(self._lib.Settings_Set_IterateDisabled(Value))
 

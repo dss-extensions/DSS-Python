@@ -23,6 +23,7 @@ class ISensors(Iterable):
         'kVARS',
         'kVS',
         'kWS',
+        'AllocationFactor',
     ]
 
     def Reset(self):
@@ -140,3 +141,9 @@ class ISensors(Iterable):
     def kWS(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self.CheckForError(self._lib.Sensors_Set_kWS(ValuePtr, ValueCount))
+
+    @property
+    def AllocationFactor(self):
+        '''Array of doubles for the allocation factors for each phase.'''
+        self.CheckForError(self._lib.Sensors_Get_AllocationFactor_GR())
+        return self._get_float64_gr_array()

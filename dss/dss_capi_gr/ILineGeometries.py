@@ -14,6 +14,7 @@ class ILineGeometries(Iterable):
     _columns = [
         'Name',
         'idx',
+        'Nconds',
         'Phases',
         'RhoEarth',
         'Reduce',
@@ -128,3 +129,11 @@ class ILineGeometries(Iterable):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self.CheckForError(self._lib.LineGeometries_Set_Ycoords(ValuePtr, ValueCount))
 
+    @property
+    def Nconds(self):
+        '''Number of conductors in this geometry. Default is 3. Triggers memory allocations. Define first!'''
+        return self.CheckForError(self._lib.LineGeometries_Get_Nconds())
+
+    @Nconds.setter
+    def Nconds(self, Value):
+        self.CheckForError(self._lib.LineGeometries_Set_Nconds(Value))

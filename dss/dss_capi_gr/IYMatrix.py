@@ -122,7 +122,10 @@ class IYMatrix(Base):
         return self._api_util.ffi.unpack(VvectorPtr, 2 * (self.CheckForError(self._lib.Circuit_Get_NumNodes() + 1)))
 
     def CheckConvergence(self):
-        return self.CheckForError(self._lib.YMatrix_CheckConvergence())
+        return self.CheckForError(self._lib.YMatrix_CheckConvergence() != 0)
+
+    def SetGeneratordQdV(self):
+        self.CheckForError(self._lib.YMatrix_SetGeneratordQdV())
 
     @property
     def LoadsNeedUpdating(self):
@@ -140,3 +143,10 @@ class IYMatrix(Base):
     def SolutionInitialized(self, value):
         self.CheckForError(self._lib.YMatrix_Set_SolutionInitialized(value))
 
+    @property
+    def Iteration(self):
+        return self.CheckForError(self._lib.YMatrix_Get_Iteration())
+
+    @Iteration.setter
+    def Iteration(self, value):
+        self.CheckForError(self._lib.YMatrix_Set_Iteration(value))

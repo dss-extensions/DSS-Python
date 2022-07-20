@@ -42,7 +42,7 @@ class IZIP(Base):
         (API Extension)
         '''
         if type(FileInZip) is not bytes:
-            FileName = FileInZip.encode(self._api_util.codec)
+            FileInZip = FileInZip.encode(self._api_util.codec)
 
         self.CheckForError(self._lib.ZIP_Redirect(FileInZip))
 

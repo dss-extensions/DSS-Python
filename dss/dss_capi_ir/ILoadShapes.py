@@ -130,3 +130,21 @@ class ILoadShapes(Iterable):
 
     Sinterval = sInterval
     SInterval = sInterval
+
+    def UseFloat32(self):
+        '''
+        Converts the current LoadShape data to float32/single precision.
+        If there is no data or the data is already represented using float32, nothing is done.
+
+        (API Extension)
+        '''
+        self.CheckForError(self._lib.LoadShapes_UseFloat32())
+
+    def UseFloat64(self):
+        '''
+        Converts the current LoadShape data to float64/double precision.
+        If there is no data or the data is already represented using float64, nothing is done.
+        
+        (API Extension)
+        '''
+        self.CheckForError(self._lib.LoadShapes_UseFloat64())

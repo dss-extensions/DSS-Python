@@ -83,7 +83,7 @@ class IXYCurves(Iterable):
 
     @property
     def Yshift(self):
-        '''Amount to shift Y valiue from original curve'''
+        '''Amount to shift Y value from original curve'''
         return self.CheckForError(self._lib.XYCurves_Get_Yshift())
 
     @Yshift.setter

@@ -47,6 +47,7 @@ class ILoads(Iterable):
         'AllocationFactor',
         'xfkVA',
         'pctSeriesRL',
+        'Sensor',
     ]
 
     @property
@@ -373,6 +374,11 @@ class ILoads(Iterable):
     @xfkVA.setter
     def xfkVA(self, Value):
         self.CheckForError(self._lib.Loads_Set_xfkVA(Value))
+
+    @property
+    def Sensor(self):
+        '''Name of the sensor monitoring this load.'''
+        return self._get_string(self.CheckForError(self._lib.Loads_Get_Sensor()))
 
     # API extensions
     @property

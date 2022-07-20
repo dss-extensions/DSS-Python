@@ -23,6 +23,8 @@ class IReclosers(Iterable):
         'PhaseTrip',
         'RecloseIntervals',
         'Shots',
+        'State',
+        'NormalState',
     ]
 
     def Close(self):
@@ -132,3 +134,33 @@ class IReclosers(Iterable):
     def SwitchedTerm(self, Value):
         self.CheckForError(self._lib.Reclosers_Set_SwitchedTerm(Value))
 
+
+    def Reset(self):
+        '''
+        Reset recloser to normal state. 
+        If open, lock out the recloser. 
+        If closed, resets recloser to first operation.
+        '''
+        self.CheckForError(self._lib.Reclosers_Reset())
+
+    @property
+    def State(self):
+        '''
+        Get/Set present state of recloser. 
+        If set to open (ActionCodes.Open=1), open recloser's controlled element and lock out the recloser. 
+        If set to close (ActionCodes.Close=2), close recloser's controlled element and resets recloser to first operation.
+        '''
+        return self.CheckForError(self._lib.Reclosers_Get_State())
+
+    @State.setter
+    def State(self, Value):
+        self.CheckForError(self._lib.Reclosers_Set_State(Value))
+
+    @property
+    def NormalState(self):
+        '''Get/set normal state (ActionCodes.Open=1, ActionCodes.Close=2) of the recloser.'''
+        return self.CheckForError(self._lib.Reclosers_Get_NormalState())
+
+    @NormalState.setter
+    def NormalState(self, Value):
+        self.CheckForError(self._lib.Reclosers_Set_NormalState(Value))

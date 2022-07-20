@@ -29,6 +29,7 @@ class IPVSystems(Iterable):
         'Tdaily',
         'Tduty',
         'Tyearly',
+        'Sensor',
     ]
 
     @property
@@ -201,3 +202,8 @@ class IPVSystems(Iterable):
     @Pmpp.setter
     def Pmpp(self, Value):
         self.CheckForError(self._lib.PVSystems_Set_Pmpp(Value))
+
+    @property
+    def Sensor(self):
+        '''Name of the sensor monitoring this element.'''
+        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Sensor()))

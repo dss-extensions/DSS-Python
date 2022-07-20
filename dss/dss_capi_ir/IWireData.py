@@ -24,6 +24,7 @@ class IWireData(Iterable):
         'Radius',
         'Diameter',
         'RadiusUnits',
+        'CapRadius',
     ]
 
     @property
@@ -107,3 +108,12 @@ class IWireData(Iterable):
     @Diameter.setter
     def Diameter(self, Value):
         self.CheckForError(self._lib.WireData_Set_Diameter(Value))
+
+    @property
+    def CapRadius(self):
+        '''Equivalent conductor radius for capacitance calcs. Specify this for bundled conductors. Defaults to same value as radius.'''
+        return self.CheckForError(self._lib.WireData_Get_CapRadius())
+
+    @CapRadius.setter
+    def CapRadius(self, Value):
+        self.CheckForError(self._lib.WireData_Set_CapRadius(Value))
