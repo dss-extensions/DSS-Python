@@ -20,7 +20,7 @@ if package_version is None and github_ref is not None:
     package_version = github_ref[len("refs/tags/"):]
 
 if package_version is not None:
-    if re.match(r'^\d+\.\d+\.\d+(((a|b|(rc))\d*)|(\.dev\d+)){0,1}$', package_version) is None:
+    if re.match(r'^\d+\.\d+\.\d+((-\d+){0,1}|((a|b|(rc))\d*)|(\.dev\d+)){0,1}$', package_version) is None:        
         package_version = None
 
 if package_version is None:
