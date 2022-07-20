@@ -79,10 +79,22 @@ for version in DSS_VERSIONS:
     ffi_builder_dss = FFI()
     debug = 'd' if version.endswith('d') else ''
 
-    with open(os.path.join(DSS_CAPI_PATH, 'include', 'dss_capi.h'), 'r') as f:
+    main_header_fn = os.path.join(DSS_CAPI_PATH, 'include', 'dss_capi.h')
+    dss_capi_ctx_path = os.path.join(DSS_CAPI_PATH, 'include', 'dss_capi_ctx.h')
+    headers = [main_header_fn, dss_capi_ctx_path]
+    # Temporary fixes for DSS C-API headers
+    for fn in headers:    
+        with open(fn, 'r') as f:
+            patched = (f.read().
+                replace(' ctx_Fuses_Reset(void* ctx, int32_t Value)', ' ctx_Fuses_Reset(void* ctx)').
+                replace(' Fuses_Reset(int32_t Value)', ' Fuses_Reset(void)')
+            )
+        with open(fn, 'w') as f:
+            f.write(patched)
+
+    with open(main_header_fn, 'r') as f:
         cffi_header_dss = process_header(f.read())
         
-    dss_capi_ctx_path = os.path.join(DSS_CAPI_PATH, 'include', 'dss_capi_ctx.h')
     if os.path.exists(dss_capi_ctx_path):
         with open(dss_capi_ctx_path, 'r') as f:
             cffi_header_dss += process_header(f.read())
