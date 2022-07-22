@@ -9,6 +9,7 @@ def process_header(src, extern_py=False, implement_py=False, prefix=''):
     
     src  = src.replace('dss_long_bool', 'int32_t')
 
+    src = re.sub('^.*namespace dss.*$', '', src, flags=re.MULTILINE)
     if not implement_py:
         src = re.sub('^extern .*', '', src, flags=re.MULTILINE)
         src = re.sub('^.*extern .*$', '', src, flags=re.MULTILINE)
