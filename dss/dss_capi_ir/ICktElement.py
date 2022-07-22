@@ -135,8 +135,7 @@ class ICktElement(Base):
 
     @BusNames.setter
     def BusNames(self, Value):
-        Value, ValuePtr, ValueCount = self._prepare_string_array(Value)
-        self.CheckForError(self._lib.CktElement_Set_BusNames(ValuePtr, ValueCount))
+        self.CheckForError(self._set_string_array(self._lib.CktElement_Set_BusNames, Value))
 
     @property
     def CplxSeqCurrents(self):

@@ -90,6 +90,7 @@ class Base(object):
         '_get_int8_array',
         '_get_int8_gr_array',
         '_get_string_array',
+        '_set_string_array',
         '_prepare_float64_array',
         '_prepare_int32_array',
         '_prepare_string_array',
@@ -107,6 +108,7 @@ class Base(object):
         self._get_int8_array = api_util.get_int8_array
         self._get_int8_gr_array = api_util.get_int8_gr_array
         self._get_string_array = api_util.get_string_array
+        self._set_string_array = api_util.set_string_array
         self._prepare_float64_array = api_util.prepare_float64_array
         self._prepare_int32_array = api_util.prepare_int32_array
         self._prepare_string_array = api_util.prepare_string_array
@@ -336,6 +338,10 @@ class CffiApiUtil(object):
 
         self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
         return res
+
+    def set_string_array(self, func, value, *args):
+        value, value_ptr, value_count = self.prepare_string_array(value)
+        func(value_ptr, value_count, *args)
 
     def get_float64_array2(self, func, *args):
         ptr = self.ffi.new('double**')

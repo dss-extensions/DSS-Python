@@ -137,8 +137,7 @@ class IFuses(Iterable):
 
     @State.setter
     def State(self, Value):
-        Value, ValuePtr, ValueCount = self._prepare_string_array(Value)
-        self.CheckForError(self._lib.Fuses_Set_State(ValuePtr, ValueCount))
+        self.CheckForError(self._set_string_array(self._lib.Fuses_Set_State, Value))
 
     @property
     def NormalState(self):
@@ -147,5 +146,4 @@ class IFuses(Iterable):
 
     @NormalState.setter
     def NormalState(self, Value):
-        Value, ValuePtr, ValueCount = self._prepare_string_array(Value)
-        self.CheckForError(self._lib.Fuses_Set_NormalState(ValuePtr, ValueCount))
+        self.CheckForError(self._set_string_array(self._lib.Fuses_Set_NormalState, Value))

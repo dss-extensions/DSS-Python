@@ -41,7 +41,6 @@ class IText(Base):
             
             self.CheckForError(self._lib.Text_CommandBlock(Value))
         else:
-            Value, ValuePtr, ValueCount = self._prepare_string_array(Value)
-            self.CheckForError(self._lib.Text_CommandArray(ValuePtr, ValueCount))
+            self.CheckForError(self._set_string_array(self._lib.Text_CommandArray, Value))
 
     
