@@ -33,7 +33,6 @@ class IDSS(Base):
         'ActiveClass',
         'Executive',
         'Events',
-        'CmathLib',
         'Parser',
         'DSSim_Coms',
         'YMatrix',
