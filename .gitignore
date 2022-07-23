@@ -97,6 +97,8 @@ ENV/
 .spyderproject
 .spyproject
 
+.vscode
+
 # Rope project settings
 .ropeproject
 
@@ -111,8 +113,10 @@ ENV/
 README.rst
 
 conda_wheels/
-/dss/*.lib
-/dss/**/*.h
+dss/*.lib
+dss/**/*.h
+dss/**/*.hpp
+dss/messages/*
 
 *.CSV
 *.lib

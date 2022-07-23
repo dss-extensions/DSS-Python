@@ -1,0 +1,15 @@
+import numpy as np
+try:
+    import numpy.typing as npt
+    ComplexArray = npt.NDArray[np.complex128]
+    Float64Array = npt.NDArray[np.float64]
+    Float32Array = npt.NDArray[np.float32]
+    Int32Array = npt.NDArray[np.int32]
+    Int8Array = npt.NDArray[np.int8]
+except:
+    from typing import List
+    ComplexArray = List[complex]
+    Float64Array = List[np.float64]
+    Float32Array = List[np.float32]
+    Int32Array = List[np.int32]
+    Int8Array = List[np.int8]

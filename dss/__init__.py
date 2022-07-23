@@ -9,10 +9,8 @@ Besides the parallel-machine mechanisms, DSS Python also exposes the DSSContext 
 
 __version__ = '0.12.2.dev'
 
-
 import os
 from .patch_dss_com import patch_dss_com
-
 
 if os.environ.get('DSS_EXTENSIONS_DEBUG', '') != '1':
     from ._dss_capi import ffi, lib
@@ -29,25 +27,26 @@ if os.path.exists(_properties_mo):
     lib.DSS_SetPropertiesMO(_properties_mo.encode())
 
 from ._cffi_api_util import CffiApiUtil, set_case_insensitive_attributes, use_com_compat, DSSException
-from . import dss_capi_gr, dss_capi_ir, enums
+from . import dss_capi_ir, enums
+from .IDSS import IDSS
 from .enums import *
 
 DssException = DSSException
 
 # Bind to the FFI module instance for OpenDSS-v7
-api_util = CffiApiUtil(ffi, lib) #: API utility functions and low-level access to the classic API
+api_util: CffiApiUtil = CffiApiUtil(ffi, lib) #: API utility functions and low-level access to the classic API
 
 if not hasattr(lib, 'ctx_New'):
     # Module was built without the context API
     prime_api_util = None
-    DSS_GR = dss_capi_gr.IDSS(api_util) #: GR (Global Result) interface
-    DSS_IR = dss_capi_ir.IDSS(api_util) #: IR (Immediate Result) interface
+    DSS_GR: IDSS = IDSS(api_util) #: GR (Global Result) interface
+    DSS_IR: dss_capi_ir.IDSS = dss_capi_ir.IDSS(api_util) #: IR (Immediate Result) interface -- this WILL be removed in the future
 else:
     prime_api_util = CffiApiUtil(ffi, lib, lib.ctx_Get_Prime()) #: API utility functions and low-level access for DSSContext API
-    DSS_GR = dss_capi_gr.IDSS(prime_api_util) #: GR (Global Result) interface using the new DSSContext API
-    DSS_IR = dss_capi_ir.IDSS(prime_api_util) #: IR (Immediate Result) interface using the new DSSContext API
+    DSS_GR: IDSS = IDSS(prime_api_util) #: GR (Global Result) interface using the new DSSContext API
+    DSS_IR: dss_capi_ir.IDSS = dss_capi_ir.IDSS(prime_api_util) #: IR (Immediate Result) interface using the new DSSContext API -- this WILL be removed in the future
 
 # Added "dss" for v0.12+ (feedback from some users)
+dss: IDSS
+DSS: IDSS
 dss = DSS = DSS_GR #: Same as DSS_GR
-
-

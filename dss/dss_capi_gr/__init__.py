@@ -3,4 +3,4 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 
 Copyright (c) 2016-2022 Paulo Meira
 '''
-from .IDSS import IDSS
+from ..IDSS import IDSS
