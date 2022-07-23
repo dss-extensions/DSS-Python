@@ -311,3 +311,23 @@ class IDSS(Base):
             return
 
         self.Text.Commands(single or block)
+
+    @property
+    def Plotting(self):
+        '''
+        Shortcut for the plotting module. This property is equivalent to:
+
+        ```
+        from dss import plot
+        return plot
+        ```
+
+        Gives access to the `enable()` and `disable()` functions.
+        Requires matplotlib and SciPy to be installed, hence it is an
+        optional feature.
+
+        (API Extension)
+        '''
+        from dss import plot
+        return plot
+

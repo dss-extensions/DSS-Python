@@ -4,6 +4,10 @@ using the new features from DSS C-API v0.12 and common Python modules such as ma
 
 This is not a complete implementation yet and there are known limitations
 """
+from . import api_util
+from . import DSS as DSSPrime
+from ._cffi_api_util import CffiApiUtil
+from .dss_capi_gr import IDSS
 try:
     import numpy as np
     from matplotlib import pyplot as plt
@@ -16,10 +20,6 @@ except:
     raise ImportError("SciPy and matplotlib are required to use this module.")
 
 import re, json, sys, warnings
-from . import api_util
-from . import DSS as DSSPrime
-from ._cffi_api_util import CffiApiUtil
-from .dss_capi_gr import IDSS
 
 # import os
 # import html
@@ -443,7 +443,7 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
             offset += 1
             
         if do_values == pqNone:
-            return lines[:offset], None, None, *extra
+            return tuple(lines[:offset], None, None, *extra)
             
         offset = 0
 
@@ -481,7 +481,7 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
             
             offset += 1
         
-        return lines[:offset], values[:offset], lines_styles, *extra
+        return tuple(lines[:offset], values[:offset], lines_styles, *extra)
     
 
 def get_point_data(DSS, point_objects, bus_coords, do_values=False):
