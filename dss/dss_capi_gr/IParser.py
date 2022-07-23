@@ -113,8 +113,7 @@ class IParser(Base):
     @property
     def WhiteSpace(self):
         '''
-        (read) Get the characters used for White space in the command string.  Default is blank and Tab.
-        (write) Set the characters used for White space in the command string.  Default is blank and Tab.
+        Get/set the characters used for White space in the command string.  Default is blank and Tab.
         '''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_WhiteSpace()))
 

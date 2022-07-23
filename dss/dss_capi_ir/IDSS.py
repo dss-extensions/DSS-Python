@@ -174,7 +174,7 @@ class IDSS(Base):
     def LegacyModels(self):
         '''
         If enabled, the legacy/deprecated models for PVSystem, InvControl, Storage and StorageControl are used.
-        In the official OpenDSS version 9.0, the old models where removed. They are temporarily present here
+        In the official OpenDSS version 9.0, the old models were removed. They are temporarily present here
         but may be removed in the near future. If they are important to you, please open an issue on GitHub
         or contact the authors from DSS Extensions: https://github.com/dss-extensions/
         

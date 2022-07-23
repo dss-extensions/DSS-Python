@@ -21,14 +21,30 @@ from ..IObj import IObj
 
 class IDSS(Base):
     '''
-    Main OpenDSS interface
+    Main OpenDSS interface. Organizes the subclasses trying to mimic the `OpenDSSengine.DSS` object
+    as seems from `win32com.client` or `comtypes.client`.
+
+    Since many features from DSS Python are not available in the official version, we mark the extra
+    features as "(API Extension)". As such, the documentation could be somewhat useful for OpenDSS
+    users stuck with the COM version. As a reminder, we provide `patch_dss_com` to introduce some of 
+    the quality-of-life features such as Python iterators and more to an `OpenDSSengine.DSS` COM object,
+    in an effort to provide compatibility when users are either migrating, validating results or 
+    just need to provide support for both the official engine and the DSS Extensions version.
+
+    If you need to create multiple, independent OpenDSS engines, `NewContext()` can be used. This
+    was introduced in DSS Python 0.12.0, after a lot of work in the underlying DSS C-API engine.
+    This feature is also unique to DSS Extensions. Although multi-threading in Python is not great
+    to the the GIL (Global Interpreter Lock), it is important to note that DSS Python releases when
+    API calls are made, i.e. multiple Python threads that spend most time in power flow solutions 
+    should still be performant.
+
+    This main class also includes some global settings. See more settings in `ActiveCircuit.Settings`.
     '''
     __slots__ = [
         'ActiveCircuit',
         'Circuits',
         'Error',
         'Text',
-        # 'NewCircuit',
         'DSSProgress',
         'ActiveClass',
         'Executive',
@@ -52,21 +68,61 @@ class IDSS(Base):
     ]
 
     def __init__(self, api_util):
+        #: Provides access to the circuit attributes and objects in general.
         self.ActiveCircuit = ICircuit(api_util)
-        '''ActiveCircuit: provides access to the circuit attributes and objects. '''
         
+        #: Kept for compatibility. Currently it is an alias to ActiveCircuit.
         self.Circuits = ICircuit(api_util)
+        
+        #: The Error interface provides the current error state and messages. In DSS Python, 
+        #: this is already mapped to Python exceptions, so the user typpically does not need 
+        #: to worry about this.
         self.Error = IError(api_util)
+        
+        #: Provides access to command
         self.Text = IText(api_util)
+
         # self.NewCircuit = ICircuit(api_util)
+
+        #: Kept for compatibility. Controls the progress dialog/output, if avaiable.
         self.DSSProgress = IDSSProgress(api_util)
+
+        #: General information about the current active DSS class.
         self.ActiveClass = IActiveClass(api_util)
+        
+        #: Access to the list of available commands and options, including help text.
         self.Executive = IDSS_Executive(api_util)
+        
+        #: Kept for compatibility.
         self.Events = IDSSEvents(api_util)
+        
+        #: Kept for compatibility.
         self.Parser = IParser(api_util)
+        
+        #: Kept for compatibility. Apparently was used for DSSim-PC (now OpenDSS-G), a 
+        #: closed-source software developed by EPRI using LabView.
         self.DSSim_Coms = IDSSimComs(api_util)
+        
+        #: The YMatrix interface provides advanced access to the internals of
+        #: the DSS engine. The sparse admittance matrix of the system is also 
+        #: available here.
+        #: 
+        #: The original OpenDSSDirect.DLL had some `YMatrix_*` functions, but we 
+        #: add a lot more here.
+        #: 
+        #: (API Extension)
         self.YMatrix = IYMatrix(api_util)
+        
+        #: The ZIP interface provides functions to open compressed ZIP packages
+        #: and run scripts inside the ZIP, without creating extra files on disk.
+        #: 
+        #: (API Extension)
         self.ZIP = IZIP(api_util)
+
+        #: An experimental API that exposes all data classes of the DSS engine in a
+        #: new and pythonic API.
+        #:
+        #: (API Extension)
         self.Obj = IObj(api_util)
 
         Base.__init__(self, api_util)    
@@ -174,7 +230,7 @@ class IDSS(Base):
     def LegacyModels(self):
         '''
         If enabled, the legacy/deprecated models for PVSystem, InvControl, Storage and StorageControl are used.
-        In the official OpenDSS version 9.0, the old models where removed. They are temporarily present here
+        In the official OpenDSS version 9.0, the old models were removed. They are temporarily present here
         but may be removed in the near future. If they are important to you, please open an issue on GitHub
         or contact the authors from DSS Extensions: https://github.com/dss-extensions/
         
@@ -183,7 +239,7 @@ class IDSS(Base):
         
         This can also be enabled by setting the environment variable DSS_CAPI_LEGACY_MODELS to 1.
 
-        NOTE: this option will be removed in a future release.
+        **NOTE**: this option will be removed in a future release.
         
         (API Extension)
         '''
