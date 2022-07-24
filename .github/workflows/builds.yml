@@ -43,6 +43,8 @@ jobs:
       #   continue-on-error: true
       #   run: |
       #     bash dss_python/ci/build_conda.sh
+      - name: Try installing the wheel
+        run: bash dss_python/ci/test_wheel.sh
       - name: 'Upload artifacts'
         uses: "actions/upload-artifact@v2"
         with:

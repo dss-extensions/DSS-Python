@@ -1,6 +1,8 @@
 import os, warnings
 from functools import partial
 import numpy as np
+from ._types import Float64Array, Int32Array, Int8Array
+from typing import Any, AnyStr, Callable, List #, Iterator
 
 # UTF8 under testing
 codec = 'UTF8'
@@ -9,7 +11,7 @@ interface_classes = set()
 
 warn_wrong_case = False
 
-def set_case_insensitive_attributes(use=True, warn=False):
+def set_case_insensitive_attributes(use: bool = True, warn: bool = False):
     '''
     This function is provided to allow easier migration from `win32com.client`.
     
@@ -216,7 +218,7 @@ class CffiApiUtil(object):
         self.lib.DSS_ResetStringBuffer()
         self.init_buffers()
 
-    def get_string(self, b):
+    def get_string(self, b) -> str:
         if b != self.ffi.NULL:
             return self.ffi.string(b).decode(self.codec)
         return u''
@@ -236,14 +238,14 @@ class CffiApiUtil(object):
         return res
 
 
-    def get_float64_gr_array(self):
+    def get_float64_gr_array(self) -> Float64Array:
         ptr, cnt = self.gr_float64_pointers
         if cnt[3] != 0:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy().reshape((cnt[2], cnt[3]))
         
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
 
-    def get_int32_array(self, func, *args):
+    def get_int32_array(self, func: Callable, *args) -> Int32Array:
         ptr = self.ffi.new('int32_t**')
         cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
@@ -258,7 +260,7 @@ class CffiApiUtil(object):
         return res
 
 
-    def get_ptr_array(self, func, *args):
+    def get_ptr_array(self, func: Callable, *args):
         ptr = self.ffi.new('void***')
         cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
@@ -266,7 +268,7 @@ class CffiApiUtil(object):
         self.lib.DSS_Dispose_PPointer(ptr)
         return res
 
-    def get_int32_gr_array(self):
+    def get_int32_gr_array(self) -> Int32Array:
         ptr, cnt = self.gr_int32_pointers
         if cnt[3] != 0:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy().reshape((cnt[2], cnt[3]))
@@ -274,7 +276,7 @@ class CffiApiUtil(object):
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
 
 
-    def get_int8_array(self, func, *args):
+    def get_int8_array(self, func: Callable, *args: Any) -> Int8Array:
         ptr = self.ffi.new('int8_t**')
         cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
@@ -288,14 +290,14 @@ class CffiApiUtil(object):
 
         return res
 
-    def get_int8_gr_array(self):
+    def get_int8_gr_array(self) -> Int8Array:
         ptr, cnt = self.gr_int8_pointers
         if cnt[3] != 0:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy().reshape((cnt[2], cnt[3]))
 
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
 
-    def get_string_array(self, func, *args):
+    def get_string_array(self, func: Callable, *args: Any) -> List[str]:
         ptr = self.ffi.new('char***')
         cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
@@ -339,7 +341,7 @@ class CffiApiUtil(object):
         self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
         return res
 
-    def set_string_array(self, func, value, *args):
+    def set_string_array(self, func: Callable, value: List[AnyStr], *args):
         value, value_ptr, value_count = self.prepare_string_array(value)
         func(value_ptr, value_count, *args)
 
@@ -408,7 +410,7 @@ class CffiApiUtil(object):
         cnt = value.size
         return value, ptr, cnt
 
-    def prepare_string_array(self, value):
+    def prepare_string_array(self, value: List[AnyStr]):
         if value is None:
             raise ValueError("Value cannot be None!")
 
@@ -453,52 +455,75 @@ class Iterable(Base):
         self._Set_idx = getattr(self._lib, '{}_Set_idx'.format(prefix))
 
     @property
-    def First(self):
+    def First(self) -> int:
         '''Sets the first object of this type active. Returns 0 if none.'''
         return self.CheckForError(self._Get_First())
 
     @property
-    def Next(self):
+    def Next(self) -> int:
         '''(read-only) Sets next object of this type active. Returns 0 if no more.'''
         return self.CheckForError(self._Get_Next())
 
     @property
-    def Count(self):
+    def Count(self) -> int:
         '''Number of objects of this type'''
         return self.CheckForError(self._Get_Count())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.CheckForError(self._Get_Count())
 
     def __iter__(self):
+        '''(API Extension)'''
         idx = self.CheckForError(self._Get_First())
         while idx != 0:
             yield self
             idx = self.CheckForError(self._Get_Next())
 
     @property
-    def AllNames(self):
+    def AllNames(self) -> List[str]:
         '''Array of all names of this object type'''
         return self.CheckForError(self._get_string_array(self._Get_AllNames))
 
     @property
-    def Name(self):
+    def Name(self) -> str:
         '''Gets the current name or sets the active object of this type by name'''
         return self._get_string(self.CheckForError(self._Get_Name()))
 
     @Name.setter
-    def Name(self, Value):
+    def Name(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
         self.CheckForError(self.CheckForError(self._Set_Name(Value)))
         
     @property
-    def idx(self):
-        '''Gets the current index or sets the active object of this type by index'''
+    def idx(self) -> int:
+        '''
+        Gets the current index or sets the active object of this type by index
+        
+        While the official API included this for some classes, this is an 
+        API Extension for:
+
+        - Capacitors
+        - CapControls
+        - ISources
+        - LineCodes
+        - Lines
+        - LoadShapes
+        - Meters
+        - Monitors
+        - RegControls
+        - Sensors
+        - SwtControls
+        - Transformers
+        - Vsources
+        - XYCurves
+
+        (API Extension) 
+        '''
         return self.CheckForError(self._Get_idx())
 
     @idx.setter
-    def idx(self, Value):
+    def idx(self, Value: int):
         self.CheckForError(self._Set_idx(Value))
         

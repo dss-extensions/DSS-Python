@@ -2,6 +2,7 @@
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
 Copyright (c) 2016-2022 Paulo Meira
+
 Copyright (c) 2018-2022 DSS Extensions contributors
 '''
 import warnings
@@ -33,7 +34,6 @@ class IDSS(Base):
         'ActiveClass',
         'Executive',
         'Events',
-        'CmathLib',
         'Parser',
         'DSSim_Coms',
         'YMatrix',
@@ -175,7 +175,7 @@ class IDSS(Base):
     def LegacyModels(self):
         '''
         If enabled, the legacy/deprecated models for PVSystem, InvControl, Storage and StorageControl are used.
-        In the official OpenDSS version 9.0, the old models where removed. They are temporarily present here
+        In the official OpenDSS version 9.0, the old models were removed. They are temporarily present here
         but may be removed in the near future. If they are important to you, please open an issue on GitHub
         or contact the authors from DSS Extensions: https://github.com/dss-extensions/
         
@@ -312,3 +312,23 @@ class IDSS(Base):
             return
 
         self.Text.Commands(single or block)
+
+    @property
+    def Plotting(self):
+        '''
+        Shortcut for the plotting module. This property is equivalent to:
+
+        ```
+        from dss import plot
+        return plot
+        ```
+
+        Gives access to the `enable()` and `disable()` functions.
+        Requires matplotlib and SciPy to be installed, hence it is an
+        optional feature.
+
+        (API Extension)
+        '''
+        from dss import plot
+        return plot
+
