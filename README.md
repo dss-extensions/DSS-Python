@@ -165,8 +165,8 @@ Roadmap
 =======
 Besides bug fixes, the main funcionality of this library is mostly done. Notable desirable features that may be implemented are:
 
-- More and better documentation (watch https://github.com/dss-extensions/dss-extensions)
-- Plotting and reports integrated in Python. Several of the plot types optionally available in DSS Python 0.12.0, buta few are missing. Reports and advanced integration are planned for a future feature.
+- More and better documentation. Initial reference at [https://dss-extensions.org/dss_python/](https://dss-extensions.org/dss_python/), watch also https://github.com/dss-extensions/dss-extensions for more.
+- Plotting and reports integrated in Python. Several of the plot types optionally available in DSS Python 0.12.0, but a few are missing. Reports and advanced integration are planned for a future feature.
 
 Expect news about these items by version 0.13.
 
