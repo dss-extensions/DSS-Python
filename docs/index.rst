@@ -2,9 +2,10 @@ DSS Python's API reference
 ==========================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Contents:
    
+   self
    dss
    obj
 
@@ -115,7 +116,7 @@ several years.
 * :class:`DSS.Text <dss.IText.IText>`
 * :class:`DSS.YMatrix <dss.IYMatrix.IYMatrix>` **(API Extension)**
 * :class:`DSS.ZIP <dss.IZIP.IZIP>` **(API Extension)**
-* :ref:`DSS.Obj` (work in progress) **(API Extension)**
+* :doc:`DSS.Obj <obj>` (work in progress) **(API Extension)**
 * :class:`DSS.ActiveCircuit <dss.ICircuit.ICircuit>`:
 
     * :class:`DSS.ActiveCircuit.ActiveBus <dss.IBus.IBus>`

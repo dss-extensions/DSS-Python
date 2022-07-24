@@ -1,5 +1,5 @@
-DSS.Obj
-=======
+The new DSS.Obj API
+===================
 
 This represents a work-in-progress effort to expose all OpenDSS data classes to the end user without requiring
 frequent string manipulation. All data is available using native Python types and wrapper objects.
@@ -8,6 +8,8 @@ A new batch API is also integrated, allowing easy manipulation of multiple objec
 manner.
 
 Changes are expected to adjust naming of the properties. New features are also planned.
+
+**TODO: add minimal examples and links to further examples**
 
 .. automodule:: dss.IObj
 

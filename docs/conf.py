@@ -24,7 +24,7 @@ copyright = '2018-2022, Paulo Meira, DSS Extensions contributors'
 author = 'Paulo Meira'
 
 # The short X.Y version
-version = ''
+version = '.'.join(ver.split('.')[:2])
 # The full version, including alpha/beta/rc tags
 release = ver
 
@@ -91,7 +91,9 @@ html_theme = "guzzle_sphinx_theme" # "sphinx_rtd_theme"
 #
 html_theme_options = {
     "project_nav_name": "DSS Python",
-#    "projectlink": "http://github.com/dss-extensions/dss_python"
+    "projectlink": "http://github.com/dss-extensions/dss_python",
+    "globaltoc_depth": 3,
+
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -107,8 +109,12 @@ html_static_path = ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {}
-
+html_sidebars = {
+    '**': ['logo-text.html',
+           'globaltoc.html',
+        #   'localtoc.html',
+           'searchbox.html']
+}
 
 # -- Options for HTMLHelp output ---------------------------------------------
 

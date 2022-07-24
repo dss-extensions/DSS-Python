@@ -1,24 +1,24 @@
-The dss package
-===============
+dss package
+===========
 
 **General submodules**
 ----------------------
 
-dss.enums module
+dss.enums
 ----------------
 
 .. automodule:: dss.enums
    :members:
    :show-inheritance:
 
-dss.patch\_dss\_com module
+dss.patch\_dss\_com
 --------------------------
 
 .. automodule:: dss.patch_dss_com
    :members:
    :show-inheritance:
 
-dss.plot module
+dss.plot
 ---------------
 
 .. automodule:: dss.plot
@@ -29,7 +29,7 @@ dss.plot module
 **Interface submodules**
 ------------------------
 
-dss.IDSS module
+dss.IDSS
 ---------------
 
 .. automodule:: dss.IDSS
@@ -38,7 +38,7 @@ dss.IDSS module
    :show-inheritance:
 
 
-dss.IDSS\_Executive module
+dss.IDSS\_Executive
 --------------------------
 
 .. automodule:: dss.IDSS_Executive
@@ -46,7 +46,7 @@ dss.IDSS\_Executive module
    :members:
    :show-inheritance:
 
-dss.IDSSimComs module
+dss.IDSSimComs
 ---------------------
 
 .. automodule:: dss.IDSSimComs
@@ -54,7 +54,7 @@ dss.IDSSimComs module
    :members:
    :show-inheritance:
 
-dss.IError module
+dss.IError
 -----------------
 
 .. automodule:: dss.IError
@@ -62,7 +62,7 @@ dss.IError module
    :members:
    :show-inheritance:
 
-dss.IText module
+dss.IText
 ----------------
 
 .. automodule:: dss.IText
@@ -70,7 +70,7 @@ dss.IText module
    :members:
    :show-inheritance:
 
-dss.IZIP module
+dss.IZIP
 ---------------
 
 .. automodule:: dss.IZIP
@@ -78,7 +78,7 @@ dss.IZIP module
    :members:
    :show-inheritance:
 
-dss.IActiveClass module
+dss.IActiveClass
 -----------------------
 
 .. automodule:: dss.IActiveClass
@@ -86,7 +86,7 @@ dss.IActiveClass module
    :members:
    :show-inheritance:
 
-dss.IBus module
+dss.IBus
 ---------------
 
 .. automodule:: dss.IBus
@@ -94,7 +94,7 @@ dss.IBus module
    :members:
    :show-inheritance:
 
-dss.ICNData module
+dss.ICNData
 ------------------
 
 .. automodule:: dss.ICNData
@@ -102,7 +102,7 @@ dss.ICNData module
    :members:
    :show-inheritance:
 
-dss.ICapControls module
+dss.ICapControls
 -----------------------
 
 .. automodule:: dss.ICapControls
@@ -110,7 +110,7 @@ dss.ICapControls module
    :members:
    :show-inheritance:
 
-dss.ICapacitors module
+dss.ICapacitors
 ----------------------
 
 .. automodule:: dss.ICapacitors
@@ -118,7 +118,7 @@ dss.ICapacitors module
    :members:
    :show-inheritance:
 
-dss.ICircuit module
+dss.ICircuit
 -------------------
 
 .. automodule:: dss.ICircuit
@@ -126,7 +126,7 @@ dss.ICircuit module
    :members:
    :show-inheritance:
 
-dss.ICktElement module
+dss.ICktElement
 ----------------------
 
 .. automodule:: dss.ICktElement
@@ -134,7 +134,7 @@ dss.ICktElement module
    :members:
    :show-inheritance:
 
-dss.ICtrlQueue module
+dss.ICtrlQueue
 ---------------------
 
 .. automodule:: dss.ICtrlQueue
@@ -142,7 +142,7 @@ dss.ICtrlQueue module
    :members:
    :show-inheritance:
 
-dss.IDSSElement module
+dss.IDSSElement
 ----------------------
 
 .. automodule:: dss.IDSSElement
@@ -150,7 +150,7 @@ dss.IDSSElement module
    :members:
    :show-inheritance:
 
-dss.IDSSEvents module
+dss.IDSSEvents
 ---------------------
 
 .. automodule:: dss.IDSSEvents
@@ -158,7 +158,7 @@ dss.IDSSEvents module
    :members:
    :show-inheritance:
 
-dss.IDSSProgress module
+dss.IDSSProgress
 -----------------------
 
 .. automodule:: dss.IDSSProgress
@@ -166,7 +166,7 @@ dss.IDSSProgress module
    :members:
    :show-inheritance:
 
-dss.IDSSProperty module
+dss.IDSSProperty
 -----------------------
 
 .. automodule:: dss.IDSSProperty
@@ -174,7 +174,7 @@ dss.IDSSProperty module
    :members:
    :show-inheritance:
 
-dss.IFuses module
+dss.IFuses
 -----------------
 
 .. automodule:: dss.IFuses
@@ -182,7 +182,7 @@ dss.IFuses module
    :members:
    :show-inheritance:
 
-dss.IGICSources module
+dss.IGICSources
 ----------------------
 
 .. automodule:: dss.IGICSources
@@ -190,7 +190,7 @@ dss.IGICSources module
    :members:
    :show-inheritance:
 
-dss.IGenerators module
+dss.IGenerators
 ----------------------
 
 .. automodule:: dss.IGenerators
@@ -198,7 +198,7 @@ dss.IGenerators module
    :members:
    :show-inheritance:
 
-dss.IISources module
+dss.IISources
 --------------------
 
 .. automodule:: dss.IISources
@@ -206,7 +206,7 @@ dss.IISources module
    :members:
    :show-inheritance:
 
-dss.ILineCodes module
+dss.ILineCodes
 ---------------------
 
 .. automodule:: dss.ILineCodes
@@ -214,7 +214,7 @@ dss.ILineCodes module
    :members:
    :show-inheritance:
 
-dss.ILineGeometries module
+dss.ILineGeometries
 --------------------------
 
 .. automodule:: dss.ILineGeometries
@@ -222,7 +222,7 @@ dss.ILineGeometries module
    :members:
    :show-inheritance:
 
-dss.ILineSpacings module
+dss.ILineSpacings
 ------------------------
 
 .. automodule:: dss.ILineSpacings
@@ -230,7 +230,7 @@ dss.ILineSpacings module
    :members:
    :show-inheritance:
 
-dss.ILines module
+dss.ILines
 -----------------
 
 .. automodule:: dss.ILines
@@ -238,7 +238,7 @@ dss.ILines module
    :members:
    :show-inheritance:
 
-dss.ILoadShapes module
+dss.ILoadShapes
 ----------------------
 
 .. automodule:: dss.ILoadShapes
@@ -246,7 +246,7 @@ dss.ILoadShapes module
    :members:
    :show-inheritance:
 
-dss.ILoads module
+dss.ILoads
 -----------------
 
 .. automodule:: dss.ILoads
@@ -254,7 +254,7 @@ dss.ILoads module
    :members:
    :show-inheritance:
 
-dss.IMeters module
+dss.IMeters
 ------------------
 
 .. automodule:: dss.IMeters
@@ -262,7 +262,7 @@ dss.IMeters module
    :members:
    :show-inheritance:
 
-dss.IMonitors module
+dss.IMonitors
 --------------------
 
 .. automodule:: dss.IMonitors
@@ -270,7 +270,7 @@ dss.IMonitors module
    :members:
    :show-inheritance:
 
-dss.IPDElements module
+dss.IPDElements
 ----------------------
 
 .. automodule:: dss.IPDElements
@@ -278,7 +278,7 @@ dss.IPDElements module
    :members:
    :show-inheritance:
 
-dss.IPVSystems module
+dss.IPVSystems
 ---------------------
 
 .. automodule:: dss.IPVSystems
@@ -286,7 +286,7 @@ dss.IPVSystems module
    :members:
    :show-inheritance:
 
-dss.IParallel module
+dss.IParallel
 --------------------
 
 .. automodule:: dss.IParallel
@@ -294,7 +294,7 @@ dss.IParallel module
    :members:
    :show-inheritance:
 
-dss.IParser module
+dss.IParser
 ------------------
 
 .. automodule:: dss.IParser
@@ -302,7 +302,7 @@ dss.IParser module
    :members:
    :show-inheritance:
 
-dss.IReactors module
+dss.IReactors
 --------------------
 
 .. automodule:: dss.IReactors
@@ -310,7 +310,7 @@ dss.IReactors module
    :members:
    :show-inheritance:
 
-dss.IReclosers module
+dss.IReclosers
 ---------------------
 
 .. automodule:: dss.IReclosers
@@ -318,7 +318,7 @@ dss.IReclosers module
    :members:
    :show-inheritance:
 
-dss.IReduceCkt module
+dss.IReduceCkt
 ---------------------
 
 .. automodule:: dss.IReduceCkt
@@ -326,7 +326,7 @@ dss.IReduceCkt module
    :members:
    :show-inheritance:
 
-dss.IRegControls module
+dss.IRegControls
 -----------------------
 
 .. automodule:: dss.IRegControls
@@ -334,7 +334,7 @@ dss.IRegControls module
    :members:
    :show-inheritance:
 
-dss.IRelays module
+dss.IRelays
 ------------------
 
 .. automodule:: dss.IRelays
@@ -342,7 +342,7 @@ dss.IRelays module
    :members:
    :show-inheritance:
 
-dss.ISensors module
+dss.ISensors
 -------------------
 
 .. automodule:: dss.ISensors
@@ -350,7 +350,7 @@ dss.ISensors module
    :members:
    :show-inheritance:
 
-dss.ISettings module
+dss.ISettings
 --------------------
 
 .. automodule:: dss.ISettings
@@ -358,7 +358,7 @@ dss.ISettings module
    :members:
    :show-inheritance:
 
-dss.ISolution module
+dss.ISolution
 --------------------
 
 .. automodule:: dss.ISolution
@@ -366,7 +366,7 @@ dss.ISolution module
    :members:
    :show-inheritance:
 
-dss.IStorages module
+dss.IStorages
 --------------------
 
 .. automodule:: dss.IStorages
@@ -374,7 +374,7 @@ dss.IStorages module
    :members:
    :show-inheritance:
 
-dss.ISwtControls module
+dss.ISwtControls
 -----------------------
 
 .. automodule:: dss.ISwtControls
@@ -382,7 +382,7 @@ dss.ISwtControls module
    :members:
    :show-inheritance:
 
-dss.ITSData module
+dss.ITSData
 ------------------
 
 .. automodule:: dss.ITSData
@@ -390,7 +390,7 @@ dss.ITSData module
    :members:
    :show-inheritance:
 
-dss.ITopology module
+dss.ITopology
 --------------------
 
 .. automodule:: dss.ITopology
@@ -398,7 +398,7 @@ dss.ITopology module
    :members:
    :show-inheritance:
 
-dss.ITransformers module
+dss.ITransformers
 ------------------------
 
 .. automodule:: dss.ITransformers
@@ -406,7 +406,7 @@ dss.ITransformers module
    :members:
    :show-inheritance:
 
-dss.IVsources module
+dss.IVsources
 --------------------
 
 .. automodule:: dss.IVsources
@@ -414,7 +414,7 @@ dss.IVsources module
    :members:
    :show-inheritance:
 
-dss.IWireData module
+dss.IWireData
 --------------------
 
 .. automodule:: dss.IWireData
@@ -422,7 +422,7 @@ dss.IWireData module
    :members:
    :show-inheritance:
 
-dss.IXYCurves module
+dss.IXYCurves
 --------------------
 
 .. automodule:: dss.IXYCurves
@@ -430,7 +430,7 @@ dss.IXYCurves module
    :members:
    :show-inheritance:
 
-dss.IYMatrix module
+dss.IYMatrix
 -------------------
 
 .. automodule:: dss.IYMatrix
