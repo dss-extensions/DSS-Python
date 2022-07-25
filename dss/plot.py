@@ -7,7 +7,9 @@ This is not a complete implementation yet and there are known limitations
 from . import api_util
 from . import DSS as DSSPrime
 from ._cffi_api_util import CffiApiUtil
-from .dss_capi_gr import IDSS
+from .IDSS import IDSS
+from .IBus import IBus
+import os
 try:
     import numpy as np
     from matplotlib import pyplot as plt
@@ -15,11 +17,45 @@ try:
     from matplotlib.collections import LineCollection
     from mpl_toolkits.mplot3d.art3d import Line3DCollection
     from matplotlib.patches import Rectangle
+    import matplotlib.colors
     import scipy.sparse.coo as coo
 except:
     raise ImportError("SciPy and matplotlib are required to use this module.")
 
 import re, json, sys, warnings
+
+try:
+    from IPython import get_ipython
+    from IPython.display import FileLink, display, display_html, HTML
+    from IPython.core.magic import register_cell_magic
+    ipython = get_ipython()
+    if ipython is None:
+        raise ImportError
+
+    import html
+
+    def link_file(fn):
+        relfn = os.path.relpath(fn, os.getcwd())
+        display(FileLink(relfn, result_html_prefix=f'<b>File output</b> ("{html.escape(fn)}"):&nbsp;'))
+
+    def show(text):
+        display(text)
+
+
+    @register_cell_magic
+    def dss(line, cell):
+        DSSPrime.Text.Commands(cell)
+
+    DSSPrime.AllowChangeDir = False
+except:
+    def link_file(fn):
+        print(f'Output file: "{fn}"')
+
+    def show(text):
+        print(text)
+
+
+    #FileLink('path_to_file/filename.extension')
 
 # import os
 # import html
@@ -227,6 +263,8 @@ def dss_tshape_plot(DSS, params):
     ax.grid(ls='--')
     plt.tight_layout()
 
+
+
 def dss_priceshape_plot(DSS, params):
     # There is no dedicated API yet
     name = params['ObjectName']
@@ -276,7 +314,7 @@ def dss_loadshape_plot(DSS, params):
     
     fig, ax = plt.subplots(1, figsize=(8.5, 6))#, num=f"LoadShape.{params['ObjectName']}")
 
-    if not h.size:
+    if not h.size or h is None or len(h) != len(p):
         h = ls.HrInterval * np.array(range(len(p)))
 
     x_unit = 'h'
@@ -290,7 +328,7 @@ def dss_loadshape_plot(DSS, params):
     ax.plot(h, p, color=color1, label="Pmult")
     if q.size == p.size:
         ax.plot(h, q, color=color2, label="Qmult")
-    
+
     ax.set_title(f"LoadShape = {params['ObjectName']}")
     ax.set_xlabel(f'Time ({x_unit})')
     if ls.UseActual:
@@ -443,7 +481,7 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
             offset += 1
             
         if do_values == pqNone:
-            return tuple(lines[:offset], None, None, *extra)
+            return [lines[:offset], None, None] + extra
             
         offset = 0
 
@@ -481,7 +519,7 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
             
             offset += 1
         
-        return tuple(lines[:offset], values[:offset], lines_styles, *extra)
+        return [lines[:offset], values[:offset], lines_styles] + extra
     
 
 def get_point_data(DSS, point_objects, bus_coords, do_values=False):
@@ -646,8 +684,8 @@ def dss_profile_plot(DSS, params):
         min_y = np.min(rseg[1::2])
         lc3d = Line3DCollection(segments_3d, colors=colors, linestyles=linestyles)
         ax2.add_collection(lc3d)
-        ax2.set_xlabel(ax.get_xlabel())
-        ax2.set_ylabel(ax.get_ylabel())
+        ax2.set_xlabel(xlabel)
+        ax2.set_ylabel(ylabel)
         ax2.set_zlabel('Phase')
         xl = [0, max_x]
         yl = [min(min_y, vmin) - 0.05, min(max_y, vmax) + 0.05]
@@ -673,7 +711,8 @@ def dss_profile_plot(DSS, params):
 
 
 def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
-    quantity = str_to_pq.get(params.pop('Quantity', None), pqNone)
+    quantity = str_to_pq.get(params.get('Quantity', None), pqNone)
+    dots = params.get('Dots', False)
     color1 = params.pop('Color1', Colors[0])
     color2 = params.pop('Color2', Colors[1])
     color3 = params.pop('Color3', Colors[2])
@@ -729,6 +768,10 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
             line_idx = [i for i, c in enumerate(lines_styles) if c == ls and i not in isolated_idxs and i not in switch_idxs]
             if not is3d:
                 ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=1, linestyles=lines_style_code[ls], color=[colors[i] for i in line_idx], capstyle='round'))
+                #TODO
+                # if dots:
+                #     ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors='b', s=16)
+
         # if is3d:
         #     ax.add_collection(Line3DCollection(lines_lines, linewidths=1, linestyles='-', color=[colors[i] for i in line_idx], capstyle='round'))
         #     ax.set_xlim(np.min(lines_lines_3d[:, :, 0]), np.max(lines_lines_3d[:, :, 0]))
@@ -745,6 +788,9 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
         lines_values = np.clip(3 * 1e-3 * lines_values / quantity_max_value, 1, 30)
         if not is3d:
             ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=lines_values[line_idx], linestyles='-', color='b', capstyle='round'))
+            if dots:
+                ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors='b', s=16)
+
         #quantity_max_value *= 1e-3
     elif quantity in (pqCurrent, pqCapacity):
         line_idx = [i for i in range(lines_lines.shape[0]) if i not in isolated_idxs and i not in switch_idxs]
@@ -758,6 +804,10 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
         lines_values = np.clip(3 * lines_values / quantity_max_value, 1, 30)
         if not is3d:
             ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=lines_values[line_idx], linestyles='-', color=colors, capstyle='round'))
+            #TODO
+            # if dots:
+            #     ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors='b', s=16)
+
         #quantity_max_value *= 1e-3
     elif quantity != pqNone:
         quantity_max_value = max(lines_values)
@@ -766,6 +816,9 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
             line_idx = [i for i, c in enumerate(lines_styles) if c == ls and i not in isolated_idxs and i not in switch_idxs]
             if not is3d:
                 ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=0.5 + 6 * lines_values[line_idx] / quantity_max_value, linestyles=lines_style_code[ls], color='b', capstyle='round'))
+                if dots:
+                    ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors='b', s=16)
+
     else:
         #TODO: handle 1 and 3 phase, etc.
         if not is3d:
@@ -850,7 +903,8 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     if not given_ax:       
-        ax.set_title('{}:{}, max={:g}'.format(DSS.ActiveCircuit.Name.upper(), quantity_str[quantity], quantity_max_value))
+        if quantity != pqNone:
+            ax.set_title('{}:{}, max={:g}'.format(DSS.ActiveCircuit.Name.upper(), quantity_str[quantity], quantity_max_value))
         ax.autoscale_view()
         ax.get_xaxis().get_major_formatter().set_scientific(False)
         ax.get_yaxis().get_major_formatter().set_scientific(False)
@@ -1047,8 +1101,111 @@ def dss_yearly_curve_plot(DSS, params):
     print("TODO: YearCurveplot")#, params)
 
 def dss_general_data_plot(DSS, params):
-    print("TODO: GeneralDataPlot")#, params)
+    is_general = params['PlotType'] == 'GeneralDataPlot'
+    ValueIndex = max(1, params['ValueIndex'] - 1)
+    fn = params['ObjectName']
+    MaxScaleIsSpecified = params['MaxScaleIsSpecified']
+    MinScaleIsSpecified = params['MinScaleIsSpecified']
+    MaxScale = params['MaxScale']
+    MinScale = params['MinScale']
 
+    # Whenever we add Pandas as a dependency, this could be
+    # rewritten to avoid all the extra/slow work
+    exp = re.compile('[,=\t]')
+    with open(fn, 'r') as f:
+        line = f.readline().rstrip()
+        field = exp.split(line)[ValueIndex].strip() #TODO: Is this right?!
+        f.seek(0)
+        # Find min and max
+        names, vals = [], []
+        for line in f:
+            if not line:
+                continue
+
+            data = exp.split(line)
+            name, val = data[0], data[ValueIndex]
+            if len(val):
+                names.append(name)
+                vals.append(float(val))
+
+    vals = np.asarray(vals)
+    min_val = np.min(vals)
+    max_val = np.max(vals)
+
+    # Do some sanity checking on the numbers. Don't want to include negative numbers in autoadd plot 
+    if not is_general:
+        if min_val < 0.0:
+            min_val = 0.0
+        if max_val < 0.0:
+            max_val = 0.0
+
+    if MaxScaleIsSpecified:
+        max_val = MaxScale # Override with user specified value
+    if MinScaleIsSpecified:
+        min_val = MinScale # Override with user specified value
+
+    diff = max_val - min_val
+    if diff == 0.0:
+        diff = max_val
+    if diff == 0.0:
+        diff = 1.0 # Everything is zero
+
+    sidxs = np.argsort(vals)
+    bus: IBus = DSS.ActiveCircuit.ActiveBus
+    data = []
+    labels = []
+    do_labels = params['Labels']
+    colors = []
+    c1 = np.asarray(matplotlib.colors.colorConverter.to_rgb(params['Color1']))
+    c2 = np.asarray(matplotlib.colors.colorConverter.to_rgb(params['Color2']))
+    for i in sidxs:
+        name, val = names[i], vals[i]
+        if DSS.ActiveCircuit.SetActiveBus(name) <= 0 or not bus.Coorddefined:
+            continue
+
+        if is_general:
+            data.append((bus.x, bus.y, val))
+            s = ((val - min_val) / diff)
+            colors.append(c2*s + c1*(1-s))
+            # InterpolateGradientColor(Color1, Color2, (GenPlotItem.Value - MinValue) / Diff),
+        else: # ptAutoAddLogPlot
+            data.append((bus.x, bus.y, val))
+            # GetAutoColor((GenPlotItem.Value - MinValue) / Diff), 
+            
+        if do_labels:
+            labels.append(bus.Name)
+
+    data = np.asarray(data)
+
+
+    dss_circuit_plot(DSS, params)
+
+    #fig = plt.figure(figsize=(8, 7))
+    plt.title(f'{field}, Max={max_val:.3g}')
+    ax = plt.gca()
+    #if not is3d:
+    #ax.set_aspect('equal', 'datalim')
+
+    ax.scatter(data[:, 0], data[:, 1], c=colors, zorder=10)
+    # ax.colorbar()
+
+    #ax.autoscale_view()
+    #ax.get_xaxis().get_major_formatter().set_scientific(False)
+    #ax.get_yaxis().get_major_formatter().set_scientific(False)
+    #plt.tight_layout()
+
+
+
+    # marker_code = MarkerIdx
+
+    # NodeMarkerWidth: int
+    # MarkerIdx = NodeMarkerCode
+
+    # marker_code = pmarkers[code_opt]
+    # marker_size = pmarkers[size_opt]
+    #marker_dict = get_marker_dict(marker_code)
+    # ax.plot(*coords, color='red', **marker_dict)
+    #MarkSpecialClasses
 
 
 def dss_matrix_plot(DSS, params):
@@ -1085,11 +1242,12 @@ def dss_matrix_plot(DSS, params):
 def dss_daisy_plot(DSS, params):
     dss_circuit_plot(DSS, params)
 
-    print(params['DaisySize'])
+    # print(params['DaisySize'])
 
     ax = plt.gca()
-    title = f"{params['Quantity']}"
-    ax.set_title(title)
+    XMIN, XMAX = ax.get_xlim()
+    quantity = str_to_pq.get(params.get('Quantity', None), pqNone)
+    ax.set_title(f'Device Locations / {quantity_str[quantity]}')
 
     daisy_bus_list = params['DaisyBusList']
     element = DSS.ActiveCircuit.ActiveCktElement
@@ -1099,7 +1257,44 @@ def dss_daisy_plot(DSS, params):
             if element.Enabled:
                 daisy_bus_list.append(element.BusNames[0])
 
-    counts = np.zeros(shape=(DSS.ActiveCircuit.NumBuses,), dtype=np.int32)
+    counts = np.zeros(shape=(DSS.ActiveCircuit.NumBuses + 1,), dtype=np.int32)
+    for b in daisy_bus_list:
+        idx = DSS.ActiveCircuit.SetActiveBus(b)
+        if idx > 0:
+            counts[idx] += 1
+
+    radius = 0.005 * params['DaisySize'] * (XMAX - XMIN)
+    lines = []
+    pointx, pointy = [], []
+    for bidx in np.nonzero(counts)[0]:
+        bus: IBus = DSS.ActiveCircuit.Buses[int(bidx)]
+        if not bus.Coorddefined:
+            continue
+
+        cnt = counts[bidx]
+        angle0 = 0
+        angle = np.pi * 2.0 / cnt
+        for j in range(cnt):
+            Xc = bus.x + 2 * radius * np.cos(angle * j + angle0)
+            Yc = bus.y + 2 * radius * np.sin(angle * j + angle0)
+            lines.append([(bus.x, bus.y), (Xc, Yc)])
+            pointx.append(Xc)
+            pointy.append(Yc)
+        bus.x, bus.y
+
+    lc = LineCollection(lines, linewidth=1, colors='r')
+    ax.add_collection(lc)
+    ax.scatter(pointx, pointy, marker='o', color='yellow', edgecolors='red', s=100, zorder=10)
+
+    if not params['Labels']:
+        return
+
+    for bidx in np.nonzero(counts)[0]:
+        bus: IBus = DSS.ActiveCircuit.Buses[int(bidx)]
+        if not bus.Coorddefined:
+            continue
+
+        ax.text(bus.x, bus.y, bus.Name, zorder=11)
 
 
 dss_plot_funcs = {
@@ -1142,75 +1337,72 @@ def ctx2dss(ctx, instances={}):
 # dss_progress_bar = None
 # dss_progress_desc = ''
 
-# @api_util.ffi.def_extern(ctx2dss)
-# def dss_python_cb_write(ctx, message_str, message_type):
-#     global dss_progress_bar
-#     global dss_progress_desc
 
-#     DSS = ctx2dss(ctx)
+@api_util.ffi.def_extern()
+def dss_python_cb_write(ctx, message_str, message_type):
+    global dss_progress_bar
+    global dss_progress_desc
+
+    DSS = ctx2dss(ctx)
     
-#     message_str = api_util.ffi.string(message_str).decode(api_util.codec)
-#     if message_type == api_util.lib.DSSMessageType_Error:
-#         #print('DSS Error:', message_str, file=sys.stderr)
-#         pass
-#     elif message_type in (api_util.lib.DSSMessageType_ProgressCaption, api_util.lib.DSSMessageType_ProgressFormCaption):
-#         #dss_progress_desc = message_str
-#         # print('Progress Caption:', message_str, file=sys.stderr)
-#         pass
-#     elif message_type == api_util.lib.DSSMessageType_Progress:
-#         #print('DSS Progress:', message_str, file=sys.stderr)
-#         pass
-#     elif message_type == api_util.lib.DSSMessageType_FireOffEditor:
-#         dpath = DSS.DataPath
-#         if not dpath:
-#             dpath = os.getcwd()
-
-#         relfn = os.path.relpath(message_str, dpath)
-
-#         IPython.display.display_html(IPython.display.HTML(f'<b>{html.escape(relfn)}</b><hr>'))
-#         try:
-#             # print('DSSMessageType_FireOffEditor')
-#             with open(message_str, 'r') as f:
-#                 text = f.read()
+    message_str = api_util.ffi.string(message_str).decode(api_util.codec)
+    if message_type == api_util.lib.DSSMessageType_Error:
+        #print('DSS Error:', message_str, file=sys.stderr)
+        pass
+    elif message_type in (api_util.lib.DSSMessageType_ProgressCaption, api_util.lib.DSSMessageType_ProgressFormCaption):
+        #dss_progress_desc = message_str
+        # print('Progress Caption:', message_str, file=sys.stderr)
+        pass
+    elif message_type == api_util.lib.DSSMessageType_Progress:
+        #print('DSS Progress:', message_str, file=sys.stderr)
+        pass
+    elif message_type == api_util.lib.DSSMessageType_FireOffEditor:
+        link_file(message_str)
+        # try:
+        #     # print('DSSMessageType_FireOffEditor')
+        #     with open(message_str, 'r') as f:
+        #         text = f.read()
             
-#             IPython.display.display({'text/plain': text}, raw=True)
-#         except:
-#             print(f'Could not display file "{message_str}"')
-#             return 1
+        #     IPython.display.display({'text/plain': text}, raw=True)
+        # except:
+        #     print(f'Could not display file "{message_str}"')
+        #     return 1
 
-#     elif message_type == api_util.lib.DSSMessageType_ProgressPercent:
-#         try:
-#             n = int(message_str)
-#             desc = ''
-#             if n == 0 and dss_progress_bar is not None:
-#                 dss_progress_bar = None
+    elif message_type == api_util.lib.DSSMessageType_ProgressPercent:
+        try:
+            pass
+            # n = int(message_str)
+            # desc = ''
+            # if n == 0 and dss_progress_bar is not None:
+            #     dss_progress_bar = None
                 
-#             if dss_progress_bar is None:
-#                 dss_progress_bar = tqdm(total=100, desc=dss_progress_desc)
+            # if dss_progress_bar is None:
+            #     dss_progress_bar = tqdm(total=100, desc=dss_progress_desc)
                 
-#             if n < 0:
-#                 del dss_progress_bar
-#                 dss_progress_bar = None
-#                 return 0
+            # if n < 0:
+            #     del dss_progress_bar
+            #     dss_progress_bar = None
+            #     return 0
                 
                 
-#             dss_progress_bar.n = n
-#             dss_progress_bar.refresh()
-# #             if n == 100:
-# #                 dss_progress_bar.close()
-#         except:
-#             import traceback
-#             traceback.print_exc()
-#             print('DSS Progress:', message_str)
-#     # else:
-#     #     # print(message_type)
-#     #     # print(message_str)
-#     #     IPython.display.display({'text/plain': message_str}, raw=True)
-#     else:
-#         # do nothing for now...
-#         pass
+            # dss_progress_bar.n = n
+            # dss_progress_bar.refresh()
+#             if n == 100:
+#                 dss_progress_bar.close()
+        except:
+            import traceback
+            traceback.print_exc()
+            print('DSS Progress:', message_str)
+
+    # else:
+    #     # print(message_type)
+    #     # print(message_str)
+    #     IPython.display.display({'text/plain': message_str}, raw=True)
+    else:
+        # do nothing for now...
+        pass
         
-#     return 0
+    return 0
 
 
 @api_util.ffi.def_extern()
@@ -1219,7 +1411,8 @@ def dss_python_cb_plot(ctx, paramsStr):
     try:
         DSS = ctx2dss(ctx)
         dss_plot(DSS, params)
-        plt.show()
+        if _do_show:
+            plt.show()
     except:
         from traceback import print_exc
         print('DSS: Error while plotting. Parameters:', params, file=sys.stderr)
@@ -1227,9 +1420,9 @@ def dss_python_cb_plot(ctx, paramsStr):
     return 0
 
 _original_allow_forms = None
+_do_show = True
 
-
-def enable(plot3d=False, plot2d=True):
+def enable(plot3d=False, plot2d=True, show=True):
     """
     Enables the experimental plotting subsystem from DSS Extensions.
 
@@ -1240,6 +1433,9 @@ def enable(plot3d=False, plot2d=True):
 
     global include_3d
     global _original_allow_forms
+    global _do_show
+
+    _do_show = show
 
     warnings.warn('This is still an initial, work-in-progress implementation of plotting for DSS Extensions')
 
@@ -1251,13 +1447,13 @@ def enable(plot3d=False, plot2d=True):
         include_3d = '2d'
 
     api_util.lib.DSS_RegisterPlotCallback(api_util.lib.dss_python_cb_plot)
-    # api_util.lib.DSS_RegisterMessageCallback(api_util.lib.dss_python_cb_write)
+    api_util.lib.DSS_RegisterMessageCallback(api_util.lib.dss_python_cb_write)
     _original_allow_forms = DSSPrime.AllowForms
     DSSPrime.AllowForms = True
 
 def disable():
     api_util.lib.DSS_RegisterPlotCallback(api_util.ffi.NULL)
-    # api_util.lib.DSS_RegisterMessageCallback(api_util.ffi.NULL)
+    api_util.lib.DSS_RegisterMessageCallback(api_util.ffi.NULL)
     if _original_allow_forms is not None:
         DSSPrime.AllowForms = _original_allow_forms
 
