@@ -4,8 +4,8 @@ These interfaces are unique to DSS Extensions, they are not present in the offic
 
 This is still under development and the final implementation might differ in some aspects.
 
-Copyright (c) 2021-2022 Paulo Meira
-Copyright (c) 2021-2022 DSS Extensions contributors
+Copyright (c) 2021-2023 Paulo Meira
+Copyright (c) 2021-2023 DSS Extensions contributors
 '''
 from typing import Union, List, AnyStr
 import numpy as np
@@ -63,7 +63,7 @@ class BatchFloat64ArrayProxy:
 
         if np.isscalar(other):
             self._lib.Batch_Float64(
-                batch.pointer[0], 
+                batch.pointer[0],
                 batch.count[0],
                 self._idx,
                 self._lib.BatchOperation_Increment,
@@ -77,8 +77,8 @@ class BatchFloat64ArrayProxy:
         data = self.to_array() + other
         data, data_ptr, _ = batch._prepare_float64_array(data)
         batch._lib.Batch_SetFloat64Array(
-            batch.pointer[0], 
-            batch.count[0], 
+            batch.pointer[0],
+            batch.count[0],
             self._idx,
             data_ptr
         )
@@ -93,8 +93,8 @@ class BatchFloat64ArrayProxy:
 
         if np.isscalar(other):
             self._lib.Batch_Float64(
-                batch.pointer[0], 
-                batch.count[0], 
+                batch.pointer[0],
+                batch.count[0],
                 self._idx,
                 self._lib.BatchOperation_Multiply,
                 other
@@ -106,9 +106,10 @@ class BatchFloat64ArrayProxy:
 
         data = self.to_array() * other
         data, data_ptr, _ = batch._prepare_float64_array(data)
-        self._lib.Batch_SetFloat64Array(
-            batch.pointer[0], 
-            batch.count[0], 
+        batch._lib.Batch_SetFloat64Array(
+            batch.pointer[0],
+            batch.count[0],
+            self._idx,
             data_ptr
         )
         batch._check_for_error()
@@ -119,8 +120,8 @@ class BatchFloat64ArrayProxy:
 
         if np.isscalar(other):
             self._lib.Batch_Float64(
-                batch.pointer[0], 
-                batch.count[0], 
+                batch.pointer[0],
+                batch.count[0],
                 self._idx,
                 self._lib.BatchOperation_Multiply,
                 1 / other
@@ -132,9 +133,10 @@ class BatchFloat64ArrayProxy:
 
         data = self.to_array() / other
         data, data_ptr, _ = batch._prepare_float64_array(data)
-        self._lib.Batch_SetFloat64Array(
-            batch.pointer[0], 
-            batch.count[0], 
+        batch._lib.Batch_SetFloat64Array(
+            batch.pointer[0],
+            batch.count[0],
+            self._idx,
             data_ptr
         )
         batch._check_for_error()
@@ -170,7 +172,7 @@ class BatchInt32ArrayProxy:
 
     def __floordiv__(self, other):
         return self.to_array() // other
-    
+
     def __add__(self, other):
         return self.to_array() + other
 
@@ -185,8 +187,8 @@ class BatchInt32ArrayProxy:
 
         if np.isscalar(other):
             self._lib.Batch_Int32(
-                batch.pointer[0], 
-                batch.count[0], 
+                batch.pointer[0],
+                batch.count[0],
                 self._idx,
                 self._lib.BatchOperation_Increment,
                 other
@@ -199,7 +201,7 @@ class BatchInt32ArrayProxy:
         data = self.to_array() + other
         data, data_ptr, _ = batch._api_util.prepare_int32_array(data)
         batch._lib.Batch_SetInt32Array(
-            batch.pointer[0], 
+            batch.pointer[0],
             batch.count[0],
             self._idx,
             data_ptr
@@ -215,7 +217,7 @@ class BatchInt32ArrayProxy:
 
         if np.isscalar(other):
             self._lib.Batch_Int32(
-                batch.pointer[0], 
+                batch.pointer[0],
                 batch.count[0],
                 self._idx,
                 self._lib.BatchOperation_Multiply,
@@ -228,9 +230,10 @@ class BatchInt32ArrayProxy:
 
         data = self.to_array() * other
         data, data_ptr, _ = batch._prepare_int32_array(data)
-        self._lib.Batch_SetInt32Array(
-            batch.pointer[0], 
-            batch.count[0], 
+        batch._lib.Batch_SetInt32Array(
+            batch.pointer[0],
+            batch.count[0],
+            self._idx,
             data_ptr
         )
         batch._check_for_error()
@@ -241,7 +244,7 @@ class BatchInt32ArrayProxy:
 
         if np.isscalar(other):
             self._lib.Batch_Int32(
-                batch.pointer[0], 
+                batch.pointer[0],
                 batch.count[0],
                 self._idx,
                 self._lib.BatchOperation_Multiply,
@@ -255,8 +258,9 @@ class BatchInt32ArrayProxy:
         data = self.to_array() / other
         data, data_ptr, _ = batch._prepare_int32_array(data)
         self._lib.Batch_SetInt32Array(
-            batch.pointer[0], 
-            batch.count[0], 
+            batch.pointer[0],
+            batch.count[0],
+            self._idx,
             data_ptr
         )
         batch._check_for_error()
@@ -347,7 +351,7 @@ class DSSObj(Base):
 
     def _get_complex(self, idx: int) -> complex:
         return self._get_float64_array(
-            self._lib.Obj_GetFloat64Array, 
+            self._lib.Obj_GetFloat64Array,
             self._ptr,
             idx
         ).astype(complex)[0]
@@ -438,9 +442,9 @@ class DSSObj(Base):
             other_cnt = len(other)
             other_ptr = self.ffi.new('void*[]', other_cnt)
             other_ptr[:] = [o._ptr for o in other]
-            
+
         self._lib.Obj_SetObjectArray(self._ptr, idx, other_ptr, other_cnt)
-        self._check_for_error()        
+        self._check_for_error()
 
 
 class DSSBatch(Base):
@@ -450,7 +454,7 @@ class DSSBatch(Base):
     def __init__(self, api_util, **kwargs):
         if len(kwargs) > 1:
             raise ValueError('Exactly one argument is expected.')
-        
+
         Base.__init__(self, api_util)
         self._ffi = api_util.ffi
 
@@ -460,7 +464,7 @@ class DSSBatch(Base):
             self._lib.Batch_CreateByClass(self.pointer, self.count, self._cls_idx)
             self._check_for_error()
             return
-            
+
         regexp = kwargs.get('re')
         if regexp is not None:
             if not isinstance(regexp, bytes):
@@ -490,7 +494,7 @@ class DSSBatch(Base):
 
         The `options` parameter contains bit-flags to toggle specific features.
         See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
-        
+
         Additionally, the `ExcludeDisabled` flag can be used to excluded disabled elements from the output.
 
         (API Extension)
@@ -531,8 +535,8 @@ class DSSBatch(Base):
 
         if np.isscalar(value):
             self._lib.Batch_Float64(
-                self.pointer[0], 
-                self.count[0], 
+                self.pointer[0],
+                self.count[0],
                 idx,
                 self._lib.BatchOperation_Set,
                 value
@@ -544,10 +548,10 @@ class DSSBatch(Base):
             raise ValueError("Number of elements must match")
 
         self._lib.Batch_SetFloat64Array(
-            self.pointer[0], 
-            self.count[0], 
-            data_ptr,
-            idx
+            self.pointer[0],
+            self.count[0],
+            idx,
+            data_ptr
         )
 
 
@@ -561,23 +565,23 @@ class DSSBatch(Base):
 
         if np.isscalar(value):
             self._lib.Batch_Int32(
-                self.pointer[0], 
-                self.count[0], 
+                self.pointer[0],
+                self.count[0],
                 idx,
                 self._lib.BatchOperation_Set,
                 value
             )
             return
-        
+
         data, data_ptr, data_cnt = self._prepare_float64_array(value)
         if data_cnt != self.count[0]:
             raise ValueError("Number of elements must match")
 
         self._lib.Batch_SetInt32Array(
-            self.pointer[0], 
-            self.count[0], 
-            data_ptr,
-            idx
+            self.pointer[0],
+            self.count[0],
+            idx,
+            data_ptr
         )
 
     def _set_batch_string(self, idx: int, value: AnyStr):
@@ -596,8 +600,8 @@ class DSSBatch(Base):
 
 
     def _get_string_ll(self, idx: int):
-        return [   
-            self._get_string_array(self._lib.Obj_GetStringArray, x, idx) 
+        return [
+            self._get_string_array(self._lib.Obj_GetStringArray, x, idx)
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
 
@@ -610,7 +614,7 @@ class DSSBatch(Base):
         ]
         self._check_for_error()
         return res
-        
+
 
     def _get_batch_obj_array(self, idx: int, pycls):
         if self.count[0] == 0:
@@ -638,7 +642,7 @@ class DSSBatch(Base):
             other_ptr = self.ffi.new('void*[]', len(other))
             other_ptr[:] = [o._ptr for o in other]
             self._lib.Batch_SetObjectArray(self.pointer[0], self.count[0], idx, other_ptr, len(other))
-            return            
+            return
 
         obj = self._obj_cls(self._api_util, self.pointer[0])
         res = []
@@ -691,7 +695,7 @@ class IDSSObj(Base):
         else:
             if type(name_or_idx) is not bytes:
                 name_or_idx = name_or_idx.encode(self._api_util.codec)
-            
+
             ptr = lib.Obj_GetHandleByName(self._api_util.ctx, self.cls_idx, name_or_idx)
             if ptr == self._api_util.ffi.NULL:
                 raise ValueError('Could not find object by name "{}".'.format(name_or_idx))
@@ -41464,24 +41468,24 @@ class IObj(Base):
         self.EnergyMeter = IDSSObj(self, 47, EnergyMeter, EnergyMeterBatch)
         self.Sensor = IDSSObj(self, 48, Sensor, SensorBatch)
 
-# __all__ = [
-#     "IObj",
-#     "EarthModel",
-#     "LineType",
-#     "DimensionUnits",
-#     "ScanType",
-#     "SequenceType",
-#     "Connection",
-#     "CoreType",
-#     "PhaseSequence",
-#     "LoadSolutionModel",
-#     "RandomType",
-#     "ControlMode",
-#     "SolutionMode",
-#     "SolutionAlgorithm",
-#     "CircuitModel",
-#     "AutoAddDeviceType",
-#     "LoadShapeClass",
-#     "MonitoredPhase",
-# ]
+__all__ = [
+    "IObj",
+    "EarthModel",
+    "LineType",
+    "DimensionUnits",
+    "ScanType",
+    "SequenceType",
+    "Connection",
+    "CoreType",
+    "PhaseSequence",
+    "LoadSolutionModel",
+    "RandomType",
+    "ControlMode",
+    "SolutionMode",
+    "SolutionAlgorithm",
+    "CircuitModel",
+    "AutoAddDeviceType",
+    "LoadShapeClass",
+    "MonitoredPhase",
+]
 
