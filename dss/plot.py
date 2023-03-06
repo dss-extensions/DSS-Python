@@ -71,17 +71,16 @@ PROFILEALLPRI = 9997
 PROFILELLALL = 9996
 PROFILELLPRI = 9995
 PROFILELL = 9994 
-PROFILE_SCALE_PUKM = 9993 # PROFILEPUKM
-PROFILE_SCALE_120KFT = 9992 # PROFILE120KFT
 
+#TODO: check if we need to add IncMatrix and Laplacian after the changes in the Pascal code
 (pqVoltage, pqCurrent, pqPower, pqLosses, pqCapacity, pqNone) = range(6)
 
 str_to_pq = {
-    'Voltage': pqVoltage,
-    'Current': pqCurrent,
-    'Power': pqPower,
+    'Voltages': pqVoltage,
+    'Currents': pqCurrent,
+    'Powers': pqPower,
     'Losses': pqLosses,
-    'Capacity': pqCapacity
+    'Capacities': pqCapacity
 }
 
 quantity_str = {v: k for k, v in str_to_pq.items()}
@@ -569,7 +568,7 @@ def dss_profile_plot(DSS, params):
     
     vmin = DSS.ActiveCircuit.Settings.NormVminpu
     vmax = DSS.ActiveCircuit.Settings.NormVmaxpu
-    if ProfileScale == PROFILE_SCALE_120KFT:
+    if ProfileScale == '120kft':
         xlabel = 'Distance (kft)'
         ylabel = '120 Base Voltage'
         DenomLN = 1.0 / 120.0
@@ -1017,26 +1016,26 @@ def dss_visualize_plot(DSS, params):
         ax.plot([XMAX + 5] * 2, [5, y - 5], color='k', lw=7)
         ax.text(XMAX - 25, y, buses[1].upper(), ha='right')
     
-    voltage = (quantity == 'Voltage')
+    voltage = (quantity == 'Voltages')
 
-    if quantity == 'Power':
+    if quantity == 'Powers':
         values = 1e-3 * (element.Voltages.view(dtype=complex) * np.conj(element.Currents.view(dtype=complex)))
         unit = 'kVA'
     elif voltage:
         values = element.Voltages.view(dtype=complex)
         unit = 'pu'
-    elif quantity == 'Current':
+    elif quantity == 'Currents':
         values = element.Currents.view(dtype=complex)
         unit = 'A'
 
-    ax.set_title(f'{etype}.{ename.upper()} {quantity}s ({unit})')
+    ax.set_title(f'{etype}.{ename.upper()} {quantity} ({unit})')
 
     def get_text():
         v = values[bus_idx * nconds + cond]
-        if quantity == 'Power':
+        if quantity == 'Powers':
             arrow_text = f"{v.real:-.6g} {'-' if v.imag < 0 else '+'} j{abs(v.imag):g}"
         else:
-            if quantity == 'Voltage':
+            if quantity == 'Voltages':
                 v /= vbase
             arrow_text = f"{np.abs(v):-.6g} {unit} ∠ {np.angle(v, deg=True):.2f}°"
 
@@ -1075,7 +1074,7 @@ def dss_visualize_plot(DSS, params):
                 else:
                     ax.annotate('', xytext=(arrow_x, arrow_y), xy=(dx + arrow_x, arrow_y), arrowprops=dict(width=lw, color='k'))
 
-        if quantity == 'Current': 
+        if quantity == 'Currents': 
             # Residual
             v = -np.sum(values[(nconds * bus_idx):(nconds * (bus_idx + 1))])
             txt = f"{np.abs(v):-.6g} A ∠ {np.angle(v, deg=True):.2f}°"
@@ -1101,7 +1100,7 @@ def dss_yearly_curve_plot(DSS, params):
     print("TODO: YearCurveplot")#, params)
 
 def dss_general_data_plot(DSS, params):
-    is_general = params['PlotType'] == 'GeneralDataPlot'
+    is_general = params['PlotType'] == 'GeneralData'
     ValueIndex = max(1, params['ValueIndex'] - 1)
     fn = params['ObjectName']
     MaxScaleIsSpecified = params['MaxScaleIsSpecified']
@@ -1210,7 +1209,7 @@ def dss_general_data_plot(DSS, params):
 
 def dss_matrix_plot(DSS, params):
     plot_id = params.get('PlotId', None)
-    if params['MatrixType'] == 'IncMatrix':
+    if params['Quantity'] == 'IncMatrix':
         title = 'Incidence matrix'
         data = DSS.ActiveCircuit.Solution.IncMatrix[:-1]
     else:
@@ -1298,18 +1297,18 @@ def dss_daisy_plot(DSS, params):
 
 
 dss_plot_funcs = {
-    'ScatterPlot': dss_scatter_plot,
-    'DaisyPlot': dss_daisy_plot,
+    'Scatter': dss_scatter_plot,
+    'Daisy': dss_daisy_plot,
     'TShape': dss_tshape_plot,
     'PriceShape': dss_priceshape_plot,
     'LoadShape': dss_loadshape_plot,
-    'MonitorPlot': dss_monitor_plot,
-    'CircuitPlot': dss_circuit_plot,
+    'Monitor': dss_monitor_plot,
+    'Circuit': dss_circuit_plot,
     'Profile': dss_profile_plot,
     'Visualize': dss_visualize_plot,
-    'YearlyCurvePlot': dss_yearly_curve_plot,
-    'MatrixPlot': dss_matrix_plot,
-    'GeneralDataPlot': dss_general_data_plot
+    'YearlyCurve': dss_yearly_curve_plot,
+    'Matrix': dss_matrix_plot,
+    'GeneralData': dss_general_data_plot
 }
 
 def dss_plot(DSS, params):
@@ -1422,13 +1421,18 @@ def dss_python_cb_plot(ctx, paramsStr):
 _original_allow_forms = None
 _do_show = True
 
-def enable(plot3d=False, plot2d=True, show=True):
+def enable(plot3d: bool = False, plot2d: bool = True, show: bool = True):
     """
     Enables the experimental plotting subsystem from DSS Extensions.
 
-    Set plot3d to True to try to reproduce some of the plots from the
+    Set plot3d to `True` to try to reproduce some of the plots from the
     alternative OpenDSS Visualization Tool / OpenDSS Viewer addition 
     to OpenDSS.
+
+    Use `show` to control whether this backend should call `pyplot.show()`
+    or leave that to the system or the user. If the user plans to customize
+    the figure, it is better to set `show=False` in order to preserve the 
+    figures, since `pyplot.show()` discards them.
     """
 
     global include_3d
