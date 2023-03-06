@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Union
 try:
     import numpy.typing as npt
     ComplexArray = npt.NDArray[np.complex128]
@@ -13,3 +14,6 @@ except:
     Float32Array = List[np.float32]
     Int32Array = List[np.int32]
     Int8Array = List[np.int8]
+
+Float64ArrayOrComplexArray = Union[Float64Array, ComplexArray]
+Float64ArrayOrSimpleComplex = Union[Float64Array, complex]

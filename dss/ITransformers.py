@@ -1,12 +1,12 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
-from ._types import Float64Array
+from ._types import Float64Array, Float64ArrayOrComplexArray
 from typing import AnyStr
 
 class ITransformers(Iterable):
@@ -188,16 +188,16 @@ class ITransformers(Iterable):
     kva = kVA
 
     @property
-    def WdgVoltages(self) -> Float64Array:
+    def WdgVoltages(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex array of voltages for active winding'''
         self.CheckForError(self._lib.Transformers_Get_WdgVoltages_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def WdgCurrents(self) -> Float64Array:
+    def WdgCurrents(self) -> Float64ArrayOrComplexArray:
         '''(read-only) All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)'''
         self.CheckForError(self._lib.Transformers_Get_WdgCurrents_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def strWdgCurrents(self) -> str:
@@ -223,13 +223,13 @@ class ITransformers(Iterable):
         self.CheckForError(self._lib.Transformers_Set_RdcOhms(Value))
 
     @property
-    def LossesByType(self) -> Float64Array:
+    def LossesByType(self) -> Float64ArrayOrComplexArray:
         '''Complex array with the losses by type (total losses, load losses, no-load losses), in VA'''
         self.CheckForError(self._lib.Transformers_Get_LossesByType_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def AllLossesByType(self) -> Float64Array:
+    def AllLossesByType(self) -> Float64ArrayOrComplexArray:
         '''Complex array with the losses by type (total losses, load losses, no-load losses), in VA, concatenated for ALL transformers'''
         self.CheckForError(self._lib.Transformers_Get_AllLossesByType_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()

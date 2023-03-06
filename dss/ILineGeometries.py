@@ -1,13 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from typing import List
-from ._types import Float64Array, Int32Array
+from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray
 
 class ILineGeometries(Iterable):
     '''
@@ -94,10 +94,10 @@ class ILineGeometries(Iterable):
         self.CheckForError(self._lib.LineGeometries_Get_Xmatrix_GR(Frequency, Length, Units))
         return self._get_float64_gr_array()
 
-    def Zmatrix(self, Frequency: float, Length: float, Units: int) -> Float64Array:
+    def Zmatrix(self, Frequency: float, Length: float, Units: int) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex impedance matrix, ohms'''
         self.CheckForError(self._lib.LineGeometries_Get_Zmatrix_GR(Frequency, Length, Units))
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     def Cmatrix(self, Frequency: float, Length: float, Units: int) -> Float64Array:
         '''(read-only) Capacitance matrix, nF'''

@@ -1,13 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Base, DssException
 from .IDSSProperty import IDSSProperty
-from ._types import Float64Array, Int32Array
+from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 from typing import List, AnyStr, Tuple
 
 class ICktElement(Base):
@@ -143,26 +143,26 @@ class ICktElement(Base):
         self.CheckForError(self._set_string_array(self._lib.CktElement_Set_BusNames, Value))
 
     @property
-    def CplxSeqCurrents(self) -> Float64Array:
+    def CplxSeqCurrents(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex double array of Sequence Currents for all conductors of all terminals of active circuit element.'''
         self.CheckForError(self._lib.CktElement_Get_CplxSeqCurrents_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def CplxSeqVoltages(self) -> Float64Array:
+    def CplxSeqVoltages(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex double array of Sequence Voltage for all terminals of active circuit element.'''
         self.CheckForError(self._lib.CktElement_Get_CplxSeqVoltages_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def Currents(self) -> Float64Array:
+    def Currents(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex array of currents into each conductor of each terminal'''
         self.CheckForError(self._lib.CktElement_Get_Currents_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def CurrentsMagAng(self) -> Float64Array:
-        '''(read-only) Currents in magnitude, angle format as a array of doubles.'''
+        '''(read-only) Currents in magnitude, angle (degrees) format as a array of doubles.'''
         self.CheckForError(self._lib.CktElement_Get_CurrentsMagAng_GR())
         return self._get_float64_gr_array()
 
@@ -227,10 +227,10 @@ class ICktElement(Base):
         return self.CheckForError(self._lib.CktElement_Get_HasVoltControl()) != 0
 
     @property
-    def Losses(self) -> Float64Array:
-        '''(read-only) Total losses in the element: two-element complex array'''
+    def Losses(self) -> Float64ArrayOrSimpleComplex:
+        '''(read-only) Total losses in the element: two-element double array (complex), in VA (watts, vars)'''
         self.CheckForError(self._lib.CktElement_Get_Losses_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_simple()
 
     @property
     def Name(self) -> str:
@@ -291,46 +291,46 @@ class ICktElement(Base):
         return self.CheckForError(self._lib.CktElement_Get_OCPDevType()) #TODO: use enum
 
     @property
-    def PhaseLosses(self) -> Float64Array:
+    def PhaseLosses(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex array of losses by phase'''
         self.CheckForError(self._lib.CktElement_Get_PhaseLosses_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def Powers(self) -> Float64Array:
+    def Powers(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex array of powers into each conductor of each terminal'''
         self.CheckForError(self._lib.CktElement_Get_Powers_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def Residuals(self) -> Float64Array:
-        '''(read-only) Residual currents for each terminal: (mag, angle)'''
+        '''(read-only) Residual currents for each terminal: (magnitude, angle in degrees)'''
         self.CheckForError(self._lib.CktElement_Get_Residuals_GR())
         return self._get_float64_gr_array()
 
     @property
     def SeqCurrents(self) -> Float64Array:
-        '''(read-only) Double array of symmetrical component currents into each 3-phase terminal'''
+        '''(read-only) Double array of symmetrical component currents (magnitudes only) into each 3-phase terminal'''
         self.CheckForError(self._lib.CktElement_Get_SeqCurrents_GR())
         return self._get_float64_gr_array()
 
     @property
-    def SeqPowers(self) -> Float64Array:
-        '''(read-only) Double array of sequence powers into each 3-phase teminal'''
+    def SeqPowers(self) -> Float64ArrayOrComplexArray:
+        '''(read-only) Complex array of sequence powers (kW, kvar) into each 3-phase teminal'''
         self.CheckForError(self._lib.CktElement_Get_SeqPowers_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def SeqVoltages(self) -> Float64Array:
-        '''(read-only) Double array of symmetrical component voltages at each 3-phase terminal'''
+        '''(read-only) Double array of symmetrical component voltages (magnitudes only) at each 3-phase terminal'''
         self.CheckForError(self._lib.CktElement_Get_SeqVoltages_GR())
         return self._get_float64_gr_array()
 
     @property
-    def Voltages(self) -> Float64Array:
+    def Voltages(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex array of voltages at terminals'''
         self.CheckForError(self._lib.CktElement_Get_Voltages_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def VoltagesMagAng(self) -> Float64Array:
@@ -339,13 +339,13 @@ class ICktElement(Base):
         return self._get_float64_gr_array()
 
     @property
-    def Yprim(self) -> Float64Array:
-        '''(read-only) YPrim matrix, column order, complex numbers (paired)'''
+    def Yprim(self) -> Float64ArrayOrComplexArray:
+        '''(read-only) YPrim matrix, column order, complex numbers'''
         self.CheckForError(self._lib.CktElement_Get_Yprim_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def IsIsolated(self) -> Float64Array:
+    def IsIsolated(self) -> bool:
         '''
         Returns true if the current active element is isolated.
         Note that this only fetches the current value. See also the Topology interface.
@@ -353,10 +353,10 @@ class ICktElement(Base):
         return self.CheckForError(self._lib.CktElement_Get_IsIsolated()) != 0
 
     @property
-    def TotalPowers(self) -> Float64Array:
+    def TotalPowers(self) -> Float64ArrayOrComplexArray:
         '''Returns the total powers (complex) at ALL terminals of the active circuit element.'''
         self.CheckForError(self._lib.CktElement_Get_TotalPowers_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def NodeRef(self) -> Int32Array:

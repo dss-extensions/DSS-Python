@@ -1,9 +1,9 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
@@ -274,6 +274,7 @@ class ILines(Iterable):
 
     @property
     def Xmatrix(self) -> Float64Array:
+        '''Reactance matrix (full), ohms per unit length. Array of doubles.'''
         self.CheckForError(self._lib.Lines_Get_Xmatrix_GR())
         return self._get_float64_gr_array()
 
@@ -284,7 +285,7 @@ class ILines(Iterable):
 
     @property
     def Yprim(self) -> Float64Array:
-        '''Yprimitive: Does Nothing at present on Put; Dangerous'''
+        '''Yprimitive for the active line object.'''
         self.CheckForError(self._lib.Lines_Get_Yprim_GR())
         return self._get_float64_gr_array()
 

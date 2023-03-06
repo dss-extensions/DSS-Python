@@ -1,9 +1,9 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Base
 
@@ -49,7 +49,7 @@ from .IReduceCkt import IReduceCkt
 from .IStorages import IStorages
 from .IGICSources import IGICSources
 from typing import List, AnyStr
-from ._types import Float64Array, Int32Array
+from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 
 class ICircuit(Base):
     __slots__ = [
@@ -333,16 +333,16 @@ class ICircuit(Base):
         return self._get_float64_gr_array()
 
     @property
-    def AllBusVolts(self) -> Float64Array:
+    def AllBusVolts(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex array of all bus, node voltages from most recent solution'''
         self.CheckForError(self._lib.Circuit_Get_AllBusVolts_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def AllElementLosses(self) -> Float64Array:
+    def AllElementLosses(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Array of total losses (complex) in each circuit element'''
         self.CheckForError(self._lib.Circuit_Get_AllElementLosses_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def AllElementNames(self) -> List[str]:
@@ -361,16 +361,16 @@ class ICircuit(Base):
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllNodeNames))
 
     @property
-    def LineLosses(self) -> Float64Array:
+    def LineLosses(self) -> Float64ArrayOrSimpleComplex:
         '''(read-only) Complex total line losses in the circuit'''
         self.CheckForError(self._lib.Circuit_Get_LineLosses_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_simple()
 
     @property
-    def Losses(self) -> Float64Array:
+    def Losses(self) -> Float64ArrayOrSimpleComplex:
         '''(read-only) Total losses in active circuit, complex number (two-element array of double).'''
         self.CheckForError(self._lib.Circuit_Get_Losses_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_simple()
 
     @property
     def Name(self) -> str:
@@ -398,32 +398,32 @@ class ICircuit(Base):
         return self.CheckForError(self._lib.Circuit_Get_ParentPDElement())
 
     @property
-    def SubstationLosses(self) -> Float64Array:
+    def SubstationLosses(self) -> Float64ArrayOrSimpleComplex:
         '''(read-only) Complex losses in all transformers designated to substations.'''
         self.CheckForError(self._lib.Circuit_Get_SubstationLosses_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_simple()
 
     @property
-    def SystemY(self) -> Float64Array:
+    def SystemY(self) -> Float64ArrayOrComplexArray:
         '''
         (read-only) System Y matrix (after a solution has been performed). 
         This is deprecated as it returns a dense matrix. Only use it for small systems.
-        For large scale systems, prefer YMatrix.GetCompressedYMatrix.
+        For large-scale systems, prefer YMatrix.GetCompressedYMatrix.
         '''
         self.CheckForError(self._lib.Circuit_Get_SystemY_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def TotalPower(self) -> Float64Array:
-        '''(read-only) Total power, kW delivered to the circuit'''
+    def TotalPower(self) -> Float64ArrayOrSimpleComplex:
+        '''(read-only) Total power (complex), kVA delivered to the circuit'''
         self.CheckForError(self._lib.Circuit_Get_TotalPower_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_simple()
 
     @property
-    def YCurrents(self) -> Float64Array:
+    def YCurrents(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Array of doubles containing complex injection currents for the present solution. Is is the "I" vector of I=YV'''
         self.CheckForError(self._lib.Circuit_Get_YCurrents_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def YNodeOrder(self) -> List[str]:
@@ -431,12 +431,12 @@ class ICircuit(Base):
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_YNodeOrder))
 
     @property
-    def YNodeVarray(self) -> Float64Array:
+    def YNodeVarray(self) -> Float64ArrayOrComplexArray:
         '''(read-only) Complex array of actual node voltages in same order as SystemY matrix.'''
         self.CheckForError(self._lib.Circuit_Get_YNodeVarray_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
-    def ElementLosses(self, Value: Int32Array) -> Float64Array:
+    def ElementLosses(self, Value: Int32Array) -> Float64ArrayOrComplexArray:
         '''
         Array of total losses (complex) in a selection of elements.
         Use the element indices (starting at 1) as parameter.
@@ -445,4 +445,4 @@ class ICircuit(Base):
         '''
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
         self.CheckForError(self._lib.Circuit_Get_ElementLosses_GR(ValuePtr, ValueCount))        
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()

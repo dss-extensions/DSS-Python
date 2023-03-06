@@ -1,13 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Base
 from typing import List, AnyStr
-from ._types import Float64Array, Int32Array
+from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray
 
 class IPDElements(Base):
     __slots__ = []
@@ -219,39 +219,39 @@ class IPDElements(Base):
         return self._get_float64_gr_array()
 
     @property
-    def AllCurrents(self) -> Float64Array:
+    def AllCurrents(self) -> Float64ArrayOrComplexArray:
         '''
         Complex array of currents for all conductors, all terminals, for each PD element.
         
         (API Extension)
         '''
         self.CheckForError(self._lib.PDElements_Get_AllCurrents_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def AllCurrentsMagAng(self) -> Float64Array:
+    def AllCurrentsMagAng(self) -> Float64ArrayOrComplexArray:
         '''
         Complex array (magnitude and angle format) of currents for all conductors, all terminals, for each PD element.
         
         (API Extension)
         '''
         self.CheckForError(self._lib.PDElements_Get_AllCurrentsMagAng_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def AllCplxSeqCurrents(self) -> Float64Array:
+    def AllCplxSeqCurrents(self) -> Float64ArrayOrComplexArray:
         '''
         Complex double array of Sequence Currents for all conductors of all terminals, for each PD elements.
 
         (API Extension)
         '''
         self.CheckForError(self._lib.PDElements_Get_AllCplxSeqCurrents_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def AllSeqCurrents(self) -> Float64Array:
         '''
-        Double array of the symmetrical component currents into each 3-phase terminal, for each PD element.
+        Double array of the symmetrical component currents (magnitudes only) into each 3-phase terminal, for each PD element.
         
         (API Extension)
         '''
@@ -259,24 +259,24 @@ class IPDElements(Base):
         return self._get_float64_gr_array()
 
     @property
-    def AllPowers(self) -> Float64Array:
+    def AllPowers(self) -> Float64ArrayOrComplexArray:
         '''
         Complex array of powers into each conductor of each terminal, for each PD element.
         
         (API Extension)
         '''
         self.CheckForError(self._lib.PDElements_Get_AllPowers_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
-    def AllSeqPowers(self) -> Float64Array:
+    def AllSeqPowers(self) -> Float64ArrayOrComplexArray:
         '''
-        Double array of sequence powers into each 3-phase teminal, for each PD element
+        Complex array of sequence powers into each 3-phase teminal, for each PD element
         
         (API Extension)
         '''
         self.CheckForError(self._lib.PDElements_Get_AllSeqPowers_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @property
     def AllNumPhases(self) -> Int32Array:

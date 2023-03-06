@@ -1,7 +1,7 @@
 import os, warnings
 from functools import partial
 import numpy as np
-from ._types import Float64Array, Int32Array, Int8Array
+from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 from typing import Any, AnyStr, Callable, List #, Iterator
 
 # UTF8 under testing
@@ -96,6 +96,12 @@ class Base(object):
         '_prepare_float64_array',
         '_prepare_int32_array',
         '_prepare_string_array',
+        '_get_complex128_array',
+        '_get_complex128_simple',
+        '_get_complex128_gr_array',
+        '_get_complex128_gr_simple',
+        '_prepare_complex128_array',
+        '_prepare_complex128_simple',
         '_errorPtr',
     ]
 
@@ -115,6 +121,13 @@ class Base(object):
         self._prepare_int32_array = api_util.prepare_int32_array
         self._prepare_string_array = api_util.prepare_string_array
         self._errorPtr = self._lib.Error_Get_NumberPtr()
+        
+        self._prepare_complex128_array = api_util.prepare_complex128_array
+        self._prepare_complex128_simple = api_util.prepare_complex128_simple
+        self._get_complex128_array = api_util.get_complex128_array
+        self._get_complex128_simple = api_util.get_complex128_simple
+        self._get_complex128_gr_array = api_util.get_complex128_gr_array
+        self._get_complex128_gr_simple = api_util.get_complex128_gr_simple
 
         cls = type(self)
         if cls not in interface_classes:
@@ -173,6 +186,8 @@ class Base(object):
 
 
 class CffiApiUtil(object):
+    _ADV_TYPES = False # class variable, changed globally
+
     def __init__(self, ffi, lib, ctx=None):
         self.owns_ctx = True
         self.codec = codec
@@ -185,6 +200,10 @@ class CffiApiUtil(object):
             self.lib = CtxLib(ctx, lib)
 
         self.init_buffers()
+
+        # Just in case the user has set the env var DSS_CAPI_ARRAY_DIMS=1
+        CffiApiUtil._ADV_TYPES = self.lib.DSS_Get_EnableArrayDimensions()
+
 
     def __delete__(self):
         if self.ctx is None:
@@ -213,6 +232,9 @@ class CffiApiUtil(object):
         self.gr_int32_pointers = (tmp_int32_pointers[0][0], tmp_int32_pointers[1][0])
         self.gr_int8_pointers = (tmp_int8_pointers[0][0], tmp_int8_pointers[1][0])
 
+        # also keep a casted version for complex floats
+        self.gr_cfloat64_pointers = (self.ffi.cast('double _Complex**', tmp_float64_pointers[0][0]), tmp_float64_pointers[1][0])
+
     def clear_buffers(self):
         self.lib.DSS_DisposeGRData()
         self.lib.DSS_ResetStringBuffer()
@@ -223,27 +245,84 @@ class CffiApiUtil(object):
             return self.ffi.string(b).decode(self.codec)
         return u''
 
-    def get_float64_array(self, func, *args):
+    def get_float64_array(self, func, *args) -> Float64Array:
         ptr = self.ffi.new('double**')
         cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
         self.lib.DSS_Dispose_PDouble(ptr)
 
-        if cnt[3] != 0:
+        if self._ADV_TYPES and cnt[3]:
             # If the last element is filled, we have a matrix.  Otherwise, the 
             # matrix feature is disabled or the result is indeed a vector
-            return res.reshape((cnt[2], cnt[3]))
+            return res.reshape((cnt[2], cnt[3]), order='F')
 
         return res
 
 
+    def get_complex128_array(self, func, *args) -> Float64ArrayOrComplexArray:
+        if not self._ADV_TYPES:
+            return self.get_float64_array(func, *args)
+
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr = self.ffi.new('double**')
+        cnt = self.ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
+        self.lib.DSS_Dispose_PDouble(ptr)
+
+        if cnt[3]:
+            # If the last element is filled, we have a matrix.  Otherwise, the 
+            # matrix feature is disabled or the result is indeed a vector
+            return res.reshape((cnt[2], cnt[3]), order='F')
+
+        return res
+
+
+    def get_complex128_simple(self, func, *args) -> Float64ArrayOrSimpleComplex:
+        if not self._ADV_TYPES:
+            return self.get_float64_array(func, *args)
+
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr = self.ffi.new('double**')
+        cnt = self.ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        try:
+            assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
+            return self.ffi.cast('double _Complex**', ptr)[0][0]
+        finally:
+            self.lib.DSS_Dispose_PDouble(ptr)
+
+
     def get_float64_gr_array(self) -> Float64Array:
         ptr, cnt = self.gr_float64_pointers
-        if cnt[3] != 0:
-            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy().reshape((cnt[2], cnt[3]))
+        if self._ADV_TYPES and cnt[3]:
+            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy().reshape((cnt[2], cnt[3]), order='F')
         
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
+
+
+    def get_complex128_gr_array(self) -> ComplexArray:
+        if not self._ADV_TYPES:
+            return self.get_float64_gr_array()
+
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr, cnt = self.gr_float64_pointers
+        if self._ADV_TYPES and cnt[3]:
+            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy().reshape((cnt[2], cnt[3]), order='F')
+        
+        return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
+
+
+    def get_complex128_gr_simple(self) -> Float64ArrayOrSimpleComplex:
+        if not self._ADV_TYPES:
+            return self.get_float64_gr_array()
+
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr, cnt = self.gr_cfloat64_pointers
+        assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
+        return ptr[0][0]
+
 
     def get_int32_array(self, func: Callable, *args) -> Int32Array:
         ptr = self.ffi.new('int32_t**')
@@ -252,7 +331,7 @@ class CffiApiUtil(object):
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
         self.lib.DSS_Dispose_PInteger(ptr)
 
-        if cnt[3] != 0:
+        if self._ADV_TYPES and cnt[3]:
             # If the last element is filled, we have a matrix.  Otherwise, the 
             # matrix feature is disabled or the result is indeed a vector
             return res.reshape((cnt[2], cnt[3]))
@@ -270,7 +349,7 @@ class CffiApiUtil(object):
 
     def get_int32_gr_array(self) -> Int32Array:
         ptr, cnt = self.gr_int32_pointers
-        if cnt[3] != 0:
+        if self._ADV_TYPES and cnt[3]:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy().reshape((cnt[2], cnt[3]))
 
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
@@ -283,7 +362,7 @@ class CffiApiUtil(object):
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
         self.lib.DSS_Dispose_PByte(ptr)
 
-        if cnt[3] != 0:
+        if self._ADV_TYPES and cnt[3]:
             # If the last element is filled, we have a matrix.  Otherwise, the 
             # matrix feature is disabled or the result is indeed a vector
             return res.reshape((cnt[2], cnt[3]))
@@ -292,8 +371,8 @@ class CffiApiUtil(object):
 
     def get_int8_gr_array(self) -> Int8Array:
         ptr, cnt = self.gr_int8_pointers
-        if cnt[3] != 0:
-            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy().reshape((cnt[2], cnt[3]))
+        if self._ADV_TYPES and cnt[3]:
+            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy().reshape((cnt[2], cnt[3]), order='F')
 
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
 
@@ -315,6 +394,7 @@ class CffiApiUtil(object):
 
         self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
         return res
+
 
     def get_string_array2(self, func, *args): # for compatibility with OpenDSSDirect.py
         ptr = self.ffi.new('char***')
@@ -341,9 +421,11 @@ class CffiApiUtil(object):
         self.lib.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
         return res
 
+
     def set_string_array(self, func: Callable, value: List[AnyStr], *args):
         value, value_ptr, value_count = self.prepare_string_array(value)
         func(value_ptr, value_count, *args)
+
 
     def get_float64_array2(self, func, *args):
         ptr = self.ffi.new('double**')
@@ -393,14 +475,42 @@ class CffiApiUtil(object):
         ptr, cnt = self.gr_int8_pointers
         return self.ffi.unpack(ptr[0], cnt[0])
 
-
     def prepare_float64_array(self, value):
         if type(value) is not np.ndarray or value.dtype != np.float64:
-            value = np.array(value, dtype=np.float64)
+            value = np.asarray(value, dtype=np.float64)
 
         ptr = self.ffi.cast('double*', self.ffi.from_buffer(value.data))
         cnt = value.size
         return value, ptr, cnt
+
+    def prepare_complex128_array(self, value):
+        if isinstance(value, (np.complex128, complex)):
+            value = np.asarray([value], dtype=np.complex128).view(dtype=np.float64)
+        elif (isinstance(value, np.array) and value.dtype in (np.complex128, np.complex64)):
+            value = np.asarray(value, dtype=np.complex128).view(dtype=np.float64)
+        elif type(value) is not np.ndarray or value.dtype != np.float64:
+            value = np.asarray(value, dtype=np.float64)
+
+        ptr = self.ffi.cast('double*', self.ffi.from_buffer(value.data))
+        cnt = value.size
+        return value, ptr, cnt
+
+
+    def prepare_complex128_simple(self, value: complex):
+        if isinstance(value, (np.complex128, complex)):
+            value = np.asarray([value], dtype=np.complex128).view(dtype=np.float64)
+        elif (isinstance(value, np.array) and value.dtype in (np.complex128, np.complex64)):
+            value = np.asarray(value, dtype=np.complex128).view(dtype=np.float64)
+        elif type(value) is not np.ndarray or value.dtype != np.float64:
+            value = np.asarray(value, dtype=np.float64)
+
+        ptr = self.ffi.cast('double*', self.ffi.from_buffer(value.data))
+        cnt = value.size
+        if cnt != 2:
+            raise TypeError('A scalar complex number or an array of 2 scalar values is required.')
+
+        return value, ptr, cnt
+
 
     def prepare_int32_array(self, value):
         if type(value) is not np.ndarray or value.dtype != np.int32:

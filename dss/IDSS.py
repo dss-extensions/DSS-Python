@@ -1,9 +1,9 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 import warnings
 from typing import List, Union, TypeVar, AnyStr
@@ -394,3 +394,32 @@ class IDSS(Base):
         from dss import plot
         return plot
 
+    @property
+    def AdvancedTypes(self) -> bool:
+        '''
+        When enabled, there are **two global side-effects**:
+        
+        - Complex arrays and complex numbers can be returned and consumed by the Python API.
+        - The low-level API provides matrix dimensions when available (`EnableArrayDimensions` is enabled).
+        
+        As a result, for example, `DSS.ActiveCircuit.ActiveCktElement.Yprim` is returned as a complex matrix instead
+        of a plain array.
+        
+        When disabled, the legacy plain arrays are used and complex numbers cannot be consumed by the Python API.
+
+        *Defaults to **False** for backwards compatibility.*
+        
+        (API Extension)
+        '''
+        
+        arr_dim = self.CheckForError(self._lib.DSS_Get_EnableArrayDimensions()) != 0
+        allow_complex = CffiApiUtil._ADV_TYPES
+        if arr_dim != allow_complex:
+            raise RuntimeError('Invalid state detected.')
+
+        return arr_dim
+
+    @AdvancedTypes.setter
+    def AdvancedTypes(self, Value: bool):
+        self.CheckForError(self._lib.DSS_Set_EnableArrayDimensions(Value))
+        CffiApiUtil._ADV_TYPES = bool(Value)
