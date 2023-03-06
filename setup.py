@@ -88,14 +88,14 @@ else:
 
 setup(
     name="dss_python",
-    description="Python bindings and tools based on the DSS C-API project, a customized OpenDSS implementation",
+    description="Python bindings and tools based on the DSS C-API project, the customized OpenDSS implementation from DSS-Extensions.org",
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="Paulo Meira",
     author_email="pmeira@ieee.org",
     version=package_version,
     license="BSD",
-    packages=['dss', 'dss.UserModels', 'dss.dss_capi_gr', 'dss.dss_capi_ir'],
+    packages=['dss', 'dss.UserModels'],
     setup_requires=["cffi>=1.11.2"],
     cffi_modules=["dss_build.py:ffi_builder_{}".format(version) for version in DSS_VERSIONS] + 
         [
@@ -113,11 +113,11 @@ setup(
     classifiers=[
         'Intended Audience :: Science/Research',
         'Intended Audience :: Education',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Development Status :: 4 - Beta',

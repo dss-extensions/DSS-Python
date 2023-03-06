@@ -1,4 +1,4 @@
-'''A compatibility layer for DSS_CAPI that mimics the official OpenDSS COM interface.
+'''DSS-Python provides a compatibility layer for DSS_CAPI that mimics the official OpenDSS COM interface, with various extensions and quality-of-life tweaks.
 
 ``dss`` is the main package for DSS Python. DSS Python is a compatibility layer for the DSS C-API library that mimics the official OpenDSS COM interface, with many extensions and a few limitations.
 
@@ -7,7 +7,7 @@ As of 2022, most of the parallel-machine functions of EPRI's OpenDSS have been r
 Besides the parallel-machine mechanisms, DSS Python also exposes the DSSContext mechanism provided by DSS Extensions. DSSContexts allow using multiple OpenDSS instances directly, including user-managed multi-threading, without using the internal OpenDSS actors.
 '''
 
-__version__ = '0.12.2.dev'
+__version__ = '0.13.0.dev'
 
 import os
 from .patch_dss_com import patch_dss_com
@@ -27,7 +27,7 @@ if os.path.exists(_properties_mo):
     lib.DSS_SetPropertiesMO(_properties_mo.encode())
 
 from ._cffi_api_util import CffiApiUtil, set_case_insensitive_attributes, use_com_compat, DSSException
-from . import dss_capi_ir, enums
+from . import enums
 from .IDSS import IDSS
 from .enums import *
 
@@ -40,11 +40,11 @@ if not hasattr(lib, 'ctx_New'):
     # Module was built without the context API
     prime_api_util = None
     DSS_GR: IDSS = IDSS(api_util) #: GR (Global Result) interface
-    DSS_IR: dss_capi_ir.IDSS = dss_capi_ir.IDSS(api_util) #: IR (Immediate Result) interface -- this WILL be removed in the future
 else:
     prime_api_util = CffiApiUtil(ffi, lib, lib.ctx_Get_Prime()) #: API utility functions and low-level access for DSSContext API
     DSS_GR: IDSS = IDSS(prime_api_util) #: GR (Global Result) interface using the new DSSContext API
-    DSS_IR: dss_capi_ir.IDSS = dss_capi_ir.IDSS(prime_api_util) #: IR (Immediate Result) interface using the new DSSContext API -- this WILL be removed in the future
+    
+DSS_IR: IDSS = DSS_GR #: IR was removed in DSS-Python v0.13.x, we'll keep mapping it to DSS_GR for this version
 
 # Added "dss" for v0.12+ (feedback from some users)
 dss: IDSS
