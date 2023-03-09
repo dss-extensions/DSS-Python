@@ -40,7 +40,6 @@ class IMeters(Iterable):
         'SumBranchFltRates',
         'AvgRepairTime',
         'SectTotalCust',
-        'SequenceList',
         'OCPDeviceType',
         'FaultRateXRepairHrs',
         'NumSectionBranches'
