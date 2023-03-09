@@ -11,6 +11,7 @@ from typing import AnyStr
 
 class ILines(Iterable):
     __slots__ = []
+    _is_circuit_element = True
 
     _columns = [
         'Name',

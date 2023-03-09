@@ -17,6 +17,7 @@ class IReactors(Iterable):
     '''
     
     __slots__ = []
+    _is_circuit_element = True
 
     _columns = [
         'Name',

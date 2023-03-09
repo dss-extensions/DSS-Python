@@ -9,6 +9,7 @@ from ._cffi_api_util import Iterable
 
 class IVsources(Iterable):
     __slots__ = []
+    _is_circuit_element = True
 
     _columns = [
         'Name',

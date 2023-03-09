@@ -1,15 +1,16 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from typing import AnyStr
 
 class IRegControls(Iterable):
     __slots__ = []
+    _is_circuit_element = True
 
     _columns = [
         'Name',
