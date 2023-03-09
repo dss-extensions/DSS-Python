@@ -1,10 +1,39 @@
 import numpy as np
+import inspect
+from ICapacitors import ICapacitors
+from ICapControls import ICapControls
+from IISources import IISources
+from IGenerators import IGenerators
+from IFuses import IFuses
+from ILineCodes import ILineCodes
+from IMeters import IMeters
+from ILoadShapes import ILoadShapes
+from ILines import ILines
+from ILoads import ILoads
+from IMonitors import IMonitors
+from IPDElements import IPDElements
+from IPVSystems import IPVSystems
+from IRelays import IRelays
+from IReclosers import IReclosers
+from ISensors import ISensors
+from IRegControls import IRegControls
+from ISwtControls import ISwtControls
+from IVsources import IVsources
+from ITransformers import ITransformers
+from IXYCurves import IXYCurves
+from IGICSources import IGICSources
+from IStorages import IStorages
+
 
 def custom_iter(self):
     idx = self.First
     while idx != 0:
         yield self
         idx = self.Next
+
+def custom_len(self):
+    return self.Count
+
 
 def Monitors_AsMatrix(self):
     '''(read-only) Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1)'''
@@ -20,7 +49,9 @@ def Monitors_AsMatrix(self):
 
     
 def patch_dss_com(obj):
-    
+    if hasattr(type(obj.ActiveCircuit.Monitors), 'AsMatrix'):
+        raise TypeError("Object already patched")
+
     def Load_Phases(self):
         current_load = self.Name
         obj.Text.Command = '? Load.{name}.Phases'.format(name=current_load)
@@ -38,6 +69,10 @@ def patch_dss_com(obj):
         for i in range(obj.ActiveCircuit.NumBuses):
             obj.ActiveCircuit.SetActiveBusi(i)
             yield self
+
+    def custom_bus_len(self):
+        return obj.ActiveCircuit.NumBuses
+
    
     # Monitors AsMatrix
     type(obj.ActiveCircuit.Monitors).AsMatrix = Monitors_AsMatrix
@@ -45,32 +80,57 @@ def patch_dss_com(obj):
     # Load Phases (implemented as read-only)
     type(obj.ActiveCircuit.Loads).Phases = property(Load_Phases)
    
-    # Bus iterators
+    # Bus iterator and len
     type(obj.ActiveCircuit.ActiveBus).__iter__ = custom_bus_iter
-    
-    # General iterators
-    type(obj.ActiveCircuit.Capacitors).__iter__ = custom_iter
-    type(obj.ActiveCircuit.CapControls).__iter__ = custom_iter
-    type(obj.ActiveCircuit.ISources).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Generators).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Fuses).__iter__ = custom_iter
-    type(obj.ActiveCircuit.LineCodes).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Meters).__iter__ = custom_iter
-    type(obj.ActiveCircuit.LoadShapes).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Lines).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Loads).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Monitors).__iter__ = custom_iter
-    type(obj.ActiveCircuit.PDElements).__iter__ = custom_iter
-    type(obj.ActiveCircuit.PVSystems).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Relays).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Reclosers).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Sensors).__iter__ = custom_iter
-    type(obj.ActiveCircuit.RegControls).__iter__ = custom_iter
-    type(obj.ActiveCircuit.SwtControls).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Vsources).__iter__ = custom_iter
-    type(obj.ActiveCircuit.Transformers).__iter__ = custom_iter
-    type(obj.ActiveCircuit.XYCurves).__iter__ = custom_iter
-    
+    type(obj.ActiveCircuit.ActiveBus).__len__ = custom_bus_len
+
+    def add_dunders(cls):
+        cls.__iter__ = custom_iter
+        cls.__len__ = custom_len
+
+    # We keep an explicit map since we may change our names later
+    com_classes_to_dsspy = {
+        'Capacitors': ICapacitors,
+        'CapControls': ICapControls,
+        'ISources': IISources,
+        'Generators': IGenerators,
+        'Fuses': IFuses,
+        'LineCodes': ILineCodes,
+        'Meters': IMeters,
+        'LoadShapes': ILoadShapes,
+        'Lines': ILines,
+        'Loads': ILoads,
+        'Monitors': IMonitors,
+        'PDElements': IPDElements,
+        'PVSystems': IPVSystems,
+        'Relays': IRelays,
+        'Reclosers': IReclosers,
+        'Sensors': ISensors,
+        'RegControls': IRegControls,
+        'SwtControls': ISwtControls,
+        'Vsources': IVsources,
+        'Transformers': ITransformers,
+        'XYCurves': IXYCurves,
+        'GICSources': IGICSources,
+        'Storages': IStorages,
+    }
+
+    # Add some more info to the classes
+    for name, py_cls in com_classes_to_dsspy.items():
+        cls = type(getattr(obj.ActiveCircuit, name))
+        add_dunders(cls)
+        cls._py_cls = py_cls
+        # Filter columns, removing 
+        cls._columns = [
+            c 
+            for c in py_cls._columns 
+            if not inspect.getdoc(getattr(py_cls, c)).rstrip().endswith('(API Extension)')
+        ]
+        if getattr(py_cls, '_is_circuit_element', False):
+            cls._is_circuit_element = True
+
+    add_dunders(cls)
+
     return obj
     
 __all__ = ['patch_dss_com']
