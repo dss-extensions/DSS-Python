@@ -1,28 +1,28 @@
 import numpy as np
 import inspect
-from ICapacitors import ICapacitors
-from ICapControls import ICapControls
-from IISources import IISources
-from IGenerators import IGenerators
-from IFuses import IFuses
-from ILineCodes import ILineCodes
-from IMeters import IMeters
-from ILoadShapes import ILoadShapes
-from ILines import ILines
-from ILoads import ILoads
-from IMonitors import IMonitors
-from IPDElements import IPDElements
-from IPVSystems import IPVSystems
-from IRelays import IRelays
-from IReclosers import IReclosers
-from ISensors import ISensors
-from IRegControls import IRegControls
-from ISwtControls import ISwtControls
-from IVsources import IVsources
-from ITransformers import ITransformers
-from IXYCurves import IXYCurves
-from IGICSources import IGICSources
-from IStorages import IStorages
+from .ICapacitors import ICapacitors
+from .ICapControls import ICapControls
+from .IISources import IISources
+from .IGenerators import IGenerators
+from .IFuses import IFuses
+from .ILineCodes import ILineCodes
+from .IMeters import IMeters
+from .ILoadShapes import ILoadShapes
+from .ILines import ILines
+from .ILoads import ILoads
+from .IMonitors import IMonitors
+from .IPDElements import IPDElements
+from .IPVSystems import IPVSystems
+from .IRelays import IRelays
+from .IReclosers import IReclosers
+from .ISensors import ISensors
+from .IRegControls import IRegControls
+from .ISwtControls import ISwtControls
+from .IVsources import IVsources
+from .ITransformers import ITransformers
+from .IXYCurves import IXYCurves
+from .IGICSources import IGICSources
+from .IStorages import IStorages
 
 
 def custom_iter(self):
@@ -58,12 +58,12 @@ def patch_dss_com(obj):
         return int(obj.Text.Result)
         
     def Load_Set_Phases(self, value):
-        try:
-            current_load = self.Name
-            obj.Text.Command = 'Load.{name}.Phases={value}'.format(name=current_load, value=value)
-        except e:
-            print('Error')
-            print(e)
+        # try:
+        current_load = self.Name
+        obj.Text.Command = 'Load.{name}.Phases={value}'.format(name=current_load, value=value)
+        # except e:
+        #     print('Error')
+        #     print(e)
     
     def custom_bus_iter(self):
         for i in range(obj.ActiveCircuit.NumBuses):
@@ -77,8 +77,8 @@ def patch_dss_com(obj):
     # Monitors AsMatrix
     type(obj.ActiveCircuit.Monitors).AsMatrix = Monitors_AsMatrix
     
-    # Load Phases (implemented as read-only)
-    type(obj.ActiveCircuit.Loads).Phases = property(Load_Phases)
+    # Load Phases
+    type(obj.ActiveCircuit.Loads).Phases = property(Load_Phases, Load_Set_Phases)
    
     # Bus iterator and len
     type(obj.ActiveCircuit.ActiveBus).__iter__ = custom_bus_iter
@@ -112,7 +112,7 @@ def patch_dss_com(obj):
         'Transformers': ITransformers,
         'XYCurves': IXYCurves,
         'GICSources': IGICSources,
-        'Storages': IStorages,
+        # 'Storages': IStorages,
     }
 
     # Add some more info to the classes
@@ -124,7 +124,7 @@ def patch_dss_com(obj):
         cls._columns = [
             c 
             for c in py_cls._columns 
-            if not inspect.getdoc(getattr(py_cls, c)).rstrip().endswith('(API Extension)')
+            if not (inspect.getdoc(getattr(py_cls, c)) or '').rstrip().endswith('(API Extension)')
         ]
         if getattr(py_cls, '_is_circuit_element', False):
             cls._is_circuit_element = True
@@ -138,12 +138,12 @@ __all__ = ['patch_dss_com']
 if __name__ == '__main__':
     # Simple test
     
-    import win32com.client as cc
-    DSS = cc.gencache.EnsureDispatch("OpenDSSEngine.DSS")
+    import comtypes.client
+    DSS = comtypes.client.CreateObject("OpenDSSEngine.DSS")
     patch_dss_com(DSS)
     ckt = DSS.ActiveCircuit
     
-    DSS.Text.Command = r'compile "Z:\dss\electricdss-tst\Distrib\IEEETestCases\13Bus\IEEE13Nodeckt.dss"'
+    DSS.Text.Command = r'compile "..\electricdss-tst\Distrib\IEEETestCases\13Bus\IEEE13Nodeckt.dss"'
       
     for cls in [ckt.ActiveBus, ckt.Capacitors, ckt.CapControls, ckt.ISources, ckt.Generators, ckt.Fuses, ckt.LineCodes, ckt.Meters, ckt.LoadShapes, ckt.Lines, ckt.Loads, ckt.Monitors, ckt.PDElements, ckt.PVSystems, ckt.Relays, ckt.Reclosers, ckt.Sensors, ckt.RegControls, ckt.SwtControls, ckt.Vsources, ckt.Transformers, ckt.XYCurves]:
         cls_name = type(cls).__name__
