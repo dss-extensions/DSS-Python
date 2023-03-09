@@ -12,12 +12,12 @@ from typing import Union, AnyStr, List
 
 class ISolution(Base):
     __slots__ = []
-    
+
     _columns = [
         'MinIterations',
         'MaxIterations',
         'MaxControlIterations',
-        'TotalIterations',
+        'Totaliterations',
         'ControlIterations',
         'MostIterationsDone',
         'Number',
@@ -250,7 +250,7 @@ class ISolution(Base):
 
     @property
     def Iterations(self) -> int:
-        '''(read-only) Number of iterations taken for last solution. (Same as TotalIterations)'''
+        '''(read-only) Number of iterations taken for last solution. (Same as Totaliterations)'''
         return self.CheckForError(self._lib.Solution_Get_Iterations())
 
     @property

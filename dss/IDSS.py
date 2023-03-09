@@ -60,7 +60,7 @@ class IDSS(Base):
         'DefaultEditor',
     ]
 
-    ActiveCircuit:ICircuit
+    ActiveCircuit: ICircuit
     Circuits: ICircuit
     Error: IError
     Text: IText
