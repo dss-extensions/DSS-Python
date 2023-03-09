@@ -292,3 +292,7 @@ class IBus(Base):
         while n == 0:
             yield self
             n = self.CheckForError(self._lib.Bus_Get_Next())
+
+    def __len__(self):
+        '''Total number of Buses in the circuit.'''
+        return self.CheckForError(self._lib.Circuit_Get_NumBuses())
