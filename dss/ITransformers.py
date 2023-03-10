@@ -225,12 +225,20 @@ class ITransformers(Iterable):
 
     @property
     def LossesByType(self) -> Float64ArrayOrComplexArray:
-        '''Complex array with the losses by type (total losses, load losses, no-load losses), in VA'''
+        '''
+        Complex array with the losses by type (total losses, load losses, no-load losses), in VA
+        
+        (API Extension)
+        '''
         self.CheckForError(self._lib.Transformers_Get_LossesByType_GR())
         return self._get_complex128_gr_array()
 
     @property
     def AllLossesByType(self) -> Float64ArrayOrComplexArray:
-        '''Complex array with the losses by type (total losses, load losses, no-load losses), in VA, concatenated for ALL transformers'''
+        '''
+        Complex array with the losses by type (total losses, load losses, no-load losses), in VA, concatenated for ALL transformers
+        
+        (API Extension)
+        '''
         self.CheckForError(self._lib.Transformers_Get_AllLossesByType_GR())
         return self._get_complex128_gr_array()

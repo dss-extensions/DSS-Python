@@ -302,7 +302,11 @@ class ILines(Iterable):
 
     @property
     def IsSwitch(self) -> bool:
-        '''Sets/gets the Line element switch status. Setting it has side-effects to the line parameters.'''
+        '''
+        Sets/gets the Line element switch status. Setting it has side-effects to the line parameters.
+
+        (API Extension)
+        '''
         return self.CheckForError(self._lib.Lines_Get_IsSwitch()) != 0
         
     @IsSwitch.setter

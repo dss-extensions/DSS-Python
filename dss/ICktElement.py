@@ -349,6 +349,8 @@ class ICktElement(Base):
         '''
         Returns true if the current active element is isolated.
         Note that this only fetches the current value. See also the Topology interface.
+
+        (API Extension)
         '''
         return self.CheckForError(self._lib.CktElement_Get_IsIsolated()) != 0
 

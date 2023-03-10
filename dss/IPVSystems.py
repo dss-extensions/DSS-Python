@@ -89,7 +89,13 @@ class IPVSystems(Iterable):
 
     @property
     def daily(self) -> str:
-        '''Name of the loadshape for a daily PVSystem profile.'''
+        '''
+        Name of the dispatch shape to use for daily simulations. Must be previously
+        defined as a Loadshape object of 24 hrs, typically. In the default dispatch
+        mode, the PVSystem element uses this loadshape to trigger State changes.        
+        
+        (API Extension)
+        '''
         return self._get_string(self.CheckForError(self._lib.PVSystems_Get_daily()))
 
     @daily.setter
@@ -105,6 +111,8 @@ class IPVSystems(Iterable):
         Name of the load shape to use for duty cycle dispatch simulations such as
         for solar ramp rate studies. Must be previously defined as a Loadshape
         object. Typically would have time intervals of 1-5 seconds.
+
+        (API Extension)
         '''
         return self._get_string(self.CheckForError(self._lib.PVSystems_Get_duty()))
 
@@ -122,6 +130,8 @@ class IPVSystems(Iterable):
         as a Loadshape object. If this is not specified, the Daily dispatch shape,
         if any, is repeated during Yearly solution modes. In the default dispatch
         mode, the PVSystem element uses this loadshape to trigger State changes.
+
+        (API Extension)
         '''
         return self._get_string(self.CheckForError(self._lib.PVSystems_Get_yearly()))
 
@@ -139,6 +149,8 @@ class IPVSystems(Iterable):
         as a TShape object of 24 hrs, typically. The PVSystem element uses this
         TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree
         with the Pmpp vs T curve.
+
+        (API Extension)
         '''
         return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Tdaily()))
 
@@ -159,6 +171,8 @@ class IPVSystems(Iterable):
         points in the actual shape, the shape is assumed to repeat. The PVSystem
         model uses this TShape to determine the Pmpp from the Pmpp vs T curve.
         Units must agree with the Pmpp vs T curve.
+
+        (API Extension)
         '''
         return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Tduty()))
 
@@ -177,6 +191,8 @@ class IPVSystems(Iterable):
         any, is repeated during Yearly solution modes. The PVSystem element uses
         this TShape to determine the Pmpp from the Pmpp vs T curve. Units must
         agree with the Pmpp vs T curve.
+
+        (API Extension)
         '''
         return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Tyearly()))
 
