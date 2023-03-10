@@ -2,6 +2,10 @@
 # filtering interactive commands
 
 new_examples = '''
+L!../../electricdss-tst/Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE123/Run_IEEE123Bus_GFMWholeDaily.DSS
+L!../../electricdss-tst/Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE123/Run_IEEE123Bus_GFMSnap.DSS
+L!../../electricdss-tst/Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_GFMSnap.dss
+L!../../electricdss-tst/Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_GFMDaily.dss
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/NewFeatures/ConstantPF/SnapShot_PFP_kvarlimitation-PV2.dss
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-watt/Daily_voltwatt_noOperation-2.dss
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-watt/Daily_voltwatt_noOperation_PF-2.dss
@@ -81,7 +85,7 @@ L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Peak
 L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Schedule/ScheduleRun.dss
 L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Support/SupportRun.dss
 L!../../electricdss-tst/Version8/Distrib/Examples/StorageControllerTechNote/Time/TimeRun.dss
-L!../../electricdss-tst/Version8/Distrib/Examples/Microgrid/Master.DSS
+L!../../electricdss-tst/Version8/Distrib/Examples/Microgrid/ISource/Master.DSS
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/MonitoredVoltage/Local_voltage_2-2.dss
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/MonitoredVoltage/Local_voltage_average-2.dss
 ../../electricdss-tst/Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/MonitoredVoltage/Local_voltage_max-2.dss
