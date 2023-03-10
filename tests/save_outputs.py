@@ -4,41 +4,17 @@ from math import isfinite
 from time import perf_counter
 import numpy as np
 from zipfile import ZipFile
-from dss import enums, DSSException, DSS
+from dss import enums, DSSException
 import dss
 
 original_working_dir = os.getcwd()
 
 NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
-NO_V9 = False
 WIN32 = (sys.platform == 'win32')
 COM_VLL_BROKEN = True
-
-USE_THREADS = False
-SAVE_OUTPUT = 'save' in sys.argv
-LOAD_OUTPUT = (not WIN32) or ('load' in sys.argv) 
-SAVE_DSSX_OUTPUT = SAVE_OUTPUT and ('dss-extensions' in sys.argv)
-LOAD_PLATFORM = None
-
-def parse_dss_matrix(m):
-    try:
-        sep = ' '
-        if ',' in m:
-            sep = ','
-            
-        data = []
-        for row in m[1:-1].split(' |'):
-            row_float = []
-            for e in row.strip(sep).strip(' ').split(sep):
-                if not e: continue
-                row_float.append(float(e))
-                
-            data.append(row_float)
-            
-        return data
-    except:
-        return m
-
+SAVE_DSSX_OUTPUT = ('dss-extensions' in sys.argv)
+VERBOSE = ('-v' in sys.argv)
+suffix = ''
 
 '''
 We need to save various outputs to compare different versions and implementation of the DSS engine.
@@ -46,6 +22,23 @@ We need to save various outputs to compare different versions and implementation
 From the official COM API implementation, ...
 '''
 
+class COMDSSException(Exception):
+    def __str__(self):
+        return f'(COM#{self.args[0]}) {self.args[1]}'
+
+def check_error():
+    number = DSS.Error.Number
+    if not SAVE_DSSX_OUTPUT and number:
+        msg = DSS.Error.Description
+        if "ignore_me_invalid_executable" not in msg:
+            raise COMDSSException(number, msg)
+
+if VERBOSE:
+    printv = print
+else:
+    def printv(*args):
+        pass
+    
 def run(dss: dss.IDSS, fn: str, solve: bool):
     os.chdir(original_working_dir)
     dss.Text.Command = f'cd "{original_working_dir}"'
@@ -89,19 +82,25 @@ def run(dss: dss.IDSS, fn: str, solve: bool):
                         input_line = input_line.replace('C:\\Users\\prdu001\\OpenDSS\\Distrib\\Examples\\Scripts\\', '../Version8/Distrib/Examples/Scripts/')
                         #print(input_line)
                         dss.Text.Command = input_line
+                        check_error()
+
             except StopIteration:
                 pass
     else:
         dss.Text.Command = 'Compile "{}"'.format(fn)
+        check_error()
 
     if solve:
         dss.ActiveCircuit.Solution.Mode = enums.SolveModes.Daily
         dss.ActiveCircuit.Solution.Solve()
+        check_error()
 
     realibity_ran = True
     try:
         dss.ActiveCircuit.Meters.DoReliabilityCalc(False)
-    except DSSException as ex:
+        check_error()
+        
+    except (DSSException, COMDSSException) as ex:
         if ex.args[0] == 52902:
             realibity_ran = False
 
@@ -117,6 +116,7 @@ def adjust_to_json(cls, field):
             # Replace NaN with None, etc.
             data = [x if isfinite(x) else None for x in data.tolist()]
 
+        check_error()
         # json.dumps(data)
 
         return data
@@ -129,18 +129,50 @@ def adjust_to_json(cls, field):
 ckt_elem_columns_meta = {'AllPropertyNames'}
 ckt_iter_columns_meta = {'Count', 'AllNames'}
 pc_elem_columns = {'AllVariableValues', 'AllVariableNames'}
-ckt_elem_columns = set(DSS.ActiveCircuit.ActiveCktElement._columns) - ckt_elem_columns_meta - pc_elem_columns
 
 def export_dss_api_cls(dss: dss.IDSS, dss_cls):
-    has_iter = hasattr(dss_cls, '__iter__')
-    is_ckt_element = getattr(dss_cls, '_is_circuit_element', False)
+    printv(dss_cls)
+    has_iter = hasattr(type(dss_cls), '__iter__')
+    is_ckt_element = getattr(type(dss_cls), '_is_circuit_element', False)
     ckt_elem = dss.ActiveCircuit.ActiveCktElement
-    fields = dss_cls._columns
+    ckt_elem_columns = set(type(ckt_elem)._columns) - ckt_elem_columns_meta - pc_elem_columns
+    fields = list(type(dss_cls)._columns)
+    
     if 'SAIFIKW' in fields:
         meter_section_fields = fields[fields.index('NumSections'):]
         fields = fields[:fields.index('NumSections')]
     else:
         meter_section_fields = None
+
+    if not SAVE_DSSX_OUTPUT:
+        if 'TotalPowers' in ckt_elem_columns:
+            ckt_elem_columns.remove('TotalPowers')
+
+        if COM_VLL_BROKEN and 'Coorddefined' in fields:
+            fields.remove('puVLL')
+            fields.remove('VLL')
+            fields.remove('AllPCEatBus')
+            fields.remove('AllPDEatBus')
+
+        # if 'Sensor' in fields: # Both  Loads and PVSystems
+        if 'ipvsystems' in type(dss_cls).__name__.lower():
+            fields.remove('Sensor')
+
+        # if 'IrradianceNow' in fields:
+        #     fields.remove('IrradianceNow')
+
+        # if 'IFuses' in type(dss_cls).__name__:
+        #     fields.remove('State')
+        #     fields.remove('NormalState')
+
+        # if 'IReclosers' in type(dss_cls).__name__:
+        #     fields.remove('State')
+        #     fields.remove('NormalState')
+
+        # if 'IRelays' in type(dss_cls).__name__:
+        #     fields.remove('State')
+        #     fields.remove('NormalState')
+
 
     records = []
     metadata_record = {}
@@ -153,7 +185,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     for _ in items:
         record = {}
         for field in fields:
-            # print('>', field)
+            printv('>', field)
             try:
                 record[field] = adjust_to_json(dss_cls, field)
             except StopIteration:
@@ -164,7 +196,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
             if dss_cls.NumSections > 0:
                 dss_cls.SetActiveSection(1)
                 for field in meter_section_fields:
-                    # print('>', field)
+                    printv('>', field)
                     try:
                         record[field] = adjust_to_json(dss_cls, field)
                     except StopIteration:
@@ -175,18 +207,18 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
             # also dump the circuit element info
             ckt_record = {}
             for field in ckt_elem_columns:
-                # print('>', field)
+                printv('>', field)
                 ckt_record[field] = adjust_to_json(ckt_elem, field)
 
             record['ActiveCktElement'] = ckt_record
 
             if not metadata_record:
                 for field in ckt_elem_columns_meta:
-                    # print('>', field)
+                    printv('>', field)
                     metadata_record[field] = adjust_to_json(ckt_elem, field)
 
                 for field in ckt_iter_columns_meta:
-                    # print('>', field)
+                    printv('>', field)
                     metadata_record[field] = adjust_to_json(dss_cls, field)
 
         # elif has_iter and not metadata_record:
@@ -216,38 +248,44 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
         'ActiveBus': dss.ActiveCircuit.ActiveBus,
         'Capacitors': dss.ActiveCircuit.Capacitors,
         'CapControls': dss.ActiveCircuit.CapControls,
-        'CNData': dss.ActiveCircuit.CNData,
         'CtrlQueue': dss.ActiveCircuit.CtrlQueue,
         'Fuses': dss.ActiveCircuit.Fuses,
         'Generators': dss.ActiveCircuit.Generators,
         'GICSources': dss.ActiveCircuit.GICSources,
         'ISources': dss.ActiveCircuit.ISources,
         'LineCodes': dss.ActiveCircuit.LineCodes,
-        'LineGeometries': dss.ActiveCircuit.LineGeometries,
         'Lines': dss.ActiveCircuit.Lines,
-        'LineSpacings': dss.ActiveCircuit.LineSpacings,
         'Loads': dss.ActiveCircuit.Loads,
         'LoadShapes': dss.ActiveCircuit.LoadShapes,
         'Meters': dss.ActiveCircuit.Meters,
         'Monitors': dss.ActiveCircuit.Monitors,
         'PDElements': dss.ActiveCircuit.PDElements,
         'PVSystems': dss.ActiveCircuit.PVSystems,
-        'Reactors': dss.ActiveCircuit.Reactors,
         'Reclosers': dss.ActiveCircuit.Reclosers,
         'RegControls': dss.ActiveCircuit.RegControls,
         'Relays': dss.ActiveCircuit.Relays,
         'Sensors': dss.ActiveCircuit.Sensors,
         'Settings': dss.ActiveCircuit.Settings,
         'Solution': dss.ActiveCircuit.Solution,
-        'Storages': dss.ActiveCircuit.Storages,
         'SwtControls': dss.ActiveCircuit.SwtControls,
         'Topology': dss.ActiveCircuit.Topology,
         'Transformers': dss.ActiveCircuit.Transformers,
-        'TSData': dss.ActiveCircuit.TSData,
         'Vsources': dss.ActiveCircuit.Vsources,
-        'WireData': dss.ActiveCircuit.WireData,
         'XYCurves': dss.ActiveCircuit.XYCurves,
     }
+
+    try:
+        dss_classes.update({
+            'CNData': dss.ActiveCircuit.CNData,
+            'LineGeometries': dss.ActiveCircuit.LineGeometries,
+            'LineSpacings': dss.ActiveCircuit.LineSpacings,
+            'Reactors': dss.ActiveCircuit.Reactors,
+            'Storages': dss.ActiveCircuit.Storages,
+            'TSData': dss.ActiveCircuit.TSData,
+            'WireData': dss.ActiveCircuit.WireData,
+        })
+    except:
+        pass
 
     document = {
         'runtime': runtime,
@@ -271,6 +309,19 @@ if __name__ == '__main__':
     except:
         colorizer = None
 
+
+    if SAVE_DSSX_OUTPUT:
+        from dss import DSS
+        print("Using DSS Extensions:", DSS.Version)
+        suffix = '-dssx'
+    else:
+        import comtypes.client
+        DSS = comtypes.client.CreateObject("OpenDSSEngine.DSS")
+        DSS = dss.patch_dss_com(DSS)
+        DSS.Text.Command = r'set editor=ignore_me_invalid_executable'
+        print("Using official OpenDSS COM:", DSS.Version)
+        suffix = '-COM-' + DSS.Version.split(' ')[1]
+
     try:
         DSS.AllowEditor = False
     except:
@@ -278,15 +329,25 @@ if __name__ == '__main__':
 
     DSS.AllowForms = False
 
+    try:
+        DSS.Text.Command = 'set ShowExport=NO'
+        check_error()
+    except:
+        pass
+
     norm_root = os.path.normpath('../../electricdss-tst')
 
     t0_global = perf_counter()
-    with ZipFile(os.path.join(original_working_dir, 'results.zip'), 'a') as zip_out:
+    total_runtime = 0.0
+    with ZipFile(os.path.join(original_working_dir, f'results{suffix}.zip'), 'a') as zip_out:
         for fn in test_filenames:
             actual_fn = os.path.normpath(fn if not fn.startswith('L!') else fn[2:])
             common_prefix = os.path.commonprefix([norm_root, actual_fn])
             fn_without_prefix = actual_fn[len(common_prefix) + 1:]
             json_fn = fn_without_prefix + '.json'
+            if WIN32:
+                json_fn = json_fn.replace('\\', '/')
+
             try:
                 zip_out.getinfo(json_fn)
                 continue
@@ -296,10 +357,15 @@ if __name__ == '__main__':
             try:
                 tstart_run = perf_counter()
                 realibity_ran = run(DSS, fn, True)
-                data_str = save_state(DSS, runtime=tstart_run - perf_counter())
+                runtime = perf_counter() - tstart_run
+                total_runtime += runtime
+                data_str = save_state(DSS, runtime=runtime)
                 print(fn_without_prefix)
                 zip_out.writestr(json_fn, data_str)
             except KeyboardInterrupt:
+                exit()
+            except OSError:
+                traceback.print_exc()
                 exit()
             except:
                 print('ERROR:', fn)
@@ -310,9 +376,6 @@ if __name__ == '__main__':
 
                 #raise
 
-        
+
     print(perf_counter() - t0_global, 'seconds')
-    # print(f"{len(failures)} Failures")
-    # print(failures)
-    # for fn in failures:
-    #     print(fn)
+    print(total_runtime, 'seconds (runtime only)')
