@@ -1,5 +1,13 @@
 import numpy as np
 import inspect
+from .IBus import IBus
+from .ICircuit import ICircuit
+from .ICtrlQueue import ICtrlQueue
+from .ISettings import ISettings
+from .ISolution import ISolution
+from .ITopology import ITopology
+
+from .ICktElement import ICktElement
 from .ICapacitors import ICapacitors
 from .ICapControls import ICapControls
 from .IISources import IISources
@@ -83,6 +91,7 @@ def patch_dss_com(obj):
     # Bus iterator and len
     type(obj.ActiveCircuit.ActiveBus).__iter__ = custom_bus_iter
     type(obj.ActiveCircuit.ActiveBus).__len__ = custom_bus_len
+    type(obj.ActiveCircuit.ActiveBus)._columns = IBus._columns
 
     def add_dunders(cls):
         cls.__iter__ = custom_iter
@@ -115,17 +124,39 @@ def patch_dss_com(obj):
         # 'Storages': IStorages,
     }
 
+    def filter_cols(py_cls):
+        return [
+            c
+            for c in py_cls._columns 
+            if not (inspect.getdoc(getattr(py_cls, c)) or '').rstrip().endswith('(API Extension)')
+        ]        
+
     # Add some more info to the classes
+    type(obj.ActiveCircuit.ActiveCktElement)._py_cls = ICktElement
+    type(obj.ActiveCircuit.ActiveCktElement)._columns = filter_cols(ICktElement)
+
+    type(obj.ActiveCircuit)._py_cls = ICircuit
+    type(obj.ActiveCircuit)._columns = filter_cols(ICircuit)
+
+    type(obj.ActiveCircuit.CtrlQueue)._py_cls = ICtrlQueue
+    type(obj.ActiveCircuit.CtrlQueue)._columns = filter_cols(ICtrlQueue)
+
+    type(obj.ActiveCircuit.Settings)._py_cls = ISettings
+    type(obj.ActiveCircuit.Settings)._columns = filter_cols(ISettings)
+
+    type(obj.ActiveCircuit.Solution)._py_cls = ISolution
+    type(obj.ActiveCircuit.Solution)._columns = filter_cols(ISolution)
+
+    type(obj.ActiveCircuit.Topology)._py_cls = ITopology
+    type(obj.ActiveCircuit.Topology)._columns = filter_cols(ITopology)
+
     for name, py_cls in com_classes_to_dsspy.items():
         cls = type(getattr(obj.ActiveCircuit, name))
         add_dunders(cls)
         cls._py_cls = py_cls
         # Filter columns, removing 
-        cls._columns = [
-            c 
-            for c in py_cls._columns 
-            if not (inspect.getdoc(getattr(py_cls, c)) or '').rstrip().endswith('(API Extension)')
-        ]
+        cls._columns = filter_cols(py_cls)
+
         if getattr(py_cls, '_is_circuit_element', False):
             cls._is_circuit_element = True
 
