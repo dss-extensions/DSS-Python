@@ -1,7 +1,9 @@
 from dss import DSS, SolveModes as SM
+import sys
 
-# import comtypes.client
-# DSS = comtypes.client.CreateObject('OpenDSSEngine.DSS')
+if 'com' in sys.argv[1:]:
+    import comtypes.client
+    DSS = comtypes.client.CreateObject('OpenDSSEngine.DSS')
 
 DSS.Text.Command = "new circuit.test"
 DSS.Text.Command = "solve"
