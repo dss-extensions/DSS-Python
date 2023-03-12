@@ -35,6 +35,8 @@ class SolveModes(IntEnum):
     AutoAdd = 13 # Auto add generators or capacitors
     Dynamic = 14 # Solve for dynamics
     Harmonic = 15 # Harmonic solution mode
+    Time = 16
+    HarmonicT = 17
 
 class Options(IntEnum):
     '''Deprecated. Please use instead: 
