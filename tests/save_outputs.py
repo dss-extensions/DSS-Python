@@ -16,12 +16,6 @@ SAVE_DSSX_OUTPUT = ('dss-extensions' in sys.argv)
 VERBOSE = ('-v' in sys.argv)
 suffix = ''
 
-'''
-We need to save various outputs to compare different versions and implementation of the DSS engine.
-
-From the official COM API implementation, ...
-'''
-
 class COMDSSException(Exception):
     def __str__(self):
         return f'(COM#{self.args[0]}) {self.args[1]}'
@@ -73,7 +67,7 @@ def run(dss: dss.IDSS, fn: str, solve: bool):
 
                     if not input_line: continue
                     lc_input_line = input_line.lower()
-                    if any(lc_input_line.startswith(x) for x in ['show', 'plot', 'visualize', 'dump', 'export']) or ord(input_line[0]) > 127:
+                    if any(lc_input_line.startswith(x) for x in ['show', 'plot', 'visualize', 'dump', 'export', 'help']) or ord(input_line[0]) > 127:
                         #print('Skipping input:', repr(input_line))
                         continue
                     else:
@@ -191,6 +185,9 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
             except StopIteration:
                 # Some fields are functions, skip those
                 continue
+            except AttributeError:
+                # Depending on the version, a field doesn't exist
+                continue
 
         if meter_section_fields:
             if dss_cls.NumSections > 0:
@@ -301,7 +298,7 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
 
             
 if __name__ == '__main__':
-    from common import test_filenames, errored
+    from common import test_filenames
     try:
         import colored_traceback
         colored_traceback.add_hook()
@@ -341,9 +338,13 @@ if __name__ == '__main__':
     total_runtime = 0.0
     with ZipFile(os.path.join(original_working_dir, f'results{suffix}.zip'), 'a') as zip_out:
         for fn in test_filenames:
-            actual_fn = os.path.normpath(fn if not fn.startswith('L!') else fn[2:])
+            org_fn = fn
+            fixed_fn = fn if not fn.startswith('L!') else fn[2:]
+            prefix_fn = 'L!' if fn.startswith('L!') else ''
+            fn = os.path.join(norm_root, fixed_fn)
+            actual_fn = os.path.normpath(fixed_fn)
             common_prefix = os.path.commonprefix([norm_root, actual_fn])
-            fn_without_prefix = actual_fn[len(common_prefix) + 1:]
+            fn_without_prefix = actual_fn[len(common_prefix):]
             json_fn = fn_without_prefix + '.json'
             if WIN32:
                 json_fn = json_fn.replace('\\', '/')
@@ -356,7 +357,7 @@ if __name__ == '__main__':
 
             try:
                 tstart_run = perf_counter()
-                realibity_ran = run(DSS, fn, True)
+                realibity_ran = run(DSS, prefix_fn + fn, True)
                 runtime = perf_counter() - tstart_run
                 total_runtime += runtime
                 data_str = save_state(DSS, runtime=runtime)
