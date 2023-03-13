@@ -159,10 +159,6 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
         if 'ipvsystems' in type(dss_cls).__name__.lower():
             fields.remove('Sensor')
 
-        if 'Lines' in type(dss_cls).__name__:
-            # This breaks COM: (COM#5007) Line Type Expected, but another found. Dss Class=Transformer
-            fields.remove('Parent')
-
         # if 'IrradianceNow' in fields:
         #     fields.remove('IrradianceNow')
 
@@ -312,7 +308,7 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
             
 if __name__ == '__main__':
     from common import test_filenames
-    # test_filenames = ['L!Version8/Distrib/Examples/DOCTechNote/1_1.dss']
+    test_filenames = ['L!Version8/Distrib/Examples/DOCTechNote/1_1.dss']
     try:
         import colored_traceback
         colored_traceback.add_hook()

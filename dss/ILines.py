@@ -23,7 +23,6 @@ class ILines(Iterable):
         'Geometry',
         'Length',
         'IsSwitch',
-        'Parent',
         'Spacing',
         'EmergAmps', 
         'NormAmps',
