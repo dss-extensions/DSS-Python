@@ -15,7 +15,6 @@ class IMeters(Iterable):
 
     _columns = [
         'Name',
-        'Totals',
         'MeteredTerminal',
         'SeqListSize',
         'RegisterNames',

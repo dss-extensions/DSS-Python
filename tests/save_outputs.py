@@ -177,6 +177,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
 
     records = []
     metadata_record = {}
+    extra = {}
     if has_iter:
         # Iterating this will already call First, Next, etc.
         items = dss_cls
@@ -216,24 +217,6 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
 
             record['ActiveCktElement'] = ckt_record
 
-            if not metadata_record:
-                for field in ckt_elem_columns_meta:
-                    printv('>', field)
-                    metadata_record[field] = adjust_to_json(ckt_elem, field)
-
-                for field in ckt_iter_columns_meta:
-                    printv('>', field)
-                    metadata_record[field] = adjust_to_json(dss_cls, field)
-
-        # elif has_iter and not metadata_record:
-        #     for field in iter_columns_meta:
-        #         metadata_record[field] = adjust_to_json(dss_cls, field)
-
-        # 'ActiveDSSElement: dss.ActiveCircuit.ActiveDSSElement,
-        # 'ReduceCkt': dss.ActiveCircuit.ReduceCkt,
-        # 'ActiveClass': dss.ActiveCircuit.ActiveClass,
-        # 'Parallel': dss.ActiveCircuit.Parallel,
-
 
         if not has_iter:
             # simple record
@@ -242,7 +225,24 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
         # accumulate records
         records.append(record)
 
-    return {'records': records, 'metadata': metadata_record}
+    if is_ckt_element and not metadata_record:
+        for field in ckt_elem_columns_meta:
+            printv('>', field)
+            metadata_record[field] = adjust_to_json(ckt_elem, field)
+
+        for field in ckt_iter_columns_meta:
+            printv('>', field)
+            metadata_record[field] = adjust_to_json(dss_cls, field)
+
+        if 'Meters' in type(dss_cls).__name__:
+            # This breaks the iteration
+            extra = {'Totals': adjust_to_json(dss_cls, 'Totals')}
+
+    # elif has_iter and not metadata_record:
+    #     for field in iter_columns_meta:
+    #         metadata_record[field] = adjust_to_json(dss_cls, field)
+
+    return {'records': records, 'metadata': metadata_record, **extra}
 
 
 def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
@@ -388,3 +388,4 @@ if __name__ == '__main__':
 
     print(perf_counter() - t0_global, 'seconds')
     print(total_runtime, 'seconds (runtime only)')
+
