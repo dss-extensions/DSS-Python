@@ -87,7 +87,7 @@ L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500N
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_GFMDailySmallerPV.dss
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_GFMSnap.dss
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_Unbal.dss
-L!Version8/Distrib/Examples/IBRDynamics_Cases/GFM_IEEE123/RevRegTest.dss
+L!Version8/Distrib/IEEETestCases/123Bus/RevRegTest.dss
 L!Version8/Distrib/Examples/IBRDynamics_Cases/GFM_IEEE123/Run_IEEE123Bus_GFMDaily.DSS
 L!Version8/Distrib/Examples/IBRDynamics_Cases/GFM_IEEE123/Run_IEEE123Bus_GFMDaily_CannotPickUpLoad.DSS
 L!Version8/Distrib/Examples/IBRDynamics_Cases/GFL_IEEE123/Run_IEEE123Bus_GFLDaily.DSS

@@ -33,7 +33,7 @@ else:
     def printv(*args):
         pass
     
-def run(dss: dss.IDSS, fn: str, solve: bool):
+def run(dss: dss.IDSS, fn: str):
     os.chdir(original_working_dir)
     dss.Text.Command = f'cd "{original_working_dir}"'
     dss.Start(0)
@@ -51,6 +51,11 @@ def run(dss: dss.IDSS, fn: str, solve: bool):
     line_by_line = fn.startswith('L!')
     if line_by_line:
         fn = fn[2:]
+
+    with open(fn, 'r') as f:
+        solve = '\nsolve' not in f.read().lower()
+
+    if line_by_line:
         with open(fn, 'r') as f:
             dss.Text.Command = f'cd "{os.path.dirname(fn)}"'
             iter_f = iter(f)
@@ -88,6 +93,8 @@ def run(dss: dss.IDSS, fn: str, solve: bool):
         dss.ActiveCircuit.Solution.Mode = enums.SolveModes.Daily
         dss.ActiveCircuit.Solution.Solve()
         check_error()
+    else:
+        dss.Text.Command = 'Makebuslist'
 
     realibity_ran = True
     try:
@@ -358,7 +365,7 @@ if __name__ == '__main__':
 
             try:
                 tstart_run = perf_counter()
-                realibity_ran = run(DSS, prefix_fn + fn, True)
+                realibity_ran = run(DSS, prefix_fn + fn)
                 runtime = perf_counter() - tstart_run
                 total_runtime += runtime
                 data_str = save_state(DSS, runtime=runtime)
