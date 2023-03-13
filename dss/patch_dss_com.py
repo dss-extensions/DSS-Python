@@ -1,5 +1,6 @@
 import numpy as np
 import inspect
+from .IDSS import IDSS
 from .IBus import IBus
 from .ICircuit import ICircuit
 from .ICtrlQueue import ICtrlQueue
@@ -134,6 +135,9 @@ def patch_dss_com(obj):
     # Add some more info to the classes
     type(obj.ActiveCircuit.ActiveCktElement)._py_cls = ICktElement
     type(obj.ActiveCircuit.ActiveCktElement)._columns = filter_cols(ICktElement)
+
+    type(obj)._py_cls = IDSS
+    type(obj)._columns = filter_cols(IDSS)
 
     type(obj.ActiveCircuit)._py_cls = ICircuit
     type(obj.ActiveCircuit)._columns = filter_cols(ICircuit)
