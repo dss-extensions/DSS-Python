@@ -1,10 +1,6 @@
 # Lines starting with "L!" indicate the file will be run line by line, 
 # filtering interactive commands
 
-# L!Version8/Distrib/Examples/Dynamic_Expressions/Dynamic_KundurDynExp.dss
-# L!Version8/Distrib/Examples/IBRDynamics_Cases/GFL_IEEE123/Run_IEEE123Bus_GFLDaily_DynExp.DSS
-
-
 # This one is expected to have different results (C-API should be more precise)
 # "Distrib/IEEETestCases/DG_Protection/DG_Prot_Fdr.dss", 
 #"L!Test/Source012Test.dss",
@@ -19,6 +15,7 @@
 
 
 test_filenames = '''
+L!Version8/Distrib/Examples/Dynamic_Expressions/Dynamic_KundurDynExp.dss
 L!Test/AutoTrans/Auto1bus.dss
 L!Test/AutoTrans/Auto3bus.dss
 L!Test/AutoTrans/AutoAuto.dss
@@ -94,6 +91,7 @@ L!Version8/Distrib/Examples/IBRDynamics_Cases/GFM_IEEE123/RevRegTest.dss
 L!Version8/Distrib/Examples/IBRDynamics_Cases/GFM_IEEE123/Run_IEEE123Bus_GFMDaily.DSS
 L!Version8/Distrib/Examples/IBRDynamics_Cases/GFM_IEEE123/Run_IEEE123Bus_GFMDaily_CannotPickUpLoad.DSS
 L!Version8/Distrib/Examples/IBRDynamics_Cases/GFL_IEEE123/Run_IEEE123Bus_GFLDaily.DSS
+L!Version8/Distrib/Examples/IBRDynamics_Cases/GFL_IEEE123/Run_IEEE123Bus_GFLDaily_DynExp.DSS
 L!Version8/Distrib/Examples/HarmonicsVariableLoad/IEEE_519.DSS
 Version8/Distrib/Examples/InverterModels/PVSystem/NewFeatures/ConstantPF/SnapShot_PFP_kvarlimitation-PV2.dss
 Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-watt/Daily_voltwatt_noOperation-2.dss

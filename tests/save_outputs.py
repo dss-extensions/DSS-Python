@@ -240,6 +240,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
 
 def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
     dss_classes = {
+        'DSS': dss,
         'ActiveCircuit': dss.ActiveCircuit,
 
         'ActiveBus': dss.ActiveCircuit.ActiveBus,
