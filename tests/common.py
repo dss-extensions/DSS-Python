@@ -27,6 +27,7 @@ L!Version8/Distrib/Examples/DOCTechNote/2_2.dss
 Version8/Distrib/IEEETestCases/NEVTestCase/NEVMASTER.DSS
 L!Test/PVSystemTest.dss
 L!Version8/Distrib/IEEETestCases/123Bus/SolarRamp.DSS
+L!Version8/Distrib/IEEETestCases/123Bus/Run_IEEE123Bus.DSS
 Test/IEEE13_CDPSM.dss
 Test/IEEE13_LineAndCableSpacing.dss
 L!Test/YgD-Test.dss
@@ -67,7 +68,7 @@ Test/LoadTest.DSS
 L!Test/ODRegTest.dss
 L!Test/PVSystemTest-Duty.dss
 L!Test/REACTORTest.DSS
-Version7/Distrib/Examples/UPFC_Test/UPFC_test_3.dss
+Version8/Distrib/Examples/UPFC_Test/UPFC_test_3.dss
 Version8/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss
 Version8/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss
 Version8/Distrib/EPRITestCircuits/ckt24/master_ckt24.dss
@@ -81,6 +82,9 @@ Version8/Distrib/Examples/Scripts/59NRelayDemo.dss
 L!Version8/Distrib/Examples/Microgrid/ISource/Master.DSS
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE123/Run_IEEE123Bus_GFMDaily.DSS
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE123/Run_IEEE123Bus_GFMDailySwapRef.DSS
+Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE123/Run_IEEE123Bus_GFMSnap-A.DSS
+Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE123/Run_IEEE123Bus_GFMSnap-B.DSS
+Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE123/Run_IEEE123Bus_GFMSnap-C.DSS
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE123/Run_IEEE123Bus_GFMSnap.DSS
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE123/Run_IEEE123Bus_GFMWholeDaily.DSS
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_GFMDaily.dss
@@ -197,4 +201,3 @@ Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-var/SnapShot_v
 Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-var/SnapShot_voltvar_Standard_varaval-2.dss
 Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-var/SnapShot_voltvar_Standard_varaval_kvarlimitation-2.dss
 '''.strip().split('\n')
-

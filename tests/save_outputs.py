@@ -308,7 +308,7 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
             
 if __name__ == '__main__':
     from common import test_filenames
-    test_filenames = ['L!Version8/Distrib/Examples/DOCTechNote/1_1.dss']
+    # test_filenames = []
     try:
         import colored_traceback
         colored_traceback.add_hook()
