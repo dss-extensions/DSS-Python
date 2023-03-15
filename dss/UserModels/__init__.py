@@ -6,3 +6,5 @@ from .wrappers import (
     # StoreDynaModel, 
     # StoreUserModel
 )
+
+__all__ = ['SolveModes', 'GenUserModel']

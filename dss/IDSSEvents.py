@@ -3,7 +3,6 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 
 Copyright (c) 2016-2019 Paulo Meira
 '''
-from ._cffi_api_util import Base
 
 class IDSSEvents(object): # Not implemented
     __slots__ = []

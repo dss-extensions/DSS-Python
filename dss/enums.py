@@ -1,9 +1,9 @@
 try:
     from enum import IntEnum, IntFlag
-except:
+except (ModuleNotFoundError, ImportError):
     try:
         from aenum import IntEnum, IntFlag
-    except:
+    except (ModuleNotFoundError, ImportError):
         IntEnum = object
         IntFlag = object
 

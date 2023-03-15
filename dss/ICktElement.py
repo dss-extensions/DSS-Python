@@ -5,7 +5,7 @@ Copyright (c) 2016-2023 Paulo Meira
 
 Copyright (c) 2018-2023 DSS Extensions contributors
 '''
-from ._cffi_api_util import Base, DssException
+from ._cffi_api_util import Base
 from .IDSSProperty import IDSSProperty
 from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 from typing import List, AnyStr, Tuple

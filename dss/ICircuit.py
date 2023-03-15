@@ -10,7 +10,6 @@ from ._cffi_api_util import Base
 from .IBus import IBus
 from .ICktElement import ICktElement
 from .ISolution import ISolution
-from .IBus import IBus
 from .IGenerators import IGenerators
 from .IMeters import IMeters
 from .IMonitors import IMonitors

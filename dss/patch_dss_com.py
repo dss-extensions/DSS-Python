@@ -31,7 +31,7 @@ from .IVsources import IVsources
 from .ITransformers import ITransformers
 from .IXYCurves import IXYCurves
 from .IGICSources import IGICSources
-from .IStorages import IStorages
+# from .IStorages import IStorages
 
 
 def custom_iter(self):

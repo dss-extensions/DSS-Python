@@ -7,7 +7,7 @@ Copyright (c) 2018-2022 DSS Extensions contributors
 '''
 from ._cffi_api_util import Base
 from dss.enums import SolveModes
-from ._types import Float64Array, Int32Array
+from ._types import Int32Array
 from typing import Union, AnyStr, List
 
 class ISolution(Base):
@@ -313,7 +313,7 @@ class ISolution(Base):
     @property
     def Mode(self) -> int:
         '''Set present solution mode (by a text code - see DSS Help)'''
-        return self.CheckForError(self._lib.Solution_Get_Mode())
+        return SolveModes(self.CheckForError(self._lib.Solution_Get_Mode()))
 
     @Mode.setter
     def Mode(self, Value: Union[int, SolveModes]):

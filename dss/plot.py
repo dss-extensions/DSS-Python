@@ -257,7 +257,7 @@ def dss_tshape_plot(DSS, params):
     ax.plot(h, p, color=color1, label="Price")
     ax.set_title(f"TShape = {params['ObjectName']}")
     ax.set_xlabel(f'Time ({x_unit})')
-    ax.set_ylabel(f'Temperature')
+    ax.set_ylabel('Temperature')
 
     ax.grid(ls='--')
     plt.tight_layout()
@@ -296,7 +296,7 @@ def dss_priceshape_plot(DSS, params):
     ax.plot(h, p, color=color1, label="Price")
     ax.set_title(f"PriceShape = {params['ObjectName']}")
     ax.set_xlabel(f'Time ({x_unit})')
-    ax.set_ylabel(f'Price')
+    ax.set_ylabel('Price')
 
     ax.grid(ls='--')
     plt.tight_layout()
@@ -332,11 +332,11 @@ def dss_loadshape_plot(DSS, params):
     ax.set_xlabel(f'Time ({x_unit})')
     if ls.UseActual:
         if q.size == p.size:
-            ax.set_ylabel(f'kW, kvar')
+            ax.set_ylabel('kW, kvar')
         else:
-            ax.set_ylabel(f'kW')
+            ax.set_ylabel('kW')
     else:
-        ax.set_ylabel(f'p.u.')
+        ax.set_ylabel('p.u.')
 
     ax.grid(ls='--')
     if q.size == p.size:
@@ -381,10 +381,10 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
     offset = 0
     skip = set()
 
-    norm_min_volts = DSS.ActiveCircuit.Settings.NormVminpu
-    norm_max_volts = DSS.ActiveCircuit.Settings.NormVmaxpu
-    emerg_min_volts = DSS.ActiveCircuit.Settings.EmergVminpu
-    emerg_max_volts = DSS.ActiveCircuit.Settings.EmergVmaxpu
+    # norm_min_volts = DSS.ActiveCircuit.Settings.NormVminpu
+    # norm_max_volts = DSS.ActiveCircuit.Settings.NormVmaxpu
+    # emerg_min_volts = DSS.ActiveCircuit.Settings.EmergVminpu
+    # emerg_max_volts = DSS.ActiveCircuit.Settings.EmergVmaxpu
     
     vbs = None
     if do_values == pqCurrent:
@@ -572,16 +572,16 @@ def dss_profile_plot(DSS, params):
         xlabel = 'Distance (kft)'
         ylabel = '120 Base Voltage'
         DenomLN = 1.0 / 120.0
-        DenomLL = 1.732 / 120.0
+        # DenomLL = 1.732 / 120.0
         LenScale = 3.2809
-        RangeScale = 120.0
+        # RangeScale = 120.0
     else:
         xlabel = 'Distance (km)'
         ylabel = 'p.u. Voltage'
         DenomLN = 1.0
-        DenomLL = 1.732
+        # DenomLL = 1.732
         LenScale = 1.0
-        RangeScale = 1.0
+        # RangeScale = 1.0
 
     busnode_to_index = {(bn.rsplit('.', 1)[0], int(bn.rsplit('.', 1)[1])): num for (num, bn) in enumerate(DSS.ActiveCircuit.AllNodeNames)}
     bus_to_kvbase = {b.Name: b.kVBase for b in DSS.ActiveCircuit.Buses}
@@ -717,9 +717,9 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
     color3 = params.pop('Color3', Colors[2])
     
     norm_min_volts = DSS.ActiveCircuit.Settings.NormVminpu
-    norm_max_volts = DSS.ActiveCircuit.Settings.NormVmaxpu
+    # norm_max_volts = DSS.ActiveCircuit.Settings.NormVmaxpu
     emerg_min_volts = DSS.ActiveCircuit.Settings.EmergVminpu
-    emerg_max_volts = DSS.ActiveCircuit.Settings.EmergVmaxpu
+    # emerg_max_volts = DSS.ActiveCircuit.Settings.EmergVmaxpu
     
     bus_coords = dict((b.Name, (b.x, b.y)) for b in DSS.ActiveCircuit.Buses if (b.x, b.y) != (0.0, 0.0))
     if fig is None:
@@ -872,7 +872,8 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
                     ax.plot(*coords, color='red', **marker_dict)
             
             else:
-                branch_lines = get_branch_data(DSS, objs, bus_coords, idxs=idxs)
+                #TODO? branch_lines = get_branch_data(DSS, objs, bus_coords, idxs=idxs)
+                pass
             
             
         for (mark_opt, code_opt, size_opt, objs, idxs) in point_marker_options:
@@ -991,7 +992,7 @@ def dss_visualize_plot(DSS, params):
     element = DSS.ActiveCircuit.ActiveCktElement
     etype, ename = params['ElementType'], params['ElementName']
     nconds = element.NumConductors
-    nphases = element.NumPhases
+    # nphases = element.NumPhases
     buses = element.BusNames[:2] # max 2 terminals
     vbases = [max(1, 1000 * DSS.ActiveCircuit.Buses[nodot(b)].kVBase) for b in buses]
 
@@ -1208,7 +1209,7 @@ def dss_general_data_plot(DSS, params):
 
 
 def dss_matrix_plot(DSS, params):
-    plot_id = params.get('PlotId', None)
+    # plot_id = params.get('PlotId', None)
     if params['Quantity'] == 'IncMatrix':
         title = 'Incidence matrix'
         data = DSS.ActiveCircuit.Solution.IncMatrix[:-1]
@@ -1342,7 +1343,7 @@ def dss_python_cb_write(ctx, message_str, message_type):
     global dss_progress_bar
     global dss_progress_desc
 
-    DSS = ctx2dss(ctx)
+    # DSS = ctx2dss(ctx)
     
     message_str = api_util.ffi.string(message_str).decode(api_util.codec)
     if message_type == api_util.lib.DSSMessageType_Error:

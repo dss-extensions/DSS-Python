@@ -7,7 +7,7 @@ Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from typing import List, AnyStr
-from ._types import Float64Array, Int32Array
+from ._types import Float64Array
 
 class IMeters(Iterable):
     __slots__ = []

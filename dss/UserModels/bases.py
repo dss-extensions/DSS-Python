@@ -6,7 +6,7 @@ class CommonBase(object):
         names.extend(getattr(cls, '_outputs', []))
         st_vars = getattr(cls, '_state_vars', [])
         for v in st_vars:
-            names.extend([v, '{}n'.format(name), 'd{}_dt'.format(name), 'd{}n_dt'.format(name)])
+            names.extend([v, f'{v}n', f'd{v}_dt', f'd{v}n_dt'])
         
         for v in getattr(cls, '_var_limits', []):
             assert v['var'] in cls._outputs
@@ -116,13 +116,13 @@ class CommonBase(object):
                     self.debug = False
             
             elif param_pointer == num_vars + 2:
-                help_str = u"option={Debug | NoDebug }\n";
+                help_str = u"option={Debug | NoDebug }\n"
                 help_str += u"Help: this help message."
                 
                 tmp = help_str.encode('ascii')[:max_len]
                 max_len_ = min(max_len, len(tmp))
                 param_str[0:max_len_] = tmp[0:max_len_]
-                param_str[max_len_max_len] = b'\0'
+                param_str[max_len_] = b'\0'
                 
                 self.callBacks.MsgCallBack(param_str, len(help_str) + 1)
         
@@ -155,9 +155,9 @@ class DynamicsBase(CommonBase):
     def integrate(self):
         h_2 = self.dyn.h * 0.5
         for name in self.state_vars:
-            value_n = getattr(self, '{}n'.format(name))
-            value_d = getattr(self, 'd{}_dt'.format(name))
-            value_dn = getattr(self, 'd{}n_dt'.format(name))
+            value_n = getattr(self, f'{name}n')
+            value_d = getattr(self, f'd{name}_dt')
+            value_dn = getattr(self, f'd{name}n_dt')
             value = value_n + h_2 * (value_d + value_dn)
             setattr(self, name, value)
             
@@ -187,9 +187,9 @@ class DynamicsBase(CommonBase):
         if not hasattr(type(self), name) and not hasattr(self, name):
             setattr(self, name, init_value)
             
-        setattr(self, '{}n'.format(name), getattr(self, name))
-        setattr(self, 'd{}_dt'.format(name), 0.0)
-        setattr(self, 'd{}n_dt'.format(name), 0.0)
+        setattr(self, f'{name}n', getattr(self, name))
+        setattr(self, f'd{name}_dt', 0.0)
+        setattr(self, f'd{name}n_dt', 0.0)
             
         self.state_vars.append(name)
             
@@ -204,14 +204,14 @@ class DynamicsBase(CommonBase):
         
     def init_dstate(self):
         for name in self.state_vars:
-            setattr(self, 'd{}_dt'.format(name), 0.0)
-            setattr(self, 'd{}n_dt'.format(name), 0.0)
+            setattr(self, f'd{name}_dt', 0.0)
+            setattr(self, f'd{name}n_dt', 0.0)
         
         
     def copy_state(self):
         for name in self.state_vars:
-            setattr(self, '{}n'.format(name), getattr(self, name))
-            setattr(self, 'd{}n_dt'.format(name), getattr(self, 'd{}_dt'.format(name)))
+            setattr(self, f'{name}n', getattr(self, name))
+            setattr(self, f'd{name}n_dt', getattr(self, f'd{name}_dt'))
         
 
     def get_all_outputs(self, var_vector):

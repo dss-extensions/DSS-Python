@@ -6,7 +6,7 @@ Copyright (c) 2016-2023 Paulo Meira
 Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
-from ._types import Float64Array, Float64ArrayOrComplexArray
+from ._types import Float64ArrayOrComplexArray
 from typing import AnyStr
 
 class ITransformers(Iterable):

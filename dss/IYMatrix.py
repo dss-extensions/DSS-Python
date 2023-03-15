@@ -7,7 +7,7 @@ Copyright (c) 2018-2022 DSS Extensions contributors
 '''
 from ._cffi_api_util import Base
 import numpy as np
-from ._types import Float64Array, Int32Array, ComplexArray
+from ._types import Int32Array, ComplexArray
 from typing import Tuple, List
 
 class IYMatrix(Base):

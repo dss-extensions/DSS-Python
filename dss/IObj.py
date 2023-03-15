@@ -334,7 +334,7 @@ class DSSObj(Base):
 
     def __repr__(self):
         # This could probably be done in DSS C-API instead (equivalent to SaveWrite)
-        ffi = self._api_util.ffi
+        # ffi = self._api_util.ffi
         # seq = sorted(enumerate(ffi.unpack(self._lib.Obj_GetPropSeqPtr(self._ptr, ffi.NULL), self._lib.Obj_GetNumProperties(self._ptr)), start=1), key=lambda v: v[1])
         # vals = []
         # for propidx, propseq in seq:
@@ -645,7 +645,6 @@ class DSSBatch(Base):
             return
 
         obj = self._obj_cls(self._api_util, self.pointer[0])
-        res = []
         for other_objs, ptr in zip(other, self._ffi.unpack(self.pointer[0], self.count[0])):
             # this could be optimized to reuse the pointers, but it's not usually in
             # the hot path
@@ -21354,7 +21353,7 @@ class LineCodeBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(8, value)
 
@@ -21632,7 +21631,7 @@ class LineCodeBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(27, value)
 
@@ -22945,7 +22944,7 @@ class WireDataBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(3, value)
 
@@ -22991,7 +22990,7 @@ class WireDataBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(5, value)
 
@@ -23037,7 +23036,7 @@ class WireDataBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(7, value)
 
@@ -23298,7 +23297,7 @@ class CNDataBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(11, value)
 
@@ -23344,7 +23343,7 @@ class CNDataBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(13, value)
 
@@ -23390,7 +23389,7 @@ class CNDataBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(15, value)
 
@@ -23638,7 +23637,7 @@ class TSDataBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(10, value)
 
@@ -23684,7 +23683,7 @@ class TSDataBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(12, value)
 
@@ -23730,7 +23729,7 @@ class TSDataBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(14, value)
 
@@ -23919,7 +23918,7 @@ class LineSpacingBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(5, value)
 
@@ -24080,7 +24079,7 @@ class LineGeometryBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(7, value)
 
@@ -24427,7 +24426,7 @@ class LineGeometryBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(19, value)
 
@@ -25418,7 +25417,7 @@ class LineBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(20, value)
 
@@ -25528,7 +25527,7 @@ class LineBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(23, value)
 
@@ -25706,7 +25705,7 @@ class LineBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(30, value)
 
@@ -26072,7 +26071,7 @@ class VsourceBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(17, value)
 
@@ -26105,7 +26104,7 @@ class VsourceBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(18, value)
 
@@ -26507,7 +26506,7 @@ class VsourceBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(30, value)
 
@@ -26718,7 +26717,7 @@ class IsourceBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(6, value)
 
@@ -26751,7 +26750,7 @@ class IsourceBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(7, value)
 
@@ -27509,7 +27508,7 @@ class LoadBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(11, value)
 
@@ -27581,7 +27580,7 @@ class LoadBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(15, value)
 
@@ -28728,7 +28727,7 @@ class TransformerBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(44, value)
 
@@ -28771,7 +28770,7 @@ class TransformerBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(46, value)
 
@@ -29038,7 +29037,7 @@ class CapacitorBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(6, value)
 
@@ -29370,7 +29369,7 @@ class ReactorBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(6, value)
 
@@ -29902,7 +29901,7 @@ class CapControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(4, value)
 
@@ -30074,7 +30073,7 @@ class CapControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(15, value)
 
@@ -30107,7 +30106,7 @@ class CapControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(16, value)
 
@@ -30730,7 +30729,7 @@ class GeneratorBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(13, value)
 
@@ -30778,7 +30777,7 @@ class GeneratorBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(15, value)
 
@@ -30811,7 +30810,7 @@ class GeneratorBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(16, value)
 
@@ -31470,7 +31469,7 @@ class StorageBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(4, value)
 
@@ -31788,7 +31787,7 @@ class StorageBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(25, value)
 
@@ -32089,7 +32088,7 @@ class StorageBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(41, value)
 
@@ -32382,7 +32381,7 @@ class StorageControllerBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(3, value)
 
@@ -32540,7 +32539,7 @@ class StorageControllerBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(12, value)
 
@@ -32595,7 +32594,7 @@ class StorageControllerBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(13, value)
 
@@ -33148,7 +33147,7 @@ class RelayBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(5, value)
 
@@ -33565,7 +33564,7 @@ class RelayBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(29, value)
 
@@ -33718,7 +33717,7 @@ class RelayBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(39, value)
 
@@ -33751,7 +33750,7 @@ class RelayBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(40, value)
 
@@ -34287,7 +34286,7 @@ class RecloserBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(18, value)
 
@@ -34372,7 +34371,7 @@ class RecloserBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(23, value)
 
@@ -34405,7 +34404,7 @@ class RecloserBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(24, value)
 
@@ -34794,7 +34793,7 @@ class SwtControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(3, value)
 
@@ -34854,7 +34853,7 @@ class SwtControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(6, value)
 
@@ -34887,7 +34886,7 @@ class SwtControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(7, value)
 
@@ -35080,7 +35079,7 @@ class PVSystemBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(9, value)
 
@@ -36164,7 +36163,7 @@ class ESPVLControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(3, value)
 
@@ -36434,7 +36433,7 @@ class IndMach012Batch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(6, value)
 
@@ -36597,7 +36596,7 @@ class IndMach012Batch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(17, value)
 
@@ -37195,7 +37194,7 @@ class AutoTransBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(11, value)
 
@@ -37654,7 +37653,7 @@ class AutoTransBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(39, value)
 
@@ -38109,7 +38108,7 @@ class RegControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(22, value)
 
@@ -38345,7 +38344,7 @@ class InvControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(2, value)
 
@@ -38398,7 +38397,7 @@ class InvControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(3, value)
 
@@ -38511,7 +38510,7 @@ class InvControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(6, value)
 
@@ -38776,7 +38775,7 @@ class InvControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(17, value)
 
@@ -38827,7 +38826,7 @@ class InvControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(18, value)
 
@@ -38940,7 +38939,7 @@ class InvControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(23, value)
 
@@ -38998,7 +38997,7 @@ class InvControlBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(25, value)
 
@@ -39903,7 +39902,7 @@ class GICTransformerBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(6, value)
 
@@ -40429,7 +40428,7 @@ class VSConverterBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(19, value)
 
@@ -41267,7 +41266,7 @@ class SensorBatch(DSSBatch):
             return
     
         if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplemented
+            raise NotImplementedError
 
         self._set_batch_int32_array(9, value)
 

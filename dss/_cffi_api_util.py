@@ -1,4 +1,4 @@
-import os, warnings
+import warnings
 from functools import partial
 import numpy as np
 from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
