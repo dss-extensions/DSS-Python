@@ -307,7 +307,7 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
 
             
 if __name__ == '__main__':
-    from common import test_filenames
+    from test_settings import test_filenames
     # test_filenames = []
     try:
         import colored_traceback

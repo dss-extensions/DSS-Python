@@ -1,4 +1,4 @@
-import json
+import json, os
 from inspect import getdoc
 from collections import defaultdict
 from zipfile import ZipFile, BadZipFile
@@ -71,11 +71,8 @@ KNOWN_COM_DIFF = set([
     ('Version8/Distrib/Examples/StorageControllerTechNote/Support/SupportRun.dss.json', 'Lines', 'records', 2029, 'ActiveCktElement', 'Losses')
 ])
 
-per_file = defaultdict(int)
-per_file_detail = defaultdict(list)
-complex_cache = {}
 
-def is_complex(path):
+def is_complex(path, complex_cache={}):
     if isinstance(path[-2], str):
         k = tuple(path[-2:])
     else:
@@ -110,251 +107,310 @@ def is_complex(path):
     except:
         print(path, k)
         raise
-        exit()    
-
-def printe(s, path, *args):
-    per_file[path[0]] += 1
-    per_file_detail[path[0]].append((s, path, *args))
-    if VERBOSE:
-        print(s, path, *args)
-
-def element_compare(va, vb, path):
-    if isinstance(va, str):
-        if va.lower() != vb.lower():
-            printe('ERROR (str):', path, repr(va), repr(vb))
-
-        return
-
-    if isinstance(va, int):
-        if path[-1] == 'NumProperties' and path[-5] == 'Generators':
-            if A_IS_COM:
-                va -= 2
-            if B_IS_COM:
-                va -= 2
-
-        # assert va == vb, (va, vb, path)
-        if va != vb:# and not np.isclose(va, vb, tol, tol):
-            printe('ERROR (int):', path, va, vb, abs(va - vb))
-
-        return
-
-    if isinstance(va, float):
-        # assert va == vb, (va, vb, path)
-        if va != vb and not np.isclose(va, vb, tol, tol):
-            printe('ERROR (float):', path, va, vb, abs(va - vb))
-
-        return
 
 
-def compare(a, b, org_path=None):
-    for k in a.keys():
-        path = org_path + [k]
-        if tuple(path) in KNOWN_COM_DIFF:
-            continue
+class ComparisonHandler:
+    def __init__(self, fnA, fnB, fns=None):
+        self.fnA = fnA
+        self.fnB = fnB
+        self.fns = fns
+        self.A_IS_COM = None
+        self.B_IS_COM = None
+        self.per_file = defaultdict(int)
+        self.per_file_detail = defaultdict(list)
+        self.total = 0
 
-        # print(path)
-        va, vb = a.get(k), b.get(k, MISSING)
+    def printe(self, s, path, *args):
+        self.per_file[path[0]] += 1
+        self.per_file_detail[path[0]].append((s, path, *args))
+        if VERBOSE:
+            print(s, path, *args)
 
-        if vb is MISSING:
-            continue
+    def element_compare(self, va, vb, path):
+        if isinstance(va, str):
+            if va.lower() != vb.lower():
+                self.printe('ERROR (str):', path, repr(va), repr(vb))
 
-        if k in ('DefaultEditor', 'DataPath', 'Version', 'NumClasses', 'Classes', 'UserClasses'):
-            continue # May/should be different even in the same platform
+            return
 
-        if k in ('TotalMiles', 'FaultRate', 'pctPermanent'):
-            continue # TODO: investigate
+        if isinstance(va, int):
+            if path[-1] == 'NumProperties' and path[-5] == 'Generators':
+                if self.A_IS_COM:
+                    va -= 2
+                if self.B_IS_COM:
+                    va -= 2
 
-        if k == 'AutoBusList':
-            continue # buggy?
+            # assert va == vb, (va, vb, path)
+            if va != vb:# and not np.isclose(va, vb, tol, tol):
+                self.printe('ERROR (int):', path, va, vb, abs(va - vb))
 
-        if k == 'duty' and path[-4] == 'Loads':
-            continue # buggy
+            return
 
-        if k in (
-            'Process_Time', 'Time_of_Step', 'Total_Time', 'runtime', # must be different always
-            'GUID', # if not explicitly set, random
-            'FileName', # different normalization, maybe we could process them
-            'FileVersion', # random/uninitialized value in COM
-        ):
-            continue 
+        if isinstance(va, float):
+            # assert va == vb, (va, vb, path)
+            if va != vb and not np.isclose(va, vb, tol, tol):
+                self.printe('ERROR (float):', path, va, vb, abs(va - vb))
 
-        if isinstance(va, dict):
-            # recursive compare
-            compare(va, vb, path)
-            continue
+            return
 
-        if isinstance(va, list):
-            if ((va == ['none'] or va == ['NONE']) and vb == []) or (va == [] and (vb == ['none'] or vb == ['NONE'])):
+
+    def compare(self, a, b, org_path=None):
+        for k in a.keys():
+            path = org_path + [k]
+            if tuple(path) in KNOWN_COM_DIFF:
                 continue
 
-            if k in ('Isc', 'Voc') and va == [0.0] and vb == []:
+            # print(path)
+            va, vb = a.get(k), b.get(k, MISSING)
+
+            if vb is MISSING:
                 continue
 
-            if path[-2:] == ['ISources', 'records'] and len(va) == 1 and len(vb) != 1:
-                continue # buggy iteration for Isources
+            if k in ('DefaultEditor', 'DataPath', 'Version', 'NumClasses', 'Classes', 'UserClasses'):
+                continue # May/should be different even in the same platform
 
-            if k == 'AllPropertyNames' and path[-3] == 'Generators':
-                if A_IS_COM:
-                    va = list(va)
-                    if 'Rneut' in va:
-                        va.remove('Rneut')
-                        va.remove('Xneut')
-                if B_IS_COM:
-                    vb = list(vb)
-                    if 'Rneut' in vb:
-                        vb.remove('Rneut')
-                        vb.remove('Xneut')
+            if k in ('TotalMiles', 'FaultRate', 'pctPermanent'):
+                continue # TODO: investigate
 
-            if len(va) != len(vb) and k != 'ZIPV':
-                if k == 'dblFreq':
-                    if va == [0.0]: #TODO: may be worth adjusting in DSS C-API
-                        assert all(x == 0 for x in vb), (path, va, vb)
-                        continue
+            if k == 'AutoBusList':
+                continue # buggy?
 
-                # printe('ERROR (list)?', path, va, vb)
-                printe('ERROR (list)?', path, len(va), len(vb))
+            if k == 'duty' and path[-4] == 'Loads':
+                continue # buggy
 
-            if not va:
+            if k in (
+                'Process_Time', 'Time_of_Step', 'Total_Time', 'runtime', # must be different always
+                'GUID', # if not explicitly set, random
+                'FileName', # different normalization, maybe we could process them
+                'FileVersion', # random/uninitialized value in COM
+            ):
+                continue 
+
+            if isinstance(va, dict):
+                # recursive compare
+                self.compare(va, vb, path)
                 continue
 
-            if isinstance(va[0], dict):
-                # recursive compare, each element
-                for idx, (item_a, item_b) in enumerate(zip(va, vb)):
-                    compare(item_a, item_b, path + [idx])
-
-                continue
-
-            if isinstance(va[0], str):
-                if k == 'EventLog':
-                    # Too textual, too many details to compare here
-                    #TODO: consider fuzzy comparison
+            if isinstance(va, list):
+                if ((va == ['none'] or va == ['NONE']) and vb == []) or (va == [] and (vb == ['none'] or vb == ['NONE'])):
                     continue
 
-                va = [(x or '').strip().lower() for x in va]
-                vb = [(x or '').strip().lower() for x in vb]
-                if va != vb:
-                    printe('ERROR ([str])', path, va[:10], vb[:10], len(va))
-                
-                continue
+                if k in ('Isc', 'Voc') and va == [0.0] and vb == []:
+                    continue
 
-            if isinstance(va[0], float) or va[0] is None:
-                if None in va:
-                    va = [x if x is not None else np.NaN for x in va]
+                if path[-2:] == ['ISources', 'records'] and len(va) == 1 and len(vb) != 1:
+                    continue # buggy iteration for Isources
 
-                if None in vb:
-                    vb = [x if x is not None else np.NaN for x in vb]
+                if k == 'AllPropertyNames' and path[-3] == 'Generators':
+                    if self.A_IS_COM:
+                        va = list(va)
+                        if 'Rneut' in va:
+                            va.remove('Rneut')
+                            va.remove('Xneut')
+                    if self.B_IS_COM:
+                        vb = list(vb)
+                        if 'Rneut' in vb:
+                            vb.remove('Rneut')
+                            vb.remove('Xneut')
 
-                atol = tol
-                rtol = tol
-                va = np.asarray(va)
-                vb = np.asarray(vb)
+                if len(va) != len(vb) and k != 'ZIPV':
+                    if k == 'dblFreq':
+                        if va == [0.0]: #TODO: may be worth adjusting in DSS C-API
+                            assert all(x == 0 for x in vb), (path, va, vb)
+                            continue
 
-                if (k == 'Residuals' or 'magang' in k.lower()) and len(va) == len(vb) and len(va) % 2 == 0:
-                    va = va[::2] * np.exp(1j * va[1::2] / BAD_RAD_TO_DEG)
-                    vb = vb[::2] * np.exp(1j * vb[1::2] / BAD_RAD_TO_DEG)
-                    rtol = 5e-4 
-                    atol = 1e-2
+                    # printe('ERROR (list)?', path, va, vb, per_file=per_file, per_file_detail=per_file_detail)
+                    self.printe('ERROR (list)?', path, len(va), len(vb))
 
-                elif (k == 'YCurrents' or k.startswith('Cplx') or is_complex(path)) and len(va) % 2 == 0:
-                    va = va.view(dtype=complex)
-                    vb = vb.view(dtype=complex)
-                    rtol = 1e-3
+                if not va:
+                    continue
+
+                if isinstance(va[0], dict):
+                    # recursive compare, each element
+                    for idx, (item_a, item_b) in enumerate(zip(va, vb)):
+                        self.compare(item_a, item_b, path + [idx])
+
+                    continue
+
+                if isinstance(va[0], str):
+                    if k == 'EventLog':
+                        # Too textual, too many details to compare here
+                        #TODO: consider fuzzy comparison
+                        continue
+
+                    va = [(x or '').strip().lower() for x in va]
+                    vb = [(x or '').strip().lower() for x in vb]
+                    if va != vb:
+                        self.printe('ERROR ([str])', path, va[:10], vb[:10], len(va))
                     
-                if 'Seq' in k:
-                    # Official data uses bad precision in the transform
-                    # Let's just compare with a wide margin to check for really absurd values. 
-                    # The nodal values are compared with full precision
-                    rtol = 1e-2
-                    atol = 1e-2
-
-                # abs(b - a) <= (atol + rtol * abs(a))
-                if len(vb) != len(va):
-                    printe('ERROR (vector, shapes):', path, f'a: {len(va)}, b: {len(vb)}')
                     continue
 
-                elif not np.allclose(vb, va, atol=atol, rtol=rtol):
-                    with np.errstate(divide='ignore', invalid='ignore', over='ignore'):
-                        d_rel = np.nan_to_num(1 - abs(vb / va), 0)
-                        d_abs = abs(va - vb)
-                        if rtol:
-                            pct_rel = 100 * sum(d_rel > rtol) / len(va)
-                        else:
-                            pct_rel = 0
+                if isinstance(va[0], float) or va[0] is None:
+                    if None in va:
+                        va = [x if x is not None else np.NaN for x in va]
 
-                        if atol:
-                            pct_abs = 100 * sum(d_abs > atol) / len(va)
-                        else:
-                            pct_abs = 0
+                    if None in vb:
+                        vb = [x if x is not None else np.NaN for x in vb]
 
-                    if len(va) > 1000 and pct_rel < 0.1 and pct_abs < 0.1:
-                        # Seems OK
+                    atol = tol
+                    rtol = tol
+                    va = np.asarray(va)
+                    vb = np.asarray(vb)
+
+                    if (k == 'Residuals' or 'magang' in k.lower()) and len(va) == len(vb) and len(va) % 2 == 0:
+                        va = va[::2] * np.exp(1j * va[1::2] / BAD_RAD_TO_DEG)
+                        vb = vb[::2] * np.exp(1j * vb[1::2] / BAD_RAD_TO_DEG)
+                        rtol = 5e-4 
+                        atol = 1e-2
+
+                    elif (k == 'YCurrents' or k.startswith('Cplx') or is_complex(path)) and len(va) % 2 == 0:
+                        va = va.view(dtype=complex)
+                        vb = vb.view(dtype=complex)
+                        rtol = 1e-3
+                        
+                    if 'Seq' in k:
+                        # Official data uses bad precision in the transform
+                        # Let's just compare with a wide margin to check for really absurd values. 
+                        # The nodal values are compared with full precision
+                        rtol = 1e-2
+                        atol = 1e-2
+
+                    # abs(b - a) <= (atol + rtol * abs(a))
+                    if len(vb) != len(va):
+                        self.printe('ERROR (vector, shapes):', path, f'a: {len(va)}, b: {len(vb)}')
                         continue
 
-                    printe('ERROR (vector):', path, f'count: {len(va)}, max abs: {max(d_abs)}, max rel: {max(abs(d_rel))}, abs(>{atol}): {pct_abs:.2g}%, rel(>{rtol}): {pct_rel:.2g}%')
-                    # print(va)
-                    # print(vb)
+                    elif not np.allclose(vb, va, atol=atol, rtol=rtol):
+                        with np.errstate(divide='ignore', invalid='ignore', over='ignore'):
+                            d_rel = np.nan_to_num(1 - abs(vb / va), 0)
+                            d_abs = abs(va - vb)
+                            if rtol:
+                                pct_rel = 100 * sum(d_rel > rtol) / len(va)
+                            else:
+                                pct_rel = 0
 
-                continue
+                            if atol:
+                                pct_abs = 100 * sum(d_abs > atol) / len(va)
+                            else:
+                                pct_abs = 0
 
-        element_compare(va, vb, path)
+                        if len(va) > 1000 and pct_rel < 0.1 and pct_abs < 0.1:
+                            # Seems OK
+                            continue
 
+                        self.printe('ERROR (vector):', path, f'count: {len(va)}, max abs: {max(d_abs)}, max rel: {max(abs(d_rel))}, abs(>{atol}): {pct_abs:.2g}%, rel(>{rtol}): {pct_rel:.2g}%')
+                        # print(va)
+                        # print(vb)
 
+                    continue
 
-fnA = 'results-COM-9.6.1.1.zip'
-fnB = 'results-dssx.zip'
-
-print(fnA)
-print(fnB)
-
-with ZipFile(fnA, 'r') as zipA, ZipFile(fnB, 'r') as zipB:
-    total = 0
-    for fn in zipA.filelist:
-
-        VERBOSE = True
-        try:
-            fB = zipB.open(fn.filename, 'r')
-            fA = zipA.open(fn.filename, 'r')
-            print(fn.filename)
-        except KeyError:
-            print('MISSING:', fn.filename)
-            continue
-        except BadZipFile:
-            print('BAD:', fn)
-            continue
-
-        dataA = json.load(fA)
-        dataB = json.load(fB)
-
-        if not dataA['Solution']['Converged']:
-            print('Skipping, not converged in the official version:', fn.filename)
-            continue
-
-        A_IS_COM = 'C-API' not in dataA['DSS']['Version']
-        B_IS_COM = 'C-API' not in dataB['DSS']['Version']
-        try:
-            compare(dataA, dataB, [fn.filename])
-        except:
-            print("COMPARE ERROR:", fn.filename)
-            raise
-
-        total += 1
+            self.element_compare(va, vb, path)
 
 
-print()
-print('Total:', total, 'files')
+    def split(self):
+        with ZipFile(self.fnA, 'r') as zipA:
+            filenames = [finfo.filename for finfo in zipA.filelist]
+
+        step = len(filenames) // os.cpu_count()
+        parts = []
+        last_proc = os.cpu_count()
+        for i in range(last_proc + 1):
+            i_start = i * step
+            i_last = (i + 1) * step
+            if i == last_proc and i_last != len(filenames):
+                i_last = len(filenames)
+
+            parts.append((self.fnA, self.fnB, filenames[i_start : i_last], VERBOSE))
+        
+        return parts
 
 
-print(fnA)
-print(fnB)
-pprint(per_file)
+    def merge(self, results):
+        for other_per_file, other_per_file_detail, other_total in results:
+            self.per_file.update(other_per_file)
+            self.per_file_detail.update(other_per_file_detail)
+            self.total += other_total
 
-print()
-if not VERBOSE:
-    for fn, cnt in per_file.items():
-        if cnt < 10:
-            print()
-            print(fn)
 
-            for l in per_file_detail[fn]:
-                print(*l)
+    def compare_all(self):
+        print(self.fnA)
+        print(self.fnB)
 
+        with ZipFile(self.fnA, 'r') as zipA, ZipFile(self.fnB, 'r') as zipB:
+            self.total = 0
+            if self.fns:
+                filenames = self.fns
+            else:
+                filenames = [finfo.filename for finfo in zipA.filelist]
+
+            for fn in filenames:
+                VERBOSE = True
+                try:
+                    fB = zipB.open(fn, 'r')
+                    fA = zipA.open(fn, 'r')
+                    print(fn)
+                except KeyError:
+                    print('MISSING:', fn)
+                    continue
+                except BadZipFile:
+                    print('BAD:', fn)
+                    continue
+
+                dataA = json.load(fA)
+                dataB = json.load(fB)
+
+                if not dataA['Solution']['Converged']:
+                    print('Skipping, not converged in the official version:', fn)
+                    continue
+
+                self.A_IS_COM = 'C-API' not in dataA['DSS']['Version']
+                self.B_IS_COM = 'C-API' not in dataB['DSS']['Version']
+                try:
+                    self.compare(dataA, dataB, [fn])
+                except:
+                    print("COMPARE ERROR:", fn)
+                    raise
+
+                self.total += 1
+
+
+def compare_filelist(fnA, fnB, fns, verb):
+    global VERBOSE
+    VERBOSE = verb
+    cmp = ComparisonHandler(fnA, fnB, fns)
+    cmp.compare_all()
+    return (dict(cmp.per_file), dict(cmp.per_file_detail), cmp.total)
+
+
+if __name__ == '__main__':
+    import sys
+    _fnA, _fnB = sys.argv[1:3]
+    mp = '-p' in sys.argv[3:]
+    VERBOSE = ('-v' in sys.argv[3:]) and (not mp)
+    
+    cmp = ComparisonHandler(_fnA, _fnB)
+    if mp:
+        print("Using multiprocessing")
+        from multiprocessing import Pool
+        parts = cmp.split()
+        pool = Pool()
+        results = pool.starmap(compare_filelist, parts)
+        cmp.merge(results)
+    else:
+        cmp.compare_all()
+
+    print(cmp.fnA)
+    print(cmp.fnB)
+    pprint(cmp.per_file)
+
+    print()
+    print('Total:', cmp.total, 'files')
+    print()
+    if not VERBOSE:
+        for fn, cnt in cmp.per_file.items():
+            if cnt < 10:
+                print()
+                print(fn)
+
+                for l in cmp.per_file_detail[fn]:
+                    print(*l)
