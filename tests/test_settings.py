@@ -201,3 +201,8 @@ Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-var/SnapShot_v
 Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-var/SnapShot_voltvar_Standard_varaval-2.dss
 Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-var/SnapShot_voltvar_Standard_varaval_kvarlimitation-2.dss
 '''.strip().split('\n')
+
+cimxml_test_filenames = '''
+Version8/Distrib/Examples/CIM/IEEE13_Assets.dss
+Version8/Distrib/Examples/CIM/IEEE13_CDPSM.dss
+'''.strip().split('\n')

@@ -1,4 +1,5 @@
-import os, sys, platform, traceback, json
+import os, sys, platform, traceback, json, re
+from glob import glob
 from inspect import ismethod, getdoc
 from math import isfinite
 from time import perf_counter
@@ -12,7 +13,7 @@ original_working_dir = os.getcwd()
 NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
 WIN32 = (sys.platform == 'win32')
 COM_VLL_BROKEN = True
-SAVE_DSSX_OUTPUT = ('dss-extensions' in sys.argv)
+SAVE_DSSX_OUTPUT = ('dss-extensions' in sys.argv) or not WIN32
 VERBOSE = ('-v' in sys.argv)
 suffix = ''
 
@@ -52,7 +53,7 @@ def run(dss: dss.IDSS, fn: str):
     if line_by_line:
         fn = fn[2:]
 
-    with open(fn, 'r') as f:
+    with open(os.path.join(root_dir, fn), 'r') as f:
         solve = '\nsolve' not in f.read().lower()
 
     if line_by_line:
@@ -86,7 +87,7 @@ def run(dss: dss.IDSS, fn: str):
             except StopIteration:
                 pass
     else:
-        dss.Text.Command = 'Compile "{}"'.format(fn)
+        dss.Text.Command = 'Compile "{}"'.format(os.path.join(root_dir, fn))
         check_error()
 
     if solve:
@@ -290,7 +291,7 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
             'TSData': dss.ActiveCircuit.TSData,
             'WireData': dss.ActiveCircuit.WireData,
         })
-    except:
+    except AttributeError:
         pass
 
     document = {
@@ -307,8 +308,11 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
 
             
 if __name__ == '__main__':
-    from test_settings import test_filenames
-    # test_filenames = []
+    root_dir = os.path.abspath('../../electricdss-tst/')
+
+    from test_settings import test_filenames, cimxml_test_filenames
+
+    test_filenames = []
     try:
         import colored_traceback
         colored_traceback.add_hook()
@@ -320,41 +324,43 @@ if __name__ == '__main__':
     if SAVE_DSSX_OUTPUT:
         from dss import DSS
         print("Using DSS Extensions:", DSS.Version)
-        suffix = '-dssx'
+        match = re.match('DSS C-API Library version ([^ ]+) revision.* ([0-9]+);.*', DSS.Version)
+        dssx_ver, dssx_timestamp = match.groups()
+        suffix = f'-dssx-{sys.platform}-{platform.machine()}-{dssx_ver}-{dssx_timestamp}' 
+        DSS.AllowEditor = False
     else:
         import comtypes.client
         DSS = comtypes.client.CreateObject("OpenDSSEngine.DSS")
         DSS = dss.patch_dss_com(DSS)
         DSS.Text.Command = r'set editor=ignore_me_invalid_executable'
         print("Using official OpenDSS COM:", DSS.Version)
-        suffix = '-COM-' + DSS.Version.split(' ')[1]
-
-    try:
-        DSS.AllowEditor = False
-    except:
-        pass
+        com_ver = DSS.Version.split(' ')[1]
+        suffix = f'-COM-{platform.machine()}-{com_ver}'
 
     DSS.AllowForms = False
 
     try:
+        DSS.Text.Command = 'new circuit.dummy'
+        check_error()
         DSS.Text.Command = 'set ShowExport=NO'
+        check_error()
+        DSS.Text.Command = 'clear'
         check_error()
     except:
         pass
 
-    norm_root = os.path.normpath('../../electricdss-tst')
-
     t0_global = perf_counter()
     total_runtime = 0.0
     with ZipFile(os.path.join(original_working_dir, f'results{suffix}.zip'), 'a') as zip_out:
-        for fn in test_filenames:
+        for fn in test_filenames + cimxml_test_filenames:
             org_fn = fn
             fixed_fn = fn if not fn.startswith('L!') else fn[2:]
             prefix_fn = 'L!' if fn.startswith('L!') else ''
-            fn = os.path.join(norm_root, fixed_fn)
+            fn = os.path.join(root_dir, fixed_fn)
             actual_fn = os.path.normpath(fixed_fn)
-            common_prefix = os.path.commonprefix([norm_root, actual_fn])
+            common_prefix = os.path.commonprefix([root_dir, actual_fn])
             fn_without_prefix = actual_fn[len(common_prefix):]
+            
             json_fn = fn_without_prefix + '.json'
             if WIN32:
                 json_fn = json_fn.replace('\\', '/')
@@ -386,6 +392,23 @@ if __name__ == '__main__':
                     traceback.print_exc()
 
                 #raise
+
+            if org_fn in cimxml_test_filenames:
+                DSS.Text.Command = 'export cim100'
+                xml_live_fns = [DSS.Text.Result]
+                DSS.Text.Command = 'export cim100fragments'
+                xml_live_fns.extend(glob(DSS.Text.Result + '_*.xml'))
+                for xml_live_fn in xml_live_fns:
+                    xml_actual_fn = os.path.normpath(xml_live_fn)
+                    xml_common_prefix = os.path.commonprefix([root_dir, xml_actual_fn])
+                    xml_archive_fn = xml_actual_fn[len(xml_common_prefix) + 1:]
+                    if WIN32:
+                        xml_archive_fn = xml_archive_fn.replace('\\', '/')
+                    zip_out.write(xml_live_fn, xml_archive_fn.replace('.XML', '.xml'))
+
+                
+
+
 
 
     print(perf_counter() - t0_global, 'seconds')
