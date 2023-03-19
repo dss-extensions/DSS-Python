@@ -4,7 +4,7 @@ from inspect import ismethod, getdoc
 from math import isfinite
 from time import perf_counter
 import numpy as np
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 from dss import enums, DSSException
 import dss
 
@@ -34,7 +34,7 @@ else:
     def printv(*args):
         pass
     
-def run(dss: dss.IDSS, fn: str):
+def run(dss: dss.IDSS, fn: str, line_by_line: bool):
     os.chdir(original_working_dir)
     dss.Text.Command = f'cd "{original_working_dir}"'
     dss.Start(0)
@@ -49,12 +49,10 @@ def run(dss: dss.IDSS, fn: str):
     dss.Text.Command = 'solve'
     dss.Text.Command = 'Clear'
 
-    line_by_line = fn.startswith('L!')
-    if line_by_line:
-        fn = fn[2:]
-
-    with open(os.path.join(root_dir, fn), 'r') as f:
-        solve = '\nsolve' not in f.read().lower()
+    with open(os.path.join(ROOT_DIR, fn), 'r') as f:
+        full_text = f.read().lower()
+        needs_solve = '\nsolve' not in full_text
+        has_closedi = '\nclosedi' in full_text
 
     if line_by_line:
         with open(fn, 'r') as f:
@@ -73,13 +71,10 @@ def run(dss: dss.IDSS, fn: str):
 
                     if not input_line: continue
                     lc_input_line = input_line.lower()
-                    if any(lc_input_line.startswith(x) for x in ['show', 'plot', 'visualize', 'dump', 'export', 'help']) or ord(input_line[0]) > 127:
+                    if any(lc_input_line.startswith(x) for x in ['show', 'plot', 'visualize', 'dump', 'export', 'help', 'fileedit']) or ord(input_line[0]) > 127:
                         #print('Skipping input:', repr(input_line))
                         continue
                     else:
-                        # Some scripts have hardcoded paths...
-                        input_line = input_line.replace('C:\\Users\\prdu001\\OpenDSS\\Test\\', '')
-                        input_line = input_line.replace('C:\\Users\\prdu001\\OpenDSS\\Distrib\\Examples\\Scripts\\', '../Version8/Distrib/Examples/Scripts/')
                         #print(input_line)
                         dss.Text.Command = input_line
                         check_error()
@@ -87,10 +82,10 @@ def run(dss: dss.IDSS, fn: str):
             except StopIteration:
                 pass
     else:
-        dss.Text.Command = 'Compile "{}"'.format(os.path.join(root_dir, fn))
+        dss.Text.Command = 'Compile "{}"'.format(os.path.join(ROOT_DIR, fn))
         check_error()
 
-    if solve:
+    if needs_solve:
         dss.ActiveCircuit.Solution.Mode = enums.SolveModes.Daily
         dss.ActiveCircuit.Solution.Solve()
         check_error()
@@ -106,7 +101,7 @@ def run(dss: dss.IDSS, fn: str):
         if ex.args[0] == 52902:
             realibity_ran = False
 
-    return realibity_ran
+    return realibity_ran, has_closedi
 
 
 def adjust_to_json(cls, field):
@@ -306,9 +301,18 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
 
     return json.dumps(document)
 
+
+def get_archive_fn(live_fn):
+    actual_fn = os.path.normpath(live_fn)
+    common_prefix = os.path.commonprefix([ROOT_DIR, actual_fn])
+    archive_fn = actual_fn[len(common_prefix) + 1:]
+    if WIN32:
+        archive_fn = archive_fn.replace('\\', '/')
+
+    return archive_fn
             
 if __name__ == '__main__':
-    root_dir = os.path.abspath('../../electricdss-tst/')
+    ROOT_DIR = os.path.abspath('../../electricdss-tst/')
 
     from test_settings import test_filenames, cimxml_test_filenames
 
@@ -326,7 +330,7 @@ if __name__ == '__main__':
         print("Using DSS Extensions:", DSS.Version)
         match = re.match('DSS C-API Library version ([^ ]+) revision.* ([0-9]+);.*', DSS.Version)
         dssx_ver, dssx_timestamp = match.groups()
-        suffix = f'-dssx-{sys.platform}-{platform.machine()}-{dssx_ver}-{dssx_timestamp}' 
+        suffix = f'-dssx-{sys.platform}-{platform.machine()}-{dssx_ver}-{dssx_timestamp}'
         DSS.AllowEditor = False
     else:
         import comtypes.client
@@ -351,20 +355,13 @@ if __name__ == '__main__':
 
     t0_global = perf_counter()
     total_runtime = 0.0
-    with ZipFile(os.path.join(original_working_dir, f'results{suffix}.zip'), 'a') as zip_out:
+    with ZipFile(os.path.join(original_working_dir, f'results{suffix}.zip'), mode='a', compression=ZIP_DEFLATED) as zip_out:
         for fn in test_filenames + cimxml_test_filenames:
             org_fn = fn
             fixed_fn = fn if not fn.startswith('L!') else fn[2:]
-            prefix_fn = 'L!' if fn.startswith('L!') else ''
-            fn = os.path.join(root_dir, fixed_fn)
-            actual_fn = os.path.normpath(fixed_fn)
-            common_prefix = os.path.commonprefix([root_dir, actual_fn])
-            fn_without_prefix = actual_fn[len(common_prefix):]
-            
-            json_fn = fn_without_prefix + '.json'
-            if WIN32:
-                json_fn = json_fn.replace('\\', '/')
-
+            line_by_line = fn.startswith('L!')
+            fn = os.path.join(ROOT_DIR, fixed_fn)
+            json_fn = get_archive_fn(fn) + '.json'
             try:
                 zip_out.getinfo(json_fn)
                 continue
@@ -373,11 +370,11 @@ if __name__ == '__main__':
 
             try:
                 tstart_run = perf_counter()
-                realibity_ran = run(DSS, prefix_fn + fn)
+                realibity_ran, has_closedi = run(DSS, fn, line_by_line)
                 runtime = perf_counter() - tstart_run
                 total_runtime += runtime
                 data_str = save_state(DSS, runtime=runtime)
-                print(fn_without_prefix)
+                print(json_fn)
                 zip_out.writestr(json_fn, data_str)
             except KeyboardInterrupt:
                 exit()
@@ -391,25 +388,20 @@ if __name__ == '__main__':
                 else:
                     traceback.print_exc()
 
-                #raise
-
             if org_fn in cimxml_test_filenames:
                 DSS.Text.Command = 'export cim100'
                 xml_live_fns = [DSS.Text.Result]
                 DSS.Text.Command = 'export cim100fragments'
                 xml_live_fns.extend(glob(DSS.Text.Result + '_*.xml'))
                 for xml_live_fn in xml_live_fns:
-                    xml_actual_fn = os.path.normpath(xml_live_fn)
-                    xml_common_prefix = os.path.commonprefix([root_dir, xml_actual_fn])
-                    xml_archive_fn = xml_actual_fn[len(xml_common_prefix) + 1:]
-                    if WIN32:
-                        xml_archive_fn = xml_archive_fn.replace('\\', '/')
-                    zip_out.write(xml_live_fn, xml_archive_fn.replace('.XML', '.xml'))
+                    zip_out.write(xml_live_fn, get_archive_fn(xml_live_fn).replace('.XML', '.xml'))
 
-                
-
-
-
+            if has_closedi:
+                DSS.Text.Command = 'get CaseName'
+                res_dir = os.path.join(DSS.DataPath, DSS.Text.Result)
+                for csv_live_fn in glob(f'{res_dir}/*/*.csv'):
+                    print(csv_live_fn)
+                    zip_out.write(csv_live_fn, get_archive_fn(csv_live_fn).replace('.CSV', '.csv'))
 
     print(perf_counter() - t0_global, 'seconds')
     print(total_runtime, 'seconds (runtime only)')
