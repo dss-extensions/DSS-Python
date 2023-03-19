@@ -1,6 +1,5 @@
 from setuptools import setup
-import re, sys, shutil, os, io
-import subprocess
+import re, shutil, os, io
 from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS, DLL_SUFFIX, DLL_PREFIX
 import glob
 
@@ -108,7 +107,7 @@ setup(
     ext_package="dss",
     install_requires=["cffi>=1.11.2", "numpy>=1.19.5"],
     extras_require={'plot': ["matplotlib", "scipy"]}, #TODO: test which versions should work
-    tests_require=["zstandard", "scipy"],
+    tests_require=["scipy", "ruff", "xmldiff", "pandas"],
     zip_safe=False,
     classifiers=[
         'Intended Audience :: Science/Research',
@@ -120,7 +119,7 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: BSD License'
     ],
