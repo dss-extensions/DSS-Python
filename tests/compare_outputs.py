@@ -1,4 +1,4 @@
-import json, re
+import json, re, io
 from inspect import getdoc
 from collections import defaultdict
 from zipfile import ZipFile, BadZipFile
@@ -6,6 +6,7 @@ import numpy as np
 from pprint import pprint
 from dss import ICircuit, IDSS
 import xmldiff.main, xmldiff.actions
+import pandas as pd
 
 np.set_printoptions(linewidth=300)
 
@@ -19,6 +20,7 @@ tol = 1e-5
 
 VERBOSE = False
 ENABLE_XML = False
+ENABLE_CSV = True
 
 KNOWN_COM_DIFF = set([
     # On official COM, uninitialized values for CalcCurrent, AllocFactors
@@ -45,7 +47,7 @@ KNOWN_COM_DIFF = set([
     ('Version8/Distrib/IEEETestCases/SecondaryTestCircuit_modified/Master.DSS.json', 'Meters', 'records', 0, 'AllocFactors'),
 
     # Close enough for the system, especially since everything else matches
-    # Some of these are due to tiny line segments, others various sources
+    # Some of these are due to tiny line segments (or line impedances in general), others various sources
     ('Test/AutoTrans/Auto3bus.dss.json', 'Lines', 'records', 1, 'ActiveCktElement', 'Residuals'),
     ('Test/AutoTrans/AutoHLT.dss.json', 'Lines', 'records', 0, 'ActiveCktElement', 'Residuals'),
     ('Version8/Distrib/EPRITestCircuits/ckt24/master_ckt24.dss.json', 'Lines', 'records', 487, 'ActiveCktElement', 'Losses'),
@@ -64,6 +66,8 @@ KNOWN_COM_DIFF = set([
     ('Version8/Distrib/EPRITestCircuits/epri_dpv/M1/Master_NoPV.dss.json', 'Lines', 'records', 398, 'ActiveCktElement', 'Losses'),
     ('Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/VV_VW/Daily_VVVW_varMax_PMPPPU_kVAlimitation_Qpriority-2.dss.json', 'PVSystems', 'records', 0, 'RegisterValues'),
     ('Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_Unbal.dss.json', 'Lines', 'records', 2029, 'ActiveCktElement', 'Losses'),
+    ('Version8/Distrib/Examples/Scripts/Storage-Quasi-Static-Example/Run_Demo1.dss.json', 'Lines', 'records', 109, 'ActiveCktElement', 'Powers'),
+    ('Version8/Distrib/Examples/Scripts/Storage-Quasi-Static-Example/Run_Demo1.dss.json', 'Lines', 'records', 708, 'ActiveCktElement', 'Powers'),
     ('Version8/Distrib/Examples/StorageControllerTechNote/LoadShape/LoadShapeRun.dss.json', 'Lines', 'records', 2029, 'ActiveCktElement', 'Losses'),
     ('Version8/Distrib/Examples/StorageControllerTechNote/PeakShave/PeakShaveMonPhaseRun.dss.json', 'Lines', 'records', 2029, 'ActiveCktElement', 'Losses'),
     ('Version8/Distrib/Examples/StorageControllerTechNote/PeakShaveDch_PeakShaveLow_Ch/PeakShaveDch_PeakShaveLow_ChRun.dss.json', 'Lines', 'records', 2029, 'ActiveCktElement', 'Losses'),
@@ -386,7 +390,22 @@ class ComparisonHandler:
                                 continue
 
                             print(type(d))
-                            
+
+                elif ENABLE_CSV and fn.endswith('.csv'):
+                    # The CSVs from OpenDSS can havbe some weird header, and we need to compare 
+                    # the lowercase data to simplify things.
+                    textA = fA.read().decode().lower()
+                    textB = fB.read().decode().lower()
+                    with io.StringIO(textA) as sfA, io.StringIO(textB) as sfB:
+                        df_a = pd.read_csv(sfA)
+                        df_b = pd.read_csv(sfB)
+
+                    try:
+                        pd.testing.assert_frame_equal(df_a, df_b, atol=tol, rtol=tol)
+                    except:
+                        print("COMPARE CSV ERROR:", fn)
+                        
+                        raise
 
                 self.total += 1
 
