@@ -6,8 +6,9 @@ Copyright (c) 2016-2023 Paulo Meira
 Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
-from typing import List
+from typing import List, Union
 from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray
+from .enums import LineUnits
 
 class ILineGeometries(Iterable):
     '''
@@ -105,12 +106,12 @@ class ILineGeometries(Iterable):
         return self._get_float64_gr_array()
 
     @property
-    def Units(self) -> Int32Array:
+    def Units(self) -> List[LineUnits]:
         self.CheckForError(self._lib.LineGeometries_Get_Units_GR())
-        return self._get_int32_gr_array() #TODO: use enum
+        return [LineUnits(unit) for unit in self._get_int32_gr_array()]
 
     @Units.setter
-    def Units(self, Value: Int32Array):
+    def Units(self, Value: Union[Int32Array, List[LineUnits]]):
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
         self.CheckForError(self._lib.LineGeometries_Set_Units(ValuePtr, ValueCount))
 

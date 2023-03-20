@@ -7,7 +7,8 @@ Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
-from typing import AnyStr
+from typing import AnyStr, Union
+from .enums import LineUnits
 
 class ILines(Iterable):
     __slots__ = []
@@ -238,11 +239,11 @@ class ILines(Iterable):
         return self.CheckForError(self._lib.Lines_Get_TotalCust())
 
     @property
-    def Units(self) -> int:
-        return self.CheckForError(self._lib.Lines_Get_Units()) #TODO: use enum
+    def Units(self) -> LineUnits:
+        return LineUnits(self.CheckForError(self._lib.Lines_Get_Units()))
 
     @Units.setter
-    def Units(self, Value: int):
+    def Units(self, Value: Union[int, LineUnits]):
         self.CheckForError(self._lib.Lines_Set_Units(Value))
 
     @property

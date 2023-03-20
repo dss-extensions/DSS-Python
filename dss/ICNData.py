@@ -1,11 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
+from typing import Union
+from .enums import LineUnits
 
 class ICNData(Iterable):
     '''
@@ -81,8 +83,8 @@ class ICNData(Iterable):
         self.CheckForError(self._lib.CNData_Set_GMRac(Value))
 
     @property
-    def GMRUnits(self) -> int:
-        return self.CheckForError(self._lib.CNData_Get_GMRUnits()) #TODO: use enum
+    def GMRUnits(self) -> LineUnits:
+        return LineUnits(self.CheckForError(self._lib.CNData_Get_GMRUnits()))
 
     @GMRUnits.setter
     def GMRUnits(self, Value: int):
@@ -97,19 +99,19 @@ class ICNData(Iterable):
         self.CheckForError(self._lib.CNData_Set_Radius(Value))
 
     @property
-    def RadiusUnits(self) -> int:
-        return self.CheckForError(self._lib.CNData_Get_RadiusUnits()) #TODO: use enum
+    def RadiusUnits(self) -> LineUnits:
+        return LineUnits(self.CheckForError(self._lib.CNData_Get_RadiusUnits()))
 
     @RadiusUnits.setter
-    def RadiusUnits(self, Value: int):
+    def RadiusUnits(self, Value: Union[int, LineUnits]):
         self.CheckForError(self._lib.CNData_Set_RadiusUnits(Value))
 
     @property
-    def ResistanceUnits(self) -> int:
-        return self.CheckForError(self._lib.CNData_Get_ResistanceUnits()) #TODO: use enum
+    def ResistanceUnits(self) -> LineUnits:
+        return LineUnits(self.CheckForError(self._lib.CNData_Get_ResistanceUnits()))
 
     @ResistanceUnits.setter
-    def ResistanceUnits(self, Value: int):
+    def ResistanceUnits(self, Value: Union[int, LineUnits]):
         self.CheckForError(self._lib.CNData_Set_ResistanceUnits(Value))
 
     @property

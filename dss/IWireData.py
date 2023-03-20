@@ -1,11 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
+from typing import Union
+from .enums import LineUnits
 
 class IWireData(Iterable):
     '''
@@ -75,12 +77,12 @@ class IWireData(Iterable):
         self.CheckForError(self._lib.WireData_Set_GMRac(Value))
 
     @property
-    def GMRUnits(self) -> int:
-        return self.CheckForError(self._lib.WireData_Get_GMRUnits())
+    def GMRUnits(self) -> LineUnits:
+        return LineUnits(self.CheckForError(self._lib.WireData_Get_GMRUnits()))
 
     @GMRUnits.setter
-    def GMRUnits(self, Value: int):
-        self.CheckForError(self._lib.WireData_Set_GMRUnits(Value)) #TODO: use enum
+    def GMRUnits(self, Value: Union[int, LineUnits]):
+        self.CheckForError(self._lib.WireData_Set_GMRUnits(Value))
 
     @property
     def Radius(self) -> float:
@@ -99,11 +101,11 @@ class IWireData(Iterable):
         self.CheckForError(self._lib.WireData_Set_RadiusUnits(Value))
 
     @property
-    def ResistanceUnits(self) -> int:
-        return self.CheckForError(self._lib.WireData_Get_ResistanceUnits()) #TODO: use enum
+    def ResistanceUnits(self) -> LineUnits:
+        return LineUnits(self.CheckForError(self._lib.WireData_Get_ResistanceUnits()))
 
     @ResistanceUnits.setter
-    def ResistanceUnits(self, Value: int):
+    def ResistanceUnits(self, Value: Union[int, LineUnits]):
         self.CheckForError(self._lib.WireData_Set_ResistanceUnits(Value))
 
     @property

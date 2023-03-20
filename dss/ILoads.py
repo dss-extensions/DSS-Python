@@ -7,7 +7,8 @@ Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
-from typing import AnyStr
+from typing import AnyStr, Union
+from .enums import LoadStatus
 
 class ILoads(Iterable):
     __slots__ = []
@@ -207,12 +208,12 @@ class ILoads(Iterable):
         self.CheckForError(self._lib.Loads_Set_Spectrum(Value))
 
     @property
-    def Status(self) -> int:
+    def Status(self) -> LoadStatus:
         '''Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).'''
-        return self.CheckForError(self._lib.Loads_Get_Status()) #TODO: use enum
+        return LoadStatus(self.CheckForError(self._lib.Loads_Get_Status()))
 
     @Status.setter
-    def Status(self, Value: int):
+    def Status(self, Value: Union[int, LoadStatus]):
         self.CheckForError(self._lib.Loads_Set_Status(Value))
 
     @property

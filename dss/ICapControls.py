@@ -1,9 +1,9 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from typing import AnyStr
@@ -73,7 +73,7 @@ class ICapControls(Iterable):
 
     @property
     def DelayOff(self) -> float:
-        '''Time delay [s] before swithcing off a step. Control may reset before actually switching.'''
+        '''Time delay [s] before switching off a step. Control may reset before actually switching.'''
         return self.CheckForError(self._lib.CapControls_Get_DelayOff())
 
     @DelayOff.setter

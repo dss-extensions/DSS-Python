@@ -9,6 +9,7 @@ from ._cffi_api_util import Base
 from .IDSSProperty import IDSSProperty
 from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 from typing import List, AnyStr, Tuple
+from .enums import OCPDevType
 
 class ICktElement(Base):
     __slots__ = [
@@ -286,9 +287,9 @@ class ICktElement(Base):
         return self.CheckForError(self._lib.CktElement_Get_OCPDevIndex())
 
     @property
-    def OCPDevType(self) -> int:
+    def OCPDevType(self) -> OCPDevType:
         '''(read-only) 0=None; 1=Fuse; 2=Recloser; 3=Relay;  Type of OCP controller device'''
-        return self.CheckForError(self._lib.CktElement_Get_OCPDevType()) #TODO: use enum
+        return OCPDevType(self.CheckForError(self._lib.CktElement_Get_OCPDevType()))
 
     @property
     def PhaseLosses(self) -> Float64ArrayOrComplexArray:

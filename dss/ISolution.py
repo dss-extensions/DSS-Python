@@ -1,14 +1,14 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2016-2022 Paulo Meira
+Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Base
-from dss.enums import SolveModes
 from ._types import Int32Array
 from typing import Union, AnyStr, List
+from .enums import SolveModes, ControlModes, SolutionAlgorithms
 
 class ISolution(Base):
     __slots__ = []
@@ -110,12 +110,12 @@ class ISolution(Base):
         self.CheckForError(self._lib.Solution_Set_AddType(Value))
 
     @property
-    def Algorithm(self) -> int:
+    def Algorithm(self) -> SolutionAlgorithms:
         '''Base Solution algorithm: {dssNormalSolve | dssNewtonSolve}'''
-        return self.CheckForError(self._lib.Solution_Get_Algorithm()) #TODO: use enum
+        return SolutionAlgorithms(self.CheckForError(self._lib.Solution_Get_Algorithm()))
 
     @Algorithm.setter
-    def Algorithm(self, Value: int):
+    def Algorithm(self, Value: Union[int, SolutionAlgorithms]):
         self.CheckForError(self._lib.Solution_Set_Algorithm(Value))
 
     @property
@@ -146,12 +146,12 @@ class ISolution(Base):
         self.CheckForError(self._lib.Solution_Set_ControlIterations(Value))
 
     @property
-    def ControlMode(self) -> int:
+    def ControlMode(self) -> ControlModes:
         '''{dssStatic* | dssEvent | dssTime}  Modes for control devices'''
-        return self.CheckForError(self._lib.Solution_Get_ControlMode()) #TODO: use enum
+        return ControlModes(self.CheckForError(self._lib.Solution_Get_ControlMode()))
 
     @ControlMode.setter
-    def ControlMode(self, Value: int):
+    def ControlMode(self, Value: Union[int, ControlModes]):
         self.CheckForError(self._lib.Solution_Set_ControlMode(Value))
 
     @property
@@ -311,13 +311,13 @@ class ISolution(Base):
         self.CheckForError(self._lib.Solution_Set_MinIterations(Value))
 
     @property
-    def Mode(self) -> int:
+    def Mode(self) -> SolveModes:
         '''Set present solution mode (by a text code - see DSS Help)'''
         return SolveModes(self.CheckForError(self._lib.Solution_Get_Mode()))
 
     @Mode.setter
     def Mode(self, Value: Union[int, SolveModes]):
-        self.CheckForError(self._lib.Solution_Set_Mode(Value)) #TODO: use enum
+        self.CheckForError(self._lib.Solution_Set_Mode(Value))
 
     @property
     def ModeID(self) -> str:

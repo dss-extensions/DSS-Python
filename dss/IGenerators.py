@@ -6,8 +6,9 @@ Copyright (c) 2016-2023 Paulo Meira
 Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
-from typing import List, AnyStr
+from typing import List, AnyStr, Union
 from ._types import Float64Array
+from .enums import GeneratorStatus
 
 class IGenerators(Iterable):
     __slots__ = []
@@ -188,7 +189,7 @@ class IGenerators(Iterable):
         self.CheckForError(self._lib.Generators_Set_Yearly(Value))
 
     @property
-    def Status(self) -> int:
+    def Status(self) -> GeneratorStatus:
         '''
         Response to dispatch multipliers: Fixed=1 (dispatch multipliers do not apply), Variable=0 (follows curves).
 
@@ -196,10 +197,10 @@ class IGenerators(Iterable):
 
         (API Extension)
         '''
-        return self.CheckForError(self._lib.Generators_Get_Status()) #TODO: use enum
+        return GeneratorStatus(self.CheckForError(self._lib.Generators_Get_Status()))
 
     @Status.setter
-    def Status(self, Value: int):
+    def Status(self, Value: Union[int, GeneratorStatus]):
         self.CheckForError(self._lib.Generators_Set_Status(Value))
 
     @property
