@@ -1,2 +1,2 @@
 line-length = 999
-ignore = ["E401", "E402", "E741"]
+ignore = ["E401", "E402", "E741", "E722"]

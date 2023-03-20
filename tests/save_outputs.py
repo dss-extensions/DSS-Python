@@ -1,6 +1,6 @@
 import os, sys, platform, traceback, json, re
 from glob import glob
-from inspect import ismethod, getdoc
+from inspect import ismethod
 from math import isfinite
 from time import perf_counter
 import numpy as np
@@ -69,7 +69,9 @@ def run(dss: dss.IDSS, fn: str, line_by_line: bool):
                                 input_line = ''
                                 break
 
-                    if not input_line: continue
+                    if not input_line: 
+                        continue
+
                     lc_input_line = input_line.lower()
                     if any(lc_input_line.startswith(x) for x in ['show', 'plot', 'visualize', 'dump', 'export', 'help', 'fileedit']) or ord(input_line[0]) > 127:
                         #print('Skipping input:', repr(input_line))
@@ -312,11 +314,15 @@ def get_archive_fn(live_fn):
     return archive_fn
             
 if __name__ == '__main__':
-    ROOT_DIR = os.path.abspath('../../electricdss-tst/')
+    if os.path.exists('../../electricdss-tst/'):
+        ROOT_DIR = os.path.abspath('../../electricdss-tst/')
+    else:
+        ROOT_DIR = os.path.abspath('../electricdss-tst/')
 
-    from test_settings import test_filenames, cimxml_test_filenames
+    from _settings import test_filenames, cimxml_test_filenames
 
-    test_filenames = []
+    # test_filenames = []
+    # cimxml_test_filenames = []
     try:
         import colored_traceback
         colored_traceback.add_hook()

@@ -12,7 +12,7 @@ with io.open('README.md', encoding='utf8') as readme_md:
 # Handle the version string
 # 1. Try env var DSS_PYTHON_VERSION
 # 2. Try GITHUB_REF for a Git tag
-# 3. Otherwise, just use the version the hardcoded version
+# 3. Otherwise, just use the hardcoded version
 package_version = os.environ.get('DSS_PYTHON_VERSION')
 github_ref = os.environ.get('GITHUB_REF')
 if package_version is None and github_ref is not None:
@@ -107,7 +107,7 @@ setup(
     ext_package="dss",
     install_requires=["cffi>=1.11.2", "numpy>=1.19.5"],
     extras_require={'plot': ["matplotlib", "scipy"]}, #TODO: test which versions should work
-    tests_require=["scipy", "ruff", "xmldiff", "pandas"],
+    tests_require=["scipy", "ruff", "xmldiff", "pandas", "pytest"],
     zip_safe=False,
     classifiers=[
         'Intended Audience :: Science/Research',
