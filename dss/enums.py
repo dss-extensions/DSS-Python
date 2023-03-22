@@ -164,3 +164,8 @@ class DSSJSONFlags(IntFlag):
     FullNames = 0x00000008
     Pretty = 0x00000010
     ExcludeDisabled = 0x00000020
+
+class DSSCompatFlags(IntFlag):
+    NoSolverFloatChecks = 0x00000001
+    BadPrecision = 0x00000002
+    InvControl9611 = 0x00000004
