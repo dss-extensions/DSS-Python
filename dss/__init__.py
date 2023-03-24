@@ -25,6 +25,7 @@ if os.path.exists(_properties_mo):
     lib.DSS_SetPropertiesMO(_properties_mo.encode())
 
 from ._cffi_api_util import CffiApiUtil, DSSException, set_case_insensitive_attributes
+from ._obj_bases import Edit
 from .IDSS import IDSS
 from .enums import *
 
@@ -50,4 +51,4 @@ dss = DSS = DSS_GR #: Same as DSS_GR
 
 
 __version__ = '0.13.0.dev'
-__all__ = ['dss', 'DSS', 'DSS_GR', 'prime_api_util', 'api_util', 'DSSException', 'patch_dss_com', 'set_case_insensitive_attributes', 'enums']
+__all__ = ['dss', 'DSS', 'DSS_GR', 'prime_api_util', 'api_util', 'DSSException', 'patch_dss_com', 'set_case_insensitive_attributes', 'enums', 'Edit']

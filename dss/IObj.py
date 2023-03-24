@@ -3,13 +3,33 @@ This module exposes base objects for the pythonic Obj and Batch interfaces from 
 These interfaces are unique to DSS Extensions, they are not present in the official OpenDSS.
 
 This is still under development and the final implementation might differ in some aspects.
+For example, we plan to adjust the spelling of many properties; `nconds` will become `NConds`, 
+`kv` will become `kV`, and so on.
+
+Currently, we're already removed `wdg` and the indirect properties in favour of the array versions.
+This will also be tweaked after more usage. `NConds`, for example, may also be removed if we can
+develop a mechanism to ensure the dimensions match.
 
 Copyright (c) 2021-2023 Paulo Meira
 Copyright (c) 2021-2023 DSS Extensions contributors
 '''
-from typing import Union, List, AnyStr
+from typing import Union, List, AnyStr, Optional
+from typing_extensions import TypedDict, Unpack
 import numpy as np
-from .enums import DSSJSONFlags
+from ._obj_bases import (
+    BatchFloat64ArrayProxy,
+    BatchInt32ArrayProxy,
+    DSSObj,
+    DSSBatch,
+    IDSSObj,
+    LIST_LIKE,
+    # NotSet,
+)
+
+try:
+    from typing import ForwardRef
+except:
+    from typing import _ForwardRef  as ForwardRef
 
 try:
     from enum import IntEnum
@@ -19,699 +39,13 @@ except:
 from ._types import Float64Array, Int32Array
 from ._cffi_api_util import Base
 
-class BatchFloat64ArrayProxy:
-    def __init__(self, batch, idx):
-        self._batch = batch
-        self._idx = idx
-        self._lib = batch._api_util.lib
-
-    def to_array(self):
-        batch = self._batch
-        return batch._get_float64_array(
-            batch._lib.Batch_GetFloat64,
-            batch.pointer[0],
-            batch.count[0],
-            self._idx
-        )
-
-    def __call__(self):
-        return self.to_array()
-
-    def __len__(self):
-        return self._batch.count[0]
-
-    def __mul__(self, other):
-        return self.to_array() * other
-
-    def __truediv__(self, other):
-        return self.to_array() / other
-
-    def __floordiv__(self, other):
-        return self.to_array() // other
-
-    def __add__(self, other):
-        return self.to_array() + other
-
-    def __sub__(self, other):
-        return self.to_array() - other
-
-    def __array__(self):
-        return self.to_array()
-
-    def __iadd__(self, other):
-        batch = self._batch
-
-        if np.isscalar(other):
-            self._lib.Batch_Float64(
-                batch.pointer[0],
-                batch.count[0],
-                self._idx,
-                self._lib.BatchOperation_Increment,
-                other
-            )
-            return self
-
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
-
-        data = self.to_array() + other
-        data, data_ptr, _ = batch._prepare_float64_array(data)
-        batch._lib.Batch_SetFloat64Array(
-            batch.pointer[0],
-            batch.count[0],
-            self._idx,
-            data_ptr
-        )
-        batch._check_for_error()
-        return self
-
-    def __isub__(self, other):
-        return self.__iadd__(-other)
-
-    def __imul__(self, other):
-        batch = self._batch
-
-        if np.isscalar(other):
-            self._lib.Batch_Float64(
-                batch.pointer[0],
-                batch.count[0],
-                self._idx,
-                self._lib.BatchOperation_Multiply,
-                other
-            )
-            return self
-
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
-
-        data = self.to_array() * other
-        data, data_ptr, _ = batch._prepare_float64_array(data)
-        batch._lib.Batch_SetFloat64Array(
-            batch.pointer[0],
-            batch.count[0],
-            self._idx,
-            data_ptr
-        )
-        batch._check_for_error()
-        return self
-
-    def __idiv__(self, other):
-        batch = self._batch
-
-        if np.isscalar(other):
-            self._lib.Batch_Float64(
-                batch.pointer[0],
-                batch.count[0],
-                self._idx,
-                self._lib.BatchOperation_Multiply,
-                1 / other
-            )
-            return self
-
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
-
-        data = self.to_array() / other
-        data, data_ptr, _ = batch._prepare_float64_array(data)
-        batch._lib.Batch_SetFloat64Array(
-            batch.pointer[0],
-            batch.count[0],
-            self._idx,
-            data_ptr
-        )
-        batch._check_for_error()
-        return self
-
-
-class BatchInt32ArrayProxy:
-    def __init__(self, batch, idx):#, kind):
-        self._batch = batch
-        self._idx = idx
-        self._lib = batch._api_util.lib
-
-    def to_array(self):
-        batch = self._batch
-        return batch._get_int32_array(
-            batch._lib.Batch_GetInt32,
-            batch.pointer[0],
-            batch.count[0],
-            self._idx
-        )
-
-    def __call__(self):
-        return self.to_array()
-
-    def __len__(self):
-        return self._batch.count[0]
-
-    def __mul__(self, other):
-        return self.to_array() * other
-
-    def __truediv__(self, other):
-        return self.to_array() / other
-
-    def __floordiv__(self, other):
-        return self.to_array() // other
-
-    def __add__(self, other):
-        return self.to_array() + other
-
-    def __sub__(self, other):
-        return self.to_array() - other
-
-    def __array__(self):
-        return self.to_array()
-
-    def __iadd__(self, other):
-        batch = self._batch
-
-        if np.isscalar(other):
-            self._lib.Batch_Int32(
-                batch.pointer[0],
-                batch.count[0],
-                self._idx,
-                self._lib.BatchOperation_Increment,
-                other
-            )
-            return self
-
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
-
-        data = self.to_array() + other
-        data, data_ptr, _ = batch._api_util.prepare_int32_array(data)
-        batch._lib.Batch_SetInt32Array(
-            batch.pointer[0],
-            batch.count[0],
-            self._idx,
-            data_ptr
-        )
-        batch._check_for_error()
-        return self
-
-    def __isub__(self, other):
-        return self.__iadd__(-other)
-
-    def __imul__(self, other):
-        batch = self._batch
-
-        if np.isscalar(other):
-            self._lib.Batch_Int32(
-                batch.pointer[0],
-                batch.count[0],
-                self._idx,
-                self._lib.BatchOperation_Multiply,
-                other
-            )
-            return self
-
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
-
-        data = self.to_array() * other
-        data, data_ptr, _ = batch._prepare_int32_array(data)
-        batch._lib.Batch_SetInt32Array(
-            batch.pointer[0],
-            batch.count[0],
-            self._idx,
-            data_ptr
-        )
-        batch._check_for_error()
-        return self
-
-    def __idiv__(self, other):
-        batch = self._batch
-
-        if np.isscalar(other):
-            self._lib.Batch_Int32(
-                batch.pointer[0],
-                batch.count[0],
-                self._idx,
-                self._lib.BatchOperation_Multiply,
-                1 / other
-            )
-            return self
-
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
-
-        data = self.to_array() / other
-        data, data_ptr, _ = batch._prepare_int32_array(data)
-        self._lib.Batch_SetInt32Array(
-            batch.pointer[0],
-            batch.count[0],
-            self._idx,
-            data_ptr
-        )
-        batch._check_for_error()
-        return self
-
-
-
-class DSSObj(Base):
-    # _properties_by_idx = {
-    #     1: ('kV', 'Obj_SetDouble')
-    # }
-    # _properties_by_name = {
-    #     'kV': (1, 'Obj_SetDouble')
-    # }
-
-    def __init__(self, api_util, ptr):
-        Base.__init__(self, api_util)
-        self._ptr = ptr
-        self._ffi = api_util.ffi
-        self._get_int32_list = api_util.get_int32_array2
-
-    # def __getitem__(self, name_or_idx):
-    #     if isinstance(name_or_idx, int):
-    #         funcname, *_ = self._properties_by_idx[name_or_idx]
-    #         return getattr(self._lib, funcname)(name_or_idx)
-
-    #     if type(name_or_idx) is bytes:
-    #         name_or_idx = name_or_idx.decode(self._api_util.codec)
-
-    #     idx, funcname, *_ = self._properties_by_name[name_or_idx]
-    #     return getattr(self._lib, funcname)(idx)
-
-    # def to_dict(self):
-    #     return {
-    #         name: getattr(self._lib, funcname)(idx)
-    #         for (name, (idx, funcname, *_)) in self._properties_by_name.items()
-    #     }
-
-    def to_json(self, options: Union[int, DSSJSONFlags] = 0):
-        '''
-        Returns an element's data as a JSON-encoded string.
-
-        The `options` parameter contains bit-flags to toggle specific features.
-
-        By default (`options = 0`), only the properties explicitly set. The properties are returned in the order they are set in the input.
-        As a reminder, OpenDSS is sensitive to the order of the properties.
-
-        The `options` bit-flags are available in the `DSSJSONFlags` enum.
-        Values used by this function are:
-
-        - `Full`: if set, all properties are returned, ordered by property index instead.
-        - `SkipRedundant`: if used with `Full`, all properties except redundant and unused ones are returned.
-        - `EnumAsInt`: enumerated properties are returned as integer values instead of strings.
-        - `FullNames`: any element reference will use the full name (`{class name}.{element name}`) even if not required.
-        - `Pretty`: more whitespace is used in the output for a "prettier" format.
-
-        **NOT IMPLEMENTED YET**:
-        - `State`: include run-time state information
-        - `Debug`: include debug information
-
-        Other bit-flags are reserved for future uses. Please use `DSSJSONFlags` enum to avoid potential conflicts.
-
-        (API Extension)
-        '''
-        s = self._lib.Obj_ToJSON(self._ptr, options)
-        self._check_for_error()
-        return self._ffi.string(s).decode(self._api_util.codec)
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and (other._ptr == self._ptr)
-
-    def __repr__(self):
-        # This could probably be done in DSS C-API instead (equivalent to SaveWrite)
-        # ffi = self._api_util.ffi
-        # seq = sorted(enumerate(ffi.unpack(self._lib.Obj_GetPropSeqPtr(self._ptr, ffi.NULL), self._lib.Obj_GetNumProperties(self._ptr)), start=1), key=lambda v: v[1])
-        # vals = []
-        # for propidx, propseq in seq:
-        #     if propseq:
-        #         vals.append(f'{self._properties_by_idx[propidx][0]}={self[propidx]}')
-
-        return f'<{self._cls_name}.{self.name}>'# {" ".join(vals)}'
-
-    @property
-    def name(self) -> str:
-        s = self._lib.Obj_GetName(self._ptr)
-        self._check_for_error()
-        return self._ffi.string(s).decode(self._api_util.codec)
-
-    def _get_complex(self, idx: int) -> complex:
-        return self._get_float64_array(
-            self._lib.Obj_GetFloat64Array,
-            self._ptr,
-            idx
-        ).astype(complex)[0]
-
-    def _set_complex(self, idx: int, value: complex):
-        data = np.array([complex(value)])
-        data, data_ptr, cnt_ptr = self._prepare_float64_array(data)
-        self._lib.Obj_SetFloat64Array(self._ptr, data_ptr, cnt_ptr)
-        self._check_for_error()
-
-    def _get_prop_string(self, idx: int) -> str:
-        s = self._lib.Obj_GetString(self._ptr, idx)
-        return self._decode_and_free_string(s)
-
-    def _set_string(self, idx: int, value: AnyStr):
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Obj_SetString(self._ptr, idx, value)
-        self._check_for_error()
-
-    def _set_float64_array(self, idx: int, value: Float64Array):
-        value, value_ptr, value_count = self._prepare_float64_array(value)
-        self._lib.Obj_SetFloat64Array(self._ptr, idx, value_ptr, value_count)
-        self._check_for_error()
-
-    def _set_int32_array(self, idx: int, value: Int32Array):
-        value, value_ptr, value_count = self._prepare_int32_array(value)
-        self._lib.Obj_SetInt32Array(self._ptr, idx, value_ptr, value_count)
-        self._check_for_error()
-
-    def _set_string_array(self, idx: int, value: List[AnyStr]):
-        value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, idx, value_ptr, value_count)
-        self._check_for_error()
-
-    def _get_obj(self, idx: int, pycls):
-        other_ptr = self._lib.Obj_GetObject(self._ptr, idx)
-        self._check_for_error()
-        if other_ptr == self._ffi.NULL:
-            return None
-
-        if pycls is None:
-            cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
-            pycls = self._iobj._idx_to_cls[cls_idx]
-
-        return pycls(self._api_util, other_ptr)
-
-    def _set_obj(self, idx: int, other):
-        if other is not None:
-            other_ptr = other._ptr
-        else:
-            other_ptr = self._ffi.NULL
-
-        self._lib.Obj_SetObject(self._ptr, idx, other_ptr)
-        self._check_for_error()
-
-    def _get_obj_array(self, idx: int, pycls):
-        ptr = self._ffi.new('void***')
-        cnt = self._ffi.new('int32_t[4]')
-        self._lib.Obj_GetObjectArray(ptr, cnt, self._ptr, idx)
-        if not cnt[0]:
-            self._lib.DSS_Dispose_PPointer(ptr)
-            self._check_for_error()
-            return []
-
-        # wrap the results with Python classes
-        if pycls is None:
-            res = []
-            for other_ptr in self._ffi.unpack(ptr[0], cnt[0]):
-                cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
-                pycls = self._iobj._idx_to_cls[cls_idx]
-                res.append(pycls(self._api_util, other_ptr))
-        else:
-            res = [
-                pycls(self._api_util, other_ptr)
-                for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
-            ]
-
-        self._lib.DSS_Dispose_PPointer(ptr)
-        self._check_for_error()
-        return res
-
-    def _set_obj_array(self, idx: int, other):
-        if other is None or not other:
-            other_ptr = self._ffi.NULL
-            other_cnt = 0
-        else:
-            other_cnt = len(other)
-            other_ptr = self.ffi.new('void*[]', other_cnt)
-            other_ptr[:] = [o._ptr for o in other]
-
-        self._lib.Obj_SetObjectArray(self._ptr, idx, other_ptr, other_cnt)
-        self._check_for_error()
-
-
-class DSSBatch(Base):
-
-    #TODO: keep property name for debugging? Or maybe use from the parent object
-
-    def __init__(self, api_util, **kwargs):
-        if len(kwargs) > 1:
-            raise ValueError('Exactly one argument is expected.')
-
-        Base.__init__(self, api_util)
-        self._ffi = api_util.ffi
-
-        self.pointer = self._ffi.new('void***')
-        self.count = self._ffi.new('int32_t[4]')
-        if len(kwargs) == 0:
-            self._lib.Batch_CreateByClass(self.pointer, self.count, self._cls_idx)
-            self._check_for_error()
-            return
-
-        regexp = kwargs.get('re')
-        if regexp is not None:
-            if not isinstance(regexp, bytes):
-                regexp = regexp.encode(self._api_util.codec)
-
-            self._lib.Batch_CreateByRegExp(self.pointer, self.count, self._cls_idx, regexp)
-            self._check_for_error()
-            return
-
-        idx = kwargs.get('idx')
-        if regexp is not None:
-            idx, idx_ptr, idx_cnt = self._prepare_int32_array(idx)
-            self._lib.Batch_CreateByIndex(self.pointer, self.count, self._cls_idx, idx_ptr, idx_cnt)
-            self._check_for_error()
-            return
-
-        (prop_name, intval), = kwargs.items()
-        prop_idx = self._obj_cls._cls_prop_idx.get(prop_name.lower())
-        if prop_idx is None:
-            raise ValueError('Invalid property name "{}"'.format(prop_name))
-        self._lib.Batch_CreateByInt32Property(self.pointer, self.count, self._cls_idx, prop_idx, intval)
-        self._check_for_error()
-
-    def to_json(self, options: Union[int, DSSJSONFlags] = 0):
-        '''
-        Returns the data (as a list) of the elements in a batch as a JSON-encoded string.
-
-        The `options` parameter contains bit-flags to toggle specific features.
-        See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
-
-        Additionally, the `ExcludeDisabled` flag can be used to excluded disabled elements from the output.
-
-        (API Extension)
-        '''
-        s = self._lib.Batch_ToJSON(self.pointer[0], self.count[0], options)
-        self._check_for_error()
-        return self._ffi.string(s).decode(self._api_util.codec)
-
-    def __eq__(self, other):
-        return self is other
-
-    def __len__(self):
-        if self.count is None or self.count == self._ffi.NULL:
-            return 0
-
-        return self.count[0]
-
-    def __iter__(self):
-        for ptr in self._ffi.unpack(self.pointer[0], self.count[0]):
-            yield self._obj_cls(self._api_util, ptr)
-
-    def __getitem__(self, idx0):
-        #TODO: decide if we keep it 0-based or 1-based here
-        '''Get element at 0-based index of the batch pointer array'''
-        if idx0 >= len(self) or idx0 < 0:
-            raise IndexError
-
-        ptr = self.pointer[0][idx0]
-        return self._obj_cls(self._api_util, ptr)
-
-    def _set_batch_float64_array(self, idx: int, value):
-        if isinstance(value, BatchFloat64ArrayProxy):
-            if self is value._batch and value._idx == idx:
-                # ignore if we're setting to property to itself
-                return
-
-            value = value.to_array()
-
-        if np.isscalar(value):
-            self._lib.Batch_Float64(
-                self.pointer[0],
-                self.count[0],
-                idx,
-                self._lib.BatchOperation_Set,
-                value
-            )
-            return
-
-        data, data_ptr, data_cnt = self._prepare_float64_array(value)
-        if data_cnt != self.count[0]:
-            raise ValueError("Number of elements must match")
-
-        self._lib.Batch_SetFloat64Array(
-            self.pointer[0],
-            self.count[0],
-            idx,
-            data_ptr
-        )
-
-
-    def _set_batch_int32_array(self, idx: int, value):
-        if isinstance(value, BatchInt32ArrayProxy):
-            if self is value._batch and value._idx == idx:
-                # ignore if we're setting to property to itself
-                return
-
-            value = value.to_array()
-
-        if np.isscalar(value):
-            self._lib.Batch_Int32(
-                self.pointer[0],
-                self.count[0],
-                idx,
-                self._lib.BatchOperation_Set,
-                value
-            )
-            return
-
-        data, data_ptr, data_cnt = self._prepare_float64_array(value)
-        if data_cnt != self.count[0]:
-            raise ValueError("Number of elements must match")
-
-        self._lib.Batch_SetInt32Array(
-            self.pointer[0],
-            self.count[0],
-            idx,
-            data_ptr
-        )
-
-    def _set_batch_string(self, idx: int, value: AnyStr):
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], idx, value)
-
-    def _set_batch_obj(self, idx: int, other):
-        if other is not None:
-            other_ptr = other._ptr
-        else:
-            other_ptr = self._ffi.NULL
-
-        self._lib.Batch_SetObject(self.pointer[0], self.count[0], idx, other_ptr)
-        self._check_for_error()
-
-
-    def _get_string_ll(self, idx: int):
-        return [
-            self._get_string_array(self._lib.Obj_GetStringArray, x, idx)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-
-    @property
-    def name(self) -> List[str]:
-        res = [
-            self._ffi.string(self._lib.Obj_GetName(ptr)).decode(self._api_util.codec)
-            for ptr in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-        self._check_for_error()
-        return res
-
-
-    def _get_batch_obj_array(self, idx: int, pycls):
-        if self.count[0] == 0:
-            return []
-
-        obj = self._obj_cls(self._api_util, self.pointer[0])
-        res = []
-        for ptr in self._ffi.unpack(self.pointer[0], self.count[0]):
-            obj._ptr = ptr
-            res.append(obj._get_obj_array(idx, pycls))
-
-        return res
-
-    def _set_batch_obj_array(self, idx: int, other):
-        if self.count[0] == 0:
-            return
-
-        if other is None or not other:
-            other_ptr = self._ffi.NULL
-            other_cnt = 0
-            self._lib.Batch_SetObjectArray(self.pointer[0], self.count[0], idx, other_ptr, other_cnt)
-            self._check_for_error()
-            return
-        elif isinstance(other[0], DSSObj):
-            other_ptr = self.ffi.new('void*[]', len(other))
-            other_ptr[:] = [o._ptr for o in other]
-            self._lib.Batch_SetObjectArray(self.pointer[0], self.count[0], idx, other_ptr, len(other))
-            return
-
-        obj = self._obj_cls(self._api_util, self.pointer[0])
-        for other_objs, ptr in zip(other, self._ffi.unpack(self.pointer[0], self.count[0])):
-            # this could be optimized to reuse the pointers, but it's not usually in
-            # the hot path
-            obj._ptr = ptr
-            obj._set_obj_array(idx, other_objs)
-
-
-class IDSSObj(Base):
-    def __init__(self, iobj, cls_idx, obj_cls, batch_cls):
-        Base.__init__(self, iobj._api_util)
-        self._iobj = iobj
-        self.cls_idx = cls_idx
-        self._obj_cls = obj_cls
-        self._batch_cls = batch_cls
-        iobj._idx_to_cls[cls_idx] = self
-
-    def batch(self, **kwargs):
-        '''
-        Creates a new batch hanlder of (existing) objects
-        '''
-        return self._batch_cls(self._api_util, **kwargs)
-
-    def new(self, name: str, begin_edit=True, activate=False):
-        if not isinstance(name, bytes):
-            name = name.encode(self._api_util.codec)
-
-        ptr = self._api_util.lib.Obj_New(
-            self._api_util.ctx,
-            self.cls_idx,
-            name,
-            activate,
-            begin_edit
-        )
-
-        if ptr == self._api_util.ffi.NULL:
-            raise ValueError('Could not create object "{}".'.format(name))
-
-        return self._obj_cls(self._api_util, ptr)
-
-    def find(self, name_or_idx):
-        lib = self._lib
-
-        if isinstance(name_or_idx, int):
-            ptr = lib.Obj_GetHandleByIdx(self._api_util.ctx, self.cls_idx, name_or_idx)
-            if ptr == self._api_util.ffi.NULL:
-                raise ValueError('Could not find object by index "{}".'.format(name_or_idx))
-        else:
-            if type(name_or_idx) is not bytes:
-                name_or_idx = name_or_idx.encode(self._api_util.codec)
-
-            ptr = lib.Obj_GetHandleByName(self._api_util.ctx, self.cls_idx, name_or_idx)
-            if ptr == self._api_util.ffi.NULL:
-                raise ValueError('Could not find object by name "{}".'.format(name_or_idx))
-
-        return self._obj_cls(self._api_util, ptr)
-
-    def __len__(self):
-        return self._lib.Obj_GetCount(self._api_util.ctx, self.cls_idx)
-
-    def __iter__(self):
-        for idx in range(len(self)):
-            ptr = self._lib.Obj_GetHandleByIdx(self._api_util.ctx, self.cls_idx, idx + 1)
-            yield self._obj_cls(self._api_util, ptr)
-
-    def __getitem__(self, name_or_idx):
-        return self.find(name_or_idx)
-
+PDElement = Union[
+    ForwardRef('AutoTrans'),
+    ForwardRef('Capacitor'),
+    ForwardRef('Line'),
+    ForwardRef('Reactor'),
+    ForwardRef('Transformer'),
+]
 
 # Global enumerations
 class EarthModel(IntEnum):
@@ -804,6 +138,11 @@ class ControlMode(IntEnum):
     Time = 2 # Time
     MultiRate = 3 # MultiRate
 
+class InverterControlMode(IntEnum):
+    """Inverter Control Mode (DSS enumeration)"""
+    GFL = 0 # GFL
+    GFM = 1 # GFM
+
 class SolutionMode(IntEnum):
     """Solution Mode (DSS enumeration)"""
     Snap = 0 # Snap
@@ -825,6 +164,13 @@ class SolutionMode(IntEnum):
     Time = 16 # Time
     HarmonicT = 17 # HarmonicT
     Snapshot = 0 # Snapshot
+    Dynamics = 14 # Dynamics
+    Harmonics = 15 # Harmonics
+    S = 0 # S
+    Y = 2 # Y
+    H = 15 # H
+    T = 16 # T
+    F = 9 # F
 
 class SolutionAlgorithm(IntEnum):
     """Solution Algorithm (DSS enumeration)"""
@@ -856,6 +202,7 @@ class MonitoredPhase(IntEnum):
 
 
 class LineCode(DSSObj):
+    __slots__ = []
     _cls_name = 'LineCode'
     _cls_idx = 1
     _cls_prop_idx = {
@@ -992,7 +339,7 @@ class LineCode(DSSObj):
     @units.setter
     def units(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(8, value)
+            self._set_string_o(8, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 8, value)
 
@@ -1020,7 +367,7 @@ class LineCode(DSSObj):
 
     @rmatrix.setter
     def rmatrix(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def xmatrix(self) -> Float64Array:
@@ -1033,7 +380,7 @@ class LineCode(DSSObj):
 
     @xmatrix.setter
     def xmatrix(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def cmatrix(self) -> Float64Array:
@@ -1046,7 +393,7 @@ class LineCode(DSSObj):
 
     @cmatrix.setter
     def cmatrix(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def baseFreq(self) -> float:
@@ -1237,7 +584,7 @@ class LineCode(DSSObj):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(26, value)
+        self._set_float64_array_o(26, value)
 
     @property
     def linetype(self) -> LineType:
@@ -1254,7 +601,7 @@ class LineCode(DSSObj):
     @linetype.setter
     def linetype(self, value: Union[AnyStr, int, LineType]):
         if not isinstance(value, int):
-            self._set_string(27, value)
+            self._set_string_o(27, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 27, value)
 
@@ -1282,9 +629,10 @@ class LineCode(DSSObj):
 
         DSS property name: `like`, DSS property index: 28.
         """
-        self._set_string(28, value)
+        self._set_string_o(28, value)
 
 class LoadShape(DSSObj):
+    __slots__ = []
     _cls_name = 'LoadShape'
     _cls_idx = 2
     _cls_prop_idx = {
@@ -1349,30 +697,6 @@ class LoadShape(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 2, value)
 
     @property
-    def mult(self) -> Float64Array:
-        """
-        Array of multiplier values for active power (P) or other key value (such as pu V for Vsource). 
-
-        You can also use the syntax: 
-
-        mult = (file=filename)     !for text file one value per line
-        mult = (dblfile=filename)  !for packed file of doubles
-        mult = (sngfile=filename)  !for packed file of singles 
-        mult = (file=MyCSVFile.CSV, col=3, header=yes)  !for multicolumn CSV files 
-
-        Note: this property will reset Npts if the  number of values in the files are fewer.
-
-        Same as Pmult
-
-        DSS property name: `mult`, DSS property index: 3.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
-
-    @mult.setter
-    def mult(self, value: Float64Array):
-        self._set_float64_array(3, value)
-
-    @property
     def hour(self) -> Float64Array:
         """
         Array of hour values. Only necessary to define for variable interval data (Interval=0). If you set Interval>0 to denote fixed interval data, DO NOT USE THIS PROPERTY. You can also use the syntax: 
@@ -1386,7 +710,7 @@ class LoadShape(DSSObj):
 
     @hour.setter
     def hour(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def mean(self) -> float:
@@ -1427,7 +751,7 @@ class LoadShape(DSSObj):
 
     @csvfile.setter
     def csvfile(self, value: AnyStr):
-        self._set_string(7, value)
+        self._set_string_o(7, value)
 
     @property
     def sngfile(self) -> str:
@@ -1440,7 +764,7 @@ class LoadShape(DSSObj):
 
     @sngfile.setter
     def sngfile(self, value: AnyStr):
-        self._set_string(8, value)
+        self._set_string_o(8, value)
 
     @property
     def dblfile(self) -> str:
@@ -1453,7 +777,7 @@ class LoadShape(DSSObj):
 
     @dblfile.setter
     def dblfile(self, value: AnyStr):
-        self._set_string(9, value)
+        self._set_string_o(9, value)
 
     def action(self, value: Union[str, bytes, int, LoadShapeAction]):
         """
@@ -1467,7 +791,7 @@ class LoadShape(DSSObj):
             self._lib.Obj_SetInt32(self._ptr, 10, value)
             return
     
-        self._set_string(10, value)
+        self._set_string_o(10, value)
 
     @property
     def qmult(self) -> Float64Array:
@@ -1484,7 +808,7 @@ class LoadShape(DSSObj):
 
     @qmult.setter
     def qmult(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def UseActual(self) -> bool:
@@ -1588,7 +912,7 @@ class LoadShape(DSSObj):
 
     @Pmult.setter
     def Pmult(self, value: Float64Array):
-        self._set_float64_array(19, value)
+        self._set_float64_array_o(19, value)
 
     @property
     def PQCSVFile(self) -> str:
@@ -1602,7 +926,7 @@ class LoadShape(DSSObj):
 
     @PQCSVFile.setter
     def PQCSVFile(self, value: AnyStr):
-        self._set_string(20, value)
+        self._set_string_o(20, value)
 
     @property
     def MemoryMapping(self) -> bool:
@@ -1626,9 +950,10 @@ class LoadShape(DSSObj):
 
         DSS property name: `like`, DSS property index: 22.
         """
-        self._set_string(22, value)
+        self._set_string_o(22, value)
 
 class TShape(DSSObj):
+    __slots__ = []
     _cls_name = 'TShape'
     _cls_idx = 3
     _cls_prop_idx = {
@@ -1698,7 +1023,7 @@ class TShape(DSSObj):
 
     @temp.setter
     def temp(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def hour(self) -> Float64Array:
@@ -1714,7 +1039,7 @@ class TShape(DSSObj):
 
     @hour.setter
     def hour(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def mean(self) -> float:
@@ -1755,7 +1080,7 @@ class TShape(DSSObj):
 
     @csvfile.setter
     def csvfile(self, value: AnyStr):
-        self._set_string(7, value)
+        self._set_string_o(7, value)
 
     @property
     def sngfile(self) -> str:
@@ -1768,7 +1093,7 @@ class TShape(DSSObj):
 
     @sngfile.setter
     def sngfile(self, value: AnyStr):
-        self._set_string(8, value)
+        self._set_string_o(8, value)
 
     @property
     def dblfile(self) -> str:
@@ -1781,7 +1106,7 @@ class TShape(DSSObj):
 
     @dblfile.setter
     def dblfile(self, value: AnyStr):
-        self._set_string(9, value)
+        self._set_string_o(9, value)
 
     @property
     def sinterval(self) -> float:
@@ -1819,7 +1144,7 @@ class TShape(DSSObj):
             self._lib.Obj_SetInt32(self._ptr, 12, value)
             return
     
-        self._set_string(12, value)
+        self._set_string_o(12, value)
 
     def like(self, value: AnyStr):
         """
@@ -1829,9 +1154,10 @@ class TShape(DSSObj):
 
         DSS property name: `like`, DSS property index: 13.
         """
-        self._set_string(13, value)
+        self._set_string_o(13, value)
 
 class PriceShape(DSSObj):
+    __slots__ = []
     _cls_name = 'PriceShape'
     _cls_idx = 4
     _cls_prop_idx = {
@@ -1901,7 +1227,7 @@ class PriceShape(DSSObj):
 
     @price.setter
     def price(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def hour(self) -> Float64Array:
@@ -1917,7 +1243,7 @@ class PriceShape(DSSObj):
 
     @hour.setter
     def hour(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def mean(self) -> float:
@@ -1958,7 +1284,7 @@ class PriceShape(DSSObj):
 
     @csvfile.setter
     def csvfile(self, value: AnyStr):
-        self._set_string(7, value)
+        self._set_string_o(7, value)
 
     @property
     def sngfile(self) -> str:
@@ -1971,7 +1297,7 @@ class PriceShape(DSSObj):
 
     @sngfile.setter
     def sngfile(self, value: AnyStr):
-        self._set_string(8, value)
+        self._set_string_o(8, value)
 
     @property
     def dblfile(self) -> str:
@@ -1984,7 +1310,7 @@ class PriceShape(DSSObj):
 
     @dblfile.setter
     def dblfile(self, value: AnyStr):
-        self._set_string(9, value)
+        self._set_string_o(9, value)
 
     @property
     def sinterval(self) -> float:
@@ -2022,7 +1348,7 @@ class PriceShape(DSSObj):
             self._lib.Obj_SetInt32(self._ptr, 12, value)
             return
     
-        self._set_string(12, value)
+        self._set_string_o(12, value)
 
     def like(self, value: AnyStr):
         """
@@ -2032,9 +1358,10 @@ class PriceShape(DSSObj):
 
         DSS property name: `like`, DSS property index: 13.
         """
-        self._set_string(13, value)
+        self._set_string_o(13, value)
 
 class XYcurve(DSSObj):
+    __slots__ = []
     _cls_name = 'XYcurve'
     _cls_idx = 5
     _cls_prop_idx = {
@@ -2068,23 +1395,6 @@ class XYcurve(DSSObj):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
     @property
-    def Points(self) -> Float64Array:
-        """
-        One way to enter the points in a curve. Enter x and y values as one array in the order [x1, y1, x2, y2, ...]. For example:
-
-        Points=[1,100 2,200 3, 300] 
-
-        Values separated by commas or white space. Zero fills arrays if insufficient number of values.
-
-        DSS property name: `Points`, DSS property index: 2.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 2)
-
-    @Points.setter
-    def Points(self, value: Float64Array):
-        self._set_float64_array(2, value)
-
-    @property
     def Yarray(self) -> Float64Array:
         """
         Alternate way to enter Y values. Enter an array of Y values corresponding to the X values.  You can also use the syntax: 
@@ -2100,7 +1410,7 @@ class XYcurve(DSSObj):
 
     @Yarray.setter
     def Yarray(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def Xarray(self) -> Float64Array:
@@ -2118,7 +1428,7 @@ class XYcurve(DSSObj):
 
     @Xarray.setter
     def Xarray(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def csvfile(self) -> str:
@@ -2131,7 +1441,7 @@ class XYcurve(DSSObj):
 
     @csvfile.setter
     def csvfile(self, value: AnyStr):
-        self._set_string(5, value)
+        self._set_string_o(5, value)
 
     @property
     def sngfile(self) -> str:
@@ -2144,7 +1454,7 @@ class XYcurve(DSSObj):
 
     @sngfile.setter
     def sngfile(self, value: AnyStr):
-        self._set_string(6, value)
+        self._set_string_o(6, value)
 
     @property
     def dblfile(self) -> str:
@@ -2157,7 +1467,7 @@ class XYcurve(DSSObj):
 
     @dblfile.setter
     def dblfile(self, value: AnyStr):
-        self._set_string(7, value)
+        self._set_string_o(7, value)
 
     @property
     def x(self) -> float:
@@ -2245,9 +1555,10 @@ class XYcurve(DSSObj):
 
         DSS property name: `like`, DSS property index: 14.
         """
-        self._set_string(14, value)
+        self._set_string_o(14, value)
 
 class GrowthShape(DSSObj):
+    __slots__ = []
     _cls_name = 'GrowthShape'
     _cls_idx = 6
     _cls_prop_idx = {
@@ -2284,7 +1595,7 @@ class GrowthShape(DSSObj):
 
     @year.setter
     def year(self, value: Float64Array):
-        self._set_float64_array(2, value)
+        self._set_float64_array_o(2, value)
 
     @property
     def mult(self) -> Float64Array:
@@ -2304,7 +1615,7 @@ class GrowthShape(DSSObj):
 
     @mult.setter
     def mult(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def csvfile(self) -> str:
@@ -2317,7 +1628,7 @@ class GrowthShape(DSSObj):
 
     @csvfile.setter
     def csvfile(self, value: AnyStr):
-        self._set_string(4, value)
+        self._set_string_o(4, value)
 
     @property
     def sngfile(self) -> str:
@@ -2330,7 +1641,7 @@ class GrowthShape(DSSObj):
 
     @sngfile.setter
     def sngfile(self, value: AnyStr):
-        self._set_string(5, value)
+        self._set_string_o(5, value)
 
     @property
     def dblfile(self) -> str:
@@ -2343,7 +1654,7 @@ class GrowthShape(DSSObj):
 
     @dblfile.setter
     def dblfile(self, value: AnyStr):
-        self._set_string(6, value)
+        self._set_string_o(6, value)
 
     def like(self, value: AnyStr):
         """
@@ -2353,9 +1664,10 @@ class GrowthShape(DSSObj):
 
         DSS property name: `like`, DSS property index: 7.
         """
-        self._set_string(7, value)
+        self._set_string_o(7, value)
 
 class TCC_Curve(DSSObj):
+    __slots__ = []
     _cls_name = 'TCC_Curve'
     _cls_idx = 7
     _cls_prop_idx = {
@@ -2389,7 +1701,7 @@ class TCC_Curve(DSSObj):
 
     @C_array.setter
     def C_array(self, value: Float64Array):
-        self._set_float64_array(2, value)
+        self._set_float64_array_o(2, value)
 
     @property
     def T_array(self) -> Float64Array:
@@ -2408,7 +1720,7 @@ class TCC_Curve(DSSObj):
 
     @T_array.setter
     def T_array(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     def like(self, value: AnyStr):
         """
@@ -2418,9 +1730,10 @@ class TCC_Curve(DSSObj):
 
         DSS property name: `like`, DSS property index: 4.
         """
-        self._set_string(4, value)
+        self._set_string_o(4, value)
 
 class Spectrum(DSSObj):
+    __slots__ = []
     _cls_name = 'Spectrum'
     _cls_idx = 8
     _cls_prop_idx = {
@@ -2460,7 +1773,7 @@ class Spectrum(DSSObj):
 
     @harmonic.setter
     def harmonic(self, value: Float64Array):
-        self._set_float64_array(2, value)
+        self._set_float64_array_o(2, value)
 
     @property
     def pctmag(self) -> Float64Array:
@@ -2476,7 +1789,7 @@ class Spectrum(DSSObj):
 
     @pctmag.setter
     def pctmag(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def angle(self) -> Float64Array:
@@ -2492,7 +1805,7 @@ class Spectrum(DSSObj):
 
     @angle.setter
     def angle(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def CSVFile(self) -> str:
@@ -2505,7 +1818,7 @@ class Spectrum(DSSObj):
 
     @CSVFile.setter
     def CSVFile(self, value: AnyStr):
-        self._set_string(5, value)
+        self._set_string_o(5, value)
 
     def like(self, value: AnyStr):
         """
@@ -2515,9 +1828,10 @@ class Spectrum(DSSObj):
 
         DSS property name: `like`, DSS property index: 6.
         """
-        self._set_string(6, value)
+        self._set_string_o(6, value)
 
 class WireData(DSSObj):
+    __slots__ = []
     _cls_name = 'WireData'
     _cls_idx = 9
     _cls_prop_idx = {
@@ -2575,7 +1889,7 @@ class WireData(DSSObj):
     @Runits.setter
     def Runits(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(3, value)
+            self._set_string_o(3, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
@@ -2617,7 +1931,7 @@ class WireData(DSSObj):
     @GMRunits.setter
     def GMRunits(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(5, value)
+            self._set_string_o(5, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
@@ -2659,7 +1973,7 @@ class WireData(DSSObj):
     @radunits.setter
     def radunits(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(7, value)
+            self._set_string_o(7, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
@@ -2740,7 +2054,7 @@ class WireData(DSSObj):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(12, value)
+        self._set_float64_array_o(12, value)
 
     @property
     def Capradius(self) -> float:
@@ -2763,9 +2077,10 @@ class WireData(DSSObj):
 
         DSS property name: `like`, DSS property index: 14.
         """
-        self._set_string(14, value)
+        self._set_string_o(14, value)
 
 class CNData(DSSObj):
+    __slots__ = []
     _cls_name = 'CNData'
     _cls_idx = 10
     _cls_prop_idx = {
@@ -2935,7 +2250,7 @@ class CNData(DSSObj):
     @Runits.setter
     def Runits(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(11, value)
+            self._set_string_o(11, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 11, value)
 
@@ -2977,7 +2292,7 @@ class CNData(DSSObj):
     @GMRunits.setter
     def GMRunits(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(13, value)
+            self._set_string_o(13, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 13, value)
 
@@ -3019,7 +2334,7 @@ class CNData(DSSObj):
     @radunits.setter
     def radunits(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(15, value)
+            self._set_string_o(15, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
@@ -3100,7 +2415,7 @@ class CNData(DSSObj):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(20, value)
+        self._set_float64_array_o(20, value)
 
     @property
     def Capradius(self) -> float:
@@ -3123,9 +2438,10 @@ class CNData(DSSObj):
 
         DSS property name: `like`, DSS property index: 22.
         """
-        self._set_string(22, value)
+        self._set_string_o(22, value)
 
 class TSData(DSSObj):
+    __slots__ = []
     _cls_name = 'TSData'
     _cls_idx = 11
     _cls_prop_idx = {
@@ -3281,7 +2597,7 @@ class TSData(DSSObj):
     @Runits.setter
     def Runits(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(10, value)
+            self._set_string_o(10, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 10, value)
 
@@ -3323,7 +2639,7 @@ class TSData(DSSObj):
     @GMRunits.setter
     def GMRunits(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(12, value)
+            self._set_string_o(12, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 12, value)
 
@@ -3365,7 +2681,7 @@ class TSData(DSSObj):
     @radunits.setter
     def radunits(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(14, value)
+            self._set_string_o(14, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 14, value)
 
@@ -3446,7 +2762,7 @@ class TSData(DSSObj):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(19, value)
+        self._set_float64_array_o(19, value)
 
     @property
     def Capradius(self) -> float:
@@ -3469,9 +2785,10 @@ class TSData(DSSObj):
 
         DSS property name: `like`, DSS property index: 21.
         """
-        self._set_string(21, value)
+        self._set_string_o(21, value)
 
 class LineSpacing(DSSObj):
+    __slots__ = []
     _cls_name = 'LineSpacing'
     _cls_idx = 12
     _cls_prop_idx = {
@@ -3520,7 +2837,7 @@ class LineSpacing(DSSObj):
 
     @x.setter
     def x(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def h(self) -> Float64Array:
@@ -3533,7 +2850,7 @@ class LineSpacing(DSSObj):
 
     @h.setter
     def h(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def units(self) -> DimensionUnits:
@@ -3547,7 +2864,7 @@ class LineSpacing(DSSObj):
     @units.setter
     def units(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(5, value)
+            self._set_string_o(5, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
@@ -3572,9 +2889,10 @@ class LineSpacing(DSSObj):
 
         DSS property name: `like`, DSS property index: 6.
         """
-        self._set_string(6, value)
+        self._set_string_o(6, value)
 
 class LineGeometry(DSSObj):
+    __slots__ = []
     _cls_name = 'LineGeometry'
     _cls_idx = 13
     _cls_prop_idx = {
@@ -3627,53 +2945,6 @@ class LineGeometry(DSSObj):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
-    def cond(self) -> int:
-        """
-        Set this = number of the conductor you wish to define. Default is 1.
-
-        DSS property name: `cond`, DSS property index: 3.
-        """
-        return self._lib.Obj_GetInt32(self._ptr, 3)
-
-    @cond.setter
-    def cond(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 3, value)
-
-    @property
-    def wire(self) -> List[str]:
-        """
-        Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Overhead Line parameter calculation,
-        Unless Tape Shield cable previously assigned to phases, and this wire is a neutral.
-
-        DSS property name: `wire`, DSS property index: 4.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
-
-    @wire.setter
-    def wire(self, value: List[Union[AnyStr, WireData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array(4, value)
-            return
-
-        self._set_obj_array(4, value)
-
-    @property
-    def wire_obj(self) -> List[WireData]:
-        """
-        Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Overhead Line parameter calculation,
-        Unless Tape Shield cable previously assigned to phases, and this wire is a neutral.
-
-        DSS property name: `wire`, DSS property index: 4.
-        """
-        return self._get_obj_array(4, WireData)
-
-    @wire_obj.setter
-    def wire_obj(self, value: List[WireData]):
-        self._set_obj_array(4, value)
-
-    @property
     def x(self) -> Float64Array:
         """
         x coordinate.
@@ -3684,7 +2955,7 @@ class LineGeometry(DSSObj):
 
     @x.setter
     def x(self, value: Float64Array):
-        self._set_float64_array(5, value)
+        self._set_float64_array_o(5, value)
 
     @property
     def h(self) -> Float64Array:
@@ -3697,7 +2968,7 @@ class LineGeometry(DSSObj):
 
     @h.setter
     def h(self, value: Float64Array):
-        self._set_float64_array(6, value)
+        self._set_float64_array_o(6, value)
 
     @property
     def units(self) -> DimensionUnits:
@@ -3711,7 +2982,7 @@ class LineGeometry(DSSObj):
     @units.setter
     def units(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(7, value)
+            self._set_string_o(7, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
@@ -3785,7 +3056,7 @@ class LineGeometry(DSSObj):
             self._set_obj(11, value)
             return
 
-        self._set_string(11, value)
+        self._set_string_o(11, value)
 
     @property
     def spacing_obj(self) -> LineSpacing:
@@ -3819,7 +3090,7 @@ class LineGeometry(DSSObj):
     @wires.setter
     def wires(self, value: List[Union[AnyStr, WireData]]):
         if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array(12, value)
+            self._set_string_array_o(12, value)
             return
 
         self._set_obj_array(12, value)
@@ -3842,70 +3113,6 @@ class LineGeometry(DSSObj):
         self._set_obj_array(12, value)
 
     @property
-    def cncable(self) -> List[str]:
-        """
-        Code from CNData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Concentric Neutral cable parameter calculation.
-
-        DSS property name: `cncable`, DSS property index: 13.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 13)
-
-    @cncable.setter
-    def cncable(self, value: List[Union[AnyStr, CNData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array(13, value)
-            return
-
-        self._set_obj_array(13, value)
-
-    @property
-    def cncable_obj(self) -> List[CNData]:
-        """
-        Code from CNData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Concentric Neutral cable parameter calculation.
-
-        DSS property name: `cncable`, DSS property index: 13.
-        """
-        return self._get_obj_array(13, CNData)
-
-    @cncable_obj.setter
-    def cncable_obj(self, value: List[CNData]):
-        self._set_obj_array(13, value)
-
-    @property
-    def tscable(self) -> List[str]:
-        """
-        Code from TSData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Tape Shield cable parameter calculation.
-
-        DSS property name: `tscable`, DSS property index: 14.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 14)
-
-    @tscable.setter
-    def tscable(self, value: List[Union[AnyStr, TSData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array(14, value)
-            return
-
-        self._set_obj_array(14, value)
-
-    @property
-    def tscable_obj(self) -> List[TSData]:
-        """
-        Code from TSData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Tape Shield cable parameter calculation.
-
-        DSS property name: `tscable`, DSS property index: 14.
-        """
-        return self._get_obj_array(14, TSData)
-
-    @tscable_obj.setter
-    def tscable_obj(self, value: List[TSData]):
-        self._set_obj_array(14, value)
-
-    @property
     def cncables(self) -> List[str]:
         """
         Array of CNData names for cable parameter calculation.
@@ -3919,7 +3126,7 @@ class LineGeometry(DSSObj):
     @cncables.setter
     def cncables(self, value: List[Union[AnyStr, CNData]]):
         if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array(15, value)
+            self._set_string_array_o(15, value)
             return
 
         self._set_obj_array(15, value)
@@ -3953,7 +3160,7 @@ class LineGeometry(DSSObj):
     @tscables.setter
     def tscables(self, value: List[Union[AnyStr, TSData]]):
         if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array(16, value)
+            self._set_string_array_o(16, value)
             return
 
         self._set_obj_array(16, value)
@@ -3998,7 +3205,7 @@ class LineGeometry(DSSObj):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(18, value)
+        self._set_float64_array_o(18, value)
 
     @property
     def linetype(self) -> LineType:
@@ -4015,7 +3222,7 @@ class LineGeometry(DSSObj):
     @linetype.setter
     def linetype(self, value: Union[AnyStr, int, LineType]):
         if not isinstance(value, int):
-            self._set_string(19, value)
+            self._set_string_o(19, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 19, value)
 
@@ -4043,9 +3250,10 @@ class LineGeometry(DSSObj):
 
         DSS property name: `like`, DSS property index: 20.
         """
-        self._set_string(20, value)
+        self._set_string_o(20, value)
 
 class XfmrCode(DSSObj):
+    __slots__ = []
     _cls_name = 'XfmrCode'
     _cls_idx = 14
     _cls_prop_idx = {
@@ -4123,87 +3331,6 @@ class XfmrCode(DSSObj):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
-    def wdg(self) -> int:
-        """
-        Set this = to the number of the winding you wish to define.  Then set the values for this winding.  Repeat for each winding.  Alternatively, use the array collections (buses, kvas, etc.) to define the windings.  Note: reactances are BETWEEN pairs of windings; they are not the property of a single winding.
-
-        DSS property name: `wdg`, DSS property index: 3.
-        """
-        return self._lib.Obj_GetInt32(self._ptr, 3)
-
-    @wdg.setter
-    def wdg(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 3, value)
-
-    @property
-    def conn(self) -> List[Connection]:
-        """
-        Connection of this winding. Default is "wye" with the neutral solidly grounded.
-
-        DSS property name: `conn`, DSS property index: 4.
-        """
-        return [Connection(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 4)]
-
-    @conn.setter
-    def conn(self, value: Union[List[Union[int,Connection]], List[AnyStr]]):
-        if not isinstance(value, int):
-            self._set_string_array(4, value)
-            return    
-        self._set_int32_array(4, value)
-
-    @property
-    def conn_str(self) -> List[str]:
-        """
-        Connection of this winding. Default is "wye" with the neutral solidly grounded.
-
-        DSS property name: `conn`, DSS property index: 4.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
-
-    @conn_str.setter
-    def conn_str(self, value: AnyStr):
-        self.conn = value
-
-    @property
-    def kV(self) -> Float64Array:
-        """
-        For 2-or 3-phase, enter phase-phase kV rating.  Otherwise, kV rating of the actual winding
-
-        DSS property name: `kV`, DSS property index: 5.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 5)
-
-    @kV.setter
-    def kV(self, value: Float64Array):
-        self._set_float64_array(5, value)
-
-    @property
-    def kVA(self) -> Float64Array:
-        """
-        Base kVA rating of the winding. Side effect: forces change of max normal and emerg kva ratings.If 2-winding transformer, forces other winding to same value. When winding 1 is defined, all other windings are defaulted to the same rating and the first two winding resistances are defaulted to the %loadloss value.
-
-        DSS property name: `kVA`, DSS property index: 6.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 6)
-
-    @kVA.setter
-    def kVA(self, value: Float64Array):
-        self._set_float64_array(6, value)
-
-    @property
-    def tap(self) -> Float64Array:
-        """
-        Per unit tap that this winding is normally on.
-
-        DSS property name: `tap`, DSS property index: 7.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 7)
-
-    @tap.setter
-    def tap(self, value: Float64Array):
-        self._set_float64_array(7, value)
-
-    @property
     def pctR(self) -> Float64Array:
         """
         Percent resistance this winding.  (half of total for a 2-winding).
@@ -4214,7 +3341,7 @@ class XfmrCode(DSSObj):
 
     @pctR.setter
     def pctR(self, value: Float64Array):
-        self._set_float64_array(8, value)
+        self._set_float64_array_o(8, value)
 
     @property
     def Rneut(self) -> Float64Array:
@@ -4227,7 +3354,7 @@ class XfmrCode(DSSObj):
 
     @Rneut.setter
     def Rneut(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def Xneut(self) -> Float64Array:
@@ -4240,7 +3367,7 @@ class XfmrCode(DSSObj):
 
     @Xneut.setter
     def Xneut(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def conns(self) -> List[Connection]:
@@ -4255,10 +3382,10 @@ class XfmrCode(DSSObj):
 
     @conns.setter
     def conns(self, value: Union[List[Union[int,Connection]], List[AnyStr]]):
-        if not isinstance(value, int):
-            self._set_string_array(11, value)
+        if len(value) and not isinstance(value[0], int):
+            self._set_string_array_o(11, value)
             return    
-        self._set_int32_array(11, value)
+        self._set_int32_array_o(11, value)
 
     @property
     def conns_str(self) -> List[str]:
@@ -4292,7 +3419,7 @@ class XfmrCode(DSSObj):
 
     @kVs.setter
     def kVs(self, value: Float64Array):
-        self._set_float64_array(12, value)
+        self._set_float64_array_o(12, value)
 
     @property
     def kVAs(self) -> Float64Array:
@@ -4305,7 +3432,7 @@ class XfmrCode(DSSObj):
 
     @kVAs.setter
     def kVAs(self, value: Float64Array):
-        self._set_float64_array(13, value)
+        self._set_float64_array_o(13, value)
 
     @property
     def taps(self) -> Float64Array:
@@ -4318,7 +3445,7 @@ class XfmrCode(DSSObj):
 
     @taps.setter
     def taps(self, value: Float64Array):
-        self._set_float64_array(14, value)
+        self._set_float64_array_o(14, value)
 
     @property
     def Xhl(self) -> float:
@@ -4374,7 +3501,7 @@ class XfmrCode(DSSObj):
 
     @Xscarray.setter
     def Xscarray(self, value: Float64Array):
-        self._set_float64_array(18, value)
+        self._set_float64_array_o(18, value)
 
     @property
     def thermal(self) -> float:
@@ -4504,7 +3631,7 @@ class XfmrCode(DSSObj):
 
     @MaxTap.setter
     def MaxTap(self, value: Float64Array):
-        self._set_float64_array(28, value)
+        self._set_float64_array_o(28, value)
 
     @property
     def MinTap(self) -> Float64Array:
@@ -4517,7 +3644,7 @@ class XfmrCode(DSSObj):
 
     @MinTap.setter
     def MinTap(self, value: Float64Array):
-        self._set_float64_array(29, value)
+        self._set_float64_array_o(29, value)
 
     @property
     def NumTaps(self) -> Int32Array:
@@ -4530,7 +3657,7 @@ class XfmrCode(DSSObj):
 
     @NumTaps.setter
     def NumTaps(self, value: Int32Array):
-        self._set_int32_array(30, value)
+        self._set_int32_array_o(30, value)
 
     @property
     def pctimag(self) -> float:
@@ -4571,7 +3698,7 @@ class XfmrCode(DSSObj):
 
     @pctRs.setter
     def pctRs(self, value: Float64Array):
-        self._set_float64_array(33, value)
+        self._set_float64_array_o(33, value)
 
     @property
     def X12(self) -> float:
@@ -4623,7 +3750,7 @@ class XfmrCode(DSSObj):
 
     @RdcOhms.setter
     def RdcOhms(self, value: Float64Array):
-        self._set_float64_array(37, value)
+        self._set_float64_array_o(37, value)
 
     @property
     def Seasons(self) -> int:
@@ -4650,7 +3777,7 @@ class XfmrCode(DSSObj):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(39, value)
+        self._set_float64_array_o(39, value)
 
     def like(self, value: AnyStr):
         """
@@ -4660,9 +3787,10 @@ class XfmrCode(DSSObj):
 
         DSS property name: `like`, DSS property index: 40.
         """
-        self._set_string(40, value)
+        self._set_string_o(40, value)
 
 class Line(DSSObj):
+    __slots__ = []
     _cls_name = 'Line'
     _cls_idx = 15
     _cls_prop_idx = {
@@ -4720,7 +3848,7 @@ class Line(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def bus2(self) -> str:
@@ -4733,7 +3861,7 @@ class Line(DSSObj):
 
     @bus2.setter
     def bus2(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def linecode(self) -> str:
@@ -4751,7 +3879,7 @@ class Line(DSSObj):
             self._set_obj(3, value)
             return
 
-        self._set_string(3, value)
+        self._set_string_o(3, value)
 
     @property
     def linecode_obj(self) -> LineCode:
@@ -4882,7 +4010,7 @@ class Line(DSSObj):
 
     @rmatrix.setter
     def rmatrix(self, value: Float64Array):
-        self._set_float64_array(12, value)
+        self._set_float64_array_o(12, value)
 
     @property
     def xmatrix(self) -> Float64Array:
@@ -4895,7 +4023,7 @@ class Line(DSSObj):
 
     @xmatrix.setter
     def xmatrix(self, value: Float64Array):
-        self._set_float64_array(13, value)
+        self._set_float64_array_o(13, value)
 
     @property
     def cmatrix(self) -> Float64Array:
@@ -4908,7 +4036,7 @@ class Line(DSSObj):
 
     @cmatrix.setter
     def cmatrix(self, value: Float64Array):
-        self._set_float64_array(14, value)
+        self._set_float64_array_o(14, value)
 
     @property
     def Switch(self) -> bool:
@@ -4978,7 +4106,7 @@ class Line(DSSObj):
             self._set_obj(19, value)
             return
 
-        self._set_string(19, value)
+        self._set_string_o(19, value)
 
     @property
     def geometry_obj(self) -> LineGeometry:
@@ -5005,7 +4133,7 @@ class Line(DSSObj):
     @units.setter
     def units(self, value: Union[AnyStr, int, DimensionUnits]):
         if not isinstance(value, int):
-            self._set_string(20, value)
+            self._set_string_o(20, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 20, value)
 
@@ -5039,7 +4167,7 @@ class Line(DSSObj):
             self._set_obj(21, value)
             return
 
-        self._set_string(21, value)
+        self._set_string_o(21, value)
 
     @property
     def spacing_obj(self) -> LineSpacing:
@@ -5071,7 +4199,7 @@ class Line(DSSObj):
     @wires.setter
     def wires(self, value: List[Union[AnyStr, WireData]]):
         if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array(22, value)
+            self._set_string_array_o(22, value)
             return
 
         self._set_obj_array(22, value)
@@ -5104,7 +4232,7 @@ class Line(DSSObj):
     @earthmodel.setter
     def earthmodel(self, value: Union[AnyStr, int, EarthModel]):
         if not isinstance(value, int):
-            self._set_string(23, value)
+            self._set_string_o(23, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 23, value)
 
@@ -5136,7 +4264,7 @@ class Line(DSSObj):
     @cncables.setter
     def cncables(self, value: List[Union[AnyStr, CNData]]):
         if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array(24, value)
+            self._set_string_array_o(24, value)
             return
 
         self._set_obj_array(24, value)
@@ -5172,7 +4300,7 @@ class Line(DSSObj):
     @tscables.setter
     def tscables(self, value: List[Union[AnyStr, TSData]]):
         if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array(25, value)
+            self._set_string_array_o(25, value)
             return
 
         self._set_obj_array(25, value)
@@ -5244,7 +4372,7 @@ class Line(DSSObj):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(29, value)
+        self._set_float64_array_o(29, value)
 
     @property
     def linetype(self) -> LineType:
@@ -5261,7 +4389,7 @@ class Line(DSSObj):
     @linetype.setter
     def linetype(self, value: Union[AnyStr, int, LineType]):
         if not isinstance(value, int):
-            self._set_string(30, value)
+            self._set_string_o(30, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 30, value)
 
@@ -5380,9 +4508,10 @@ class Line(DSSObj):
 
         DSS property name: `like`, DSS property index: 38.
         """
-        self._set_string(38, value)
+        self._set_string_o(38, value)
 
 class Vsource(DSSObj):
+    __slots__ = []
     _cls_name = 'Vsource'
     _cls_idx = 16
     _cls_prop_idx = {
@@ -5445,7 +4574,7 @@ class Vsource(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def basekv(self) -> float:
@@ -5661,7 +4790,7 @@ class Vsource(DSSObj):
     @scantype.setter
     def scantype(self, value: Union[AnyStr, int, ScanType]):
         if not isinstance(value, int):
-            self._set_string(17, value)
+            self._set_string_o(17, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
@@ -5690,7 +4819,7 @@ class Vsource(DSSObj):
     @Sequence.setter
     def Sequence(self, value: Union[AnyStr, int, SequenceType]):
         if not isinstance(value, int):
-            self._set_string(18, value)
+            self._set_string_o(18, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 18, value)
 
@@ -5722,45 +4851,7 @@ class Vsource(DSSObj):
 
     @bus2.setter
     def bus2(self, value: AnyStr):
-        self._set_string(19, value)
-
-    @property
-    def Z1(self) -> complex:
-        """
-        Positive-sequence equivalent source impedance, ohms, as a 2-element array representing a complex number. Example: 
-
-        Z1=[1, 2]  ! represents 1 + j2 
-
-        If defined, Z1, Z2, and Z0 are used to define the impedance matrix of the VSOURCE. Z1 MUST BE DEFINED TO USE THIS OPTION FOR DEFINING THE MATRIX.
-
-        Side Effect: Sets Z2 and Z0 to same values unless they were previously defined.
-
-        DSS property name: `Z1`, DSS property index: 20.
-        """
-        return self._get_complex(20)
-
-    @Z1.setter
-    def Z1(self, value: complex):
-        self._set_complex(20, value)
-
-    @property
-    def Z0(self) -> complex:
-        """
-        Zero-sequence equivalent source impedance, ohms, as a 2-element array representing a complex number. Example: 
-
-        Z0=[3, 4]  ! represents 3 + j4 
-
-        Used to define the impedance matrix of the VSOURCE if Z1 is also specified. 
-
-        Note: Z0 defaults to Z1 if it is not specifically defined. 
-
-        DSS property name: `Z0`, DSS property index: 21.
-        """
-        return self._get_complex(21)
-
-    @Z0.setter
-    def Z0(self, value: complex):
-        self._set_complex(21, value)
+        self._set_string_o(19, value)
 
     @property
     def Z2(self) -> complex:
@@ -5852,7 +4943,7 @@ class Vsource(DSSObj):
             self._set_obj(27, value)
             return
 
-        self._set_string(27, value)
+        self._set_string_o(27, value)
 
     @property
     def Yearly_obj(self) -> LoadShape:
@@ -5890,7 +4981,7 @@ class Vsource(DSSObj):
             self._set_obj(28, value)
             return
 
-        self._set_string(28, value)
+        self._set_string_o(28, value)
 
     @property
     def Daily_obj(self) -> LoadShape:
@@ -5928,7 +5019,7 @@ class Vsource(DSSObj):
             self._set_obj(29, value)
             return
 
-        self._set_string(29, value)
+        self._set_string_o(29, value)
 
     @property
     def Duty_obj(self) -> LoadShape:
@@ -5954,12 +5045,12 @@ class Vsource(DSSObj):
 
         DSS property name: `Model`, DSS property index: 30.
         """
-        return VSourceModel(self._lib.Obj_GetInt32(self._ptr, 30))
+        return Vsource.VSourceModel(self._lib.Obj_GetInt32(self._ptr, 30))
 
     @Model.setter
     def Model(self, value: Union[AnyStr, int, VSourceModel]):
         if not isinstance(value, int):
-            self._set_string(30, value)
+            self._set_string_o(30, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 30, value)
 
@@ -6004,7 +5095,7 @@ class Vsource(DSSObj):
             self._set_obj(32, value)
             return
 
-        self._set_string(32, value)
+        self._set_string_o(32, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
@@ -6053,9 +5144,10 @@ class Vsource(DSSObj):
 
         DSS property name: `like`, DSS property index: 35.
         """
-        self._set_string(35, value)
+        self._set_string_o(35, value)
 
 class Isource(DSSObj):
+    __slots__ = []
     _cls_name = 'Isource'
     _cls_idx = 17
     _cls_prop_idx = {
@@ -6089,7 +5181,7 @@ class Isource(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def amps(self) -> float:
@@ -6156,7 +5248,7 @@ class Isource(DSSObj):
     @scantype.setter
     def scantype(self, value: Union[AnyStr, int, ScanType]):
         if not isinstance(value, int):
-            self._set_string(6, value)
+            self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
@@ -6185,7 +5277,7 @@ class Isource(DSSObj):
     @sequence.setter
     def sequence(self, value: Union[AnyStr, int, SequenceType]):
         if not isinstance(value, int):
-            self._set_string(7, value)
+            self._set_string_o(7, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
@@ -6221,7 +5313,7 @@ class Isource(DSSObj):
             self._set_obj(8, value)
             return
 
-        self._set_string(8, value)
+        self._set_string_o(8, value)
 
     @property
     def Yearly_obj(self) -> LoadShape:
@@ -6259,7 +5351,7 @@ class Isource(DSSObj):
             self._set_obj(9, value)
             return
 
-        self._set_string(9, value)
+        self._set_string_o(9, value)
 
     @property
     def Daily_obj(self) -> LoadShape:
@@ -6297,7 +5389,7 @@ class Isource(DSSObj):
             self._set_obj(10, value)
             return
 
-        self._set_string(10, value)
+        self._set_string_o(10, value)
 
     @property
     def Duty_obj(self) -> LoadShape:
@@ -6331,7 +5423,7 @@ class Isource(DSSObj):
 
     @Bus2.setter
     def Bus2(self, value: AnyStr):
-        self._set_string(11, value)
+        self._set_string_o(11, value)
 
     @property
     def spectrum(self) -> str:
@@ -6348,7 +5440,7 @@ class Isource(DSSObj):
             self._set_obj(12, value)
             return
 
-        self._set_string(12, value)
+        self._set_string_o(12, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
@@ -6397,9 +5489,10 @@ class Isource(DSSObj):
 
         DSS property name: `like`, DSS property index: 15.
         """
-        self._set_string(15, value)
+        self._set_string_o(15, value)
 
 class VCCS(DSSObj):
+    __slots__ = []
     _cls_name = 'VCCS'
     _cls_idx = 18
     _cls_prop_idx = {
@@ -6435,7 +5528,7 @@ class VCCS(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def phases(self) -> int:
@@ -6504,7 +5597,7 @@ class VCCS(DSSObj):
             self._set_obj(6, value)
             return
 
-        self._set_string(6, value)
+        self._set_string_o(6, value)
 
     @property
     def bp1_obj(self) -> XYcurve:
@@ -6534,7 +5627,7 @@ class VCCS(DSSObj):
             self._set_obj(7, value)
             return
 
-        self._set_string(7, value)
+        self._set_string_o(7, value)
 
     @property
     def bp2_obj(self) -> XYcurve:
@@ -6564,7 +5657,7 @@ class VCCS(DSSObj):
             self._set_obj(8, value)
             return
 
-        self._set_string(8, value)
+        self._set_string_o(8, value)
 
     @property
     def filter_obj(self) -> XYcurve:
@@ -6659,7 +5752,7 @@ class VCCS(DSSObj):
             self._set_obj(14, value)
             return
 
-        self._set_string(14, value)
+        self._set_string_o(14, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
@@ -6708,9 +5801,10 @@ class VCCS(DSSObj):
 
         DSS property name: `like`, DSS property index: 17.
         """
-        self._set_string(17, value)
+        self._set_string_o(17, value)
 
 class Load(DSSObj):
+    __slots__ = []
     _cls_name = 'Load'
     _cls_idx = 19
     _cls_prop_idx = {
@@ -6805,7 +5899,7 @@ class Load(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def kV(self) -> float:
@@ -6871,7 +5965,7 @@ class Load(DSSObj):
 
         DSS property name: `model`, DSS property index: 6.
         """
-        return LoadModel(self._lib.Obj_GetInt32(self._ptr, 6))
+        return Load.LoadModel(self._lib.Obj_GetInt32(self._ptr, 6))
 
     @model.setter
     def model(self, value: Union[int, LoadModel]):
@@ -6892,7 +5986,7 @@ class Load(DSSObj):
             self._set_obj(7, value)
             return
 
-        self._set_string(7, value)
+        self._set_string_o(7, value)
 
     @property
     def yearly_obj(self) -> LoadShape:
@@ -6922,7 +6016,7 @@ class Load(DSSObj):
             self._set_obj(8, value)
             return
 
-        self._set_string(8, value)
+        self._set_string_o(8, value)
 
     @property
     def daily_obj(self) -> LoadShape:
@@ -6952,7 +6046,7 @@ class Load(DSSObj):
             self._set_obj(9, value)
             return
 
-        self._set_string(9, value)
+        self._set_string_o(9, value)
 
     @property
     def duty_obj(self) -> LoadShape:
@@ -6982,7 +6076,7 @@ class Load(DSSObj):
             self._set_obj(10, value)
             return
 
-        self._set_string(10, value)
+        self._set_string_o(10, value)
 
     @property
     def growth_obj(self) -> GrowthShape:
@@ -7009,7 +6103,7 @@ class Load(DSSObj):
     @conn.setter
     def conn(self, value: Union[AnyStr, int, Connection]):
         if not isinstance(value, int):
-            self._set_string(11, value)
+            self._set_string_o(11, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 11, value)
 
@@ -7072,12 +6166,12 @@ class Load(DSSObj):
 
         DSS property name: `status`, DSS property index: 15.
         """
-        return LoadStatus(self._lib.Obj_GetInt32(self._ptr, 15))
+        return Load.LoadStatus(self._lib.Obj_GetInt32(self._ptr, 15))
 
     @status.setter
     def status(self, value: Union[AnyStr, int, LoadStatus]):
         if not isinstance(value, int):
-            self._set_string(15, value)
+            self._set_string_o(15, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
@@ -7315,7 +6409,7 @@ class Load(DSSObj):
             self._set_obj(31, value)
             return
 
-        self._set_string(31, value)
+        self._set_string_o(31, value)
 
     @property
     def CVRcurve_obj(self) -> LoadShape:
@@ -7359,7 +6453,7 @@ class Load(DSSObj):
 
     @ZIPV.setter
     def ZIPV(self, value: Float64Array):
-        self._set_float64_array(33, value)
+        self._set_float64_array_o(33, value)
 
     @property
     def pctSeriesRL(self) -> float:
@@ -7447,7 +6541,7 @@ class Load(DSSObj):
             self._set_obj(39, value)
             return
 
-        self._set_string(39, value)
+        self._set_string_o(39, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
@@ -7496,9 +6590,10 @@ class Load(DSSObj):
 
         DSS property name: `like`, DSS property index: 42.
         """
-        self._set_string(42, value)
+        self._set_string_o(42, value)
 
 class Transformer(DSSObj):
+    __slots__ = []
     _cls_name = 'Transformer'
     _cls_idx = 20
     _cls_prop_idx = {
@@ -7593,102 +6688,6 @@ class Transformer(DSSObj):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
-    def wdg(self) -> int:
-        """
-        Set this = to the number of the winding you wish to define.  Then set the values for this winding.  Repeat for each winding.  Alternatively, use the array collections (buses, kVAs, etc.) to define the windings.  Note: reactances are BETWEEN pairs of windings; they are not the property of a single winding.
-
-        DSS property name: `wdg`, DSS property index: 3.
-        """
-        return self._lib.Obj_GetInt32(self._ptr, 3)
-
-    @wdg.setter
-    def wdg(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 3, value)
-
-    @property
-    def bus(self) -> List[str]:
-        """
-        Bus connection spec for this winding.
-
-        DSS property name: `bus`, DSS property index: 4.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
-
-    @bus.setter
-    def bus(self, value: List[str]):
-        value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, 4, value_ptr, value_count)
-        self._check_for_error()
-
-    @property
-    def conn(self) -> List[Connection]:
-        """
-        Connection of this winding {wye*, Delta, LN, LL}. Default is "wye" with the neutral solidly grounded. 
-
-        DSS property name: `conn`, DSS property index: 5.
-        """
-        return [Connection(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 5)]
-
-    @conn.setter
-    def conn(self, value: Union[List[Union[int,Connection]], List[AnyStr]]):
-        if not isinstance(value, int):
-            self._set_string_array(5, value)
-            return    
-        self._set_int32_array(5, value)
-
-    @property
-    def conn_str(self) -> List[str]:
-        """
-        Connection of this winding {wye*, Delta, LN, LL}. Default is "wye" with the neutral solidly grounded. 
-
-        DSS property name: `conn`, DSS property index: 5.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 5)
-
-    @conn_str.setter
-    def conn_str(self, value: AnyStr):
-        self.conn = value
-
-    @property
-    def kV(self) -> Float64Array:
-        """
-        For 2-or 3-phase, enter phase-phase kV rating.  Otherwise, kV rating of the actual winding
-
-        DSS property name: `kV`, DSS property index: 6.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 6)
-
-    @kV.setter
-    def kV(self, value: Float64Array):
-        self._set_float64_array(6, value)
-
-    @property
-    def kVA(self) -> Float64Array:
-        """
-        Base kVA rating of the winding. Side effect: forces change of max normal and emerg kVA ratings.If 2-winding transformer, forces other winding to same value. When winding 1 is defined, all other windings are defaulted to the same rating and the first two winding resistances are defaulted to the %loadloss value.
-
-        DSS property name: `kVA`, DSS property index: 7.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 7)
-
-    @kVA.setter
-    def kVA(self, value: Float64Array):
-        self._set_float64_array(7, value)
-
-    @property
-    def tap(self) -> Float64Array:
-        """
-        Per unit tap that this winding is on.
-
-        DSS property name: `tap`, DSS property index: 8.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 8)
-
-    @tap.setter
-    def tap(self, value: Float64Array):
-        self._set_float64_array(8, value)
-
-    @property
     def pctR(self) -> Float64Array:
         """
         Percent resistance this winding.  (half of total for a 2-winding).
@@ -7699,7 +6698,7 @@ class Transformer(DSSObj):
 
     @pctR.setter
     def pctR(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def Rneut(self) -> Float64Array:
@@ -7712,7 +6711,7 @@ class Transformer(DSSObj):
 
     @Rneut.setter
     def Rneut(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def Xneut(self) -> Float64Array:
@@ -7725,7 +6724,7 @@ class Transformer(DSSObj):
 
     @Xneut.setter
     def Xneut(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def buses(self) -> List[str]:
@@ -7739,7 +6738,7 @@ class Transformer(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 12)
 
     @buses.setter
-    def buses(self, value: List[str]):
+    def buses(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 12, value_ptr, value_count)
         self._check_for_error()
@@ -7757,10 +6756,10 @@ class Transformer(DSSObj):
 
     @conns.setter
     def conns(self, value: Union[List[Union[int,Connection]], List[AnyStr]]):
-        if not isinstance(value, int):
-            self._set_string_array(13, value)
+        if len(value) and not isinstance(value[0], int):
+            self._set_string_array_o(13, value)
             return    
-        self._set_int32_array(13, value)
+        self._set_int32_array_o(13, value)
 
     @property
     def conns_str(self) -> List[str]:
@@ -7794,7 +6793,7 @@ class Transformer(DSSObj):
 
     @kVs.setter
     def kVs(self, value: Float64Array):
-        self._set_float64_array(14, value)
+        self._set_float64_array_o(14, value)
 
     @property
     def kVAs(self) -> Float64Array:
@@ -7807,7 +6806,7 @@ class Transformer(DSSObj):
 
     @kVAs.setter
     def kVAs(self, value: Float64Array):
-        self._set_float64_array(15, value)
+        self._set_float64_array_o(15, value)
 
     @property
     def taps(self) -> Float64Array:
@@ -7820,7 +6819,7 @@ class Transformer(DSSObj):
 
     @taps.setter
     def taps(self, value: Float64Array):
-        self._set_float64_array(16, value)
+        self._set_float64_array_o(16, value)
 
     @property
     def XHL(self) -> float:
@@ -7876,7 +6875,7 @@ class Transformer(DSSObj):
 
     @Xscarray.setter
     def Xscarray(self, value: Float64Array):
-        self._set_float64_array(20, value)
+        self._set_float64_array_o(20, value)
 
     @property
     def thermal(self) -> float:
@@ -8019,7 +7018,7 @@ class Transformer(DSSObj):
 
     @MaxTap.setter
     def MaxTap(self, value: Float64Array):
-        self._set_float64_array(31, value)
+        self._set_float64_array_o(31, value)
 
     @property
     def MinTap(self) -> Float64Array:
@@ -8032,7 +7031,7 @@ class Transformer(DSSObj):
 
     @MinTap.setter
     def MinTap(self, value: Float64Array):
-        self._set_float64_array(32, value)
+        self._set_float64_array_o(32, value)
 
     @property
     def NumTaps(self) -> Int32Array:
@@ -8045,7 +7044,7 @@ class Transformer(DSSObj):
 
     @NumTaps.setter
     def NumTaps(self, value: Int32Array):
-        self._set_int32_array(33, value)
+        self._set_int32_array_o(33, value)
 
     @property
     def subname(self) -> str:
@@ -8058,7 +7057,7 @@ class Transformer(DSSObj):
 
     @subname.setter
     def subname(self, value: AnyStr):
-        self._set_string(34, value)
+        self._set_string_o(34, value)
 
     @property
     def pctimag(self) -> float:
@@ -8099,7 +7098,7 @@ class Transformer(DSSObj):
 
     @pctRs.setter
     def pctRs(self, value: Float64Array):
-        self._set_float64_array(37, value)
+        self._set_float64_array_o(37, value)
 
     @property
     def bank(self) -> str:
@@ -8112,7 +7111,7 @@ class Transformer(DSSObj):
 
     @bank.setter
     def bank(self, value: AnyStr):
-        self._set_string(38, value)
+        self._set_string_o(38, value)
 
     @property
     def xfmrcode(self) -> str:
@@ -8129,7 +7128,7 @@ class Transformer(DSSObj):
             self._set_obj(39, value)
             return
 
-        self._set_string(39, value)
+        self._set_string_o(39, value)
 
     @property
     def xfmrcode_obj(self) -> XfmrCode:
@@ -8208,7 +7207,7 @@ class Transformer(DSSObj):
     @LeadLag.setter
     def LeadLag(self, value: Union[AnyStr, int, PhaseSequence]):
         if not isinstance(value, int):
-            self._set_string(44, value)
+            self._set_string_o(44, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 44, value)
 
@@ -8247,7 +7246,7 @@ class Transformer(DSSObj):
     @Core.setter
     def Core(self, value: Union[AnyStr, int, CoreType]):
         if not isinstance(value, int):
-            self._set_string(46, value)
+            self._set_string_o(46, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 46, value)
 
@@ -8275,7 +7274,7 @@ class Transformer(DSSObj):
 
     @RdcOhms.setter
     def RdcOhms(self, value: Float64Array):
-        self._set_float64_array(47, value)
+        self._set_float64_array_o(47, value)
 
     @property
     def Seasons(self) -> int:
@@ -8302,7 +7301,7 @@ class Transformer(DSSObj):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(49, value)
+        self._set_float64_array_o(49, value)
 
     @property
     def normamps(self) -> float:
@@ -8403,9 +7402,10 @@ class Transformer(DSSObj):
 
         DSS property name: `like`, DSS property index: 57.
         """
-        self._set_string(57, value)
+        self._set_string_o(57, value)
 
 class Capacitor(DSSObj):
+    __slots__ = []
     _cls_name = 'Capacitor'
     _cls_idx = 22
     _cls_prop_idx = {
@@ -8447,7 +7447,7 @@ class Capacitor(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def bus2(self) -> str:
@@ -8462,7 +7462,7 @@ class Capacitor(DSSObj):
 
     @bus2.setter
     def bus2(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def phases(self) -> int:
@@ -8488,7 +7488,7 @@ class Capacitor(DSSObj):
 
     @kvar.setter
     def kvar(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def kv(self) -> float:
@@ -8515,7 +7515,7 @@ class Capacitor(DSSObj):
     @conn.setter
     def conn(self, value: Union[AnyStr, int, Connection]):
         if not isinstance(value, int):
-            self._set_string(6, value)
+            self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
@@ -8547,7 +7547,7 @@ class Capacitor(DSSObj):
 
     @cmatrix.setter
     def cmatrix(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def cuf(self) -> Float64Array:
@@ -8561,7 +7561,7 @@ class Capacitor(DSSObj):
 
     @cuf.setter
     def cuf(self, value: Float64Array):
-        self._set_float64_array(8, value)
+        self._set_float64_array_o(8, value)
 
     @property
     def R(self) -> Float64Array:
@@ -8574,7 +7574,7 @@ class Capacitor(DSSObj):
 
     @R.setter
     def R(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def XL(self) -> Float64Array:
@@ -8587,7 +7587,7 @@ class Capacitor(DSSObj):
 
     @XL.setter
     def XL(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def Harm(self) -> Float64Array:
@@ -8600,7 +7600,7 @@ class Capacitor(DSSObj):
 
     @Harm.setter
     def Harm(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def Numsteps(self) -> int:
@@ -8626,7 +7626,7 @@ class Capacitor(DSSObj):
 
     @states.setter
     def states(self, value: Int32Array):
-        self._set_int32_array(13, value)
+        self._set_int32_array_o(13, value)
 
     @property
     def normamps(self) -> float:
@@ -8727,9 +7727,10 @@ class Capacitor(DSSObj):
 
         DSS property name: `like`, DSS property index: 21.
         """
-        self._set_string(21, value)
+        self._set_string_o(21, value)
 
 class Reactor(DSSObj):
+    __slots__ = []
     _cls_name = 'Reactor'
     _cls_idx = 23
     _cls_prop_idx = {
@@ -8777,7 +7778,7 @@ class Reactor(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def bus2(self) -> str:
@@ -8792,7 +7793,7 @@ class Reactor(DSSObj):
 
     @bus2.setter
     def bus2(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def phases(self) -> int:
@@ -8845,7 +7846,7 @@ class Reactor(DSSObj):
     @conn.setter
     def conn(self, value: Union[AnyStr, int, Connection]):
         if not isinstance(value, int):
-            self._set_string(6, value)
+            self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
@@ -8873,7 +7874,7 @@ class Reactor(DSSObj):
 
     @Rmatrix.setter
     def Rmatrix(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def Xmatrix(self) -> Float64Array:
@@ -8886,7 +7887,7 @@ class Reactor(DSSObj):
 
     @Xmatrix.setter
     def Xmatrix(self, value: Float64Array):
-        self._set_float64_array(8, value)
+        self._set_float64_array_o(8, value)
 
     @property
     def Parallel(self) -> bool:
@@ -8998,21 +7999,6 @@ class Reactor(DSSObj):
         self._set_complex(15, value)
 
     @property
-    def Z(self) -> complex:
-        """
-        Alternative way of defining R and X properties. Enter a 2-element array representing R +jX in ohms. Example:
-
-        Z=[5  10]   ! equivalent to R=5  X=10 
-
-        DSS property name: `Z`, DSS property index: 16.
-        """
-        return self._get_complex(16)
-
-    @Z.setter
-    def Z(self, value: complex):
-        self._set_complex(16, value)
-
-    @property
     def RCurve(self) -> str:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
@@ -9027,7 +8013,7 @@ class Reactor(DSSObj):
             self._set_obj(17, value)
             return
 
-        self._set_string(17, value)
+        self._set_string_o(17, value)
 
     @property
     def RCurve_obj(self) -> XYcurve:
@@ -9057,7 +8043,7 @@ class Reactor(DSSObj):
             self._set_obj(18, value)
             return
 
-        self._set_string(18, value)
+        self._set_string_o(18, value)
 
     @property
     def LCurve_obj(self) -> XYcurve:
@@ -9184,9 +8170,10 @@ class Reactor(DSSObj):
 
         DSS property name: `like`, DSS property index: 27.
         """
-        self._set_string(27, value)
+        self._set_string_o(27, value)
 
 class CapControl(DSSObj):
+    __slots__ = []
     _cls_name = 'CapControl'
     _cls_idx = 24
     _cls_prop_idx = {
@@ -9242,7 +8229,7 @@ class CapControl(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def element_obj(self) -> DSSObj:
@@ -9287,7 +8274,7 @@ class CapControl(DSSObj):
             self._set_obj(3, value)
             return
 
-        self._set_string(3, value)
+        self._set_string_o(3, value)
 
     @property
     def capacitor_obj(self) -> Capacitor:
@@ -9311,12 +8298,12 @@ class CapControl(DSSObj):
 
         DSS property name: `type`, DSS property index: 4.
         """
-        return CapControlType(self._lib.Obj_GetInt32(self._ptr, 4))
+        return CapControl.CapControlType(self._lib.Obj_GetInt32(self._ptr, 4))
 
     @type.setter
     def type(self, value: Union[AnyStr, int, CapControlType]):
         if not isinstance(value, int):
-            self._set_string(4, value)
+            self._set_string_o(4, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
@@ -9487,7 +8474,7 @@ class CapControl(DSSObj):
     @CTPhase.setter
     def CTPhase(self, value: Union[AnyStr, int, MonitoredPhase]):
         if not isinstance(value, int):
-            self._set_string(15, value)
+            self._set_string_o(15, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
@@ -9520,7 +8507,7 @@ class CapControl(DSSObj):
     @PTPhase.setter
     def PTPhase(self, value: Union[AnyStr, int, MonitoredPhase]):
         if not isinstance(value, int):
-            self._set_string(16, value)
+            self._set_string_o(16, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 16, value)
 
@@ -9548,7 +8535,7 @@ class CapControl(DSSObj):
 
     @VBus.setter
     def VBus(self, value: AnyStr):
-        self._set_string(17, value)
+        self._set_string_o(17, value)
 
     @property
     def EventLog(self) -> bool:
@@ -9574,7 +8561,7 @@ class CapControl(DSSObj):
 
     @UserModel.setter
     def UserModel(self, value: AnyStr):
-        self._set_string(19, value)
+        self._set_string_o(19, value)
 
     @property
     def UserData(self) -> str:
@@ -9587,7 +8574,7 @@ class CapControl(DSSObj):
 
     @UserData.setter
     def UserData(self, value: AnyStr):
-        self._set_string(20, value)
+        self._set_string_o(20, value)
 
     @property
     def pctMinkvar(self) -> float:
@@ -9644,9 +8631,10 @@ class CapControl(DSSObj):
 
         DSS property name: `like`, DSS property index: 25.
         """
-        self._set_string(25, value)
+        self._set_string_o(25, value)
 
 class Fault(DSSObj):
+    __slots__ = []
     _cls_name = 'Fault'
     _cls_idx = 25
     _cls_prop_idx = {
@@ -9686,7 +8674,7 @@ class Fault(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def bus2(self) -> str:
@@ -9701,7 +8689,7 @@ class Fault(DSSObj):
 
     @bus2.setter
     def bus2(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def phases(self) -> int:
@@ -9753,7 +8741,7 @@ class Fault(DSSObj):
 
     @Gmatrix.setter
     def Gmatrix(self, value: Float64Array):
-        self._set_float64_array(6, value)
+        self._set_float64_array_o(6, value)
 
     @property
     def ONtime(self) -> float:
@@ -9893,11 +8881,139 @@ class Fault(DSSObj):
 
         DSS property name: `like`, DSS property index: 17.
         """
-        self._set_string(17, value)
+        self._set_string_o(17, value)
+
+class DynamicExp(DSSObj):
+    __slots__ = []
+    _cls_name = 'DynamicExp'
+    _cls_idx = 26
+    _cls_prop_idx = {
+        'nvariables': 1,
+        'varnames': 2,
+        'var': 3,
+        'varidx': 4,
+        'expression': 5,
+        'domain': 6,
+        'like': 7,
+    }
+
+    # Class-specific enumerations
+    class DynamicExpDomain(IntEnum):
+        """DynamicExp: Domain (DSS enumeration for DynamicExp)"""
+        Time = 0 # Time
+        dq = 1 # dq
+
+
+    @property
+    def NVariables(self) -> int:
+        """
+        (Int) Number of state variables to be considered in the differential equation.
+
+        DSS property name: `NVariables`, DSS property index: 1.
+        """
+        return self._lib.Obj_GetInt32(self._ptr, 1)
+
+    @NVariables.setter
+    def NVariables(self, value: int):
+        self._lib.Obj_SetInt32(self._ptr, 1, value)
+
+    @property
+    def VarNames(self) -> List[str]:
+        """
+        ([String]) Array of strings with the names of the state variables.
+
+        DSS property name: `VarNames`, DSS property index: 2.
+        """
+        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 2)
+
+    @VarNames.setter
+    def VarNames(self, value: List[AnyStr]):
+        value, value_ptr, value_count = self._prepare_string_array(value)
+        self._lib.Obj_SetStringArray(self._ptr, 2, value_ptr, value_count)
+        self._check_for_error()
+
+    @property
+    def var(self) -> str:
+        """
+        (String) Activates the state variable using the given name.
+
+        DSS property name: `var`, DSS property index: 3.
+        """
+        return self._get_prop_string(3)
+
+    @var.setter
+    def var(self, value: AnyStr):
+        self._set_string_o(3, value)
+
+    @property
+    def VarIdx(self) -> int:
+        """
+        (Int) read-only, returns the index of the active state variable.
+
+        DSS property name: `VarIdx`, DSS property index: 4.
+        """
+        return self._lib.Obj_GetInt32(self._ptr, 4)
+
+    @VarIdx.setter
+    def VarIdx(self, value: int):
+        self._lib.Obj_SetInt32(self._ptr, 4, value)
+
+    @property
+    def Expression(self) -> str:
+        """
+        It is the differential expression using OpenDSS RPN syntax. The expression must be contained within brackets in case of having multiple equations, for example:
+
+        expression="[w dt = 1 M / (P_m D*w - P_e -) *]"
+
+        DSS property name: `Expression`, DSS property index: 5.
+        """
+        return self._get_prop_string(5)
+
+    @Expression.setter
+    def Expression(self, value: AnyStr):
+        self._set_string_o(5, value)
+
+    @property
+    def Domain(self) -> DynamicExpDomain:
+        """
+        It is the domain for which the equation is defined, it can be one of [time*, dq]. By deafult, dynamic epxressions are defined in the time domain.
+
+        DSS property name: `Domain`, DSS property index: 6.
+        """
+        return DynamicExp.DynamicExpDomain(self._lib.Obj_GetInt32(self._ptr, 6))
+
+    @Domain.setter
+    def Domain(self, value: Union[AnyStr, int, DynamicExpDomain]):
+        if not isinstance(value, int):
+            self._set_string_o(6, value)
+            return
+        self._lib.Obj_SetInt32(self._ptr, 6, value)
+
+    @property
+    def Domain_str(self) -> str:
+        """
+        It is the domain for which the equation is defined, it can be one of [time*, dq]. By deafult, dynamic epxressions are defined in the time domain.
+
+        DSS property name: `Domain`, DSS property index: 6.
+        """
+        return self._get_prop_string(6)
+
+    @Domain_str.setter
+    def Domain_str(self, value: AnyStr):
+        self.Domain = value
+
+    def like(self, value: AnyStr):
+        """
+        DynamicExp.like
+
+        DSS property name: `like`, DSS property index: 7.
+        """
+        self._set_string_o(7, value)
 
 class Generator(DSSObj):
+    __slots__ = []
     _cls_name = 'Generator'
-    _cls_idx = 26
+    _cls_idx = 27
     _cls_prop_idx = {
         'phases': 1,
         'bus1': 2,
@@ -9944,10 +9060,12 @@ class Generator(DSSObj):
         'pctreserve': 41,
         '%reserve': 41,
         'refuel': 42,
-        'spectrum': 43,
-        'basefreq': 44,
-        'enabled': 45,
-        'like': 46,
+        'dynamiceq': 43,
+        'dynout': 44,
+        'spectrum': 45,
+        'basefreq': 46,
+        'enabled': 47,
+        'like': 48,
     }
 
     # Class-specific enumerations
@@ -9987,7 +9105,7 @@ class Generator(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def kv(self) -> float:
@@ -10107,7 +9225,7 @@ class Generator(DSSObj):
             self._set_obj(10, value)
             return
 
-        self._set_string(10, value)
+        self._set_string_o(10, value)
 
     @property
     def yearly_obj(self) -> LoadShape:
@@ -10137,7 +9255,7 @@ class Generator(DSSObj):
             self._set_obj(11, value)
             return
 
-        self._set_string(11, value)
+        self._set_string_o(11, value)
 
     @property
     def daily_obj(self) -> LoadShape:
@@ -10167,7 +9285,7 @@ class Generator(DSSObj):
             self._set_obj(12, value)
             return
 
-        self._set_string(12, value)
+        self._set_string_o(12, value)
 
     @property
     def duty_obj(self) -> LoadShape:
@@ -10189,12 +9307,12 @@ class Generator(DSSObj):
 
         DSS property name: `dispmode`, DSS property index: 13.
         """
-        return GeneratorDispatchMode(self._lib.Obj_GetInt32(self._ptr, 13))
+        return Generator.GeneratorDispatchMode(self._lib.Obj_GetInt32(self._ptr, 13))
 
     @dispmode.setter
     def dispmode(self, value: Union[AnyStr, int, GeneratorDispatchMode]):
         if not isinstance(value, int):
-            self._set_string(13, value)
+            self._set_string_o(13, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 13, value)
 
@@ -10238,7 +9356,7 @@ class Generator(DSSObj):
     @conn.setter
     def conn(self, value: Union[AnyStr, int, Connection]):
         if not isinstance(value, int):
-            self._set_string(15, value)
+            self._set_string_o(15, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
@@ -10262,12 +9380,12 @@ class Generator(DSSObj):
 
         DSS property name: `status`, DSS property index: 16.
         """
-        return GeneratorStatus(self._lib.Obj_GetInt32(self._ptr, 16))
+        return Generator.GeneratorStatus(self._lib.Obj_GetInt32(self._ptr, 16))
 
     @status.setter
     def status(self, value: Union[AnyStr, int, GeneratorStatus]):
         if not isinstance(value, int):
-            self._set_string(16, value)
+            self._set_string_o(16, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 16, value)
 
@@ -10376,19 +9494,6 @@ class Generator(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
     @property
-    def MVA(self) -> float:
-        """
-        MVA rating of electrical machine.  Alternative to using kVA=.
-
-        DSS property name: `MVA`, DSS property index: 24.
-        """
-        return self._lib.Obj_GetFloat64(self._ptr, 24)
-
-    @MVA.setter
-    def MVA(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 24, value)
-
-    @property
     def Xd(self) -> float:
         """
         Per unit synchronous reactance of machine. Presently used only for Thevinen impedance for power flow calcs of user models (model=6). Typically use a value 0.4 to 1.0. Default is 1.0
@@ -10464,7 +9569,7 @@ class Generator(DSSObj):
 
     @UserModel.setter
     def UserModel(self, value: AnyStr):
-        self._set_string(30, value)
+        self._set_string_o(30, value)
 
     @property
     def UserData(self) -> str:
@@ -10477,7 +9582,7 @@ class Generator(DSSObj):
 
     @UserData.setter
     def UserData(self, value: AnyStr):
-        self._set_string(31, value)
+        self._set_string_o(31, value)
 
     @property
     def ShaftModel(self) -> str:
@@ -10490,7 +9595,7 @@ class Generator(DSSObj):
 
     @ShaftModel.setter
     def ShaftModel(self, value: AnyStr):
-        self._set_string(32, value)
+        self._set_string_o(32, value)
 
     @property
     def ShaftData(self) -> str:
@@ -10503,7 +9608,7 @@ class Generator(DSSObj):
 
     @ShaftData.setter
     def ShaftData(self, value: AnyStr):
-        self._set_string(33, value)
+        self._set_string_o(33, value)
 
     @property
     def DutyStart(self) -> float:
@@ -10618,60 +9723,108 @@ class Generator(DSSObj):
         self._lib.Obj_SetInt32(self._ptr, 42, value)
 
     @property
-    def spectrum(self) -> str:
+    def DynamicEq(self) -> str:
         """
-        Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
 
-        DSS property name: `spectrum`, DSS property index: 43.
+        DSS property name: `DynamicEq`, DSS property index: 43.
         """
         return self._get_prop_string(43)
 
-    @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
+    @DynamicEq.setter
+    def DynamicEq(self, value: Union[AnyStr, DynamicExp]):
         if isinstance(value, DSSObj):
             self._set_obj(43, value)
             return
 
-        self._set_string(43, value)
+        self._set_string_o(43, value)
+
+    @property
+    def DynamicEq_obj(self) -> DynamicExp:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 43.
+        """
+        return self._get_obj(43, DynamicExp)
+
+    @DynamicEq_obj.setter
+    def DynamicEq_obj(self, value: DynamicExp):
+        self._set_obj(43, value)
+
+    @property
+    def DynOut(self) -> str:
+        """
+        The name of the variables within the Dynamic equation that will be used to govern the generator dynamics.This generator model requires 2 outputs from the dynamic equation: 
+
+        1. Shaft speed (velocity) relative to synchronous speed.
+        2. Shaft, or power, angle (relative to synchronous reference frame).
+
+        The output variables need to be defined in tha strict order.
+
+        DSS property name: `DynOut`, DSS property index: 44.
+        """
+        return self._get_prop_string(44)
+
+    @DynOut.setter
+    def DynOut(self, value: AnyStr):
+        self._set_string_o(44, value)
+
+    @property
+    def spectrum(self) -> str:
+        """
+        Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
+
+        DSS property name: `spectrum`, DSS property index: 45.
+        """
+        return self._get_prop_string(45)
+
+    @spectrum.setter
+    def spectrum(self, value: Union[AnyStr, Spectrum]):
+        if isinstance(value, DSSObj):
+            self._set_obj(45, value)
+            return
+
+        self._set_string_o(45, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 43.
+        DSS property name: `spectrum`, DSS property index: 45.
         """
-        return self._get_obj(43, Spectrum)
+        return self._get_obj(45, Spectrum)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_obj(43, value)
+        self._set_obj(45, value)
 
     @property
     def basefreq(self) -> float:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 44.
+        DSS property name: `basefreq`, DSS property index: 46.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 44)
+        return self._lib.Obj_GetFloat64(self._ptr, 46)
 
     @basefreq.setter
     def basefreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 44, value)
+        self._lib.Obj_SetFloat64(self._ptr, 46, value)
 
     @property
     def enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 45.
+        DSS property name: `enabled`, DSS property index: 47.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 45) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 47) != 0
 
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 45, value)
+        self._lib.Obj_SetInt32(self._ptr, 47, value)
 
     def like(self, value: AnyStr):
         """
@@ -10679,13 +9832,14 @@ class Generator(DSSObj):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 46.
+        DSS property name: `like`, DSS property index: 48.
         """
-        self._set_string(46, value)
+        self._set_string_o(48, value)
 
 class GenDispatcher(DSSObj):
+    __slots__ = []
     _cls_name = 'GenDispatcher'
-    _cls_idx = 27
+    _cls_idx = 28
     _cls_prop_idx = {
         'element': 1,
         'terminal': 2,
@@ -10714,7 +9868,7 @@ class GenDispatcher(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def Element_obj(self) -> DSSObj:
@@ -10791,7 +9945,7 @@ class GenDispatcher(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 6)
 
     @GenList.setter
-    def GenList(self, value: List[str]):
+    def GenList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 6, value_ptr, value_count)
         self._check_for_error()
@@ -10807,7 +9961,7 @@ class GenDispatcher(DSSObj):
 
     @Weights.setter
     def Weights(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def basefreq(self) -> float:
@@ -10843,11 +9997,12 @@ class GenDispatcher(DSSObj):
 
         DSS property name: `like`, DSS property index: 10.
         """
-        self._set_string(10, value)
+        self._set_string_o(10, value)
 
 class Storage(DSSObj):
+    __slots__ = []
     _cls_name = 'Storage'
-    _cls_idx = 28
+    _cls_idx = 29
     _cls_prop_idx = {
         'phases': 1,
         'bus1': 2,
@@ -10891,33 +10046,43 @@ class Storage(DSSObj):
         '%effdischarge': 29,
         'pctidlingkw': 30,
         '%idlingkw': 30,
-        'pctr': 31,
-        '%r': 31,
-        'pctx': 32,
-        '%x': 32,
-        'model': 33,
-        'vminpu': 34,
-        'vmaxpu': 35,
-        'balanced': 36,
-        'limitcurrent': 37,
-        'yearly': 38,
-        'daily': 39,
-        'duty': 40,
-        'dispmode': 41,
-        'dischargetrigger': 42,
-        'chargetrigger': 43,
-        'timechargetrig': 44,
-        'cls': 45,
-        'class': 45,
-        'dynadll': 46,
-        'dynadata': 47,
-        'usermodel': 48,
-        'userdata': 49,
-        'debugtrace': 50,
-        'spectrum': 51,
-        'basefreq': 52,
-        'enabled': 53,
-        'like': 54,
+        'pctidlingkvar': 31,
+        '%idlingkvar': 31,
+        'pctr': 32,
+        '%r': 32,
+        'pctx': 33,
+        '%x': 33,
+        'model': 34,
+        'vminpu': 35,
+        'vmaxpu': 36,
+        'balanced': 37,
+        'limitcurrent': 38,
+        'yearly': 39,
+        'daily': 40,
+        'duty': 41,
+        'dispmode': 42,
+        'dischargetrigger': 43,
+        'chargetrigger': 44,
+        'timechargetrig': 45,
+        'cls': 46,
+        'class': 46,
+        'dynadll': 47,
+        'dynadata': 48,
+        'usermodel': 49,
+        'userdata': 50,
+        'debugtrace': 51,
+        'kvdc': 52,
+        'kp': 53,
+        'pitol': 54,
+        'safevoltage': 55,
+        'safemode': 56,
+        'dynamiceq': 57,
+        'dynout': 58,
+        'controlmode': 59,
+        'spectrum': 60,
+        'basefreq': 61,
+        'enabled': 62,
+        'like': 63,
     }
 
     # Class-specific enumerations
@@ -10960,7 +10125,7 @@ class Storage(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def kv(self) -> float:
@@ -10991,7 +10156,7 @@ class Storage(DSSObj):
     @conn.setter
     def conn(self, value: Union[AnyStr, int, Connection]):
         if not isinstance(value, int):
-            self._set_string(4, value)
+            self._set_string_o(4, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
@@ -11105,7 +10270,7 @@ class Storage(DSSObj):
             self._set_obj(11, value)
             return
 
-        self._set_string(11, value)
+        self._set_string_o(11, value)
 
     @property
     def EffCurve_obj(self) -> XYcurve:
@@ -11297,12 +10462,12 @@ class Storage(DSSObj):
 
         DSS property name: `State`, DSS property index: 25.
         """
-        return StorageState(self._lib.Obj_GetInt32(self._ptr, 25))
+        return Storage.StorageState(self._lib.Obj_GetInt32(self._ptr, 25))
 
     @State.setter
     def State(self, value: Union[AnyStr, int, StorageState]):
         if not isinstance(value, int):
-            self._set_string(25, value)
+            self._set_string_o(25, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 25, value)
 
@@ -11389,26 +10554,26 @@ class Storage(DSSObj):
         """
         Equivalent percentage internal resistance, ohms. Default is 0. Placed in series with internal voltage source for harmonics and dynamics modes. Use a combination of %IdlingkW, %EffCharge and %EffDischarge to account for losses in power flow modes.
 
-        DSS property name: `%R`, DSS property index: 31.
+        DSS property name: `%R`, DSS property index: 32.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 31)
+        return self._lib.Obj_GetFloat64(self._ptr, 32)
 
     @pctR.setter
     def pctR(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 31, value)
+        self._lib.Obj_SetFloat64(self._ptr, 32, value)
 
     @property
     def pctX(self) -> float:
         """
         Equivalent percentage internal reactance, ohms. Default is 50%. Placed in series with internal voltage source for harmonics and dynamics modes. (Limits fault current to 2 pu.
 
-        DSS property name: `%X`, DSS property index: 32.
+        DSS property name: `%X`, DSS property index: 33.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 32)
+        return self._lib.Obj_GetFloat64(self._ptr, 33)
 
     @pctX.setter
     def pctX(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 32, value)
+        self._lib.Obj_SetFloat64(self._ptr, 33, value)
 
     @property
     def model(self) -> int:
@@ -11419,125 +10584,125 @@ class Storage(DSSObj):
         2:Storage element is modeled as a CONSTANT IMPEDANCE.
         3:Compute load injection from User-written Model.
 
-        DSS property name: `model`, DSS property index: 33.
+        DSS property name: `model`, DSS property index: 34.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 33)
+        return self._lib.Obj_GetInt32(self._ptr, 34)
 
     @model.setter
     def model(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 33, value)
+        self._lib.Obj_SetInt32(self._ptr, 34, value)
 
     @property
     def Vminpu(self) -> float:
         """
         Default = 0.90.  Minimum per unit voltage for which the Model is assumed to apply. Below this value, the load model reverts to a constant impedance model.
 
-        DSS property name: `Vminpu`, DSS property index: 34.
+        DSS property name: `Vminpu`, DSS property index: 35.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 34)
+        return self._lib.Obj_GetFloat64(self._ptr, 35)
 
     @Vminpu.setter
     def Vminpu(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 34, value)
+        self._lib.Obj_SetFloat64(self._ptr, 35, value)
 
     @property
     def Vmaxpu(self) -> float:
         """
         Default = 1.10.  Maximum per unit voltage for which the Model is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
-        DSS property name: `Vmaxpu`, DSS property index: 35.
+        DSS property name: `Vmaxpu`, DSS property index: 36.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 35)
+        return self._lib.Obj_GetFloat64(self._ptr, 36)
 
     @Vmaxpu.setter
     def Vmaxpu(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 35, value)
+        self._lib.Obj_SetFloat64(self._ptr, 36, value)
 
     @property
     def Balanced(self) -> bool:
         """
         {Yes | No*} Default is No. Force balanced current only for 3-phase Storage. Forces zero- and negative-sequence to zero. 
 
-        DSS property name: `Balanced`, DSS property index: 36.
+        DSS property name: `Balanced`, DSS property index: 37.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 36) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 37) != 0
 
     @Balanced.setter
     def Balanced(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 36, value)
+        self._lib.Obj_SetInt32(self._ptr, 37, value)
 
     @property
     def LimitCurrent(self) -> bool:
         """
         Limits current magnitude to Vminpu value for both 1-phase and 3-phase Storage similar to Generator Model 7. For 3-phase, limits the positive-sequence current but not the negative-sequence.
 
-        DSS property name: `LimitCurrent`, DSS property index: 37.
+        DSS property name: `LimitCurrent`, DSS property index: 38.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 37) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 38) != 0
 
     @LimitCurrent.setter
     def LimitCurrent(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 37, value)
+        self._lib.Obj_SetInt32(self._ptr, 38, value)
 
     @property
     def yearly(self) -> str:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
-        DSS property name: `yearly`, DSS property index: 38.
+        DSS property name: `yearly`, DSS property index: 39.
         """
-        return self._get_prop_string(38)
+        return self._get_prop_string(39)
 
     @yearly.setter
     def yearly(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
-            self._set_obj(38, value)
+            self._set_obj(39, value)
             return
 
-        self._set_string(38, value)
+        self._set_string_o(39, value)
 
     @property
     def yearly_obj(self) -> LoadShape:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
-        DSS property name: `yearly`, DSS property index: 38.
+        DSS property name: `yearly`, DSS property index: 39.
         """
-        return self._get_obj(38, LoadShape)
+        return self._get_obj(39, LoadShape)
 
     @yearly_obj.setter
     def yearly_obj(self, value: LoadShape):
-        self._set_obj(38, value)
+        self._set_obj(39, value)
 
     @property
     def daily(self) -> str:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
-        DSS property name: `daily`, DSS property index: 39.
+        DSS property name: `daily`, DSS property index: 40.
         """
-        return self._get_prop_string(39)
+        return self._get_prop_string(40)
 
     @daily.setter
     def daily(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
-            self._set_obj(39, value)
+            self._set_obj(40, value)
             return
 
-        self._set_string(39, value)
+        self._set_string_o(40, value)
 
     @property
     def daily_obj(self) -> LoadShape:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
-        DSS property name: `daily`, DSS property index: 39.
+        DSS property name: `daily`, DSS property index: 40.
         """
-        return self._get_obj(39, LoadShape)
+        return self._get_obj(40, LoadShape)
 
     @daily_obj.setter
     def daily_obj(self, value: LoadShape):
-        self._set_obj(39, value)
+        self._set_obj(40, value)
 
     @property
     def duty(self) -> str:
@@ -11548,17 +10713,17 @@ class Storage(DSSObj):
 
         Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
-        DSS property name: `duty`, DSS property index: 40.
+        DSS property name: `duty`, DSS property index: 41.
         """
-        return self._get_prop_string(40)
+        return self._get_prop_string(41)
 
     @duty.setter
     def duty(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
-            self._set_obj(40, value)
+            self._set_obj(41, value)
             return
 
-        self._set_string(40, value)
+        self._set_string_o(41, value)
 
     @property
     def duty_obj(self) -> LoadShape:
@@ -11569,13 +10734,13 @@ class Storage(DSSObj):
 
         Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
-        DSS property name: `duty`, DSS property index: 40.
+        DSS property name: `duty`, DSS property index: 41.
         """
-        return self._get_obj(40, LoadShape)
+        return self._get_obj(41, LoadShape)
 
     @duty_obj.setter
     def duty_obj(self, value: LoadShape):
-        self._set_obj(40, value)
+        self._set_obj(41, value)
 
     @property
     def DispMode(self) -> StorageDispatchMode:
@@ -11586,20 +10751,20 @@ class Storage(DSSObj):
 
         In FOLLOW mode the kW output of the Storage element follows the active loadshape multiplier until Storage is either exhausted or full. The element discharges for positive values and charges for negative values.  The loadshape is based on rated kW. 
 
-        In EXTERNAL mode, Storage element state is controlled by an external Storagecontroller2. This mode is automatically set if this Storage element is included in the element list of a StorageController element. 
+        In EXTERNAL mode, Storage element state is controlled by an external Storagecontroller. This mode is automatically set if this Storage element is included in the element list of a StorageController element. 
 
         For the other two dispatch modes, the Storage element state is controlled by either the global default Loadlevel value or the price level. 
 
-        DSS property name: `DispMode`, DSS property index: 41.
+        DSS property name: `DispMode`, DSS property index: 42.
         """
-        return StorageDispatchMode(self._lib.Obj_GetInt32(self._ptr, 41))
+        return Storage.StorageDispatchMode(self._lib.Obj_GetInt32(self._ptr, 42))
 
     @DispMode.setter
     def DispMode(self, value: Union[AnyStr, int, StorageDispatchMode]):
         if not isinstance(value, int):
-            self._set_string(41, value)
+            self._set_string_o(42, value)
             return
-        self._lib.Obj_SetInt32(self._ptr, 41, value)
+        self._lib.Obj_SetInt32(self._ptr, 42, value)
 
     @property
     def DispMode_str(self) -> str:
@@ -11610,13 +10775,13 @@ class Storage(DSSObj):
 
         In FOLLOW mode the kW output of the Storage element follows the active loadshape multiplier until Storage is either exhausted or full. The element discharges for positive values and charges for negative values.  The loadshape is based on rated kW. 
 
-        In EXTERNAL mode, Storage element state is controlled by an external Storagecontroller2. This mode is automatically set if this Storage element is included in the element list of a StorageController element. 
+        In EXTERNAL mode, Storage element state is controlled by an external Storagecontroller. This mode is automatically set if this Storage element is included in the element list of a StorageController element. 
 
         For the other two dispatch modes, the Storage element state is controlled by either the global default Loadlevel value or the price level. 
 
-        DSS property name: `DispMode`, DSS property index: 41.
+        DSS property name: `DispMode`, DSS property index: 42.
         """
-        return self._get_prop_string(41)
+        return self._get_prop_string(42)
 
     @DispMode_str.setter
     def DispMode_str(self, value: AnyStr):
@@ -11626,180 +10791,325 @@ class Storage(DSSObj):
     def DischargeTrigger(self) -> float:
         """
         Dispatch trigger value for discharging the Storage. 
-        If = 0.0 the Storage element state is changed by the State command or by a StorageController2 object. 
+        If = 0.0 the Storage element state is changed by the State command or by a StorageController object. 
         If <> 0  the Storage element state is set to DISCHARGING when this trigger level is EXCEEDED by either the specified Loadshape curve value or the price signal or global Loadlevel value, depending on dispatch mode. See State property.
 
-        DSS property name: `DischargeTrigger`, DSS property index: 42.
+        DSS property name: `DischargeTrigger`, DSS property index: 43.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 42)
+        return self._lib.Obj_GetFloat64(self._ptr, 43)
 
     @DischargeTrigger.setter
     def DischargeTrigger(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 42, value)
+        self._lib.Obj_SetFloat64(self._ptr, 43, value)
 
     @property
     def ChargeTrigger(self) -> float:
         """
         Dispatch trigger value for charging the Storage. 
 
-        If = 0.0 the Storage element state is changed by the State command or StorageController2 object.  
+        If = 0.0 the Storage element state is changed by the State command or StorageController object.  
 
         If <> 0  the Storage element state is set to CHARGING when this trigger level is GREATER than either the specified Loadshape curve value or the price signal or global Loadlevel value, depending on dispatch mode. See State property.
 
-        DSS property name: `ChargeTrigger`, DSS property index: 43.
+        DSS property name: `ChargeTrigger`, DSS property index: 44.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 43)
+        return self._lib.Obj_GetFloat64(self._ptr, 44)
 
     @ChargeTrigger.setter
     def ChargeTrigger(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 43, value)
+        self._lib.Obj_SetFloat64(self._ptr, 44, value)
 
     @property
     def TimeChargeTrig(self) -> float:
         """
         Time of day in fractional hours (0230 = 2.5) at which Storage element will automatically go into charge state. Default is 2.0.  Enter a negative time value to disable this feature.
 
-        DSS property name: `TimeChargeTrig`, DSS property index: 44.
+        DSS property name: `TimeChargeTrig`, DSS property index: 45.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 44)
+        return self._lib.Obj_GetFloat64(self._ptr, 45)
 
     @TimeChargeTrig.setter
     def TimeChargeTrig(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 44, value)
+        self._lib.Obj_SetFloat64(self._ptr, 45, value)
 
     @property
     def cls(self) -> int:
         """
         An arbitrary integer number representing the class of Storage element so that Storage values may be segregated by class.
 
-        DSS property name: `class`, DSS property index: 45.
+        DSS property name: `class`, DSS property index: 46.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 45)
+        return self._lib.Obj_GetInt32(self._ptr, 46)
 
     @cls.setter
     def cls(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 45, value)
+        self._lib.Obj_SetInt32(self._ptr, 46, value)
 
     @property
     def DynaDLL(self) -> str:
         """
         Name of DLL containing user-written dynamics model, which computes the terminal currents for Dynamics-mode simulations, overriding the default model.  Set to "none" to negate previous setting. This DLL has a simpler interface than the UserModel DLL and is only used for Dynamics mode.
 
-        DSS property name: `DynaDLL`, DSS property index: 46.
+        DSS property name: `DynaDLL`, DSS property index: 47.
         """
-        return self._get_prop_string(46)
+        return self._get_prop_string(47)
 
     @DynaDLL.setter
     def DynaDLL(self, value: AnyStr):
-        self._set_string(46, value)
+        self._set_string_o(47, value)
 
     @property
     def DynaData(self) -> str:
         """
         String (in quotes or parentheses if necessary) that gets passed to the user-written dynamics model Edit function for defining the data required for that model.
 
-        DSS property name: `DynaData`, DSS property index: 47.
+        DSS property name: `DynaData`, DSS property index: 48.
         """
-        return self._get_prop_string(47)
+        return self._get_prop_string(48)
 
     @DynaData.setter
     def DynaData(self, value: AnyStr):
-        self._set_string(47, value)
+        self._set_string_o(48, value)
 
     @property
     def UserModel(self) -> str:
         """
         Name of DLL containing user-written model, which computes the terminal currents for both power flow and dynamics, overriding the default model.  Set to "none" to negate previous setting.
 
-        DSS property name: `UserModel`, DSS property index: 48.
+        DSS property name: `UserModel`, DSS property index: 49.
         """
-        return self._get_prop_string(48)
+        return self._get_prop_string(49)
 
     @UserModel.setter
     def UserModel(self, value: AnyStr):
-        self._set_string(48, value)
+        self._set_string_o(49, value)
 
     @property
     def UserData(self) -> str:
         """
         String (in quotes or parentheses) that gets passed to user-written model for defining the data required for that model.
 
-        DSS property name: `UserData`, DSS property index: 49.
+        DSS property name: `UserData`, DSS property index: 50.
         """
-        return self._get_prop_string(49)
+        return self._get_prop_string(50)
 
     @UserData.setter
     def UserData(self, value: AnyStr):
-        self._set_string(49, value)
+        self._set_string_o(50, value)
 
     @property
     def debugtrace(self) -> bool:
         """
         {Yes | No }  Default is no.  Turn this on to capture the progress of the Storage model for each iteration.  Creates a separate file for each Storage element named "Storage_name.CSV".
 
-        DSS property name: `debugtrace`, DSS property index: 50.
+        DSS property name: `debugtrace`, DSS property index: 51.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 50) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 51) != 0
 
     @debugtrace.setter
     def debugtrace(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 50, value)
+        self._lib.Obj_SetInt32(self._ptr, 51, value)
+
+    @property
+    def kVDC(self) -> float:
+        """
+        Indicates the rated voltage (kV) at the input of the inverter while the storage is discharging. The value is normally greater or equal to the kV base of the Storage device. It is used for dynamics simulation ONLY.
+
+        DSS property name: `kVDC`, DSS property index: 52.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 52)
+
+    @kVDC.setter
+    def kVDC(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 52, value)
+
+    @property
+    def Kp(self) -> float:
+        """
+        It is the proportional gain for the PI controller within the inverter. Use it to modify the controller response in dynamics simulation mode.
+
+        DSS property name: `Kp`, DSS property index: 53.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 53)
+
+    @Kp.setter
+    def Kp(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 53, value)
+
+    @property
+    def PITol(self) -> float:
+        """
+        It is the tolerance (%) for the closed loop controller of the inverter. For dynamics simulation mode.
+
+        DSS property name: `PITol`, DSS property index: 54.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 54)
+
+    @PITol.setter
+    def PITol(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 54, value)
+
+    @property
+    def SafeVoltage(self) -> float:
+        """
+        Indicates the voltage level (%) respect to the base voltage level for which the Inverter will operate. If this threshold is violated, the Inverter will enter safe mode (OFF). For dynamic simulation. By default is 80%.
+
+        DSS property name: `SafeVoltage`, DSS property index: 55.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 55)
+
+    @SafeVoltage.setter
+    def SafeVoltage(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 55, value)
+
+    @property
+    def SafeMode(self) -> bool:
+        """
+        (Read only) Indicates whether the inverter entered (Yes) or not (No) into Safe Mode.
+
+        DSS property name: `SafeMode`, DSS property index: 56.
+        """
+        return self._lib.Obj_GetInt32(self._ptr, 56) != 0
+
+    @SafeMode.setter
+    def SafeMode(self, value: bool):
+        self._lib.Obj_SetInt32(self._ptr, 56, value)
+
+    @property
+    def DynamicEq(self) -> str:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 57.
+        """
+        return self._get_prop_string(57)
+
+    @DynamicEq.setter
+    def DynamicEq(self, value: Union[AnyStr, DynamicExp]):
+        if isinstance(value, DSSObj):
+            self._set_obj(57, value)
+            return
+
+        self._set_string_o(57, value)
+
+    @property
+    def DynamicEq_obj(self) -> DynamicExp:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 57.
+        """
+        return self._get_obj(57, DynamicExp)
+
+    @DynamicEq_obj.setter
+    def DynamicEq_obj(self, value: DynamicExp):
+        self._set_obj(57, value)
+
+    @property
+    def DynOut(self) -> str:
+        """
+        The name of the variables within the Dynamic equation that will be used to govern the Storage dynamics. This Storage model requires 1 output from the dynamic equation:
+
+            1. Current.
+
+        The output variables need to be defined in the same order.
+
+        DSS property name: `DynOut`, DSS property index: 58.
+        """
+        return self._get_prop_string(58)
+
+    @DynOut.setter
+    def DynOut(self, value: AnyStr):
+        self._set_string_o(58, value)
+
+    @property
+    def ControlMode(self) -> InverterControlMode:
+        """
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+
+        GFM control mode disables any control action set by the InvControl device.
+
+        DSS property name: `ControlMode`, DSS property index: 59.
+        """
+        return InverterControlMode(self._lib.Obj_GetInt32(self._ptr, 59))
+
+    @ControlMode.setter
+    def ControlMode(self, value: Union[AnyStr, int, InverterControlMode]):
+        if not isinstance(value, int):
+            self._set_string_o(59, value)
+            return
+        self._lib.Obj_SetInt32(self._ptr, 59, value)
+
+    @property
+    def ControlMode_str(self) -> str:
+        """
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+
+        GFM control mode disables any control action set by the InvControl device.
+
+        DSS property name: `ControlMode`, DSS property index: 59.
+        """
+        return self._get_prop_string(59)
+
+    @ControlMode_str.setter
+    def ControlMode_str(self, value: AnyStr):
+        self.ControlMode = value
 
     @property
     def spectrum(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 51.
+        DSS property name: `spectrum`, DSS property index: 60.
         """
-        return self._get_prop_string(51)
+        return self._get_prop_string(60)
 
     @spectrum.setter
     def spectrum(self, value: Union[AnyStr, Spectrum]):
         if isinstance(value, DSSObj):
-            self._set_obj(51, value)
+            self._set_obj(60, value)
             return
 
-        self._set_string(51, value)
+        self._set_string_o(60, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 51.
+        DSS property name: `spectrum`, DSS property index: 60.
         """
-        return self._get_obj(51, Spectrum)
+        return self._get_obj(60, Spectrum)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_obj(51, value)
+        self._set_obj(60, value)
 
     @property
     def basefreq(self) -> float:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 52.
+        DSS property name: `basefreq`, DSS property index: 61.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 52)
+        return self._lib.Obj_GetFloat64(self._ptr, 61)
 
     @basefreq.setter
     def basefreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 52, value)
+        self._lib.Obj_SetFloat64(self._ptr, 61, value)
 
     @property
     def enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 53.
+        DSS property name: `enabled`, DSS property index: 62.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 53) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 62) != 0
 
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 53, value)
+        self._lib.Obj_SetInt32(self._ptr, 62, value)
 
     def like(self, value: AnyStr):
         """
@@ -11807,13 +11117,14 @@ class Storage(DSSObj):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 54.
+        DSS property name: `like`, DSS property index: 63.
         """
-        self._set_string(54, value)
+        self._set_string_o(63, value)
 
 class StorageController(DSSObj):
+    __slots__ = []
     _cls_name = 'StorageController'
-    _cls_idx = 29
+    _cls_idx = 30
     _cls_prop_idx = {
         'element': 1,
         'terminal': 2,
@@ -11896,7 +11207,7 @@ class StorageController(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def Element_obj(self) -> DSSObj:
@@ -11914,7 +11225,7 @@ class StorageController(DSSObj):
     @property
     def Terminal(self) -> int:
         """
-        Number of the terminal of the circuit element to which the StorageController2 control is connected. 1 or 2, typically.  Default is 1. Make sure to select the proper direction on the power for the respective dispatch mode.
+        Number of the terminal of the circuit element to which the StorageController control is connected. 1 or 2, typically.  Default is 1. Make sure to select the proper direction on the power for the respective dispatch mode.
 
         DSS property name: `Terminal`, DSS property index: 2.
         """
@@ -11940,7 +11251,7 @@ class StorageController(DSSObj):
     @MonPhase.setter
     def MonPhase(self, value: Union[AnyStr, int, MonitoredPhase]):
         if not isinstance(value, int):
-            self._set_string(3, value)
+            self._set_string_o(3, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
@@ -12045,7 +11356,7 @@ class StorageController(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 10)
 
     @ElementList.setter
-    def ElementList(self, value: List[str]):
+    def ElementList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 10, value_ptr, value_count)
         self._check_for_error()
@@ -12061,7 +11372,7 @@ class StorageController(DSSObj):
 
     @Weights.setter
     def Weights(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def ModeDischarge(self) -> StorageControllerDischargemode:
@@ -12084,12 +11395,12 @@ class StorageController(DSSObj):
 
         DSS property name: `ModeDischarge`, DSS property index: 12.
         """
-        return StorageControllerDischargemode(self._lib.Obj_GetInt32(self._ptr, 12))
+        return StorageController.StorageControllerDischargemode(self._lib.Obj_GetInt32(self._ptr, 12))
 
     @ModeDischarge.setter
     def ModeDischarge(self, value: Union[AnyStr, int, StorageControllerDischargemode]):
         if not isinstance(value, int):
-            self._set_string(12, value)
+            self._set_string_o(12, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 12, value)
 
@@ -12135,12 +11446,12 @@ class StorageController(DSSObj):
 
         DSS property name: `ModeCharge`, DSS property index: 13.
         """
-        return StorageControllerChargemode(self._lib.Obj_GetInt32(self._ptr, 13))
+        return StorageController.StorageControllerChargemode(self._lib.Obj_GetInt32(self._ptr, 13))
 
     @ModeCharge.setter
     def ModeCharge(self, value: Union[AnyStr, int, StorageControllerChargemode]):
         if not isinstance(value, int):
-            self._set_string(13, value)
+            self._set_string_o(13, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 13, value)
 
@@ -12310,7 +11621,7 @@ class StorageController(DSSObj):
             self._set_obj(24, value)
             return
 
-        self._set_string(24, value)
+        self._set_string_o(24, value)
 
     @property
     def Yearly_obj(self) -> LoadShape:
@@ -12340,7 +11651,7 @@ class StorageController(DSSObj):
             self._set_obj(25, value)
             return
 
-        self._set_string(25, value)
+        self._set_string_o(25, value)
 
     @property
     def Daily_obj(self) -> LoadShape:
@@ -12370,7 +11681,7 @@ class StorageController(DSSObj):
             self._set_obj(26, value)
             return
 
-        self._set_string(26, value)
+        self._set_string_o(26, value)
 
     @property
     def Duty_obj(self) -> LoadShape:
@@ -12515,7 +11826,7 @@ class StorageController(DSSObj):
 
     @SeasonTargets.setter
     def SeasonTargets(self, value: Float64Array):
-        self._set_float64_array(36, value)
+        self._set_float64_array_o(36, value)
 
     @property
     def SeasonTargetsLow(self) -> Float64Array:
@@ -12528,7 +11839,7 @@ class StorageController(DSSObj):
 
     @SeasonTargetsLow.setter
     def SeasonTargetsLow(self, value: Float64Array):
-        self._set_float64_array(37, value)
+        self._set_float64_array_o(37, value)
 
     @property
     def basefreq(self) -> float:
@@ -12564,11 +11875,12 @@ class StorageController(DSSObj):
 
         DSS property name: `like`, DSS property index: 40.
         """
-        self._set_string(40, value)
+        self._set_string_o(40, value)
 
 class Relay(DSSObj):
+    __slots__ = []
     _cls_name = 'Relay'
-    _cls_idx = 30
+    _cls_idx = 31
     _cls_prop_idx = {
         'monitoredobj': 1,
         'monitoredterm': 2,
@@ -12623,9 +11935,10 @@ class Relay(DSSObj):
         'doc_phasecurveinner': 47,
         'doc_phasetripinner': 48,
         'doc_tdphaseinner': 49,
-        'basefreq': 50,
-        'enabled': 51,
-        'like': 52,
+        'doc_p1blocking': 50,
+        'basefreq': 51,
+        'enabled': 52,
+        'like': 53,
     }
 
     # Class-specific enumerations
@@ -12669,7 +11982,7 @@ class Relay(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def MonitoredObj_obj(self) -> DSSObj:
@@ -12712,7 +12025,7 @@ class Relay(DSSObj):
             self._set_obj(3, value)
             return
 
-        self._set_string(3, value)
+        self._set_string_o(3, value)
 
     @property
     def SwitchedObj_obj(self) -> DSSObj:
@@ -12758,12 +12071,12 @@ class Relay(DSSObj):
 
         DSS property name: `type`, DSS property index: 5.
         """
-        return RelayType(self._lib.Obj_GetInt32(self._ptr, 5))
+        return Relay.RelayType(self._lib.Obj_GetInt32(self._ptr, 5))
 
     @type.setter
     def type(self, value: Union[AnyStr, int, RelayType]):
         if not isinstance(value, int):
-            self._set_string(5, value)
+            self._set_string_o(5, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
@@ -12806,7 +12119,7 @@ class Relay(DSSObj):
             self._set_obj(6, value)
             return
 
-        self._set_string(6, value)
+        self._set_string_o(6, value)
 
     @property
     def Phasecurve_obj(self) -> TCC_Curve:
@@ -12836,7 +12149,7 @@ class Relay(DSSObj):
             self._set_obj(7, value)
             return
 
-        self._set_string(7, value)
+        self._set_string_o(7, value)
 
     @property
     def Groundcurve_obj(self) -> TCC_Curve:
@@ -12966,12 +12279,12 @@ class Relay(DSSObj):
 
     @RecloseIntervals.setter
     def RecloseIntervals(self, value: Float64Array):
-        self._set_float64_array(16, value)
+        self._set_float64_array_o(16, value)
 
     @property
     def Delay(self) -> float:
         """
-        Trip time delay (sec) for DEFINITE TIME relays. Default is 0.0 for current and voltage relays.  If >0 then this value is used instead of curves.  Used by Generic, RevPower, 46 and 47 relays. Defaults to 0.1 s for these relays.
+        Trip time delay (sec) for DEFINITE TIME relays. Default is 0.0 for current, voltage and DOC relays. If >0 then this value is used instead of curves. Used by Generic, RevPower, 46 and 47 relays. Defaults to 0.1 s for these relays.
 
         DSS property name: `Delay`, DSS property index: 17.
         """
@@ -12996,7 +12309,7 @@ class Relay(DSSObj):
             self._set_obj(18, value)
             return
 
-        self._set_string(18, value)
+        self._set_string_o(18, value)
 
     @property
     def Overvoltcurve_obj(self) -> TCC_Curve:
@@ -13026,7 +12339,7 @@ class Relay(DSSObj):
             self._set_obj(19, value)
             return
 
-        self._set_string(19, value)
+        self._set_string_o(19, value)
 
     @property
     def Undervoltcurve_obj(self) -> TCC_Curve:
@@ -13117,7 +12430,7 @@ class Relay(DSSObj):
 
     @Variable.setter
     def Variable(self, value: AnyStr):
-        self._set_string(25, value)
+        self._set_string_o(25, value)
 
     @property
     def overtrip(self) -> float:
@@ -13165,12 +12478,12 @@ class Relay(DSSObj):
 
         DSS property name: `action`, DSS property index: 29.
         """
-        return RelayAction(self._lib.Obj_GetInt32(self._ptr, 29))
+        return Relay.RelayAction(self._lib.Obj_GetInt32(self._ptr, 29))
 
     @action.setter
     def action(self, value: Union[AnyStr, int, RelayAction]):
         if not isinstance(value, int):
-            self._set_string(29, value)
+            self._set_string_o(29, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 29, value)
 
@@ -13311,12 +12624,12 @@ class Relay(DSSObj):
 
         DSS property name: `Normal`, DSS property index: 39.
         """
-        return RelayState(self._lib.Obj_GetInt32(self._ptr, 39))
+        return Relay.RelayState(self._lib.Obj_GetInt32(self._ptr, 39))
 
     @Normal.setter
     def Normal(self, value: Union[AnyStr, int, RelayState]):
         if not isinstance(value, int):
-            self._set_string(39, value)
+            self._set_string_o(39, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 39, value)
 
@@ -13340,12 +12653,12 @@ class Relay(DSSObj):
 
         DSS property name: `State`, DSS property index: 40.
         """
-        return RelayState(self._lib.Obj_GetInt32(self._ptr, 40))
+        return Relay.RelayState(self._lib.Obj_GetInt32(self._ptr, 40))
 
     @State.setter
     def State(self, value: Union[AnyStr, int, RelayState]):
         if not isinstance(value, int):
-            self._set_string(40, value)
+            self._set_string_o(40, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 40, value)
 
@@ -13365,7 +12678,7 @@ class Relay(DSSObj):
     @property
     def DOC_TiltAngleLow(self) -> float:
         """
-        Tilt angle for lower current magnitudes. Default is 90.
+        Tilt angle for low-current trip line. Default is 90.
 
         DSS property name: `DOC_TiltAngleLow`, DSS property index: 41.
         """
@@ -13378,7 +12691,7 @@ class Relay(DSSObj):
     @property
     def DOC_TiltAngleHigh(self) -> float:
         """
-        Tilt angle for higher current magnitudes. Default is 90.
+        Tilt angle for high-current trip line. Default is 90.
 
         DSS property name: `DOC_TiltAngleHigh`, DSS property index: 42.
         """
@@ -13391,7 +12704,7 @@ class Relay(DSSObj):
     @property
     def DOC_TripSettingLow(self) -> float:
         """
-        Trip setting for lower current magnitude.  Default is 0.
+        Resistive trip setting for low-current line. Default is 0.
 
         DSS property name: `DOC_TripSettingLow`, DSS property index: 43.
         """
@@ -13404,7 +12717,7 @@ class Relay(DSSObj):
     @property
     def DOC_TripSettingHigh(self) -> float:
         """
-        Trip setting for higher current magnitude.  Default is -1 (deactivated). To activate, set a positive value. Must be greater than "DOC_TripSettingLow".
+        Resistive trip setting for high-current line.  Default is -1 (deactivated). To activate, set a positive value. Must be greater than "DOC_TripSettingLow".
 
         DSS property name: `DOC_TripSettingHigh`, DSS property index: 44.
         """
@@ -13417,7 +12730,7 @@ class Relay(DSSObj):
     @property
     def DOC_TripSettingMag(self) -> float:
         """
-        Trip setting for current magnitude (define a circle for the relay characteristics). Default is -1 (deactivated). To activate, set a positive value.
+        Trip setting for current magnitude (defines a circle in the relay characteristics). Default is -1 (deactivated). To activate, set a positive value.
 
         DSS property name: `DOC_TripSettingMag`, DSS property index: 45.
         """
@@ -13430,7 +12743,7 @@ class Relay(DSSObj):
     @property
     def DOC_DelayInner(self) -> float:
         """
-        Trip time delay (sec) for operation in inner zone for DOC relay, defined when "DOC_TripSettingMag" or "DOC_TripSettingHigh" are activate. Default is -1.0 (deactivated), meaning that the relay characteristic is insensitive in the inner zone (no trip). Set to 0 for instantaneous trip and >0 for a definite time delay. If "DOC_PhaseCurveInner" is specified, time delay from curve is utilized instead.
+        Trip time delay (sec) for operation in inner region for DOC relay, defined when "DOC_TripSettingMag" or "DOC_TripSettingHigh" are activate. Default is -1.0 (deactivated), meaning that the relay characteristic is insensitive in the inner region (no trip). Set to 0 for instantaneous trip and >0 for a definite time delay. If "DOC_PhaseCurveInner" is specified, time delay from curve is utilized instead.
 
         DSS property name: `DOC_DelayInner`, DSS property index: 46.
         """
@@ -13443,7 +12756,7 @@ class Relay(DSSObj):
     @property
     def DOC_PhaseCurveInner(self) -> float:
         """
-        Name of the TCC Curve object that determines the phase trip for operation in inner zone for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
+        Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
         DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
         """
@@ -13481,7 +12794,7 @@ class Relay(DSSObj):
             self._set_obj(49, value)
             return
 
-        self._set_string(49, value)
+        self._set_string_o(49, value)
 
     @property
     def DOC_TDPhaseInner_obj(self) -> TCC_Curve:
@@ -13497,30 +12810,43 @@ class Relay(DSSObj):
         self._set_obj(49, value)
 
     @property
+    def DOC_P1Blocking(self) -> bool:
+        """
+        {Yes/True* | No/False} Blocking element that impedes relay from tripping if balanced net three-phase active power is in the forward direction (i.e., flowing into the monitored terminal). For a delayed trip, if at any given time the reverse power flow condition stops, the tripping is reset. Default=True.
+
+        DSS property name: `DOC_P1Blocking`, DSS property index: 50.
+        """
+        return self._lib.Obj_GetInt32(self._ptr, 50) != 0
+
+    @DOC_P1Blocking.setter
+    def DOC_P1Blocking(self, value: bool):
+        self._lib.Obj_SetInt32(self._ptr, 50, value)
+
+    @property
     def basefreq(self) -> float:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 50.
+        DSS property name: `basefreq`, DSS property index: 51.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 50)
+        return self._lib.Obj_GetFloat64(self._ptr, 51)
 
     @basefreq.setter
     def basefreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 50, value)
+        self._lib.Obj_SetFloat64(self._ptr, 51, value)
 
     @property
     def enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 51.
+        DSS property name: `enabled`, DSS property index: 52.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 51) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 52) != 0
 
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 51, value)
+        self._lib.Obj_SetInt32(self._ptr, 52, value)
 
     def like(self, value: AnyStr):
         """
@@ -13528,13 +12854,14 @@ class Relay(DSSObj):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 52.
+        DSS property name: `like`, DSS property index: 53.
         """
-        self._set_string(52, value)
+        self._set_string_o(53, value)
 
 class Recloser(DSSObj):
+    __slots__ = []
     _cls_name = 'Recloser'
-    _cls_idx = 31
+    _cls_idx = 32
     _cls_prop_idx = {
         'monitoredobj': 1,
         'monitoredterm': 2,
@@ -13594,7 +12921,7 @@ class Recloser(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def MonitoredObj_obj(self) -> DSSObj:
@@ -13637,7 +12964,7 @@ class Recloser(DSSObj):
             self._set_obj(3, value)
             return
 
-        self._set_string(3, value)
+        self._set_string_o(3, value)
 
     @property
     def SwitchedObj_obj(self) -> DSSObj:
@@ -13693,7 +13020,7 @@ class Recloser(DSSObj):
             self._set_obj(6, value)
             return
 
-        self._set_string(6, value)
+        self._set_string_o(6, value)
 
     @property
     def PhaseFast_obj(self) -> TCC_Curve:
@@ -13723,7 +13050,7 @@ class Recloser(DSSObj):
             self._set_obj(7, value)
             return
 
-        self._set_string(7, value)
+        self._set_string_o(7, value)
 
     @property
     def PhaseDelayed_obj(self) -> TCC_Curve:
@@ -13753,7 +13080,7 @@ class Recloser(DSSObj):
             self._set_obj(8, value)
             return
 
-        self._set_string(8, value)
+        self._set_string_o(8, value)
 
     @property
     def GroundFast_obj(self) -> TCC_Curve:
@@ -13783,7 +13110,7 @@ class Recloser(DSSObj):
             self._set_obj(9, value)
             return
 
-        self._set_string(9, value)
+        self._set_string_o(9, value)
 
     @property
     def GroundDelayed_obj(self) -> TCC_Curve:
@@ -13887,7 +13214,7 @@ class Recloser(DSSObj):
 
     @RecloseIntervals.setter
     def RecloseIntervals(self, value: Float64Array):
-        self._set_float64_array(16, value)
+        self._set_float64_array_o(16, value)
 
     @property
     def Delay(self) -> float:
@@ -13901,35 +13228,6 @@ class Recloser(DSSObj):
     @Delay.setter
     def Delay(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
-
-    @property
-    def Action(self) -> RecloserAction:
-        """
-        DEPRECATED. See "State" property
-
-        DSS property name: `Action`, DSS property index: 18.
-        """
-        return RecloserAction(self._lib.Obj_GetInt32(self._ptr, 18))
-
-    @Action.setter
-    def Action(self, value: Union[AnyStr, int, RecloserAction]):
-        if not isinstance(value, int):
-            self._set_string(18, value)
-            return
-        self._lib.Obj_SetInt32(self._ptr, 18, value)
-
-    @property
-    def Action_str(self) -> str:
-        """
-        DEPRECATED. See "State" property
-
-        DSS property name: `Action`, DSS property index: 18.
-        """
-        return self._get_prop_string(18)
-
-    @Action_str.setter
-    def Action_str(self, value: AnyStr):
-        self.Action = value
 
     @property
     def TDPhFast(self) -> float:
@@ -13990,12 +13288,12 @@ class Recloser(DSSObj):
 
         DSS property name: `Normal`, DSS property index: 23.
         """
-        return RecloserState(self._lib.Obj_GetInt32(self._ptr, 23))
+        return Recloser.RecloserState(self._lib.Obj_GetInt32(self._ptr, 23))
 
     @Normal.setter
     def Normal(self, value: Union[AnyStr, int, RecloserState]):
         if not isinstance(value, int):
-            self._set_string(23, value)
+            self._set_string_o(23, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 23, value)
 
@@ -14019,12 +13317,12 @@ class Recloser(DSSObj):
 
         DSS property name: `State`, DSS property index: 24.
         """
-        return RecloserState(self._lib.Obj_GetInt32(self._ptr, 24))
+        return Recloser.RecloserState(self._lib.Obj_GetInt32(self._ptr, 24))
 
     @State.setter
     def State(self, value: Union[AnyStr, int, RecloserState]):
         if not isinstance(value, int):
-            self._set_string(24, value)
+            self._set_string_o(24, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 24, value)
 
@@ -14075,11 +13373,12 @@ class Recloser(DSSObj):
 
         DSS property name: `like`, DSS property index: 27.
         """
-        self._set_string(27, value)
+        self._set_string_o(27, value)
 
 class Fuse(DSSObj):
+    __slots__ = []
     _cls_name = 'Fuse'
-    _cls_idx = 32
+    _cls_idx = 33
     _cls_prop_idx = {
         'monitoredobj': 1,
         'monitoredterm': 2,
@@ -14123,7 +13422,7 @@ class Fuse(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def MonitoredObj_obj(self) -> DSSObj:
@@ -14166,7 +13465,7 @@ class Fuse(DSSObj):
             self._set_obj(3, value)
             return
 
-        self._set_string(3, value)
+        self._set_string_o(3, value)
 
     @property
     def SwitchedObj_obj(self) -> DSSObj:
@@ -14209,7 +13508,7 @@ class Fuse(DSSObj):
             self._set_obj(5, value)
             return
 
-        self._set_string(5, value)
+        self._set_string_o(5, value)
 
     @property
     def FuseCurve_obj(self) -> TCC_Curve:
@@ -14260,7 +13559,7 @@ class Fuse(DSSObj):
             self._lib.Obj_SetInt32(self._ptr, 8, value)
             return
     
-        self._set_string(8, value)
+        self._set_string_o(8, value)
 
     @property
     def Normal(self) -> List[FuseState]:
@@ -14269,14 +13568,14 @@ class Fuse(DSSObj):
 
         DSS property name: `Normal`, DSS property index: 9.
         """
-        return [FuseState(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 9)]
+        return [Fuse.FuseState(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 9)]
 
     @Normal.setter
     def Normal(self, value: Union[List[Union[int,FuseState]], List[AnyStr]]):
-        if not isinstance(value, int):
-            self._set_string_array(9, value)
+        if len(value) and not isinstance(value[0], int):
+            self._set_string_array_o(9, value)
             return    
-        self._set_int32_array(9, value)
+        self._set_int32_array_o(9, value)
 
     @property
     def Normal_str(self) -> List[str]:
@@ -14298,14 +13597,14 @@ class Fuse(DSSObj):
 
         DSS property name: `State`, DSS property index: 10.
         """
-        return [FuseState(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 10)]
+        return [Fuse.FuseState(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 10)]
 
     @State.setter
     def State(self, value: Union[List[Union[int,FuseState]], List[AnyStr]]):
-        if not isinstance(value, int):
-            self._set_string_array(10, value)
+        if len(value) and not isinstance(value[0], int):
+            self._set_string_array_o(10, value)
             return    
-        self._set_int32_array(10, value)
+        self._set_int32_array_o(10, value)
 
     @property
     def State_str(self) -> List[str]:
@@ -14354,11 +13653,12 @@ class Fuse(DSSObj):
 
         DSS property name: `like`, DSS property index: 13.
         """
-        self._set_string(13, value)
+        self._set_string_o(13, value)
 
 class SwtControl(DSSObj):
+    __slots__ = []
     _cls_name = 'SwtControl'
-    _cls_idx = 33
+    _cls_idx = 34
     _cls_prop_idx = {
         'switchedobj': 1,
         'switchedterm': 2,
@@ -14400,7 +13700,7 @@ class SwtControl(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def SwitchedObj_obj(self) -> DSSObj:
@@ -14427,35 +13727,6 @@ class SwtControl(DSSObj):
     @SwitchedTerm.setter
     def SwitchedTerm(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
-
-    @property
-    def Action(self) -> SwtControlAction:
-        """
-        {Open | Close}  After specified delay time, and if not locked, causes the controlled switch to open or close. 
-
-        DSS property name: `Action`, DSS property index: 3.
-        """
-        return SwtControlAction(self._lib.Obj_GetInt32(self._ptr, 3))
-
-    @Action.setter
-    def Action(self, value: Union[AnyStr, int, SwtControlAction]):
-        if not isinstance(value, int):
-            self._set_string(3, value)
-            return
-        self._lib.Obj_SetInt32(self._ptr, 3, value)
-
-    @property
-    def Action_str(self) -> str:
-        """
-        {Open | Close}  After specified delay time, and if not locked, causes the controlled switch to open or close. 
-
-        DSS property name: `Action`, DSS property index: 3.
-        """
-        return self._get_prop_string(3)
-
-    @Action_str.setter
-    def Action_str(self, value: AnyStr):
-        self.Action = value
 
     @property
     def Lock(self) -> bool:
@@ -14490,12 +13761,12 @@ class SwtControl(DSSObj):
 
         DSS property name: `Normal`, DSS property index: 6.
         """
-        return SwtControlState(self._lib.Obj_GetInt32(self._ptr, 6))
+        return SwtControl.SwtControlState(self._lib.Obj_GetInt32(self._ptr, 6))
 
     @Normal.setter
     def Normal(self, value: Union[AnyStr, int, SwtControlState]):
         if not isinstance(value, int):
-            self._set_string(6, value)
+            self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
@@ -14519,12 +13790,12 @@ class SwtControl(DSSObj):
 
         DSS property name: `State`, DSS property index: 7.
         """
-        return SwtControlState(self._lib.Obj_GetInt32(self._ptr, 7))
+        return SwtControl.SwtControlState(self._lib.Obj_GetInt32(self._ptr, 7))
 
     @State.setter
     def State(self, value: Union[AnyStr, int, SwtControlState]):
         if not isinstance(value, int):
-            self._set_string(7, value)
+            self._set_string_o(7, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
@@ -14583,11 +13854,12 @@ class SwtControl(DSSObj):
 
         DSS property name: `like`, DSS property index: 11.
         """
-        self._set_string(11, value)
+        self._set_string_o(11, value)
 
 class PVSystem(DSSObj):
+    __slots__ = []
     _cls_name = 'PVSystem'
-    _cls_idx = 34
+    _cls_idx = 35
     _cls_prop_idx = {
         'phases': 1,
         'bus1': 2,
@@ -14638,10 +13910,18 @@ class PVSystem(DSSObj):
         '%pminkvarmax': 38,
         'kvarmax': 39,
         'kvarmaxabs': 40,
-        'spectrum': 41,
-        'basefreq': 42,
-        'enabled': 43,
-        'like': 44,
+        'kvdc': 41,
+        'kp': 42,
+        'pitol': 43,
+        'safevoltage': 44,
+        'safemode': 45,
+        'dynamiceq': 46,
+        'dynout': 47,
+        'controlmode': 48,
+        'spectrum': 49,
+        'basefreq': 50,
+        'enabled': 51,
+        'like': 52,
     }
 
     @property
@@ -14668,7 +13948,7 @@ class PVSystem(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def kv(self) -> float:
@@ -14762,7 +14042,7 @@ class PVSystem(DSSObj):
     @conn.setter
     def conn(self, value: Union[AnyStr, int, Connection]):
         if not isinstance(value, int):
-            self._set_string(9, value)
+            self._set_string_o(9, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 9, value)
 
@@ -14846,7 +14126,7 @@ class PVSystem(DSSObj):
             self._set_obj(14, value)
             return
 
-        self._set_string(14, value)
+        self._set_string_o(14, value)
 
     @property
     def EffCurve_obj(self) -> XYcurve:
@@ -14876,7 +14156,7 @@ class PVSystem(DSSObj):
             self._set_obj(15, value)
             return
 
-        self._set_string(15, value)
+        self._set_string_o(15, value)
 
     @property
     def PTCurve_obj(self) -> XYcurve:
@@ -15001,7 +14281,7 @@ class PVSystem(DSSObj):
             self._set_obj(23, value)
             return
 
-        self._set_string(23, value)
+        self._set_string_o(23, value)
 
     @property
     def yearly_obj(self) -> LoadShape:
@@ -15031,7 +14311,7 @@ class PVSystem(DSSObj):
             self._set_obj(24, value)
             return
 
-        self._set_string(24, value)
+        self._set_string_o(24, value)
 
     @property
     def daily_obj(self) -> LoadShape:
@@ -15061,7 +14341,7 @@ class PVSystem(DSSObj):
             self._set_obj(25, value)
             return
 
-        self._set_string(25, value)
+        self._set_string_o(25, value)
 
     @property
     def duty_obj(self) -> LoadShape:
@@ -15091,7 +14371,7 @@ class PVSystem(DSSObj):
             self._set_obj(26, value)
             return
 
-        self._set_string(26, value)
+        self._set_string_o(26, value)
 
     @property
     def Tyearly_obj(self) -> TShape:
@@ -15121,7 +14401,7 @@ class PVSystem(DSSObj):
             self._set_obj(27, value)
             return
 
-        self._set_string(27, value)
+        self._set_string_o(27, value)
 
     @property
     def Tdaily_obj(self) -> TShape:
@@ -15151,7 +14431,7 @@ class PVSystem(DSSObj):
             self._set_obj(28, value)
             return
 
-        self._set_string(28, value)
+        self._set_string_o(28, value)
 
     @property
     def Tduty_obj(self) -> TShape:
@@ -15190,7 +14470,7 @@ class PVSystem(DSSObj):
 
     @UserModel.setter
     def UserModel(self, value: AnyStr):
-        self._set_string(30, value)
+        self._set_string_o(30, value)
 
     @property
     def UserData(self) -> str:
@@ -15203,7 +14483,7 @@ class PVSystem(DSSObj):
 
     @UserData.setter
     def UserData(self, value: AnyStr):
-        self._set_string(31, value)
+        self._set_string_o(31, value)
 
     @property
     def debugtrace(self) -> bool:
@@ -15323,60 +14603,205 @@ class PVSystem(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 40, value)
 
     @property
+    def kVDC(self) -> float:
+        """
+        Indicates the rated voltage (kV) at the input of the inverter at the peak of PV energy production. The value is normally greater or equal to the kV base of the PV system. It is used for dynamics simulation ONLY.
+
+        DSS property name: `kVDC`, DSS property index: 41.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 41)
+
+    @kVDC.setter
+    def kVDC(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 41, value)
+
+    @property
+    def Kp(self) -> float:
+        """
+        It is the proportional gain for the PI controller within the inverter. Use it to modify the controller response in dynamics simulation mode.
+
+        DSS property name: `Kp`, DSS property index: 42.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 42)
+
+    @Kp.setter
+    def Kp(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 42, value)
+
+    @property
+    def PITol(self) -> float:
+        """
+        It is the tolerance (%) for the closed loop controller of the inverter. For dynamics simulation mode.
+
+        DSS property name: `PITol`, DSS property index: 43.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 43)
+
+    @PITol.setter
+    def PITol(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 43, value)
+
+    @property
+    def SafeVoltage(self) -> float:
+        """
+        Indicates the voltage level (%) respect to the base voltage level for which the Inverter will operate. If this threshold is violated, the Inverter will enter safe mode (OFF). For dynamic simulation. By default is 80%
+
+        DSS property name: `SafeVoltage`, DSS property index: 44.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 44)
+
+    @SafeVoltage.setter
+    def SafeVoltage(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 44, value)
+
+    @property
+    def SafeMode(self) -> bool:
+        """
+        (Read only) Indicates whether the inverter entered (Yes) or not (No) into Safe Mode.
+
+        DSS property name: `SafeMode`, DSS property index: 45.
+        """
+        return self._lib.Obj_GetInt32(self._ptr, 45) != 0
+
+    @SafeMode.setter
+    def SafeMode(self, value: bool):
+        self._lib.Obj_SetInt32(self._ptr, 45, value)
+
+    @property
+    def DynamicEq(self) -> str:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 46.
+        """
+        return self._get_prop_string(46)
+
+    @DynamicEq.setter
+    def DynamicEq(self, value: Union[AnyStr, DynamicExp]):
+        if isinstance(value, DSSObj):
+            self._set_obj(46, value)
+            return
+
+        self._set_string_o(46, value)
+
+    @property
+    def DynamicEq_obj(self) -> DynamicExp:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 46.
+        """
+        return self._get_obj(46, DynamicExp)
+
+    @DynamicEq_obj.setter
+    def DynamicEq_obj(self, value: DynamicExp):
+        self._set_obj(46, value)
+
+    @property
+    def DynOut(self) -> str:
+        """
+        The name of the variables within the Dynamic equation that will be used to govern the PVSystem dynamics. This PVsystem model requires 1 output from the dynamic equation:
+
+            1. Current.
+
+        The output variables need to be defined in the same order.
+
+        DSS property name: `DynOut`, DSS property index: 47.
+        """
+        return self._get_prop_string(47)
+
+    @DynOut.setter
+    def DynOut(self, value: AnyStr):
+        self._set_string_o(47, value)
+
+    @property
+    def ControlMode(self) -> InverterControlMode:
+        """
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+
+        GFM control mode disables any control action set by the InvControl device.
+
+        DSS property name: `ControlMode`, DSS property index: 48.
+        """
+        return InverterControlMode(self._lib.Obj_GetInt32(self._ptr, 48))
+
+    @ControlMode.setter
+    def ControlMode(self, value: Union[AnyStr, int, InverterControlMode]):
+        if not isinstance(value, int):
+            self._set_string_o(48, value)
+            return
+        self._lib.Obj_SetInt32(self._ptr, 48, value)
+
+    @property
+    def ControlMode_str(self) -> str:
+        """
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+
+        GFM control mode disables any control action set by the InvControl device.
+
+        DSS property name: `ControlMode`, DSS property index: 48.
+        """
+        return self._get_prop_string(48)
+
+    @ControlMode_str.setter
+    def ControlMode_str(self, value: AnyStr):
+        self.ControlMode = value
+
+    @property
     def spectrum(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 41.
+        DSS property name: `spectrum`, DSS property index: 49.
         """
-        return self._get_prop_string(41)
+        return self._get_prop_string(49)
 
     @spectrum.setter
     def spectrum(self, value: Union[AnyStr, Spectrum]):
         if isinstance(value, DSSObj):
-            self._set_obj(41, value)
+            self._set_obj(49, value)
             return
 
-        self._set_string(41, value)
+        self._set_string_o(49, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 41.
+        DSS property name: `spectrum`, DSS property index: 49.
         """
-        return self._get_obj(41, Spectrum)
+        return self._get_obj(49, Spectrum)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_obj(41, value)
+        self._set_obj(49, value)
 
     @property
     def basefreq(self) -> float:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 42.
+        DSS property name: `basefreq`, DSS property index: 50.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 42)
+        return self._lib.Obj_GetFloat64(self._ptr, 50)
 
     @basefreq.setter
     def basefreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 42, value)
+        self._lib.Obj_SetFloat64(self._ptr, 50, value)
 
     @property
     def enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 43.
+        DSS property name: `enabled`, DSS property index: 51.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 43) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 51) != 0
 
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 43, value)
+        self._lib.Obj_SetInt32(self._ptr, 51, value)
 
     def like(self, value: AnyStr):
         """
@@ -15384,13 +14809,14 @@ class PVSystem(DSSObj):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 44.
+        DSS property name: `like`, DSS property index: 52.
         """
-        self._set_string(44, value)
+        self._set_string_o(52, value)
 
 class UPFC(DSSObj):
+    __slots__ = []
     _cls_name = 'UPFC'
-    _cls_idx = 35
+    _cls_idx = 36
     _cls_prop_idx = {
         'bus1': 1,
         'bus2': 2,
@@ -15408,10 +14834,11 @@ class UPFC(DSSObj):
         'climit': 14,
         'refkv2': 15,
         'kvarlimit': 16,
-        'spectrum': 17,
-        'basefreq': 18,
-        'enabled': 19,
-        'like': 20,
+        'element': 17,
+        'spectrum': 18,
+        'basefreq': 19,
+        'enabled': 20,
+        'like': 21,
     }
 
     @property
@@ -15427,7 +14854,7 @@ class UPFC(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def bus2(self) -> str:
@@ -15442,60 +14869,58 @@ class UPFC(DSSObj):
 
     @bus2.setter
     def bus2(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
-    def refkv(self) -> float:
+    def refkV(self) -> float:
         """
-        Base Voltage expected at the output of the UPFC
+        UPFC.refkV
 
-        "refkv=0.24"
-
-        DSS property name: `refkv`, DSS property index: 3.
+        DSS property name: `refkV`, DSS property index: 3.
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @refkv.setter
-    def refkv(self, value: float):
+    @refkV.setter
+    def refkV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
     @property
-    def pf(self) -> float:
+    def PF(self) -> float:
         """
-        Power factor target at the input terminal.
+        UPFC.PF
 
-        DSS property name: `pf`, DSS property index: 4.
+        DSS property name: `PF`, DSS property index: 4.
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @pf.setter
-    def pf(self, value: float):
+    @PF.setter
+    def PF(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
     @property
-    def frequency(self) -> float:
+    def Frequency(self) -> float:
         """
-        UPFC working frequency.  Defaults to system default base frequency.
+        UPFC.Frequency
 
-        DSS property name: `frequency`, DSS property index: 5.
+        DSS property name: `Frequency`, DSS property index: 5.
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @frequency.setter
-    def frequency(self, value: float):
+    @Frequency.setter
+    def Frequency(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
     @property
-    def phases(self) -> int:
+    def Phases(self) -> int:
         """
-        Number of phases.  Defaults to 1 phase (2 terminals, 1 conductor per terminal).
+        UPFC.Phases
 
-        DSS property name: `phases`, DSS property index: 6.
+        DSS property name: `Phases`, DSS property index: 6.
         """
         return self._lib.Obj_GetInt32(self._ptr, 6)
 
-    @phases.setter
-    def phases(self, value: int):
+    @Phases.setter
+    def Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
     @property
@@ -15573,7 +14998,7 @@ class UPFC(DSSObj):
             self._set_obj(11, value)
             return
 
-        self._set_string(11, value)
+        self._set_string_o(11, value)
 
     @property
     def LossCurve_obj(self) -> XYcurve:
@@ -15628,18 +15053,16 @@ class UPFC(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
     @property
-    def refkv2(self) -> float:
+    def refkV2(self) -> float:
         """
-        Base Voltage expected at the output of the UPFC for control modes 4 and 5.
+        UPFC.refkV2
 
-        This reference must be lower than refkv, see control modes 4 and 5 for details
-
-        DSS property name: `refkv2`, DSS property index: 15.
+        DSS property name: `refkV2`, DSS property index: 15.
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @refkv2.setter
-    def refkv2(self, value: float):
+    @refkV2.setter
+    def refkV2(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
     @property
@@ -15656,60 +15079,90 @@ class UPFC(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
     @property
-    def spectrum(self) -> str:
+    def Element(self) -> str:
         """
-        Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
+        The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
 
-        DSS property name: `spectrum`, DSS property index: 17.
+        DSS property name: `Element`, DSS property index: 17.
         """
         return self._get_prop_string(17)
 
-    @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
+    @Element.setter
+    def Element(self, value: Union[AnyStr, PDElement]):
         if isinstance(value, DSSObj):
             self._set_obj(17, value)
             return
 
-        self._set_string(17, value)
+        self._set_string_o(17, value)
+
+    @property
+    def Element_obj(self) -> PDElement:
+        """
+        The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
+
+        DSS property name: `Element`, DSS property index: 17.
+        """
+        return self._get_obj(17, PDElement)
+
+    @Element_obj.setter
+    def Element_obj(self, value: PDElement):
+        self._set_obj(17, value)
+
+    @property
+    def spectrum(self) -> str:
+        """
+        Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
+
+        DSS property name: `spectrum`, DSS property index: 18.
+        """
+        return self._get_prop_string(18)
+
+    @spectrum.setter
+    def spectrum(self, value: Union[AnyStr, Spectrum]):
+        if isinstance(value, DSSObj):
+            self._set_obj(18, value)
+            return
+
+        self._set_string_o(18, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 17.
+        DSS property name: `spectrum`, DSS property index: 18.
         """
-        return self._get_obj(17, Spectrum)
+        return self._get_obj(18, Spectrum)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_obj(17, value)
+        self._set_obj(18, value)
 
     @property
     def basefreq(self) -> float:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 18.
+        DSS property name: `basefreq`, DSS property index: 19.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 18)
+        return self._lib.Obj_GetFloat64(self._ptr, 19)
 
     @basefreq.setter
     def basefreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 18, value)
+        self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
     @property
     def enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 19.
+        DSS property name: `enabled`, DSS property index: 20.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 19) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 20) != 0
 
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 19, value)
+        self._lib.Obj_SetInt32(self._ptr, 20, value)
 
     def like(self, value: AnyStr):
         """
@@ -15717,13 +15170,14 @@ class UPFC(DSSObj):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 20.
+        DSS property name: `like`, DSS property index: 21.
         """
-        self._set_string(20, value)
+        self._set_string_o(21, value)
 
 class UPFCControl(DSSObj):
+    __slots__ = []
     _cls_name = 'UPFCControl'
-    _cls_idx = 36
+    _cls_idx = 37
     _cls_prop_idx = {
         'upfclist': 1,
         'basefreq': 2,
@@ -15741,7 +15195,7 @@ class UPFCControl(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 1)
 
     @UPFCList.setter
-    def UPFCList(self, value: List[str]):
+    def UPFCList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count)
         self._check_for_error()
@@ -15780,11 +15234,12 @@ class UPFCControl(DSSObj):
 
         DSS property name: `like`, DSS property index: 4.
         """
-        self._set_string(4, value)
+        self._set_string_o(4, value)
 
 class ESPVLControl(DSSObj):
+    __slots__ = []
     _cls_name = 'ESPVLControl'
-    _cls_idx = 37
+    _cls_idx = 38
     _cls_prop_idx = {
         'element': 1,
         'terminal': 2,
@@ -15824,7 +15279,7 @@ class ESPVLControl(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def Element_obj(self) -> DSSObj:
@@ -15859,12 +15314,12 @@ class ESPVLControl(DSSObj):
 
         DSS property name: `Type`, DSS property index: 3.
         """
-        return ESPVLControlType(self._lib.Obj_GetInt32(self._ptr, 3))
+        return ESPVLControl.ESPVLControlType(self._lib.Obj_GetInt32(self._ptr, 3))
 
     @Type.setter
     def Type(self, value: Union[AnyStr, int, ESPVLControlType]):
         if not isinstance(value, int):
-            self._set_string(3, value)
+            self._set_string_o(3, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
@@ -15917,7 +15372,7 @@ class ESPVLControl(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 6)
 
     @LocalControlList.setter
-    def LocalControlList(self, value: List[str]):
+    def LocalControlList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 6, value_ptr, value_count)
         self._check_for_error()
@@ -15933,7 +15388,7 @@ class ESPVLControl(DSSObj):
 
     @LocalControlWeights.setter
     def LocalControlWeights(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def PVSystemList(self) -> List[str]:
@@ -15945,7 +15400,7 @@ class ESPVLControl(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 8)
 
     @PVSystemList.setter
-    def PVSystemList(self, value: List[str]):
+    def PVSystemList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 8, value_ptr, value_count)
         self._check_for_error()
@@ -15961,7 +15416,7 @@ class ESPVLControl(DSSObj):
 
     @PVSystemWeights.setter
     def PVSystemWeights(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def StorageList(self) -> List[str]:
@@ -15973,7 +15428,7 @@ class ESPVLControl(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 10)
 
     @StorageList.setter
-    def StorageList(self, value: List[str]):
+    def StorageList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 10, value_ptr, value_count)
         self._check_for_error()
@@ -15989,7 +15444,7 @@ class ESPVLControl(DSSObj):
 
     @StorageWeights.setter
     def StorageWeights(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def basefreq(self) -> float:
@@ -16025,11 +15480,12 @@ class ESPVLControl(DSSObj):
 
         DSS property name: `like`, DSS property index: 14.
         """
-        self._set_string(14, value)
+        self._set_string_o(14, value)
 
 class IndMach012(DSSObj):
+    __slots__ = []
     _cls_name = 'IndMach012'
-    _cls_idx = 38
+    _cls_idx = 39
     _cls_prop_idx = {
         'phases': 1,
         'bus1': 2,
@@ -16089,7 +15545,7 @@ class IndMach012(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def kv(self) -> float:
@@ -16143,7 +15599,7 @@ class IndMach012(DSSObj):
     @conn.setter
     def conn(self, value: Union[AnyStr, int, Connection]):
         if not isinstance(value, int):
-            self._set_string(6, value)
+            self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
@@ -16297,12 +15753,12 @@ class IndMach012(DSSObj):
 
         DSS property name: `SlipOption`, DSS property index: 17.
         """
-        return IndMach012SlipOption(self._lib.Obj_GetInt32(self._ptr, 17))
+        return IndMach012.IndMach012SlipOption(self._lib.Obj_GetInt32(self._ptr, 17))
 
     @SlipOption.setter
     def SlipOption(self, value: Union[AnyStr, int, IndMach012SlipOption]):
         if not isinstance(value, int):
-            self._set_string(17, value)
+            self._set_string_o(17, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
@@ -16334,7 +15790,7 @@ class IndMach012(DSSObj):
             self._set_obj(18, value)
             return
 
-        self._set_string(18, value)
+        self._set_string_o(18, value)
 
     @property
     def Yearly_obj(self) -> LoadShape:
@@ -16364,7 +15820,7 @@ class IndMach012(DSSObj):
             self._set_obj(19, value)
             return
 
-        self._set_string(19, value)
+        self._set_string_o(19, value)
 
     @property
     def Daily_obj(self) -> LoadShape:
@@ -16394,7 +15850,7 @@ class IndMach012(DSSObj):
             self._set_obj(20, value)
             return
 
-        self._set_string(20, value)
+        self._set_string_o(20, value)
 
     @property
     def Duty_obj(self) -> LoadShape:
@@ -16437,7 +15893,7 @@ class IndMach012(DSSObj):
             self._set_obj(22, value)
             return
 
-        self._set_string(22, value)
+        self._set_string_o(22, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
@@ -16486,11 +15942,12 @@ class IndMach012(DSSObj):
 
         DSS property name: `like`, DSS property index: 25.
         """
-        self._set_string(25, value)
+        self._set_string_o(25, value)
 
 class GICsource(DSSObj):
+    __slots__ = []
     _cls_name = 'GICsource'
-    _cls_idx = 39
+    _cls_idx = 40
     _cls_prop_idx = {
         'volts': 1,
         'angle': 2,
@@ -16661,7 +16118,7 @@ class GICsource(DSSObj):
             self._set_obj(11, value)
             return
 
-        self._set_string(11, value)
+        self._set_string_o(11, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
@@ -16710,11 +16167,12 @@ class GICsource(DSSObj):
 
         DSS property name: `like`, DSS property index: 14.
         """
-        self._set_string(14, value)
+        self._set_string_o(14, value)
 
 class AutoTrans(DSSObj):
+    __slots__ = []
     _cls_name = 'AutoTrans'
-    _cls_idx = 40
+    _cls_idx = 41
     _cls_prop_idx = {
         'phases': 1,
         'windings': 2,
@@ -16809,106 +16267,6 @@ class AutoTrans(DSSObj):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
-    def wdg(self) -> int:
-        """
-        Set this = to the number of the winding you wish to define.  Then set the values for this winding.  Winding 1 is always the Series winding. Winding 2 is always Common winding (wye connected). Repeat for each winding.  Alternatively, use the array collections (buses, kVAs, etc.) to define the windings.  Note: reactances are BETWEEN pairs of windings; they are not the property of a single winding.
-
-        DSS property name: `wdg`, DSS property index: 3.
-        """
-        return self._lib.Obj_GetInt32(self._ptr, 3)
-
-    @wdg.setter
-    def wdg(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 3, value)
-
-    @property
-    def bus(self) -> List[str]:
-        """
-        Bus connection spec for this winding.
-
-        DSS property name: `bus`, DSS property index: 4.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
-
-    @bus.setter
-    def bus(self, value: List[str]):
-        value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, 4, value_ptr, value_count)
-        self._check_for_error()
-
-    @property
-    def conn(self) -> List[AutoTransConnection]:
-        """
-        Connection of this winding {Series, wye*, Delta, LN, LL }. Default is "wye" with the neutral solidly grounded. 
-        For AutoTrans, Winding 1 is always Series and Winding 2 (the Common winding) is always Wye. 
-        If only 2 windings, no need to specify connections.
-
-        DSS property name: `conn`, DSS property index: 5.
-        """
-        return [AutoTransConnection(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 5)]
-
-    @conn.setter
-    def conn(self, value: Union[List[Union[int,AutoTransConnection]], List[AnyStr]]):
-        if not isinstance(value, int):
-            self._set_string_array(5, value)
-            return    
-        self._set_int32_array(5, value)
-
-    @property
-    def conn_str(self) -> List[str]:
-        """
-        Connection of this winding {Series, wye*, Delta, LN, LL }. Default is "wye" with the neutral solidly grounded. 
-        For AutoTrans, Winding 1 is always Series and Winding 2 (the Common winding) is always Wye. 
-        If only 2 windings, no need to specify connections.
-
-        DSS property name: `conn`, DSS property index: 5.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 5)
-
-    @conn_str.setter
-    def conn_str(self, value: AnyStr):
-        self.conn = value
-
-    @property
-    def kV(self) -> Float64Array:
-        """
-        For 2-or 3-phase, enter phase-phase kV rating.  Otherwise, kV rating of the actual winding. Specify H terminal kV rating for Series winding.
-
-        DSS property name: `kV`, DSS property index: 6.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 6)
-
-    @kV.setter
-    def kV(self, value: Float64Array):
-        self._set_float64_array(6, value)
-
-    @property
-    def kVA(self) -> Float64Array:
-        """
-        Base kVA rating of the winding. Side effect: forces change of max normal and emerg kVA ratings.If 2-winding AutoTrans, forces other winding to same value. When winding 1 is defined, all other windings are defaulted to the same rating and the first two winding resistances are defaulted to the %loadloss value.
-
-        DSS property name: `kVA`, DSS property index: 7.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 7)
-
-    @kVA.setter
-    def kVA(self, value: Float64Array):
-        self._set_float64_array(7, value)
-
-    @property
-    def tap(self) -> Float64Array:
-        """
-        Per unit tap that this winding is on.
-
-        DSS property name: `tap`, DSS property index: 8.
-        """
-        return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 8)
-
-    @tap.setter
-    def tap(self, value: Float64Array):
-        self._set_float64_array(8, value)
-
-    @property
     def pctR(self) -> Float64Array:
         """
         Percent ac resistance this winding.  This value is for the power flow model.Is derived from the full load losses in the transformer test report.
@@ -16919,7 +16277,7 @@ class AutoTrans(DSSObj):
 
     @pctR.setter
     def pctR(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def Rdcohms(self) -> Float64Array:
@@ -16932,7 +16290,7 @@ class AutoTrans(DSSObj):
 
     @Rdcohms.setter
     def Rdcohms(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def Core(self) -> CoreType:
@@ -16946,7 +16304,7 @@ class AutoTrans(DSSObj):
     @Core.setter
     def Core(self, value: Union[AnyStr, int, CoreType]):
         if not isinstance(value, int):
-            self._set_string(11, value)
+            self._set_string_o(11, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 11, value)
 
@@ -16975,7 +16333,7 @@ class AutoTrans(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 12)
 
     @buses.setter
-    def buses(self, value: List[str]):
+    def buses(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 12, value_ptr, value_count)
         self._check_for_error()
@@ -16989,14 +16347,14 @@ class AutoTrans(DSSObj):
 
         DSS property name: `conns`, DSS property index: 13.
         """
-        return [AutoTransConnection(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 13)]
+        return [AutoTrans.AutoTransConnection(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 13)]
 
     @conns.setter
     def conns(self, value: Union[List[Union[int,AutoTransConnection]], List[AnyStr]]):
-        if not isinstance(value, int):
-            self._set_string_array(13, value)
+        if len(value) and not isinstance(value[0], int):
+            self._set_string_array_o(13, value)
             return    
-        self._set_int32_array(13, value)
+        self._set_int32_array_o(13, value)
 
     @property
     def conns_str(self) -> List[str]:
@@ -17030,7 +16388,7 @@ class AutoTrans(DSSObj):
 
     @kVs.setter
     def kVs(self, value: Float64Array):
-        self._set_float64_array(14, value)
+        self._set_float64_array_o(14, value)
 
     @property
     def kVAs(self) -> Float64Array:
@@ -17043,7 +16401,7 @@ class AutoTrans(DSSObj):
 
     @kVAs.setter
     def kVAs(self, value: Float64Array):
-        self._set_float64_array(15, value)
+        self._set_float64_array_o(15, value)
 
     @property
     def taps(self) -> Float64Array:
@@ -17056,7 +16414,7 @@ class AutoTrans(DSSObj):
 
     @taps.setter
     def taps(self, value: Float64Array):
-        self._set_float64_array(16, value)
+        self._set_float64_array_o(16, value)
 
     @property
     def XHX(self) -> float:
@@ -17112,7 +16470,7 @@ class AutoTrans(DSSObj):
 
     @XSCarray.setter
     def XSCarray(self, value: Float64Array):
-        self._set_float64_array(20, value)
+        self._set_float64_array_o(20, value)
 
     @property
     def thermal(self) -> float:
@@ -17255,7 +16613,7 @@ class AutoTrans(DSSObj):
 
     @MaxTap.setter
     def MaxTap(self, value: Float64Array):
-        self._set_float64_array(31, value)
+        self._set_float64_array_o(31, value)
 
     @property
     def MinTap(self) -> Float64Array:
@@ -17268,7 +16626,7 @@ class AutoTrans(DSSObj):
 
     @MinTap.setter
     def MinTap(self, value: Float64Array):
-        self._set_float64_array(32, value)
+        self._set_float64_array_o(32, value)
 
     @property
     def NumTaps(self) -> Int32Array:
@@ -17281,7 +16639,7 @@ class AutoTrans(DSSObj):
 
     @NumTaps.setter
     def NumTaps(self, value: Int32Array):
-        self._set_int32_array(33, value)
+        self._set_int32_array_o(33, value)
 
     @property
     def subname(self) -> str:
@@ -17294,7 +16652,7 @@ class AutoTrans(DSSObj):
 
     @subname.setter
     def subname(self, value: AnyStr):
-        self._set_string(34, value)
+        self._set_string_o(34, value)
 
     @property
     def pctimag(self) -> float:
@@ -17335,7 +16693,7 @@ class AutoTrans(DSSObj):
 
     @pctRs.setter
     def pctRs(self, value: Float64Array):
-        self._set_float64_array(37, value)
+        self._set_float64_array_o(37, value)
 
     @property
     def XRConst(self) -> bool:
@@ -17362,7 +16720,7 @@ class AutoTrans(DSSObj):
     @LeadLag.setter
     def LeadLag(self, value: Union[AnyStr, int, PhaseSequence]):
         if not isinstance(value, int):
-            self._set_string(39, value)
+            self._set_string_o(39, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 39, value)
 
@@ -17488,9 +16846,10 @@ class AutoTrans(DSSObj):
 
         DSS property name: `like`, DSS property index: 48.
         """
-        self._set_string(48, value)
+        self._set_string_o(48, value)
 
 class RegControl(DSSObj):
+    __slots__ = []
     _cls_name = 'RegControl'
     _cls_idx = 21
     _cls_prop_idx = {
@@ -17555,7 +16914,7 @@ class RegControl(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def transformer_obj(self) -> DSSObj:
@@ -17674,7 +17033,7 @@ class RegControl(DSSObj):
 
     @bus.setter
     def bus(self, value: AnyStr):
-        self._set_string(9, value)
+        self._set_string_o(9, value)
 
     @property
     def delay(self) -> float:
@@ -17847,12 +17206,12 @@ class RegControl(DSSObj):
         if value > 0:
             return value
     
-        return RegControlPhaseSelection(value)
+        return RegControl.RegControlPhaseSelection(value)
 
     @PTphase.setter
     def PTphase(self, value: Union[AnyStr, int, RegControlPhaseSelection]):
         if not isinstance(value, int):
-            self._set_string(22, value)
+            self._set_string_o(22, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 22, value)
 
@@ -18028,11 +17387,12 @@ class RegControl(DSSObj):
 
         DSS property name: `like`, DSS property index: 35.
         """
-        self._set_string(35, value)
+        self._set_string_o(35, value)
 
 class InvControl(DSSObj):
+    __slots__ = []
     _cls_name = 'InvControl'
-    _cls_idx = 41
+    _cls_idx = 42
     _cls_prop_idx = {
         'derlist': 1,
         'mode': 2,
@@ -18064,11 +17424,13 @@ class InvControl(DSSObj):
         'voltwattch_curve': 28,
         'wattpf_curve': 29,
         'wattvar_curve': 30,
-        'pvsystemlist': 31,
-        'vsetpoint': 32,
-        'basefreq': 33,
-        'enabled': 34,
-        'like': 35,
+        'vv_refreactivepower': 31,
+        'pvsystemlist': 32,
+        'vsetpoint': 33,
+        'controlmodel': 34,
+        'basefreq': 35,
+        'enabled': 36,
+        'like': 37,
     }
 
     # Class-specific enumerations
@@ -18080,6 +17442,7 @@ class InvControl(DSSObj):
         WattPF = 4 # WattPF
         Wattvar = 5 # Wattvar
         AVR = 6 # AVR
+        GFM = 7 # GFM
 
     class InvControlCombiMode(IntEnum):
         """InvControl: Combi Mode (DSS enumeration for InvControl)"""
@@ -18110,6 +17473,11 @@ class InvControl(DSSObj):
         VARAVAL = 0 # VARAVAL
         VARMAX = 1 # VARMAX
 
+    class InvControlControlModel(IntEnum):
+        """InvControl: Control Model (DSS enumeration for InvControl)"""
+        Linear = 0 # Linear
+        Exponential = 1 # Exponential
+
 
     @property
     def DERList(self) -> List[str]:
@@ -18123,7 +17491,7 @@ class InvControl(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 1)
 
     @DERList.setter
-    def DERList(self, value: List[str]):
+    def DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count)
         self._check_for_error()
@@ -18133,7 +17501,7 @@ class InvControl(DSSObj):
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
-        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR} 
+        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
         if the user desires to use modes simultaneously, then set the CombiMode property. Setting the Mode to any valid value disables combination mode.
 
         In volt-var mode (Default). This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
@@ -18146,14 +17514,16 @@ class InvControl(DSSObj):
 
         In watt-var mode. This mode attempts to CONTROL the vars, according to a watt-var curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
 
+        In GFM mode this control will trigger the GFM control routine for the DERs within the DERList. The GFM actiosn will only take place if the pointed DERs are in GFM mode. The controller parameters are locally setup at the DER.
+
         DSS property name: `Mode`, DSS property index: 2.
         """
-        return InvControlControlMode(self._lib.Obj_GetInt32(self._ptr, 2))
+        return InvControl.InvControlControlMode(self._lib.Obj_GetInt32(self._ptr, 2))
 
     @Mode.setter
     def Mode(self, value: Union[AnyStr, int, InvControlControlMode]):
         if not isinstance(value, int):
-            self._set_string(2, value)
+            self._set_string_o(2, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
@@ -18162,7 +17532,7 @@ class InvControl(DSSObj):
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
-        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR} 
+        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
         if the user desires to use modes simultaneously, then set the CombiMode property. Setting the Mode to any valid value disables combination mode.
 
         In volt-var mode (Default). This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
@@ -18174,6 +17544,8 @@ class InvControl(DSSObj):
         In watt-pf mode. This mode attempts to CONTROL the vars, according to a watt-pf curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
 
         In watt-var mode. This mode attempts to CONTROL the vars, according to a watt-var curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
+
+        In GFM mode this control will trigger the GFM control routine for the DERs within the DERList. The GFM actiosn will only take place if the pointed DERs are in GFM mode. The controller parameters are locally setup at the DER.
 
         DSS property name: `Mode`, DSS property index: 2.
         """
@@ -18197,12 +17569,12 @@ class InvControl(DSSObj):
 
         DSS property name: `CombiMode`, DSS property index: 3.
         """
-        return InvControlCombiMode(self._lib.Obj_GetInt32(self._ptr, 3))
+        return InvControl.InvControlCombiMode(self._lib.Obj_GetInt32(self._ptr, 3))
 
     @CombiMode.setter
     def CombiMode(self, value: Union[AnyStr, int, InvControlCombiMode]):
         if not isinstance(value, int):
-            self._set_string(3, value)
+            self._set_string_o(3, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
@@ -18246,7 +17618,7 @@ class InvControl(DSSObj):
             self._set_obj(4, value)
             return
 
-        self._set_string(4, value)
+        self._set_string_o(4, value)
 
     @property
     def vvc_curve1_obj(self) -> XYcurve:
@@ -18306,12 +17678,12 @@ class InvControl(DSSObj):
 
         DSS property name: `voltage_curvex_ref`, DSS property index: 6.
         """
-        return InvControlVoltageCurveXRef(self._lib.Obj_GetInt32(self._ptr, 6))
+        return InvControl.InvControlVoltageCurveXRef(self._lib.Obj_GetInt32(self._ptr, 6))
 
     @voltage_curvex_ref.setter
     def voltage_curvex_ref(self, value: Union[AnyStr, int, InvControlVoltageCurveXRef]):
         if not isinstance(value, int):
-            self._set_string(6, value)
+            self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
@@ -18380,7 +17752,7 @@ class InvControl(DSSObj):
             self._set_obj(8, value)
             return
 
-        self._set_string(8, value)
+        self._set_string_o(8, value)
 
     @property
     def voltwatt_curve_obj(self) -> XYcurve:
@@ -18502,7 +17874,9 @@ class InvControl(DSSObj):
 
         if numerical instability is noticed in solutions such as var sign changing from one control iteration to the next and voltages oscillating between two values with some separation, this is an indication of numerical instability (use the EventLog to diagnose). 
 
-        if the maximum control iterations are exceeded, and no numerical instability is seen in the EventLog of via monitors, then try increasing the value of this parameter to reduce the number of control iterations needed to achieve the control criteria, and move to the power flow solution.
+        if the maximum control iterations are exceeded, and no numerical instability is seen in the EventLog of via monitors, then try increasing the value of this parameter to reduce the number of control iterations needed to achieve the control criteria, and move to the power flow solution. 
+
+        When operating the controller using expoenential control model (see CtrlModel), this parameter represents the sampling time gain of the controller, which is used for accelrating the controller response in terms of control iterations required.
 
         DSS property name: `deltaQ_Factor`, DSS property index: 14.
         """
@@ -18567,12 +17941,12 @@ class InvControl(DSSObj):
 
         DSS property name: `VoltwattYAxis`, DSS property index: 17.
         """
-        return InvControlVoltWattYAxis(self._lib.Obj_GetInt32(self._ptr, 17))
+        return InvControl.InvControlVoltWattYAxis(self._lib.Obj_GetInt32(self._ptr, 17))
 
     @VoltwattYAxis.setter
     def VoltwattYAxis(self, value: Union[AnyStr, int, InvControlVoltWattYAxis]):
         if not isinstance(value, int):
-            self._set_string(17, value)
+            self._set_string_o(17, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
@@ -18614,12 +17988,12 @@ class InvControl(DSSObj):
 
         DSS property name: `RateofChangeMode`, DSS property index: 18.
         """
-        return InvControlRateOfChangeMode(self._lib.Obj_GetInt32(self._ptr, 18))
+        return InvControl.InvControlRateOfChangeMode(self._lib.Obj_GetInt32(self._ptr, 18))
 
     @RateofChangeMode.setter
     def RateofChangeMode(self, value: Union[AnyStr, int, InvControlRateOfChangeMode]):
         if not isinstance(value, int):
-            self._set_string(18, value)
+            self._set_string_o(18, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 18, value)
 
@@ -18699,7 +18073,7 @@ class InvControl(DSSObj):
     @property
     def EventLog(self) -> bool:
         """
-        {Yes/True* | No/False} Default is YES for InvControl. Log control actions to Eventlog.
+        {Yes/True | No/False*} Default is NO for InvControl. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 22.
         """
@@ -18722,12 +18096,12 @@ class InvControl(DSSObj):
 
         DSS property name: `RefReactivePower`, DSS property index: 23.
         """
-        return InvControlReactivePowerReference(self._lib.Obj_GetInt32(self._ptr, 23))
+        return InvControl.InvControlReactivePowerReference(self._lib.Obj_GetInt32(self._ptr, 23))
 
     @RefReactivePower.setter
     def RefReactivePower(self, value: Union[AnyStr, int, InvControlReactivePowerReference]):
         if not isinstance(value, int):
-            self._set_string(23, value)
+            self._set_string_o(23, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 23, value)
 
@@ -18785,7 +18159,7 @@ class InvControl(DSSObj):
     @monVoltageCalc.setter
     def monVoltageCalc(self, value: Union[AnyStr, int, MonitoredPhase]):
         if not isinstance(value, int):
-            self._set_string(25, value)
+            self._set_string_o(25, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 25, value)
 
@@ -18812,7 +18186,7 @@ class InvControl(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 26)
 
     @monBus.setter
-    def monBus(self, value: List[str]):
+    def monBus(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 26, value_ptr, value_count)
         self._check_for_error()
@@ -18828,7 +18202,7 @@ class InvControl(DSSObj):
 
     @MonBusesVbase.setter
     def MonBusesVbase(self, value: Float64Array):
-        self._set_float64_array(27, value)
+        self._set_float64_array_o(27, value)
 
     @property
     def voltwattCH_curve(self) -> str:
@@ -18853,7 +18227,7 @@ class InvControl(DSSObj):
             self._set_obj(28, value)
             return
 
-        self._set_string(28, value)
+        self._set_string_o(28, value)
 
     @property
     def voltwattCH_curve_obj(self) -> XYcurve:
@@ -18904,7 +18278,7 @@ class InvControl(DSSObj):
             self._set_obj(29, value)
             return
 
-        self._set_string(29, value)
+        self._set_string_o(29, value)
 
     @property
     def wattpf_curve_obj(self) -> XYcurve:
@@ -18952,7 +18326,7 @@ class InvControl(DSSObj):
             self._set_obj(30, value)
             return
 
-        self._set_string(30, value)
+        self._set_string_o(30, value)
 
     @property
     def wattvar_curve_obj(self) -> XYcurve:
@@ -18973,58 +18347,62 @@ class InvControl(DSSObj):
         self._set_obj(30, value)
 
     @property
-    def PVSystemList(self) -> List[str]:
-        """
-        Deprecated, use DERList instead.
-
-        DSS property name: `PVSystemList`, DSS property index: 31.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 31)
-
-    @PVSystemList.setter
-    def PVSystemList(self, value: List[str]):
-        value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, 31, value_ptr, value_count)
-        self._check_for_error()
-
-    @property
     def Vsetpoint(self) -> float:
         """
         Required for Active Voltage Regulation (AVR).
 
-        DSS property name: `Vsetpoint`, DSS property index: 32.
+        DSS property name: `Vsetpoint`, DSS property index: 33.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 32)
+        return self._lib.Obj_GetFloat64(self._ptr, 33)
 
     @Vsetpoint.setter
     def Vsetpoint(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 32, value)
+        self._lib.Obj_SetFloat64(self._ptr, 33, value)
+
+    @property
+    def ControlModel(self) -> InvControlControlModel:
+        """
+        Integer defining the method for moving across the control curve. It can be one of the following:
+
+        0 = Linear mode (default)
+        1 = Exponential
+
+        Use this property for better tunning your controller and improve the controller response in terms of control iterations needed to reach the target.
+        This property alters the meaning of deltaQ_factor and deltaP_factor properties accroding to its value (Check help). The method can also be combined with the controller tolerance for improving performance.
+
+        DSS property name: `ControlModel`, DSS property index: 34.
+        """
+        return InvControl.InvControlControlModel(self._lib.Obj_GetInt32(self._ptr, 34))
+
+    @ControlModel.setter
+    def ControlModel(self, value: Union[int, InvControlControlModel]):
+        self._lib.Obj_SetInt32(self._ptr, 34, value)
 
     @property
     def basefreq(self) -> float:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 33.
+        DSS property name: `basefreq`, DSS property index: 35.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 33)
+        return self._lib.Obj_GetFloat64(self._ptr, 35)
 
     @basefreq.setter
     def basefreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 33, value)
+        self._lib.Obj_SetFloat64(self._ptr, 35, value)
 
     @property
     def enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 34.
+        DSS property name: `enabled`, DSS property index: 36.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 34) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 36) != 0
 
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 34, value)
+        self._lib.Obj_SetInt32(self._ptr, 36, value)
 
     def like(self, value: AnyStr):
         """
@@ -19032,13 +18410,14 @@ class InvControl(DSSObj):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 35.
+        DSS property name: `like`, DSS property index: 37.
         """
-        self._set_string(35, value)
+        self._set_string_o(37, value)
 
 class ExpControl(DSSObj):
+    __slots__ = []
     _cls_name = 'ExpControl'
-    _cls_idx = 42
+    _cls_idx = 43
     _cls_prop_idx = {
         'pvsystemlist': 1,
         'vreg': 2,
@@ -19071,7 +18450,7 @@ class ExpControl(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 1)
 
     @PVSystemList.setter
-    def PVSystemList(self, value: List[str]):
+    def PVSystemList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count)
         self._check_for_error()
@@ -19262,7 +18641,7 @@ class ExpControl(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 14)
 
     @DERList.setter
-    def DERList(self, value: List[str]):
+    def DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 14, value_ptr, value_count)
         self._check_for_error()
@@ -19301,11 +18680,12 @@ class ExpControl(DSSObj):
 
         DSS property name: `like`, DSS property index: 17.
         """
-        self._set_string(17, value)
+        self._set_string_o(17, value)
 
 class GICLine(DSSObj):
+    __slots__ = []
     _cls_name = 'GICLine'
-    _cls_idx = 43
+    _cls_idx = 44
     _cls_prop_idx = {
         'bus1': 1,
         'bus2': 2,
@@ -19341,7 +18721,7 @@ class GICLine(DSSObj):
 
     @bus1.setter
     def bus1(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def bus2(self) -> str:
@@ -19358,7 +18738,7 @@ class GICLine(DSSObj):
 
     @bus2.setter
     def bus2(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def Volts(self) -> float:
@@ -19552,7 +18932,7 @@ class GICLine(DSSObj):
             self._set_obj(16, value)
             return
 
-        self._set_string(16, value)
+        self._set_string_o(16, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
@@ -19601,11 +18981,12 @@ class GICLine(DSSObj):
 
         DSS property name: `like`, DSS property index: 19.
         """
-        self._set_string(19, value)
+        self._set_string_o(19, value)
 
 class GICTransformer(DSSObj):
+    __slots__ = []
     _cls_name = 'GICTransformer'
-    _cls_idx = 44
+    _cls_idx = 45
     _cls_prop_idx = {
         'bush': 1,
         'busnh': 2,
@@ -19655,7 +19036,7 @@ class GICTransformer(DSSObj):
 
     @BusH.setter
     def BusH(self, value: AnyStr):
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def BusNH(self) -> str:
@@ -19668,7 +19049,7 @@ class GICTransformer(DSSObj):
 
     @BusNH.setter
     def BusNH(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def BusX(self) -> str:
@@ -19681,7 +19062,7 @@ class GICTransformer(DSSObj):
 
     @BusX.setter
     def BusX(self, value: AnyStr):
-        self._set_string(3, value)
+        self._set_string_o(3, value)
 
     @property
     def BusNX(self) -> str:
@@ -19694,7 +19075,7 @@ class GICTransformer(DSSObj):
 
     @BusNX.setter
     def BusNX(self, value: AnyStr):
-        self._set_string(4, value)
+        self._set_string_o(4, value)
 
     @property
     def phases(self) -> int:
@@ -19716,12 +19097,12 @@ class GICTransformer(DSSObj):
 
         DSS property name: `Type`, DSS property index: 6.
         """
-        return GICTransformerType(self._lib.Obj_GetInt32(self._ptr, 6))
+        return GICTransformer.GICTransformerType(self._lib.Obj_GetInt32(self._ptr, 6))
 
     @Type.setter
     def Type(self, value: Union[AnyStr, int, GICTransformerType]):
         if not isinstance(value, int):
-            self._set_string(6, value)
+            self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
@@ -19818,7 +19199,7 @@ class GICTransformer(DSSObj):
             self._set_obj(12, value)
             return
 
-        self._set_string(12, value)
+        self._set_string_o(12, value)
 
     @property
     def VarCurve_obj(self) -> XYcurve:
@@ -19979,11 +19360,12 @@ class GICTransformer(DSSObj):
 
         DSS property name: `like`, DSS property index: 23.
         """
-        self._set_string(23, value)
+        self._set_string_o(23, value)
 
 class VSConverter(DSSObj):
+    __slots__ = []
     _cls_name = 'VSConverter'
-    _cls_idx = 45
+    _cls_idx = 46
     _cls_prop_idx = {
         'phases': 1,
         'bus1': 2,
@@ -20044,7 +19426,7 @@ class VSConverter(DSSObj):
 
     @Bus1.setter
     def Bus1(self, value: AnyStr):
-        self._set_string(2, value)
+        self._set_string_o(2, value)
 
     @property
     def kVac(self) -> float:
@@ -20267,12 +19649,12 @@ class VSConverter(DSSObj):
 
         DSS property name: `VscMode`, DSS property index: 19.
         """
-        return VSConverterControlMode(self._lib.Obj_GetInt32(self._ptr, 19))
+        return VSConverter.VSConverterControlMode(self._lib.Obj_GetInt32(self._ptr, 19))
 
     @VscMode.setter
     def VscMode(self, value: Union[AnyStr, int, VSConverterControlMode]):
         if not isinstance(value, int):
-            self._set_string(19, value)
+            self._set_string_o(19, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 19, value)
 
@@ -20304,7 +19686,7 @@ class VSConverter(DSSObj):
             self._set_obj(20, value)
             return
 
-        self._set_string(20, value)
+        self._set_string_o(20, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
@@ -20353,11 +19735,12 @@ class VSConverter(DSSObj):
 
         DSS property name: `like`, DSS property index: 23.
         """
-        self._set_string(23, value)
+        self._set_string_o(23, value)
 
 class Monitor(DSSObj):
+    __slots__ = []
     _cls_name = 'Monitor'
-    _cls_idx = 46
+    _cls_idx = 47
     _cls_prop_idx = {
         'element': 1,
         'terminal': 2,
@@ -20396,7 +19779,7 @@ class Monitor(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def element_obj(self) -> DSSObj:
@@ -20476,7 +19859,7 @@ class Monitor(DSSObj):
             self._lib.Obj_SetInt32(self._ptr, 4, value)
             return
     
-        self._set_string(4, value)
+        self._set_string_o(4, value)
 
     @property
     def residual(self) -> bool:
@@ -20551,11 +19934,12 @@ class Monitor(DSSObj):
 
         DSS property name: `like`, DSS property index: 10.
         """
-        self._set_string(10, value)
+        self._set_string_o(10, value)
 
 class EnergyMeter(DSSObj):
+    __slots__ = []
     _cls_name = 'EnergyMeter'
-    _cls_idx = 47
+    _cls_idx = 48
     _cls_prop_idx = {
         'element': 1,
         'terminal': 2,
@@ -20613,7 +19997,7 @@ class EnergyMeter(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def element_obj(self) -> DSSObj:
@@ -20660,7 +20044,7 @@ class EnergyMeter(DSSObj):
             self._lib.Obj_SetInt32(self._ptr, 3, value)
             return
     
-        self._set_string(3, value)
+        self._set_string_o(3, value)
 
     @property
     def option(self) -> List[str]:
@@ -20681,7 +20065,7 @@ class EnergyMeter(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
 
     @option.setter
-    def option(self, value: List[str]):
+    def option(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 4, value_ptr, value_count)
         self._check_for_error()
@@ -20723,7 +20107,7 @@ class EnergyMeter(DSSObj):
 
     @peakcurrent.setter
     def peakcurrent(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def Zonelist(self) -> List[str]:
@@ -20738,7 +20122,7 @@ class EnergyMeter(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 8)
 
     @Zonelist.setter
-    def Zonelist(self, value: List[str]):
+    def Zonelist(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 8, value_ptr, value_count)
         self._check_for_error()
@@ -20767,7 +20151,7 @@ class EnergyMeter(DSSObj):
 
     @Mask.setter
     def Mask(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def Losses(self) -> bool:
@@ -20985,11 +20369,12 @@ class EnergyMeter(DSSObj):
 
         DSS property name: `like`, DSS property index: 27.
         """
-        self._set_string(27, value)
+        self._set_string_o(27, value)
 
 class Sensor(DSSObj):
+    __slots__ = []
     _cls_name = 'Sensor'
-    _cls_idx = 48
+    _cls_idx = 49
     _cls_prop_idx = {
         'element': 1,
         'terminal': 2,
@@ -21024,7 +20409,7 @@ class Sensor(DSSObj):
             self._set_obj(1, value)
             return
 
-        self._set_string(1, value)
+        self._set_string_o(1, value)
 
     @property
     def element_obj(self) -> DSSObj:
@@ -21090,7 +20475,7 @@ class Sensor(DSSObj):
 
     @kVs.setter
     def kVs(self, value: Float64Array):
-        self._set_float64_array(5, value)
+        self._set_float64_array_o(5, value)
 
     @property
     def currents(self) -> Float64Array:
@@ -21103,7 +20488,7 @@ class Sensor(DSSObj):
 
     @currents.setter
     def currents(self, value: Float64Array):
-        self._set_float64_array(6, value)
+        self._set_float64_array_o(6, value)
 
     @property
     def kWs(self) -> Float64Array:
@@ -21117,7 +20502,7 @@ class Sensor(DSSObj):
 
     @kWs.setter
     def kWs(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def kvars(self) -> Float64Array:
@@ -21130,7 +20515,7 @@ class Sensor(DSSObj):
 
     @kvars.setter
     def kvars(self, value: Float64Array):
-        self._set_float64_array(8, value)
+        self._set_float64_array_o(8, value)
 
     @property
     def conn(self) -> Connection:
@@ -21146,7 +20531,7 @@ class Sensor(DSSObj):
     @conn.setter
     def conn(self, value: Union[AnyStr, int, Connection]):
         if not isinstance(value, int):
-            self._set_string(9, value)
+            self._set_string_o(9, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 9, value)
 
@@ -21238,7 +20623,1251 @@ class Sensor(DSSObj):
 
         DSS property name: `like`, DSS property index: 15.
         """
-        self._set_string(15, value)
+        self._set_string_o(15, value)
+
+class LineCodeProperties(TypedDict):
+    nphases: int
+    r1: float
+    x1: float
+    r0: float
+    x0: float
+    C1: float
+    C0: float
+    units: Union[AnyStr, int, DimensionUnits]
+    rmatrix: Float64Array
+    xmatrix: Float64Array
+    cmatrix: Float64Array
+    baseFreq: float
+    normamps: float
+    emergamps: float
+    faultrate: float
+    pctperm: float
+    repair: float
+    Kron: bool
+    Rg: float
+    Xg: float
+    rho: float
+    neutral: int
+    B1: float
+    B0: float
+    Seasons: int
+    Ratings: Float64Array
+    linetype: Union[AnyStr, int, LineType]
+    like: AnyStr
+
+class LoadShapeProperties(TypedDict):
+    npts: int
+    interval: float
+    hour: Float64Array
+    mean: float
+    stddev: float
+    csvfile: AnyStr
+    sngfile: AnyStr
+    dblfile: AnyStr
+    action: Union[str, bytes, int, LoadShape.LoadShapeAction]
+    qmult: Float64Array
+    UseActual: bool
+    Pmax: float
+    Qmax: float
+    sinterval: float
+    minterval: float
+    Pbase: float
+    Qbase: float
+    Pmult: Float64Array
+    PQCSVFile: AnyStr
+    MemoryMapping: bool
+    like: AnyStr
+
+class TShapeProperties(TypedDict):
+    npts: int
+    interval: float
+    temp: Float64Array
+    hour: Float64Array
+    mean: float
+    stddev: float
+    csvfile: AnyStr
+    sngfile: AnyStr
+    dblfile: AnyStr
+    sinterval: float
+    minterval: float
+    action: Union[str, bytes, int, TShape.TShapeAction]
+    like: AnyStr
+
+class PriceShapeProperties(TypedDict):
+    npts: int
+    interval: float
+    price: Float64Array
+    hour: Float64Array
+    mean: float
+    stddev: float
+    csvfile: AnyStr
+    sngfile: AnyStr
+    dblfile: AnyStr
+    sinterval: float
+    minterval: float
+    action: Union[str, bytes, int, PriceShape.PriceShapeAction]
+    like: AnyStr
+
+class XYcurveProperties(TypedDict):
+    npts: int
+    Yarray: Float64Array
+    Xarray: Float64Array
+    csvfile: AnyStr
+    sngfile: AnyStr
+    dblfile: AnyStr
+    x: float
+    y: float
+    Xshift: float
+    Yshift: float
+    Xscale: float
+    Yscale: float
+    like: AnyStr
+
+class GrowthShapeProperties(TypedDict):
+    npts: int
+    year: Float64Array
+    mult: Float64Array
+    csvfile: AnyStr
+    sngfile: AnyStr
+    dblfile: AnyStr
+    like: AnyStr
+
+class TCC_CurveProperties(TypedDict):
+    npts: int
+    C_array: Float64Array
+    T_array: Float64Array
+    like: AnyStr
+
+class SpectrumProperties(TypedDict):
+    NumHarm: int
+    harmonic: Float64Array
+    pctmag: Float64Array
+    angle: Float64Array
+    CSVFile: AnyStr
+    like: AnyStr
+
+class WireDataProperties(TypedDict):
+    Rdc: float
+    Rac: float
+    Runits: Union[AnyStr, int, DimensionUnits]
+    GMRac: float
+    GMRunits: Union[AnyStr, int, DimensionUnits]
+    radius: float
+    radunits: Union[AnyStr, int, DimensionUnits]
+    normamps: float
+    emergamps: float
+    diam: float
+    Seasons: int
+    Ratings: Float64Array
+    Capradius: float
+    like: AnyStr
+
+class CNDataProperties(TypedDict):
+    k: int
+    DiaStrand: float
+    GmrStrand: float
+    Rstrand: float
+    EpsR: float
+    InsLayer: float
+    DiaIns: float
+    DiaCable: float
+    Rdc: float
+    Rac: float
+    Runits: Union[AnyStr, int, DimensionUnits]
+    GMRac: float
+    GMRunits: Union[AnyStr, int, DimensionUnits]
+    radius: float
+    radunits: Union[AnyStr, int, DimensionUnits]
+    normamps: float
+    emergamps: float
+    diam: float
+    Seasons: int
+    Ratings: Float64Array
+    Capradius: float
+    like: AnyStr
+
+class TSDataProperties(TypedDict):
+    DiaShield: float
+    TapeLayer: float
+    TapeLap: float
+    EpsR: float
+    InsLayer: float
+    DiaIns: float
+    DiaCable: float
+    Rdc: float
+    Rac: float
+    Runits: Union[AnyStr, int, DimensionUnits]
+    GMRac: float
+    GMRunits: Union[AnyStr, int, DimensionUnits]
+    radius: float
+    radunits: Union[AnyStr, int, DimensionUnits]
+    normamps: float
+    emergamps: float
+    diam: float
+    Seasons: int
+    Ratings: Float64Array
+    Capradius: float
+    like: AnyStr
+
+class LineSpacingProperties(TypedDict):
+    nconds: int
+    nphases: int
+    x: Float64Array
+    h: Float64Array
+    units: Union[AnyStr, int, DimensionUnits]
+    like: AnyStr
+
+class LineGeometryProperties(TypedDict):
+    nconds: int
+    nphases: int
+    x: Float64Array
+    h: Float64Array
+    units: Union[AnyStr, int, DimensionUnits]
+    normamps: float
+    emergamps: float
+    reduce: bool
+    spacing: Union[AnyStr, LineSpacing]
+    wires: List[Union[AnyStr, WireData]]
+    cncables: List[Union[AnyStr, CNData]]
+    tscables: List[Union[AnyStr, TSData]]
+    Seasons: int
+    Ratings: Float64Array
+    linetype: Union[AnyStr, int, LineType]
+    like: AnyStr
+
+class XfmrCodeProperties(TypedDict):
+    phases: int
+    windings: int
+    pctR: Float64Array
+    Rneut: Float64Array
+    Xneut: Float64Array
+    conns: Union[List[Union[int,Connection]], List[AnyStr]]
+    kVs: Float64Array
+    kVAs: Float64Array
+    taps: Float64Array
+    Xhl: float
+    Xht: float
+    Xlt: float
+    Xscarray: Float64Array
+    thermal: float
+    n: float
+    m: float
+    flrise: float
+    hsrise: float
+    pctloadloss: float
+    pctnoloadloss: float
+    normhkVA: float
+    emerghkVA: float
+    MaxTap: Float64Array
+    MinTap: Float64Array
+    NumTaps: Int32Array
+    pctimag: float
+    ppm_antifloat: float
+    pctRs: Float64Array
+    X12: float
+    X13: float
+    X23: float
+    RdcOhms: Float64Array
+    Seasons: int
+    Ratings: Float64Array
+    like: AnyStr
+
+class LineProperties(TypedDict):
+    bus1: AnyStr
+    bus2: AnyStr
+    linecode: Union[AnyStr, LineCode]
+    length: float
+    phases: int
+    r1: float
+    x1: float
+    r0: float
+    x0: float
+    C1: float
+    C0: float
+    rmatrix: Float64Array
+    xmatrix: Float64Array
+    cmatrix: Float64Array
+    Switch: bool
+    Rg: float
+    Xg: float
+    rho: float
+    geometry: Union[AnyStr, LineGeometry]
+    units: Union[AnyStr, int, DimensionUnits]
+    spacing: Union[AnyStr, LineSpacing]
+    wires: List[Union[AnyStr, WireData]]
+    earthmodel: Union[AnyStr, int, EarthModel]
+    cncables: List[Union[AnyStr, CNData]]
+    tscables: List[Union[AnyStr, TSData]]
+    B1: float
+    B0: float
+    Seasons: int
+    Ratings: Float64Array
+    linetype: Union[AnyStr, int, LineType]
+    normamps: float
+    emergamps: float
+    faultrate: float
+    pctperm: float
+    repair: float
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class VsourceProperties(TypedDict):
+    bus1: AnyStr
+    basekv: float
+    pu: float
+    angle: float
+    frequency: float
+    phases: int
+    MVAsc3: float
+    MVAsc1: float
+    x1r1: float
+    x0r0: float
+    Isc3: float
+    Isc1: float
+    R1: float
+    X1: float
+    R0: float
+    X0: float
+    scantype: Union[AnyStr, int, ScanType]
+    Sequence: Union[AnyStr, int, SequenceType]
+    bus2: AnyStr
+    Z2: complex
+    puZ1: complex
+    puZ0: complex
+    puZ2: complex
+    baseMVA: float
+    Yearly: Union[AnyStr, LoadShape]
+    Daily: Union[AnyStr, LoadShape]
+    Duty: Union[AnyStr, LoadShape]
+    Model: Union[AnyStr, int, Vsource.VSourceModel]
+    puZideal: complex
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class IsourceProperties(TypedDict):
+    bus1: AnyStr
+    amps: float
+    angle: float
+    frequency: float
+    phases: int
+    scantype: Union[AnyStr, int, ScanType]
+    sequence: Union[AnyStr, int, SequenceType]
+    Yearly: Union[AnyStr, LoadShape]
+    Daily: Union[AnyStr, LoadShape]
+    Duty: Union[AnyStr, LoadShape]
+    Bus2: AnyStr
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class VCCSProperties(TypedDict):
+    bus1: AnyStr
+    phases: int
+    prated: float
+    vrated: float
+    ppct: float
+    bp1: Union[AnyStr, XYcurve]
+    bp2: Union[AnyStr, XYcurve]
+    filter: Union[AnyStr, XYcurve]
+    fsample: float
+    rmsmode: bool
+    imaxpu: float
+    vrmstau: float
+    irmstau: float
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class LoadProperties(TypedDict):
+    phases: int
+    bus1: AnyStr
+    kV: float
+    kW: float
+    pf: float
+    model: Union[int, Load.LoadModel]
+    yearly: Union[AnyStr, LoadShape]
+    daily: Union[AnyStr, LoadShape]
+    duty: Union[AnyStr, LoadShape]
+    growth: Union[AnyStr, GrowthShape]
+    conn: Union[AnyStr, int, Connection]
+    kvar: float
+    Rneut: float
+    Xneut: float
+    status: Union[AnyStr, int, Load.LoadStatus]
+    cls: int
+    Vminpu: float
+    Vmaxpu: float
+    Vminnorm: float
+    Vminemerg: float
+    xfkVA: float
+    allocationfactor: float
+    kVA: float
+    pctmean: float
+    pctstddev: float
+    CVRwatts: float
+    CVRvars: float
+    kwh: float
+    kwhdays: float
+    Cfactor: float
+    CVRcurve: Union[AnyStr, LoadShape]
+    NumCust: int
+    ZIPV: Float64Array
+    pctSeriesRL: float
+    RelWeight: float
+    Vlowpu: float
+    puXharm: float
+    XRharm: float
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class TransformerProperties(TypedDict):
+    phases: int
+    windings: int
+    pctR: Float64Array
+    Rneut: Float64Array
+    Xneut: Float64Array
+    buses: List[AnyStr]
+    conns: Union[List[Union[int,Connection]], List[AnyStr]]
+    kVs: Float64Array
+    kVAs: Float64Array
+    taps: Float64Array
+    XHL: float
+    XHT: float
+    XLT: float
+    Xscarray: Float64Array
+    thermal: float
+    n: float
+    m: float
+    flrise: float
+    hsrise: float
+    pctloadloss: float
+    pctnoloadloss: float
+    normhkVA: float
+    emerghkVA: float
+    sub: bool
+    MaxTap: Float64Array
+    MinTap: Float64Array
+    NumTaps: Int32Array
+    subname: AnyStr
+    pctimag: float
+    ppm_antifloat: float
+    pctRs: Float64Array
+    bank: AnyStr
+    xfmrcode: Union[AnyStr, XfmrCode]
+    XRConst: bool
+    X12: float
+    X13: float
+    X23: float
+    LeadLag: Union[AnyStr, int, PhaseSequence]
+    Core: Union[AnyStr, int, CoreType]
+    RdcOhms: Float64Array
+    Seasons: int
+    Ratings: Float64Array
+    normamps: float
+    emergamps: float
+    faultrate: float
+    pctperm: float
+    repair: float
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class CapacitorProperties(TypedDict):
+    bus1: AnyStr
+    bus2: AnyStr
+    phases: int
+    kvar: Float64Array
+    kv: float
+    conn: Union[AnyStr, int, Connection]
+    cmatrix: Float64Array
+    cuf: Float64Array
+    R: Float64Array
+    XL: Float64Array
+    Harm: Float64Array
+    Numsteps: int
+    states: Int32Array
+    normamps: float
+    emergamps: float
+    faultrate: float
+    pctperm: float
+    repair: float
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class ReactorProperties(TypedDict):
+    bus1: AnyStr
+    bus2: AnyStr
+    phases: int
+    kvar: float
+    kv: float
+    conn: Union[AnyStr, int, Connection]
+    Rmatrix: Float64Array
+    Xmatrix: Float64Array
+    Parallel: bool
+    R: float
+    X: float
+    Rp: float
+    Z1: complex
+    Z2: complex
+    Z0: complex
+    RCurve: Union[AnyStr, XYcurve]
+    LCurve: Union[AnyStr, XYcurve]
+    LmH: float
+    normamps: float
+    emergamps: float
+    faultrate: float
+    pctperm: float
+    repair: float
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class CapControlProperties(TypedDict):
+    element: Union[AnyStr, DSSObj]
+    terminal: int
+    capacitor: Union[AnyStr, Capacitor]
+    type: Union[AnyStr, int, CapControl.CapControlType]
+    PTratio: float
+    CTratio: float
+    ONsetting: float
+    OFFsetting: float
+    Delay: float
+    VoltOverride: bool
+    Vmax: float
+    Vmin: float
+    DelayOFF: float
+    DeadTime: float
+    CTPhase: Union[AnyStr, int, MonitoredPhase]
+    PTPhase: Union[AnyStr, int, MonitoredPhase]
+    VBus: AnyStr
+    EventLog: bool
+    UserModel: AnyStr
+    UserData: AnyStr
+    pctMinkvar: float
+    Reset: bool
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class FaultProperties(TypedDict):
+    bus1: AnyStr
+    bus2: AnyStr
+    phases: int
+    r: float
+    pctstddev: float
+    Gmatrix: Float64Array
+    ONtime: float
+    temporary: bool
+    MinAmps: float
+    normamps: float
+    emergamps: float
+    faultrate: float
+    pctperm: float
+    repair: float
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class DynamicExpProperties(TypedDict):
+    NVariables: int
+    VarNames: List[AnyStr]
+    var: AnyStr
+    VarIdx: int
+    Expression: AnyStr
+    Domain: Union[AnyStr, int, DynamicExp.DynamicExpDomain]
+    like: AnyStr
+
+class GeneratorProperties(TypedDict):
+    phases: int
+    bus1: AnyStr
+    kv: float
+    kW: float
+    pf: float
+    kvar: float
+    model: int
+    Vminpu: float
+    Vmaxpu: float
+    yearly: Union[AnyStr, LoadShape]
+    daily: Union[AnyStr, LoadShape]
+    duty: Union[AnyStr, LoadShape]
+    dispmode: Union[AnyStr, int, Generator.GeneratorDispatchMode]
+    dispvalue: float
+    conn: Union[AnyStr, int, Connection]
+    status: Union[AnyStr, int, Generator.GeneratorStatus]
+    cls: int
+    Vpu: float
+    maxkvar: float
+    minkvar: float
+    pvfactor: float
+    forceon: bool
+    kVA: float
+    Xd: float
+    Xdp: float
+    Xdpp: float
+    H: float
+    D: float
+    UserModel: AnyStr
+    UserData: AnyStr
+    ShaftModel: AnyStr
+    ShaftData: AnyStr
+    DutyStart: float
+    debugtrace: bool
+    Balanced: bool
+    XRdp: float
+    UseFuel: bool
+    FuelkWh: float
+    pctFuel: float
+    pctReserve: float
+    Refuel: bool
+    DynamicEq: Union[AnyStr, DynamicExp]
+    DynOut: AnyStr
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class GenDispatcherProperties(TypedDict):
+    Element: Union[AnyStr, DSSObj]
+    Terminal: int
+    kWLimit: float
+    kWBand: float
+    kvarlimit: float
+    GenList: List[AnyStr]
+    Weights: Float64Array
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class StorageProperties(TypedDict):
+    phases: int
+    bus1: AnyStr
+    kv: float
+    conn: Union[AnyStr, int, Connection]
+    kW: float
+    kvar: float
+    pf: float
+    kVA: float
+    pctCutin: float
+    pctCutout: float
+    EffCurve: Union[AnyStr, XYcurve]
+    VarFollowInverter: bool
+    kvarMax: float
+    kvarMaxAbs: float
+    WattPriority: bool
+    PFPriority: bool
+    pctPminNoVars: float
+    pctPminkvarMax: float
+    kWrated: float
+    pctkWrated: float
+    kWhrated: float
+    kWhstored: float
+    pctstored: float
+    pctreserve: float
+    State: Union[AnyStr, int, Storage.StorageState]
+    pctDischarge: float
+    pctCharge: float
+    pctEffCharge: float
+    pctEffDischarge: float
+    pctIdlingkW: float
+    pctR: float
+    pctX: float
+    model: int
+    Vminpu: float
+    Vmaxpu: float
+    Balanced: bool
+    LimitCurrent: bool
+    yearly: Union[AnyStr, LoadShape]
+    daily: Union[AnyStr, LoadShape]
+    duty: Union[AnyStr, LoadShape]
+    DispMode: Union[AnyStr, int, Storage.StorageDispatchMode]
+    DischargeTrigger: float
+    ChargeTrigger: float
+    TimeChargeTrig: float
+    cls: int
+    DynaDLL: AnyStr
+    DynaData: AnyStr
+    UserModel: AnyStr
+    UserData: AnyStr
+    debugtrace: bool
+    kVDC: float
+    Kp: float
+    PITol: float
+    SafeVoltage: float
+    SafeMode: bool
+    DynamicEq: Union[AnyStr, DynamicExp]
+    DynOut: AnyStr
+    ControlMode: Union[AnyStr, int, InverterControlMode]
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class StorageControllerProperties(TypedDict):
+    Element: Union[AnyStr, DSSObj]
+    Terminal: int
+    MonPhase: Union[AnyStr, int, MonitoredPhase]
+    kWTarget: float
+    kWTargetLow: float
+    pctkWBand: float
+    kWBand: float
+    pctkWBandLow: float
+    kWBandLow: float
+    ElementList: List[AnyStr]
+    Weights: Float64Array
+    ModeDischarge: Union[AnyStr, int, StorageController.StorageControllerDischargemode]
+    ModeCharge: Union[AnyStr, int, StorageController.StorageControllerChargemode]
+    TimeDischargeTrigger: float
+    TimeChargeTrigger: float
+    pctRatekW: float
+    pctRateCharge: float
+    pctReserve: float
+    kWhTotal: float
+    kWTotal: float
+    kWhActual: float
+    kWActual: float
+    kWneed: float
+    Yearly: Union[AnyStr, LoadShape]
+    Daily: Union[AnyStr, LoadShape]
+    Duty: Union[AnyStr, LoadShape]
+    EventLog: bool
+    InhibitTime: int
+    Tup: float
+    TFlat: float
+    Tdn: float
+    kWThreshold: float
+    DispFactor: float
+    ResetLevel: float
+    Seasons: int
+    SeasonTargets: Float64Array
+    SeasonTargetsLow: Float64Array
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class RelayProperties(TypedDict):
+    MonitoredObj: Union[AnyStr, DSSObj]
+    MonitoredTerm: int
+    SwitchedObj: Union[AnyStr, DSSObj]
+    SwitchedTerm: int
+    type: Union[AnyStr, int, Relay.RelayType]
+    Phasecurve: Union[AnyStr, TCC_Curve]
+    Groundcurve: Union[AnyStr, TCC_Curve]
+    PhaseTrip: float
+    GroundTrip: float
+    TDPhase: float
+    TDGround: float
+    PhaseInst: float
+    GroundInst: float
+    Reset: float
+    Shots: int
+    RecloseIntervals: Float64Array
+    Delay: float
+    Overvoltcurve: Union[AnyStr, TCC_Curve]
+    Undervoltcurve: Union[AnyStr, TCC_Curve]
+    kvbase: float
+    pctPickup47: float
+    BaseAmps46: float
+    pctPickup46: float
+    isqt46: float
+    Variable: AnyStr
+    overtrip: float
+    undertrip: float
+    Breakertime: float
+    action: Union[AnyStr, int, Relay.RelayAction]
+    Z1mag: float
+    Z1ang: float
+    Z0mag: float
+    Z0ang: float
+    Mphase: float
+    Mground: float
+    EventLog: bool
+    DebugTrace: bool
+    DistReverse: bool
+    Normal: Union[AnyStr, int, Relay.RelayState]
+    State: Union[AnyStr, int, Relay.RelayState]
+    DOC_TiltAngleLow: float
+    DOC_TiltAngleHigh: float
+    DOC_TripSettingLow: float
+    DOC_TripSettingHigh: float
+    DOC_TripSettingMag: float
+    DOC_DelayInner: float
+    DOC_PhaseCurveInner: float
+    DOC_PhaseTripInner: float
+    DOC_TDPhaseInner: Union[AnyStr, TCC_Curve]
+    DOC_P1Blocking: bool
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class RecloserProperties(TypedDict):
+    MonitoredObj: Union[AnyStr, DSSObj]
+    MonitoredTerm: int
+    SwitchedObj: Union[AnyStr, DSSObj]
+    SwitchedTerm: int
+    NumFast: int
+    PhaseFast: Union[AnyStr, TCC_Curve]
+    PhaseDelayed: Union[AnyStr, TCC_Curve]
+    GroundFast: Union[AnyStr, TCC_Curve]
+    GroundDelayed: Union[AnyStr, TCC_Curve]
+    PhaseTrip: float
+    GroundTrip: float
+    PhaseInst: float
+    GroundInst: float
+    Reset: float
+    Shots: int
+    RecloseIntervals: Float64Array
+    Delay: float
+    TDPhFast: float
+    TDGrFast: float
+    TDPhDelayed: float
+    TDGrDelayed: float
+    Normal: Union[AnyStr, int, Recloser.RecloserState]
+    State: Union[AnyStr, int, Recloser.RecloserState]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class FuseProperties(TypedDict):
+    MonitoredObj: Union[AnyStr, DSSObj]
+    MonitoredTerm: int
+    SwitchedObj: Union[AnyStr, DSSObj]
+    SwitchedTerm: int
+    FuseCurve: Union[AnyStr, TCC_Curve]
+    RatedCurrent: float
+    Delay: float
+    Action: Union[str, bytes, int, Fuse.FuseAction]
+    Normal: Union[List[Union[int,Fuse.FuseState]], List[AnyStr]]
+    State: Union[List[Union[int,Fuse.FuseState]], List[AnyStr]]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class SwtControlProperties(TypedDict):
+    SwitchedObj: Union[AnyStr, DSSObj]
+    SwitchedTerm: int
+    Lock: bool
+    Delay: float
+    Normal: Union[AnyStr, int, SwtControl.SwtControlState]
+    State: Union[AnyStr, int, SwtControl.SwtControlState]
+    Reset: bool
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class PVSystemProperties(TypedDict):
+    phases: int
+    bus1: AnyStr
+    kv: float
+    irradiance: float
+    Pmpp: float
+    pctPmpp: float
+    Temperature: float
+    pf: float
+    conn: Union[AnyStr, int, Connection]
+    kvar: float
+    kVA: float
+    pctCutin: float
+    pctCutout: float
+    EffCurve: Union[AnyStr, XYcurve]
+    PTCurve: Union[AnyStr, XYcurve]
+    pctR: float
+    pctX: float
+    model: int
+    Vminpu: float
+    Vmaxpu: float
+    Balanced: bool
+    LimitCurrent: bool
+    yearly: Union[AnyStr, LoadShape]
+    daily: Union[AnyStr, LoadShape]
+    duty: Union[AnyStr, LoadShape]
+    Tyearly: Union[AnyStr, TShape]
+    Tdaily: Union[AnyStr, TShape]
+    Tduty: Union[AnyStr, TShape]
+    cls: int
+    UserModel: AnyStr
+    UserData: AnyStr
+    debugtrace: bool
+    VarFollowInverter: bool
+    DutyStart: float
+    WattPriority: bool
+    PFPriority: bool
+    pctPminNoVars: float
+    pctPminkvarMax: float
+    kvarMax: float
+    kvarMaxAbs: float
+    kVDC: float
+    Kp: float
+    PITol: float
+    SafeVoltage: float
+    SafeMode: bool
+    DynamicEq: Union[AnyStr, DynamicExp]
+    DynOut: AnyStr
+    ControlMode: Union[AnyStr, int, InverterControlMode]
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class UPFCProperties(TypedDict):
+    bus1: AnyStr
+    bus2: AnyStr
+    refkV: float
+    PF: float
+    Frequency: float
+    Phases: int
+    Xs: float
+    Tol1: float
+    Mode: int
+    VpqMax: float
+    LossCurve: Union[AnyStr, XYcurve]
+    VHLimit: float
+    VLLimit: float
+    CLimit: float
+    refkV2: float
+    kvarLimit: float
+    Element: Union[AnyStr, PDElement]
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class UPFCControlProperties(TypedDict):
+    UPFCList: List[AnyStr]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class ESPVLControlProperties(TypedDict):
+    Element: Union[AnyStr, DSSObj]
+    Terminal: int
+    Type: Union[AnyStr, int, ESPVLControl.ESPVLControlType]
+    kWBand: float
+    kvarlimit: float
+    LocalControlList: List[AnyStr]
+    LocalControlWeights: Float64Array
+    PVSystemList: List[AnyStr]
+    PVSystemWeights: Float64Array
+    StorageList: List[AnyStr]
+    StorageWeights: Float64Array
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class IndMach012Properties(TypedDict):
+    phases: int
+    bus1: AnyStr
+    kv: float
+    kW: float
+    pf: float
+    conn: Union[AnyStr, int, Connection]
+    kVA: float
+    H: float
+    D: float
+    puRs: float
+    puXs: float
+    puRr: float
+    puXr: float
+    puXm: float
+    Slip: float
+    MaxSlip: float
+    SlipOption: Union[AnyStr, int, IndMach012.IndMach012SlipOption]
+    Yearly: Union[AnyStr, LoadShape]
+    Daily: Union[AnyStr, LoadShape]
+    Duty: Union[AnyStr, LoadShape]
+    Debugtrace: bool
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class GICsourceProperties(TypedDict):
+    Volts: float
+    angle: float
+    frequency: float
+    phases: int
+    EN: float
+    EE: float
+    Lat1: float
+    Lon1: float
+    Lat2: float
+    Lon2: float
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class AutoTransProperties(TypedDict):
+    phases: int
+    windings: int
+    pctR: Float64Array
+    Rdcohms: Float64Array
+    Core: Union[AnyStr, int, CoreType]
+    buses: List[AnyStr]
+    conns: Union[List[Union[int,AutoTrans.AutoTransConnection]], List[AnyStr]]
+    kVs: Float64Array
+    kVAs: Float64Array
+    taps: Float64Array
+    XHX: float
+    XHT: float
+    XXT: float
+    XSCarray: Float64Array
+    thermal: float
+    n: float
+    m: float
+    flrise: float
+    hsrise: float
+    pctloadloss: float
+    pctnoloadloss: float
+    normhkVA: float
+    emerghkVA: float
+    sub: bool
+    MaxTap: Float64Array
+    MinTap: Float64Array
+    NumTaps: Int32Array
+    subname: AnyStr
+    pctimag: float
+    ppm_antifloat: float
+    pctRs: Float64Array
+    XRConst: bool
+    LeadLag: Union[AnyStr, int, PhaseSequence]
+    normamps: float
+    emergamps: float
+    faultrate: float
+    pctperm: float
+    repair: float
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class RegControlProperties(TypedDict):
+    transformer: Union[AnyStr, Transformer, AutoTrans]
+    winding: int
+    vreg: float
+    band: float
+    ptratio: float
+    CTprim: float
+    R: float
+    X: float
+    bus: AnyStr
+    delay: float
+    reversible: bool
+    revvreg: float
+    revband: float
+    revR: float
+    revX: float
+    tapdelay: float
+    debugtrace: bool
+    maxtapchange: int
+    inversetime: bool
+    tapwinding: int
+    vlimit: float
+    PTphase: Union[AnyStr, int, RegControl.RegControlPhaseSelection]
+    revThreshold: float
+    revDelay: float
+    revNeutral: bool
+    EventLog: bool
+    RemotePTRatio: float
+    TapNum: int
+    Reset: bool
+    LDC_Z: float
+    rev_Z: float
+    Cogen: bool
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class InvControlProperties(TypedDict):
+    DERList: List[AnyStr]
+    Mode: Union[AnyStr, int, InvControl.InvControlControlMode]
+    CombiMode: Union[AnyStr, int, InvControl.InvControlCombiMode]
+    vvc_curve1: Union[AnyStr, XYcurve]
+    hysteresis_offset: float
+    voltage_curvex_ref: Union[AnyStr, int, InvControl.InvControlVoltageCurveXRef]
+    avgwindowlen: int
+    voltwatt_curve: Union[AnyStr, XYcurve]
+    DbVMin: float
+    DbVMax: float
+    ArGraLowV: float
+    ArGraHiV: float
+    DynReacavgwindowlen: int
+    deltaQ_Factor: float
+    VoltageChangeTolerance: float
+    VarChangeTolerance: float
+    VoltwattYAxis: Union[AnyStr, int, InvControl.InvControlVoltWattYAxis]
+    RateofChangeMode: Union[AnyStr, int, InvControl.InvControlRateOfChangeMode]
+    LPFTau: float
+    RiseFallLimit: float
+    deltaP_Factor: float
+    EventLog: bool
+    RefReactivePower: Union[AnyStr, int, InvControl.InvControlReactivePowerReference]
+    ActivePChangeTolerance: float
+    monVoltageCalc: Union[AnyStr, int, MonitoredPhase]
+    monBus: List[AnyStr]
+    MonBusesVbase: Float64Array
+    voltwattCH_curve: Union[AnyStr, XYcurve]
+    wattpf_curve: Union[AnyStr, XYcurve]
+    wattvar_curve: Union[AnyStr, XYcurve]
+    Vsetpoint: float
+    ControlModel: Union[int, InvControl.InvControlControlModel]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class ExpControlProperties(TypedDict):
+    PVSystemList: List[AnyStr]
+    Vreg: float
+    Slope: float
+    VregTau: float
+    Qbias: float
+    VregMin: float
+    VregMax: float
+    QmaxLead: float
+    QmaxLag: float
+    EventLog: bool
+    DeltaQ_factor: float
+    PreferQ: bool
+    Tresponse: float
+    DERList: List[AnyStr]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class GICLineProperties(TypedDict):
+    bus1: AnyStr
+    bus2: AnyStr
+    Volts: float
+    Angle: float
+    frequency: float
+    phases: int
+    R: float
+    X: float
+    C: float
+    EN: float
+    EE: float
+    Lat1: float
+    Lon1: float
+    Lat2: float
+    Lon2: float
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class GICTransformerProperties(TypedDict):
+    BusH: AnyStr
+    BusNH: AnyStr
+    BusX: AnyStr
+    BusNX: AnyStr
+    phases: int
+    Type: Union[AnyStr, int, GICTransformer.GICTransformerType]
+    R1: float
+    R2: float
+    KVLL1: float
+    KVLL2: float
+    MVA: float
+    VarCurve: Union[AnyStr, XYcurve]
+    pctR1: float
+    pctR2: float
+    K: float
+    normamps: float
+    emergamps: float
+    faultrate: float
+    pctperm: float
+    repair: float
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class VSConverterProperties(TypedDict):
+    phases: int
+    Bus1: AnyStr
+    kVac: float
+    kVdc: float
+    kW: float
+    Ndc: int
+    Rac: float
+    Xac: float
+    m0: float
+    d0: float
+    Mmin: float
+    Mmax: float
+    Iacmax: float
+    Idcmax: float
+    Vacref: float
+    Pacref: float
+    Qacref: float
+    Vdcref: float
+    VscMode: Union[AnyStr, int, VSConverter.VSConverterControlMode]
+    spectrum: Union[AnyStr, Spectrum]
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class MonitorProperties(TypedDict):
+    element: Union[AnyStr, DSSObj]
+    terminal: int
+    mode: int
+    action: Union[str, bytes, int, Monitor.MonitorAction]
+    residual: bool
+    VIPolar: bool
+    PPolar: bool
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class EnergyMeterProperties(TypedDict):
+    element: Union[AnyStr, DSSObj]
+    terminal: int
+    action: Union[str, bytes, int, EnergyMeter.EnergyMeterAction]
+    option: List[AnyStr]
+    kVAnormal: float
+    kVAemerg: float
+    peakcurrent: Float64Array
+    Zonelist: List[AnyStr]
+    LocalOnly: bool
+    Mask: Float64Array
+    Losses: bool
+    LineLosses: bool
+    XfmrLosses: bool
+    SeqLosses: bool
+    threePaseLosses: bool
+    VbaseLosses: bool
+    PhaseVoltageReport: bool
+    Int_Rate: float
+    Int_Duration: float
+    SAIFI: float
+    SAIFIkW: float
+    SAIDI: float
+    CAIDI: float
+    CustInterrupts: float
+    basefreq: float
+    enabled: bool
+    like: AnyStr
+
+class SensorProperties(TypedDict):
+    element: Union[AnyStr, DSSObj]
+    terminal: int
+    kvbase: float
+    clear: bool
+    kVs: Float64Array
+    currents: Float64Array
+    kWs: Float64Array
+    kvars: Float64Array
+    conn: Union[AnyStr, int, Connection]
+    Deltadirection: int
+    pctError: float
+    Weight: float
+    basefreq: float
+    enabled: bool
+    like: AnyStr
 
 class LineCodeBatch(DSSBatch):
     _cls_name = 'LineCode'
@@ -21256,7 +21885,7 @@ class LineCodeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @nphases.setter
-    def nphases(self, value):
+    def nphases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -21269,7 +21898,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @r1.setter
-    def r1(self, value):
+    def r1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -21282,7 +21911,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @x1.setter
-    def x1(self, value):
+    def x1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -21295,7 +21924,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @r0.setter
-    def r0(self, value):
+    def r0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -21308,7 +21937,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @x0.setter
-    def x0(self, value):
+    def x0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -21321,7 +21950,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @C1.setter
-    def C1(self, value):
+    def C1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -21334,7 +21963,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @C0.setter
-    def C0(self, value):
+    def C0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -21347,14 +21976,11 @@ class LineCodeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 8)
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(8, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(8, value)
 
     @property
@@ -21384,7 +22010,7 @@ class LineCodeBatch(DSSBatch):
 
     @rmatrix.setter
     def rmatrix(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def xmatrix(self) -> List[Float64Array]:
@@ -21400,7 +22026,7 @@ class LineCodeBatch(DSSBatch):
 
     @xmatrix.setter
     def xmatrix(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def cmatrix(self) -> List[Float64Array]:
@@ -21416,7 +22042,7 @@ class LineCodeBatch(DSSBatch):
 
     @cmatrix.setter
     def cmatrix(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def baseFreq(self) -> BatchFloat64ArrayProxy:
@@ -21428,7 +22054,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @baseFreq.setter
-    def baseFreq(self, value):
+    def baseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -21441,7 +22067,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -21454,7 +22080,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -21467,7 +22093,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @faultrate.setter
-    def faultrate(self, value):
+    def faultrate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -21480,7 +22106,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @pctperm.setter
-    def pctperm(self, value):
+    def pctperm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -21493,7 +22119,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @repair.setter
-    def repair(self, value):
+    def repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     def Kron(self, value: bool):
@@ -21514,7 +22140,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @Rg.setter
-    def Rg(self, value):
+    def Rg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -21527,7 +22153,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @Xg.setter
-    def Xg(self, value):
+    def Xg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -21540,7 +22166,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @rho.setter
-    def rho(self, value):
+    def rho(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -21553,7 +22179,7 @@ class LineCodeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 22)
 
     @neutral.setter
-    def neutral(self, value):
+    def neutral(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(22, value)
 
     @property
@@ -21566,7 +22192,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @B1.setter
-    def B1(self, value):
+    def B1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -21579,7 +22205,7 @@ class LineCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @B0.setter
-    def B0(self, value):
+    def B0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -21592,7 +22218,7 @@ class LineCodeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 25)
 
     @Seasons.setter
-    def Seasons(self, value):
+    def Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(25, value)
 
     @property
@@ -21610,7 +22236,7 @@ class LineCodeBatch(DSSBatch):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(26, value)
+        self._set_float64_array_o(26, value)
 
     @property
     def linetype(self) -> BatchInt32ArrayProxy:
@@ -21625,14 +22251,11 @@ class LineCodeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 27)
 
     @linetype.setter
-    def linetype(self, value: Union[AnyStr, int, LineType, List[AnyStr], List[Union[int, LineType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def linetype(self, value: Union[AnyStr, int, LineType, List[AnyStr], List[int], List[LineType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(27, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(27, value)
 
     @property
@@ -21677,7 +22300,7 @@ class LoadShapeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @npts.setter
-    def npts(self, value):
+    def npts(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -21692,35 +22315,8 @@ class LoadShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @interval.setter
-    def interval(self, value):
+    def interval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
-
-    @property
-    def mult(self) -> List[Float64Array]:
-        """
-        Array of multiplier values for active power (P) or other key value (such as pu V for Vsource). 
-
-        You can also use the syntax: 
-
-        mult = (file=filename)     !for text file one value per line
-        mult = (dblfile=filename)  !for packed file of doubles
-        mult = (sngfile=filename)  !for packed file of singles 
-        mult = (file=MyCSVFile.CSV, col=3, header=yes)  !for multicolumn CSV files 
-
-        Note: this property will reset Npts if the  number of values in the files are fewer.
-
-        Same as Pmult
-
-        DSS property name: `mult`, DSS property index: 3.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 3)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @mult.setter
-    def mult(self, value: Float64Array):
-        self._set_float64_array(3, value)
 
     @property
     def hour(self) -> List[Float64Array]:
@@ -21739,7 +22335,7 @@ class LoadShapeBatch(DSSBatch):
 
     @hour.setter
     def hour(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def mean(self) -> BatchFloat64ArrayProxy:
@@ -21751,7 +22347,7 @@ class LoadShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @mean.setter
-    def mean(self, value):
+    def mean(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -21766,7 +22362,7 @@ class LoadShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @stddev.setter
-    def stddev(self, value):
+    def stddev(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -21780,10 +22376,8 @@ class LoadShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7) 
 
     @csvfile.setter
-    def csvfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 7, value)
+    def csvfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(7, value)
 
     @property
     def sngfile(self) -> List[str]:
@@ -21796,10 +22390,8 @@ class LoadShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8) 
 
     @sngfile.setter
-    def sngfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 8, value)
+    def sngfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(8, value)
 
     @property
     def dblfile(self) -> List[str]:
@@ -21812,12 +22404,10 @@ class LoadShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9) 
 
     @dblfile.setter
-    def dblfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 9, value)
+    def dblfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(9, value)
 
-    def action(self, value: Union[str, bytes, int]):
+    def action(self, value: Union[str, bytes, int, LoadShape.LoadShapeAction]):
         """
         {NORMALIZE | DblSave | SngSave} After defining load curve data, setting action=normalize will modify the multipliers so that the peak is 1.0. The mean and std deviation are recomputed.
 
@@ -21848,7 +22438,7 @@ class LoadShapeBatch(DSSBatch):
 
     @qmult.setter
     def qmult(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def UseActual(self) -> List[bool]:
@@ -21874,7 +22464,7 @@ class LoadShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @Pmax.setter
-    def Pmax(self, value):
+    def Pmax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -21887,7 +22477,7 @@ class LoadShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @Qmax.setter
-    def Qmax(self, value):
+    def Qmax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -21900,7 +22490,7 @@ class LoadShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @sinterval.setter
-    def sinterval(self, value):
+    def sinterval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -21913,7 +22503,7 @@ class LoadShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @minterval.setter
-    def minterval(self, value):
+    def minterval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -21926,7 +22516,7 @@ class LoadShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @Pbase.setter
-    def Pbase(self, value):
+    def Pbase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -21939,7 +22529,7 @@ class LoadShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @Qbase.setter
-    def Qbase(self, value):
+    def Qbase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -21956,7 +22546,7 @@ class LoadShapeBatch(DSSBatch):
 
     @Pmult.setter
     def Pmult(self, value: Float64Array):
-        self._set_float64_array(19, value)
+        self._set_float64_array_o(19, value)
 
     @property
     def PQCSVFile(self) -> List[str]:
@@ -21970,10 +22560,8 @@ class LoadShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 20) 
 
     @PQCSVFile.setter
-    def PQCSVFile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 20, value)
+    def PQCSVFile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(20, value)
 
     @property
     def MemoryMapping(self) -> List[bool]:
@@ -22016,7 +22604,7 @@ class TShapeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @npts.setter
-    def npts(self, value):
+    def npts(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -22031,7 +22619,7 @@ class TShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @interval.setter
-    def interval(self, value):
+    def interval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -22053,7 +22641,7 @@ class TShapeBatch(DSSBatch):
 
     @temp.setter
     def temp(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def hour(self) -> List[Float64Array]:
@@ -22072,7 +22660,7 @@ class TShapeBatch(DSSBatch):
 
     @hour.setter
     def hour(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def mean(self) -> BatchFloat64ArrayProxy:
@@ -22084,7 +22672,7 @@ class TShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @mean.setter
-    def mean(self, value):
+    def mean(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -22099,7 +22687,7 @@ class TShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @stddev.setter
-    def stddev(self, value):
+    def stddev(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -22113,10 +22701,8 @@ class TShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7) 
 
     @csvfile.setter
-    def csvfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 7, value)
+    def csvfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(7, value)
 
     @property
     def sngfile(self) -> List[str]:
@@ -22129,10 +22715,8 @@ class TShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8) 
 
     @sngfile.setter
-    def sngfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 8, value)
+    def sngfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(8, value)
 
     @property
     def dblfile(self) -> List[str]:
@@ -22145,10 +22729,8 @@ class TShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9) 
 
     @dblfile.setter
-    def dblfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 9, value)
+    def dblfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(9, value)
 
     @property
     def sinterval(self) -> BatchFloat64ArrayProxy:
@@ -22160,7 +22742,7 @@ class TShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @sinterval.setter
-    def sinterval(self, value):
+    def sinterval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -22173,10 +22755,10 @@ class TShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @minterval.setter
-    def minterval(self, value):
+    def minterval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    def action(self, value: Union[str, bytes, int]):
+    def action(self, value: Union[str, bytes, int, TShape.TShapeAction]):
         """
         {DblSave | SngSave} After defining temperature curve data... Setting action=DblSave or SngSave will cause the present "Temp" values to be written to either a packed file of double or single. The filename is the Tshape name. 
 
@@ -22213,7 +22795,7 @@ class PriceShapeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @npts.setter
-    def npts(self, value):
+    def npts(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -22228,7 +22810,7 @@ class PriceShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @interval.setter
-    def interval(self, value):
+    def interval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -22250,7 +22832,7 @@ class PriceShapeBatch(DSSBatch):
 
     @price.setter
     def price(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def hour(self) -> List[Float64Array]:
@@ -22269,7 +22851,7 @@ class PriceShapeBatch(DSSBatch):
 
     @hour.setter
     def hour(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def mean(self) -> BatchFloat64ArrayProxy:
@@ -22281,7 +22863,7 @@ class PriceShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @mean.setter
-    def mean(self, value):
+    def mean(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -22296,7 +22878,7 @@ class PriceShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @stddev.setter
-    def stddev(self, value):
+    def stddev(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -22310,10 +22892,8 @@ class PriceShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7) 
 
     @csvfile.setter
-    def csvfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 7, value)
+    def csvfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(7, value)
 
     @property
     def sngfile(self) -> List[str]:
@@ -22326,10 +22906,8 @@ class PriceShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8) 
 
     @sngfile.setter
-    def sngfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 8, value)
+    def sngfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(8, value)
 
     @property
     def dblfile(self) -> List[str]:
@@ -22342,10 +22920,8 @@ class PriceShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9) 
 
     @dblfile.setter
-    def dblfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 9, value)
+    def dblfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(9, value)
 
     @property
     def sinterval(self) -> BatchFloat64ArrayProxy:
@@ -22357,7 +22933,7 @@ class PriceShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @sinterval.setter
-    def sinterval(self, value):
+    def sinterval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -22370,10 +22946,10 @@ class PriceShapeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @minterval.setter
-    def minterval(self, value):
+    def minterval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    def action(self, value: Union[str, bytes, int]):
+    def action(self, value: Union[str, bytes, int, PriceShape.PriceShapeAction]):
         """
         {DblSave | SngSave} After defining Price curve data... Setting action=DblSave or SngSave will cause the present "Price" values to be written to either a packed file of double or single. The filename is the PriceShape name. 
 
@@ -22410,28 +22986,8 @@ class XYcurveBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @npts.setter
-    def npts(self, value):
+    def npts(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
-
-    @property
-    def Points(self) -> List[Float64Array]:
-        """
-        One way to enter the points in a curve. Enter x and y values as one array in the order [x1, y1, x2, y2, ...]. For example:
-
-        Points=[1,100 2,200 3, 300] 
-
-        Values separated by commas or white space. Zero fills arrays if insufficient number of values.
-
-        DSS property name: `Points`, DSS property index: 2.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 2)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @Points.setter
-    def Points(self, value: Float64Array):
-        self._set_float64_array(2, value)
 
     @property
     def Yarray(self) -> List[Float64Array]:
@@ -22452,7 +23008,7 @@ class XYcurveBatch(DSSBatch):
 
     @Yarray.setter
     def Yarray(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def Xarray(self) -> List[Float64Array]:
@@ -22473,7 +23029,7 @@ class XYcurveBatch(DSSBatch):
 
     @Xarray.setter
     def Xarray(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def csvfile(self) -> List[str]:
@@ -22486,10 +23042,8 @@ class XYcurveBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5) 
 
     @csvfile.setter
-    def csvfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 5, value)
+    def csvfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(5, value)
 
     @property
     def sngfile(self) -> List[str]:
@@ -22502,10 +23056,8 @@ class XYcurveBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6) 
 
     @sngfile.setter
-    def sngfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 6, value)
+    def sngfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(6, value)
 
     @property
     def dblfile(self) -> List[str]:
@@ -22518,10 +23070,8 @@ class XYcurveBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7) 
 
     @dblfile.setter
-    def dblfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 7, value)
+    def dblfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(7, value)
 
     @property
     def x(self) -> BatchFloat64ArrayProxy:
@@ -22533,7 +23083,7 @@ class XYcurveBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @x.setter
-    def x(self, value):
+    def x(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -22546,7 +23096,7 @@ class XYcurveBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @y.setter
-    def y(self, value):
+    def y(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -22559,7 +23109,7 @@ class XYcurveBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @Xshift.setter
-    def Xshift(self, value):
+    def Xshift(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -22572,7 +23122,7 @@ class XYcurveBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @Yshift.setter
-    def Yshift(self, value):
+    def Yshift(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -22585,7 +23135,7 @@ class XYcurveBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @Xscale.setter
-    def Xscale(self, value):
+    def Xscale(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -22598,7 +23148,7 @@ class XYcurveBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @Yscale.setter
-    def Yscale(self, value):
+    def Yscale(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     def like(self, value: AnyStr):
@@ -22627,7 +23177,7 @@ class GrowthShapeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @npts.setter
-    def npts(self, value):
+    def npts(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -22644,7 +23194,7 @@ class GrowthShapeBatch(DSSBatch):
 
     @year.setter
     def year(self, value: Float64Array):
-        self._set_float64_array(2, value)
+        self._set_float64_array_o(2, value)
 
     @property
     def mult(self) -> List[Float64Array]:
@@ -22667,7 +23217,7 @@ class GrowthShapeBatch(DSSBatch):
 
     @mult.setter
     def mult(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def csvfile(self) -> List[str]:
@@ -22680,10 +23230,8 @@ class GrowthShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4) 
 
     @csvfile.setter
-    def csvfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 4, value)
+    def csvfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(4, value)
 
     @property
     def sngfile(self) -> List[str]:
@@ -22696,10 +23244,8 @@ class GrowthShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5) 
 
     @sngfile.setter
-    def sngfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 5, value)
+    def sngfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(5, value)
 
     @property
     def dblfile(self) -> List[str]:
@@ -22712,10 +23258,8 @@ class GrowthShapeBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6) 
 
     @dblfile.setter
-    def dblfile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 6, value)
+    def dblfile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(6, value)
 
     def like(self, value: AnyStr):
         """
@@ -22743,7 +23287,7 @@ class TCC_CurveBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @npts.setter
-    def npts(self, value):
+    def npts(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -22760,7 +23304,7 @@ class TCC_CurveBatch(DSSBatch):
 
     @C_array.setter
     def C_array(self, value: Float64Array):
-        self._set_float64_array(2, value)
+        self._set_float64_array_o(2, value)
 
     @property
     def T_array(self) -> List[Float64Array]:
@@ -22782,7 +23326,7 @@ class TCC_CurveBatch(DSSBatch):
 
     @T_array.setter
     def T_array(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     def like(self, value: AnyStr):
         """
@@ -22810,7 +23354,7 @@ class SpectrumBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @NumHarm.setter
-    def NumHarm(self, value):
+    def NumHarm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -22830,7 +23374,7 @@ class SpectrumBatch(DSSBatch):
 
     @harmonic.setter
     def harmonic(self, value: Float64Array):
-        self._set_float64_array(2, value)
+        self._set_float64_array_o(2, value)
 
     @property
     def pctmag(self) -> List[Float64Array]:
@@ -22849,7 +23393,7 @@ class SpectrumBatch(DSSBatch):
 
     @pctmag.setter
     def pctmag(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def angle(self) -> List[Float64Array]:
@@ -22868,7 +23412,7 @@ class SpectrumBatch(DSSBatch):
 
     @angle.setter
     def angle(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def CSVFile(self) -> List[str]:
@@ -22881,10 +23425,8 @@ class SpectrumBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5) 
 
     @CSVFile.setter
-    def CSVFile(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 5, value)
+    def CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(5, value)
 
     def like(self, value: AnyStr):
         """
@@ -22912,7 +23454,7 @@ class WireDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 1)
 
     @Rdc.setter
-    def Rdc(self, value):
+    def Rdc(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(1, value)
 
     @property
@@ -22925,7 +23467,7 @@ class WireDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @Rac.setter
-    def Rac(self, value):
+    def Rac(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -22938,14 +23480,11 @@ class WireDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 3)
 
     @Runits.setter
-    def Runits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Runits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(3, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(3, value)
 
     @property
@@ -22971,7 +23510,7 @@ class WireDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @GMRac.setter
-    def GMRac(self, value):
+    def GMRac(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -22984,14 +23523,11 @@ class WireDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 5)
 
     @GMRunits.setter
-    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(5, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(5, value)
 
     @property
@@ -23017,7 +23553,7 @@ class WireDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @radius.setter
-    def radius(self, value):
+    def radius(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -23030,14 +23566,11 @@ class WireDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 7)
 
     @radunits.setter
-    def radunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def radunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(7, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(7, value)
 
     @property
@@ -23063,7 +23596,7 @@ class WireDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -23076,7 +23609,7 @@ class WireDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -23089,7 +23622,7 @@ class WireDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @diam.setter
-    def diam(self, value):
+    def diam(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -23102,7 +23635,7 @@ class WireDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 11)
 
     @Seasons.setter
-    def Seasons(self, value):
+    def Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(11, value)
 
     @property
@@ -23120,7 +23653,7 @@ class WireDataBatch(DSSBatch):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(12, value)
+        self._set_float64_array_o(12, value)
 
     @property
     def Capradius(self) -> BatchFloat64ArrayProxy:
@@ -23132,7 +23665,7 @@ class WireDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @Capradius.setter
-    def Capradius(self, value):
+    def Capradius(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     def like(self, value: AnyStr):
@@ -23161,7 +23694,7 @@ class CNDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @k.setter
-    def k(self, value):
+    def k(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -23174,7 +23707,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @DiaStrand.setter
-    def DiaStrand(self, value):
+    def DiaStrand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -23187,7 +23720,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @GmrStrand.setter
-    def GmrStrand(self, value):
+    def GmrStrand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -23200,7 +23733,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @Rstrand.setter
-    def Rstrand(self, value):
+    def Rstrand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -23213,7 +23746,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @EpsR.setter
-    def EpsR(self, value):
+    def EpsR(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -23226,7 +23759,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @InsLayer.setter
-    def InsLayer(self, value):
+    def InsLayer(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -23239,7 +23772,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @DiaIns.setter
-    def DiaIns(self, value):
+    def DiaIns(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -23252,7 +23785,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @DiaCable.setter
-    def DiaCable(self, value):
+    def DiaCable(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -23265,7 +23798,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @Rdc.setter
-    def Rdc(self, value):
+    def Rdc(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -23278,7 +23811,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @Rac.setter
-    def Rac(self, value):
+    def Rac(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -23291,14 +23824,11 @@ class CNDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 11)
 
     @Runits.setter
-    def Runits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Runits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(11, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(11, value)
 
     @property
@@ -23324,7 +23854,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @GMRac.setter
-    def GMRac(self, value):
+    def GMRac(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -23337,14 +23867,11 @@ class CNDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 13)
 
     @GMRunits.setter
-    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(13, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(13, value)
 
     @property
@@ -23370,7 +23897,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @radius.setter
-    def radius(self, value):
+    def radius(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -23383,14 +23910,11 @@ class CNDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 15)
 
     @radunits.setter
-    def radunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def radunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(15, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(15, value)
 
     @property
@@ -23416,7 +23940,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -23429,7 +23953,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -23442,7 +23966,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @diam.setter
-    def diam(self, value):
+    def diam(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -23455,7 +23979,7 @@ class CNDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 19)
 
     @Seasons.setter
-    def Seasons(self, value):
+    def Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(19, value)
 
     @property
@@ -23473,7 +23997,7 @@ class CNDataBatch(DSSBatch):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(20, value)
+        self._set_float64_array_o(20, value)
 
     @property
     def Capradius(self) -> BatchFloat64ArrayProxy:
@@ -23485,7 +24009,7 @@ class CNDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @Capradius.setter
-    def Capradius(self, value):
+    def Capradius(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     def like(self, value: AnyStr):
@@ -23514,7 +24038,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 1)
 
     @DiaShield.setter
-    def DiaShield(self, value):
+    def DiaShield(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(1, value)
 
     @property
@@ -23527,7 +24051,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @TapeLayer.setter
-    def TapeLayer(self, value):
+    def TapeLayer(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -23540,7 +24064,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @TapeLap.setter
-    def TapeLap(self, value):
+    def TapeLap(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -23553,7 +24077,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @EpsR.setter
-    def EpsR(self, value):
+    def EpsR(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -23566,7 +24090,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @InsLayer.setter
-    def InsLayer(self, value):
+    def InsLayer(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -23579,7 +24103,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @DiaIns.setter
-    def DiaIns(self, value):
+    def DiaIns(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -23592,7 +24116,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @DiaCable.setter
-    def DiaCable(self, value):
+    def DiaCable(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -23605,7 +24129,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @Rdc.setter
-    def Rdc(self, value):
+    def Rdc(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -23618,7 +24142,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @Rac.setter
-    def Rac(self, value):
+    def Rac(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -23631,14 +24155,11 @@ class TSDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 10)
 
     @Runits.setter
-    def Runits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Runits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(10, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(10, value)
 
     @property
@@ -23664,7 +24185,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @GMRac.setter
-    def GMRac(self, value):
+    def GMRac(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -23677,14 +24198,11 @@ class TSDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 12)
 
     @GMRunits.setter
-    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(12, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(12, value)
 
     @property
@@ -23710,7 +24228,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @radius.setter
-    def radius(self, value):
+    def radius(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -23723,14 +24241,11 @@ class TSDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 14)
 
     @radunits.setter
-    def radunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def radunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(14, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(14, value)
 
     @property
@@ -23756,7 +24271,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -23769,7 +24284,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -23782,7 +24297,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @diam.setter
-    def diam(self, value):
+    def diam(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -23795,7 +24310,7 @@ class TSDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 18)
 
     @Seasons.setter
-    def Seasons(self, value):
+    def Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(18, value)
 
     @property
@@ -23813,7 +24328,7 @@ class TSDataBatch(DSSBatch):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(19, value)
+        self._set_float64_array_o(19, value)
 
     @property
     def Capradius(self) -> BatchFloat64ArrayProxy:
@@ -23825,7 +24340,7 @@ class TSDataBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @Capradius.setter
-    def Capradius(self, value):
+    def Capradius(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     def like(self, value: AnyStr):
@@ -23854,7 +24369,7 @@ class LineSpacingBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @nconds.setter
-    def nconds(self, value):
+    def nconds(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -23867,7 +24382,7 @@ class LineSpacingBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @nphases.setter
-    def nphases(self, value):
+    def nphases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -23884,7 +24399,7 @@ class LineSpacingBatch(DSSBatch):
 
     @x.setter
     def x(self, value: Float64Array):
-        self._set_float64_array(3, value)
+        self._set_float64_array_o(3, value)
 
     @property
     def h(self) -> List[Float64Array]:
@@ -23900,7 +24415,7 @@ class LineSpacingBatch(DSSBatch):
 
     @h.setter
     def h(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def units(self) -> BatchInt32ArrayProxy:
@@ -23912,14 +24427,11 @@ class LineSpacingBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 5)
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(5, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(5, value)
 
     @property
@@ -23961,7 +24473,7 @@ class LineGeometryBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @nconds.setter
-    def nconds(self, value):
+    def nconds(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -23974,62 +24486,8 @@ class LineGeometryBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @nphases.setter
-    def nphases(self, value):
+    def nphases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
-
-    @property
-    def cond(self) -> BatchInt32ArrayProxy:
-        """
-        Set this = number of the conductor you wish to define. Default is 1.
-
-        DSS property name: `cond`, DSS property index: 3.
-        """
-        return BatchInt32ArrayProxy(self, 3)
-
-    @cond.setter
-    def cond(self, value):
-        self._set_batch_int32_array(3, value)
-
-    @property
-    def wire(self) -> List[List[str]]:
-        """
-        Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Overhead Line parameter calculation,
-        Unless Tape Shield cable previously assigned to phases, and this wire is a neutral.
-
-        DSS property name: `wire`, DSS property index: 4.
-        """
-        return self._get_string_ll(4)
-
-    @wire.setter
-    def wire(self, value: Union[List[Union[AnyStr, WireData]], List[List[Union[AnyStr, WireData]]]]):
-        if not len(value):
-            return
-
-        if isinstance(value[0], (bytes, str)):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 4, value_ptr, value_count)
-        
-            self._check_for_error()
-            return
-
-        self._set_batch_obj_array(4, value)
-
-    @property
-    def wire_obj(self) -> List[List[WireData]]:
-        """
-        Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Overhead Line parameter calculation,
-        Unless Tape Shield cable previously assigned to phases, and this wire is a neutral.
-
-        DSS property name: `wire`, DSS property index: 4.
-        """
-        return self._get_batch_obj_array(4, WireData)
-
-    @wire_obj.setter
-    def wire_obj(self, value: Union[List[WireData], List[List[WireData]]]):
-        self._set_batch_obj_array(4, value)
 
     @property
     def x(self) -> List[Float64Array]:
@@ -24045,7 +24503,7 @@ class LineGeometryBatch(DSSBatch):
 
     @x.setter
     def x(self, value: Float64Array):
-        self._set_float64_array(5, value)
+        self._set_float64_array_o(5, value)
 
     @property
     def h(self) -> List[Float64Array]:
@@ -24061,7 +24519,7 @@ class LineGeometryBatch(DSSBatch):
 
     @h.setter
     def h(self, value: Float64Array):
-        self._set_float64_array(6, value)
+        self._set_float64_array_o(6, value)
 
     @property
     def units(self) -> BatchInt32ArrayProxy:
@@ -24073,14 +24531,11 @@ class LineGeometryBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 7)
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(7, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(7, value)
 
     @property
@@ -24106,7 +24561,7 @@ class LineGeometryBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -24119,7 +24574,7 @@ class LineGeometryBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -24149,15 +24604,11 @@ class LineGeometryBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
 
     @spacing.setter
-    def spacing(self, value: Union[AnyStr, LineSpacing]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(11, value)
-            return
-
-        self._set_batch_string(11, value)
+    def spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
-    def spacing_obj(self) -> List[str]:
+    def spacing_obj(self) -> List[LineSpacing]:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Alternative to x, h, and units. MUST BE PREVIOUSLY DEFINED.
@@ -24166,7 +24617,7 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `spacing`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 11)
 
     @spacing_obj.setter
     def spacing_obj(self, value: LineSpacing):
@@ -24186,19 +24637,12 @@ class LineGeometryBatch(DSSBatch):
         return self._get_string_ll(12)
 
     @wires.setter
-    def wires(self, value: Union[List[Union[AnyStr, WireData]], List[List[Union[AnyStr, WireData]]]]):
-        if not len(value):
+    def wires(self, value: Union[List[AnyStr], List[WireData]]):
+        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
+            self._set_batch_stringlist_prop(12, value)
             return
 
-        if isinstance(value[0], (bytes, str)):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 12, value_ptr, value_count)
-        
-            self._check_for_error()
-            return
-
-        self._set_batch_obj_array(12, value)
+        self._set_batch_objlist_prop(12, value)
 
     @property
     def wires_obj(self) -> List[List[WireData]]:
@@ -24211,89 +24655,11 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `wires`, DSS property index: 12.
         """
-        return self._get_batch_obj_array(12, WireData)
+        return self._get_obj_ll(12, WireData)
 
     @wires_obj.setter
-    def wires_obj(self, value: Union[List[WireData], List[List[WireData]]]):
-        self._set_batch_obj_array(12, value)
-
-    @property
-    def cncable(self) -> List[List[str]]:
-        """
-        Code from CNData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Concentric Neutral cable parameter calculation.
-
-        DSS property name: `cncable`, DSS property index: 13.
-        """
-        return self._get_string_ll(13)
-
-    @cncable.setter
-    def cncable(self, value: Union[List[Union[AnyStr, CNData]], List[List[Union[AnyStr, CNData]]]]):
-        if not len(value):
-            return
-
-        if isinstance(value[0], (bytes, str)):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 13, value_ptr, value_count)
-        
-            self._check_for_error()
-            return
-
-        self._set_batch_obj_array(13, value)
-
-    @property
-    def cncable_obj(self) -> List[List[CNData]]:
-        """
-        Code from CNData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Concentric Neutral cable parameter calculation.
-
-        DSS property name: `cncable`, DSS property index: 13.
-        """
-        return self._get_batch_obj_array(13, CNData)
-
-    @cncable_obj.setter
-    def cncable_obj(self, value: Union[List[CNData], List[List[CNData]]]):
-        self._set_batch_obj_array(13, value)
-
-    @property
-    def tscable(self) -> List[List[str]]:
-        """
-        Code from TSData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Tape Shield cable parameter calculation.
-
-        DSS property name: `tscable`, DSS property index: 14.
-        """
-        return self._get_string_ll(14)
-
-    @tscable.setter
-    def tscable(self, value: Union[List[Union[AnyStr, TSData]], List[List[Union[AnyStr, TSData]]]]):
-        if not len(value):
-            return
-
-        if isinstance(value[0], (bytes, str)):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 14, value_ptr, value_count)
-        
-            self._check_for_error()
-            return
-
-        self._set_batch_obj_array(14, value)
-
-    @property
-    def tscable_obj(self) -> List[List[TSData]]:
-        """
-        Code from TSData. MUST BE PREVIOUSLY DEFINED. no default.
-        Specifies use of Tape Shield cable parameter calculation.
-
-        DSS property name: `tscable`, DSS property index: 14.
-        """
-        return self._get_batch_obj_array(14, TSData)
-
-    @tscable_obj.setter
-    def tscable_obj(self, value: Union[List[TSData], List[List[TSData]]]):
-        self._set_batch_obj_array(14, value)
+    def wires_obj(self, value: List[WireData]):
+        self._set_batch_objlist_prop(12, value)
 
     @property
     def cncables(self) -> List[List[str]]:
@@ -24307,19 +24673,12 @@ class LineGeometryBatch(DSSBatch):
         return self._get_string_ll(15)
 
     @cncables.setter
-    def cncables(self, value: Union[List[Union[AnyStr, CNData]], List[List[Union[AnyStr, CNData]]]]):
-        if not len(value):
+    def cncables(self, value: Union[List[AnyStr], List[CNData]]):
+        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
+            self._set_batch_stringlist_prop(15, value)
             return
 
-        if isinstance(value[0], (bytes, str)):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 15, value_ptr, value_count)
-        
-            self._check_for_error()
-            return
-
-        self._set_batch_obj_array(15, value)
+        self._set_batch_objlist_prop(15, value)
 
     @property
     def cncables_obj(self) -> List[List[CNData]]:
@@ -24330,11 +24689,11 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `cncables`, DSS property index: 15.
         """
-        return self._get_batch_obj_array(15, CNData)
+        return self._get_obj_ll(15, CNData)
 
     @cncables_obj.setter
-    def cncables_obj(self, value: Union[List[CNData], List[List[CNData]]]):
-        self._set_batch_obj_array(15, value)
+    def cncables_obj(self, value: List[CNData]):
+        self._set_batch_objlist_prop(15, value)
 
     @property
     def tscables(self) -> List[List[str]]:
@@ -24348,19 +24707,12 @@ class LineGeometryBatch(DSSBatch):
         return self._get_string_ll(16)
 
     @tscables.setter
-    def tscables(self, value: Union[List[Union[AnyStr, TSData]], List[List[Union[AnyStr, TSData]]]]):
-        if not len(value):
+    def tscables(self, value: Union[List[AnyStr], List[TSData]]):
+        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
+            self._set_batch_stringlist_prop(16, value)
             return
 
-        if isinstance(value[0], (bytes, str)):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 16, value_ptr, value_count)
-        
-            self._check_for_error()
-            return
-
-        self._set_batch_obj_array(16, value)
+        self._set_batch_objlist_prop(16, value)
 
     @property
     def tscables_obj(self) -> List[List[TSData]]:
@@ -24371,11 +24723,11 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `tscables`, DSS property index: 16.
         """
-        return self._get_batch_obj_array(16, TSData)
+        return self._get_obj_ll(16, TSData)
 
     @tscables_obj.setter
-    def tscables_obj(self, value: Union[List[TSData], List[List[TSData]]]):
-        self._set_batch_obj_array(16, value)
+    def tscables_obj(self, value: List[TSData]):
+        self._set_batch_objlist_prop(16, value)
 
     @property
     def Seasons(self) -> BatchInt32ArrayProxy:
@@ -24387,7 +24739,7 @@ class LineGeometryBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 17)
 
     @Seasons.setter
-    def Seasons(self, value):
+    def Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(17, value)
 
     @property
@@ -24405,7 +24757,7 @@ class LineGeometryBatch(DSSBatch):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(18, value)
+        self._set_float64_array_o(18, value)
 
     @property
     def linetype(self) -> BatchInt32ArrayProxy:
@@ -24420,14 +24772,11 @@ class LineGeometryBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 19)
 
     @linetype.setter
-    def linetype(self, value: Union[AnyStr, int, LineType, List[AnyStr], List[Union[int, LineType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def linetype(self, value: Union[AnyStr, int, LineType, List[AnyStr], List[int], List[LineType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(19, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(19, value)
 
     @property
@@ -24472,7 +24821,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -24485,106 +24834,8 @@ class XfmrCodeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @windings.setter
-    def windings(self, value):
+    def windings(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
-
-    @property
-    def wdg(self) -> BatchInt32ArrayProxy:
-        """
-        Set this = to the number of the winding you wish to define.  Then set the values for this winding.  Repeat for each winding.  Alternatively, use the array collections (buses, kvas, etc.) to define the windings.  Note: reactances are BETWEEN pairs of windings; they are not the property of a single winding.
-
-        DSS property name: `wdg`, DSS property index: 3.
-        """
-        return BatchInt32ArrayProxy(self, 3)
-
-    @wdg.setter
-    def wdg(self, value):
-        self._set_batch_int32_array(3, value)
-
-    @property
-    def conn(self) -> List[Int32Array]:
-        """
-        Connection of this winding. Default is "wye" with the neutral solidly grounded.
-
-        DSS property name: `conn`, DSS property index: 4.
-        """
-        return [
-            self._get_int32_array(self._lib.Obj_GetInt32Array, x, 4)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @conn.setter
-    def conn(self, value: Union[List[Union[int,Connection]], List[AnyStr]]): #TODO: list of lists
-        if len(value) and not isinstance(value[0], int):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 4, value_ptr, value_count)
-
-            self._check_for_error()
-            return
-
-        self._set_batch_int32_array(4, value)
-
-    @property
-    def conn_str(self) -> List[List[str]]:
-        """
-        Connection of this winding. Default is "wye" with the neutral solidly grounded.
-
-        DSS property name: `conn`, DSS property index: 4.
-        """
-        return self._get_string_ll(4)
-
-    @conn_str.setter
-    def conn_str(self, value: AnyStr):
-        self.conn = value
-
-    @property
-    def kV(self) -> List[Float64Array]:
-        """
-        For 2-or 3-phase, enter phase-phase kV rating.  Otherwise, kV rating of the actual winding
-
-        DSS property name: `kV`, DSS property index: 5.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 5)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @kV.setter
-    def kV(self, value: Float64Array):
-        self._set_float64_array(5, value)
-
-    @property
-    def kVA(self) -> List[Float64Array]:
-        """
-        Base kVA rating of the winding. Side effect: forces change of max normal and emerg kva ratings.If 2-winding transformer, forces other winding to same value. When winding 1 is defined, all other windings are defaulted to the same rating and the first two winding resistances are defaulted to the %loadloss value.
-
-        DSS property name: `kVA`, DSS property index: 6.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 6)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @kVA.setter
-    def kVA(self, value: Float64Array):
-        self._set_float64_array(6, value)
-
-    @property
-    def tap(self) -> List[Float64Array]:
-        """
-        Per unit tap that this winding is normally on.
-
-        DSS property name: `tap`, DSS property index: 7.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 7)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @tap.setter
-    def tap(self, value: Float64Array):
-        self._set_float64_array(7, value)
 
     @property
     def pctR(self) -> List[Float64Array]:
@@ -24600,7 +24851,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @pctR.setter
     def pctR(self, value: Float64Array):
-        self._set_float64_array(8, value)
+        self._set_float64_array_o(8, value)
 
     @property
     def Rneut(self) -> List[Float64Array]:
@@ -24616,7 +24867,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @Rneut.setter
     def Rneut(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def Xneut(self) -> List[Float64Array]:
@@ -24632,7 +24883,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @Xneut.setter
     def Xneut(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def conns(self) -> List[Int32Array]:
@@ -24695,7 +24946,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @kVs.setter
     def kVs(self, value: Float64Array):
-        self._set_float64_array(12, value)
+        self._set_float64_array_o(12, value)
 
     @property
     def kVAs(self) -> List[Float64Array]:
@@ -24711,7 +24962,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @kVAs.setter
     def kVAs(self, value: Float64Array):
-        self._set_float64_array(13, value)
+        self._set_float64_array_o(13, value)
 
     @property
     def taps(self) -> List[Float64Array]:
@@ -24727,7 +24978,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @taps.setter
     def taps(self, value: Float64Array):
-        self._set_float64_array(14, value)
+        self._set_float64_array_o(14, value)
 
     @property
     def Xhl(self) -> BatchFloat64ArrayProxy:
@@ -24739,7 +24990,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @Xhl.setter
-    def Xhl(self, value):
+    def Xhl(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -24752,7 +25003,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @Xht.setter
-    def Xht(self, value):
+    def Xht(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -24765,7 +25016,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @Xlt.setter
-    def Xlt(self, value):
+    def Xlt(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -24786,7 +25037,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @Xscarray.setter
     def Xscarray(self, value: Float64Array):
-        self._set_float64_array(18, value)
+        self._set_float64_array_o(18, value)
 
     @property
     def thermal(self) -> BatchFloat64ArrayProxy:
@@ -24798,7 +25049,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @thermal.setter
-    def thermal(self, value):
+    def thermal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -24811,7 +25062,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @n.setter
-    def n(self, value):
+    def n(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -24824,7 +25075,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @m.setter
-    def m(self, value):
+    def m(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -24837,7 +25088,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @flrise.setter
-    def flrise(self, value):
+    def flrise(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -24850,7 +25101,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @hsrise.setter
-    def hsrise(self, value):
+    def hsrise(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -24863,7 +25114,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @pctloadloss.setter
-    def pctloadloss(self, value):
+    def pctloadloss(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -24876,7 +25127,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 25)
 
     @pctnoloadloss.setter
-    def pctnoloadloss(self, value):
+    def pctnoloadloss(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
     @property
@@ -24889,7 +25140,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 26)
 
     @normhkVA.setter
-    def normhkVA(self, value):
+    def normhkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
     @property
@@ -24902,7 +25153,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 27)
 
     @emerghkVA.setter
-    def emerghkVA(self, value):
+    def emerghkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
     @property
@@ -24919,7 +25170,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @MaxTap.setter
     def MaxTap(self, value: Float64Array):
-        self._set_float64_array(28, value)
+        self._set_float64_array_o(28, value)
 
     @property
     def MinTap(self) -> List[Float64Array]:
@@ -24935,7 +25186,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @MinTap.setter
     def MinTap(self, value: Float64Array):
-        self._set_float64_array(29, value)
+        self._set_float64_array_o(29, value)
 
     @property
     def NumTaps(self) -> List[Int32Array]:
@@ -24963,7 +25214,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 31)
 
     @pctimag.setter
-    def pctimag(self, value):
+    def pctimag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(31, value)
 
     @property
@@ -24976,7 +25227,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 32)
 
     @ppm_antifloat.setter
-    def ppm_antifloat(self, value):
+    def ppm_antifloat(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(32, value)
 
     @property
@@ -24995,7 +25246,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @pctRs.setter
     def pctRs(self, value: Float64Array):
-        self._set_float64_array(33, value)
+        self._set_float64_array_o(33, value)
 
     @property
     def X12(self) -> BatchFloat64ArrayProxy:
@@ -25007,7 +25258,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 34)
 
     @X12.setter
-    def X12(self, value):
+    def X12(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
     @property
@@ -25020,7 +25271,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 35)
 
     @X13.setter
-    def X13(self, value):
+    def X13(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
     @property
@@ -25033,7 +25284,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 36)
 
     @X23.setter
-    def X23(self, value):
+    def X23(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(36, value)
 
     @property
@@ -25050,7 +25301,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @RdcOhms.setter
     def RdcOhms(self, value: Float64Array):
-        self._set_float64_array(37, value)
+        self._set_float64_array_o(37, value)
 
     @property
     def Seasons(self) -> BatchInt32ArrayProxy:
@@ -25062,7 +25313,7 @@ class XfmrCodeBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 38)
 
     @Seasons.setter
-    def Seasons(self, value):
+    def Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(38, value)
 
     @property
@@ -25080,7 +25331,7 @@ class XfmrCodeBatch(DSSBatch):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(39, value)
+        self._set_float64_array_o(39, value)
 
     def like(self, value: AnyStr):
         """
@@ -25112,10 +25363,8 @@ class LineBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def bus2(self) -> List[str]:
@@ -25128,10 +25377,8 @@ class LineBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus2.setter
-    def bus2(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus2(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def linecode(self) -> List[str]:
@@ -25144,22 +25391,18 @@ class LineBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
 
     @linecode.setter
-    def linecode(self, value: Union[AnyStr, LineCode]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(3, value)
-            return
-
-        self._set_batch_string(3, value)
+    def linecode(self, value: Union[AnyStr, LineCode, List[AnyStr], List[LineCode]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
-    def linecode_obj(self) -> List[str]:
+    def linecode_obj(self) -> List[LineCode]:
         """
         Name of linecode object describing line impedances.
         If you use a line code, you do not need to specify the impedances here. The line code must have been PREVIOUSLY defined. The values specified last will prevail over those specified earlier (left-to-right sequence of properties).  You can subsequently change the number of phases if symmetrical component quantities are specified.If no line code or impedance data are specified, the line object defaults to 336 MCM ACSR on 4 ft spacing.
 
         DSS property name: `linecode`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 3)
 
     @linecode_obj.setter
     def linecode_obj(self, value: LineCode):
@@ -25175,7 +25418,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @length.setter
-    def length(self, value):
+    def length(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -25188,7 +25431,7 @@ class LineBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 5)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(5, value)
 
     @property
@@ -25201,7 +25444,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @r1.setter
-    def r1(self, value):
+    def r1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -25214,7 +25457,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @x1.setter
-    def x1(self, value):
+    def x1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -25227,7 +25470,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @r0.setter
-    def r0(self, value):
+    def r0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -25240,7 +25483,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @x0.setter
-    def x0(self, value):
+    def x0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -25253,7 +25496,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @C1.setter
-    def C1(self, value):
+    def C1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -25266,7 +25509,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @C0.setter
-    def C0(self, value):
+    def C0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -25283,7 +25526,7 @@ class LineBatch(DSSBatch):
 
     @rmatrix.setter
     def rmatrix(self, value: Float64Array):
-        self._set_float64_array(12, value)
+        self._set_float64_array_o(12, value)
 
     @property
     def xmatrix(self) -> List[Float64Array]:
@@ -25299,7 +25542,7 @@ class LineBatch(DSSBatch):
 
     @xmatrix.setter
     def xmatrix(self, value: Float64Array):
-        self._set_float64_array(13, value)
+        self._set_float64_array_o(13, value)
 
     @property
     def cmatrix(self) -> List[Float64Array]:
@@ -25315,7 +25558,7 @@ class LineBatch(DSSBatch):
 
     @cmatrix.setter
     def cmatrix(self, value: Float64Array):
-        self._set_float64_array(14, value)
+        self._set_float64_array_o(14, value)
 
     @property
     def Switch(self) -> List[bool]:
@@ -25342,7 +25585,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @Rg.setter
-    def Rg(self, value):
+    def Rg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -25355,7 +25598,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @Xg.setter
-    def Xg(self, value):
+    def Xg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -25368,7 +25611,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @rho.setter
-    def rho(self, value):
+    def rho(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -25381,21 +25624,17 @@ class LineBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
 
     @geometry.setter
-    def geometry(self, value: Union[AnyStr, LineGeometry]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(19, value)
-            return
-
-        self._set_batch_string(19, value)
+    def geometry(self, value: Union[AnyStr, LineGeometry, List[AnyStr], List[LineGeometry]]):
+        self._set_batch_obj_prop(19, value)
 
     @property
-    def geometry_obj(self) -> List[str]:
+    def geometry_obj(self) -> List[LineGeometry]:
         """
         Geometry code for LineGeometry Object. Supercedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
 
         DSS property name: `geometry`, DSS property index: 19.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 19)
 
     @geometry_obj.setter
     def geometry_obj(self, value: LineGeometry):
@@ -25411,14 +25650,11 @@ class LineBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 20)
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[Union[int, DimensionUnits]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(20, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(20, value)
 
     @property
@@ -25446,15 +25682,11 @@ class LineBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 21)
 
     @spacing.setter
-    def spacing(self, value: Union[AnyStr, LineSpacing]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(21, value)
-            return
-
-        self._set_batch_string(21, value)
+    def spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
+        self._set_batch_obj_prop(21, value)
 
     @property
-    def spacing_obj(self) -> List[str]:
+    def spacing_obj(self) -> List[LineSpacing]:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Must be used in conjunction with the Wires property.
@@ -25462,7 +25694,7 @@ class LineBatch(DSSBatch):
 
         DSS property name: `spacing`, DSS property index: 21.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 21)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 21)
 
     @spacing_obj.setter
     def spacing_obj(self, value: LineSpacing):
@@ -25481,19 +25713,12 @@ class LineBatch(DSSBatch):
         return self._get_string_ll(22)
 
     @wires.setter
-    def wires(self, value: Union[List[Union[AnyStr, WireData]], List[List[Union[AnyStr, WireData]]]]):
-        if not len(value):
+    def wires(self, value: Union[List[AnyStr], List[WireData]]):
+        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
+            self._set_batch_stringlist_prop(22, value)
             return
 
-        if isinstance(value[0], (bytes, str)):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 22, value_ptr, value_count)
-        
-            self._check_for_error()
-            return
-
-        self._set_batch_obj_array(22, value)
+        self._set_batch_objlist_prop(22, value)
 
     @property
     def wires_obj(self) -> List[List[WireData]]:
@@ -25505,11 +25730,11 @@ class LineBatch(DSSBatch):
 
         DSS property name: `wires`, DSS property index: 22.
         """
-        return self._get_batch_obj_array(22, WireData)
+        return self._get_obj_ll(22, WireData)
 
     @wires_obj.setter
-    def wires_obj(self, value: Union[List[WireData], List[List[WireData]]]):
-        self._set_batch_obj_array(22, value)
+    def wires_obj(self, value: List[WireData]):
+        self._set_batch_objlist_prop(22, value)
 
     @property
     def earthmodel(self) -> BatchInt32ArrayProxy:
@@ -25521,14 +25746,11 @@ class LineBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 23)
 
     @earthmodel.setter
-    def earthmodel(self, value: Union[AnyStr, int, EarthModel, List[AnyStr], List[Union[int, EarthModel]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def earthmodel(self, value: Union[AnyStr, int, EarthModel, List[AnyStr], List[int], List[EarthModel], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(23, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(23, value)
 
     @property
@@ -25557,19 +25779,12 @@ class LineBatch(DSSBatch):
         return self._get_string_ll(24)
 
     @cncables.setter
-    def cncables(self, value: Union[List[Union[AnyStr, CNData]], List[List[Union[AnyStr, CNData]]]]):
-        if not len(value):
+    def cncables(self, value: Union[List[AnyStr], List[CNData]]):
+        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
+            self._set_batch_stringlist_prop(24, value)
             return
 
-        if isinstance(value[0], (bytes, str)):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 24, value_ptr, value_count)
-        
-            self._check_for_error()
-            return
-
-        self._set_batch_obj_array(24, value)
+        self._set_batch_objlist_prop(24, value)
 
     @property
     def cncables_obj(self) -> List[List[CNData]]:
@@ -25581,11 +25796,11 @@ class LineBatch(DSSBatch):
 
         DSS property name: `cncables`, DSS property index: 24.
         """
-        return self._get_batch_obj_array(24, CNData)
+        return self._get_obj_ll(24, CNData)
 
     @cncables_obj.setter
-    def cncables_obj(self, value: Union[List[CNData], List[List[CNData]]]):
-        self._set_batch_obj_array(24, value)
+    def cncables_obj(self, value: List[CNData]):
+        self._set_batch_objlist_prop(24, value)
 
     @property
     def tscables(self) -> List[List[str]]:
@@ -25600,19 +25815,12 @@ class LineBatch(DSSBatch):
         return self._get_string_ll(25)
 
     @tscables.setter
-    def tscables(self, value: Union[List[Union[AnyStr, TSData]], List[List[Union[AnyStr, TSData]]]]):
-        if not len(value):
+    def tscables(self, value: Union[List[AnyStr], List[TSData]]):
+        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
+            self._set_batch_stringlist_prop(25, value)
             return
 
-        if isinstance(value[0], (bytes, str)):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 25, value_ptr, value_count)
-        
-            self._check_for_error()
-            return
-
-        self._set_batch_obj_array(25, value)
+        self._set_batch_objlist_prop(25, value)
 
     @property
     def tscables_obj(self) -> List[List[TSData]]:
@@ -25624,11 +25832,11 @@ class LineBatch(DSSBatch):
 
         DSS property name: `tscables`, DSS property index: 25.
         """
-        return self._get_batch_obj_array(25, TSData)
+        return self._get_obj_ll(25, TSData)
 
     @tscables_obj.setter
-    def tscables_obj(self, value: Union[List[TSData], List[List[TSData]]]):
-        self._set_batch_obj_array(25, value)
+    def tscables_obj(self, value: List[TSData]):
+        self._set_batch_objlist_prop(25, value)
 
     @property
     def B1(self) -> BatchFloat64ArrayProxy:
@@ -25640,7 +25848,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 26)
 
     @B1.setter
-    def B1(self, value):
+    def B1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
     @property
@@ -25653,7 +25861,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 27)
 
     @B0.setter
-    def B0(self, value):
+    def B0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
     @property
@@ -25666,7 +25874,7 @@ class LineBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 28)
 
     @Seasons.setter
-    def Seasons(self, value):
+    def Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(28, value)
 
     @property
@@ -25684,7 +25892,7 @@ class LineBatch(DSSBatch):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(29, value)
+        self._set_float64_array_o(29, value)
 
     @property
     def linetype(self) -> BatchInt32ArrayProxy:
@@ -25699,14 +25907,11 @@ class LineBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 30)
 
     @linetype.setter
-    def linetype(self, value: Union[AnyStr, int, LineType, List[AnyStr], List[Union[int, LineType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def linetype(self, value: Union[AnyStr, int, LineType, List[AnyStr], List[int], List[LineType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(30, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(30, value)
 
     @property
@@ -25735,7 +25940,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 31)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(31, value)
 
     @property
@@ -25748,7 +25953,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 32)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(32, value)
 
     @property
@@ -25761,7 +25966,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 33)
 
     @faultrate.setter
-    def faultrate(self, value):
+    def faultrate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
     @property
@@ -25774,7 +25979,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 34)
 
     @pctperm.setter
-    def pctperm(self, value):
+    def pctperm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
     @property
@@ -25787,7 +25992,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 35)
 
     @repair.setter
-    def repair(self, value):
+    def repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
     @property
@@ -25800,7 +26005,7 @@ class LineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 36)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(36, value)
 
     @property
@@ -25848,10 +26053,8 @@ class VsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def basekv(self) -> BatchFloat64ArrayProxy:
@@ -25863,7 +26066,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @basekv.setter
-    def basekv(self, value):
+    def basekv(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -25877,7 +26080,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @pu.setter
-    def pu(self, value):
+    def pu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -25890,7 +26093,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @angle.setter
-    def angle(self, value):
+    def angle(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -25903,7 +26106,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @frequency.setter
-    def frequency(self, value):
+    def frequency(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -25916,7 +26119,7 @@ class VsourceBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(6, value)
 
     @property
@@ -25929,7 +26132,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @MVAsc3.setter
-    def MVAsc3(self, value):
+    def MVAsc3(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -25942,7 +26145,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @MVAsc1.setter
-    def MVAsc1(self, value):
+    def MVAsc1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -25955,7 +26158,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @x1r1.setter
-    def x1r1(self, value):
+    def x1r1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -25968,7 +26171,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @x0r0.setter
-    def x0r0(self, value):
+    def x0r0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -25982,7 +26185,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @Isc3.setter
-    def Isc3(self, value):
+    def Isc3(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -25996,7 +26199,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @Isc1.setter
-    def Isc1(self, value):
+    def Isc1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -26010,7 +26213,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @R1.setter
-    def R1(self, value):
+    def R1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -26024,7 +26227,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @X1.setter
-    def X1(self, value):
+    def X1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -26038,7 +26241,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @R0.setter
-    def R0(self, value):
+    def R0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -26052,7 +26255,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @X0.setter
-    def X0(self, value):
+    def X0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -26065,14 +26268,11 @@ class VsourceBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 17)
 
     @scantype.setter
-    def scantype(self, value: Union[AnyStr, int, ScanType, List[AnyStr], List[Union[int, ScanType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def scantype(self, value: Union[AnyStr, int, ScanType, List[AnyStr], List[int], List[ScanType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(17, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(17, value)
 
     @property
@@ -26098,14 +26298,11 @@ class VsourceBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 18)
 
     @Sequence.setter
-    def Sequence(self, value: Union[AnyStr, int, SequenceType, List[AnyStr], List[Union[int, SequenceType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Sequence(self, value: Union[AnyStr, int, SequenceType, List[AnyStr], List[int], List[SequenceType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(18, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(18, value)
 
     @property
@@ -26136,90 +26333,8 @@ class VsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19) 
 
     @bus2.setter
-    def bus2(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 19, value)
-
-    @property
-    def Z1(self) -> List[complex]:
-        """
-        Positive-sequence equivalent source impedance, ohms, as a 2-element array representing a complex number. Example: 
-
-        Z1=[1, 2]  ! represents 1 + j2 
-
-        If defined, Z1, Z2, and Z0 are used to define the impedance matrix of the VSOURCE. Z1 MUST BE DEFINED TO USE THIS OPTION FOR DEFINING THE MATRIX.
-
-        Side Effect: Sets Z2 and Z0 to same values unless they were previously defined.
-
-        DSS property name: `Z1`, DSS property index: 20.
-        """
-        return [   
-            self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
-                x,
-                20,
-            ).astype(complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @Z1.setter
-    def Z1(self, value: Union[complex, List[complex]]):
-        if isinstance(value, complex):
-            value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetFloat64Array(x, 20, value_ptr, value_count)
-            return
-
-        values = value
-        if len(values) != self.count[0]:
-            raise ValueError('Number of elements provided must match the number of objects in the batch.')
-
-        value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
-            value[0] = v.real
-            value[1] = v.imag
-            self._lib.Obj_SetFloat64Array(x, 20, value_ptr, value_count)
-
-    @property
-    def Z0(self) -> List[complex]:
-        """
-        Zero-sequence equivalent source impedance, ohms, as a 2-element array representing a complex number. Example: 
-
-        Z0=[3, 4]  ! represents 3 + j4 
-
-        Used to define the impedance matrix of the VSOURCE if Z1 is also specified. 
-
-        Note: Z0 defaults to Z1 if it is not specifically defined. 
-
-        DSS property name: `Z0`, DSS property index: 21.
-        """
-        return [   
-            self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
-                x,
-                21,
-            ).astype(complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @Z0.setter
-    def Z0(self, value: Union[complex, List[complex]]):
-        if isinstance(value, complex):
-            value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetFloat64Array(x, 21, value_ptr, value_count)
-            return
-
-        values = value
-        if len(values) != self.count[0]:
-            raise ValueError('Number of elements provided must match the number of objects in the batch.')
-
-        value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
-            value[0] = v.real
-            value[1] = v.imag
-            self._lib.Obj_SetFloat64Array(x, 21, value_ptr, value_count)
+    def bus2(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(19, value)
 
     @property
     def Z2(self) -> List[complex]:
@@ -26373,7 +26488,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 26)
 
     @baseMVA.setter
-    def baseMVA(self, value):
+    def baseMVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
     @property
@@ -26390,15 +26505,11 @@ class VsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 27)
 
     @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(27, value)
-            return
-
-        self._set_batch_string(27, value)
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(27, value)
 
     @property
-    def Yearly_obj(self) -> List[str]:
+    def Yearly_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit voltage for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -26408,7 +26519,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 27.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 27)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 27)
 
     @Yearly_obj.setter
     def Yearly_obj(self, value: LoadShape):
@@ -26428,15 +26539,11 @@ class VsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 28)
 
     @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(28, value)
-            return
-
-        self._set_batch_string(28, value)
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(28, value)
 
     @property
-    def Daily_obj(self) -> List[str]:
+    def Daily_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit voltage for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -26446,7 +26553,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 28.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 28)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 28)
 
     @Daily_obj.setter
     def Daily_obj(self, value: LoadShape):
@@ -26466,15 +26573,11 @@ class VsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 29)
 
     @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(29, value)
-            return
-
-        self._set_batch_string(29, value)
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(29, value)
 
     @property
-    def Duty_obj(self) -> List[str]:
+    def Duty_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit voltage for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -26484,7 +26587,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 29.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 29)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 29)
 
     @Duty_obj.setter
     def Duty_obj(self, value: LoadShape):
@@ -26500,14 +26603,11 @@ class VsourceBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 30)
 
     @Model.setter
-    def Model(self, value: Union[AnyStr, int, Vsource.VSourceModel, List[AnyStr], List[Union[int, Vsource.VSourceModel]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Model(self, value: Union[AnyStr, int, Vsource.VSourceModel, List[AnyStr], List[int], List[Vsource.VSourceModel], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(30, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(30, value)
 
     @property
@@ -26567,21 +26667,17 @@ class VsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 32)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(32, value)
-            return
-
-        self._set_batch_string(32, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(32, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
         DSS property name: `spectrum`, DSS property index: 32.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 32)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 32)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
@@ -26597,7 +26693,7 @@ class VsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 33)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
     @property
@@ -26643,10 +26739,8 @@ class IsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def amps(self) -> BatchFloat64ArrayProxy:
@@ -26658,7 +26752,7 @@ class IsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @amps.setter
-    def amps(self, value):
+    def amps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -26672,7 +26766,7 @@ class IsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @angle.setter
-    def angle(self, value):
+    def angle(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -26685,7 +26779,7 @@ class IsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @frequency.setter
-    def frequency(self, value):
+    def frequency(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -26698,7 +26792,7 @@ class IsourceBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 5)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(5, value)
 
     @property
@@ -26711,14 +26805,11 @@ class IsourceBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @scantype.setter
-    def scantype(self, value: Union[AnyStr, int, ScanType, List[AnyStr], List[Union[int, ScanType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def scantype(self, value: Union[AnyStr, int, ScanType, List[AnyStr], List[int], List[ScanType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(6, value)
 
     @property
@@ -26744,14 +26835,11 @@ class IsourceBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 7)
 
     @sequence.setter
-    def sequence(self, value: Union[AnyStr, int, SequenceType, List[AnyStr], List[Union[int, SequenceType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def sequence(self, value: Union[AnyStr, int, SequenceType, List[AnyStr], List[int], List[SequenceType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(7, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(7, value)
 
     @property
@@ -26781,15 +26869,11 @@ class IsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
 
     @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(8, value)
-            return
-
-        self._set_batch_string(8, value)
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(8, value)
 
     @property
-    def Yearly_obj(self) -> List[str]:
+    def Yearly_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit current for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual Amp.
 
@@ -26799,7 +26883,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 8)
 
     @Yearly_obj.setter
     def Yearly_obj(self, value: LoadShape):
@@ -26819,15 +26903,11 @@ class IsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
 
     @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(9, value)
-            return
-
-        self._set_batch_string(9, value)
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(9, value)
 
     @property
-    def Daily_obj(self) -> List[str]:
+    def Daily_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit current for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual A.
 
@@ -26837,7 +26917,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 9.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 9)
 
     @Daily_obj.setter
     def Daily_obj(self, value: LoadShape):
@@ -26857,15 +26937,11 @@ class IsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
 
     @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(10, value)
-            return
-
-        self._set_batch_string(10, value)
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(10, value)
 
     @property
-    def Duty_obj(self) -> List[str]:
+    def Duty_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit current for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual A.
 
@@ -26875,7 +26951,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 10.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 10)
 
     @Duty_obj.setter
     def Duty_obj(self, value: LoadShape):
@@ -26896,10 +26972,8 @@ class IsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11) 
 
     @Bus2.setter
-    def Bus2(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 11, value)
+    def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(11, value)
 
     @property
     def spectrum(self) -> List[str]:
@@ -26911,21 +26985,17 @@ class IsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(12, value)
-            return
-
-        self._set_batch_string(12, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(12, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Harmonic spectrum assumed for this source.  Default is "default".
 
         DSS property name: `spectrum`, DSS property index: 12.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 12)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
@@ -26941,7 +27011,7 @@ class IsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -26987,10 +27057,8 @@ class VCCSBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def phases(self) -> BatchInt32ArrayProxy:
@@ -27002,7 +27070,7 @@ class VCCSBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -27015,7 +27083,7 @@ class VCCSBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @prated.setter
-    def prated(self, value):
+    def prated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -27028,7 +27096,7 @@ class VCCSBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @vrated.setter
-    def vrated(self, value):
+    def vrated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -27041,7 +27109,7 @@ class VCCSBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @ppct.setter
-    def ppct(self, value):
+    def ppct(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -27054,21 +27122,17 @@ class VCCSBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @bp1.setter
-    def bp1(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(6, value)
-            return
-
-        self._set_batch_string(6, value)
+    def bp1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(6, value)
 
     @property
-    def bp1_obj(self) -> List[str]:
+    def bp1_obj(self) -> List[XYcurve]:
         """
         XYCurve defining the input piece-wise linear block.
 
         DSS property name: `bp1`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 6)
 
     @bp1_obj.setter
     def bp1_obj(self, value: XYcurve):
@@ -27084,21 +27148,17 @@ class VCCSBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
 
     @bp2.setter
-    def bp2(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(7, value)
-            return
-
-        self._set_batch_string(7, value)
+    def bp2(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(7, value)
 
     @property
-    def bp2_obj(self) -> List[str]:
+    def bp2_obj(self) -> List[XYcurve]:
         """
         XYCurve defining the output piece-wise linear block.
 
         DSS property name: `bp2`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 7)
 
     @bp2_obj.setter
     def bp2_obj(self, value: XYcurve):
@@ -27114,21 +27174,17 @@ class VCCSBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
 
     @filter.setter
-    def filter(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(8, value)
-            return
-
-        self._set_batch_string(8, value)
+    def filter(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(8, value)
 
     @property
-    def filter_obj(self) -> List[str]:
+    def filter_obj(self) -> List[XYcurve]:
         """
         XYCurve defining the digital filter coefficients (x numerator, y denominator).
 
         DSS property name: `filter`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 8)
 
     @filter_obj.setter
     def filter_obj(self, value: XYcurve):
@@ -27144,7 +27200,7 @@ class VCCSBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @fsample.setter
-    def fsample(self, value):
+    def fsample(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -27171,7 +27227,7 @@ class VCCSBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @imaxpu.setter
-    def imaxpu(self, value):
+    def imaxpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -27184,7 +27240,7 @@ class VCCSBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @vrmstau.setter
-    def vrmstau(self, value):
+    def vrmstau(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -27197,7 +27253,7 @@ class VCCSBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @irmstau.setter
-    def irmstau(self, value):
+    def irmstau(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -27210,21 +27266,17 @@ class VCCSBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 14)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(14, value)
-            return
-
-        self._set_batch_string(14, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(14, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Harmonic spectrum assumed for this source.  Default is "default".
 
         DSS property name: `spectrum`, DSS property index: 14.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 14)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 14)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
@@ -27240,7 +27292,7 @@ class VCCSBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -27283,7 +27335,7 @@ class LoadBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -27297,10 +27349,8 @@ class LoadBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def kV(self) -> BatchFloat64ArrayProxy:
@@ -27312,7 +27362,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @kV.setter
-    def kV(self, value):
+    def kV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -27332,7 +27382,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @kW.setter
-    def kW(self, value):
+    def kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -27345,7 +27395,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @pf.setter
-    def pf(self, value):
+    def pf(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -27369,7 +27419,7 @@ class LoadBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @model.setter
-    def model(self, value):
+    def model(self, value: Union[int, Load.LoadModel, Int32Array]):
         self._set_batch_int32_array(6, value)
 
     @property
@@ -27382,21 +27432,17 @@ class LoadBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
 
     @yearly.setter
-    def yearly(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(7, value)
-            return
-
-        self._set_batch_string(7, value)
+    def yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(7, value)
 
     @property
-    def yearly_obj(self) -> List[str]:
+    def yearly_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
 
         DSS property name: `yearly`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 7)
 
     @yearly_obj.setter
     def yearly_obj(self, value: LoadShape):
@@ -27412,21 +27458,17 @@ class LoadBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
 
     @daily.setter
-    def daily(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(8, value)
-            return
-
-        self._set_batch_string(8, value)
+    def daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(8, value)
 
     @property
-    def daily_obj(self) -> List[str]:
+    def daily_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `daily`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 8)
 
     @daily_obj.setter
     def daily_obj(self, value: LoadShape):
@@ -27442,21 +27484,17 @@ class LoadBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
 
     @duty.setter
-    def duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(9, value)
-            return
-
-        self._set_batch_string(9, value)
+    def duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(9, value)
 
     @property
-    def duty_obj(self) -> List[str]:
+    def duty_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `duty`, DSS property index: 9.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 9)
 
     @duty_obj.setter
     def duty_obj(self, value: LoadShape):
@@ -27472,21 +27510,17 @@ class LoadBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
 
     @growth.setter
-    def growth(self, value: Union[AnyStr, GrowthShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(10, value)
-            return
-
-        self._set_batch_string(10, value)
+    def growth(self, value: Union[AnyStr, GrowthShape, List[AnyStr], List[GrowthShape]]):
+        self._set_batch_obj_prop(10, value)
 
     @property
-    def growth_obj(self) -> List[str]:
+    def growth_obj(self) -> List[GrowthShape]:
         """
         Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
 
         DSS property name: `growth`, DSS property index: 10.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 10)
 
     @growth_obj.setter
     def growth_obj(self, value: GrowthShape):
@@ -27502,14 +27536,11 @@ class LoadBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 11)
 
     @conn.setter
-    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[Union[int, Connection]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(11, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(11, value)
 
     @property
@@ -27535,7 +27566,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @kvar.setter
-    def kvar(self, value):
+    def kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -27548,7 +27579,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @Rneut.setter
-    def Rneut(self, value):
+    def Rneut(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -27561,7 +27592,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @Xneut.setter
-    def Xneut(self, value):
+    def Xneut(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -27574,14 +27605,11 @@ class LoadBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 15)
 
     @status.setter
-    def status(self, value: Union[AnyStr, int, Load.LoadStatus, List[AnyStr], List[Union[int, Load.LoadStatus]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def status(self, value: Union[AnyStr, int, Load.LoadStatus, List[AnyStr], List[int], List[Load.LoadStatus], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(15, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(15, value)
 
     @property
@@ -27607,7 +27635,7 @@ class LoadBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 16)
 
     @cls.setter
-    def cls(self, value):
+    def cls(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(16, value)
 
     @property
@@ -27620,7 +27648,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @Vminpu.setter
-    def Vminpu(self, value):
+    def Vminpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -27633,7 +27661,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @Vmaxpu.setter
-    def Vmaxpu(self, value):
+    def Vmaxpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -27646,7 +27674,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @Vminnorm.setter
-    def Vminnorm(self, value):
+    def Vminnorm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -27659,7 +27687,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @Vminemerg.setter
-    def Vminemerg(self, value):
+    def Vminemerg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -27672,7 +27700,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @xfkVA.setter
-    def xfkVA(self, value):
+    def xfkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -27685,7 +27713,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @allocationfactor.setter
-    def allocationfactor(self, value):
+    def allocationfactor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -27705,7 +27733,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @kVA.setter
-    def kVA(self, value):
+    def kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -27718,7 +27746,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @pctmean.setter
-    def pctmean(self, value):
+    def pctmean(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -27731,7 +27759,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 25)
 
     @pctstddev.setter
-    def pctstddev(self, value):
+    def pctstddev(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
     @property
@@ -27746,7 +27774,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 26)
 
     @CVRwatts.setter
-    def CVRwatts(self, value):
+    def CVRwatts(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
     @property
@@ -27761,7 +27789,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 27)
 
     @CVRvars.setter
-    def CVRvars(self, value):
+    def CVRvars(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
     @property
@@ -27774,7 +27802,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 28)
 
     @kwh.setter
-    def kwh(self, value):
+    def kwh(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
     @property
@@ -27787,7 +27815,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 29)
 
     @kwhdays.setter
-    def kwhdays(self, value):
+    def kwhdays(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
     @property
@@ -27800,7 +27828,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 30)
 
     @Cfactor.setter
-    def Cfactor(self, value):
+    def Cfactor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
     @property
@@ -27813,21 +27841,17 @@ class LoadBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 31)
 
     @CVRcurve.setter
-    def CVRcurve(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(31, value)
-            return
-
-        self._set_batch_string(31, value)
+    def CVRcurve(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(31, value)
 
     @property
-    def CVRcurve_obj(self) -> List[str]:
+    def CVRcurve_obj(self) -> List[LoadShape]:
         """
         Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
 
         DSS property name: `CVRcurve`, DSS property index: 31.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 31)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 31)
 
     @CVRcurve_obj.setter
     def CVRcurve_obj(self, value: LoadShape):
@@ -27843,7 +27867,7 @@ class LoadBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 32)
 
     @NumCust.setter
-    def NumCust(self, value):
+    def NumCust(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(32, value)
 
     @property
@@ -27865,7 +27889,7 @@ class LoadBatch(DSSBatch):
 
     @ZIPV.setter
     def ZIPV(self, value: Float64Array):
-        self._set_float64_array(33, value)
+        self._set_float64_array_o(33, value)
 
     @property
     def pctSeriesRL(self) -> BatchFloat64ArrayProxy:
@@ -27877,7 +27901,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 34)
 
     @pctSeriesRL.setter
-    def pctSeriesRL(self, value):
+    def pctSeriesRL(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
     @property
@@ -27892,7 +27916,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 35)
 
     @RelWeight.setter
-    def RelWeight(self, value):
+    def RelWeight(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
     @property
@@ -27905,7 +27929,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 36)
 
     @Vlowpu.setter
-    def Vlowpu(self, value):
+    def Vlowpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(36, value)
 
     @property
@@ -27922,7 +27946,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 37)
 
     @puXharm.setter
-    def puXharm(self, value):
+    def puXharm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(37, value)
 
     @property
@@ -27935,7 +27959,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 38)
 
     @XRharm.setter
-    def XRharm(self, value):
+    def XRharm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(38, value)
 
     @property
@@ -27948,21 +27972,17 @@ class LoadBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(39, value)
-            return
-
-        self._set_batch_string(39, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(39, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
 
         DSS property name: `spectrum`, DSS property index: 39.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 39)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
@@ -27978,7 +27998,7 @@ class LoadBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 40)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(40, value)
 
     @property
@@ -28021,7 +28041,7 @@ class TransformerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -28034,123 +28054,8 @@ class TransformerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @windings.setter
-    def windings(self, value):
+    def windings(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
-
-    @property
-    def wdg(self) -> BatchInt32ArrayProxy:
-        """
-        Set this = to the number of the winding you wish to define.  Then set the values for this winding.  Repeat for each winding.  Alternatively, use the array collections (buses, kVAs, etc.) to define the windings.  Note: reactances are BETWEEN pairs of windings; they are not the property of a single winding.
-
-        DSS property name: `wdg`, DSS property index: 3.
-        """
-        return BatchInt32ArrayProxy(self, 3)
-
-    @wdg.setter
-    def wdg(self, value):
-        self._set_batch_int32_array(3, value)
-
-    @property
-    def bus(self) -> List[List[str]]:
-        """
-        Bus connection spec for this winding.
-
-        DSS property name: `bus`, DSS property index: 4.
-        """
-        return self._get_string_ll(4)
-
-    @bus.setter
-    def bus(self, value: List[str]):
-        value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-            self._lib.Obj_SetStringArray(x, 4, value_ptr, value_count)
-    
-        self._check_for_error()
-
-    @property
-    def conn(self) -> List[Int32Array]:
-        """
-        Connection of this winding {wye*, Delta, LN, LL}. Default is "wye" with the neutral solidly grounded. 
-
-        DSS property name: `conn`, DSS property index: 5.
-        """
-        return [
-            self._get_int32_array(self._lib.Obj_GetInt32Array, x, 5)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @conn.setter
-    def conn(self, value: Union[List[Union[int,Connection]], List[AnyStr]]): #TODO: list of lists
-        if len(value) and not isinstance(value[0], int):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 5, value_ptr, value_count)
-
-            self._check_for_error()
-            return
-
-        self._set_batch_int32_array(5, value)
-
-    @property
-    def conn_str(self) -> List[List[str]]:
-        """
-        Connection of this winding {wye*, Delta, LN, LL}. Default is "wye" with the neutral solidly grounded. 
-
-        DSS property name: `conn`, DSS property index: 5.
-        """
-        return self._get_string_ll(5)
-
-    @conn_str.setter
-    def conn_str(self, value: AnyStr):
-        self.conn = value
-
-    @property
-    def kV(self) -> List[Float64Array]:
-        """
-        For 2-or 3-phase, enter phase-phase kV rating.  Otherwise, kV rating of the actual winding
-
-        DSS property name: `kV`, DSS property index: 6.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 6)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @kV.setter
-    def kV(self, value: Float64Array):
-        self._set_float64_array(6, value)
-
-    @property
-    def kVA(self) -> List[Float64Array]:
-        """
-        Base kVA rating of the winding. Side effect: forces change of max normal and emerg kVA ratings.If 2-winding transformer, forces other winding to same value. When winding 1 is defined, all other windings are defaulted to the same rating and the first two winding resistances are defaulted to the %loadloss value.
-
-        DSS property name: `kVA`, DSS property index: 7.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 7)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @kVA.setter
-    def kVA(self, value: Float64Array):
-        self._set_float64_array(7, value)
-
-    @property
-    def tap(self) -> List[Float64Array]:
-        """
-        Per unit tap that this winding is on.
-
-        DSS property name: `tap`, DSS property index: 8.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 8)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @tap.setter
-    def tap(self, value: Float64Array):
-        self._set_float64_array(8, value)
 
     @property
     def pctR(self) -> List[Float64Array]:
@@ -28166,7 +28071,7 @@ class TransformerBatch(DSSBatch):
 
     @pctR.setter
     def pctR(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def Rneut(self) -> List[Float64Array]:
@@ -28182,7 +28087,7 @@ class TransformerBatch(DSSBatch):
 
     @Rneut.setter
     def Rneut(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def Xneut(self) -> List[Float64Array]:
@@ -28198,7 +28103,7 @@ class TransformerBatch(DSSBatch):
 
     @Xneut.setter
     def Xneut(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def buses(self) -> List[List[str]]:
@@ -28212,7 +28117,7 @@ class TransformerBatch(DSSBatch):
         return self._get_string_ll(12)
 
     @buses.setter
-    def buses(self, value: List[str]):
+    def buses(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 12, value_ptr, value_count)
@@ -28280,7 +28185,7 @@ class TransformerBatch(DSSBatch):
 
     @kVs.setter
     def kVs(self, value: Float64Array):
-        self._set_float64_array(14, value)
+        self._set_float64_array_o(14, value)
 
     @property
     def kVAs(self) -> List[Float64Array]:
@@ -28296,7 +28201,7 @@ class TransformerBatch(DSSBatch):
 
     @kVAs.setter
     def kVAs(self, value: Float64Array):
-        self._set_float64_array(15, value)
+        self._set_float64_array_o(15, value)
 
     @property
     def taps(self) -> List[Float64Array]:
@@ -28312,7 +28217,7 @@ class TransformerBatch(DSSBatch):
 
     @taps.setter
     def taps(self, value: Float64Array):
-        self._set_float64_array(16, value)
+        self._set_float64_array_o(16, value)
 
     @property
     def XHL(self) -> BatchFloat64ArrayProxy:
@@ -28324,7 +28229,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @XHL.setter
-    def XHL(self, value):
+    def XHL(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -28337,7 +28242,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @XHT.setter
-    def XHT(self, value):
+    def XHT(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -28350,7 +28255,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @XLT.setter
-    def XLT(self, value):
+    def XLT(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -28371,7 +28276,7 @@ class TransformerBatch(DSSBatch):
 
     @Xscarray.setter
     def Xscarray(self, value: Float64Array):
-        self._set_float64_array(20, value)
+        self._set_float64_array_o(20, value)
 
     @property
     def thermal(self) -> BatchFloat64ArrayProxy:
@@ -28383,7 +28288,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @thermal.setter
-    def thermal(self, value):
+    def thermal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -28396,7 +28301,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @n.setter
-    def n(self, value):
+    def n(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -28409,7 +28314,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @m.setter
-    def m(self, value):
+    def m(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -28422,7 +28327,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @flrise.setter
-    def flrise(self, value):
+    def flrise(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -28435,7 +28340,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 25)
 
     @hsrise.setter
-    def hsrise(self, value):
+    def hsrise(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
     @property
@@ -28448,7 +28353,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 26)
 
     @pctloadloss.setter
-    def pctloadloss(self, value):
+    def pctloadloss(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
     @property
@@ -28461,7 +28366,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 27)
 
     @pctnoloadloss.setter
-    def pctnoloadloss(self, value):
+    def pctnoloadloss(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
     @property
@@ -28474,7 +28379,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 28)
 
     @normhkVA.setter
-    def normhkVA(self, value):
+    def normhkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
     @property
@@ -28487,7 +28392,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 29)
 
     @emerghkVA.setter
-    def emerghkVA(self, value):
+    def emerghkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
     @property
@@ -28518,7 +28423,7 @@ class TransformerBatch(DSSBatch):
 
     @MaxTap.setter
     def MaxTap(self, value: Float64Array):
-        self._set_float64_array(31, value)
+        self._set_float64_array_o(31, value)
 
     @property
     def MinTap(self) -> List[Float64Array]:
@@ -28534,7 +28439,7 @@ class TransformerBatch(DSSBatch):
 
     @MinTap.setter
     def MinTap(self, value: Float64Array):
-        self._set_float64_array(32, value)
+        self._set_float64_array_o(32, value)
 
     @property
     def NumTaps(self) -> List[Int32Array]:
@@ -28563,10 +28468,8 @@ class TransformerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 34) 
 
     @subname.setter
-    def subname(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 34, value)
+    def subname(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(34, value)
 
     @property
     def pctimag(self) -> BatchFloat64ArrayProxy:
@@ -28578,7 +28481,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 35)
 
     @pctimag.setter
-    def pctimag(self, value):
+    def pctimag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
     @property
@@ -28591,7 +28494,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 36)
 
     @ppm_antifloat.setter
-    def ppm_antifloat(self, value):
+    def ppm_antifloat(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(36, value)
 
     @property
@@ -28610,7 +28513,7 @@ class TransformerBatch(DSSBatch):
 
     @pctRs.setter
     def pctRs(self, value: Float64Array):
-        self._set_float64_array(37, value)
+        self._set_float64_array_o(37, value)
 
     @property
     def bank(self) -> List[str]:
@@ -28623,10 +28526,8 @@ class TransformerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 38) 
 
     @bank.setter
-    def bank(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 38, value)
+    def bank(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(38, value)
 
     @property
     def xfmrcode(self) -> List[str]:
@@ -28638,21 +28539,17 @@ class TransformerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
 
     @xfmrcode.setter
-    def xfmrcode(self, value: Union[AnyStr, XfmrCode]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(39, value)
-            return
-
-        self._set_batch_string(39, value)
+    def xfmrcode(self, value: Union[AnyStr, XfmrCode, List[AnyStr], List[XfmrCode]]):
+        self._set_batch_obj_prop(39, value)
 
     @property
-    def xfmrcode_obj(self) -> List[str]:
+    def xfmrcode_obj(self) -> List[XfmrCode]:
         """
         Name of a library entry for transformer properties. The named XfmrCode must already be defined.
 
         DSS property name: `XfmrCode`, DSS property index: 39.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 39)
 
     @xfmrcode_obj.setter
     def xfmrcode_obj(self, value: XfmrCode):
@@ -28682,7 +28579,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 41)
 
     @X12.setter
-    def X12(self, value):
+    def X12(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(41, value)
 
     @property
@@ -28695,7 +28592,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 42)
 
     @X13.setter
-    def X13(self, value):
+    def X13(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(42, value)
 
     @property
@@ -28708,7 +28605,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 43)
 
     @X23.setter
-    def X23(self, value):
+    def X23(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(43, value)
 
     @property
@@ -28721,14 +28618,11 @@ class TransformerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 44)
 
     @LeadLag.setter
-    def LeadLag(self, value: Union[AnyStr, int, PhaseSequence, List[AnyStr], List[Union[int, PhaseSequence]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def LeadLag(self, value: Union[AnyStr, int, PhaseSequence, List[AnyStr], List[int], List[PhaseSequence], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(44, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(44, value)
 
     @property
@@ -28764,14 +28658,11 @@ class TransformerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 46)
 
     @Core.setter
-    def Core(self, value: Union[AnyStr, int, CoreType, List[AnyStr], List[Union[int, CoreType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Core(self, value: Union[AnyStr, int, CoreType, List[AnyStr], List[int], List[CoreType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(46, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(46, value)
 
     @property
@@ -28801,7 +28692,7 @@ class TransformerBatch(DSSBatch):
 
     @RdcOhms.setter
     def RdcOhms(self, value: Float64Array):
-        self._set_float64_array(47, value)
+        self._set_float64_array_o(47, value)
 
     @property
     def Seasons(self) -> BatchInt32ArrayProxy:
@@ -28813,7 +28704,7 @@ class TransformerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 48)
 
     @Seasons.setter
-    def Seasons(self, value):
+    def Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(48, value)
 
     @property
@@ -28831,7 +28722,7 @@ class TransformerBatch(DSSBatch):
 
     @Ratings.setter
     def Ratings(self, value: Float64Array):
-        self._set_float64_array(49, value)
+        self._set_float64_array_o(49, value)
 
     @property
     def normamps(self) -> BatchFloat64ArrayProxy:
@@ -28843,7 +28734,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 50)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(50, value)
 
     @property
@@ -28856,7 +28747,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 51)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(51, value)
 
     @property
@@ -28869,7 +28760,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 52)
 
     @faultrate.setter
-    def faultrate(self, value):
+    def faultrate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(52, value)
 
     @property
@@ -28882,7 +28773,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 53)
 
     @pctperm.setter
-    def pctperm(self, value):
+    def pctperm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(53, value)
 
     @property
@@ -28895,7 +28786,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 54)
 
     @repair.setter
-    def repair(self, value):
+    def repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(54, value)
 
     @property
@@ -28908,7 +28799,7 @@ class TransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 55)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(55, value)
 
     @property
@@ -28956,10 +28847,8 @@ class CapacitorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def bus2(self) -> List[str]:
@@ -28974,10 +28863,8 @@ class CapacitorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus2.setter
-    def bus2(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus2(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def phases(self) -> BatchInt32ArrayProxy:
@@ -28989,7 +28876,7 @@ class CapacitorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 3)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(3, value)
 
     @property
@@ -29006,7 +28893,7 @@ class CapacitorBatch(DSSBatch):
 
     @kvar.setter
     def kvar(self, value: Float64Array):
-        self._set_float64_array(4, value)
+        self._set_float64_array_o(4, value)
 
     @property
     def kv(self) -> BatchFloat64ArrayProxy:
@@ -29018,7 +28905,7 @@ class CapacitorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @kv.setter
-    def kv(self, value):
+    def kv(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -29031,14 +28918,11 @@ class CapacitorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @conn.setter
-    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[Union[int, Connection]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(6, value)
 
     @property
@@ -29072,7 +28956,7 @@ class CapacitorBatch(DSSBatch):
 
     @cmatrix.setter
     def cmatrix(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def cuf(self) -> List[Float64Array]:
@@ -29089,7 +28973,7 @@ class CapacitorBatch(DSSBatch):
 
     @cuf.setter
     def cuf(self, value: Float64Array):
-        self._set_float64_array(8, value)
+        self._set_float64_array_o(8, value)
 
     @property
     def R(self) -> List[Float64Array]:
@@ -29105,7 +28989,7 @@ class CapacitorBatch(DSSBatch):
 
     @R.setter
     def R(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def XL(self) -> List[Float64Array]:
@@ -29121,7 +29005,7 @@ class CapacitorBatch(DSSBatch):
 
     @XL.setter
     def XL(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def Harm(self) -> List[Float64Array]:
@@ -29137,7 +29021,7 @@ class CapacitorBatch(DSSBatch):
 
     @Harm.setter
     def Harm(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def Numsteps(self) -> BatchInt32ArrayProxy:
@@ -29149,7 +29033,7 @@ class CapacitorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 12)
 
     @Numsteps.setter
-    def Numsteps(self, value):
+    def Numsteps(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(12, value)
 
     @property
@@ -29178,7 +29062,7 @@ class CapacitorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -29191,7 +29075,7 @@ class CapacitorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -29204,7 +29088,7 @@ class CapacitorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @faultrate.setter
-    def faultrate(self, value):
+    def faultrate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -29217,7 +29101,7 @@ class CapacitorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @pctperm.setter
-    def pctperm(self, value):
+    def pctperm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -29230,7 +29114,7 @@ class CapacitorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @repair.setter
-    def repair(self, value):
+    def repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -29243,7 +29127,7 @@ class CapacitorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -29291,10 +29175,8 @@ class ReactorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def bus2(self) -> List[str]:
@@ -29309,10 +29191,8 @@ class ReactorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus2.setter
-    def bus2(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus2(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def phases(self) -> BatchInt32ArrayProxy:
@@ -29324,7 +29204,7 @@ class ReactorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 3)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(3, value)
 
     @property
@@ -29337,7 +29217,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @kvar.setter
-    def kvar(self, value):
+    def kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -29350,7 +29230,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @kv.setter
-    def kv(self, value):
+    def kv(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -29363,14 +29243,11 @@ class ReactorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @conn.setter
-    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[Union[int, Connection]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(6, value)
 
     @property
@@ -29400,7 +29277,7 @@ class ReactorBatch(DSSBatch):
 
     @Rmatrix.setter
     def Rmatrix(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def Xmatrix(self) -> List[Float64Array]:
@@ -29416,7 +29293,7 @@ class ReactorBatch(DSSBatch):
 
     @Xmatrix.setter
     def Xmatrix(self, value: Float64Array):
-        self._set_float64_array(8, value)
+        self._set_float64_array_o(8, value)
 
     @property
     def Parallel(self) -> List[bool]:
@@ -29442,7 +29319,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @R.setter
-    def R(self, value):
+    def R(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -29455,7 +29332,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @X.setter
-    def X(self, value):
+    def X(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -29468,7 +29345,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @Rp.setter
-    def Rp(self, value):
+    def Rp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -29592,42 +29469,6 @@ class ReactorBatch(DSSBatch):
             self._lib.Obj_SetFloat64Array(x, 15, value_ptr, value_count)
 
     @property
-    def Z(self) -> List[complex]:
-        """
-        Alternative way of defining R and X properties. Enter a 2-element array representing R +jX in ohms. Example:
-
-        Z=[5  10]   ! equivalent to R=5  X=10 
-
-        DSS property name: `Z`, DSS property index: 16.
-        """
-        return [   
-            self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
-                x,
-                16,
-            ).astype(complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @Z.setter
-    def Z(self, value: Union[complex, List[complex]]):
-        if isinstance(value, complex):
-            value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetFloat64Array(x, 16, value_ptr, value_count)
-            return
-
-        values = value
-        if len(values) != self.count[0]:
-            raise ValueError('Number of elements provided must match the number of objects in the batch.')
-
-        value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
-            value[0] = v.real
-            value[1] = v.imag
-            self._lib.Obj_SetFloat64Array(x, 16, value_ptr, value_count)
-
-    @property
     def RCurve(self) -> List[str]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
@@ -29637,21 +29478,17 @@ class ReactorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
 
     @RCurve.setter
-    def RCurve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(17, value)
-            return
-
-        self._set_batch_string(17, value)
+    def RCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(17, value)
 
     @property
-    def RCurve_obj(self) -> List[str]:
+    def RCurve_obj(self) -> List[XYcurve]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
 
         DSS property name: `RCurve`, DSS property index: 17.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 17)
 
     @RCurve_obj.setter
     def RCurve_obj(self, value: XYcurve):
@@ -29667,21 +29504,17 @@ class ReactorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
 
     @LCurve.setter
-    def LCurve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(18, value)
-            return
-
-        self._set_batch_string(18, value)
+    def LCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(18, value)
 
     @property
-    def LCurve_obj(self) -> List[str]:
+    def LCurve_obj(self) -> List[XYcurve]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
 
         DSS property name: `LCurve`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 18)
 
     @LCurve_obj.setter
     def LCurve_obj(self, value: XYcurve):
@@ -29697,7 +29530,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @LmH.setter
-    def LmH(self, value):
+    def LmH(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -29710,7 +29543,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -29723,7 +29556,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -29736,7 +29569,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @faultrate.setter
-    def faultrate(self, value):
+    def faultrate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -29749,7 +29582,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @pctperm.setter
-    def pctperm(self, value):
+    def pctperm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -29762,7 +29595,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @repair.setter
-    def repair(self, value):
+    def repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -29775,7 +29608,7 @@ class ReactorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 25)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
     @property
@@ -29818,21 +29651,17 @@ class CapControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @element.setter
-    def element(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def element_obj(self) -> List[str]:
+    def element_obj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line or transformer, to which the capacitor control's PT and/or CT are connected.There is no default; must be specified.
 
         DSS property name: `element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @element_obj.setter
     def element_obj(self, value: DSSObj):
@@ -29848,7 +29677,7 @@ class CapControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @terminal.setter
-    def terminal(self, value):
+    def terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -29863,15 +29692,11 @@ class CapControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
 
     @capacitor.setter
-    def capacitor(self, value: Union[AnyStr, Capacitor]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(3, value)
-            return
-
-        self._set_batch_string(3, value)
+    def capacitor(self, value: Union[AnyStr, Capacitor, List[AnyStr], List[Capacitor]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
-    def capacitor_obj(self) -> List[str]:
+    def capacitor_obj(self) -> List[Capacitor]:
         """
         Name of Capacitor element which the CapControl controls. No Default; Must be specified.Do not specify the full object name; "Capacitor" is assumed for the object class.  Example:
 
@@ -29879,7 +29704,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `capacitor`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 3)
 
     @capacitor_obj.setter
     def capacitor_obj(self, value: Capacitor):
@@ -29895,14 +29720,11 @@ class CapControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 4)
 
     @type.setter
-    def type(self, value: Union[AnyStr, int, CapControl.CapControlType, List[AnyStr], List[Union[int, CapControl.CapControlType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def type(self, value: Union[AnyStr, int, CapControl.CapControlType, List[AnyStr], List[int], List[CapControl.CapControlType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(4, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(4, value)
 
     @property
@@ -29928,7 +29750,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @PTratio.setter
-    def PTratio(self, value):
+    def PTratio(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -29941,7 +29763,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @CTratio.setter
-    def CTratio(self, value):
+    def CTratio(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -29962,7 +29784,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @ONsetting.setter
-    def ONsetting(self, value):
+    def ONsetting(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -29975,7 +29797,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @OFFsetting.setter
-    def OFFsetting(self, value):
+    def OFFsetting(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -29988,7 +29810,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @Delay.setter
-    def Delay(self, value):
+    def Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -30015,7 +29837,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @Vmax.setter
-    def Vmax(self, value):
+    def Vmax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -30028,7 +29850,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @Vmin.setter
-    def Vmin(self, value):
+    def Vmin(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -30041,7 +29863,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @DelayOFF.setter
-    def DelayOFF(self, value):
+    def DelayOFF(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -30054,7 +29876,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @DeadTime.setter
-    def DeadTime(self, value):
+    def DeadTime(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -30067,14 +29889,11 @@ class CapControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 15)
 
     @CTPhase.setter
-    def CTPhase(self, value: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[Union[int, MonitoredPhase]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def CTPhase(self, value: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[int], List[MonitoredPhase], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(15, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(15, value)
 
     @property
@@ -30100,14 +29919,11 @@ class CapControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 16)
 
     @PTPhase.setter
-    def PTPhase(self, value: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[Union[int, MonitoredPhase]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def PTPhase(self, value: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[int], List[MonitoredPhase], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(16, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(16, value)
 
     @property
@@ -30134,10 +29950,8 @@ class CapControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17) 
 
     @VBus.setter
-    def VBus(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 17, value)
+    def VBus(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(17, value)
 
     @property
     def EventLog(self) -> List[bool]:
@@ -30164,10 +29978,8 @@ class CapControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19) 
 
     @UserModel.setter
-    def UserModel(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 19, value)
+    def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(19, value)
 
     @property
     def UserData(self) -> List[str]:
@@ -30180,10 +29992,8 @@ class CapControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 20) 
 
     @UserData.setter
-    def UserData(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 20, value)
+    def UserData(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(20, value)
 
     @property
     def pctMinkvar(self) -> BatchFloat64ArrayProxy:
@@ -30195,7 +30005,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @pctMinkvar.setter
-    def pctMinkvar(self, value):
+    def pctMinkvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     def Reset(self, value: bool):
@@ -30216,7 +30026,7 @@ class CapControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -30265,10 +30075,8 @@ class FaultBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def bus2(self) -> List[str]:
@@ -30283,10 +30091,8 @@ class FaultBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus2.setter
-    def bus2(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus2(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def phases(self) -> BatchInt32ArrayProxy:
@@ -30298,7 +30104,7 @@ class FaultBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 3)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(3, value)
 
     @property
@@ -30311,7 +30117,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @r.setter
-    def r(self, value):
+    def r(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -30324,7 +30130,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @pctstddev.setter
-    def pctstddev(self, value):
+    def pctstddev(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -30341,7 +30147,7 @@ class FaultBatch(DSSBatch):
 
     @Gmatrix.setter
     def Gmatrix(self, value: Float64Array):
-        self._set_float64_array(6, value)
+        self._set_float64_array_o(6, value)
 
     @property
     def ONtime(self) -> BatchFloat64ArrayProxy:
@@ -30353,7 +30159,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @ONtime.setter
-    def ONtime(self, value):
+    def ONtime(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -30380,7 +30186,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @MinAmps.setter
-    def MinAmps(self, value):
+    def MinAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -30393,7 +30199,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -30406,7 +30212,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -30419,7 +30225,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @faultrate.setter
-    def faultrate(self, value):
+    def faultrate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -30432,7 +30238,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @pctperm.setter
-    def pctperm(self, value):
+    def pctperm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -30445,7 +30251,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @repair.setter
-    def repair(self, value):
+    def repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -30458,7 +30264,7 @@ class FaultBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -30485,10 +30291,127 @@ class FaultBatch(DSSBatch):
         """
         self._set_batch_string(17, value)
 
+class DynamicExpBatch(DSSBatch):
+    _cls_name = 'DynamicExp'
+    _obj_cls = DynamicExp
+    _cls_idx = 26
+
+
+    @property
+    def NVariables(self) -> BatchInt32ArrayProxy:
+        """
+        (Int) Number of state variables to be considered in the differential equation.
+
+        DSS property name: `NVariables`, DSS property index: 1.
+        """
+        return BatchInt32ArrayProxy(self, 1)
+
+    @NVariables.setter
+    def NVariables(self, value: Union[int, Int32Array]):
+        self._set_batch_int32_array(1, value)
+
+    @property
+    def VarNames(self) -> List[List[str]]:
+        """
+        ([String]) Array of strings with the names of the state variables.
+
+        DSS property name: `VarNames`, DSS property index: 2.
+        """
+        return self._get_string_ll(2)
+
+    @VarNames.setter
+    def VarNames(self, value: List[AnyStr]):
+        value, value_ptr, value_count = self._prepare_string_array(value)
+        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            self._lib.Obj_SetStringArray(x, 2, value_ptr, value_count)
+    
+        self._check_for_error()
+
+    @property
+    def var(self) -> List[str]:
+        """
+        (String) Activates the state variable using the given name.
+
+        DSS property name: `var`, DSS property index: 3.
+        """
+
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3) 
+
+    @var.setter
+    def var(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(3, value)
+
+    @property
+    def VarIdx(self) -> BatchInt32ArrayProxy:
+        """
+        (Int) read-only, returns the index of the active state variable.
+
+        DSS property name: `VarIdx`, DSS property index: 4.
+        """
+        return BatchInt32ArrayProxy(self, 4)
+
+    @VarIdx.setter
+    def VarIdx(self, value: Union[int, Int32Array]):
+        self._set_batch_int32_array(4, value)
+
+    @property
+    def Expression(self) -> List[str]:
+        """
+        It is the differential expression using OpenDSS RPN syntax. The expression must be contained within brackets in case of having multiple equations, for example:
+
+        expression="[w dt = 1 M / (P_m D*w - P_e -) *]"
+
+        DSS property name: `Expression`, DSS property index: 5.
+        """
+
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5) 
+
+    @Expression.setter
+    def Expression(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(5, value)
+
+    @property
+    def Domain(self) -> BatchInt32ArrayProxy:
+        """
+        It is the domain for which the equation is defined, it can be one of [time*, dq]. By deafult, dynamic epxressions are defined in the time domain.
+
+        DSS property name: `Domain`, DSS property index: 6.
+        """
+        return BatchInt32ArrayProxy(self, 6)
+
+    @Domain.setter
+    def Domain(self, value: Union[AnyStr, int, DynamicExp.DynamicExpDomain, List[AnyStr], List[int], List[DynamicExp.DynamicExpDomain], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
+            self._set_batch_string(6, value)
+            return
+    
+        self._set_batch_int32_array(6, value)
+
+    @property
+    def Domain_str(self) -> str:
+        """
+        It is the domain for which the equation is defined, it can be one of [time*, dq]. By deafult, dynamic epxressions are defined in the time domain.
+
+        DSS property name: `Domain`, DSS property index: 6.
+        """
+        return self._get_prop_string(6)
+
+    @Domain_str.setter
+    def Domain_str(self, value: AnyStr):
+        self.Domain = value
+
+    def like(self, value: AnyStr):
+        """
+        DynamicExp.like
+
+        DSS property name: `like`, DSS property index: 7.
+        """
+        self._set_batch_string(7, value)
+
 class GeneratorBatch(DSSBatch):
     _cls_name = 'Generator'
     _obj_cls = Generator
-    _cls_idx = 26
+    _cls_idx = 27
 
 
     @property
@@ -30501,7 +30424,7 @@ class GeneratorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -30515,10 +30438,8 @@ class GeneratorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def kv(self) -> BatchFloat64ArrayProxy:
@@ -30530,7 +30451,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @kv.setter
-    def kv(self, value):
+    def kv(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -30544,7 +30465,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @kW.setter
-    def kW(self, value):
+    def kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -30560,7 +30481,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @pf.setter
-    def pf(self, value):
+    def pf(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -30573,7 +30494,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @kvar.setter
-    def kvar(self, value):
+    def kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -30594,7 +30515,7 @@ class GeneratorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 7)
 
     @model.setter
-    def model(self, value):
+    def model(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(7, value)
 
     @property
@@ -30607,7 +30528,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @Vminpu.setter
-    def Vminpu(self, value):
+    def Vminpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -30620,7 +30541,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @Vmaxpu.setter
-    def Vmaxpu(self, value):
+    def Vmaxpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -30633,21 +30554,17 @@ class GeneratorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
 
     @yearly.setter
-    def yearly(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(10, value)
-            return
-
-        self._set_batch_string(10, value)
+    def yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(10, value)
 
     @property
-    def yearly_obj(self) -> List[str]:
+    def yearly_obj(self) -> List[LoadShape]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadahape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
         DSS property name: `yearly`, DSS property index: 10.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 10)
 
     @yearly_obj.setter
     def yearly_obj(self, value: LoadShape):
@@ -30663,21 +30580,17 @@ class GeneratorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
 
     @daily.setter
-    def daily(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(11, value)
-            return
-
-        self._set_batch_string(11, value)
+    def daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
-    def daily_obj(self) -> List[str]:
+    def daily_obj(self) -> List[LoadShape]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape objectthat is 1.0 perunit for all hours. Set to NONE to reset to no loadahape. 
 
         DSS property name: `daily`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 11)
 
     @daily_obj.setter
     def daily_obj(self, value: LoadShape):
@@ -30693,21 +30606,17 @@ class GeneratorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
 
     @duty.setter
-    def duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(12, value)
-            return
-
-        self._set_batch_string(12, value)
+    def duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(12, value)
 
     @property
-    def duty_obj(self) -> List[str]:
+    def duty_obj(self) -> List[LoadShape]:
         """
         Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
         DSS property name: `duty`, DSS property index: 12.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 12)
 
     @duty_obj.setter
     def duty_obj(self, value: LoadShape):
@@ -30723,14 +30632,11 @@ class GeneratorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 13)
 
     @dispmode.setter
-    def dispmode(self, value: Union[AnyStr, int, Generator.GeneratorDispatchMode, List[AnyStr], List[Union[int, Generator.GeneratorDispatchMode]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def dispmode(self, value: Union[AnyStr, int, Generator.GeneratorDispatchMode, List[AnyStr], List[int], List[Generator.GeneratorDispatchMode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(13, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(13, value)
 
     @property
@@ -30758,7 +30664,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @dispvalue.setter
-    def dispvalue(self, value):
+    def dispvalue(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -30771,14 +30677,11 @@ class GeneratorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 15)
 
     @conn.setter
-    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[Union[int, Connection]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(15, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(15, value)
 
     @property
@@ -30804,14 +30707,11 @@ class GeneratorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 16)
 
     @status.setter
-    def status(self, value: Union[AnyStr, int, Generator.GeneratorStatus, List[AnyStr], List[Union[int, Generator.GeneratorStatus]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def status(self, value: Union[AnyStr, int, Generator.GeneratorStatus, List[AnyStr], List[int], List[Generator.GeneratorStatus], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(16, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(16, value)
 
     @property
@@ -30837,7 +30737,7 @@ class GeneratorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 17)
 
     @cls.setter
-    def cls(self, value):
+    def cls(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(17, value)
 
     @property
@@ -30850,7 +30750,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @Vpu.setter
-    def Vpu(self, value):
+    def Vpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -30863,7 +30763,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @maxkvar.setter
-    def maxkvar(self, value):
+    def maxkvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -30876,7 +30776,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @minkvar.setter
-    def minkvar(self, value):
+    def minkvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -30889,7 +30789,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @pvfactor.setter
-    def pvfactor(self, value):
+    def pvfactor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -30916,21 +30816,8 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @kVA.setter
-    def kVA(self, value):
+    def kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
-
-    @property
-    def MVA(self) -> BatchFloat64ArrayProxy:
-        """
-        MVA rating of electrical machine.  Alternative to using kVA=.
-
-        DSS property name: `MVA`, DSS property index: 24.
-        """
-        return BatchFloat64ArrayProxy(self, 24)
-
-    @MVA.setter
-    def MVA(self, value):
-        self._set_batch_float64_array(24, value)
 
     @property
     def Xd(self) -> BatchFloat64ArrayProxy:
@@ -30942,7 +30829,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 25)
 
     @Xd.setter
-    def Xd(self, value):
+    def Xd(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
     @property
@@ -30955,7 +30842,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 26)
 
     @Xdp.setter
-    def Xdp(self, value):
+    def Xdp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
     @property
@@ -30968,7 +30855,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 27)
 
     @Xdpp.setter
-    def Xdpp(self, value):
+    def Xdpp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
     @property
@@ -30981,7 +30868,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 28)
 
     @H.setter
-    def H(self, value):
+    def H(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
     @property
@@ -30994,7 +30881,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 29)
 
     @D.setter
-    def D(self, value):
+    def D(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
     @property
@@ -31008,10 +30895,8 @@ class GeneratorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30) 
 
     @UserModel.setter
-    def UserModel(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 30, value)
+    def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(30, value)
 
     @property
     def UserData(self) -> List[str]:
@@ -31024,10 +30909,8 @@ class GeneratorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 31) 
 
     @UserData.setter
-    def UserData(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 31, value)
+    def UserData(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(31, value)
 
     @property
     def ShaftModel(self) -> List[str]:
@@ -31040,10 +30923,8 @@ class GeneratorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 32) 
 
     @ShaftModel.setter
-    def ShaftModel(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 32, value)
+    def ShaftModel(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(32, value)
 
     @property
     def ShaftData(self) -> List[str]:
@@ -31056,10 +30937,8 @@ class GeneratorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 33) 
 
     @ShaftData.setter
-    def ShaftData(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 33, value)
+    def ShaftData(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(33, value)
 
     @property
     def DutyStart(self) -> BatchFloat64ArrayProxy:
@@ -31071,7 +30950,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 34)
 
     @DutyStart.setter
-    def DutyStart(self, value):
+    def DutyStart(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
     @property
@@ -31112,7 +30991,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 37)
 
     @XRdp.setter
-    def XRdp(self, value):
+    def XRdp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(37, value)
 
     @property
@@ -31139,7 +31018,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 39)
 
     @FuelkWh.setter
-    def FuelkWh(self, value):
+    def FuelkWh(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(39, value)
 
     @property
@@ -31152,7 +31031,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 40)
 
     @pctFuel.setter
-    def pctFuel(self, value):
+    def pctFuel(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(40, value)
 
     @property
@@ -31165,7 +31044,7 @@ class GeneratorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 41)
 
     @pctReserve.setter
-    def pctReserve(self, value):
+    def pctReserve(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(41, value)
 
     def Refuel(self, value: bool):
@@ -31177,61 +31056,102 @@ class GeneratorBatch(DSSBatch):
         self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 42, value)
 
     @property
+    def DynamicEq(self) -> List[str]:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 43.
+        """
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 43)
+
+    @DynamicEq.setter
+    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
+        self._set_batch_obj_prop(43, value)
+
+    @property
+    def DynamicEq_obj(self) -> List[DynamicExp]:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 43.
+        """
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 43)
+
+    @DynamicEq_obj.setter
+    def DynamicEq_obj(self, value: DynamicExp):
+        self._set_batch_string(43, value)
+
+    @property
+    def DynOut(self) -> List[str]:
+        """
+        The name of the variables within the Dynamic equation that will be used to govern the generator dynamics.This generator model requires 2 outputs from the dynamic equation: 
+
+        1. Shaft speed (velocity) relative to synchronous speed.
+        2. Shaft, or power, angle (relative to synchronous reference frame).
+
+        The output variables need to be defined in tha strict order.
+
+        DSS property name: `DynOut`, DSS property index: 44.
+        """
+
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 44) 
+
+    @DynOut.setter
+    def DynOut(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(44, value)
+
+    @property
     def spectrum(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 43.
+        DSS property name: `spectrum`, DSS property index: 45.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 43)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 45)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(43, value)
-            return
-
-        self._set_batch_string(43, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(45, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 43.
+        DSS property name: `spectrum`, DSS property index: 45.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 43)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 45)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_batch_string(43, value)
+        self._set_batch_string(45, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 44.
+        DSS property name: `basefreq`, DSS property index: 46.
         """
-        return BatchFloat64ArrayProxy(self, 44)
+        return BatchFloat64ArrayProxy(self, 46)
 
     @basefreq.setter
-    def basefreq(self, value):
-        self._set_batch_float64_array(44, value)
+    def basefreq(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(46, value)
 
     @property
     def enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 45.
+        DSS property name: `enabled`, DSS property index: 47.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 45)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 47)
         ]
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 45, value)
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 47, value)
 
     def like(self, value: AnyStr):
         """
@@ -31239,14 +31159,14 @@ class GeneratorBatch(DSSBatch):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 46.
+        DSS property name: `like`, DSS property index: 48.
         """
-        self._set_batch_string(46, value)
+        self._set_batch_string(48, value)
 
 class GenDispatcherBatch(DSSBatch):
     _cls_name = 'GenDispatcher'
     _obj_cls = GenDispatcher
-    _cls_idx = 27
+    _cls_idx = 28
 
 
     @property
@@ -31259,21 +31179,17 @@ class GenDispatcherBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def Element_obj(self) -> List[str]:
+    def Element_obj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -31289,7 +31205,7 @@ class GenDispatcherBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @Terminal.setter
-    def Terminal(self, value):
+    def Terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -31302,7 +31218,7 @@ class GenDispatcherBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @kWLimit.setter
-    def kWLimit(self, value):
+    def kWLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -31315,7 +31231,7 @@ class GenDispatcherBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @kWBand.setter
-    def kWBand(self, value):
+    def kWBand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -31328,7 +31244,7 @@ class GenDispatcherBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @kvarlimit.setter
-    def kvarlimit(self, value):
+    def kvarlimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -31341,7 +31257,7 @@ class GenDispatcherBatch(DSSBatch):
         return self._get_string_ll(6)
 
     @GenList.setter
-    def GenList(self, value: List[str]):
+    def GenList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 6, value_ptr, value_count)
@@ -31362,7 +31278,7 @@ class GenDispatcherBatch(DSSBatch):
 
     @Weights.setter
     def Weights(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
@@ -31374,7 +31290,7 @@ class GenDispatcherBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -31404,7 +31320,7 @@ class GenDispatcherBatch(DSSBatch):
 class StorageBatch(DSSBatch):
     _cls_name = 'Storage'
     _obj_cls = Storage
-    _cls_idx = 28
+    _cls_idx = 29
 
 
     @property
@@ -31417,7 +31333,7 @@ class StorageBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -31431,10 +31347,8 @@ class StorageBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def kv(self) -> BatchFloat64ArrayProxy:
@@ -31450,7 +31364,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @kv.setter
-    def kv(self, value):
+    def kv(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -31463,14 +31377,11 @@ class StorageBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 4)
 
     @conn.setter
-    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[Union[int, Connection]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(4, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(4, value)
 
     @property
@@ -31496,7 +31407,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @kW.setter
-    def kW(self, value):
+    def kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -31509,7 +31420,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @kvar.setter
-    def kvar(self, value):
+    def kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -31526,7 +31437,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @pf.setter
-    def pf(self, value):
+    def pf(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -31539,7 +31450,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @kVA.setter
-    def kVA(self, value):
+    def kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -31552,7 +31463,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @pctCutin.setter
-    def pctCutin(self, value):
+    def pctCutin(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -31565,7 +31476,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @pctCutout.setter
-    def pctCutout(self, value):
+    def pctCutout(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -31578,21 +31489,17 @@ class StorageBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
 
     @EffCurve.setter
-    def EffCurve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(11, value)
-            return
-
-        self._set_batch_string(11, value)
+    def EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
-    def EffCurve_obj(self) -> List[str]:
+    def EffCurve_obj(self) -> List[XYcurve]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
 
         DSS property name: `EffCurve`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 11)
 
     @EffCurve_obj.setter
     def EffCurve_obj(self, value: XYcurve):
@@ -31622,7 +31529,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @kvarMax.setter
-    def kvarMax(self, value):
+    def kvarMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -31635,7 +31542,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @kvarMaxAbs.setter
-    def kvarMaxAbs(self, value):
+    def kvarMaxAbs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -31676,7 +31583,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @pctPminNoVars.setter
-    def pctPminNoVars(self, value):
+    def pctPminNoVars(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -31689,7 +31596,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @pctPminkvarMax.setter
-    def pctPminkvarMax(self, value):
+    def pctPminkvarMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -31702,7 +31609,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @kWrated.setter
-    def kWrated(self, value):
+    def kWrated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -31715,7 +31622,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @pctkWrated.setter
-    def pctkWrated(self, value):
+    def pctkWrated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -31728,7 +31635,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @kWhrated.setter
-    def kWhrated(self, value):
+    def kWhrated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -31741,7 +31648,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @kWhstored.setter
-    def kWhstored(self, value):
+    def kWhstored(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -31754,7 +31661,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @pctstored.setter
-    def pctstored(self, value):
+    def pctstored(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -31768,7 +31675,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @pctreserve.setter
-    def pctreserve(self, value):
+    def pctreserve(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -31781,14 +31688,11 @@ class StorageBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 25)
 
     @State.setter
-    def State(self, value: Union[AnyStr, int, Storage.StorageState, List[AnyStr], List[Union[int, Storage.StorageState]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def State(self, value: Union[AnyStr, int, Storage.StorageState, List[AnyStr], List[int], List[Storage.StorageState], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(25, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(25, value)
 
     @property
@@ -31814,7 +31718,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 26)
 
     @pctDischarge.setter
-    def pctDischarge(self, value):
+    def pctDischarge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
     @property
@@ -31827,7 +31731,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 27)
 
     @pctCharge.setter
-    def pctCharge(self, value):
+    def pctCharge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
     @property
@@ -31840,7 +31744,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 28)
 
     @pctEffCharge.setter
-    def pctEffCharge(self, value):
+    def pctEffCharge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
     @property
@@ -31853,7 +31757,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 29)
 
     @pctEffDischarge.setter
-    def pctEffDischarge(self, value):
+    def pctEffDischarge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
     @property
@@ -31866,7 +31770,7 @@ class StorageBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 30)
 
     @pctIdlingkW.setter
-    def pctIdlingkW(self, value):
+    def pctIdlingkW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
     @property
@@ -31874,26 +31778,26 @@ class StorageBatch(DSSBatch):
         """
         Equivalent percentage internal resistance, ohms. Default is 0. Placed in series with internal voltage source for harmonics and dynamics modes. Use a combination of %IdlingkW, %EffCharge and %EffDischarge to account for losses in power flow modes.
 
-        DSS property name: `%R`, DSS property index: 31.
+        DSS property name: `%R`, DSS property index: 32.
         """
-        return BatchFloat64ArrayProxy(self, 31)
+        return BatchFloat64ArrayProxy(self, 32)
 
     @pctR.setter
-    def pctR(self, value):
-        self._set_batch_float64_array(31, value)
+    def pctR(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(32, value)
 
     @property
     def pctX(self) -> BatchFloat64ArrayProxy:
         """
         Equivalent percentage internal reactance, ohms. Default is 50%. Placed in series with internal voltage source for harmonics and dynamics modes. (Limits fault current to 2 pu.
 
-        DSS property name: `%X`, DSS property index: 32.
+        DSS property name: `%X`, DSS property index: 33.
         """
-        return BatchFloat64ArrayProxy(self, 32)
+        return BatchFloat64ArrayProxy(self, 33)
 
     @pctX.setter
-    def pctX(self, value):
-        self._set_batch_float64_array(32, value)
+    def pctX(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(33, value)
 
     @property
     def model(self) -> BatchInt32ArrayProxy:
@@ -31904,127 +31808,119 @@ class StorageBatch(DSSBatch):
         2:Storage element is modeled as a CONSTANT IMPEDANCE.
         3:Compute load injection from User-written Model.
 
-        DSS property name: `model`, DSS property index: 33.
+        DSS property name: `model`, DSS property index: 34.
         """
-        return BatchInt32ArrayProxy(self, 33)
+        return BatchInt32ArrayProxy(self, 34)
 
     @model.setter
-    def model(self, value):
-        self._set_batch_int32_array(33, value)
+    def model(self, value: Union[int, Int32Array]):
+        self._set_batch_int32_array(34, value)
 
     @property
     def Vminpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 0.90.  Minimum per unit voltage for which the Model is assumed to apply. Below this value, the load model reverts to a constant impedance model.
 
-        DSS property name: `Vminpu`, DSS property index: 34.
+        DSS property name: `Vminpu`, DSS property index: 35.
         """
-        return BatchFloat64ArrayProxy(self, 34)
+        return BatchFloat64ArrayProxy(self, 35)
 
     @Vminpu.setter
-    def Vminpu(self, value):
-        self._set_batch_float64_array(34, value)
+    def Vminpu(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(35, value)
 
     @property
     def Vmaxpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 1.10.  Maximum per unit voltage for which the Model is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
-        DSS property name: `Vmaxpu`, DSS property index: 35.
+        DSS property name: `Vmaxpu`, DSS property index: 36.
         """
-        return BatchFloat64ArrayProxy(self, 35)
+        return BatchFloat64ArrayProxy(self, 36)
 
     @Vmaxpu.setter
-    def Vmaxpu(self, value):
-        self._set_batch_float64_array(35, value)
+    def Vmaxpu(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(36, value)
 
     @property
     def Balanced(self) -> List[bool]:
         """
         {Yes | No*} Default is No. Force balanced current only for 3-phase Storage. Forces zero- and negative-sequence to zero. 
 
-        DSS property name: `Balanced`, DSS property index: 36.
+        DSS property name: `Balanced`, DSS property index: 37.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 36)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 37)
         ]
     @Balanced.setter
     def Balanced(self, value: bool):
-        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 36, value)
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 37, value)
 
     @property
     def LimitCurrent(self) -> List[bool]:
         """
         Limits current magnitude to Vminpu value for both 1-phase and 3-phase Storage similar to Generator Model 7. For 3-phase, limits the positive-sequence current but not the negative-sequence.
 
-        DSS property name: `LimitCurrent`, DSS property index: 37.
+        DSS property name: `LimitCurrent`, DSS property index: 38.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 37)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 38)
         ]
     @LimitCurrent.setter
     def LimitCurrent(self, value: bool):
-        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 37, value)
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 38, value)
 
     @property
     def yearly(self) -> List[str]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
-        DSS property name: `yearly`, DSS property index: 38.
+        DSS property name: `yearly`, DSS property index: 39.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 38)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
 
     @yearly.setter
-    def yearly(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(38, value)
-            return
-
-        self._set_batch_string(38, value)
+    def yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(39, value)
 
     @property
-    def yearly_obj(self) -> List[str]:
+    def yearly_obj(self) -> List[LoadShape]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
-        DSS property name: `yearly`, DSS property index: 38.
+        DSS property name: `yearly`, DSS property index: 39.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 38)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 39)
 
     @yearly_obj.setter
     def yearly_obj(self, value: LoadShape):
-        self._set_batch_string(38, value)
+        self._set_batch_string(39, value)
 
     @property
     def daily(self) -> List[str]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
-        DSS property name: `daily`, DSS property index: 39.
+        DSS property name: `daily`, DSS property index: 40.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 40)
 
     @daily.setter
-    def daily(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(39, value)
-            return
-
-        self._set_batch_string(39, value)
+    def daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(40, value)
 
     @property
-    def daily_obj(self) -> List[str]:
+    def daily_obj(self) -> List[LoadShape]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
-        DSS property name: `daily`, DSS property index: 39.
+        DSS property name: `daily`, DSS property index: 40.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 40)
 
     @daily_obj.setter
     def daily_obj(self, value: LoadShape):
-        self._set_batch_string(39, value)
+        self._set_batch_string(40, value)
 
     @property
     def duty(self) -> List[str]:
@@ -32035,20 +31931,16 @@ class StorageBatch(DSSBatch):
 
         Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
-        DSS property name: `duty`, DSS property index: 40.
+        DSS property name: `duty`, DSS property index: 41.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 40)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 41)
 
     @duty.setter
-    def duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(40, value)
-            return
-
-        self._set_batch_string(40, value)
+    def duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(41, value)
 
     @property
-    def duty_obj(self) -> List[str]:
+    def duty_obj(self) -> List[LoadShape]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. 
 
@@ -32056,13 +31948,13 @@ class StorageBatch(DSSBatch):
 
         Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
-        DSS property name: `duty`, DSS property index: 40.
+        DSS property name: `duty`, DSS property index: 41.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 40)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 41)
 
     @duty_obj.setter
     def duty_obj(self, value: LoadShape):
-        self._set_batch_string(40, value)
+        self._set_batch_string(41, value)
 
     @property
     def DispMode(self) -> BatchInt32ArrayProxy:
@@ -32073,24 +31965,21 @@ class StorageBatch(DSSBatch):
 
         In FOLLOW mode the kW output of the Storage element follows the active loadshape multiplier until Storage is either exhausted or full. The element discharges for positive values and charges for negative values.  The loadshape is based on rated kW. 
 
-        In EXTERNAL mode, Storage element state is controlled by an external Storagecontroller2. This mode is automatically set if this Storage element is included in the element list of a StorageController element. 
+        In EXTERNAL mode, Storage element state is controlled by an external Storagecontroller. This mode is automatically set if this Storage element is included in the element list of a StorageController element. 
 
         For the other two dispatch modes, the Storage element state is controlled by either the global default Loadlevel value or the price level. 
 
-        DSS property name: `DispMode`, DSS property index: 41.
+        DSS property name: `DispMode`, DSS property index: 42.
         """
-        return BatchInt32ArrayProxy(self, 41)
+        return BatchInt32ArrayProxy(self, 42)
 
     @DispMode.setter
-    def DispMode(self, value: Union[AnyStr, int, Storage.StorageDispatchMode, List[AnyStr], List[Union[int, Storage.StorageDispatchMode]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
-            self._set_batch_string(41, value)
+    def DispMode(self, value: Union[AnyStr, int, Storage.StorageDispatchMode, List[AnyStr], List[int], List[Storage.StorageDispatchMode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
+            self._set_batch_string(42, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
-        self._set_batch_int32_array(41, value)
+        self._set_batch_int32_array(42, value)
 
     @property
     def DispMode_str(self) -> str:
@@ -32101,13 +31990,13 @@ class StorageBatch(DSSBatch):
 
         In FOLLOW mode the kW output of the Storage element follows the active loadshape multiplier until Storage is either exhausted or full. The element discharges for positive values and charges for negative values.  The loadshape is based on rated kW. 
 
-        In EXTERNAL mode, Storage element state is controlled by an external Storagecontroller2. This mode is automatically set if this Storage element is included in the element list of a StorageController element. 
+        In EXTERNAL mode, Storage element state is controlled by an external Storagecontroller. This mode is automatically set if this Storage element is included in the element list of a StorageController element. 
 
         For the other two dispatch modes, the Storage element state is controlled by either the global default Loadlevel value or the price level. 
 
-        DSS property name: `DispMode`, DSS property index: 41.
+        DSS property name: `DispMode`, DSS property index: 42.
         """
-        return self._get_prop_string(41)
+        return self._get_prop_string(42)
 
     @DispMode_str.setter
     def DispMode_str(self, value: AnyStr):
@@ -32117,194 +32006,326 @@ class StorageBatch(DSSBatch):
     def DischargeTrigger(self) -> BatchFloat64ArrayProxy:
         """
         Dispatch trigger value for discharging the Storage. 
-        If = 0.0 the Storage element state is changed by the State command or by a StorageController2 object. 
+        If = 0.0 the Storage element state is changed by the State command or by a StorageController object. 
         If <> 0  the Storage element state is set to DISCHARGING when this trigger level is EXCEEDED by either the specified Loadshape curve value or the price signal or global Loadlevel value, depending on dispatch mode. See State property.
 
-        DSS property name: `DischargeTrigger`, DSS property index: 42.
+        DSS property name: `DischargeTrigger`, DSS property index: 43.
         """
-        return BatchFloat64ArrayProxy(self, 42)
+        return BatchFloat64ArrayProxy(self, 43)
 
     @DischargeTrigger.setter
-    def DischargeTrigger(self, value):
-        self._set_batch_float64_array(42, value)
+    def DischargeTrigger(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(43, value)
 
     @property
     def ChargeTrigger(self) -> BatchFloat64ArrayProxy:
         """
         Dispatch trigger value for charging the Storage. 
 
-        If = 0.0 the Storage element state is changed by the State command or StorageController2 object.  
+        If = 0.0 the Storage element state is changed by the State command or StorageController object.  
 
         If <> 0  the Storage element state is set to CHARGING when this trigger level is GREATER than either the specified Loadshape curve value or the price signal or global Loadlevel value, depending on dispatch mode. See State property.
 
-        DSS property name: `ChargeTrigger`, DSS property index: 43.
+        DSS property name: `ChargeTrigger`, DSS property index: 44.
         """
-        return BatchFloat64ArrayProxy(self, 43)
+        return BatchFloat64ArrayProxy(self, 44)
 
     @ChargeTrigger.setter
-    def ChargeTrigger(self, value):
-        self._set_batch_float64_array(43, value)
+    def ChargeTrigger(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(44, value)
 
     @property
     def TimeChargeTrig(self) -> BatchFloat64ArrayProxy:
         """
         Time of day in fractional hours (0230 = 2.5) at which Storage element will automatically go into charge state. Default is 2.0.  Enter a negative time value to disable this feature.
 
-        DSS property name: `TimeChargeTrig`, DSS property index: 44.
+        DSS property name: `TimeChargeTrig`, DSS property index: 45.
         """
-        return BatchFloat64ArrayProxy(self, 44)
+        return BatchFloat64ArrayProxy(self, 45)
 
     @TimeChargeTrig.setter
-    def TimeChargeTrig(self, value):
-        self._set_batch_float64_array(44, value)
+    def TimeChargeTrig(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(45, value)
 
     @property
     def cls(self) -> BatchInt32ArrayProxy:
         """
         An arbitrary integer number representing the class of Storage element so that Storage values may be segregated by class.
 
-        DSS property name: `class`, DSS property index: 45.
+        DSS property name: `class`, DSS property index: 46.
         """
-        return BatchInt32ArrayProxy(self, 45)
+        return BatchInt32ArrayProxy(self, 46)
 
     @cls.setter
-    def cls(self, value):
-        self._set_batch_int32_array(45, value)
+    def cls(self, value: Union[int, Int32Array]):
+        self._set_batch_int32_array(46, value)
 
     @property
     def DynaDLL(self) -> List[str]:
         """
         Name of DLL containing user-written dynamics model, which computes the terminal currents for Dynamics-mode simulations, overriding the default model.  Set to "none" to negate previous setting. This DLL has a simpler interface than the UserModel DLL and is only used for Dynamics mode.
 
-        DSS property name: `DynaDLL`, DSS property index: 46.
+        DSS property name: `DynaDLL`, DSS property index: 47.
         """
 
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 46) 
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 47) 
 
     @DynaDLL.setter
-    def DynaDLL(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 46, value)
+    def DynaDLL(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(47, value)
 
     @property
     def DynaData(self) -> List[str]:
         """
         String (in quotes or parentheses if necessary) that gets passed to the user-written dynamics model Edit function for defining the data required for that model.
 
-        DSS property name: `DynaData`, DSS property index: 47.
+        DSS property name: `DynaData`, DSS property index: 48.
         """
 
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 47) 
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 48) 
 
     @DynaData.setter
-    def DynaData(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 47, value)
+    def DynaData(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(48, value)
 
     @property
     def UserModel(self) -> List[str]:
         """
         Name of DLL containing user-written model, which computes the terminal currents for both power flow and dynamics, overriding the default model.  Set to "none" to negate previous setting.
 
-        DSS property name: `UserModel`, DSS property index: 48.
+        DSS property name: `UserModel`, DSS property index: 49.
         """
 
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 48) 
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 49) 
 
     @UserModel.setter
-    def UserModel(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 48, value)
+    def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(49, value)
 
     @property
     def UserData(self) -> List[str]:
         """
         String (in quotes or parentheses) that gets passed to user-written model for defining the data required for that model.
 
-        DSS property name: `UserData`, DSS property index: 49.
+        DSS property name: `UserData`, DSS property index: 50.
         """
 
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 49) 
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 50) 
 
     @UserData.setter
-    def UserData(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 49, value)
+    def UserData(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(50, value)
 
     @property
     def debugtrace(self) -> List[bool]:
         """
         {Yes | No }  Default is no.  Turn this on to capture the progress of the Storage model for each iteration.  Creates a separate file for each Storage element named "Storage_name.CSV".
 
-        DSS property name: `debugtrace`, DSS property index: 50.
+        DSS property name: `debugtrace`, DSS property index: 51.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 50)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 51)
         ]
     @debugtrace.setter
     def debugtrace(self, value: bool):
-        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 50, value)
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 51, value)
+
+    @property
+    def kVDC(self) -> BatchFloat64ArrayProxy:
+        """
+        Indicates the rated voltage (kV) at the input of the inverter while the storage is discharging. The value is normally greater or equal to the kV base of the Storage device. It is used for dynamics simulation ONLY.
+
+        DSS property name: `kVDC`, DSS property index: 52.
+        """
+        return BatchFloat64ArrayProxy(self, 52)
+
+    @kVDC.setter
+    def kVDC(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(52, value)
+
+    @property
+    def Kp(self) -> BatchFloat64ArrayProxy:
+        """
+        It is the proportional gain for the PI controller within the inverter. Use it to modify the controller response in dynamics simulation mode.
+
+        DSS property name: `Kp`, DSS property index: 53.
+        """
+        return BatchFloat64ArrayProxy(self, 53)
+
+    @Kp.setter
+    def Kp(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(53, value)
+
+    @property
+    def PITol(self) -> BatchFloat64ArrayProxy:
+        """
+        It is the tolerance (%) for the closed loop controller of the inverter. For dynamics simulation mode.
+
+        DSS property name: `PITol`, DSS property index: 54.
+        """
+        return BatchFloat64ArrayProxy(self, 54)
+
+    @PITol.setter
+    def PITol(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(54, value)
+
+    @property
+    def SafeVoltage(self) -> BatchFloat64ArrayProxy:
+        """
+        Indicates the voltage level (%) respect to the base voltage level for which the Inverter will operate. If this threshold is violated, the Inverter will enter safe mode (OFF). For dynamic simulation. By default is 80%.
+
+        DSS property name: `SafeVoltage`, DSS property index: 55.
+        """
+        return BatchFloat64ArrayProxy(self, 55)
+
+    @SafeVoltage.setter
+    def SafeVoltage(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(55, value)
+
+    @property
+    def SafeMode(self) -> List[bool]:
+        """
+        (Read only) Indicates whether the inverter entered (Yes) or not (No) into Safe Mode.
+
+        DSS property name: `SafeMode`, DSS property index: 56.
+        """
+        return [v != 0 for v in 
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 56)
+        ]
+    @SafeMode.setter
+    def SafeMode(self, value: bool):
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 56, value)
+
+    @property
+    def DynamicEq(self) -> List[str]:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 57.
+        """
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 57)
+
+    @DynamicEq.setter
+    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
+        self._set_batch_obj_prop(57, value)
+
+    @property
+    def DynamicEq_obj(self) -> List[DynamicExp]:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 57.
+        """
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 57)
+
+    @DynamicEq_obj.setter
+    def DynamicEq_obj(self, value: DynamicExp):
+        self._set_batch_string(57, value)
+
+    @property
+    def DynOut(self) -> List[str]:
+        """
+        The name of the variables within the Dynamic equation that will be used to govern the Storage dynamics. This Storage model requires 1 output from the dynamic equation:
+
+            1. Current.
+
+        The output variables need to be defined in the same order.
+
+        DSS property name: `DynOut`, DSS property index: 58.
+        """
+
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 58) 
+
+    @DynOut.setter
+    def DynOut(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(58, value)
+
+    @property
+    def ControlMode(self) -> BatchInt32ArrayProxy:
+        """
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+
+        GFM control mode disables any control action set by the InvControl device.
+
+        DSS property name: `ControlMode`, DSS property index: 59.
+        """
+        return BatchInt32ArrayProxy(self, 59)
+
+    @ControlMode.setter
+    def ControlMode(self, value: Union[AnyStr, int, InverterControlMode, List[AnyStr], List[int], List[InverterControlMode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
+            self._set_batch_string(59, value)
+            return
+    
+        self._set_batch_int32_array(59, value)
+
+    @property
+    def ControlMode_str(self) -> str:
+        """
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+
+        GFM control mode disables any control action set by the InvControl device.
+
+        DSS property name: `ControlMode`, DSS property index: 59.
+        """
+        return self._get_prop_string(59)
+
+    @ControlMode_str.setter
+    def ControlMode_str(self, value: AnyStr):
+        self.ControlMode = value
 
     @property
     def spectrum(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 51.
+        DSS property name: `spectrum`, DSS property index: 60.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 51)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 60)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(51, value)
-            return
-
-        self._set_batch_string(51, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(60, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 51.
+        DSS property name: `spectrum`, DSS property index: 60.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 51)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 60)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_batch_string(51, value)
+        self._set_batch_string(60, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 52.
+        DSS property name: `basefreq`, DSS property index: 61.
         """
-        return BatchFloat64ArrayProxy(self, 52)
+        return BatchFloat64ArrayProxy(self, 61)
 
     @basefreq.setter
-    def basefreq(self, value):
-        self._set_batch_float64_array(52, value)
+    def basefreq(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(61, value)
 
     @property
     def enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 53.
+        DSS property name: `enabled`, DSS property index: 62.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 53)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 62)
         ]
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 53, value)
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 62, value)
 
     def like(self, value: AnyStr):
         """
@@ -32312,14 +32333,14 @@ class StorageBatch(DSSBatch):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 54.
+        DSS property name: `like`, DSS property index: 63.
         """
-        self._set_batch_string(54, value)
+        self._set_batch_string(63, value)
 
 class StorageControllerBatch(DSSBatch):
     _cls_name = 'StorageController'
     _obj_cls = StorageController
-    _cls_idx = 29
+    _cls_idx = 30
 
 
     @property
@@ -32332,21 +32353,17 @@ class StorageControllerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def Element_obj(self) -> List[str]:
+    def Element_obj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -32355,14 +32372,14 @@ class StorageControllerBatch(DSSBatch):
     @property
     def Terminal(self) -> BatchInt32ArrayProxy:
         """
-        Number of the terminal of the circuit element to which the StorageController2 control is connected. 1 or 2, typically.  Default is 1. Make sure to select the proper direction on the power for the respective dispatch mode.
+        Number of the terminal of the circuit element to which the StorageController control is connected. 1 or 2, typically.  Default is 1. Make sure to select the proper direction on the power for the respective dispatch mode.
 
         DSS property name: `Terminal`, DSS property index: 2.
         """
         return BatchInt32ArrayProxy(self, 2)
 
     @Terminal.setter
-    def Terminal(self, value):
+    def Terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -32375,14 +32392,11 @@ class StorageControllerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 3)
 
     @MonPhase.setter
-    def MonPhase(self, value: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[Union[int, MonitoredPhase]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def MonPhase(self, value: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[int], List[MonitoredPhase], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(3, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(3, value)
 
     @property
@@ -32408,7 +32422,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @kWTarget.setter
-    def kWTarget(self, value):
+    def kWTarget(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -32421,7 +32435,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @kWTargetLow.setter
-    def kWTargetLow(self, value):
+    def kWTargetLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -32434,7 +32448,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @pctkWBand.setter
-    def pctkWBand(self, value):
+    def pctkWBand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -32447,7 +32461,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @kWBand.setter
-    def kWBand(self, value):
+    def kWBand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -32460,7 +32474,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @pctkWBandLow.setter
-    def pctkWBandLow(self, value):
+    def pctkWBandLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -32473,7 +32487,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @kWBandLow.setter
-    def kWBandLow(self, value):
+    def kWBandLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -32486,7 +32500,7 @@ class StorageControllerBatch(DSSBatch):
         return self._get_string_ll(10)
 
     @ElementList.setter
-    def ElementList(self, value: List[str]):
+    def ElementList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 10, value_ptr, value_count)
@@ -32507,7 +32521,7 @@ class StorageControllerBatch(DSSBatch):
 
     @Weights.setter
     def Weights(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def ModeDischarge(self) -> BatchInt32ArrayProxy:
@@ -32533,14 +32547,11 @@ class StorageControllerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 12)
 
     @ModeDischarge.setter
-    def ModeDischarge(self, value: Union[AnyStr, int, StorageController.StorageControllerDischargemode, List[AnyStr], List[Union[int, StorageController.StorageControllerDischargemode]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def ModeDischarge(self, value: Union[AnyStr, int, StorageController.StorageControllerDischargemode, List[AnyStr], List[int], List[StorageController.StorageControllerDischargemode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(12, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(12, value)
 
     @property
@@ -32588,14 +32599,11 @@ class StorageControllerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 13)
 
     @ModeCharge.setter
-    def ModeCharge(self, value: Union[AnyStr, int, StorageController.StorageControllerChargemode, List[AnyStr], List[Union[int, StorageController.StorageControllerChargemode]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def ModeCharge(self, value: Union[AnyStr, int, StorageController.StorageControllerChargemode, List[AnyStr], List[int], List[StorageController.StorageControllerChargemode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(13, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(13, value)
 
     @property
@@ -32629,7 +32637,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @TimeDischargeTrigger.setter
-    def TimeDischargeTrigger(self, value):
+    def TimeDischargeTrigger(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -32642,7 +32650,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @TimeChargeTrigger.setter
-    def TimeChargeTrigger(self, value):
+    def TimeChargeTrigger(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -32655,7 +32663,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @pctRatekW.setter
-    def pctRatekW(self, value):
+    def pctRatekW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -32668,7 +32676,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @pctRateCharge.setter
-    def pctRateCharge(self, value):
+    def pctRateCharge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -32681,7 +32689,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @pctReserve.setter
-    def pctReserve(self, value):
+    def pctReserve(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -32694,7 +32702,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @kWhTotal.setter
-    def kWhTotal(self, value):
+    def kWhTotal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -32707,7 +32715,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @kWTotal.setter
-    def kWTotal(self, value):
+    def kWTotal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -32720,7 +32728,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @kWhActual.setter
-    def kWhActual(self, value):
+    def kWhActual(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -32733,7 +32741,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @kWActual.setter
-    def kWActual(self, value):
+    def kWActual(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -32746,7 +32754,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @kWneed.setter
-    def kWneed(self, value):
+    def kWneed(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -32759,21 +32767,17 @@ class StorageControllerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 24)
 
     @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(24, value)
-            return
-
-        self._set_batch_string(24, value)
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(24, value)
 
     @property
-    def Yearly_obj(self) -> List[str]:
+    def Yearly_obj(self) -> List[LoadShape]:
         """
         Dispatch loadshape object, If any, for Yearly solution Mode.
 
         DSS property name: `Yearly`, DSS property index: 24.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 24)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 24)
 
     @Yearly_obj.setter
     def Yearly_obj(self, value: LoadShape):
@@ -32789,21 +32793,17 @@ class StorageControllerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25)
 
     @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(25, value)
-            return
-
-        self._set_batch_string(25, value)
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(25, value)
 
     @property
-    def Daily_obj(self) -> List[str]:
+    def Daily_obj(self) -> List[LoadShape]:
         """
         Dispatch loadshape object, If any, for Daily solution mode.
 
         DSS property name: `Daily`, DSS property index: 25.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 25)
 
     @Daily_obj.setter
     def Daily_obj(self, value: LoadShape):
@@ -32819,21 +32819,17 @@ class StorageControllerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 26)
 
     @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(26, value)
-            return
-
-        self._set_batch_string(26, value)
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(26, value)
 
     @property
-    def Duty_obj(self) -> List[str]:
+    def Duty_obj(self) -> List[LoadShape]:
         """
         Dispatch loadshape object, If any, for Dutycycle solution mode.
 
         DSS property name: `Duty`, DSS property index: 26.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 26)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 26)
 
     @Duty_obj.setter
     def Duty_obj(self, value: LoadShape):
@@ -32863,7 +32859,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 28)
 
     @InhibitTime.setter
-    def InhibitTime(self, value):
+    def InhibitTime(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(28, value)
 
     @property
@@ -32876,7 +32872,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 29)
 
     @Tup.setter
-    def Tup(self, value):
+    def Tup(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
     @property
@@ -32889,7 +32885,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 30)
 
     @TFlat.setter
-    def TFlat(self, value):
+    def TFlat(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
     @property
@@ -32902,7 +32898,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 31)
 
     @Tdn.setter
-    def Tdn(self, value):
+    def Tdn(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(31, value)
 
     @property
@@ -32915,7 +32911,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 32)
 
     @kWThreshold.setter
-    def kWThreshold(self, value):
+    def kWThreshold(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(32, value)
 
     @property
@@ -32930,7 +32926,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 33)
 
     @DispFactor.setter
-    def DispFactor(self, value):
+    def DispFactor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
     @property
@@ -32943,7 +32939,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 34)
 
     @ResetLevel.setter
-    def ResetLevel(self, value):
+    def ResetLevel(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
     @property
@@ -32956,7 +32952,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 35)
 
     @Seasons.setter
-    def Seasons(self, value):
+    def Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(35, value)
 
     @property
@@ -32973,7 +32969,7 @@ class StorageControllerBatch(DSSBatch):
 
     @SeasonTargets.setter
     def SeasonTargets(self, value: Float64Array):
-        self._set_float64_array(36, value)
+        self._set_float64_array_o(36, value)
 
     @property
     def SeasonTargetsLow(self) -> List[Float64Array]:
@@ -32989,7 +32985,7 @@ class StorageControllerBatch(DSSBatch):
 
     @SeasonTargetsLow.setter
     def SeasonTargetsLow(self, value: Float64Array):
-        self._set_float64_array(37, value)
+        self._set_float64_array_o(37, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
@@ -33001,7 +32997,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 38)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(38, value)
 
     @property
@@ -33031,7 +33027,7 @@ class StorageControllerBatch(DSSBatch):
 class RelayBatch(DSSBatch):
     _cls_name = 'Relay'
     _obj_cls = Relay
-    _cls_idx = 30
+    _cls_idx = 31
 
 
     @property
@@ -33044,21 +33040,17 @@ class RelayBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def MonitoredObj_obj(self) -> List[str]:
+    def MonitoredObj_obj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @MonitoredObj_obj.setter
     def MonitoredObj_obj(self, value: DSSObj):
@@ -33074,7 +33066,7 @@ class RelayBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @MonitoredTerm.setter
-    def MonitoredTerm(self, value):
+    def MonitoredTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -33087,21 +33079,17 @@ class RelayBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
 
     @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(3, value)
-            return
-
-        self._set_batch_string(3, value)
+    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
-    def SwitchedObj_obj(self) -> List[str]:
+    def SwitchedObj_obj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 3)
 
     @SwitchedObj_obj.setter
     def SwitchedObj_obj(self, value: DSSObj):
@@ -33117,7 +33105,7 @@ class RelayBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 4)
 
     @SwitchedTerm.setter
-    def SwitchedTerm(self, value):
+    def SwitchedTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(4, value)
 
     @property
@@ -33141,14 +33129,11 @@ class RelayBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 5)
 
     @type.setter
-    def type(self, value: Union[AnyStr, int, Relay.RelayType, List[AnyStr], List[Union[int, Relay.RelayType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def type(self, value: Union[AnyStr, int, Relay.RelayType, List[AnyStr], List[int], List[Relay.RelayType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(5, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(5, value)
 
     @property
@@ -33185,21 +33170,17 @@ class RelayBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @Phasecurve.setter
-    def Phasecurve(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(6, value)
-            return
-
-        self._set_batch_string(6, value)
+    def Phasecurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(6, value)
 
     @property
-    def Phasecurve_obj(self) -> List[str]:
+    def Phasecurve_obj(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
         DSS property name: `Phasecurve`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 6)
 
     @Phasecurve_obj.setter
     def Phasecurve_obj(self, value: TCC_Curve):
@@ -33215,21 +33196,17 @@ class RelayBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
 
     @Groundcurve.setter
-    def Groundcurve(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(7, value)
-            return
-
-        self._set_batch_string(7, value)
+    def Groundcurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(7, value)
 
     @property
-    def Groundcurve_obj(self) -> List[str]:
+    def Groundcurve_obj(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
 
         DSS property name: `Groundcurve`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 7)
 
     @Groundcurve_obj.setter
     def Groundcurve_obj(self, value: TCC_Curve):
@@ -33245,7 +33222,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @PhaseTrip.setter
-    def PhaseTrip(self, value):
+    def PhaseTrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -33258,7 +33235,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @GroundTrip.setter
-    def GroundTrip(self, value):
+    def GroundTrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -33271,7 +33248,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @TDPhase.setter
-    def TDPhase(self, value):
+    def TDPhase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -33284,7 +33261,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @TDGround.setter
-    def TDGround(self, value):
+    def TDGround(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -33297,7 +33274,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @PhaseInst.setter
-    def PhaseInst(self, value):
+    def PhaseInst(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -33310,7 +33287,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @GroundInst.setter
-    def GroundInst(self, value):
+    def GroundInst(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -33323,7 +33300,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @Reset.setter
-    def Reset(self, value):
+    def Reset(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -33336,7 +33313,7 @@ class RelayBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 15)
 
     @Shots.setter
-    def Shots(self, value):
+    def Shots(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(15, value)
 
     @property
@@ -33353,19 +33330,19 @@ class RelayBatch(DSSBatch):
 
     @RecloseIntervals.setter
     def RecloseIntervals(self, value: Float64Array):
-        self._set_float64_array(16, value)
+        self._set_float64_array_o(16, value)
 
     @property
     def Delay(self) -> BatchFloat64ArrayProxy:
         """
-        Trip time delay (sec) for DEFINITE TIME relays. Default is 0.0 for current and voltage relays.  If >0 then this value is used instead of curves.  Used by Generic, RevPower, 46 and 47 relays. Defaults to 0.1 s for these relays.
+        Trip time delay (sec) for DEFINITE TIME relays. Default is 0.0 for current, voltage and DOC relays. If >0 then this value is used instead of curves. Used by Generic, RevPower, 46 and 47 relays. Defaults to 0.1 s for these relays.
 
         DSS property name: `Delay`, DSS property index: 17.
         """
         return BatchFloat64ArrayProxy(self, 17)
 
     @Delay.setter
-    def Delay(self, value):
+    def Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -33378,21 +33355,17 @@ class RelayBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
 
     @Overvoltcurve.setter
-    def Overvoltcurve(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(18, value)
-            return
-
-        self._set_batch_string(18, value)
+    def Overvoltcurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(18, value)
 
     @property
-    def Overvoltcurve_obj(self) -> List[str]:
+    def Overvoltcurve_obj(self) -> List[TCC_Curve]:
         """
         TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
         DSS property name: `Overvoltcurve`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 18)
 
     @Overvoltcurve_obj.setter
     def Overvoltcurve_obj(self, value: TCC_Curve):
@@ -33408,21 +33381,17 @@ class RelayBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
 
     @Undervoltcurve.setter
-    def Undervoltcurve(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(19, value)
-            return
-
-        self._set_batch_string(19, value)
+    def Undervoltcurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(19, value)
 
     @property
-    def Undervoltcurve_obj(self) -> List[str]:
+    def Undervoltcurve_obj(self) -> List[TCC_Curve]:
         """
         TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
         DSS property name: `Undervoltcurve`, DSS property index: 19.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 19)
 
     @Undervoltcurve_obj.setter
     def Undervoltcurve_obj(self, value: TCC_Curve):
@@ -33438,7 +33407,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @kvbase.setter
-    def kvbase(self, value):
+    def kvbase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -33451,7 +33420,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @pctPickup47.setter
-    def pctPickup47(self, value):
+    def pctPickup47(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -33464,7 +33433,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @BaseAmps46.setter
-    def BaseAmps46(self, value):
+    def BaseAmps46(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -33477,7 +33446,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @pctPickup46.setter
-    def pctPickup46(self, value):
+    def pctPickup46(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -33490,7 +33459,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @isqt46.setter
-    def isqt46(self, value):
+    def isqt46(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -33504,10 +33473,8 @@ class RelayBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25) 
 
     @Variable.setter
-    def Variable(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 25, value)
+    def Variable(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(25, value)
 
     @property
     def overtrip(self) -> BatchFloat64ArrayProxy:
@@ -33519,7 +33486,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 26)
 
     @overtrip.setter
-    def overtrip(self, value):
+    def overtrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
     @property
@@ -33532,7 +33499,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 27)
 
     @undertrip.setter
-    def undertrip(self, value):
+    def undertrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
     @property
@@ -33545,7 +33512,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 28)
 
     @Breakertime.setter
-    def Breakertime(self, value):
+    def Breakertime(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
     @property
@@ -33558,14 +33525,11 @@ class RelayBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 29)
 
     @action.setter
-    def action(self, value: Union[AnyStr, int, Relay.RelayAction, List[AnyStr], List[Union[int, Relay.RelayAction]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def action(self, value: Union[AnyStr, int, Relay.RelayAction, List[AnyStr], List[int], List[Relay.RelayAction], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(29, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(29, value)
 
     @property
@@ -33591,7 +33555,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 30)
 
     @Z1mag.setter
-    def Z1mag(self, value):
+    def Z1mag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
     @property
@@ -33604,7 +33568,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 31)
 
     @Z1ang.setter
-    def Z1ang(self, value):
+    def Z1ang(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(31, value)
 
     @property
@@ -33617,7 +33581,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 32)
 
     @Z0mag.setter
-    def Z0mag(self, value):
+    def Z0mag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(32, value)
 
     @property
@@ -33630,7 +33594,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 33)
 
     @Z0ang.setter
-    def Z0ang(self, value):
+    def Z0ang(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
     @property
@@ -33643,7 +33607,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 34)
 
     @Mphase.setter
-    def Mphase(self, value):
+    def Mphase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
     @property
@@ -33656,7 +33620,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 35)
 
     @Mground.setter
-    def Mground(self, value):
+    def Mground(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
     @property
@@ -33711,14 +33675,11 @@ class RelayBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 39)
 
     @Normal.setter
-    def Normal(self, value: Union[AnyStr, int, Relay.RelayState, List[AnyStr], List[Union[int, Relay.RelayState]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Normal(self, value: Union[AnyStr, int, Relay.RelayState, List[AnyStr], List[int], List[Relay.RelayState], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(39, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(39, value)
 
     @property
@@ -33744,14 +33705,11 @@ class RelayBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 40)
 
     @State.setter
-    def State(self, value: Union[AnyStr, int, Relay.RelayState, List[AnyStr], List[Union[int, Relay.RelayState]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def State(self, value: Union[AnyStr, int, Relay.RelayState, List[AnyStr], List[int], List[Relay.RelayState], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(40, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(40, value)
 
     @property
@@ -33770,92 +33728,92 @@ class RelayBatch(DSSBatch):
     @property
     def DOC_TiltAngleLow(self) -> BatchFloat64ArrayProxy:
         """
-        Tilt angle for lower current magnitudes. Default is 90.
+        Tilt angle for low-current trip line. Default is 90.
 
         DSS property name: `DOC_TiltAngleLow`, DSS property index: 41.
         """
         return BatchFloat64ArrayProxy(self, 41)
 
     @DOC_TiltAngleLow.setter
-    def DOC_TiltAngleLow(self, value):
+    def DOC_TiltAngleLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(41, value)
 
     @property
     def DOC_TiltAngleHigh(self) -> BatchFloat64ArrayProxy:
         """
-        Tilt angle for higher current magnitudes. Default is 90.
+        Tilt angle for high-current trip line. Default is 90.
 
         DSS property name: `DOC_TiltAngleHigh`, DSS property index: 42.
         """
         return BatchFloat64ArrayProxy(self, 42)
 
     @DOC_TiltAngleHigh.setter
-    def DOC_TiltAngleHigh(self, value):
+    def DOC_TiltAngleHigh(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(42, value)
 
     @property
     def DOC_TripSettingLow(self) -> BatchFloat64ArrayProxy:
         """
-        Trip setting for lower current magnitude.  Default is 0.
+        Resistive trip setting for low-current line. Default is 0.
 
         DSS property name: `DOC_TripSettingLow`, DSS property index: 43.
         """
         return BatchFloat64ArrayProxy(self, 43)
 
     @DOC_TripSettingLow.setter
-    def DOC_TripSettingLow(self, value):
+    def DOC_TripSettingLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(43, value)
 
     @property
     def DOC_TripSettingHigh(self) -> BatchFloat64ArrayProxy:
         """
-        Trip setting for higher current magnitude.  Default is -1 (deactivated). To activate, set a positive value. Must be greater than "DOC_TripSettingLow".
+        Resistive trip setting for high-current line.  Default is -1 (deactivated). To activate, set a positive value. Must be greater than "DOC_TripSettingLow".
 
         DSS property name: `DOC_TripSettingHigh`, DSS property index: 44.
         """
         return BatchFloat64ArrayProxy(self, 44)
 
     @DOC_TripSettingHigh.setter
-    def DOC_TripSettingHigh(self, value):
+    def DOC_TripSettingHigh(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(44, value)
 
     @property
     def DOC_TripSettingMag(self) -> BatchFloat64ArrayProxy:
         """
-        Trip setting for current magnitude (define a circle for the relay characteristics). Default is -1 (deactivated). To activate, set a positive value.
+        Trip setting for current magnitude (defines a circle in the relay characteristics). Default is -1 (deactivated). To activate, set a positive value.
 
         DSS property name: `DOC_TripSettingMag`, DSS property index: 45.
         """
         return BatchFloat64ArrayProxy(self, 45)
 
     @DOC_TripSettingMag.setter
-    def DOC_TripSettingMag(self, value):
+    def DOC_TripSettingMag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(45, value)
 
     @property
     def DOC_DelayInner(self) -> BatchFloat64ArrayProxy:
         """
-        Trip time delay (sec) for operation in inner zone for DOC relay, defined when "DOC_TripSettingMag" or "DOC_TripSettingHigh" are activate. Default is -1.0 (deactivated), meaning that the relay characteristic is insensitive in the inner zone (no trip). Set to 0 for instantaneous trip and >0 for a definite time delay. If "DOC_PhaseCurveInner" is specified, time delay from curve is utilized instead.
+        Trip time delay (sec) for operation in inner region for DOC relay, defined when "DOC_TripSettingMag" or "DOC_TripSettingHigh" are activate. Default is -1.0 (deactivated), meaning that the relay characteristic is insensitive in the inner region (no trip). Set to 0 for instantaneous trip and >0 for a definite time delay. If "DOC_PhaseCurveInner" is specified, time delay from curve is utilized instead.
 
         DSS property name: `DOC_DelayInner`, DSS property index: 46.
         """
         return BatchFloat64ArrayProxy(self, 46)
 
     @DOC_DelayInner.setter
-    def DOC_DelayInner(self, value):
+    def DOC_DelayInner(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(46, value)
 
     @property
     def DOC_PhaseCurveInner(self) -> BatchFloat64ArrayProxy:
         """
-        Name of the TCC Curve object that determines the phase trip for operation in inner zone for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
+        Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
         DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
         """
         return BatchFloat64ArrayProxy(self, 47)
 
     @DOC_PhaseCurveInner.setter
-    def DOC_PhaseCurveInner(self, value):
+    def DOC_PhaseCurveInner(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(47, value)
 
     @property
@@ -33868,7 +33826,7 @@ class RelayBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 48)
 
     @DOC_PhaseTripInner.setter
-    def DOC_PhaseTripInner(self, value):
+    def DOC_PhaseTripInner(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(48, value)
 
     @property
@@ -33881,52 +33839,62 @@ class RelayBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 49)
 
     @DOC_TDPhaseInner.setter
-    def DOC_TDPhaseInner(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(49, value)
-            return
-
-        self._set_batch_string(49, value)
+    def DOC_TDPhaseInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(49, value)
 
     @property
-    def DOC_TDPhaseInner_obj(self) -> List[str]:
+    def DOC_TDPhaseInner_obj(self) -> List[TCC_Curve]:
         """
         Time dial for "DOC_PhaseCurveInner" TCC curve. Multiplier on time axis of specified curve. Default=1.0.
 
         DSS property name: `DOC_TDPhaseInner`, DSS property index: 49.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 49)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 49)
 
     @DOC_TDPhaseInner_obj.setter
     def DOC_TDPhaseInner_obj(self, value: TCC_Curve):
         self._set_batch_string(49, value)
 
     @property
+    def DOC_P1Blocking(self) -> List[bool]:
+        """
+        {Yes/True* | No/False} Blocking element that impedes relay from tripping if balanced net three-phase active power is in the forward direction (i.e., flowing into the monitored terminal). For a delayed trip, if at any given time the reverse power flow condition stops, the tripping is reset. Default=True.
+
+        DSS property name: `DOC_P1Blocking`, DSS property index: 50.
+        """
+        return [v != 0 for v in 
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 50)
+        ]
+    @DOC_P1Blocking.setter
+    def DOC_P1Blocking(self, value: bool):
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 50, value)
+
+    @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 50.
+        DSS property name: `basefreq`, DSS property index: 51.
         """
-        return BatchFloat64ArrayProxy(self, 50)
+        return BatchFloat64ArrayProxy(self, 51)
 
     @basefreq.setter
-    def basefreq(self, value):
-        self._set_batch_float64_array(50, value)
+    def basefreq(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(51, value)
 
     @property
     def enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 51.
+        DSS property name: `enabled`, DSS property index: 52.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 51)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 52)
         ]
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 51, value)
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 52, value)
 
     def like(self, value: AnyStr):
         """
@@ -33934,14 +33902,14 @@ class RelayBatch(DSSBatch):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 52.
+        DSS property name: `like`, DSS property index: 53.
         """
-        self._set_batch_string(52, value)
+        self._set_batch_string(53, value)
 
 class RecloserBatch(DSSBatch):
     _cls_name = 'Recloser'
     _obj_cls = Recloser
-    _cls_idx = 31
+    _cls_idx = 32
 
 
     @property
@@ -33954,21 +33922,17 @@ class RecloserBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def MonitoredObj_obj(self) -> List[str]:
+    def MonitoredObj_obj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @MonitoredObj_obj.setter
     def MonitoredObj_obj(self, value: DSSObj):
@@ -33984,7 +33948,7 @@ class RecloserBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @MonitoredTerm.setter
-    def MonitoredTerm(self, value):
+    def MonitoredTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -33997,21 +33961,17 @@ class RecloserBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
 
     @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(3, value)
-            return
-
-        self._set_batch_string(3, value)
+    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
-    def SwitchedObj_obj(self) -> List[str]:
+    def SwitchedObj_obj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 3)
 
     @SwitchedObj_obj.setter
     def SwitchedObj_obj(self, value: DSSObj):
@@ -34027,7 +33987,7 @@ class RecloserBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 4)
 
     @SwitchedTerm.setter
-    def SwitchedTerm(self, value):
+    def SwitchedTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(4, value)
 
     @property
@@ -34040,7 +34000,7 @@ class RecloserBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 5)
 
     @NumFast.setter
-    def NumFast(self, value):
+    def NumFast(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(5, value)
 
     @property
@@ -34053,21 +34013,17 @@ class RecloserBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @PhaseFast.setter
-    def PhaseFast(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(6, value)
-            return
-
-        self._set_batch_string(6, value)
+    def PhaseFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(6, value)
 
     @property
-    def PhaseFast_obj(self) -> List[str]:
+    def PhaseFast_obj(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
         DSS property name: `PhaseFast`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 6)
 
     @PhaseFast_obj.setter
     def PhaseFast_obj(self, value: TCC_Curve):
@@ -34083,21 +34039,17 @@ class RecloserBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
 
     @PhaseDelayed.setter
-    def PhaseDelayed(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(7, value)
-            return
-
-        self._set_batch_string(7, value)
+    def PhaseDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(7, value)
 
     @property
-    def PhaseDelayed_obj(self) -> List[str]:
+    def PhaseDelayed_obj(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
         DSS property name: `PhaseDelayed`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 7)
 
     @PhaseDelayed_obj.setter
     def PhaseDelayed_obj(self, value: TCC_Curve):
@@ -34113,21 +34065,17 @@ class RecloserBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
 
     @GroundFast.setter
-    def GroundFast(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(8, value)
-            return
-
-        self._set_batch_string(8, value)
+    def GroundFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(8, value)
 
     @property
-    def GroundFast_obj(self) -> List[str]:
+    def GroundFast_obj(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
         DSS property name: `GroundFast`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 8)
 
     @GroundFast_obj.setter
     def GroundFast_obj(self, value: TCC_Curve):
@@ -34143,21 +34091,17 @@ class RecloserBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
 
     @GroundDelayed.setter
-    def GroundDelayed(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(9, value)
-            return
-
-        self._set_batch_string(9, value)
+    def GroundDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(9, value)
 
     @property
-    def GroundDelayed_obj(self) -> List[str]:
+    def GroundDelayed_obj(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
         DSS property name: `GroundDelayed`, DSS property index: 9.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 9)
 
     @GroundDelayed_obj.setter
     def GroundDelayed_obj(self, value: TCC_Curve):
@@ -34173,7 +34117,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @PhaseTrip.setter
-    def PhaseTrip(self, value):
+    def PhaseTrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -34186,7 +34130,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @GroundTrip.setter
-    def GroundTrip(self, value):
+    def GroundTrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -34199,7 +34143,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @PhaseInst.setter
-    def PhaseInst(self, value):
+    def PhaseInst(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -34212,7 +34156,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @GroundInst.setter
-    def GroundInst(self, value):
+    def GroundInst(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -34225,7 +34169,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @Reset.setter
-    def Reset(self, value):
+    def Reset(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -34238,7 +34182,7 @@ class RecloserBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 15)
 
     @Shots.setter
-    def Shots(self, value):
+    def Shots(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(15, value)
 
     @property
@@ -34255,7 +34199,7 @@ class RecloserBatch(DSSBatch):
 
     @RecloseIntervals.setter
     def RecloseIntervals(self, value: Float64Array):
-        self._set_float64_array(16, value)
+        self._set_float64_array_o(16, value)
 
     @property
     def Delay(self) -> BatchFloat64ArrayProxy:
@@ -34267,41 +34211,8 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @Delay.setter
-    def Delay(self, value):
+    def Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
-
-    @property
-    def Action(self) -> BatchInt32ArrayProxy:
-        """
-        DEPRECATED. See "State" property
-
-        DSS property name: `Action`, DSS property index: 18.
-        """
-        return BatchInt32ArrayProxy(self, 18)
-
-    @Action.setter
-    def Action(self, value: Union[AnyStr, int, Recloser.RecloserAction, List[AnyStr], List[Union[int, Recloser.RecloserAction]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
-            self._set_batch_string(18, value)
-            return
-    
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
-        self._set_batch_int32_array(18, value)
-
-    @property
-    def Action_str(self) -> str:
-        """
-        DEPRECATED. See "State" property
-
-        DSS property name: `Action`, DSS property index: 18.
-        """
-        return self._get_prop_string(18)
-
-    @Action_str.setter
-    def Action_str(self, value: AnyStr):
-        self.Action = value
 
     @property
     def TDPhFast(self) -> BatchFloat64ArrayProxy:
@@ -34313,7 +34224,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @TDPhFast.setter
-    def TDPhFast(self, value):
+    def TDPhFast(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -34326,7 +34237,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @TDGrFast.setter
-    def TDGrFast(self, value):
+    def TDGrFast(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -34339,7 +34250,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @TDPhDelayed.setter
-    def TDPhDelayed(self, value):
+    def TDPhDelayed(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -34352,7 +34263,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @TDGrDelayed.setter
-    def TDGrDelayed(self, value):
+    def TDGrDelayed(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -34365,14 +34276,11 @@ class RecloserBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 23)
 
     @Normal.setter
-    def Normal(self, value: Union[AnyStr, int, Recloser.RecloserState, List[AnyStr], List[Union[int, Recloser.RecloserState]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Normal(self, value: Union[AnyStr, int, Recloser.RecloserState, List[AnyStr], List[int], List[Recloser.RecloserState], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(23, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(23, value)
 
     @property
@@ -34398,14 +34306,11 @@ class RecloserBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 24)
 
     @State.setter
-    def State(self, value: Union[AnyStr, int, Recloser.RecloserState, List[AnyStr], List[Union[int, Recloser.RecloserState]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def State(self, value: Union[AnyStr, int, Recloser.RecloserState, List[AnyStr], List[int], List[Recloser.RecloserState], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(24, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(24, value)
 
     @property
@@ -34431,7 +34336,7 @@ class RecloserBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 25)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
     @property
@@ -34461,7 +34366,7 @@ class RecloserBatch(DSSBatch):
 class FuseBatch(DSSBatch):
     _cls_name = 'Fuse'
     _obj_cls = Fuse
-    _cls_idx = 32
+    _cls_idx = 33
 
 
     @property
@@ -34474,21 +34379,17 @@ class FuseBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def MonitoredObj_obj(self) -> List[str]:
+    def MonitoredObj_obj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @MonitoredObj_obj.setter
     def MonitoredObj_obj(self, value: DSSObj):
@@ -34504,7 +34405,7 @@ class FuseBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @MonitoredTerm.setter
-    def MonitoredTerm(self, value):
+    def MonitoredTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -34517,21 +34418,17 @@ class FuseBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
 
     @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(3, value)
-            return
-
-        self._set_batch_string(3, value)
+    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
-    def SwitchedObj_obj(self) -> List[str]:
+    def SwitchedObj_obj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 3)
 
     @SwitchedObj_obj.setter
     def SwitchedObj_obj(self, value: DSSObj):
@@ -34547,7 +34444,7 @@ class FuseBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 4)
 
     @SwitchedTerm.setter
-    def SwitchedTerm(self, value):
+    def SwitchedTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(4, value)
 
     @property
@@ -34560,21 +34457,17 @@ class FuseBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5)
 
     @FuseCurve.setter
-    def FuseCurve(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(5, value)
-            return
-
-        self._set_batch_string(5, value)
+    def FuseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(5, value)
 
     @property
-    def FuseCurve_obj(self) -> List[str]:
+    def FuseCurve_obj(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
 
         DSS property name: `FuseCurve`, DSS property index: 5.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 5)
 
     @FuseCurve_obj.setter
     def FuseCurve_obj(self, value: TCC_Curve):
@@ -34590,7 +34483,7 @@ class FuseBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @RatedCurrent.setter
-    def RatedCurrent(self, value):
+    def RatedCurrent(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -34603,10 +34496,10 @@ class FuseBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @Delay.setter
-    def Delay(self, value):
+    def Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    def Action(self, value: Union[str, bytes, int]):
+    def Action(self, value: Union[str, bytes, int, Fuse.FuseAction]):
         """
         DEPRECATED. See "State" property.
 
@@ -34701,7 +34594,7 @@ class FuseBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -34731,7 +34624,7 @@ class FuseBatch(DSSBatch):
 class SwtControlBatch(DSSBatch):
     _cls_name = 'SwtControl'
     _obj_cls = SwtControl
-    _cls_idx = 33
+    _cls_idx = 34
 
 
     @property
@@ -34744,21 +34637,17 @@ class SwtControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def SwitchedObj_obj(self) -> List[str]:
+    def SwitchedObj_obj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
 
         DSS property name: `SwitchedObj`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @SwitchedObj_obj.setter
     def SwitchedObj_obj(self, value: DSSObj):
@@ -34774,41 +34663,8 @@ class SwtControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @SwitchedTerm.setter
-    def SwitchedTerm(self, value):
+    def SwitchedTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
-
-    @property
-    def Action(self) -> BatchInt32ArrayProxy:
-        """
-        {Open | Close}  After specified delay time, and if not locked, causes the controlled switch to open or close. 
-
-        DSS property name: `Action`, DSS property index: 3.
-        """
-        return BatchInt32ArrayProxy(self, 3)
-
-    @Action.setter
-    def Action(self, value: Union[AnyStr, int, SwtControl.SwtControlAction, List[AnyStr], List[Union[int, SwtControl.SwtControlAction]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
-            self._set_batch_string(3, value)
-            return
-    
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
-        self._set_batch_int32_array(3, value)
-
-    @property
-    def Action_str(self) -> str:
-        """
-        {Open | Close}  After specified delay time, and if not locked, causes the controlled switch to open or close. 
-
-        DSS property name: `Action`, DSS property index: 3.
-        """
-        return self._get_prop_string(3)
-
-    @Action_str.setter
-    def Action_str(self, value: AnyStr):
-        self.Action = value
 
     @property
     def Lock(self) -> List[bool]:
@@ -34834,7 +34690,7 @@ class SwtControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @Delay.setter
-    def Delay(self, value):
+    def Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -34847,14 +34703,11 @@ class SwtControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @Normal.setter
-    def Normal(self, value: Union[AnyStr, int, SwtControl.SwtControlState, List[AnyStr], List[Union[int, SwtControl.SwtControlState]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Normal(self, value: Union[AnyStr, int, SwtControl.SwtControlState, List[AnyStr], List[int], List[SwtControl.SwtControlState], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(6, value)
 
     @property
@@ -34880,14 +34733,11 @@ class SwtControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 7)
 
     @State.setter
-    def State(self, value: Union[AnyStr, int, SwtControl.SwtControlState, List[AnyStr], List[Union[int, SwtControl.SwtControlState]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def State(self, value: Union[AnyStr, int, SwtControl.SwtControlState, List[AnyStr], List[int], List[SwtControl.SwtControlState], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(7, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(7, value)
 
     @property
@@ -34921,7 +34771,7 @@ class SwtControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -34951,7 +34801,7 @@ class SwtControlBatch(DSSBatch):
 class PVSystemBatch(DSSBatch):
     _cls_name = 'PVSystem'
     _obj_cls = PVSystem
-    _cls_idx = 34
+    _cls_idx = 35
 
 
     @property
@@ -34964,7 +34814,7 @@ class PVSystemBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -34978,10 +34828,8 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def kv(self) -> BatchFloat64ArrayProxy:
@@ -34993,7 +34841,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @kv.setter
-    def kv(self, value):
+    def kv(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -35006,7 +34854,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @irradiance.setter
-    def irradiance(self, value):
+    def irradiance(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -35019,7 +34867,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @Pmpp.setter
-    def Pmpp(self, value):
+    def Pmpp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -35032,7 +34880,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @pctPmpp.setter
-    def pctPmpp(self, value):
+    def pctPmpp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -35045,7 +34893,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @Temperature.setter
-    def Temperature(self, value):
+    def Temperature(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -35060,7 +34908,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @pf.setter
-    def pf(self, value):
+    def pf(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -35073,14 +34921,11 @@ class PVSystemBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 9)
 
     @conn.setter
-    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[Union[int, Connection]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(9, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(9, value)
 
     @property
@@ -35106,7 +34951,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @kvar.setter
-    def kvar(self, value):
+    def kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -35119,7 +34964,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @kVA.setter
-    def kVA(self, value):
+    def kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -35132,7 +34977,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @pctCutin.setter
-    def pctCutin(self, value):
+    def pctCutin(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -35145,7 +34990,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @pctCutout.setter
-    def pctCutout(self, value):
+    def pctCutout(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -35158,21 +35003,17 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 14)
 
     @EffCurve.setter
-    def EffCurve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(14, value)
-            return
-
-        self._set_batch_string(14, value)
+    def EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(14, value)
 
     @property
-    def EffCurve_obj(self) -> List[str]:
+    def EffCurve_obj(self) -> List[XYcurve]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
 
         DSS property name: `EffCurve`, DSS property index: 14.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 14)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 14)
 
     @EffCurve_obj.setter
     def EffCurve_obj(self, value: XYcurve):
@@ -35188,21 +35029,17 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
 
     @PTCurve.setter
-    def PTCurve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(15, value)
-            return
-
-        self._set_batch_string(15, value)
+    def PTCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(15, value)
 
     @property
-    def PTCurve_obj(self) -> List[str]:
+    def PTCurve_obj(self) -> List[XYcurve]:
         """
         An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
 
         DSS property name: `P-TCurve`, DSS property index: 15.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 15)
 
     @PTCurve_obj.setter
     def PTCurve_obj(self, value: XYcurve):
@@ -35218,7 +35055,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @pctR.setter
-    def pctR(self, value):
+    def pctR(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -35231,7 +35068,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @pctX.setter
-    def pctX(self, value):
+    def pctX(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -35248,7 +35085,7 @@ class PVSystemBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 18)
 
     @model.setter
-    def model(self, value):
+    def model(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(18, value)
 
     @property
@@ -35261,7 +35098,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @Vminpu.setter
-    def Vminpu(self, value):
+    def Vminpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -35274,7 +35111,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @Vmaxpu.setter
-    def Vmaxpu(self, value):
+    def Vmaxpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -35315,21 +35152,17 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 23)
 
     @yearly.setter
-    def yearly(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(23, value)
-            return
-
-        self._set_batch_string(23, value)
+    def yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(23, value)
 
     @property
-    def yearly_obj(self) -> List[str]:
+    def yearly_obj(self) -> List[LoadShape]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
         DSS property name: `yearly`, DSS property index: 23.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 23)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 23)
 
     @yearly_obj.setter
     def yearly_obj(self, value: LoadShape):
@@ -35345,21 +35178,17 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 24)
 
     @daily.setter
-    def daily(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(24, value)
-            return
-
-        self._set_batch_string(24, value)
+    def daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(24, value)
 
     @property
-    def daily_obj(self) -> List[str]:
+    def daily_obj(self) -> List[LoadShape]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
         DSS property name: `daily`, DSS property index: 24.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 24)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 24)
 
     @daily_obj.setter
     def daily_obj(self, value: LoadShape):
@@ -35375,21 +35204,17 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25)
 
     @duty.setter
-    def duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(25, value)
-            return
-
-        self._set_batch_string(25, value)
+    def duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(25, value)
 
     @property
-    def duty_obj(self) -> List[str]:
+    def duty_obj(self) -> List[LoadShape]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
         DSS property name: `duty`, DSS property index: 25.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 25)
 
     @duty_obj.setter
     def duty_obj(self, value: LoadShape):
@@ -35405,21 +35230,17 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 26)
 
     @Tyearly.setter
-    def Tyearly(self, value: Union[AnyStr, TShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(26, value)
-            return
-
-        self._set_batch_string(26, value)
+    def Tyearly(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
+        self._set_batch_obj_prop(26, value)
 
     @property
-    def Tyearly_obj(self) -> List[str]:
+    def Tyearly_obj(self) -> List[TShape]:
         """
         Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
         DSS property name: `Tyearly`, DSS property index: 26.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 26)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 26)
 
     @Tyearly_obj.setter
     def Tyearly_obj(self, value: TShape):
@@ -35435,21 +35256,17 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 27)
 
     @Tdaily.setter
-    def Tdaily(self, value: Union[AnyStr, TShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(27, value)
-            return
-
-        self._set_batch_string(27, value)
+    def Tdaily(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
+        self._set_batch_obj_prop(27, value)
 
     @property
-    def Tdaily_obj(self) -> List[str]:
+    def Tdaily_obj(self) -> List[TShape]:
         """
         Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
         DSS property name: `Tdaily`, DSS property index: 27.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 27)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 27)
 
     @Tdaily_obj.setter
     def Tdaily_obj(self, value: TShape):
@@ -35465,21 +35282,17 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 28)
 
     @Tduty.setter
-    def Tduty(self, value: Union[AnyStr, TShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(28, value)
-            return
-
-        self._set_batch_string(28, value)
+    def Tduty(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
+        self._set_batch_obj_prop(28, value)
 
     @property
-    def Tduty_obj(self) -> List[str]:
+    def Tduty_obj(self) -> List[TShape]:
         """
         Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
         DSS property name: `Tduty`, DSS property index: 28.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 28)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 28)
 
     @Tduty_obj.setter
     def Tduty_obj(self, value: TShape):
@@ -35495,7 +35308,7 @@ class PVSystemBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 29)
 
     @cls.setter
-    def cls(self, value):
+    def cls(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(29, value)
 
     @property
@@ -35509,10 +35322,8 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30) 
 
     @UserModel.setter
-    def UserModel(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 30, value)
+    def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(30, value)
 
     @property
     def UserData(self) -> List[str]:
@@ -35525,10 +35336,8 @@ class PVSystemBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 31) 
 
     @UserData.setter
-    def UserData(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 31, value)
+    def UserData(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(31, value)
 
     @property
     def debugtrace(self) -> List[bool]:
@@ -35568,7 +35377,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 34)
 
     @DutyStart.setter
-    def DutyStart(self, value):
+    def DutyStart(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
     @property
@@ -35609,7 +35418,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 37)
 
     @pctPminNoVars.setter
-    def pctPminNoVars(self, value):
+    def pctPminNoVars(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(37, value)
 
     @property
@@ -35622,7 +35431,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 38)
 
     @pctPminkvarMax.setter
-    def pctPminkvarMax(self, value):
+    def pctPminkvarMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(38, value)
 
     @property
@@ -35635,7 +35444,7 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 39)
 
     @kvarMax.setter
-    def kvarMax(self, value):
+    def kvarMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(39, value)
 
     @property
@@ -35648,65 +35457,205 @@ class PVSystemBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 40)
 
     @kvarMaxAbs.setter
-    def kvarMaxAbs(self, value):
+    def kvarMaxAbs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(40, value)
+
+    @property
+    def kVDC(self) -> BatchFloat64ArrayProxy:
+        """
+        Indicates the rated voltage (kV) at the input of the inverter at the peak of PV energy production. The value is normally greater or equal to the kV base of the PV system. It is used for dynamics simulation ONLY.
+
+        DSS property name: `kVDC`, DSS property index: 41.
+        """
+        return BatchFloat64ArrayProxy(self, 41)
+
+    @kVDC.setter
+    def kVDC(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(41, value)
+
+    @property
+    def Kp(self) -> BatchFloat64ArrayProxy:
+        """
+        It is the proportional gain for the PI controller within the inverter. Use it to modify the controller response in dynamics simulation mode.
+
+        DSS property name: `Kp`, DSS property index: 42.
+        """
+        return BatchFloat64ArrayProxy(self, 42)
+
+    @Kp.setter
+    def Kp(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(42, value)
+
+    @property
+    def PITol(self) -> BatchFloat64ArrayProxy:
+        """
+        It is the tolerance (%) for the closed loop controller of the inverter. For dynamics simulation mode.
+
+        DSS property name: `PITol`, DSS property index: 43.
+        """
+        return BatchFloat64ArrayProxy(self, 43)
+
+    @PITol.setter
+    def PITol(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(43, value)
+
+    @property
+    def SafeVoltage(self) -> BatchFloat64ArrayProxy:
+        """
+        Indicates the voltage level (%) respect to the base voltage level for which the Inverter will operate. If this threshold is violated, the Inverter will enter safe mode (OFF). For dynamic simulation. By default is 80%
+
+        DSS property name: `SafeVoltage`, DSS property index: 44.
+        """
+        return BatchFloat64ArrayProxy(self, 44)
+
+    @SafeVoltage.setter
+    def SafeVoltage(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(44, value)
+
+    @property
+    def SafeMode(self) -> List[bool]:
+        """
+        (Read only) Indicates whether the inverter entered (Yes) or not (No) into Safe Mode.
+
+        DSS property name: `SafeMode`, DSS property index: 45.
+        """
+        return [v != 0 for v in 
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 45)
+        ]
+    @SafeMode.setter
+    def SafeMode(self, value: bool):
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 45, value)
+
+    @property
+    def DynamicEq(self) -> List[str]:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 46.
+        """
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 46)
+
+    @DynamicEq.setter
+    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
+        self._set_batch_obj_prop(46, value)
+
+    @property
+    def DynamicEq_obj(self) -> List[DynamicExp]:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 46.
+        """
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 46)
+
+    @DynamicEq_obj.setter
+    def DynamicEq_obj(self, value: DynamicExp):
+        self._set_batch_string(46, value)
+
+    @property
+    def DynOut(self) -> List[str]:
+        """
+        The name of the variables within the Dynamic equation that will be used to govern the PVSystem dynamics. This PVsystem model requires 1 output from the dynamic equation:
+
+            1. Current.
+
+        The output variables need to be defined in the same order.
+
+        DSS property name: `DynOut`, DSS property index: 47.
+        """
+
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 47) 
+
+    @DynOut.setter
+    def DynOut(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(47, value)
+
+    @property
+    def ControlMode(self) -> BatchInt32ArrayProxy:
+        """
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+
+        GFM control mode disables any control action set by the InvControl device.
+
+        DSS property name: `ControlMode`, DSS property index: 48.
+        """
+        return BatchInt32ArrayProxy(self, 48)
+
+    @ControlMode.setter
+    def ControlMode(self, value: Union[AnyStr, int, InverterControlMode, List[AnyStr], List[int], List[InverterControlMode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
+            self._set_batch_string(48, value)
+            return
+    
+        self._set_batch_int32_array(48, value)
+
+    @property
+    def ControlMode_str(self) -> str:
+        """
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+
+        GFM control mode disables any control action set by the InvControl device.
+
+        DSS property name: `ControlMode`, DSS property index: 48.
+        """
+        return self._get_prop_string(48)
+
+    @ControlMode_str.setter
+    def ControlMode_str(self, value: AnyStr):
+        self.ControlMode = value
 
     @property
     def spectrum(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 41.
+        DSS property name: `spectrum`, DSS property index: 49.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 41)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 49)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(41, value)
-            return
-
-        self._set_batch_string(41, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(49, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 41.
+        DSS property name: `spectrum`, DSS property index: 49.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 41)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 49)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_batch_string(41, value)
+        self._set_batch_string(49, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 42.
+        DSS property name: `basefreq`, DSS property index: 50.
         """
-        return BatchFloat64ArrayProxy(self, 42)
+        return BatchFloat64ArrayProxy(self, 50)
 
     @basefreq.setter
-    def basefreq(self, value):
-        self._set_batch_float64_array(42, value)
+    def basefreq(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(50, value)
 
     @property
     def enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 43.
+        DSS property name: `enabled`, DSS property index: 51.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 43)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 51)
         ]
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 43, value)
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 51, value)
 
     def like(self, value: AnyStr):
         """
@@ -35714,14 +35663,14 @@ class PVSystemBatch(DSSBatch):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 44.
+        DSS property name: `like`, DSS property index: 52.
         """
-        self._set_batch_string(44, value)
+        self._set_batch_string(52, value)
 
 class UPFCBatch(DSSBatch):
     _cls_name = 'UPFC'
     _obj_cls = UPFC
-    _cls_idx = 35
+    _cls_idx = 36
 
 
     @property
@@ -35737,10 +35686,8 @@ class UPFCBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def bus2(self) -> List[str]:
@@ -35755,63 +35702,59 @@ class UPFCBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus2.setter
-    def bus2(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus2(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
-    def refkv(self) -> BatchFloat64ArrayProxy:
+    def refkV(self) -> BatchFloat64ArrayProxy:
         """
-        Base Voltage expected at the output of the UPFC
+        UPFC.refkV
 
-        "refkv=0.24"
-
-        DSS property name: `refkv`, DSS property index: 3.
+        DSS property name: `refkV`, DSS property index: 3.
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @refkv.setter
-    def refkv(self, value):
+    @refkV.setter
+    def refkV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
-    def pf(self) -> BatchFloat64ArrayProxy:
+    def PF(self) -> BatchFloat64ArrayProxy:
         """
-        Power factor target at the input terminal.
+        UPFC.PF
 
-        DSS property name: `pf`, DSS property index: 4.
+        DSS property name: `PF`, DSS property index: 4.
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @pf.setter
-    def pf(self, value):
+    @PF.setter
+    def PF(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
-    def frequency(self) -> BatchFloat64ArrayProxy:
+    def Frequency(self) -> BatchFloat64ArrayProxy:
         """
-        UPFC working frequency.  Defaults to system default base frequency.
+        UPFC.Frequency
 
-        DSS property name: `frequency`, DSS property index: 5.
+        DSS property name: `Frequency`, DSS property index: 5.
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @frequency.setter
-    def frequency(self, value):
+    @Frequency.setter
+    def Frequency(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
-    def phases(self) -> BatchInt32ArrayProxy:
+    def Phases(self) -> BatchInt32ArrayProxy:
         """
-        Number of phases.  Defaults to 1 phase (2 terminals, 1 conductor per terminal).
+        UPFC.Phases
 
-        DSS property name: `phases`, DSS property index: 6.
+        DSS property name: `Phases`, DSS property index: 6.
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @phases.setter
-    def phases(self, value):
+    @Phases.setter
+    def Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(6, value)
 
     @property
@@ -35824,7 +35767,7 @@ class UPFCBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @Xs.setter
-    def Xs(self, value):
+    def Xs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -35838,7 +35781,7 @@ class UPFCBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @Tol1.setter
-    def Tol1(self, value):
+    def Tol1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -35858,7 +35801,7 @@ class UPFCBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 9)
 
     @Mode.setter
-    def Mode(self, value):
+    def Mode(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(9, value)
 
     @property
@@ -35871,7 +35814,7 @@ class UPFCBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @VpqMax.setter
-    def VpqMax(self, value):
+    def VpqMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -35884,21 +35827,17 @@ class UPFCBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
 
     @LossCurve.setter
-    def LossCurve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(11, value)
-            return
-
-        self._set_batch_string(11, value)
+    def LossCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
-    def LossCurve_obj(self) -> List[str]:
+    def LossCurve_obj(self) -> List[XYcurve]:
         """
         Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
 
         DSS property name: `LossCurve`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 11)
 
     @LossCurve_obj.setter
     def LossCurve_obj(self, value: XYcurve):
@@ -35914,7 +35853,7 @@ class UPFCBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @VHLimit.setter
-    def VHLimit(self, value):
+    def VHLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -35927,7 +35866,7 @@ class UPFCBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @VLLimit.setter
-    def VLLimit(self, value):
+    def VLLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -35940,22 +35879,20 @@ class UPFCBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @CLimit.setter
-    def CLimit(self, value):
+    def CLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
-    def refkv2(self) -> BatchFloat64ArrayProxy:
+    def refkV2(self) -> BatchFloat64ArrayProxy:
         """
-        Base Voltage expected at the output of the UPFC for control modes 4 and 5.
+        UPFC.refkV2
 
-        This reference must be lower than refkv, see control modes 4 and 5 for details
-
-        DSS property name: `refkv2`, DSS property index: 15.
+        DSS property name: `refkV2`, DSS property index: 15.
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @refkv2.setter
-    def refkv2(self, value):
+    @refkV2.setter
+    def refkV2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -35968,65 +35905,87 @@ class UPFCBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @kvarLimit.setter
-    def kvarLimit(self, value):
+    def kvarLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
+
+    @property
+    def Element(self) -> List[str]:
+        """
+        The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
+
+        DSS property name: `Element`, DSS property index: 17.
+        """
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
+
+    @Element.setter
+    def Element(self, value: Union[AnyStr, PDElement, List[AnyStr], List[PDElement]]):
+        self._set_batch_obj_prop(17, value)
+
+    @property
+    def Element_obj(self) -> List[PDElement]:
+        """
+        The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
+
+        DSS property name: `Element`, DSS property index: 17.
+        """
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 17)
+
+    @Element_obj.setter
+    def Element_obj(self, value: PDElement):
+        self._set_batch_string(17, value)
 
     @property
     def spectrum(self) -> List[str]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 17.
+        DSS property name: `spectrum`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(17, value)
-            return
-
-        self._set_batch_string(17, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(18, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 17.
+        DSS property name: `spectrum`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 18)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_batch_string(17, value)
+        self._set_batch_string(18, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 18.
+        DSS property name: `basefreq`, DSS property index: 19.
         """
-        return BatchFloat64ArrayProxy(self, 18)
+        return BatchFloat64ArrayProxy(self, 19)
 
     @basefreq.setter
-    def basefreq(self, value):
-        self._set_batch_float64_array(18, value)
+    def basefreq(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(19, value)
 
     @property
     def enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 19.
+        DSS property name: `enabled`, DSS property index: 20.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 19)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 20)
         ]
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 19, value)
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 20, value)
 
     def like(self, value: AnyStr):
         """
@@ -36034,14 +35993,14 @@ class UPFCBatch(DSSBatch):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 20.
+        DSS property name: `like`, DSS property index: 21.
         """
-        self._set_batch_string(20, value)
+        self._set_batch_string(21, value)
 
 class UPFCControlBatch(DSSBatch):
     _cls_name = 'UPFCControl'
     _obj_cls = UPFCControl
-    _cls_idx = 36
+    _cls_idx = 37
 
 
     @property
@@ -36054,7 +36013,7 @@ class UPFCControlBatch(DSSBatch):
         return self._get_string_ll(1)
 
     @UPFCList.setter
-    def UPFCList(self, value: List[str]):
+    def UPFCList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
@@ -36071,7 +36030,7 @@ class UPFCControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -36101,7 +36060,7 @@ class UPFCControlBatch(DSSBatch):
 class ESPVLControlBatch(DSSBatch):
     _cls_name = 'ESPVLControl'
     _obj_cls = ESPVLControl
-    _cls_idx = 37
+    _cls_idx = 38
 
 
     @property
@@ -36114,21 +36073,17 @@ class ESPVLControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def Element_obj(self) -> List[str]:
+    def Element_obj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -36144,7 +36099,7 @@ class ESPVLControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @Terminal.setter
-    def Terminal(self, value):
+    def Terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -36157,14 +36112,11 @@ class ESPVLControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 3)
 
     @Type.setter
-    def Type(self, value: Union[AnyStr, int, ESPVLControl.ESPVLControlType, List[AnyStr], List[Union[int, ESPVLControl.ESPVLControlType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Type(self, value: Union[AnyStr, int, ESPVLControl.ESPVLControlType, List[AnyStr], List[int], List[ESPVLControl.ESPVLControlType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(3, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(3, value)
 
     @property
@@ -36190,7 +36142,7 @@ class ESPVLControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @kWBand.setter
-    def kWBand(self, value):
+    def kWBand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -36203,7 +36155,7 @@ class ESPVLControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @kvarlimit.setter
-    def kvarlimit(self, value):
+    def kvarlimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -36216,7 +36168,7 @@ class ESPVLControlBatch(DSSBatch):
         return self._get_string_ll(6)
 
     @LocalControlList.setter
-    def LocalControlList(self, value: List[str]):
+    def LocalControlList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 6, value_ptr, value_count)
@@ -36237,7 +36189,7 @@ class ESPVLControlBatch(DSSBatch):
 
     @LocalControlWeights.setter
     def LocalControlWeights(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def PVSystemList(self) -> List[List[str]]:
@@ -36249,7 +36201,7 @@ class ESPVLControlBatch(DSSBatch):
         return self._get_string_ll(8)
 
     @PVSystemList.setter
-    def PVSystemList(self, value: List[str]):
+    def PVSystemList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 8, value_ptr, value_count)
@@ -36270,7 +36222,7 @@ class ESPVLControlBatch(DSSBatch):
 
     @PVSystemWeights.setter
     def PVSystemWeights(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def StorageList(self) -> List[List[str]]:
@@ -36282,7 +36234,7 @@ class ESPVLControlBatch(DSSBatch):
         return self._get_string_ll(10)
 
     @StorageList.setter
-    def StorageList(self, value: List[str]):
+    def StorageList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 10, value_ptr, value_count)
@@ -36303,7 +36255,7 @@ class ESPVLControlBatch(DSSBatch):
 
     @StorageWeights.setter
     def StorageWeights(self, value: Float64Array):
-        self._set_float64_array(11, value)
+        self._set_float64_array_o(11, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
@@ -36315,7 +36267,7 @@ class ESPVLControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -36345,7 +36297,7 @@ class ESPVLControlBatch(DSSBatch):
 class IndMach012Batch(DSSBatch):
     _cls_name = 'IndMach012'
     _obj_cls = IndMach012
-    _cls_idx = 38
+    _cls_idx = 39
 
 
     @property
@@ -36358,7 +36310,7 @@ class IndMach012Batch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -36372,10 +36324,8 @@ class IndMach012Batch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def kv(self) -> BatchFloat64ArrayProxy:
@@ -36387,7 +36337,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @kv.setter
-    def kv(self, value):
+    def kv(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -36401,7 +36351,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @kW.setter
-    def kW(self, value):
+    def kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -36414,7 +36364,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @pf.setter
-    def pf(self, value):
+    def pf(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -36427,14 +36377,11 @@ class IndMach012Batch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @conn.setter
-    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[Union[int, Connection]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(6, value)
 
     @property
@@ -36460,7 +36407,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @kVA.setter
-    def kVA(self, value):
+    def kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -36473,7 +36420,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @H.setter
-    def H(self, value):
+    def H(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -36486,7 +36433,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @D.setter
-    def D(self, value):
+    def D(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -36499,7 +36446,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @puRs.setter
-    def puRs(self, value):
+    def puRs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -36512,7 +36459,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @puXs.setter
-    def puXs(self, value):
+    def puXs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -36525,7 +36472,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @puRr.setter
-    def puRr(self, value):
+    def puRr(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -36538,7 +36485,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @puXr.setter
-    def puXr(self, value):
+    def puXr(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -36551,7 +36498,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @puXm.setter
-    def puXm(self, value):
+    def puXm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -36564,7 +36511,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @Slip.setter
-    def Slip(self, value):
+    def Slip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -36577,7 +36524,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @MaxSlip.setter
-    def MaxSlip(self, value):
+    def MaxSlip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -36590,14 +36537,11 @@ class IndMach012Batch(DSSBatch):
         return BatchInt32ArrayProxy(self, 17)
 
     @SlipOption.setter
-    def SlipOption(self, value: Union[AnyStr, int, IndMach012.IndMach012SlipOption, List[AnyStr], List[Union[int, IndMach012.IndMach012SlipOption]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def SlipOption(self, value: Union[AnyStr, int, IndMach012.IndMach012SlipOption, List[AnyStr], List[int], List[IndMach012.IndMach012SlipOption], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(17, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(17, value)
 
     @property
@@ -36623,21 +36567,17 @@ class IndMach012Batch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
 
     @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(18, value)
-            return
-
-        self._set_batch_string(18, value)
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(18, value)
 
     @property
-    def Yearly_obj(self) -> List[str]:
+    def Yearly_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 18)
 
     @Yearly_obj.setter
     def Yearly_obj(self, value: LoadShape):
@@ -36653,21 +36593,17 @@ class IndMach012Batch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
 
     @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(19, value)
-            return
-
-        self._set_batch_string(19, value)
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(19, value)
 
     @property
-    def Daily_obj(self) -> List[str]:
+    def Daily_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `Daily`, DSS property index: 19.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 19)
 
     @Daily_obj.setter
     def Daily_obj(self, value: LoadShape):
@@ -36683,21 +36619,17 @@ class IndMach012Batch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 20)
 
     @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(20, value)
-            return
-
-        self._set_batch_string(20, value)
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(20, value)
 
     @property
-    def Duty_obj(self) -> List[str]:
+    def Duty_obj(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `Duty`, DSS property index: 20.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 20)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 20)
 
     @Duty_obj.setter
     def Duty_obj(self, value: LoadShape):
@@ -36727,21 +36659,17 @@ class IndMach012Batch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 22)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(22, value)
-            return
-
-        self._set_batch_string(22, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(22, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic voltage or current spectrum for this IndMach012. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
         DSS property name: `spectrum`, DSS property index: 22.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 22)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 22)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
@@ -36757,7 +36685,7 @@ class IndMach012Batch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -36787,7 +36715,7 @@ class IndMach012Batch(DSSBatch):
 class GICsourceBatch(DSSBatch):
     _cls_name = 'GICsource'
     _obj_cls = GICsource
-    _cls_idx = 39
+    _cls_idx = 40
 
 
     @property
@@ -36808,7 +36736,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 1)
 
     @Volts.setter
-    def Volts(self, value):
+    def Volts(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(1, value)
 
     @property
@@ -36821,7 +36749,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @angle.setter
-    def angle(self, value):
+    def angle(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -36834,7 +36762,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @frequency.setter
-    def frequency(self, value):
+    def frequency(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -36847,7 +36775,7 @@ class GICsourceBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 4)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(4, value)
 
     @property
@@ -36860,7 +36788,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @EN.setter
-    def EN(self, value):
+    def EN(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -36873,7 +36801,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @EE.setter
-    def EE(self, value):
+    def EE(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -36886,7 +36814,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @Lat1.setter
-    def Lat1(self, value):
+    def Lat1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -36899,7 +36827,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @Lon1.setter
-    def Lon1(self, value):
+    def Lon1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -36912,7 +36840,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @Lat2.setter
-    def Lat2(self, value):
+    def Lat2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -36925,7 +36853,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @Lon2.setter
-    def Lon2(self, value):
+    def Lon2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -36938,21 +36866,17 @@ class GICsourceBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(11, value)
-            return
-
-        self._set_batch_string(11, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Not used.
 
         DSS property name: `spectrum`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 11)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
@@ -36968,7 +36892,7 @@ class GICsourceBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -36998,7 +36922,7 @@ class GICsourceBatch(DSSBatch):
 class AutoTransBatch(DSSBatch):
     _cls_name = 'AutoTrans'
     _obj_cls = AutoTrans
-    _cls_idx = 40
+    _cls_idx = 41
 
 
     @property
@@ -37011,7 +36935,7 @@ class AutoTransBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -37024,127 +36948,8 @@ class AutoTransBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @windings.setter
-    def windings(self, value):
+    def windings(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
-
-    @property
-    def wdg(self) -> BatchInt32ArrayProxy:
-        """
-        Set this = to the number of the winding you wish to define.  Then set the values for this winding.  Winding 1 is always the Series winding. Winding 2 is always Common winding (wye connected). Repeat for each winding.  Alternatively, use the array collections (buses, kVAs, etc.) to define the windings.  Note: reactances are BETWEEN pairs of windings; they are not the property of a single winding.
-
-        DSS property name: `wdg`, DSS property index: 3.
-        """
-        return BatchInt32ArrayProxy(self, 3)
-
-    @wdg.setter
-    def wdg(self, value):
-        self._set_batch_int32_array(3, value)
-
-    @property
-    def bus(self) -> List[List[str]]:
-        """
-        Bus connection spec for this winding.
-
-        DSS property name: `bus`, DSS property index: 4.
-        """
-        return self._get_string_ll(4)
-
-    @bus.setter
-    def bus(self, value: List[str]):
-        value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-            self._lib.Obj_SetStringArray(x, 4, value_ptr, value_count)
-    
-        self._check_for_error()
-
-    @property
-    def conn(self) -> List[Int32Array]:
-        """
-        Connection of this winding {Series, wye*, Delta, LN, LL }. Default is "wye" with the neutral solidly grounded. 
-        For AutoTrans, Winding 1 is always Series and Winding 2 (the Common winding) is always Wye. 
-        If only 2 windings, no need to specify connections.
-
-        DSS property name: `conn`, DSS property index: 5.
-        """
-        return [
-            self._get_int32_array(self._lib.Obj_GetInt32Array, x, 5)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @conn.setter
-    def conn(self, value: Union[List[Union[int,AutoTrans.AutoTransConnection]], List[AnyStr]]): #TODO: list of lists
-        if len(value) and not isinstance(value[0], int):
-            value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-                self._lib.Obj_SetStringArray(x, 5, value_ptr, value_count)
-
-            self._check_for_error()
-            return
-
-        self._set_batch_int32_array(5, value)
-
-    @property
-    def conn_str(self) -> List[List[str]]:
-        """
-        Connection of this winding {Series, wye*, Delta, LN, LL }. Default is "wye" with the neutral solidly grounded. 
-        For AutoTrans, Winding 1 is always Series and Winding 2 (the Common winding) is always Wye. 
-        If only 2 windings, no need to specify connections.
-
-        DSS property name: `conn`, DSS property index: 5.
-        """
-        return self._get_string_ll(5)
-
-    @conn_str.setter
-    def conn_str(self, value: AnyStr):
-        self.conn = value
-
-    @property
-    def kV(self) -> List[Float64Array]:
-        """
-        For 2-or 3-phase, enter phase-phase kV rating.  Otherwise, kV rating of the actual winding. Specify H terminal kV rating for Series winding.
-
-        DSS property name: `kV`, DSS property index: 6.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 6)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @kV.setter
-    def kV(self, value: Float64Array):
-        self._set_float64_array(6, value)
-
-    @property
-    def kVA(self) -> List[Float64Array]:
-        """
-        Base kVA rating of the winding. Side effect: forces change of max normal and emerg kVA ratings.If 2-winding AutoTrans, forces other winding to same value. When winding 1 is defined, all other windings are defaulted to the same rating and the first two winding resistances are defaulted to the %loadloss value.
-
-        DSS property name: `kVA`, DSS property index: 7.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 7)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @kVA.setter
-    def kVA(self, value: Float64Array):
-        self._set_float64_array(7, value)
-
-    @property
-    def tap(self) -> List[Float64Array]:
-        """
-        Per unit tap that this winding is on.
-
-        DSS property name: `tap`, DSS property index: 8.
-        """
-        return [
-            self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 8)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
-        ]
-
-    @tap.setter
-    def tap(self, value: Float64Array):
-        self._set_float64_array(8, value)
 
     @property
     def pctR(self) -> List[Float64Array]:
@@ -37160,7 +36965,7 @@ class AutoTransBatch(DSSBatch):
 
     @pctR.setter
     def pctR(self, value: Float64Array):
-        self._set_float64_array(9, value)
+        self._set_float64_array_o(9, value)
 
     @property
     def Rdcohms(self) -> List[Float64Array]:
@@ -37176,7 +36981,7 @@ class AutoTransBatch(DSSBatch):
 
     @Rdcohms.setter
     def Rdcohms(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def Core(self) -> BatchInt32ArrayProxy:
@@ -37188,14 +36993,11 @@ class AutoTransBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 11)
 
     @Core.setter
-    def Core(self, value: Union[AnyStr, int, CoreType, List[AnyStr], List[Union[int, CoreType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Core(self, value: Union[AnyStr, int, CoreType, List[AnyStr], List[int], List[CoreType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(11, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(11, value)
 
     @property
@@ -37223,7 +37025,7 @@ class AutoTransBatch(DSSBatch):
         return self._get_string_ll(12)
 
     @buses.setter
-    def buses(self, value: List[str]):
+    def buses(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 12, value_ptr, value_count)
@@ -37291,7 +37093,7 @@ class AutoTransBatch(DSSBatch):
 
     @kVs.setter
     def kVs(self, value: Float64Array):
-        self._set_float64_array(14, value)
+        self._set_float64_array_o(14, value)
 
     @property
     def kVAs(self) -> List[Float64Array]:
@@ -37307,7 +37109,7 @@ class AutoTransBatch(DSSBatch):
 
     @kVAs.setter
     def kVAs(self, value: Float64Array):
-        self._set_float64_array(15, value)
+        self._set_float64_array_o(15, value)
 
     @property
     def taps(self) -> List[Float64Array]:
@@ -37323,7 +37125,7 @@ class AutoTransBatch(DSSBatch):
 
     @taps.setter
     def taps(self, value: Float64Array):
-        self._set_float64_array(16, value)
+        self._set_float64_array_o(16, value)
 
     @property
     def XHX(self) -> BatchFloat64ArrayProxy:
@@ -37335,7 +37137,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @XHX.setter
-    def XHX(self, value):
+    def XHX(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -37348,7 +37150,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @XHT.setter
-    def XHT(self, value):
+    def XHT(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -37361,7 +37163,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @XXT.setter
-    def XXT(self, value):
+    def XXT(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -37382,7 +37184,7 @@ class AutoTransBatch(DSSBatch):
 
     @XSCarray.setter
     def XSCarray(self, value: Float64Array):
-        self._set_float64_array(20, value)
+        self._set_float64_array_o(20, value)
 
     @property
     def thermal(self) -> BatchFloat64ArrayProxy:
@@ -37394,7 +37196,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @thermal.setter
-    def thermal(self, value):
+    def thermal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -37407,7 +37209,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @n.setter
-    def n(self, value):
+    def n(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -37420,7 +37222,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @m.setter
-    def m(self, value):
+    def m(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -37433,7 +37235,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @flrise.setter
-    def flrise(self, value):
+    def flrise(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -37446,7 +37248,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 25)
 
     @hsrise.setter
-    def hsrise(self, value):
+    def hsrise(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
     @property
@@ -37459,7 +37261,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 26)
 
     @pctloadloss.setter
-    def pctloadloss(self, value):
+    def pctloadloss(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
     @property
@@ -37472,7 +37274,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 27)
 
     @pctnoloadloss.setter
-    def pctnoloadloss(self, value):
+    def pctnoloadloss(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
     @property
@@ -37485,7 +37287,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 28)
 
     @normhkVA.setter
-    def normhkVA(self, value):
+    def normhkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
     @property
@@ -37498,7 +37300,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 29)
 
     @emerghkVA.setter
-    def emerghkVA(self, value):
+    def emerghkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
     @property
@@ -37529,7 +37331,7 @@ class AutoTransBatch(DSSBatch):
 
     @MaxTap.setter
     def MaxTap(self, value: Float64Array):
-        self._set_float64_array(31, value)
+        self._set_float64_array_o(31, value)
 
     @property
     def MinTap(self) -> List[Float64Array]:
@@ -37545,7 +37347,7 @@ class AutoTransBatch(DSSBatch):
 
     @MinTap.setter
     def MinTap(self, value: Float64Array):
-        self._set_float64_array(32, value)
+        self._set_float64_array_o(32, value)
 
     @property
     def NumTaps(self) -> List[Int32Array]:
@@ -37574,10 +37376,8 @@ class AutoTransBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 34) 
 
     @subname.setter
-    def subname(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 34, value)
+    def subname(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(34, value)
 
     @property
     def pctimag(self) -> BatchFloat64ArrayProxy:
@@ -37589,7 +37389,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 35)
 
     @pctimag.setter
-    def pctimag(self, value):
+    def pctimag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
     @property
@@ -37602,7 +37402,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 36)
 
     @ppm_antifloat.setter
-    def ppm_antifloat(self, value):
+    def ppm_antifloat(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(36, value)
 
     @property
@@ -37621,7 +37421,7 @@ class AutoTransBatch(DSSBatch):
 
     @pctRs.setter
     def pctRs(self, value: Float64Array):
-        self._set_float64_array(37, value)
+        self._set_float64_array_o(37, value)
 
     @property
     def XRConst(self) -> List[bool]:
@@ -37647,14 +37447,11 @@ class AutoTransBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 39)
 
     @LeadLag.setter
-    def LeadLag(self, value: Union[AnyStr, int, PhaseSequence, List[AnyStr], List[Union[int, PhaseSequence]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def LeadLag(self, value: Union[AnyStr, int, PhaseSequence, List[AnyStr], List[int], List[PhaseSequence], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(39, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(39, value)
 
     @property
@@ -37690,7 +37487,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 41)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(41, value)
 
     @property
@@ -37703,7 +37500,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 42)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(42, value)
 
     @property
@@ -37716,7 +37513,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 43)
 
     @faultrate.setter
-    def faultrate(self, value):
+    def faultrate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(43, value)
 
     @property
@@ -37729,7 +37526,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 44)
 
     @pctperm.setter
-    def pctperm(self, value):
+    def pctperm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(44, value)
 
     @property
@@ -37742,7 +37539,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 45)
 
     @repair.setter
-    def repair(self, value):
+    def repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(45, value)
 
     @property
@@ -37755,7 +37552,7 @@ class AutoTransBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 46)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(46, value)
 
     @property
@@ -37800,15 +37597,11 @@ class RegControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @transformer.setter
-    def transformer(self, value: Union[AnyStr, Transformer, AutoTrans]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def transformer(self, value: Union[AnyStr, Transformer, AutoTrans, List[AnyStr], List[Union[Transformer, AutoTrans]]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def transformer_obj(self) -> List[str]:
+    def transformer_obj(self) -> List[Union[Transformer, AutoTrans]]:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -37816,7 +37609,7 @@ class RegControlBatch(DSSBatch):
 
         DSS property name: `transformer`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @transformer_obj.setter
     def transformer_obj(self, value: Union[Transformer, AutoTrans]):
@@ -37832,7 +37625,7 @@ class RegControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @winding.setter
-    def winding(self, value):
+    def winding(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -37845,7 +37638,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @vreg.setter
-    def vreg(self, value):
+    def vreg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -37858,7 +37651,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @band.setter
-    def band(self, value):
+    def band(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -37871,7 +37664,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @ptratio.setter
-    def ptratio(self, value):
+    def ptratio(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -37884,7 +37677,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @CTprim.setter
-    def CTprim(self, value):
+    def CTprim(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -37897,7 +37690,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @R.setter
-    def R(self, value):
+    def R(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -37910,7 +37703,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @X.setter
-    def X(self, value):
+    def X(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -37924,10 +37717,8 @@ class RegControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9) 
 
     @bus.setter
-    def bus(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 9, value)
+    def bus(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(9, value)
 
     @property
     def delay(self) -> BatchFloat64ArrayProxy:
@@ -37939,7 +37730,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @delay.setter
-    def delay(self, value):
+    def delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -37966,7 +37757,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @revvreg.setter
-    def revvreg(self, value):
+    def revvreg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -37979,7 +37770,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @revband.setter
-    def revband(self, value):
+    def revband(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -37992,7 +37783,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @revR.setter
-    def revR(self, value):
+    def revR(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -38005,7 +37796,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @revX.setter
-    def revX(self, value):
+    def revX(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -38018,7 +37809,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @tapdelay.setter
-    def tapdelay(self, value):
+    def tapdelay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -38049,7 +37840,7 @@ class RegControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 18)
 
     @maxtapchange.setter
-    def maxtapchange(self, value):
+    def maxtapchange(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(18, value)
 
     @property
@@ -38076,7 +37867,7 @@ class RegControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 20)
 
     @tapwinding.setter
-    def tapwinding(self, value):
+    def tapwinding(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(20, value)
 
     @property
@@ -38089,7 +37880,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @vlimit.setter
-    def vlimit(self, value):
+    def vlimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -38102,14 +37893,11 @@ class RegControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 22)
 
     @PTphase.setter
-    def PTphase(self, value: Union[AnyStr, int, RegControl.RegControlPhaseSelection, List[AnyStr], List[Union[int, RegControl.RegControlPhaseSelection]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def PTphase(self, value: Union[AnyStr, int, RegControl.RegControlPhaseSelection, List[AnyStr], List[int], List[RegControl.RegControlPhaseSelection], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(22, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(22, value)
 
     @property
@@ -38135,7 +37923,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @revThreshold.setter
-    def revThreshold(self, value):
+    def revThreshold(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -38148,7 +37936,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @revDelay.setter
-    def revDelay(self, value):
+    def revDelay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -38189,7 +37977,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 27)
 
     @RemotePTRatio.setter
-    def RemotePTRatio(self, value):
+    def RemotePTRatio(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
     @property
@@ -38202,7 +37990,7 @@ class RegControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 28)
 
     @TapNum.setter
-    def TapNum(self, value):
+    def TapNum(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(28, value)
 
     def Reset(self, value: bool):
@@ -38223,7 +38011,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 30)
 
     @LDC_Z.setter
-    def LDC_Z(self, value):
+    def LDC_Z(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
     @property
@@ -38236,7 +38024,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 31)
 
     @rev_Z.setter
-    def rev_Z(self, value):
+    def rev_Z(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(31, value)
 
     @property
@@ -38263,7 +38051,7 @@ class RegControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 33)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
     @property
@@ -38293,7 +38081,7 @@ class RegControlBatch(DSSBatch):
 class InvControlBatch(DSSBatch):
     _cls_name = 'InvControl'
     _obj_cls = InvControl
-    _cls_idx = 41
+    _cls_idx = 42
 
 
     @property
@@ -38308,7 +38096,7 @@ class InvControlBatch(DSSBatch):
         return self._get_string_ll(1)
 
     @DERList.setter
-    def DERList(self, value: List[str]):
+    def DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
@@ -38320,7 +38108,7 @@ class InvControlBatch(DSSBatch):
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
-        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR} 
+        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
         if the user desires to use modes simultaneously, then set the CombiMode property. Setting the Mode to any valid value disables combination mode.
 
         In volt-var mode (Default). This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
@@ -38333,19 +38121,18 @@ class InvControlBatch(DSSBatch):
 
         In watt-var mode. This mode attempts to CONTROL the vars, according to a watt-var curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
 
+        In GFM mode this control will trigger the GFM control routine for the DERs within the DERList. The GFM actiosn will only take place if the pointed DERs are in GFM mode. The controller parameters are locally setup at the DER.
+
         DSS property name: `Mode`, DSS property index: 2.
         """
         return BatchInt32ArrayProxy(self, 2)
 
     @Mode.setter
-    def Mode(self, value: Union[AnyStr, int, InvControl.InvControlControlMode, List[AnyStr], List[Union[int, InvControl.InvControlControlMode]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Mode(self, value: Union[AnyStr, int, InvControl.InvControlControlMode, List[AnyStr], List[int], List[InvControl.InvControlControlMode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(2, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(2, value)
 
     @property
@@ -38353,7 +38140,7 @@ class InvControlBatch(DSSBatch):
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
-        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR} 
+        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
         if the user desires to use modes simultaneously, then set the CombiMode property. Setting the Mode to any valid value disables combination mode.
 
         In volt-var mode (Default). This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
@@ -38365,6 +38152,8 @@ class InvControlBatch(DSSBatch):
         In watt-pf mode. This mode attempts to CONTROL the vars, according to a watt-pf curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
 
         In watt-var mode. This mode attempts to CONTROL the vars, according to a watt-var curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
+
+        In GFM mode this control will trigger the GFM control routine for the DERs within the DERList. The GFM actiosn will only take place if the pointed DERs are in GFM mode. The controller parameters are locally setup at the DER.
 
         DSS property name: `Mode`, DSS property index: 2.
         """
@@ -38391,14 +38180,11 @@ class InvControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 3)
 
     @CombiMode.setter
-    def CombiMode(self, value: Union[AnyStr, int, InvControl.InvControlCombiMode, List[AnyStr], List[Union[int, InvControl.InvControlCombiMode]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def CombiMode(self, value: Union[AnyStr, int, InvControl.InvControlCombiMode, List[AnyStr], List[int], List[InvControl.InvControlCombiMode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(3, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(3, value)
 
     @property
@@ -38436,15 +38222,11 @@ class InvControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4)
 
     @vvc_curve1.setter
-    def vvc_curve1(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(4, value)
-            return
-
-        self._set_batch_string(4, value)
+    def vvc_curve1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(4, value)
 
     @property
-    def vvc_curve1_obj(self) -> List[str]:
+    def vvc_curve1_obj(self) -> List[XYcurve]:
         """
         Required for VOLTVAR mode. 
 
@@ -38455,7 +38237,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `vvc_curve1`, DSS property index: 4.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 4)
 
     @vvc_curve1_obj.setter
     def vvc_curve1_obj(self, value: XYcurve):
@@ -38481,7 +38263,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @hysteresis_offset.setter
-    def hysteresis_offset(self, value):
+    def hysteresis_offset(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -38504,14 +38286,11 @@ class InvControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @voltage_curvex_ref.setter
-    def voltage_curvex_ref(self, value: Union[AnyStr, int, InvControl.InvControlVoltageCurveXRef, List[AnyStr], List[Union[int, InvControl.InvControlVoltageCurveXRef]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def voltage_curvex_ref(self, value: Union[AnyStr, int, InvControl.InvControlVoltageCurveXRef, List[AnyStr], List[int], List[InvControl.InvControlVoltageCurveXRef], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(6, value)
 
     @property
@@ -38555,7 +38334,7 @@ class InvControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 7)
 
     @avgwindowlen.setter
-    def avgwindowlen(self, value):
+    def avgwindowlen(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(7, value)
 
     @property
@@ -38574,15 +38353,11 @@ class InvControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
 
     @voltwatt_curve.setter
-    def voltwatt_curve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(8, value)
-            return
-
-        self._set_batch_string(8, value)
+    def voltwatt_curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(8, value)
 
     @property
-    def voltwatt_curve_obj(self) -> List[str]:
+    def voltwatt_curve_obj(self) -> List[XYcurve]:
         """
         Required for VOLTWATT mode. 
 
@@ -38594,7 +38369,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `voltwatt_curve`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 8)
 
     @voltwatt_curve_obj.setter
     def voltwatt_curve_obj(self, value: XYcurve):
@@ -38612,7 +38387,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @DbVMin.setter
-    def DbVMin(self, value):
+    def DbVMin(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -38627,7 +38402,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @DbVMax.setter
-    def DbVMax(self, value):
+    def DbVMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -38646,7 +38421,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @ArGraLowV.setter
-    def ArGraLowV(self, value):
+    def ArGraLowV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -38665,7 +38440,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @ArGraHiV.setter
-    def ArGraHiV(self, value):
+    def ArGraHiV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -38686,7 +38461,7 @@ class InvControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 13)
 
     @DynReacavgwindowlen.setter
-    def DynReacavgwindowlen(self, value):
+    def DynReacavgwindowlen(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(13, value)
 
     @property
@@ -38701,14 +38476,16 @@ class InvControlBatch(DSSBatch):
 
         if numerical instability is noticed in solutions such as var sign changing from one control iteration to the next and voltages oscillating between two values with some separation, this is an indication of numerical instability (use the EventLog to diagnose). 
 
-        if the maximum control iterations are exceeded, and no numerical instability is seen in the EventLog of via monitors, then try increasing the value of this parameter to reduce the number of control iterations needed to achieve the control criteria, and move to the power flow solution.
+        if the maximum control iterations are exceeded, and no numerical instability is seen in the EventLog of via monitors, then try increasing the value of this parameter to reduce the number of control iterations needed to achieve the control criteria, and move to the power flow solution. 
+
+        When operating the controller using expoenential control model (see CtrlModel), this parameter represents the sampling time gain of the controller, which is used for accelrating the controller response in terms of control iterations required.
 
         DSS property name: `deltaQ_Factor`, DSS property index: 14.
         """
         return BatchFloat64ArrayProxy(self, 14)
 
     @deltaQ_Factor.setter
-    def deltaQ_Factor(self, value):
+    def deltaQ_Factor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -38727,7 +38504,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @VoltageChangeTolerance.setter
-    def VoltageChangeTolerance(self, value):
+    def VoltageChangeTolerance(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -38746,7 +38523,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @VarChangeTolerance.setter
-    def VarChangeTolerance(self, value):
+    def VarChangeTolerance(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -38769,14 +38546,11 @@ class InvControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 17)
 
     @VoltwattYAxis.setter
-    def VoltwattYAxis(self, value: Union[AnyStr, int, InvControl.InvControlVoltWattYAxis, List[AnyStr], List[Union[int, InvControl.InvControlVoltWattYAxis]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def VoltwattYAxis(self, value: Union[AnyStr, int, InvControl.InvControlVoltWattYAxis, List[AnyStr], List[int], List[InvControl.InvControlVoltWattYAxis], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(17, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(17, value)
 
     @property
@@ -38820,14 +38594,11 @@ class InvControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 18)
 
     @RateofChangeMode.setter
-    def RateofChangeMode(self, value: Union[AnyStr, int, InvControl.InvControlRateOfChangeMode, List[AnyStr], List[Union[int, InvControl.InvControlRateOfChangeMode]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def RateofChangeMode(self, value: Union[AnyStr, int, InvControl.InvControlRateOfChangeMode, List[AnyStr], List[int], List[InvControl.InvControlRateOfChangeMode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(18, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(18, value)
 
     @property
@@ -38863,7 +38634,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @LPFTau.setter
-    def LPFTau(self, value):
+    def LPFTau(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -38878,7 +38649,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @RiseFallLimit.setter
-    def RiseFallLimit(self, value):
+    def RiseFallLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -38900,13 +38671,13 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @deltaP_Factor.setter
-    def deltaP_Factor(self, value):
+    def deltaP_Factor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
     def EventLog(self) -> List[bool]:
         """
-        {Yes/True* | No/False} Default is YES for InvControl. Log control actions to Eventlog.
+        {Yes/True | No/False*} Default is NO for InvControl. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 22.
         """
@@ -38933,14 +38704,11 @@ class InvControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 23)
 
     @RefReactivePower.setter
-    def RefReactivePower(self, value: Union[AnyStr, int, InvControl.InvControlReactivePowerReference, List[AnyStr], List[Union[int, InvControl.InvControlReactivePowerReference]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def RefReactivePower(self, value: Union[AnyStr, int, InvControl.InvControlReactivePowerReference, List[AnyStr], List[int], List[InvControl.InvControlReactivePowerReference], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(23, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(23, value)
 
     @property
@@ -38978,7 +38746,7 @@ class InvControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @ActivePChangeTolerance.setter
-    def ActivePChangeTolerance(self, value):
+    def ActivePChangeTolerance(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -38991,14 +38759,11 @@ class InvControlBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 25)
 
     @monVoltageCalc.setter
-    def monVoltageCalc(self, value: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[Union[int, MonitoredPhase]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def monVoltageCalc(self, value: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[int], List[MonitoredPhase], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(25, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(25, value)
 
     @property
@@ -39024,7 +38789,7 @@ class InvControlBatch(DSSBatch):
         return self._get_string_ll(26)
 
     @monBus.setter
-    def monBus(self, value: List[str]):
+    def monBus(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 26, value_ptr, value_count)
@@ -39045,7 +38810,7 @@ class InvControlBatch(DSSBatch):
 
     @MonBusesVbase.setter
     def MonBusesVbase(self, value: Float64Array):
-        self._set_float64_array(27, value)
+        self._set_float64_array_o(27, value)
 
     @property
     def voltwattCH_curve(self) -> List[str]:
@@ -39065,15 +38830,11 @@ class InvControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 28)
 
     @voltwattCH_curve.setter
-    def voltwattCH_curve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(28, value)
-            return
-
-        self._set_batch_string(28, value)
+    def voltwattCH_curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(28, value)
 
     @property
-    def voltwattCH_curve_obj(self) -> List[str]:
+    def voltwattCH_curve_obj(self) -> List[XYcurve]:
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
@@ -39087,7 +38848,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `voltwattCH_curve`, DSS property index: 28.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 28)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 28)
 
     @voltwattCH_curve_obj.setter
     def voltwattCH_curve_obj(self, value: XYcurve):
@@ -39116,15 +38877,11 @@ class InvControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 29)
 
     @wattpf_curve.setter
-    def wattpf_curve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(29, value)
-            return
-
-        self._set_batch_string(29, value)
+    def wattpf_curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(29, value)
 
     @property
-    def wattpf_curve_obj(self) -> List[str]:
+    def wattpf_curve_obj(self) -> List[XYcurve]:
         """
         Required for WATTPF mode.
 
@@ -39143,7 +38900,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `wattpf_curve`, DSS property index: 29.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 29)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 29)
 
     @wattpf_curve_obj.setter
     def wattpf_curve_obj(self, value: XYcurve):
@@ -39164,15 +38921,11 @@ class InvControlBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30)
 
     @wattvar_curve.setter
-    def wattvar_curve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(30, value)
-            return
-
-        self._set_batch_string(30, value)
+    def wattvar_curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(30, value)
 
     @property
-    def wattvar_curve_obj(self) -> List[str]:
+    def wattvar_curve_obj(self) -> List[XYcurve]:
         """
         Required for WATTVAR mode. 
 
@@ -39183,68 +38936,70 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `wattvar_curve`, DSS property index: 30.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 30)
 
     @wattvar_curve_obj.setter
     def wattvar_curve_obj(self, value: XYcurve):
         self._set_batch_string(30, value)
 
     @property
-    def PVSystemList(self) -> List[List[str]]:
-        """
-        Deprecated, use DERList instead.
-
-        DSS property name: `PVSystemList`, DSS property index: 31.
-        """
-        return self._get_string_ll(31)
-
-    @PVSystemList.setter
-    def PVSystemList(self, value: List[str]):
-        value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
-            self._lib.Obj_SetStringArray(x, 31, value_ptr, value_count)
-    
-        self._check_for_error()
-
-    @property
     def Vsetpoint(self) -> BatchFloat64ArrayProxy:
         """
         Required for Active Voltage Regulation (AVR).
 
-        DSS property name: `Vsetpoint`, DSS property index: 32.
+        DSS property name: `Vsetpoint`, DSS property index: 33.
         """
-        return BatchFloat64ArrayProxy(self, 32)
+        return BatchFloat64ArrayProxy(self, 33)
 
     @Vsetpoint.setter
-    def Vsetpoint(self, value):
-        self._set_batch_float64_array(32, value)
+    def Vsetpoint(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(33, value)
+
+    @property
+    def ControlModel(self) -> BatchInt32ArrayProxy:
+        """
+        Integer defining the method for moving across the control curve. It can be one of the following:
+
+        0 = Linear mode (default)
+        1 = Exponential
+
+        Use this property for better tunning your controller and improve the controller response in terms of control iterations needed to reach the target.
+        This property alters the meaning of deltaQ_factor and deltaP_factor properties accroding to its value (Check help). The method can also be combined with the controller tolerance for improving performance.
+
+        DSS property name: `ControlModel`, DSS property index: 34.
+        """
+        return BatchInt32ArrayProxy(self, 34)
+
+    @ControlModel.setter
+    def ControlModel(self, value: Union[int, InvControl.InvControlControlModel, Int32Array]):
+        self._set_batch_int32_array(34, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 33.
+        DSS property name: `basefreq`, DSS property index: 35.
         """
-        return BatchFloat64ArrayProxy(self, 33)
+        return BatchFloat64ArrayProxy(self, 35)
 
     @basefreq.setter
-    def basefreq(self, value):
-        self._set_batch_float64_array(33, value)
+    def basefreq(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(35, value)
 
     @property
     def enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 34.
+        DSS property name: `enabled`, DSS property index: 36.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 34)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 36)
         ]
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 34, value)
+        self._lib.Batch_SetInt32(self.pointer[0], self.count[0], 36, value)
 
     def like(self, value: AnyStr):
         """
@@ -39252,14 +39007,14 @@ class InvControlBatch(DSSBatch):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 35.
+        DSS property name: `like`, DSS property index: 37.
         """
-        self._set_batch_string(35, value)
+        self._set_batch_string(37, value)
 
 class ExpControlBatch(DSSBatch):
     _cls_name = 'ExpControl'
     _obj_cls = ExpControl
-    _cls_idx = 42
+    _cls_idx = 43
 
 
     @property
@@ -39274,7 +39029,7 @@ class ExpControlBatch(DSSBatch):
         return self._get_string_ll(1)
 
     @PVSystemList.setter
-    def PVSystemList(self, value: List[str]):
+    def PVSystemList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
@@ -39293,7 +39048,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 2)
 
     @Vreg.setter
-    def Vreg(self, value):
+    def Vreg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
     @property
@@ -39308,7 +39063,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @Slope.setter
-    def Slope(self, value):
+    def Slope(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -39323,7 +39078,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @VregTau.setter
-    def VregTau(self, value):
+    def VregTau(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -39338,7 +39093,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @Qbias.setter
-    def Qbias(self, value):
+    def Qbias(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -39351,7 +39106,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @VregMin.setter
-    def VregMin(self, value):
+    def VregMin(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -39364,7 +39119,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @VregMax.setter
-    def VregMax(self, value):
+    def VregMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -39379,7 +39134,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @QmaxLead.setter
-    def QmaxLead(self, value):
+    def QmaxLead(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -39394,7 +39149,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @QmaxLag.setter
-    def QmaxLag(self, value):
+    def QmaxLag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -39423,7 +39178,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @DeltaQ_factor.setter
-    def DeltaQ_factor(self, value):
+    def DeltaQ_factor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -39454,7 +39209,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @Tresponse.setter
-    def Tresponse(self, value):
+    def Tresponse(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -39469,7 +39224,7 @@ class ExpControlBatch(DSSBatch):
         return self._get_string_ll(14)
 
     @DERList.setter
-    def DERList(self, value: List[str]):
+    def DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 14, value_ptr, value_count)
@@ -39486,7 +39241,7 @@ class ExpControlBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -39516,7 +39271,7 @@ class ExpControlBatch(DSSBatch):
 class GICLineBatch(DSSBatch):
     _cls_name = 'GICLine'
     _obj_cls = GICLine
-    _cls_idx = 43
+    _cls_idx = 44
 
 
     @property
@@ -39532,10 +39287,8 @@ class GICLineBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @bus1.setter
-    def bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def bus2(self) -> List[str]:
@@ -39552,10 +39305,8 @@ class GICLineBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @bus2.setter
-    def bus2(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def bus2(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def Volts(self) -> BatchFloat64ArrayProxy:
@@ -39575,7 +39326,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @Volts.setter
-    def Volts(self, value):
+    def Volts(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -39588,7 +39339,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @Angle.setter
-    def Angle(self, value):
+    def Angle(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -39601,7 +39352,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @frequency.setter
-    def frequency(self, value):
+    def frequency(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -39614,7 +39365,7 @@ class GICLineBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(6, value)
 
     @property
@@ -39627,7 +39378,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @R.setter
-    def R(self, value):
+    def R(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -39640,7 +39391,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @X.setter
-    def X(self, value):
+    def X(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -39653,7 +39404,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @C.setter
-    def C(self, value):
+    def C(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -39666,7 +39417,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @EN.setter
-    def EN(self, value):
+    def EN(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -39679,7 +39430,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @EE.setter
-    def EE(self, value):
+    def EE(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -39692,7 +39443,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @Lat1.setter
-    def Lat1(self, value):
+    def Lat1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -39705,7 +39456,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @Lon1.setter
-    def Lon1(self, value):
+    def Lon1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -39718,7 +39469,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @Lat2.setter
-    def Lat2(self, value):
+    def Lat2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -39731,7 +39482,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @Lon2.setter
-    def Lon2(self, value):
+    def Lon2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -39744,21 +39495,17 @@ class GICLineBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 16)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(16, value)
-            return
-
-        self._set_batch_string(16, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(16, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
         DSS property name: `spectrum`, DSS property index: 16.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 16)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 16)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
@@ -39774,7 +39521,7 @@ class GICLineBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -39804,7 +39551,7 @@ class GICLineBatch(DSSBatch):
 class GICTransformerBatch(DSSBatch):
     _cls_name = 'GICTransformer'
     _obj_cls = GICTransformer
-    _cls_idx = 44
+    _cls_idx = 45
 
 
     @property
@@ -39820,10 +39567,8 @@ class GICTransformerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
 
     @BusH.setter
-    def BusH(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 1, value)
+    def BusH(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
     def BusNH(self) -> List[str]:
@@ -39836,10 +39581,8 @@ class GICTransformerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @BusNH.setter
-    def BusNH(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def BusNH(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def BusX(self) -> List[str]:
@@ -39852,10 +39595,8 @@ class GICTransformerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3) 
 
     @BusX.setter
-    def BusX(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 3, value)
+    def BusX(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(3, value)
 
     @property
     def BusNX(self) -> List[str]:
@@ -39868,10 +39609,8 @@ class GICTransformerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4) 
 
     @BusNX.setter
-    def BusNX(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 4, value)
+    def BusNX(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(4, value)
 
     @property
     def phases(self) -> BatchInt32ArrayProxy:
@@ -39883,7 +39622,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 5)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(5, value)
 
     @property
@@ -39896,14 +39635,11 @@ class GICTransformerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @Type.setter
-    def Type(self, value: Union[AnyStr, int, GICTransformer.GICTransformerType, List[AnyStr], List[Union[int, GICTransformer.GICTransformerType]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def Type(self, value: Union[AnyStr, int, GICTransformer.GICTransformerType, List[AnyStr], List[int], List[GICTransformer.GICTransformerType], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(6, value)
 
     @property
@@ -39929,7 +39665,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @R1.setter
-    def R1(self, value):
+    def R1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -39942,7 +39678,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @R2.setter
-    def R2(self, value):
+    def R2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -39955,7 +39691,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @KVLL1.setter
-    def KVLL1(self, value):
+    def KVLL1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -39968,7 +39704,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @KVLL2.setter
-    def KVLL2(self, value):
+    def KVLL2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -39981,7 +39717,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @MVA.setter
-    def MVA(self, value):
+    def MVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -39994,21 +39730,17 @@ class GICTransformerBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
 
     @VarCurve.setter
-    def VarCurve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(12, value)
-            return
-
-        self._set_batch_string(12, value)
+    def VarCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(12, value)
 
     @property
-    def VarCurve_obj(self) -> List[str]:
+    def VarCurve_obj(self) -> List[XYcurve]:
         """
         Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
 
         DSS property name: `VarCurve`, DSS property index: 12.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 12)
 
     @VarCurve_obj.setter
     def VarCurve_obj(self, value: XYcurve):
@@ -40026,7 +39758,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @pctR1.setter
-    def pctR1(self, value):
+    def pctR1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -40041,7 +39773,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @pctR2.setter
-    def pctR2(self, value):
+    def pctR2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -40058,7 +39790,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @K.setter
-    def K(self, value):
+    def K(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -40071,7 +39803,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @normamps.setter
-    def normamps(self, value):
+    def normamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -40084,7 +39816,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @emergamps.setter
-    def emergamps(self, value):
+    def emergamps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -40097,7 +39829,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @faultrate.setter
-    def faultrate(self, value):
+    def faultrate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -40110,7 +39842,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @pctperm.setter
-    def pctperm(self, value):
+    def pctperm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -40123,7 +39855,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @repair.setter
-    def repair(self, value):
+    def repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -40136,7 +39868,7 @@ class GICTransformerBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -40166,7 +39898,7 @@ class GICTransformerBatch(DSSBatch):
 class VSConverterBatch(DSSBatch):
     _cls_name = 'VSConverter'
     _obj_cls = VSConverter
-    _cls_idx = 45
+    _cls_idx = 46
 
 
     @property
@@ -40179,7 +39911,7 @@ class VSConverterBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 1)
 
     @phases.setter
-    def phases(self, value):
+    def phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
     @property
@@ -40193,10 +39925,8 @@ class VSConverterBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
 
     @Bus1.setter
-    def Bus1(self, value: AnyStr): #TODO: list of AnyStr
-        if not isinstance(value, bytes):
-            value = value.encode(self._api_util.codec)
-        self._lib.Batch_SetString(self.pointer[0], self.count[0], 2, value)
+    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(2, value)
 
     @property
     def kVac(self) -> BatchFloat64ArrayProxy:
@@ -40208,7 +39938,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @kVac.setter
-    def kVac(self, value):
+    def kVac(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -40221,7 +39951,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 4)
 
     @kVdc.setter
-    def kVdc(self, value):
+    def kVdc(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
     @property
@@ -40234,7 +39964,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @kW.setter
-    def kW(self, value):
+    def kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -40247,7 +39977,7 @@ class VSConverterBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 6)
 
     @Ndc.setter
-    def Ndc(self, value):
+    def Ndc(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(6, value)
 
     @property
@@ -40261,7 +39991,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 7)
 
     @Rac.setter
-    def Rac(self, value):
+    def Rac(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
     @property
@@ -40275,7 +40005,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @Xac.setter
-    def Xac(self, value):
+    def Xac(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -40288,7 +40018,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 9)
 
     @m0.setter
-    def m0(self, value):
+    def m0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
     @property
@@ -40301,7 +40031,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 10)
 
     @d0.setter
-    def d0(self, value):
+    def d0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
     @property
@@ -40314,7 +40044,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @Mmin.setter
-    def Mmin(self, value):
+    def Mmin(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -40327,7 +40057,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @Mmax.setter
-    def Mmax(self, value):
+    def Mmax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -40340,7 +40070,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @Iacmax.setter
-    def Iacmax(self, value):
+    def Iacmax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -40353,7 +40083,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 14)
 
     @Idcmax.setter
-    def Idcmax(self, value):
+    def Idcmax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
     @property
@@ -40367,7 +40097,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 15)
 
     @Vacref.setter
-    def Vacref(self, value):
+    def Vacref(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
     @property
@@ -40381,7 +40111,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 16)
 
     @Pacref.setter
-    def Pacref(self, value):
+    def Pacref(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
     @property
@@ -40395,7 +40125,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 17)
 
     @Qacref.setter
-    def Qacref(self, value):
+    def Qacref(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
     @property
@@ -40409,7 +40139,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @Vdcref.setter
-    def Vdcref(self, value):
+    def Vdcref(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -40422,14 +40152,11 @@ class VSConverterBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 19)
 
     @VscMode.setter
-    def VscMode(self, value: Union[AnyStr, int, VSConverter.VSConverterControlMode, List[AnyStr], List[Union[int, VSConverter.VSConverterControlMode]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def VscMode(self, value: Union[AnyStr, int, VSConverter.VSConverterControlMode, List[AnyStr], List[int], List[VSConverter.VSConverterControlMode], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(19, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(19, value)
 
     @property
@@ -40455,21 +40182,17 @@ class VSConverterBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 20)
 
     @spectrum.setter
-    def spectrum(self, value: Union[AnyStr, Spectrum]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(20, value)
-            return
-
-        self._set_batch_string(20, value)
+    def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
+        self._set_batch_obj_prop(20, value)
 
     @property
-    def spectrum_obj(self) -> List[str]:
+    def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic spectrum for this device.
 
         DSS property name: `spectrum`, DSS property index: 20.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 20)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 20)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
@@ -40485,7 +40208,7 @@ class VSConverterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -40515,7 +40238,7 @@ class VSConverterBatch(DSSBatch):
 class MonitorBatch(DSSBatch):
     _cls_name = 'Monitor'
     _obj_cls = Monitor
-    _cls_idx = 46
+    _cls_idx = 47
 
 
     @property
@@ -40528,21 +40251,17 @@ class MonitorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @element.setter
-    def element(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def element_obj(self) -> List[str]:
+    def element_obj(self) -> List[DSSObj]:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
         DSS property name: `element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @element_obj.setter
     def element_obj(self, value: DSSObj):
@@ -40558,7 +40277,7 @@ class MonitorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @terminal.setter
-    def terminal(self, value):
+    def terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -40595,10 +40314,10 @@ class MonitorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 3)
 
     @mode.setter
-    def mode(self, value):
+    def mode(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(3, value)
 
-    def action(self, value: Union[str, bytes, int]):
+    def action(self, value: Union[str, bytes, int, Monitor.MonitorAction]):
         """
         {Clear | Save | Take | Process}
         (C)lears or (S)aves current buffer.
@@ -40666,7 +40385,7 @@ class MonitorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 8)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
     @property
@@ -40696,7 +40415,7 @@ class MonitorBatch(DSSBatch):
 class EnergyMeterBatch(DSSBatch):
     _cls_name = 'EnergyMeter'
     _obj_cls = EnergyMeter
-    _cls_idx = 47
+    _cls_idx = 48
 
 
     @property
@@ -40709,21 +40428,17 @@ class EnergyMeterBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @element.setter
-    def element(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def element_obj(self) -> List[str]:
+    def element_obj(self) -> List[DSSObj]:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
         DSS property name: `element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @element_obj.setter
     def element_obj(self, value: DSSObj):
@@ -40739,10 +40454,10 @@ class EnergyMeterBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @terminal.setter
-    def terminal(self, value):
+    def terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    def action(self, value: Union[str, bytes, int]):
+    def action(self, value: Union[str, bytes, int, EnergyMeter.EnergyMeterAction]):
         """
         {Clear (reset) | Save | Take | Zonedump | Allocate | Reduce} 
 
@@ -40781,7 +40496,7 @@ class EnergyMeterBatch(DSSBatch):
         return self._get_string_ll(4)
 
     @option.setter
-    def option(self, value: List[str]):
+    def option(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 4, value_ptr, value_count)
@@ -40798,7 +40513,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 5)
 
     @kVAnormal.setter
-    def kVAnormal(self, value):
+    def kVAnormal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
     @property
@@ -40811,7 +40526,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 6)
 
     @kVAemerg.setter
-    def kVAemerg(self, value):
+    def kVAemerg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
     @property
@@ -40828,7 +40543,7 @@ class EnergyMeterBatch(DSSBatch):
 
     @peakcurrent.setter
     def peakcurrent(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def Zonelist(self) -> List[List[str]]:
@@ -40843,7 +40558,7 @@ class EnergyMeterBatch(DSSBatch):
         return self._get_string_ll(8)
 
     @Zonelist.setter
-    def Zonelist(self, value: List[str]):
+    def Zonelist(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, 8, value_ptr, value_count)
@@ -40878,7 +40593,7 @@ class EnergyMeterBatch(DSSBatch):
 
     @Mask.setter
     def Mask(self, value: Float64Array):
-        self._set_float64_array(10, value)
+        self._set_float64_array_o(10, value)
 
     @property
     def Losses(self) -> List[bool]:
@@ -40988,7 +40703,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 18)
 
     @Int_Rate.setter
-    def Int_Rate(self, value):
+    def Int_Rate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
     @property
@@ -41001,7 +40716,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 19)
 
     @Int_Duration.setter
-    def Int_Duration(self, value):
+    def Int_Duration(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
     @property
@@ -41014,7 +40729,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 20)
 
     @SAIFI.setter
-    def SAIFI(self, value):
+    def SAIFI(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
     @property
@@ -41027,7 +40742,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 21)
 
     @SAIFIkW.setter
-    def SAIFIkW(self, value):
+    def SAIFIkW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
     @property
@@ -41040,7 +40755,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 22)
 
     @SAIDI.setter
-    def SAIDI(self, value):
+    def SAIDI(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
     @property
@@ -41053,7 +40768,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 23)
 
     @CAIDI.setter
-    def CAIDI(self, value):
+    def CAIDI(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
     @property
@@ -41066,7 +40781,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 24)
 
     @CustInterrupts.setter
-    def CustInterrupts(self, value):
+    def CustInterrupts(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
     @property
@@ -41079,7 +40794,7 @@ class EnergyMeterBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 25)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
     @property
@@ -41109,7 +40824,7 @@ class EnergyMeterBatch(DSSBatch):
 class SensorBatch(DSSBatch):
     _cls_name = 'Sensor'
     _obj_cls = Sensor
-    _cls_idx = 48
+    _cls_idx = 49
 
 
     @property
@@ -41122,21 +40837,17 @@ class SensorBatch(DSSBatch):
         return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
 
     @element.setter
-    def element(self, value: Union[AnyStr, DSSObj]):
-        if isinstance(value, DSSObj):
-            self._set_batch_obj(1, value)
-            return
-
-        self._set_batch_string(1, value)
+    def element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
-    def element_obj(self) -> List[str]:
+    def element_obj(self) -> List[DSSObj]:
         """
         Name (Full Object name) of element to which the Sensor is connected.
 
         DSS property name: `element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
 
     @element_obj.setter
     def element_obj(self, value: DSSObj):
@@ -41152,7 +40863,7 @@ class SensorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 2)
 
     @terminal.setter
-    def terminal(self, value):
+    def terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
     @property
@@ -41166,7 +40877,7 @@ class SensorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 3)
 
     @kvbase.setter
-    def kvbase(self, value):
+    def kvbase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
     @property
@@ -41197,7 +40908,7 @@ class SensorBatch(DSSBatch):
 
     @kVs.setter
     def kVs(self, value: Float64Array):
-        self._set_float64_array(5, value)
+        self._set_float64_array_o(5, value)
 
     @property
     def currents(self) -> List[Float64Array]:
@@ -41213,7 +40924,7 @@ class SensorBatch(DSSBatch):
 
     @currents.setter
     def currents(self, value: Float64Array):
-        self._set_float64_array(6, value)
+        self._set_float64_array_o(6, value)
 
     @property
     def kWs(self) -> List[Float64Array]:
@@ -41230,7 +40941,7 @@ class SensorBatch(DSSBatch):
 
     @kWs.setter
     def kWs(self, value: Float64Array):
-        self._set_float64_array(7, value)
+        self._set_float64_array_o(7, value)
 
     @property
     def kvars(self) -> List[Float64Array]:
@@ -41246,7 +40957,7 @@ class SensorBatch(DSSBatch):
 
     @kvars.setter
     def kvars(self, value: Float64Array):
-        self._set_float64_array(8, value)
+        self._set_float64_array_o(8, value)
 
     @property
     def conn(self) -> BatchInt32ArrayProxy:
@@ -41260,14 +40971,11 @@ class SensorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 9)
 
     @conn.setter
-    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[Union[int, Connection]]]):
-        if isinstance(value, str) or isinstance(value, bytes):
+    def conn(self, value: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]):
+        if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(9, value)
             return
     
-        if not isinstance(value, int) and (isinstance(value[0], str) or isinstance(value[0], bytes)):
-            raise NotImplementedError
-
         self._set_batch_int32_array(9, value)
 
     @property
@@ -41295,7 +41003,7 @@ class SensorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 10)
 
     @Deltadirection.setter
-    def Deltadirection(self, value):
+    def Deltadirection(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(10, value)
 
     @property
@@ -41308,7 +41016,7 @@ class SensorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 11)
 
     @pctError.setter
-    def pctError(self, value):
+    def pctError(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
     @property
@@ -41321,7 +41029,7 @@ class SensorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 12)
 
     @Weight.setter
-    def Weight(self, value):
+    def Weight(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
     @property
@@ -41334,7 +41042,7 @@ class SensorBatch(DSSBatch):
         return BatchFloat64ArrayProxy(self, 13)
 
     @basefreq.setter
-    def basefreq(self, value):
+    def basefreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
     @property
@@ -41360,6 +41068,4046 @@ class SensorBatch(DSSBatch):
         DSS property name: `like`, DSS property index: 15.
         """
         self._set_batch_string(15, value)
+
+class LineCodeBatchProperties(TypedDict):
+    nphases: Union[int, Int32Array]
+    r1: Union[float, Float64Array]
+    x1: Union[float, Float64Array]
+    r0: Union[float, Float64Array]
+    x0: Union[float, Float64Array]
+    C1: Union[float, Float64Array]
+    C0: Union[float, Float64Array]
+    units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    rmatrix: Float64Array
+    xmatrix: Float64Array
+    cmatrix: Float64Array
+    baseFreq: Union[float, Float64Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    faultrate: Union[float, Float64Array]
+    pctperm: Union[float, Float64Array]
+    repair: Union[float, Float64Array]
+    Kron: bool
+    Rg: Union[float, Float64Array]
+    Xg: Union[float, Float64Array]
+    rho: Union[float, Float64Array]
+    neutral: Union[int, Int32Array]
+    B1: Union[float, Float64Array]
+    B0: Union[float, Float64Array]
+    Seasons: Union[int, Int32Array]
+    Ratings: Float64Array
+    linetype: Union[AnyStr, int, LineType, List[AnyStr], List[int], List[LineType], Int32Array]
+    like: AnyStr
+
+class LoadShapeBatchProperties(TypedDict):
+    npts: Union[int, Int32Array]
+    interval: Union[float, Float64Array]
+    hour: Float64Array
+    mean: Union[float, Float64Array]
+    stddev: Union[float, Float64Array]
+    csvfile: Union[AnyStr, List[AnyStr]]
+    sngfile: Union[AnyStr, List[AnyStr]]
+    dblfile: Union[AnyStr, List[AnyStr]]
+    action: Union[str, bytes, int, LoadShape.LoadShapeAction]
+    qmult: Float64Array
+    UseActual: bool
+    Pmax: Union[float, Float64Array]
+    Qmax: Union[float, Float64Array]
+    sinterval: Union[float, Float64Array]
+    minterval: Union[float, Float64Array]
+    Pbase: Union[float, Float64Array]
+    Qbase: Union[float, Float64Array]
+    Pmult: Float64Array
+    PQCSVFile: Union[AnyStr, List[AnyStr]]
+    MemoryMapping: bool
+    like: AnyStr
+
+class TShapeBatchProperties(TypedDict):
+    npts: Union[int, Int32Array]
+    interval: Union[float, Float64Array]
+    temp: Float64Array
+    hour: Float64Array
+    mean: Union[float, Float64Array]
+    stddev: Union[float, Float64Array]
+    csvfile: Union[AnyStr, List[AnyStr]]
+    sngfile: Union[AnyStr, List[AnyStr]]
+    dblfile: Union[AnyStr, List[AnyStr]]
+    sinterval: Union[float, Float64Array]
+    minterval: Union[float, Float64Array]
+    action: Union[str, bytes, int, TShape.TShapeAction]
+    like: AnyStr
+
+class PriceShapeBatchProperties(TypedDict):
+    npts: Union[int, Int32Array]
+    interval: Union[float, Float64Array]
+    price: Float64Array
+    hour: Float64Array
+    mean: Union[float, Float64Array]
+    stddev: Union[float, Float64Array]
+    csvfile: Union[AnyStr, List[AnyStr]]
+    sngfile: Union[AnyStr, List[AnyStr]]
+    dblfile: Union[AnyStr, List[AnyStr]]
+    sinterval: Union[float, Float64Array]
+    minterval: Union[float, Float64Array]
+    action: Union[str, bytes, int, PriceShape.PriceShapeAction]
+    like: AnyStr
+
+class XYcurveBatchProperties(TypedDict):
+    npts: Union[int, Int32Array]
+    Yarray: Float64Array
+    Xarray: Float64Array
+    csvfile: Union[AnyStr, List[AnyStr]]
+    sngfile: Union[AnyStr, List[AnyStr]]
+    dblfile: Union[AnyStr, List[AnyStr]]
+    x: Union[float, Float64Array]
+    y: Union[float, Float64Array]
+    Xshift: Union[float, Float64Array]
+    Yshift: Union[float, Float64Array]
+    Xscale: Union[float, Float64Array]
+    Yscale: Union[float, Float64Array]
+    like: AnyStr
+
+class GrowthShapeBatchProperties(TypedDict):
+    npts: Union[int, Int32Array]
+    year: Float64Array
+    mult: Float64Array
+    csvfile: Union[AnyStr, List[AnyStr]]
+    sngfile: Union[AnyStr, List[AnyStr]]
+    dblfile: Union[AnyStr, List[AnyStr]]
+    like: AnyStr
+
+class TCC_CurveBatchProperties(TypedDict):
+    npts: Union[int, Int32Array]
+    C_array: Float64Array
+    T_array: Float64Array
+    like: AnyStr
+
+class SpectrumBatchProperties(TypedDict):
+    NumHarm: Union[int, Int32Array]
+    harmonic: Float64Array
+    pctmag: Float64Array
+    angle: Float64Array
+    CSVFile: Union[AnyStr, List[AnyStr]]
+    like: AnyStr
+
+class WireDataBatchProperties(TypedDict):
+    Rdc: Union[float, Float64Array]
+    Rac: Union[float, Float64Array]
+    Runits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    GMRac: Union[float, Float64Array]
+    GMRunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    radius: Union[float, Float64Array]
+    radunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    diam: Union[float, Float64Array]
+    Seasons: Union[int, Int32Array]
+    Ratings: Float64Array
+    Capradius: Union[float, Float64Array]
+    like: AnyStr
+
+class CNDataBatchProperties(TypedDict):
+    k: Union[int, Int32Array]
+    DiaStrand: Union[float, Float64Array]
+    GmrStrand: Union[float, Float64Array]
+    Rstrand: Union[float, Float64Array]
+    EpsR: Union[float, Float64Array]
+    InsLayer: Union[float, Float64Array]
+    DiaIns: Union[float, Float64Array]
+    DiaCable: Union[float, Float64Array]
+    Rdc: Union[float, Float64Array]
+    Rac: Union[float, Float64Array]
+    Runits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    GMRac: Union[float, Float64Array]
+    GMRunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    radius: Union[float, Float64Array]
+    radunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    diam: Union[float, Float64Array]
+    Seasons: Union[int, Int32Array]
+    Ratings: Float64Array
+    Capradius: Union[float, Float64Array]
+    like: AnyStr
+
+class TSDataBatchProperties(TypedDict):
+    DiaShield: Union[float, Float64Array]
+    TapeLayer: Union[float, Float64Array]
+    TapeLap: Union[float, Float64Array]
+    EpsR: Union[float, Float64Array]
+    InsLayer: Union[float, Float64Array]
+    DiaIns: Union[float, Float64Array]
+    DiaCable: Union[float, Float64Array]
+    Rdc: Union[float, Float64Array]
+    Rac: Union[float, Float64Array]
+    Runits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    GMRac: Union[float, Float64Array]
+    GMRunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    radius: Union[float, Float64Array]
+    radunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    diam: Union[float, Float64Array]
+    Seasons: Union[int, Int32Array]
+    Ratings: Float64Array
+    Capradius: Union[float, Float64Array]
+    like: AnyStr
+
+class LineSpacingBatchProperties(TypedDict):
+    nconds: Union[int, Int32Array]
+    nphases: Union[int, Int32Array]
+    x: Float64Array
+    h: Float64Array
+    units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    like: AnyStr
+
+class LineGeometryBatchProperties(TypedDict):
+    nconds: Union[int, Int32Array]
+    nphases: Union[int, Int32Array]
+    x: Float64Array
+    h: Float64Array
+    units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    reduce: bool
+    spacing: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]
+    wires: Union[List[AnyStr], List[WireData]]
+    cncables: Union[List[AnyStr], List[CNData]]
+    tscables: Union[List[AnyStr], List[TSData]]
+    Seasons: Union[int, Int32Array]
+    Ratings: Float64Array
+    linetype: Union[AnyStr, int, LineType, List[AnyStr], List[int], List[LineType], Int32Array]
+    like: AnyStr
+
+class XfmrCodeBatchProperties(TypedDict):
+    phases: Union[int, Int32Array]
+    windings: Union[int, Int32Array]
+    pctR: Float64Array
+    Rneut: Float64Array
+    Xneut: Float64Array
+    conns: Union[List[Union[int,Connection]], List[AnyStr]]
+    kVs: Float64Array
+    kVAs: Float64Array
+    taps: Float64Array
+    Xhl: Union[float, Float64Array]
+    Xht: Union[float, Float64Array]
+    Xlt: Union[float, Float64Array]
+    Xscarray: Float64Array
+    thermal: Union[float, Float64Array]
+    n: Union[float, Float64Array]
+    m: Union[float, Float64Array]
+    flrise: Union[float, Float64Array]
+    hsrise: Union[float, Float64Array]
+    pctloadloss: Union[float, Float64Array]
+    pctnoloadloss: Union[float, Float64Array]
+    normhkVA: Union[float, Float64Array]
+    emerghkVA: Union[float, Float64Array]
+    MaxTap: Float64Array
+    MinTap: Float64Array
+    NumTaps: Int32Array
+    pctimag: Union[float, Float64Array]
+    ppm_antifloat: Union[float, Float64Array]
+    pctRs: Float64Array
+    X12: Union[float, Float64Array]
+    X13: Union[float, Float64Array]
+    X23: Union[float, Float64Array]
+    RdcOhms: Float64Array
+    Seasons: Union[int, Int32Array]
+    Ratings: Float64Array
+    like: AnyStr
+
+class LineBatchProperties(TypedDict):
+    bus1: Union[AnyStr, List[AnyStr]]
+    bus2: Union[AnyStr, List[AnyStr]]
+    linecode: Union[AnyStr, LineCode, List[AnyStr], List[LineCode]]
+    length: Union[float, Float64Array]
+    phases: Union[int, Int32Array]
+    r1: Union[float, Float64Array]
+    x1: Union[float, Float64Array]
+    r0: Union[float, Float64Array]
+    x0: Union[float, Float64Array]
+    C1: Union[float, Float64Array]
+    C0: Union[float, Float64Array]
+    rmatrix: Float64Array
+    xmatrix: Float64Array
+    cmatrix: Float64Array
+    Switch: bool
+    Rg: Union[float, Float64Array]
+    Xg: Union[float, Float64Array]
+    rho: Union[float, Float64Array]
+    geometry: Union[AnyStr, LineGeometry, List[AnyStr], List[LineGeometry]]
+    units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    spacing: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]
+    wires: Union[List[AnyStr], List[WireData]]
+    earthmodel: Union[AnyStr, int, EarthModel, List[AnyStr], List[int], List[EarthModel], Int32Array]
+    cncables: Union[List[AnyStr], List[CNData]]
+    tscables: Union[List[AnyStr], List[TSData]]
+    B1: Union[float, Float64Array]
+    B0: Union[float, Float64Array]
+    Seasons: Union[int, Int32Array]
+    Ratings: Float64Array
+    linetype: Union[AnyStr, int, LineType, List[AnyStr], List[int], List[LineType], Int32Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    faultrate: Union[float, Float64Array]
+    pctperm: Union[float, Float64Array]
+    repair: Union[float, Float64Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class VsourceBatchProperties(TypedDict):
+    bus1: Union[AnyStr, List[AnyStr]]
+    basekv: Union[float, Float64Array]
+    pu: Union[float, Float64Array]
+    angle: Union[float, Float64Array]
+    frequency: Union[float, Float64Array]
+    phases: Union[int, Int32Array]
+    MVAsc3: Union[float, Float64Array]
+    MVAsc1: Union[float, Float64Array]
+    x1r1: Union[float, Float64Array]
+    x0r0: Union[float, Float64Array]
+    Isc3: Union[float, Float64Array]
+    Isc1: Union[float, Float64Array]
+    R1: Union[float, Float64Array]
+    X1: Union[float, Float64Array]
+    R0: Union[float, Float64Array]
+    X0: Union[float, Float64Array]
+    scantype: Union[AnyStr, int, ScanType, List[AnyStr], List[int], List[ScanType], Int32Array]
+    Sequence: Union[AnyStr, int, SequenceType, List[AnyStr], List[int], List[SequenceType], Int32Array]
+    bus2: Union[AnyStr, List[AnyStr]]
+    Z2: Union[complex, List[complex]]
+    puZ1: Union[complex, List[complex]]
+    puZ0: Union[complex, List[complex]]
+    puZ2: Union[complex, List[complex]]
+    baseMVA: Union[float, Float64Array]
+    Yearly: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Daily: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Duty: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Model: Union[AnyStr, int, Vsource.VSourceModel, List[AnyStr], List[int], List[Vsource.VSourceModel], Int32Array]
+    puZideal: Union[complex, List[complex]]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class IsourceBatchProperties(TypedDict):
+    bus1: Union[AnyStr, List[AnyStr]]
+    amps: Union[float, Float64Array]
+    angle: Union[float, Float64Array]
+    frequency: Union[float, Float64Array]
+    phases: Union[int, Int32Array]
+    scantype: Union[AnyStr, int, ScanType, List[AnyStr], List[int], List[ScanType], Int32Array]
+    sequence: Union[AnyStr, int, SequenceType, List[AnyStr], List[int], List[SequenceType], Int32Array]
+    Yearly: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Daily: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Duty: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Bus2: Union[AnyStr, List[AnyStr]]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class VCCSBatchProperties(TypedDict):
+    bus1: Union[AnyStr, List[AnyStr]]
+    phases: Union[int, Int32Array]
+    prated: Union[float, Float64Array]
+    vrated: Union[float, Float64Array]
+    ppct: Union[float, Float64Array]
+    bp1: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    bp2: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    filter: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    fsample: Union[float, Float64Array]
+    rmsmode: bool
+    imaxpu: Union[float, Float64Array]
+    vrmstau: Union[float, Float64Array]
+    irmstau: Union[float, Float64Array]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class LoadBatchProperties(TypedDict):
+    phases: Union[int, Int32Array]
+    bus1: Union[AnyStr, List[AnyStr]]
+    kV: Union[float, Float64Array]
+    kW: Union[float, Float64Array]
+    pf: Union[float, Float64Array]
+    model: Union[int, Load.LoadModel, Int32Array]
+    yearly: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    daily: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    duty: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    growth: Union[AnyStr, GrowthShape, List[AnyStr], List[GrowthShape]]
+    conn: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]
+    kvar: Union[float, Float64Array]
+    Rneut: Union[float, Float64Array]
+    Xneut: Union[float, Float64Array]
+    status: Union[AnyStr, int, Load.LoadStatus, List[AnyStr], List[int], List[Load.LoadStatus], Int32Array]
+    cls: Union[int, Int32Array]
+    Vminpu: Union[float, Float64Array]
+    Vmaxpu: Union[float, Float64Array]
+    Vminnorm: Union[float, Float64Array]
+    Vminemerg: Union[float, Float64Array]
+    xfkVA: Union[float, Float64Array]
+    allocationfactor: Union[float, Float64Array]
+    kVA: Union[float, Float64Array]
+    pctmean: Union[float, Float64Array]
+    pctstddev: Union[float, Float64Array]
+    CVRwatts: Union[float, Float64Array]
+    CVRvars: Union[float, Float64Array]
+    kwh: Union[float, Float64Array]
+    kwhdays: Union[float, Float64Array]
+    Cfactor: Union[float, Float64Array]
+    CVRcurve: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    NumCust: Union[int, Int32Array]
+    ZIPV: Float64Array
+    pctSeriesRL: Union[float, Float64Array]
+    RelWeight: Union[float, Float64Array]
+    Vlowpu: Union[float, Float64Array]
+    puXharm: Union[float, Float64Array]
+    XRharm: Union[float, Float64Array]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class TransformerBatchProperties(TypedDict):
+    phases: Union[int, Int32Array]
+    windings: Union[int, Int32Array]
+    pctR: Float64Array
+    Rneut: Float64Array
+    Xneut: Float64Array
+    buses: List[AnyStr]
+    conns: Union[List[Union[int,Connection]], List[AnyStr]]
+    kVs: Float64Array
+    kVAs: Float64Array
+    taps: Float64Array
+    XHL: Union[float, Float64Array]
+    XHT: Union[float, Float64Array]
+    XLT: Union[float, Float64Array]
+    Xscarray: Float64Array
+    thermal: Union[float, Float64Array]
+    n: Union[float, Float64Array]
+    m: Union[float, Float64Array]
+    flrise: Union[float, Float64Array]
+    hsrise: Union[float, Float64Array]
+    pctloadloss: Union[float, Float64Array]
+    pctnoloadloss: Union[float, Float64Array]
+    normhkVA: Union[float, Float64Array]
+    emerghkVA: Union[float, Float64Array]
+    sub: bool
+    MaxTap: Float64Array
+    MinTap: Float64Array
+    NumTaps: Int32Array
+    subname: Union[AnyStr, List[AnyStr]]
+    pctimag: Union[float, Float64Array]
+    ppm_antifloat: Union[float, Float64Array]
+    pctRs: Float64Array
+    bank: Union[AnyStr, List[AnyStr]]
+    xfmrcode: Union[AnyStr, XfmrCode, List[AnyStr], List[XfmrCode]]
+    XRConst: bool
+    X12: Union[float, Float64Array]
+    X13: Union[float, Float64Array]
+    X23: Union[float, Float64Array]
+    LeadLag: Union[AnyStr, int, PhaseSequence, List[AnyStr], List[int], List[PhaseSequence], Int32Array]
+    Core: Union[AnyStr, int, CoreType, List[AnyStr], List[int], List[CoreType], Int32Array]
+    RdcOhms: Float64Array
+    Seasons: Union[int, Int32Array]
+    Ratings: Float64Array
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    faultrate: Union[float, Float64Array]
+    pctperm: Union[float, Float64Array]
+    repair: Union[float, Float64Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class CapacitorBatchProperties(TypedDict):
+    bus1: Union[AnyStr, List[AnyStr]]
+    bus2: Union[AnyStr, List[AnyStr]]
+    phases: Union[int, Int32Array]
+    kvar: Float64Array
+    kv: Union[float, Float64Array]
+    conn: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]
+    cmatrix: Float64Array
+    cuf: Float64Array
+    R: Float64Array
+    XL: Float64Array
+    Harm: Float64Array
+    Numsteps: Union[int, Int32Array]
+    states: Int32Array
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    faultrate: Union[float, Float64Array]
+    pctperm: Union[float, Float64Array]
+    repair: Union[float, Float64Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class ReactorBatchProperties(TypedDict):
+    bus1: Union[AnyStr, List[AnyStr]]
+    bus2: Union[AnyStr, List[AnyStr]]
+    phases: Union[int, Int32Array]
+    kvar: Union[float, Float64Array]
+    kv: Union[float, Float64Array]
+    conn: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]
+    Rmatrix: Float64Array
+    Xmatrix: Float64Array
+    Parallel: bool
+    R: Union[float, Float64Array]
+    X: Union[float, Float64Array]
+    Rp: Union[float, Float64Array]
+    Z1: Union[complex, List[complex]]
+    Z2: Union[complex, List[complex]]
+    Z0: Union[complex, List[complex]]
+    RCurve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    LCurve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    LmH: Union[float, Float64Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    faultrate: Union[float, Float64Array]
+    pctperm: Union[float, Float64Array]
+    repair: Union[float, Float64Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class CapControlBatchProperties(TypedDict):
+    element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    terminal: Union[int, Int32Array]
+    capacitor: Union[AnyStr, Capacitor, List[AnyStr], List[Capacitor]]
+    type: Union[AnyStr, int, CapControl.CapControlType, List[AnyStr], List[int], List[CapControl.CapControlType], Int32Array]
+    PTratio: Union[float, Float64Array]
+    CTratio: Union[float, Float64Array]
+    ONsetting: Union[float, Float64Array]
+    OFFsetting: Union[float, Float64Array]
+    Delay: Union[float, Float64Array]
+    VoltOverride: bool
+    Vmax: Union[float, Float64Array]
+    Vmin: Union[float, Float64Array]
+    DelayOFF: Union[float, Float64Array]
+    DeadTime: Union[float, Float64Array]
+    CTPhase: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[int], List[MonitoredPhase], Int32Array]
+    PTPhase: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[int], List[MonitoredPhase], Int32Array]
+    VBus: Union[AnyStr, List[AnyStr]]
+    EventLog: bool
+    UserModel: Union[AnyStr, List[AnyStr]]
+    UserData: Union[AnyStr, List[AnyStr]]
+    pctMinkvar: Union[float, Float64Array]
+    Reset: bool
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class FaultBatchProperties(TypedDict):
+    bus1: Union[AnyStr, List[AnyStr]]
+    bus2: Union[AnyStr, List[AnyStr]]
+    phases: Union[int, Int32Array]
+    r: Union[float, Float64Array]
+    pctstddev: Union[float, Float64Array]
+    Gmatrix: Float64Array
+    ONtime: Union[float, Float64Array]
+    temporary: bool
+    MinAmps: Union[float, Float64Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    faultrate: Union[float, Float64Array]
+    pctperm: Union[float, Float64Array]
+    repair: Union[float, Float64Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class DynamicExpBatchProperties(TypedDict):
+    NVariables: Union[int, Int32Array]
+    VarNames: List[AnyStr]
+    var: Union[AnyStr, List[AnyStr]]
+    VarIdx: Union[int, Int32Array]
+    Expression: Union[AnyStr, List[AnyStr]]
+    Domain: Union[AnyStr, int, DynamicExp.DynamicExpDomain, List[AnyStr], List[int], List[DynamicExp.DynamicExpDomain], Int32Array]
+    like: AnyStr
+
+class GeneratorBatchProperties(TypedDict):
+    phases: Union[int, Int32Array]
+    bus1: Union[AnyStr, List[AnyStr]]
+    kv: Union[float, Float64Array]
+    kW: Union[float, Float64Array]
+    pf: Union[float, Float64Array]
+    kvar: Union[float, Float64Array]
+    model: Union[int, Int32Array]
+    Vminpu: Union[float, Float64Array]
+    Vmaxpu: Union[float, Float64Array]
+    yearly: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    daily: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    duty: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    dispmode: Union[AnyStr, int, Generator.GeneratorDispatchMode, List[AnyStr], List[int], List[Generator.GeneratorDispatchMode], Int32Array]
+    dispvalue: Union[float, Float64Array]
+    conn: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]
+    status: Union[AnyStr, int, Generator.GeneratorStatus, List[AnyStr], List[int], List[Generator.GeneratorStatus], Int32Array]
+    cls: Union[int, Int32Array]
+    Vpu: Union[float, Float64Array]
+    maxkvar: Union[float, Float64Array]
+    minkvar: Union[float, Float64Array]
+    pvfactor: Union[float, Float64Array]
+    forceon: bool
+    kVA: Union[float, Float64Array]
+    Xd: Union[float, Float64Array]
+    Xdp: Union[float, Float64Array]
+    Xdpp: Union[float, Float64Array]
+    H: Union[float, Float64Array]
+    D: Union[float, Float64Array]
+    UserModel: Union[AnyStr, List[AnyStr]]
+    UserData: Union[AnyStr, List[AnyStr]]
+    ShaftModel: Union[AnyStr, List[AnyStr]]
+    ShaftData: Union[AnyStr, List[AnyStr]]
+    DutyStart: Union[float, Float64Array]
+    debugtrace: bool
+    Balanced: bool
+    XRdp: Union[float, Float64Array]
+    UseFuel: bool
+    FuelkWh: Union[float, Float64Array]
+    pctFuel: Union[float, Float64Array]
+    pctReserve: Union[float, Float64Array]
+    Refuel: bool
+    DynamicEq: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]
+    DynOut: Union[AnyStr, List[AnyStr]]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class GenDispatcherBatchProperties(TypedDict):
+    Element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    Terminal: Union[int, Int32Array]
+    kWLimit: Union[float, Float64Array]
+    kWBand: Union[float, Float64Array]
+    kvarlimit: Union[float, Float64Array]
+    GenList: List[AnyStr]
+    Weights: Float64Array
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class StorageBatchProperties(TypedDict):
+    phases: Union[int, Int32Array]
+    bus1: Union[AnyStr, List[AnyStr]]
+    kv: Union[float, Float64Array]
+    conn: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]
+    kW: Union[float, Float64Array]
+    kvar: Union[float, Float64Array]
+    pf: Union[float, Float64Array]
+    kVA: Union[float, Float64Array]
+    pctCutin: Union[float, Float64Array]
+    pctCutout: Union[float, Float64Array]
+    EffCurve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    VarFollowInverter: bool
+    kvarMax: Union[float, Float64Array]
+    kvarMaxAbs: Union[float, Float64Array]
+    WattPriority: bool
+    PFPriority: bool
+    pctPminNoVars: Union[float, Float64Array]
+    pctPminkvarMax: Union[float, Float64Array]
+    kWrated: Union[float, Float64Array]
+    pctkWrated: Union[float, Float64Array]
+    kWhrated: Union[float, Float64Array]
+    kWhstored: Union[float, Float64Array]
+    pctstored: Union[float, Float64Array]
+    pctreserve: Union[float, Float64Array]
+    State: Union[AnyStr, int, Storage.StorageState, List[AnyStr], List[int], List[Storage.StorageState], Int32Array]
+    pctDischarge: Union[float, Float64Array]
+    pctCharge: Union[float, Float64Array]
+    pctEffCharge: Union[float, Float64Array]
+    pctEffDischarge: Union[float, Float64Array]
+    pctIdlingkW: Union[float, Float64Array]
+    pctR: Union[float, Float64Array]
+    pctX: Union[float, Float64Array]
+    model: Union[int, Int32Array]
+    Vminpu: Union[float, Float64Array]
+    Vmaxpu: Union[float, Float64Array]
+    Balanced: bool
+    LimitCurrent: bool
+    yearly: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    daily: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    duty: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    DispMode: Union[AnyStr, int, Storage.StorageDispatchMode, List[AnyStr], List[int], List[Storage.StorageDispatchMode], Int32Array]
+    DischargeTrigger: Union[float, Float64Array]
+    ChargeTrigger: Union[float, Float64Array]
+    TimeChargeTrig: Union[float, Float64Array]
+    cls: Union[int, Int32Array]
+    DynaDLL: Union[AnyStr, List[AnyStr]]
+    DynaData: Union[AnyStr, List[AnyStr]]
+    UserModel: Union[AnyStr, List[AnyStr]]
+    UserData: Union[AnyStr, List[AnyStr]]
+    debugtrace: bool
+    kVDC: Union[float, Float64Array]
+    Kp: Union[float, Float64Array]
+    PITol: Union[float, Float64Array]
+    SafeVoltage: Union[float, Float64Array]
+    SafeMode: bool
+    DynamicEq: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]
+    DynOut: Union[AnyStr, List[AnyStr]]
+    ControlMode: Union[AnyStr, int, InverterControlMode, List[AnyStr], List[int], List[InverterControlMode], Int32Array]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class StorageControllerBatchProperties(TypedDict):
+    Element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    Terminal: Union[int, Int32Array]
+    MonPhase: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[int], List[MonitoredPhase], Int32Array]
+    kWTarget: Union[float, Float64Array]
+    kWTargetLow: Union[float, Float64Array]
+    pctkWBand: Union[float, Float64Array]
+    kWBand: Union[float, Float64Array]
+    pctkWBandLow: Union[float, Float64Array]
+    kWBandLow: Union[float, Float64Array]
+    ElementList: List[AnyStr]
+    Weights: Float64Array
+    ModeDischarge: Union[AnyStr, int, StorageController.StorageControllerDischargemode, List[AnyStr], List[int], List[StorageController.StorageControllerDischargemode], Int32Array]
+    ModeCharge: Union[AnyStr, int, StorageController.StorageControllerChargemode, List[AnyStr], List[int], List[StorageController.StorageControllerChargemode], Int32Array]
+    TimeDischargeTrigger: Union[float, Float64Array]
+    TimeChargeTrigger: Union[float, Float64Array]
+    pctRatekW: Union[float, Float64Array]
+    pctRateCharge: Union[float, Float64Array]
+    pctReserve: Union[float, Float64Array]
+    kWhTotal: Union[float, Float64Array]
+    kWTotal: Union[float, Float64Array]
+    kWhActual: Union[float, Float64Array]
+    kWActual: Union[float, Float64Array]
+    kWneed: Union[float, Float64Array]
+    Yearly: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Daily: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Duty: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    EventLog: bool
+    InhibitTime: Union[int, Int32Array]
+    Tup: Union[float, Float64Array]
+    TFlat: Union[float, Float64Array]
+    Tdn: Union[float, Float64Array]
+    kWThreshold: Union[float, Float64Array]
+    DispFactor: Union[float, Float64Array]
+    ResetLevel: Union[float, Float64Array]
+    Seasons: Union[int, Int32Array]
+    SeasonTargets: Float64Array
+    SeasonTargetsLow: Float64Array
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class RelayBatchProperties(TypedDict):
+    MonitoredObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    MonitoredTerm: Union[int, Int32Array]
+    SwitchedObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    SwitchedTerm: Union[int, Int32Array]
+    type: Union[AnyStr, int, Relay.RelayType, List[AnyStr], List[int], List[Relay.RelayType], Int32Array]
+    Phasecurve: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    Groundcurve: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    PhaseTrip: Union[float, Float64Array]
+    GroundTrip: Union[float, Float64Array]
+    TDPhase: Union[float, Float64Array]
+    TDGround: Union[float, Float64Array]
+    PhaseInst: Union[float, Float64Array]
+    GroundInst: Union[float, Float64Array]
+    Reset: Union[float, Float64Array]
+    Shots: Union[int, Int32Array]
+    RecloseIntervals: Float64Array
+    Delay: Union[float, Float64Array]
+    Overvoltcurve: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    Undervoltcurve: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    kvbase: Union[float, Float64Array]
+    pctPickup47: Union[float, Float64Array]
+    BaseAmps46: Union[float, Float64Array]
+    pctPickup46: Union[float, Float64Array]
+    isqt46: Union[float, Float64Array]
+    Variable: Union[AnyStr, List[AnyStr]]
+    overtrip: Union[float, Float64Array]
+    undertrip: Union[float, Float64Array]
+    Breakertime: Union[float, Float64Array]
+    action: Union[AnyStr, int, Relay.RelayAction, List[AnyStr], List[int], List[Relay.RelayAction], Int32Array]
+    Z1mag: Union[float, Float64Array]
+    Z1ang: Union[float, Float64Array]
+    Z0mag: Union[float, Float64Array]
+    Z0ang: Union[float, Float64Array]
+    Mphase: Union[float, Float64Array]
+    Mground: Union[float, Float64Array]
+    EventLog: bool
+    DebugTrace: bool
+    DistReverse: bool
+    Normal: Union[AnyStr, int, Relay.RelayState, List[AnyStr], List[int], List[Relay.RelayState], Int32Array]
+    State: Union[AnyStr, int, Relay.RelayState, List[AnyStr], List[int], List[Relay.RelayState], Int32Array]
+    DOC_TiltAngleLow: Union[float, Float64Array]
+    DOC_TiltAngleHigh: Union[float, Float64Array]
+    DOC_TripSettingLow: Union[float, Float64Array]
+    DOC_TripSettingHigh: Union[float, Float64Array]
+    DOC_TripSettingMag: Union[float, Float64Array]
+    DOC_DelayInner: Union[float, Float64Array]
+    DOC_PhaseCurveInner: Union[float, Float64Array]
+    DOC_PhaseTripInner: Union[float, Float64Array]
+    DOC_TDPhaseInner: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    DOC_P1Blocking: bool
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class RecloserBatchProperties(TypedDict):
+    MonitoredObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    MonitoredTerm: Union[int, Int32Array]
+    SwitchedObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    SwitchedTerm: Union[int, Int32Array]
+    NumFast: Union[int, Int32Array]
+    PhaseFast: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    PhaseDelayed: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    GroundFast: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    GroundDelayed: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    PhaseTrip: Union[float, Float64Array]
+    GroundTrip: Union[float, Float64Array]
+    PhaseInst: Union[float, Float64Array]
+    GroundInst: Union[float, Float64Array]
+    Reset: Union[float, Float64Array]
+    Shots: Union[int, Int32Array]
+    RecloseIntervals: Float64Array
+    Delay: Union[float, Float64Array]
+    TDPhFast: Union[float, Float64Array]
+    TDGrFast: Union[float, Float64Array]
+    TDPhDelayed: Union[float, Float64Array]
+    TDGrDelayed: Union[float, Float64Array]
+    Normal: Union[AnyStr, int, Recloser.RecloserState, List[AnyStr], List[int], List[Recloser.RecloserState], Int32Array]
+    State: Union[AnyStr, int, Recloser.RecloserState, List[AnyStr], List[int], List[Recloser.RecloserState], Int32Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class FuseBatchProperties(TypedDict):
+    MonitoredObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    MonitoredTerm: Union[int, Int32Array]
+    SwitchedObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    SwitchedTerm: Union[int, Int32Array]
+    FuseCurve: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    RatedCurrent: Union[float, Float64Array]
+    Delay: Union[float, Float64Array]
+    Action: Union[str, bytes, int, Fuse.FuseAction]
+    Normal: Union[List[Union[int,Fuse.FuseState]], List[AnyStr]]
+    State: Union[List[Union[int,Fuse.FuseState]], List[AnyStr]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class SwtControlBatchProperties(TypedDict):
+    SwitchedObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    SwitchedTerm: Union[int, Int32Array]
+    Lock: bool
+    Delay: Union[float, Float64Array]
+    Normal: Union[AnyStr, int, SwtControl.SwtControlState, List[AnyStr], List[int], List[SwtControl.SwtControlState], Int32Array]
+    State: Union[AnyStr, int, SwtControl.SwtControlState, List[AnyStr], List[int], List[SwtControl.SwtControlState], Int32Array]
+    Reset: bool
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class PVSystemBatchProperties(TypedDict):
+    phases: Union[int, Int32Array]
+    bus1: Union[AnyStr, List[AnyStr]]
+    kv: Union[float, Float64Array]
+    irradiance: Union[float, Float64Array]
+    Pmpp: Union[float, Float64Array]
+    pctPmpp: Union[float, Float64Array]
+    Temperature: Union[float, Float64Array]
+    pf: Union[float, Float64Array]
+    conn: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]
+    kvar: Union[float, Float64Array]
+    kVA: Union[float, Float64Array]
+    pctCutin: Union[float, Float64Array]
+    pctCutout: Union[float, Float64Array]
+    EffCurve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    PTCurve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    pctR: Union[float, Float64Array]
+    pctX: Union[float, Float64Array]
+    model: Union[int, Int32Array]
+    Vminpu: Union[float, Float64Array]
+    Vmaxpu: Union[float, Float64Array]
+    Balanced: bool
+    LimitCurrent: bool
+    yearly: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    daily: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    duty: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Tyearly: Union[AnyStr, TShape, List[AnyStr], List[TShape]]
+    Tdaily: Union[AnyStr, TShape, List[AnyStr], List[TShape]]
+    Tduty: Union[AnyStr, TShape, List[AnyStr], List[TShape]]
+    cls: Union[int, Int32Array]
+    UserModel: Union[AnyStr, List[AnyStr]]
+    UserData: Union[AnyStr, List[AnyStr]]
+    debugtrace: bool
+    VarFollowInverter: bool
+    DutyStart: Union[float, Float64Array]
+    WattPriority: bool
+    PFPriority: bool
+    pctPminNoVars: Union[float, Float64Array]
+    pctPminkvarMax: Union[float, Float64Array]
+    kvarMax: Union[float, Float64Array]
+    kvarMaxAbs: Union[float, Float64Array]
+    kVDC: Union[float, Float64Array]
+    Kp: Union[float, Float64Array]
+    PITol: Union[float, Float64Array]
+    SafeVoltage: Union[float, Float64Array]
+    SafeMode: bool
+    DynamicEq: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]
+    DynOut: Union[AnyStr, List[AnyStr]]
+    ControlMode: Union[AnyStr, int, InverterControlMode, List[AnyStr], List[int], List[InverterControlMode], Int32Array]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class UPFCBatchProperties(TypedDict):
+    bus1: Union[AnyStr, List[AnyStr]]
+    bus2: Union[AnyStr, List[AnyStr]]
+    refkV: Union[float, Float64Array]
+    PF: Union[float, Float64Array]
+    Frequency: Union[float, Float64Array]
+    Phases: Union[int, Int32Array]
+    Xs: Union[float, Float64Array]
+    Tol1: Union[float, Float64Array]
+    Mode: Union[int, Int32Array]
+    VpqMax: Union[float, Float64Array]
+    LossCurve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    VHLimit: Union[float, Float64Array]
+    VLLimit: Union[float, Float64Array]
+    CLimit: Union[float, Float64Array]
+    refkV2: Union[float, Float64Array]
+    kvarLimit: Union[float, Float64Array]
+    Element: Union[AnyStr, PDElement, List[AnyStr], List[PDElement]]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class UPFCControlBatchProperties(TypedDict):
+    UPFCList: List[AnyStr]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class ESPVLControlBatchProperties(TypedDict):
+    Element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    Terminal: Union[int, Int32Array]
+    Type: Union[AnyStr, int, ESPVLControl.ESPVLControlType, List[AnyStr], List[int], List[ESPVLControl.ESPVLControlType], Int32Array]
+    kWBand: Union[float, Float64Array]
+    kvarlimit: Union[float, Float64Array]
+    LocalControlList: List[AnyStr]
+    LocalControlWeights: Float64Array
+    PVSystemList: List[AnyStr]
+    PVSystemWeights: Float64Array
+    StorageList: List[AnyStr]
+    StorageWeights: Float64Array
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class IndMach012BatchProperties(TypedDict):
+    phases: Union[int, Int32Array]
+    bus1: Union[AnyStr, List[AnyStr]]
+    kv: Union[float, Float64Array]
+    kW: Union[float, Float64Array]
+    pf: Union[float, Float64Array]
+    conn: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]
+    kVA: Union[float, Float64Array]
+    H: Union[float, Float64Array]
+    D: Union[float, Float64Array]
+    puRs: Union[float, Float64Array]
+    puXs: Union[float, Float64Array]
+    puRr: Union[float, Float64Array]
+    puXr: Union[float, Float64Array]
+    puXm: Union[float, Float64Array]
+    Slip: Union[float, Float64Array]
+    MaxSlip: Union[float, Float64Array]
+    SlipOption: Union[AnyStr, int, IndMach012.IndMach012SlipOption, List[AnyStr], List[int], List[IndMach012.IndMach012SlipOption], Int32Array]
+    Yearly: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Daily: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Duty: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
+    Debugtrace: bool
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class GICsourceBatchProperties(TypedDict):
+    Volts: Union[float, Float64Array]
+    angle: Union[float, Float64Array]
+    frequency: Union[float, Float64Array]
+    phases: Union[int, Int32Array]
+    EN: Union[float, Float64Array]
+    EE: Union[float, Float64Array]
+    Lat1: Union[float, Float64Array]
+    Lon1: Union[float, Float64Array]
+    Lat2: Union[float, Float64Array]
+    Lon2: Union[float, Float64Array]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class AutoTransBatchProperties(TypedDict):
+    phases: Union[int, Int32Array]
+    windings: Union[int, Int32Array]
+    pctR: Float64Array
+    Rdcohms: Float64Array
+    Core: Union[AnyStr, int, CoreType, List[AnyStr], List[int], List[CoreType], Int32Array]
+    buses: List[AnyStr]
+    conns: Union[List[Union[int,AutoTrans.AutoTransConnection]], List[AnyStr]]
+    kVs: Float64Array
+    kVAs: Float64Array
+    taps: Float64Array
+    XHX: Union[float, Float64Array]
+    XHT: Union[float, Float64Array]
+    XXT: Union[float, Float64Array]
+    XSCarray: Float64Array
+    thermal: Union[float, Float64Array]
+    n: Union[float, Float64Array]
+    m: Union[float, Float64Array]
+    flrise: Union[float, Float64Array]
+    hsrise: Union[float, Float64Array]
+    pctloadloss: Union[float, Float64Array]
+    pctnoloadloss: Union[float, Float64Array]
+    normhkVA: Union[float, Float64Array]
+    emerghkVA: Union[float, Float64Array]
+    sub: bool
+    MaxTap: Float64Array
+    MinTap: Float64Array
+    NumTaps: Int32Array
+    subname: Union[AnyStr, List[AnyStr]]
+    pctimag: Union[float, Float64Array]
+    ppm_antifloat: Union[float, Float64Array]
+    pctRs: Float64Array
+    XRConst: bool
+    LeadLag: Union[AnyStr, int, PhaseSequence, List[AnyStr], List[int], List[PhaseSequence], Int32Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    faultrate: Union[float, Float64Array]
+    pctperm: Union[float, Float64Array]
+    repair: Union[float, Float64Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class RegControlBatchProperties(TypedDict):
+    transformer: Union[AnyStr, Transformer, AutoTrans, List[AnyStr], List[Union[Transformer, AutoTrans]]]
+    winding: Union[int, Int32Array]
+    vreg: Union[float, Float64Array]
+    band: Union[float, Float64Array]
+    ptratio: Union[float, Float64Array]
+    CTprim: Union[float, Float64Array]
+    R: Union[float, Float64Array]
+    X: Union[float, Float64Array]
+    bus: Union[AnyStr, List[AnyStr]]
+    delay: Union[float, Float64Array]
+    reversible: bool
+    revvreg: Union[float, Float64Array]
+    revband: Union[float, Float64Array]
+    revR: Union[float, Float64Array]
+    revX: Union[float, Float64Array]
+    tapdelay: Union[float, Float64Array]
+    debugtrace: bool
+    maxtapchange: Union[int, Int32Array]
+    inversetime: bool
+    tapwinding: Union[int, Int32Array]
+    vlimit: Union[float, Float64Array]
+    PTphase: Union[AnyStr, int, RegControl.RegControlPhaseSelection, List[AnyStr], List[int], List[RegControl.RegControlPhaseSelection], Int32Array]
+    revThreshold: Union[float, Float64Array]
+    revDelay: Union[float, Float64Array]
+    revNeutral: bool
+    EventLog: bool
+    RemotePTRatio: Union[float, Float64Array]
+    TapNum: Union[int, Int32Array]
+    Reset: bool
+    LDC_Z: Union[float, Float64Array]
+    rev_Z: Union[float, Float64Array]
+    Cogen: bool
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class InvControlBatchProperties(TypedDict):
+    DERList: List[AnyStr]
+    Mode: Union[AnyStr, int, InvControl.InvControlControlMode, List[AnyStr], List[int], List[InvControl.InvControlControlMode], Int32Array]
+    CombiMode: Union[AnyStr, int, InvControl.InvControlCombiMode, List[AnyStr], List[int], List[InvControl.InvControlCombiMode], Int32Array]
+    vvc_curve1: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    hysteresis_offset: Union[float, Float64Array]
+    voltage_curvex_ref: Union[AnyStr, int, InvControl.InvControlVoltageCurveXRef, List[AnyStr], List[int], List[InvControl.InvControlVoltageCurveXRef], Int32Array]
+    avgwindowlen: Union[int, Int32Array]
+    voltwatt_curve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    DbVMin: Union[float, Float64Array]
+    DbVMax: Union[float, Float64Array]
+    ArGraLowV: Union[float, Float64Array]
+    ArGraHiV: Union[float, Float64Array]
+    DynReacavgwindowlen: Union[int, Int32Array]
+    deltaQ_Factor: Union[float, Float64Array]
+    VoltageChangeTolerance: Union[float, Float64Array]
+    VarChangeTolerance: Union[float, Float64Array]
+    VoltwattYAxis: Union[AnyStr, int, InvControl.InvControlVoltWattYAxis, List[AnyStr], List[int], List[InvControl.InvControlVoltWattYAxis], Int32Array]
+    RateofChangeMode: Union[AnyStr, int, InvControl.InvControlRateOfChangeMode, List[AnyStr], List[int], List[InvControl.InvControlRateOfChangeMode], Int32Array]
+    LPFTau: Union[float, Float64Array]
+    RiseFallLimit: Union[float, Float64Array]
+    deltaP_Factor: Union[float, Float64Array]
+    EventLog: bool
+    RefReactivePower: Union[AnyStr, int, InvControl.InvControlReactivePowerReference, List[AnyStr], List[int], List[InvControl.InvControlReactivePowerReference], Int32Array]
+    ActivePChangeTolerance: Union[float, Float64Array]
+    monVoltageCalc: Union[AnyStr, int, MonitoredPhase, List[AnyStr], List[int], List[MonitoredPhase], Int32Array]
+    monBus: List[AnyStr]
+    MonBusesVbase: Float64Array
+    voltwattCH_curve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    wattpf_curve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    wattvar_curve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    Vsetpoint: Union[float, Float64Array]
+    ControlModel: Union[int, InvControl.InvControlControlModel, Int32Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class ExpControlBatchProperties(TypedDict):
+    PVSystemList: List[AnyStr]
+    Vreg: Union[float, Float64Array]
+    Slope: Union[float, Float64Array]
+    VregTau: Union[float, Float64Array]
+    Qbias: Union[float, Float64Array]
+    VregMin: Union[float, Float64Array]
+    VregMax: Union[float, Float64Array]
+    QmaxLead: Union[float, Float64Array]
+    QmaxLag: Union[float, Float64Array]
+    EventLog: bool
+    DeltaQ_factor: Union[float, Float64Array]
+    PreferQ: bool
+    Tresponse: Union[float, Float64Array]
+    DERList: List[AnyStr]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class GICLineBatchProperties(TypedDict):
+    bus1: Union[AnyStr, List[AnyStr]]
+    bus2: Union[AnyStr, List[AnyStr]]
+    Volts: Union[float, Float64Array]
+    Angle: Union[float, Float64Array]
+    frequency: Union[float, Float64Array]
+    phases: Union[int, Int32Array]
+    R: Union[float, Float64Array]
+    X: Union[float, Float64Array]
+    C: Union[float, Float64Array]
+    EN: Union[float, Float64Array]
+    EE: Union[float, Float64Array]
+    Lat1: Union[float, Float64Array]
+    Lon1: Union[float, Float64Array]
+    Lat2: Union[float, Float64Array]
+    Lon2: Union[float, Float64Array]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class GICTransformerBatchProperties(TypedDict):
+    BusH: Union[AnyStr, List[AnyStr]]
+    BusNH: Union[AnyStr, List[AnyStr]]
+    BusX: Union[AnyStr, List[AnyStr]]
+    BusNX: Union[AnyStr, List[AnyStr]]
+    phases: Union[int, Int32Array]
+    Type: Union[AnyStr, int, GICTransformer.GICTransformerType, List[AnyStr], List[int], List[GICTransformer.GICTransformerType], Int32Array]
+    R1: Union[float, Float64Array]
+    R2: Union[float, Float64Array]
+    KVLL1: Union[float, Float64Array]
+    KVLL2: Union[float, Float64Array]
+    MVA: Union[float, Float64Array]
+    VarCurve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
+    pctR1: Union[float, Float64Array]
+    pctR2: Union[float, Float64Array]
+    K: Union[float, Float64Array]
+    normamps: Union[float, Float64Array]
+    emergamps: Union[float, Float64Array]
+    faultrate: Union[float, Float64Array]
+    pctperm: Union[float, Float64Array]
+    repair: Union[float, Float64Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class VSConverterBatchProperties(TypedDict):
+    phases: Union[int, Int32Array]
+    Bus1: Union[AnyStr, List[AnyStr]]
+    kVac: Union[float, Float64Array]
+    kVdc: Union[float, Float64Array]
+    kW: Union[float, Float64Array]
+    Ndc: Union[int, Int32Array]
+    Rac: Union[float, Float64Array]
+    Xac: Union[float, Float64Array]
+    m0: Union[float, Float64Array]
+    d0: Union[float, Float64Array]
+    Mmin: Union[float, Float64Array]
+    Mmax: Union[float, Float64Array]
+    Iacmax: Union[float, Float64Array]
+    Idcmax: Union[float, Float64Array]
+    Vacref: Union[float, Float64Array]
+    Pacref: Union[float, Float64Array]
+    Qacref: Union[float, Float64Array]
+    Vdcref: Union[float, Float64Array]
+    VscMode: Union[AnyStr, int, VSConverter.VSConverterControlMode, List[AnyStr], List[int], List[VSConverter.VSConverterControlMode], Int32Array]
+    spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class MonitorBatchProperties(TypedDict):
+    element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    terminal: Union[int, Int32Array]
+    mode: Union[int, Int32Array]
+    action: Union[str, bytes, int, Monitor.MonitorAction]
+    residual: bool
+    VIPolar: bool
+    PPolar: bool
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class EnergyMeterBatchProperties(TypedDict):
+    element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    terminal: Union[int, Int32Array]
+    action: Union[str, bytes, int, EnergyMeter.EnergyMeterAction]
+    option: List[AnyStr]
+    kVAnormal: Union[float, Float64Array]
+    kVAemerg: Union[float, Float64Array]
+    peakcurrent: Float64Array
+    Zonelist: List[AnyStr]
+    LocalOnly: bool
+    Mask: Float64Array
+    Losses: bool
+    LineLosses: bool
+    XfmrLosses: bool
+    SeqLosses: bool
+    threePaseLosses: bool
+    VbaseLosses: bool
+    PhaseVoltageReport: bool
+    Int_Rate: Union[float, Float64Array]
+    Int_Duration: Union[float, Float64Array]
+    SAIFI: Union[float, Float64Array]
+    SAIFIkW: Union[float, Float64Array]
+    SAIDI: Union[float, Float64Array]
+    CAIDI: Union[float, Float64Array]
+    CustInterrupts: Union[float, Float64Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+class SensorBatchProperties(TypedDict):
+    element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
+    terminal: Union[int, Int32Array]
+    kvbase: Union[float, Float64Array]
+    clear: bool
+    kVs: Float64Array
+    currents: Float64Array
+    kWs: Float64Array
+    kvars: Float64Array
+    conn: Union[AnyStr, int, Connection, List[AnyStr], List[int], List[Connection], Int32Array]
+    Deltadirection: Union[int, Int32Array]
+    pctError: Union[float, Float64Array]
+    Weight: Union[float, Float64Array]
+    basefreq: Union[float, Float64Array]
+    enabled: bool
+    like: AnyStr
+
+#TODO: warn that begin_edit=False with extra params will be ignored?
+
+class ILineCode(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, LineCode, LineCodeBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[LineCodeProperties]) -> LineCode:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[LineCodeBatchProperties]) -> LineCodeBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ILoadShape(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, LoadShape, LoadShapeBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[LoadShapeProperties]) -> LoadShape:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[LoadShapeBatchProperties]) -> LoadShapeBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ITShape(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, TShape, TShapeBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[TShapeProperties]) -> TShape:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[TShapeBatchProperties]) -> TShapeBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IPriceShape(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, PriceShape, PriceShapeBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[PriceShapeProperties]) -> PriceShape:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[PriceShapeBatchProperties]) -> PriceShapeBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IXYcurve(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, XYcurve, XYcurveBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[XYcurveProperties]) -> XYcurve:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[XYcurveBatchProperties]) -> XYcurveBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IGrowthShape(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, GrowthShape, GrowthShapeBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[GrowthShapeProperties]) -> GrowthShape:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[GrowthShapeBatchProperties]) -> GrowthShapeBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ITCC_Curve(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, TCC_Curve, TCC_CurveBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[TCC_CurveProperties]) -> TCC_Curve:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[TCC_CurveBatchProperties]) -> TCC_CurveBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ISpectrum(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Spectrum, SpectrumBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[SpectrumProperties]) -> Spectrum:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[SpectrumBatchProperties]) -> SpectrumBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IWireData(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, WireData, WireDataBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[WireDataProperties]) -> WireData:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[WireDataBatchProperties]) -> WireDataBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ICNData(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, CNData, CNDataBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[CNDataProperties]) -> CNData:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[CNDataBatchProperties]) -> CNDataBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ITSData(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, TSData, TSDataBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[TSDataProperties]) -> TSData:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[TSDataBatchProperties]) -> TSDataBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ILineSpacing(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, LineSpacing, LineSpacingBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[LineSpacingProperties]) -> LineSpacing:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[LineSpacingBatchProperties]) -> LineSpacingBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ILineGeometry(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, LineGeometry, LineGeometryBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[LineGeometryProperties]) -> LineGeometry:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[LineGeometryBatchProperties]) -> LineGeometryBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IXfmrCode(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, XfmrCode, XfmrCodeBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[XfmrCodeProperties]) -> XfmrCode:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[XfmrCodeBatchProperties]) -> XfmrCodeBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ILine(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Line, LineBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[LineProperties]) -> Line:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[LineBatchProperties]) -> LineBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IVsource(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Vsource, VsourceBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[VsourceProperties]) -> Vsource:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[VsourceBatchProperties]) -> VsourceBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IIsource(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Isource, IsourceBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[IsourceProperties]) -> Isource:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[IsourceBatchProperties]) -> IsourceBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IVCCS(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, VCCS, VCCSBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[VCCSProperties]) -> VCCS:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[VCCSBatchProperties]) -> VCCSBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ILoad(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Load, LoadBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[LoadProperties]) -> Load:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[LoadBatchProperties]) -> LoadBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ITransformer(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Transformer, TransformerBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[TransformerProperties]) -> Transformer:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[TransformerBatchProperties]) -> TransformerBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ICapacitor(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Capacitor, CapacitorBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[CapacitorProperties]) -> Capacitor:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[CapacitorBatchProperties]) -> CapacitorBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IReactor(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Reactor, ReactorBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[ReactorProperties]) -> Reactor:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[ReactorBatchProperties]) -> ReactorBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ICapControl(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, CapControl, CapControlBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[CapControlProperties]) -> CapControl:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[CapControlBatchProperties]) -> CapControlBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IFault(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Fault, FaultBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[FaultProperties]) -> Fault:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[FaultBatchProperties]) -> FaultBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IDynamicExp(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, DynamicExp, DynamicExpBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[DynamicExpProperties]) -> DynamicExp:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[DynamicExpBatchProperties]) -> DynamicExpBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IGenerator(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Generator, GeneratorBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[GeneratorProperties]) -> Generator:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[GeneratorBatchProperties]) -> GeneratorBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IGenDispatcher(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, GenDispatcher, GenDispatcherBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[GenDispatcherProperties]) -> GenDispatcher:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[GenDispatcherBatchProperties]) -> GenDispatcherBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IStorage(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Storage, StorageBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[StorageProperties]) -> Storage:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[StorageBatchProperties]) -> StorageBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IStorageController(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, StorageController, StorageControllerBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[StorageControllerProperties]) -> StorageController:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[StorageControllerBatchProperties]) -> StorageControllerBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IRelay(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Relay, RelayBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[RelayProperties]) -> Relay:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[RelayBatchProperties]) -> RelayBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IRecloser(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Recloser, RecloserBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[RecloserProperties]) -> Recloser:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[RecloserBatchProperties]) -> RecloserBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IFuse(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Fuse, FuseBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[FuseProperties]) -> Fuse:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[FuseBatchProperties]) -> FuseBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ISwtControl(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, SwtControl, SwtControlBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[SwtControlProperties]) -> SwtControl:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[SwtControlBatchProperties]) -> SwtControlBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IPVSystem(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, PVSystem, PVSystemBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[PVSystemProperties]) -> PVSystem:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[PVSystemBatchProperties]) -> PVSystemBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IUPFC(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, UPFC, UPFCBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[UPFCProperties]) -> UPFC:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[UPFCBatchProperties]) -> UPFCBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IUPFCControl(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, UPFCControl, UPFCControlBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[UPFCControlProperties]) -> UPFCControl:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[UPFCControlBatchProperties]) -> UPFCControlBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IESPVLControl(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, ESPVLControl, ESPVLControlBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[ESPVLControlProperties]) -> ESPVLControl:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[ESPVLControlBatchProperties]) -> ESPVLControlBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IIndMach012(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, IndMach012, IndMach012Batch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[IndMach012Properties]) -> IndMach012:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[IndMach012BatchProperties]) -> IndMach012Batch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IGICsource(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, GICsource, GICsourceBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[GICsourceProperties]) -> GICsource:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[GICsourceBatchProperties]) -> GICsourceBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IAutoTrans(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, AutoTrans, AutoTransBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[AutoTransProperties]) -> AutoTrans:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[AutoTransBatchProperties]) -> AutoTransBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IRegControl(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, RegControl, RegControlBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[RegControlProperties]) -> RegControl:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[RegControlBatchProperties]) -> RegControlBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IInvControl(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, InvControl, InvControlBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[InvControlProperties]) -> InvControl:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[InvControlBatchProperties]) -> InvControlBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IExpControl(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, ExpControl, ExpControlBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[ExpControlProperties]) -> ExpControl:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[ExpControlBatchProperties]) -> ExpControlBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IGICLine(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, GICLine, GICLineBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[GICLineProperties]) -> GICLine:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[GICLineBatchProperties]) -> GICLineBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IGICTransformer(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, GICTransformer, GICTransformerBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[GICTransformerProperties]) -> GICTransformer:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[GICTransformerBatchProperties]) -> GICTransformerBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IVSConverter(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, VSConverter, VSConverterBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[VSConverterProperties]) -> VSConverter:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[VSConverterBatchProperties]) -> VSConverterBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IMonitor(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Monitor, MonitorBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[MonitorProperties]) -> Monitor:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[MonitorBatchProperties]) -> MonitorBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class IEnergyMeter(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, EnergyMeter, EnergyMeterBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[EnergyMeterProperties]) -> EnergyMeter:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[EnergyMeterBatchProperties]) -> EnergyMeterBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
+class ISensor(IDSSObj):
+    def __init__(self, iobj):
+        super().__init__(iobj, Sensor, SensorBatch)
+
+    def new(self, name: AnyStr, begin_edit=True, activate=False, **kwargs: Unpack[SensorProperties]) -> Sensor:
+        if kwargs:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in kwargs.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+    
+
+    def batch_new(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, **kwargs: Unpack[SensorBatchProperties]) -> SensorBatch:
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+
+        if kwargs:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in kwargs:
+                names = kwargs.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in kwargs.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+        
+    
+
 
 class IObj(Base):
     __slots__ = [
@@ -41387,6 +45135,7 @@ class IObj(Base):
         'Reactor',
         'CapControl',
         'Fault',
+        'DynamicExp',
         'Generator',
         'GenDispatcher',
         'Storage',
@@ -41418,54 +45167,55 @@ class IObj(Base):
         Base.__init__(self, api_util)
         self._idx_to_cls = dict()
 
-        self.LineCode = IDSSObj(self, 1, LineCode, LineCodeBatch)
-        self.LoadShape = IDSSObj(self, 2, LoadShape, LoadShapeBatch)
-        self.TShape = IDSSObj(self, 3, TShape, TShapeBatch)
-        self.PriceShape = IDSSObj(self, 4, PriceShape, PriceShapeBatch)
-        self.XYcurve = IDSSObj(self, 5, XYcurve, XYcurveBatch)
-        self.GrowthShape = IDSSObj(self, 6, GrowthShape, GrowthShapeBatch)
-        self.TCC_Curve = IDSSObj(self, 7, TCC_Curve, TCC_CurveBatch)
-        self.Spectrum = IDSSObj(self, 8, Spectrum, SpectrumBatch)
-        self.WireData = IDSSObj(self, 9, WireData, WireDataBatch)
-        self.CNData = IDSSObj(self, 10, CNData, CNDataBatch)
-        self.TSData = IDSSObj(self, 11, TSData, TSDataBatch)
-        self.LineSpacing = IDSSObj(self, 12, LineSpacing, LineSpacingBatch)
-        self.LineGeometry = IDSSObj(self, 13, LineGeometry, LineGeometryBatch)
-        self.XfmrCode = IDSSObj(self, 14, XfmrCode, XfmrCodeBatch)
-        self.Line = IDSSObj(self, 15, Line, LineBatch)
-        self.Vsource = IDSSObj(self, 16, Vsource, VsourceBatch)
-        self.Isource = IDSSObj(self, 17, Isource, IsourceBatch)
-        self.VCCS = IDSSObj(self, 18, VCCS, VCCSBatch)
-        self.Load = IDSSObj(self, 19, Load, LoadBatch)
-        self.Transformer = IDSSObj(self, 20, Transformer, TransformerBatch)
-        self.Capacitor = IDSSObj(self, 22, Capacitor, CapacitorBatch)
-        self.Reactor = IDSSObj(self, 23, Reactor, ReactorBatch)
-        self.CapControl = IDSSObj(self, 24, CapControl, CapControlBatch)
-        self.Fault = IDSSObj(self, 25, Fault, FaultBatch)
-        self.Generator = IDSSObj(self, 26, Generator, GeneratorBatch)
-        self.GenDispatcher = IDSSObj(self, 27, GenDispatcher, GenDispatcherBatch)
-        self.Storage = IDSSObj(self, 28, Storage, StorageBatch)
-        self.StorageController = IDSSObj(self, 29, StorageController, StorageControllerBatch)
-        self.Relay = IDSSObj(self, 30, Relay, RelayBatch)
-        self.Recloser = IDSSObj(self, 31, Recloser, RecloserBatch)
-        self.Fuse = IDSSObj(self, 32, Fuse, FuseBatch)
-        self.SwtControl = IDSSObj(self, 33, SwtControl, SwtControlBatch)
-        self.PVSystem = IDSSObj(self, 34, PVSystem, PVSystemBatch)
-        self.UPFC = IDSSObj(self, 35, UPFC, UPFCBatch)
-        self.UPFCControl = IDSSObj(self, 36, UPFCControl, UPFCControlBatch)
-        self.ESPVLControl = IDSSObj(self, 37, ESPVLControl, ESPVLControlBatch)
-        self.IndMach012 = IDSSObj(self, 38, IndMach012, IndMach012Batch)
-        self.GICsource = IDSSObj(self, 39, GICsource, GICsourceBatch)
-        self.AutoTrans = IDSSObj(self, 40, AutoTrans, AutoTransBatch)
-        self.RegControl = IDSSObj(self, 21, RegControl, RegControlBatch)
-        self.InvControl = IDSSObj(self, 41, InvControl, InvControlBatch)
-        self.ExpControl = IDSSObj(self, 42, ExpControl, ExpControlBatch)
-        self.GICLine = IDSSObj(self, 43, GICLine, GICLineBatch)
-        self.GICTransformer = IDSSObj(self, 44, GICTransformer, GICTransformerBatch)
-        self.VSConverter = IDSSObj(self, 45, VSConverter, VSConverterBatch)
-        self.Monitor = IDSSObj(self, 46, Monitor, MonitorBatch)
-        self.EnergyMeter = IDSSObj(self, 47, EnergyMeter, EnergyMeterBatch)
-        self.Sensor = IDSSObj(self, 48, Sensor, SensorBatch)
+        self.LineCode = ILineCode(self)
+        self.LoadShape = ILoadShape(self)
+        self.TShape = ITShape(self)
+        self.PriceShape = IPriceShape(self)
+        self.XYcurve = IXYcurve(self)
+        self.GrowthShape = IGrowthShape(self)
+        self.TCC_Curve = ITCC_Curve(self)
+        self.Spectrum = ISpectrum(self)
+        self.WireData = IWireData(self)
+        self.CNData = ICNData(self)
+        self.TSData = ITSData(self)
+        self.LineSpacing = ILineSpacing(self)
+        self.LineGeometry = ILineGeometry(self)
+        self.XfmrCode = IXfmrCode(self)
+        self.Line = ILine(self)
+        self.Vsource = IVsource(self)
+        self.Isource = IIsource(self)
+        self.VCCS = IVCCS(self)
+        self.Load = ILoad(self)
+        self.Transformer = ITransformer(self)
+        self.Capacitor = ICapacitor(self)
+        self.Reactor = IReactor(self)
+        self.CapControl = ICapControl(self)
+        self.Fault = IFault(self)
+        self.DynamicExp = IDynamicExp(self)
+        self.Generator = IGenerator(self)
+        self.GenDispatcher = IGenDispatcher(self)
+        self.Storage = IStorage(self)
+        self.StorageController = IStorageController(self)
+        self.Relay = IRelay(self)
+        self.Recloser = IRecloser(self)
+        self.Fuse = IFuse(self)
+        self.SwtControl = ISwtControl(self)
+        self.PVSystem = IPVSystem(self)
+        self.UPFC = IUPFC(self)
+        self.UPFCControl = IUPFCControl(self)
+        self.ESPVLControl = IESPVLControl(self)
+        self.IndMach012 = IIndMach012(self)
+        self.GICsource = IGICsource(self)
+        self.AutoTrans = IAutoTrans(self)
+        self.RegControl = IRegControl(self)
+        self.InvControl = IInvControl(self)
+        self.ExpControl = IExpControl(self)
+        self.GICLine = IGICLine(self)
+        self.GICTransformer = IGICTransformer(self)
+        self.VSConverter = IVSConverter(self)
+        self.Monitor = IMonitor(self)
+        self.EnergyMeter = IEnergyMeter(self)
+        self.Sensor = ISensor(self)
 
 __all__ = [
     "IObj",
@@ -41480,6 +45230,7 @@ __all__ = [
     "LoadSolutionModel",
     "RandomType",
     "ControlMode",
+    "InverterControlMode",
     "SolutionMode",
     "SolutionAlgorithm",
     "CircuitModel",

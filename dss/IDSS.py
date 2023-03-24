@@ -6,8 +6,8 @@ Copyright (c) 2016-2023 Paulo Meira
 Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 import warnings
-from typing import List, Union, TypeVar, AnyStr
-
+from typing import List, Union, AnyStr
+from typing_extensions import Self
 from ._cffi_api_util import Base, CffiApiUtil, DSSException
 from .ICircuit import ICircuit
 from .IError import IError
@@ -21,10 +21,6 @@ from .IDSSimComs import IDSSimComs
 from .IYMatrix import IYMatrix
 from .IZIP import IZIP
 from .IObj import IObj
-
-# This is the kind of thing that shows how immature was Python 
-# the type annotation system when they were introduced...
-TIDSS = TypeVar("TIDSS", bound="IDSS")
 
 class IDSS(Base):
     '''
@@ -315,7 +311,7 @@ class IDSS(Base):
     def COMErrorResults(self, Value: bool):
         self.CheckForError(self._lib.DSS_Set_COMErrorResults(Value))
 
-    def NewContext(self) -> TIDSS:
+    def NewContext(self) -> Self:
         '''
         Creates a new DSS engine context.
         A DSS Context encapsulates most of the global state of the original OpenDSS engine,
@@ -433,7 +429,7 @@ class IDSS(Base):
             development of DSS Extensions, we noticed this is actually a quite common issue.
         - 0x2 (bit 1): Toggle worse precision for certain aspects of the engine. For example, the sequence-to-phase 
             (`As2p`) and sequence-to-phase (`Ap2s`) transform matrices. On DSS C-API, we fill the matrix explicitly
-            using higher precision, while numeric invertion of an initially worse precision matrix is used in the 
+            using higher precision, while numerical inversion of an initially worse precision matrix is used in the 
             official OpenDSS. We will introduce better precision for other aspects of the engine in the future, 
             so this flag can be used to toggle the old/bad values where feasible.
         - 0x4 (bit 2): Toggle some InvControl behavior introduced in OpenDSS 9.6.1.1. It could be a regression 

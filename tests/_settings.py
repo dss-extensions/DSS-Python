@@ -1,3 +1,15 @@
+import sys, os
+
+WIN32 = (sys.platform == 'win32')
+if os.path.exists('../../electricdss-tst/'):
+    BASE_DIR = os.path.abspath('../../electricdss-tst/')
+    ZIP_FN = os.path.abspath('data/13Bus.zip')
+else:
+    BASE_DIR = os.path.abspath('../electricdss-tst/')
+    ZIP_FN = os.path.abspath('tests/data/13Bus.zip')
+
+assert os.path.exists(BASE_DIR)
+
 # Lines starting with "L!" indicate the file will be run line by line, 
 # filtering interactive commands
 
@@ -11,8 +23,6 @@
 #"L!Distrib/IEEETestCases/4wire-Delta/Kersting4wire_Lagging.dss",
 #"L!Distrib/IEEETestCases/4wire-Delta/Kersting4wire_Leading.dss",
 #"L!Distrib/IEEETestCases/4wire-Delta/Kersting4wireIndMotor.dss",
-
-
 
 test_filenames = '''
 L!Version8/Distrib/Examples/Dynamic_Expressions/Dynamic_KundurDynExp.dss

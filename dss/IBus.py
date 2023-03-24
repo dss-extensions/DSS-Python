@@ -7,10 +7,8 @@ Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Base
 from ._types import Float64Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex, Int32Array
-from typing import List, TypeVar, Union
-
-TIBus = TypeVar("TIBus", bound="IBus")
-
+from typing import List, Union
+from typing_extensions import Self
 
 class IBus(Base):
     __slots__ = []
@@ -272,7 +270,7 @@ class IBus(Base):
 
         return result
 
-    def __getitem__(self, index: Union[int, str]) -> TIBus:
+    def __getitem__(self, index: Union[int, str]) -> Self:
         if isinstance(index, int):
             # bus index is zero based, pass it directly
             self.CheckForError(self._lib.Circuit_SetActiveBusi(index))
@@ -284,7 +282,7 @@ class IBus(Base):
 
         return self
 
-    def __call__(self, index: Union[int, str]) -> TIBus:
+    def __call__(self, index: Union[int, str]) -> Self:
         return self.__getitem__(index)
 
     def __iter__(self):

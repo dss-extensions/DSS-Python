@@ -80,7 +80,7 @@ class CtxLib:
             setattr(self, name, value)
 
 
-class Base(object):
+class Base:
     __slots__ = [
         '_lib',
         '_api_util',

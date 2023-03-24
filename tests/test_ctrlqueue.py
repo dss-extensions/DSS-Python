@@ -2,20 +2,16 @@
 2019-02-28: Ported from CtrlQueueTest.bas by Paulo Meira (@pmeira)
 2023-03-19: Modified to add to DSS-Python's tests
 '''
-import sys, os
+import sys
 import numpy as np
 
-WIN32 = (sys.platform == 'win32')
-if os.path.exists('../../electricdss-tst/'):
-    BASE_DIR = os.path.abspath('../../electricdss-tst/')
-else:
-    BASE_DIR = os.path.abspath('../electricdss-tst/')
+try:
+    from ._settings import BASE_DIR
+except ImportError:
+    from _settings import BASE_DIR
 
-assert os.path.exists(BASE_DIR)
 
 USE_COM = False # Change to True to test with the COM DLL
-
-
 
 def test_ctrlqueue():
     '''Example of implementing a simple voltage control for Capacitors via the interface'''

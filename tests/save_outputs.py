@@ -94,16 +94,16 @@ def run(dss: dss.IDSS, fn: str, line_by_line: bool):
     else:
         dss.Text.Command = 'Makebuslist'
 
-    realibity_ran = True
+    reliabity_ran = True
     try:
         dss.ActiveCircuit.Meters.DoReliabilityCalc(False)
         check_error()
         
     except (DSSException, COMDSSException) as ex:
         if ex.args[0] == 52902:
-            realibity_ran = False
+            reliabity_ran = False
 
-    return realibity_ran, has_closedi
+    return reliabity_ran, has_closedi
 
 
 def adjust_to_json(cls, field):
@@ -319,7 +319,10 @@ if __name__ == '__main__':
     else:
         ROOT_DIR = os.path.abspath('../electricdss-tst/')
 
-    from _settings import test_filenames, cimxml_test_filenames
+    try:
+        from ._settings import test_filenames, cimxml_test_filenames
+    except ImportError:
+        from _settings import test_filenames, cimxml_test_filenames
 
     # test_filenames = []
     # cimxml_test_filenames = []
@@ -332,7 +335,8 @@ if __name__ == '__main__':
 
 
     if SAVE_DSSX_OUTPUT:
-        from dss import DSS
+        from dss import DSS, DSSCompatFlags
+        # DSS.CompatFlags = DSSCompatFlags.InvControl9611
         print("Using DSS Extensions:", DSS.Version)
         match = re.match('DSS C-API Library version ([^ ]+) revision.* ([0-9]+);.*', DSS.Version)
         dssx_ver, dssx_timestamp = match.groups()
@@ -375,8 +379,9 @@ if __name__ == '__main__':
                 pass
 
             try:
+                has_closedi = False
                 tstart_run = perf_counter()
-                realibity_ran, has_closedi = run(DSS, fn, line_by_line)
+                reliabity_ran, has_closedi = run(DSS, fn, line_by_line)
                 runtime = perf_counter() - tstart_run
                 total_runtime += runtime
                 data_str = save_state(DSS, runtime=runtime)
@@ -393,6 +398,8 @@ if __name__ == '__main__':
                     colorizer.colorize_traceback(*sys.exc_info())
                 else:
                     traceback.print_exc()
+
+                continue
 
             if org_fn in cimxml_test_filenames:
                 DSS.Text.Command = 'export cim100'

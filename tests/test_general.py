@@ -4,29 +4,29 @@
 import sys, os, itertools, threading
 from time import perf_counter
 import dss
-from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes
+from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags
 import numpy as np
 import pytest
+try:
+    from ._settings import BASE_DIR, ZIP_FN, WIN32
+except ImportError:
+    from _settings import BASE_DIR, ZIP_FN, WIN32
 
-WIN32 = (sys.platform == 'win32')
-DSS.AllowEditor = False
-if os.path.exists('../../electricdss-tst/'):
-    BASE_DIR = os.path.abspath('../../electricdss-tst/')
-    ZIP_FN = os.path.abspath('data/13Bus.zip')
-else:
-    BASE_DIR = os.path.abspath('../electricdss-tst/')
-    ZIP_FN = os.path.abspath('tests/data/13Bus.zip')
-
-assert os.path.exists(BASE_DIR)
 
 def setup_function():
     DSS.ClearAll()
+    DSS.AllowEditor = False
     DSS.AdvancedTypes = False
     DSS.AllowChangeDir = True
     DSS.COMErrorResults = True # TODO: change to False
+    DSS.CompatFlags = 0
 
 
 def test_zip_redirect():
+    with pytest.raises(DSSException):
+        DSS.ZIP.Redirect('13Bus/IEEE13Nodeckt.dss')
+
+    DSS.ZIP.Close()
     DSS.ZIP.Open(ZIP_FN)
     DSS.ZIP.Redirect('13Bus/IEEE13Nodeckt.dss')
     DSS.ZIP.Close()
@@ -36,6 +36,9 @@ def test_zip_redirect():
 
 
 def test_zip_contains():
+    with pytest.raises(DSSException):
+        assert 'before open' in DSS.ZIP
+
     DSS.ZIP.Open(ZIP_FN)
     assert '13Bus/README.txt' in DSS.ZIP
     assert '13Bus/some/wrong/entry.txt' not in DSS.ZIP
@@ -72,7 +75,7 @@ def test_zipv():
 
 
 def _run_mode(mode):
-    DSS.Text.Command = f'redirect "${BASE_DIR}/Version8/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss"'
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/EPRITestCircuits/ckt7/Master_ckt7.dss"'
     DSS.ActiveCircuit.Solution.Mode = SolveModes.Daily
     DSS.YMatrix.SolverOptions = mode
     assert DSS.YMatrix.SolverOptions == mode
@@ -84,7 +87,7 @@ def _run_mode(mode):
     return DSS.ActiveCircuit.AllBusVolts
 
 
-def xtest_sparse_options():
+def test_sparse_options():
     expected = _run_mode(SparseSolverOptions.ReuseNothing)
     for mode in [
         SparseSolverOptions.AlwaysResetYPrimInvalid,
@@ -171,6 +174,20 @@ def test_basic_ctx():
     assert prime_engine.ActiveCircuit.Name == 'test_prime'
 
 
+def test_compat_precision():
+    DSS.ZIP.Open(ZIP_FN)
+    DSS.ZIP.Redirect('13Bus/IEEE13Nodeckt.dss')
+    DSS.ZIP.Close()
+
+    DSS.ActiveCircuit.Vsources.First
+    good = DSS.ActiveCircuit.ActiveCktElement.SeqVoltages.view(dtype=complex)
+    DSS.CompatFlags = DSSCompatFlags.BadPrecision
+    bad = DSS.ActiveCircuit.ActiveCktElement.SeqVoltages.view(dtype=complex)
+    assert max(abs(good - bad)) > 1e-6
+
+
+
+
 def test_set_mode():
     DSS.Text.Command = "new circuit.test"
     DSS.Text.Command = "solve"
@@ -224,6 +241,8 @@ def test_set_mode():
 
 
 def test_pm_threads():
+    DSS.AllowChangeDir = False
+
     Parallel = DSS.ActiveCircuit.Parallel
     if Parallel.NumCPUs < 4:
         return # Cannot run in this machine, e.g. won't run on GitHub Actions
@@ -257,6 +276,7 @@ def test_pm_threads():
 
     DSS.ActiveCircuit.Solution.SolveAll()
     DSS.Text.Command = 'wait'
+    
     assert tuple(Parallel.ActorStatus) == (1, 1, 1, 1)
     assert tuple(Parallel.ActorProgress) == (100, 100, 100, 100)
     t1 = perf_counter()
@@ -271,7 +291,6 @@ def test_pm_threads():
     v_pm.append(DSS.ActiveCircuit.AllBusVolts)
     Parallel.ActiveActor = 4
     v_pm.append(DSS.ActiveCircuit.AllBusVolts)
-
 
     # Now let's run the same thing sequentially for comparison
     DSS.Text.Command = 'set parallel=No'
@@ -304,8 +323,6 @@ def test_pm_threads():
     assert dt_pm < dt_seq
 
     # Let's run with threads, using DSSContexts too
-    DSS.AllowChangeDir = False
-
     v_ctx = [None] * 4
 
     def _run(ctx, i):
@@ -578,13 +595,19 @@ def test_essentials(DSS: IDSS = DSS):
     for expected, b in zip(['sourcebus', '1', '2', '3'], DSS.ActiveCircuit.Buses):
         assert expected == b.Name
 
-if WIN32:
-    def test_patch_comtypes():
+
+def test_patch_comtypes():
+    if WIN32:
         import comtypes.client
         DSS_COM = dss.patch_dss_com(comtypes.client.CreateObject("OpenDSSengine.DSS"))
         test_essentials(DSS_COM)
 
-    def test_patch_comtypes():
+def test_patch_win32com():
+    if WIN32:
         import win32com.client
         DSS_COM = dss.patch_dss_com(win32com.client.Dispatch("OpenDSSengine.DSS"))
         test_essentials(DSS_COM)
+
+if __name__ == '__main__':
+    for _ in range(250):
+        test_pm_threads()
