@@ -322,7 +322,7 @@ class IDSS(Base):
         '''
         ffi = self._api_util.ffi
         lib = self._api_util.lib_unpatched
-        new_ctx = lib.ctx_New()
+        new_ctx = ffi.gc(lib.ctx_New(), lib.ctx_Dispose)
         new_api_util = CffiApiUtil(ffi, lib, new_ctx)
         return IDSS(new_api_util)
 

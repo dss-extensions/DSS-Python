@@ -205,12 +205,12 @@ class CffiApiUtil(object):
         CffiApiUtil._ADV_TYPES = self.lib.DSS_Get_EnableArrayDimensions()
 
 
-    def __delete__(self):
-        if self.ctx is None:
-            return
+    # def __delete__(self):
+    #     if self.ctx is None:
+    #         return
              
-        if self.lib.ctx_Get_Prime() != self.ctx and self.owns_ctx:
-            self.lib.ctx_Dispose(self.ctx)
+    #     if self.lib.ctx_Get_Prime() != self.ctx and self.owns_ctx:
+    #         self.lib.ctx_Dispose(self.ctx)
 
     def init_buffers(self):
         tmp_string_pointers = (self.ffi.new('char****'), self.ffi.new('int32_t**'))
