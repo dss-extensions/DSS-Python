@@ -6,9 +6,9 @@ import sys
 import numpy as np
 
 try:
-    from ._settings import BASE_DIR
+    from ._settings import BASE_DIR, WIN32
 except ImportError:
-    from _settings import BASE_DIR
+    from _settings import BASE_DIR, WIN32
 
 
 USE_COM = False # Change to True to test with the COM DLL
@@ -17,7 +17,15 @@ def test_ctrlqueue():
     '''Example of implementing a simple voltage control for Capacitors via the interface'''
 
     if not USE_COM:
-        from dss import DSS as DSSobj
+        if WIN32:
+            # When running pytest, the faulthandler seems to eager to grab FPC's exceptions, even when handled
+            import faulthandler
+            faulthandler.disable()
+            from dss import DSS as DSSobj
+            faulthandler.enable()
+        else:
+            from dss import DSS as DSSobj
+        
     else:
         import os
         old_cd = os.getcwd()

@@ -5,15 +5,21 @@ from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_ca
 import numpy as np
 import pytest
 
-WIN32 = (sys.platform == 'win32')
-DSS.AllowEditor = False
-if os.path.exists('../../electricdss-tst/'):
-    BASE_DIR = os.path.abspath('../../electricdss-tst/')
-    ZIP_FN = os.path.abspath('data/13Bus.zip')
-else:
-    BASE_DIR = os.path.abspath('../electricdss-tst/')
-    ZIP_FN = os.path.abspath('tests/data/13Bus.zip')
+try:
+    from ._settings import BASE_DIR, WIN32, ZIP_FN
+except ImportError:
+    from _settings import BASE_DIR, WIN32, ZIP_FN
 
+if WIN32:
+    # When running pytest, the faulthandler seems to eager to grab FPC's exceptions, even when handled
+    import faulthandler
+    faulthandler.disable()
+    import dss
+    faulthandler.enable()
+else:
+    import dss
+
+DSS.AllowEditor = False
 
 def test_rxmatrix():
     DSS.ClearAll()

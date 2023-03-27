@@ -346,7 +346,7 @@ if __name__ == '__main__':
         import comtypes.client
         DSS = comtypes.client.CreateObject("OpenDSSEngine.DSS")
         DSS = dss.patch_dss_com(DSS)
-        DSS.Text.Command = r'set editor=ignore_me_invalid_executable'
+        #DSS.Text.Command = r'set editor=ignore_me_invalid_executable' -- need to let it open for some reports :|
         print("Using official OpenDSS COM:", DSS.Version)
         com_ver = DSS.Version.split(' ')[1]
         suffix = f'-COM-{platform.machine()}-{com_ver}'

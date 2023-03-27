@@ -3,14 +3,23 @@
 #       covers detailed check of API states, etc.
 import sys, os, itertools, threading
 from time import perf_counter
-import dss
-from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags
-import numpy as np
-import pytest
 try:
     from ._settings import BASE_DIR, ZIP_FN, WIN32
 except ImportError:
     from _settings import BASE_DIR, ZIP_FN, WIN32
+
+if WIN32:
+    # When running pytest, the faulthandler seems to eager to grab FPC's exceptions, even when handled
+    import faulthandler
+    faulthandler.disable()
+    import dss
+    faulthandler.enable()
+else:
+    import dss
+
+from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags
+import numpy as np
+import pytest
 
 
 def setup_function():
@@ -589,10 +598,10 @@ def test_essentials(DSS: IDSS = DSS):
     Text.Command = 'new line.line1 bus=1 bus2=2'
     Text.Command = 'new line.line2 bus=2 bus2=3'
     assert DSS.ActiveCircuit.Name == 'test789'
-    assert len(DSS.ActiveCircuit.Buses) == 0
+    assert len(DSS.ActiveCircuit.ActiveBus) == 0
     Text.Command = 'MakeBusList'
-    assert len(DSS.ActiveCircuit.Buses) == 4
-    for expected, b in zip(['sourcebus', '1', '2', '3'], DSS.ActiveCircuit.Buses):
+    assert len(DSS.ActiveCircuit.ActiveBus) == 4
+    for expected, b in zip(['sourcebus', '1', '2', '3'], DSS.ActiveCircuit.ActiveBus):
         assert expected == b.Name
 
 
@@ -605,7 +614,8 @@ def test_patch_comtypes():
 def test_patch_win32com():
     if WIN32:
         import win32com.client
-        DSS_COM = dss.patch_dss_com(win32com.client.Dispatch("OpenDSSengine.DSS"))
+        win32com.client.Dispatch("OpenDSSengine.DSS")
+        DSS_COM = dss.patch_dss_com(win32com.client.gencache.EnsureDispatch("OpenDSSengine.DSS"))
         test_essentials(DSS_COM)
 
 if __name__ == '__main__':

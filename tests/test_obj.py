@@ -1,13 +1,24 @@
 import numpy as np
+try:
+    from ._settings import BASE_DIR, WIN32
+except ImportError:
+    from _settings import BASE_DIR, WIN32
+
+if WIN32:
+    # When running pytest, the faulthandler seems to eager to grab FPC's exceptions, even when handled
+    import faulthandler
+    faulthandler.disable()
+    import dss
+    faulthandler.enable()
+else:
+    import dss
+
 from dss import dss, Edit, IDSS #, YMatrixModes
 from dss.IObj import (
     Vsource, Transformer, LineCode, Load, Line, Capacitor, 
     Connection as Conn, RegControl, DimensionUnits as Units,
 )    
-try:
-    from ._settings import BASE_DIR
-except ImportError:
-    from _settings import BASE_DIR
+
 
 
 LoadModel = Load.LoadModel
