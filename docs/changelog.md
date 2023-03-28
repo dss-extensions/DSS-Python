@@ -1,3 +1,74 @@
+# 0.13.0
+
+- Engine updated to [**DSS C-API 0.13.0**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.0), which is very compatible with OpenDSS 9.6.1.1 (plus some official SVN commits up to rev 3595, plus our own changes.
+- **New test suite,** which runs many more files and validates more of the API. We now use `pytest` for some more complex tests, while the numeric validation is done with the new `compare_outputs.py`.
+- **New `DSS.AdvancedTypes`:** toggle matrix shapes and complex numbers in many of the properties and functions of the API. This is disabled by default.
+- **New `DSS.CompatFlags`:** to address some concerns about compatibility, we added a few toggles to toggle behavior that matches the official OpenDSS more closely. This flags will be refined in later releases.
+- Drop deprecated IR classes and a few undocumented functions.
+- Use **more enums** throughout the code, which helps both readability and documentation. Some enums were complemented.
+- **`DSS.AdvancedTypes`** toggle: enabling `AdvancedTypes` allows using **array/matrix shapes and complex numbers** as results from properties/functions in the API.
+- **Plotting**: Implement several plot types. Only a few issues need to be addressed to consider the plotting system complete!
+- **Notebook integration**: Initial prototype available. It is enabled automatically when `DSS.Plotting.enable()` is run in a notebook, providing integration with some DSS messages and outputs.
+    - It also registers the **`%%dss` cell magic**. Use it in a cell to run DSS-language code directly. We found it useful for exploration and learning.
+- Updated `patch_dss_com` to patch a few more classes.
+- Drop Python 3.6 support, include 3.11 officially in the tests.
+- **DSSContext disposal:** use CFFI to track the disposal of the contexts instead of manually tracking. This could remove memory leaks if you application creates too many DSSContexts (which is not recommended).
+- **DSS.Obj:** remove some redundant properties, fix several issues. While it's not complete yet (some known limitations), you can see the tests for a few examples of how to create circuits without .DSS scripts/files in [tests/test_obj.py](https://github.com/dss-extensions/dss_python/blob/master/tests/test_obj.py) and [tests/test_batch.py](https://github.com/dss-extensions/dss_python/blob/master/tests/test_batch.py) -- the first creates each object explicitly, while the second uses batch operations to fill properties from arrays and lists.
+- Add `typing_extensions` as a dependency to address Python typing needs in the main API code and the new Obj API.
+- Docs: mark more properties as "**(API Extension)**".
+- Internal code refactoring and clean-up.
+
+## DSS C-API 0.13.0 changes 
+
+[**check its repo for more info**](https://github.com/dss-extensions/dss_capi/)
+
+- Clean-up several files to ease the transition from Pascal to C++; more enum usage, remove redundant internal properties, rename some class members, etc. Some final steps still remain (that work is done in private branches).
+- Fixes a couple of minor memory leaks.
+- Removed our old *Legacy Models* mechanism. Right now, the API functions still exist, but will have no effect when setting and will throw an error. For a future version, the functions will be removed. This toggle was introduced in 2020, some time after the removal of the legacy models in the official OpenDSS. We believe users had enough time to fully migrate and the extra maintenance burden is not justified anymore.
+- Transition some deprecated and buggy properties to throw specific errors, instead of generic messages. Issue: https://github.com/dss-extensions/dss_capi/issues/118
+- `Export` command: When the user provides a filename, use it as-is, otherwise could be an invalid path in case-sensitive file systems (e.g. Linux, most likely).
+- `Dump` and `Save` commands: in some cases, our internal "hybrid enums" were not being converted correctly for dumps. A few classes had incomplete dump implementations since v0.12.0; some strings needed to be escaped for correct output.
+- CtrlQueue: adjust string formatting of items; although this doesn't affect the numeric results, the strings from the queue had some truncated numbers.
+- Property system: For compatibility with the official version, allow autoresizing some arrays when given conflicting number of elements through the text interface or scripts.
+- `Like` property: Although not recommended and [deprecated in the official OpenDSS](https://sourceforge.net/p/electricdss/discussion/861977/thread/8b59d21eb6/?limit=25#b57c/f668), the sequence of properties filled in the original copy is also copied. If you use `Like`, remember to check if the copy actually worked since some classes are known to not copy every property correctly.
+- Plotting and UI: The engine side plotting callback system is now complete. There are fixes for `DaisyPlot` and `GeneralDataPlot`, especially multi-platform handling. Changed how some properties are exposed in the JSON interchange to the callbacks. Implement argument handling and callback dispatch for `DI_Plot`, `CompareCases` and `YearlyCurves`.
+- `New` commands: Fix potential issue with null pointers and duplicate names when `DuplicatesAllowed=False`.
+- EnergyMeter: Fix error message when the metered element is not a PDElement.
+- CIMXML export: Fix issues present since v0.12.0; reported in https://github.com/dss-extensions/OpenDSSDirect.py/issues/121
+- Parser: properly error out when given excessive number of elements for matrices; implemented due to the report in https://github.com/dss-extensions/OpenDSSDirect.py/issues/122
+- Port most changes from the official OpenDSS up to SVN revision 3595 (OpenDSS v9.6.1.1 + a couple of CIMXML updates); check [OpenDSS v9.6.1.1 README.txt](https://sourceforge.net/p/electricdss/code/3595/tree/trunk/Version8/README.txt) for some complementary info to the list below.
+    - Relay, UPFC, UPFCControl changes ported.
+    - CIMXML exports: Various updates.
+    - RegControl: More log and debug trace entries.
+    - LoadMult: Set `SystemYChanged` when changing `LoadMult` **through a DSS script or DSS command** (doesn't affect `Solution_Set_LoadMult`)
+    - Port PVSystem, Storage, InvControl, and StorageController changes, including the new grid-forming mode (GFM). For DSS Extensions, we added a new class InvBasedPCE to avoid some redundancy and make things clearer.
+    - Port DynamicExp and related functionality. In our implementation, we also add a new class DynEqPCE to avoid some redundant code (could still be improved). the Generator and the new InvBasePCE derive from this new DynEqPCE. **Note**: the `DynamicEq` functionality from the upstream still seems incomplete and some things are not fully implemented or maybe buggy, so we only ported now to remove the burden of porting this down the line. If you find issues, feel free to report here on DSS Extensions, but we recommended checking first with the official OpenDSS -- if the issue is also found in the official version, prefer to report in the official OpenDSS forum first so everyone gets the fixes and our implementation doesn't diverge too much.
+    - CktElement/API: add a few new functions related to state variables.
+    - Circuit, Line: port the `LongLineCorrection` flag now that it seems to be fixed upstream. Note that we didn't publish releases with the previous buggy version from the upstream OpenDSS (that applied the long-line correction for everything).
+    - LineSpacing: port side-effect from upstream; changing `nconds` now reallocates and doesn't leak previously allocated memory. Not a common operation, so it's not very relevant.
+    - CktElement: port code for handling losses in AutoTrans
+- Other API updates:
+    - DSSContext API: allow `null` pointer for the prime/default instance. This should ease the transition. Issue: https://github.com/dss-extensions/dss_capi/issues/119
+    - Error API: add `Error_Set_Description` to allow easier setting an error message from callbacks (this is for advanced usage)
+    - Batch and Obj API: 
+        - For a couple of fast-path operations, add checks for edit state, automatically issuing `BeginEdit` and `EndEdit` for the objects in the batch.
+        - Allow passing strings (object names) instead of pointers for object references
+        - Automatically add new elements to the current DSSContext (since we have not yet published a manipulation API)
+        - For symmetric matrices, if the user passes only the triangle, follow the same convention as the Text interface. Includes specific fix for (parts of) complex matrices (like the R or X matrices when internally Z is stored). If the user provides full matrices, the previous behavior was correct, no changes required.
+    - `Fuses_Reset`: fix C header (remove extra/unused parameter)
+    - `Fuses_Get_State` and `Fuses_Get_NormalState`: add missing string copy. Sometimes this could cause memory corruption.
+    - `Bus_Get_ZSC012Matrix`: check for nulls
+    - `Bus_Get_AllPCEatBus`, `Bus_Get_AllPDEatBus`: faster implementations
+    - `Meters_Get_CountBranches`: reimplemented
+    - `Monitors_Get_dblHour`: For harmonics solution, return empty array. Previously, it was returning a large array instead of a single element (`[0]`) array. A small issue adjusted for compatibility with the official COM API results.
+    - `Reactors_Set_Bus1`: Match the side-effects of the property API for two-terminal reactors. 
+    - New `DSS_Set_CompatFlags`/`DSS_Get_CompatFlags` function pair: introduced to address some current and potential future concerns about compatibility of results with the official OpenDSS. See the API docs for more info.
+    - New `DSS_Set_EnableArrayDimensions`/`DSS_Get_EnableArrayDimensions`: for Array results in the API, implement optional matrix sizes; when setting `DSS_Set_EnableArrayDimensions(true)`, the array size pointer will be filled with two extra elements to represent the matrix size (if the data is a matrix instead of a plain vector). For complex number, the dimensions are filled in relation to complex elements instead of double/float64 elements even though we currently reuse the double/float64 array interface. Issue: https://github.com/dss-extensions/dss_capi/issues/113
+
+Note that a couple of SVN changes were ignored on purpose since they introduced potential issues, while many other changes and bug-fixes did not affect the DSS C-API version since our implementation is quite different in some places.
+
+
+
 # 0.12.1
 
 - Expose `Storages` in Python
@@ -6,7 +77,7 @@
 
 # 0.12.0
 
-- Removed CmathLib: not useful in Python or most programming languages targetted by DSS Extensions.
+- Removed CmathLib: not useful in Python or most programming languages targeted by DSS Extensions.
 - Allow creating multiple DSS engine instances via `DSS.NewContext()`.
 - Reenabled Parallel interface and PM functions (actors and so on), based on a new implementation.
 - Enable incremental Y matrix options -- controlled by `DSS.YMatrix.SolverOptions`, options listed in `SparseSolverOptions`.
@@ -29,7 +100,7 @@ This version still maintains basic compatibility with the 0.10.x series of relea
 - The code was finally unified, merging remaining features from OpenDSS v8+ (with few exceptions). Most of the DSS PM commands and functions were enabled. To achieve this, most of the global variables from the OpenDSS engine were encapsulated in a new class, a DSS Context class. Multi-threaded features are based on DSSContexts, both the original OpenDSS PM features and new extensions.
 - Using DSS Contexts, user threads are now possible.
 - Initial ARM64/AARCH64 support added. ARM32 building scripts were also added. Support includes Apple M1 support, including parallel/multi-threading features.
-- Finally use KLUSolveX (our KLUSolve fork, rewritten and extended), enabling incremental Y updates for transformers and capacitor banks. **Documentation including usage notes and limitations still not written.** This was planned for version v0.13, but momved back to v0.12 to enable ARM32 (armv7l) support and better results in ARM64 (aarch64).
+- Finally use KLUSolveX (our KLUSolve fork, rewritten and extended), enabling incremental Y updates for transformers and capacitor banks. **Documentation including usage notes and limitations still not written.** This was planned for version v0.13, but moved back to v0.12 to enable ARM32 (armv7l) support and better results in ARM64 (aarch64).
 - Experimental callbacks for plotting and message output. Expect initial support in Python soon after DSS C-API v0.12 is released.
 - Introduce `AllowChangeDir` mechanism: defaults to enabled state for backwards compatibility. When disabled, the engine will not change the current working directory in any situation. This is exposed through a new pair of functions
 `DSS_Set_AllowChangeDir` and `DSS_Get_AllowChangeDir`, besides the environment variable `DSS_CAPI_ALLOW_CHANGE_DIR`.
@@ -106,7 +177,7 @@ DSS C-API 0.10.7 changes:
 
 DSS C-API 0.10.6 changes:
 
-- This version should be fully API compatible with 0.10.3+. The behavior of some functions changed with the new extensions. Especially, empty strings are explicitely return as nulls instead of "\0". This conforms to the behavior already seen in arrays of strings.
+- This version should be fully API compatible with 0.10.3+. The behavior of some functions changed with the new extensions. Especially, empty strings are explicitly return as nulls instead of "\0". This conforms to the behavior already seen in arrays of strings.
 - The binary releases now use Free Pascal 3.2.0. We observed the solution process is around 6% faster, and results are even closer to the official OpenDSS.
 - The releases now include both the optimized/default binary and a non-optimized/debug version. See the [Debugging](https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/debug.md) document for more.
 - Extended API validation and **Extended Errors** mechanism: 
