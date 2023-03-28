@@ -1,14 +1,16 @@
 """
 This module provides a **work-in-progress** implementation of the original OpenDSS plots
-using the new features from DSS C-API v0.12 and common Python modules such as matplotlib.
+using the new features from DSS C-API v0.12+ and common Python modules such as matplotlib.
 
-This is not a complete implementation yet and there are known limitations
+This is not a complete implementation and there are known limitations, but should suffice
+for many use-cases. We'd like to add another backend later.
 """
 from . import api_util
 from . import DSS as DSSPrime
 from ._cffi_api_util import CffiApiUtil
 from .IDSS import IDSS
 from .IBus import IBus
+from typing import List
 import os
 try:
     import numpy as np
@@ -36,7 +38,11 @@ try:
 
     def link_file(fn):
         relfn = os.path.relpath(fn, os.getcwd())
-        display(FileLink(relfn, result_html_prefix=f'<b>File output</b> ("{html.escape(fn)}"):&nbsp;'))
+        if relfn.startswith('..'):
+            # cannot show in the notebook :(
+            display(HTML(f'<p><b>File output</b> ("{html.escape(relfn)}") outside current workspace.<p>'))
+        else:    
+            display(FileLink(relfn, result_html_prefix=f'<b>File output</b> ("{html.escape(fn)}"):&nbsp;'))
 
     def show(text):
         display(text)
@@ -94,7 +100,7 @@ DSS_MARKER_21 = Path([(-0.28, -0.147), (0.0, 0.13), (0.28, -0.147)], [1, 2, 2])
 DSS_MARKER_22 = Path([(-0.23, 0.147), (0.0, -0.13), (0.23, 0.147)], [1, 2, 2])
 DSS_MARKER_23 = Path([(-0.28, 0.147), (0.0, -0.13), (0.28, 0.147)], [1, 2, 2])
 
-marker_map = {
+MARKER_MAP = {
     # marker, size multipler (1=normal, 2=small, 3=tiny), fill
     0: (',', 1, 1),
     1: ('+', 3, 1),
@@ -168,8 +174,10 @@ Colors = [
 
 sizes = np.array([0, 9, 6, 4], dtype=float) * 0.7
 
+MARKER_SEQ = (5, 15, 2, 8, 26, 36, 39, 19, 18)
+
 def get_marker_dict(dss_code):
-    marker, size, fill = marker_map[dss_code]
+    marker, size, fill = MARKER_MAP[dss_code]
     res = dict(
         marker=marker, 
         markersize=sizes[size], 
@@ -187,35 +195,48 @@ def get_marker_dict(dss_code):
 def nodot(b):
     return b.split('.', 1)[0]
 
-def dss_monitor_plot(DSS, params):
+def dss_monitor_plot(DSS: IDSS, params):
     monitor = DSS.ActiveCircuit.Monitors
     monitor.Name = params['ObjectName']
     data = monitor.AsMatrix()
+    channels = [x + 1 for x in params['Channels']]
+    if min(channels) <= 1 or max(channels) >= monitor.NumChannels:
+        raise IndexError("Invalid channel number")
 
+    bases = params['Bases']
     header = monitor.Header
-    if header[0].strip().lower() == 'freq':
+    if len(monitor.dblHour) < len(monitor.dblFreq):
+        header.insert(0, 'Frequency')
+        header.insert(1, 'Harmonic')
         xlabel = 'Frequency (Hz)'
         h = data[:, 0]
     else:
-        xlabel = 'Time (s)'
+        header.insert(0, 'Hour')
+        header.insert(1, 'Seconds')
         h = data[:, 0] * 3600 + data[:, 1]
-    
+        total_seconds = max(h) - min(h)
+        if total_seconds < 7200:
+            xlabel = 'Time (s)'
+        else:
+            xlabel = 'Time (h)'
+            h /= 3600
+
     separate = False
     if separate:
-        fig, axs = plt.subplots(len(params['Channels']), sharex=True, figsize=(8, 9))
+        fig, axs = plt.subplots(len(channels), sharex=True, figsize=(8, 9))
         icolor = -1
-        for ax, base, ch in zip(axs, params['Bases'], params['Channels']):
+        for ax, base, ch in zip(axs, bases, channels):
             icolor += 1
-            ax.plot(h, data[:, ch + 1] / base, color=Colors[icolor % len(Colors)])
+            ax.plot(h, data[:, ch] / base, color=Colors[icolor % len(Colors)])
             ax.grid()
-            ax.set_ylabel(header[ch - 1])
-    
+            ax.set_ylabel(header[ch])
+
     else:
         fig, ax = plt.subplots(1)
         icolor = -1
-        for base, ch in zip(params['Bases'], params['Channels']):
+        for base, ch in zip(bases, channels):
             icolor += 1
-            ax.plot(h, data[:, ch + 1] / base, label=header[ch - 1], color=Colors[icolor % len(Colors)])
+            ax.plot(h, data[:, ch] / base, label=header[ch], color=Colors[icolor % len(Colors)])
 
         ax.grid()
         ax.legend()
@@ -265,7 +286,7 @@ def dss_tshape_plot(DSS, params):
 
 
 def dss_priceshape_plot(DSS, params):
-    # There is no dedicated API yet
+    # There is no dedicated API yet but we can move to the Obj API
     name = params['ObjectName']
     DSS.Text.Command = f'? priceshape.{name}.price'
     p = np.fromstring(DSS.Text.Result[1:-1].strip(), dtype=float, sep=' ')
@@ -885,7 +906,7 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
             
             points = get_point_data(DSS, objs, bus_coords)
             
-    #        if marker_code not in marker_map:
+    #        if marker_code not in MARKER_MAP:
                 #marker_code = 25
                 
             marker_dict = get_marker_dict(marker_code)
@@ -1097,9 +1118,6 @@ def dss_visualize_plot(DSS, params):
     ax.set_ylim(-15, y + 5)
 
 
-def dss_yearly_curve_plot(DSS, params):
-    print("TODO: YearCurveplot")#, params)
-
 def dss_general_data_plot(DSS, params):
     is_general = params['PlotType'] == 'GeneralData'
     ValueIndex = max(1, params['ValueIndex'] - 1)
@@ -1297,6 +1315,163 @@ def dss_daisy_plot(DSS, params):
         ax.text(bus.x, bus.y, bus.Name, zorder=11)
 
 
+def unquote(field: str):
+    field = field.strip()
+    if field[0] == '"' and field[-1] == '"':
+        return field[1:-1]
+    
+    return field
+
+
+def dss_di_plot(DSS: IDSS, params):
+    caseYear, caseName, meterName = params['CaseYear'], params['CaseName'], params['MeterName']
+    plotRegisters, peakDay = params['Registers'], params['PeakDay']
+
+    fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', meterName + '.csv')
+
+    if len(plotRegisters) == 0:
+        raise RuntimeError("No register indices were provided for DI_Plot")
+
+    if not os.path.exists(fn):
+        fn = fn[:-4] + '_1.csv'
+
+    # Whenever we add Pandas as a dependency, this could be
+    # rewritten to avoid all the extra/slow work
+    selected_data = []
+    day_data = []
+    mult = 1 if peakDay else 0.001
+
+    # If the file doesn't exist, let the exception raise
+    with open(fn, 'r') as f:
+        header = f.readline().rstrip()
+        allRegisterNames = [unquote(field) for field in header.strip().strip(' \t,').split(',')]
+        registerNames = [allRegisterNames[i] for i in plotRegisters]
+
+        if not len(registerNames):
+            raise RuntimeError("Could not find any register name in the file")
+
+        for line in f:
+            if not line:
+                continue
+
+            rawValues = line.split(',')
+            selValues = [float(rawValues[0]), *(float(rawValues[i]) for i in plotRegisters)]
+            if not peakDay:
+                selected_data.append(selValues)
+            else:
+                day_data.append(selValues)
+                if len(day_data) == 24:
+                    max_vals = [max(x) for x in zip(*day_data)]
+                    max_vals[0] = day_data[0][0]
+                    day_data = []
+                    selected_data.append(max_vals)
+
+    if day_data:
+        max_vals = [max(x) for x in zip(*day_data)]
+        max_vals[0] = day_data[0][0]
+        day_data = []
+        selected_data.append(max_vals)
+
+    vals = np.asarray(selected_data, dtype=float)
+    fig, ax = plt.subplots(1)
+    icolor = -1
+    for idx, name in enumerate(registerNames, start=1):
+        icolor += 1
+        ax.plot(vals[:, 0], vals[:, idx] * mult, label=name, color=Colors[icolor % len(Colors)])
+
+    ax.set_title(f'{caseName}, Yr={caseYear}')
+    ax.set_xlabel('Hour')
+    ax.set_ylabel('MW, MWh or MVA')
+    ax.legend()
+    ax.grid()
+
+
+def _plot_yearly_case(DSS: IDSS, caseName: str, meterName: str, plotRegisters: List[int], icolor: int, ax, registerNames: List[str]):
+    anyData = True
+    xvalues = []
+    all_yvalues = [[] for _ in plotRegisters]
+    for caseYear in range(0, 21):
+        fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', 'Totals_1.csv')
+        if not os.path.exists(fn):
+            continue
+
+        with open(fn, 'r') as f:
+            f.readline() # Skip the header
+            # Get started - initialize Registers 1
+            registerVals = [float(x) * 0.001 for x in f.readline().split(',')]
+            if len(registerVals):
+                xvalues.append(registerVals[7])
+
+    if len(xvalues) == 0:
+        raise RuntimeError('No data to plot')                
+
+    for caseYear in range(0, 21):
+        if meterName.lower() in ('totals', 'systemmeter', 'totals_1', 'systemmeter_1'):
+            suffix = '' if meterName.endswith('_1') else '_1'
+            meterName = meterName.lower().replace('totals', 'Totals').replace('systemmeter', 'SystemMeter')
+            fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', f'{meterName}{suffix}.csv')
+            searchForMeterLine = False
+        else:
+            fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', 'EnergyMeterTotals_1.csv')
+            searchForMeterLine = True
+
+        if not os.path.exists(fn):
+            continue
+
+        with open(fn, 'r') as f:
+            header = f.readline()
+            if len(registerNames) == 0:
+                allRegisterNames = [unquote(field) for field in header.strip(' \t,').split(',')]
+                registerNames.extend(allRegisterNames[i] for i in plotRegisters)
+
+            if not searchForMeterLine:
+                line = f.readline()
+            else:
+                for line in f:
+                    label, rest = line.split(',', 1)
+                    if label.strip().lower() == meterName.lower():
+                        line = f'{caseYear},{rest}'
+                else:
+                    raise RuntimeError("Meter not found")
+
+            registerVals = [float(x) * 0.001 for x in line.strip(' \t,').split(',')]
+            if len(registerVals):
+                for yvalues, idx in zip(all_yvalues, plotRegisters):
+                    yvalues.append(registerVals[idx])
+    
+    for yvalues, idx, regName in zip(all_yvalues, plotRegisters, registerNames):
+        marker_code = MARKER_SEQ[icolor % len(MARKER_SEQ)]
+        ax.plot(xvalues, yvalues, label=f'{caseName}:{meterName}:{regName}', color=Colors[icolor % len(Colors)], **get_marker_dict(marker_code))
+        icolor += 1
+
+    return icolor
+
+
+def dss_yearly_curve_plot(DSS: IDSS, params):
+    caseNames, meterName, plotRegisters = params['CaseNames'], params['MeterName'], params['Registers']
+
+    fig, ax = plt.subplots(1)
+    icolor = 0
+    registerNames = []
+    for caseName in caseNames:
+        icolor = _plot_yearly_case(DSS, caseName, meterName, plotRegisters, icolor, ax, registerNames)
+
+    if icolor == 0:
+        plt.close(fig)
+        raise RuntimeError('No files found')
+    
+    fig.suptitle(f"Yearly Curves for case(s): {', '.join(caseNames)}")
+    ax.set_title(f"Meter: {meterName}; Registers: {', '.join(registerNames)}", fontsize='small')
+    ax.set_xlabel('Total Area MW')
+    ax.set_ylabel('MW, MWh or MVA')
+    ax.legend()
+    ax.grid()
+
+
+def dss_comparecases_plot(DSS: IDSS, params):
+    print('TODO: dss_comparecases_plot', params)
+
+
 dss_plot_funcs = {
     'Scatter': dss_scatter_plot,
     'Daisy': dss_daisy_plot,
@@ -1309,11 +1484,26 @@ dss_plot_funcs = {
     'Visualize': dss_visualize_plot,
     'YearlyCurve': dss_yearly_curve_plot,
     'Matrix': dss_matrix_plot,
-    'GeneralData': dss_general_data_plot
+    'GeneralData': dss_general_data_plot,
+    'DI': dss_di_plot,
+    'CompareCases': dss_comparecases_plot,
 }
 
 def dss_plot(DSS, params):
-    dss_plot_funcs.get(params['PlotType'])(DSS, params)
+    try:
+        ptype = params['PlotType']
+        if ptype not in dss_plot_funcs:
+            print('ERROR: not implemented plot type:', ptype)
+            return -1
+
+        dss_plot_funcs.get(ptype)(DSS, params)
+    except Exception as ex:
+        DSS._errorPtr[0] = 777
+        DSS._lib.Error_Set_Description(f"Error in the plot backend: {ex}".encode())
+        return 777
+    
+    return 0
+        
 
 
 def ctx2dss(ctx, instances={}):
@@ -1408,23 +1598,24 @@ def dss_python_cb_write(ctx, message_str, message_type):
 @api_util.ffi.def_extern()
 def dss_python_cb_plot(ctx, paramsStr):
     params = json.loads(api_util.ffi.string(paramsStr))
+    result = 0
     try:
         DSS = ctx2dss(ctx)
-        dss_plot(DSS, params)
+        result = dss_plot(DSS, params)
         if _do_show:
             plt.show()
     except:
         from traceback import print_exc
         print('DSS: Error while plotting. Parameters:', params, file=sys.stderr)
         print_exc()
-    return 0
+    return 0 if result is None else result
 
 _original_allow_forms = None
 _do_show = True
 
 def enable(plot3d: bool = False, plot2d: bool = True, show: bool = True):
     """
-    Enables the experimental plotting subsystem from DSS Extensions.
+    Enables the plotting subsystem from DSS Extensions.
 
     Set plot3d to `True` to try to reproduce some of the plots from the
     alternative OpenDSS Visualization Tool / OpenDSS Viewer addition 
@@ -1441,8 +1632,6 @@ def enable(plot3d: bool = False, plot2d: bool = True, show: bool = True):
     global _do_show
 
     _do_show = show
-
-    warnings.warn('This is still an initial, work-in-progress implementation of plotting for DSS Extensions')
 
     if plot3d and plot2d:
         include_3d = 'both'
