@@ -186,8 +186,6 @@ class Base:
 
 
 class CffiApiUtil(object):
-    _ADV_TYPES = False # class variable, changed globally
-
     def __init__(self, ffi, lib, ctx=None):
         self.owns_ctx = True
         self.codec = codec
@@ -199,10 +197,9 @@ class CffiApiUtil(object):
         else:
             self.lib = CtxLib(ctx, lib)
 
+        self._allow_complex = False
         self.init_buffers()
 
-        # Just in case the user has set the env var DSS_CAPI_ARRAY_DIMS=1
-        CffiApiUtil._ADV_TYPES = self.lib.DSS_Get_EnableArrayDimensions()
 
 
     # def __delete__(self):
@@ -252,7 +249,7 @@ class CffiApiUtil(object):
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
         self.lib.DSS_Dispose_PDouble(ptr)
 
-        if self._ADV_TYPES and cnt[3]:
+        if self._allow_complex and cnt[3]:
             # If the last element is filled, we have a matrix.  Otherwise, the 
             # matrix feature is disabled or the result is indeed a vector
             return res.reshape((cnt[2], cnt[3]), order='F')
@@ -261,7 +258,7 @@ class CffiApiUtil(object):
 
 
     def get_complex128_array(self, func, *args) -> Float64ArrayOrComplexArray:
-        if not self._ADV_TYPES:
+        if not self._allow_complex:
             return self.get_float64_array(func, *args)
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -280,7 +277,7 @@ class CffiApiUtil(object):
 
 
     def get_complex128_simple(self, func, *args) -> Float64ArrayOrSimpleComplex:
-        if not self._ADV_TYPES:
+        if not self._allow_complex:
             return self.get_float64_array(func, *args)
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -296,26 +293,26 @@ class CffiApiUtil(object):
 
     def get_float64_gr_array(self) -> Float64Array:
         ptr, cnt = self.gr_float64_pointers
-        if self._ADV_TYPES and cnt[3]:
+        if self._allow_complex and cnt[3]:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy().reshape((cnt[2], cnt[3]), order='F')
         
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
 
 
     def get_complex128_gr_array(self) -> ComplexArray:
-        if not self._ADV_TYPES:
+        if not self._allow_complex:
             return self.get_float64_gr_array()
 
         # Currently we use the same as API as get_float64_array, may change later
         ptr, cnt = self.gr_float64_pointers
-        if self._ADV_TYPES and cnt[3]:
+        if self._allow_complex and cnt[3]:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy().reshape((cnt[2], cnt[3]), order='F')
         
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
 
 
     def get_complex128_gr_simple(self) -> Float64ArrayOrSimpleComplex:
-        if not self._ADV_TYPES:
+        if not self._allow_complex:
             return self.get_float64_gr_array()
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -331,7 +328,7 @@ class CffiApiUtil(object):
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
         self.lib.DSS_Dispose_PInteger(ptr)
 
-        if self._ADV_TYPES and cnt[3]:
+        if self._allow_complex and cnt[3]:
             # If the last element is filled, we have a matrix.  Otherwise, the 
             # matrix feature is disabled or the result is indeed a vector
             return res.reshape((cnt[2], cnt[3]))
@@ -349,7 +346,7 @@ class CffiApiUtil(object):
 
     def get_int32_gr_array(self) -> Int32Array:
         ptr, cnt = self.gr_int32_pointers
-        if self._ADV_TYPES and cnt[3]:
+        if self._allow_complex and cnt[3]:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy().reshape((cnt[2], cnt[3]))
 
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
@@ -362,7 +359,7 @@ class CffiApiUtil(object):
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
         self.lib.DSS_Dispose_PByte(ptr)
 
-        if self._ADV_TYPES and cnt[3]:
+        if self._allow_complex and cnt[3]:
             # If the last element is filled, we have a matrix.  Otherwise, the 
             # matrix feature is disabled or the result is indeed a vector
             return res.reshape((cnt[2], cnt[3]))
@@ -371,7 +368,7 @@ class CffiApiUtil(object):
 
     def get_int8_gr_array(self) -> Int8Array:
         ptr, cnt = self.gr_int8_pointers
-        if self._ADV_TYPES and cnt[3]:
+        if self._allow_complex and cnt[3]:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy().reshape((cnt[2], cnt[3]), order='F')
 
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()

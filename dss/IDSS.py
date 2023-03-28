@@ -324,6 +324,7 @@ class IDSS(Base):
         lib = self._api_util.lib_unpatched
         new_ctx = ffi.gc(lib.ctx_New(), lib.ctx_Dispose)
         new_api_util = CffiApiUtil(ffi, lib, new_ctx)
+        new_api_util._allow_complex = self._api_util._allow_complex
         return IDSS(new_api_util)
 
     def __call__(self, single:Union[AnyStr, List[AnyStr]]=None, block : AnyStr = None): #TODO: benchmark and simplify (single argument)
@@ -388,10 +389,10 @@ class IDSS(Base):
     @property
     def AdvancedTypes(self) -> bool:
         '''
-        When enabled, there are **two global side-effects**:
+        When enabled, there are **two side-effects**:
         
-        - Complex arrays and complex numbers can be returned and consumed by the Python API.
-        - The low-level API provides matrix dimensions when available (`EnableArrayDimensions` is enabled).
+        - **Per DSS Context:** Complex arrays and complex numbers can be returned and consumed by the Python API.
+        - **Global effect:** The low-level API provides matrix dimensions when available (`EnableArrayDimensions` is enabled).
         
         As a result, for example, `DSS.ActiveCircuit.ActiveCktElement.Yprim` is returned as a complex matrix instead
         of a plain array.
@@ -404,16 +405,13 @@ class IDSS(Base):
         '''
         
         arr_dim = self.CheckForError(self._lib.DSS_Get_EnableArrayDimensions()) != 0
-        allow_complex = CffiApiUtil._ADV_TYPES
-        if arr_dim != allow_complex:
-            raise RuntimeError('Invalid state detected.')
-
-        return arr_dim
+        allow_complex = self._api_util._allow_complex
+        return arr_dim and allow_complex
 
     @AdvancedTypes.setter
     def AdvancedTypes(self, Value: bool):
         self.CheckForError(self._lib.DSS_Set_EnableArrayDimensions(Value))
-        CffiApiUtil._ADV_TYPES = bool(Value)
+        self._api_util._allow_complex = bool(Value)
 
     @property
     def CompatFlags(self) -> int:
