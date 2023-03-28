@@ -25,7 +25,7 @@ The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the 
 
 ## Brief release history
 
-- **2023-03-16 / version 0.13.0: Updates to the OpenDSS engine, move plotting and initial notebook integration, matrix shapes and complex numbers, bug fixes, etc.**
+- **2023-03-29 / version 0.13.0: Updates to the OpenDSS engine, move plotting and initial notebook integration, matrix shapes and complex numbers, bug fixes, etc.**
 - 2022-07-16 / version 0.12.1: Very minor release to address a bug found in v0.12.0, to add the Storages API, and include the property descriptions/help.
 - 2022-07-14 / version 0.12.0: Major release merging parallel features, multiple DSS engine instances, ZIP file support, incremental Y matrix updates, new API functions, partial plotting support, better performance, and so on. General usage examples for the new features will be incrementally added to https://github.com/dss-extensions/dss-extensions
 - 2021-03-09 / version 0.10.7-1: Very minor release to fix issues with some of the energy meter reports.
