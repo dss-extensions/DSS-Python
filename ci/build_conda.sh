@@ -18,7 +18,7 @@ conda config --add channels conda-forge
 conda create -p ../boa boa anaconda-client
 conda activate boa
 
-PYTHON_VERSIONS="3.6 3.7 3.8 3.9 3.10"
+PYTHON_VERSIONS="3.7 3.8 3.9 3.10 3.11"
 for pyversion in $PYTHON_VERSIONS
 do
     # Workaround to build when a single version fails
