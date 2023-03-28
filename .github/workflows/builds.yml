@@ -15,8 +15,14 @@ jobs:
   build_linux_x64:
     name: 'Linux x64'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        container-image: [
+          'quay.io/pypa/manylinux_2_28_x86_64',
+          'quay.io/pypa/manylinux2014_x86_64'
+        ]
     container:
-      image: 'docker://pmeira/manylinux_wheel_fpc322_x86_64'
+      image: ${{ matrix.container-image }}
     env:
       CONDA_SUBDIR: 'linux-64'
       DSS_CAPI_PATH: '${{ github.workspace }}/dss_capi'
