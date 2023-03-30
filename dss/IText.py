@@ -31,11 +31,11 @@ class IText(Base):
     def Commands(self, Value: Union[AnyStr, List[AnyStr]]):
         '''
         Runs a list of strings or a large string as commands directly in the DSS engine.
-        Intermediate results are ignored.
+        Intermediate results (from Text.Result) are ignored.
 
         Value can be a list of strings, or a single large string (usually faster).
 
-        (API Extensions)
+        (API Extension)
         '''
         if isinstance(Value, str) or isinstance(Value, bytes):
             if type(Value) is not bytes:
