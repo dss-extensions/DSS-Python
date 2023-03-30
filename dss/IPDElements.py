@@ -229,14 +229,14 @@ class IPDElements(Base):
         return self._get_complex128_gr_array()
 
     @property
-    def AllCurrentsMagAng(self) -> Float64ArrayOrComplexArray:
+    def AllCurrentsMagAng(self) -> Float64Array:
         '''
         Complex array (magnitude and angle format) of currents for all conductors, all terminals, for each PD element.
         
         (API Extension)
         '''
         self.CheckForError(self._lib.PDElements_Get_AllCurrentsMagAng_GR())
-        return self._get_complex128_gr_array()
+        return self._get_float64_gr_array()
 
     @property
     def AllCplxSeqCurrents(self) -> Float64ArrayOrComplexArray:
