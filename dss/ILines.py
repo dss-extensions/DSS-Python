@@ -6,7 +6,7 @@ Copyright (c) 2016-2023 Paulo Meira
 Copyright (c) 2018-2023 DSS Extensions contributors
 '''
 from ._cffi_api_util import Iterable
-from ._types import Float64Array
+from ._types import Float64Array, Float64ArrayOrComplexArray
 from typing import AnyStr, Union
 from .enums import LineUnits
 
@@ -217,7 +217,7 @@ class ILines(Iterable):
         return self._get_float64_gr_array()
 
     @Rmatrix.setter
-    def Rmatrix(self, Value: float):
+    def Rmatrix(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self.CheckForError(self._lib.Lines_Set_Rmatrix(ValuePtr, ValueCount))
 
@@ -285,13 +285,13 @@ class ILines(Iterable):
         self.CheckForError(self._lib.Lines_Set_Xmatrix(ValuePtr, ValueCount))
 
     @property
-    def Yprim(self) -> Float64Array:
-        '''Yprimitive for the active line object.'''
+    def Yprim(self) -> Float64ArrayOrComplexArray:
+        '''Yprimitive for the active line object (complex array).'''
         self.CheckForError(self._lib.Lines_Get_Yprim_GR())
-        return self._get_float64_gr_array()
+        return self._get_complex128_gr_array()
 
     @Yprim.setter
-    def Yprim(self, Value: Float64Array):
+    def Yprim(self, Value: Float64ArrayOrComplexArray):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self.CheckForError(self._lib.Lines_Set_Yprim(ValuePtr, ValueCount))
 
