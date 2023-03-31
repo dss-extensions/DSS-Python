@@ -312,7 +312,7 @@ class ISolution(Base):
 
     @property
     def Mode(self) -> SolveModes:
-        '''Set present solution mode (by a text code - see DSS Help)'''
+        '''Set present solution mode'''
         return SolveModes(self.CheckForError(self._lib.Solution_Get_Mode()))
 
     @Mode.setter
