@@ -47,3 +47,40 @@ def test_rxmatrix():
         DSS.Text.Command = f'? Line.ourline{r_or_x}.{r_or_x}matrix'
         assert DSS.Text.Result == '[11 |22 33 |44 55 66 ]'
 
+
+def test_create_no_circuit():
+    general_classes = (
+        'CNData', 'DynamicExp', 'GrowthShape', 'LineSpacing', 'LoadShape', 'PriceShape', 'Spectrum', 
+        'TShape', 'TCC_Curve', 'TSData', 'XfmrCode', 'XYcurve', 'WireData',
+    )
+    for cls in DSS.Classes:
+        DSS.ClearAll()
+
+        if cls in general_classes:
+            DSS.Text.Command = f'new {cls}.test'
+        else:
+            with pytest.raises(DSSException, match=r'\(#(279)|(265)\)'):
+                DSS.Text.Command = f'new {cls}.test'
+                pytest.fail(f'Object of type "{cls}" was allowed to be created without a circuit!')
+
+
+def test_create_with_circuit():
+    for cls in DSS.Classes:
+        DSS.ClearAll()
+        DSS.NewCircuit(f'test_{cls}')
+        if cls in ('CapControl', 'RegControl', 'GenDispatcher', 'StorageController', 'Relay', 'Fuse', 'SwtControl', 'ESPVLControl', 'GICsource'):
+            with pytest.raises(DSSException):
+                DSS.Text.Command = f'new {cls}.test{cls}'
+
+            DSS.Text.Command = f'new Transformer.testtr'
+            DSS.Text.Command = f'new Capacitor.testcap'
+            if cls == 'RegControl':
+                DSS.Text.Command = f'new {cls}.test{cls}2 transformer=testtr'
+            elif cls == 'CapControl':
+                DSS.Text.Command = f'new {cls}.test{cls}2 element=transformer.testtr capacitor=testcap'
+            elif cls == 'GenDispatcher':
+                DSS.Text.Command = f'new {cls}.test{cls}2 element=transformer.testtr'
+
+        else:
+            DSS.Text.Command = f'new {cls}.test{cls}'
+
