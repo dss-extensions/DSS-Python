@@ -1,4 +1,11 @@
-# 0.13.0
+# 0.13.x
+
+## 0.13.1
+
+- Engine updated to [**DSS C-API 0.13.1**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.1). Contains tiny changes to address potential issues with a few PVSystem properties (which passed undetected by our tests).
+- `DSS.AdvancedTypes`: fix `Lines.Yprim` and `PDElements.AllCurrentsMagAng` when `AdvancedTypes` is enabled.
+
+## 0.13.0
 
 - Engine updated to [**DSS C-API 0.13.0**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.0), which is very compatible with OpenDSS 9.6.1.1 (plus some official SVN commits up to rev 3595, plus our own changes.
 - **New test suite,** which runs many more files and validates more of the API. We now use `pytest` for some more complex tests, while the numeric validation is done with the new `compare_outputs.py`.

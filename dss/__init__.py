@@ -50,5 +50,5 @@ DSS: IDSS
 dss = DSS = DSS_GR #: Same as DSS_GR
 
 
-__version__ = '0.13.0.dev'
+__version__ = '0.13.2.dev'
 __all__ = ['dss', 'DSS', 'DSS_GR', 'prime_api_util', 'api_util', 'DSSException', 'patch_dss_com', 'set_case_insensitive_attributes', 'enums', 'Edit']
