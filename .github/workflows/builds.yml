@@ -25,7 +25,6 @@ jobs:
       image: ${{ matrix.container-image }}
     env:
       CONDA_SUBDIR: 'linux-64'
-      DSS_CAPI_PATH: '${{ github.workspace }}/dss_capi'
       CONDA: "/opt/miniconda/"
     steps: 
       - name: 'Checkout'
@@ -35,9 +34,7 @@ jobs:
           git checkout $GITHUB_SHA
       - name: 'Download/extract DSS C-API binaries'
         run: |
-          curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_linux_x64.tar.gz -o dss_capi.tar.gz
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
-          tar zxf dss_capi.tar.gz
           cd dss_python/dss
           tar zxf ../../messages.tar.gz
       - name: Build wheel
@@ -74,16 +71,14 @@ jobs:
           docker pull $DOCKER_IMAGE
       - name: 'Download/extract DSS C-API binaries'
         run: |
-          curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_linux_x86.tar.gz -o dss_capi.tar.gz
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
-          tar zxf dss_capi.tar.gz
           cd dss_python/dss
           tar zxf ../../messages.tar.gz
       - name: Build wheel
         run: |
           mkdir -p artifacts
           mkdir -p artifacts_raw
-          docker run -e GITHUB_SHA -e GITHUB_REF -e DSS_CAPI_PATH=/build/dss_capi -v "${PWD}:/build" -w /build $DOCKER_IMAGE bash /build/dss_python/ci/build_linux.sh x86
+          docker run -e GITHUB_SHA -e GITHUB_REF -v "${PWD}:/build" -w /build $DOCKER_IMAGE bash /build/dss_python/ci/build_linux.sh x86
       - name: 'Upload artifacts'
         uses: "actions/upload-artifact@v2"
         with:
@@ -94,7 +89,6 @@ jobs:
     name: 'macOS x64'
     runs-on: 'macos-10.15'
     env:
-      DSS_CAPI_PATH: '${{ github.workspace }}/dss_capi'
       SDKROOT: '${{ github.workspace }}/MacOSX10.13.sdk'
       PYTHON: python3
     steps:
@@ -104,15 +98,9 @@ jobs:
           path: 'dss_python'
       - name: 'Download/extract DSS C-API binaries'
         run: |
-          curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_darwin_x64.tar.gz -o dss_capi.tar.gz
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
-          tar zxf dss_capi.tar.gz
           cd dss_python/dss
           tar zxf ../../messages.tar.gz
-      - name: 'Download macOS SDK 10.13'
-        run: |
-          curl -s -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.13.sdk.tar.xz -o macOSsdk.tar.xz
-          tar xf macOSsdk.tar.xz
       - name: Build wheel
         run: |
           bash dss_python/ci/build_wheel.sh
@@ -131,8 +119,6 @@ jobs:
     name: 'macOS ARM64'
     runs-on: 'macos-11'
     env:
-      DSS_CAPI_PATH: '${{ github.workspace }}/dss_capi'
-      # SDKROOT: '${{ github.workspace }}/MacOSX10.13.sdk'
       PYTHON: python3
       _PYTHON_HOST_PLATFORM: macosx-11.0-arm64
       ARCHFLAGS: '-arch arm64'
@@ -144,9 +130,7 @@ jobs:
           path: 'dss_python'
       - name: 'Download/extract DSS C-API binaries'
         run: |
-          curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/dss_capi_${DSS_CAPI_TAG}_darwin_arm64.tar.gz -o dss_capi.tar.gz
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
-          tar zxf dss_capi.tar.gz
           cd dss_python/dss
           tar zxf ../../messages.tar.gz
       # - name: 'Download macOS SDK 10.13'
@@ -172,7 +156,6 @@ jobs:
     runs-on: windows-2019
     env:
       CONDA_SUBDIR: 'win-64'
-      DSS_CAPI_PATH: '${{ github.workspace }}\dss_capi'
       PYTHON: python
     steps:
       - uses: actions/checkout@v2
@@ -182,9 +165,7 @@ jobs:
       - name: 'Download/extract DSS C-API binaries'
         shell: cmd
         run: |
-          "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/dss_capi_%DSS_CAPI_TAG%_win_x64.zip -o dss_capi.zip
           "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/messages.zip -o messages.zip
-          7z x -y -o. dss_capi.zip
           cd dss_python\dss
           tar zxf ..\..\messages.zip
       - name: Build wheel
@@ -207,7 +188,6 @@ jobs:
     runs-on: windows-2019
     env:
       CONDA_SUBDIR: 'win-32'
-      DSS_CAPI_PATH: '${{ github.workspace }}\dss_capi'
       PYTHON: python
     steps:
       - uses: actions/checkout@v2
@@ -221,9 +201,7 @@ jobs:
       - name: 'Download/extract DSS C-API binaries'
         shell: cmd
         run: |
-          "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/dss_capi_%DSS_CAPI_TAG%_win_x86.zip -o dss_capi.zip
           "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/messages.zip -o messages.zip
-          7z x -y -o. dss_capi.zip
           cd dss_python\dss
           tar zxf ..\..\messages.zip
       - name: Build wheel

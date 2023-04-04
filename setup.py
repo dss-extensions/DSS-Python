@@ -1,9 +1,6 @@
 from setuptools import setup
 import re, shutil, os, io
-from dss_setup_common import PLATFORM_FOLDER, DSS_VERSIONS, DLL_SUFFIX, DLL_PREFIX
 import glob
-
-MANYLINUX = os.environ.get('DSS_PYTHON_MANYLINUX', '0') == '1'
 
 # Copy README.md contents
 with io.open('README.md', encoding='utf8') as readme_md:
@@ -42,48 +39,18 @@ if os.environ.get('DSS_PYTHON_PREPARE_BOA') == '1':
 
     exit()
 
-# Copy all the DLLs from DSS C-API
+# Copy all the i18n files
 src_path = os.environ.get('SRC_DIR', '')
-DSS_CAPI_PATH = os.environ.get('DSS_CAPI_PATH', os.path.join(src_path, '..', 'dss_capi'))
-base_dll_path_in = os.path.join(DSS_CAPI_PATH, 'lib', PLATFORM_FOLDER)
-dll_path_out = os.path.abspath(os.path.join(src_path, 'dss'))
 mo_path_out = os.path.abspath(os.path.join(src_path, 'dss', 'messages'))
-include_path_out = os.path.join(dll_path_out, 'include')
-
-if not MANYLINUX:
-    # for manylinux wheels, auditwheel handles copying the libs later
-    for fn in glob.glob(os.path.join(base_dll_path_in, '*{}'.format(DLL_SUFFIX))):
-        shutil.copy(fn, dll_path_out)
-
-# Copy libs (easier to build custom extensions with a default DSS Python installation)
-for fn in glob.glob(os.path.join(base_dll_path_in, '*.lib')) + glob.glob(os.path.join(base_dll_path_in, '*.a')):
-    shutil.copy(fn, dll_path_out)
-
-# Copy headers
-if os.path.exists(include_path_out):
-    shutil.rmtree(include_path_out)
-
-shutil.copytree(os.path.join(DSS_CAPI_PATH, 'include'), include_path_out)
 
 # Filter files to include in the Python package
 extra_files = (
-    glob.glob(os.path.join(include_path_out, '**', '*')) + 
-    glob.glob(os.path.join(include_path_out, '*')) + 
-    glob.glob(os.path.join(dll_path_out, '*.lib')) + 
-    glob.glob(os.path.join(dll_path_out, '*.a')) +
     glob.glob(os.path.join(mo_path_out, '*.mo'))
 )
 
-if MANYLINUX:
-    # Do not pack .so files when building manylinux wheels
-    # (auditwheel will copy and adjust them anyway)
-    extra_args = dict(package_data={
-        'dss': extra_files
-    })
-else:
-    extra_args = dict(package_data={
-        'dss': ['*{}'.format(DLL_SUFFIX)] + extra_files
-    })
+extra_args = dict(package_data={
+    'dss': extra_files
+})
 
 setup(
     name="dss_python",
@@ -95,17 +62,8 @@ setup(
     version=package_version,
     license="BSD",
     packages=['dss', 'dss.UserModels'],
-    setup_requires=["cffi>=1.11.2"],
-    cffi_modules=["dss_build.py:ffi_builder_{}".format(version) for version in DSS_VERSIONS] + 
-        [
-            'dss_build.py:ffi_builder_GenUserModel', 
-            #'dss_build.py:ffi_builder_PVSystemUserModel', 
-            #'dss_build.py:ffi_builder_StoreDynaModel', 
-            #'dss_build.py:ffi_builder_StoreUserModel', 
-            #'dss_build.py:ffi_builder_CapUserControl'
-        ],
     ext_package="dss",
-    install_requires=["cffi>=1.11.2", "numpy>=1.19.5", "typing_extensions>=4.5,<5"],
+    install_requires=["dss_python_backend==0.13.1", "numpy>=1.19.5", "typing_extensions>=4.5,<5"],
     extras_require={'plot': ["matplotlib", "scipy"]}, #TODO: test which versions should work
     tests_require=["scipy", "ruff", "xmldiff", "pandas", "pytest"],
     zip_safe=False,

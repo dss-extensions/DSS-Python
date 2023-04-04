@@ -6,7 +6,6 @@ if [ "$RUNNER_OS" = "Windows" ]; then
 fi
 
 export PATH=$CONDA:$CONDA/bin:$CONDA/scripts:$PATH
-export DSS_PYTHON_MANYLINUX=0
 
 source $CONDA/etc/profile.d/conda.sh
 

@@ -16,7 +16,7 @@ Please see [FAQ](https://github.com/dss-extensions/dss-extensions#faq) for a cou
 - [DSS Sharp](http://github.com/dss-extensions/dss_sharp/) is available for .NET/C#, [packaged on NuGet](https://www.nuget.org/packages/dss_sharp/), also mimics the COM classes (drop-in replacement for `OpenDSSengine.DLL`). The current version is now multi-platform too! Soon it will be possible to use it via COM.
 - [DSS MATLAB](http://github.com/dss-extensions/dss_matlab/) presents multi-platform integration (Windows, Linux, MacOS) with DSS C-API and is also very compatible with the API of the official OpenDSS COM classes.
 
-Version 0.13.x is based on OpenDSS revision 3595 (few commits after OpenDSS v9.6.1.1, but we pick and choose when to port certain features). While we plan to add a lot more functionality into DSS Python, the main goal of creating a COM-compatible API has been reached in 2018. If you find an unexpected missing feature, please report it! Currently missing features that will be implemented eventually are plotting (partial implementation available) and diakoptics (planned for future version).
+Version 0.14.x is based on OpenDSS revision 3595 (few commits after OpenDSS v9.6.1.1, but we pick and choose when to port certain features). While we plan to add a lot more functionality into DSS Python, the main goal of creating a COM-compatible API has been reached in 2018. If you find an unexpected missing feature, please report it! Currently missing features that will be implemented eventually are plotting (partial implementation available) and diakoptics (planned for future version).
 
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`) -- see [The DSS instance](https://dss-extensions.org/dss_python/#the-dss-instance) for some docs --  effectively enabling multi-platform compatibility at Python level. Compared to other options, it provides easier migration from code that uses the official OpenDSS through COM.
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange, which is usually preferred by the users.
@@ -25,6 +25,7 @@ The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the 
 
 ## Brief release history
 
+- 2023-04-03 / version 0.14.0: Same as 0.13.1, but splits dss_python into two packages: [dss_python_backend](https://github.com/dss-extensions/dss_python_backend) now contains the native binaries/DLLs. No need for user action.
 - **2023-04-01 / version 0.13.1: Microupdate to the OpenDSS engine; very minor Python changes.**
 - 2023-03-29 / version 0.13.0: Updates to the OpenDSS engine, move plotting and initial notebook integration, matrix shapes and complex numbers, bug fixes, etc.
 - 2022-07-16 / version 0.12.1: Very minor release to address a bug found in v0.12.0, to add the Storages API, and include the property descriptions/help.

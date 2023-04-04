@@ -1,3 +1,11 @@
+# 0.14.x
+
+## 0.14.0
+
+Same as version 0.13.1, except that the organization of the module has changed to facilitate fast iteration of the Python side of the code.
+
+We introduced the new package `dss_python_backend` that will contain all native libs and CFFI bindings from this point on. This leaves DSS-Python itself as a pure Python package, which is much easier to package and distribute.
+
 # 0.13.x
 
 ## 0.13.1
