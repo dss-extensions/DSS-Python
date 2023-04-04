@@ -127,7 +127,7 @@ you can replace that fragment with:
 from dss import DSS as dss_engine
 ```
 
-If you need the mixed-cased handling (that is, you were not using early bindings with win32com), add a call to `dss.use_com_compat()`.
+If you need the mixed-cased handling (that is, you were not using early bindings with win32com), add a call to `dss.set_case_insensitive_attributes()`.
 
 Assuming you have a DSS script named `master.dss`, you should be able to run it as shown below:
 
