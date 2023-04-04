@@ -83,24 +83,33 @@ After a successful installation, you can then import the `dss` module from your 
 
 ## Building
 
-Get the repository:
+Since v0.14.0, dss_python itself is a pure-Python package, i.e., the usual install methods should work fine for itself. However, you may still need to build the backend yourself in some situations.
+
+The backend is now in `dss_python_backend`. The 
+
+Get the repositories
 
 ```
     git clone https://github.com/dss-extensions/dss_python.git
-```    
+    git clone https://github.com/dss-extensions/dss_python_backend.git
+```
     
 Assuming you successfully built or downloaded the DSS C-API DLLs (check [its repository](http://github.com/dss-extensions/dss_capi/) for instructions), keep the folder organization as follows:
 
 ```
 dss_capi/
 dss_python/
+dss_python_backend/
 ```
 
-Open a command prompt in the `dss_python` subfolder and run the build process:
+Open a command prompt in the `dss_python_backend` subfolder and run the build process:
 
 ```
 python setup.py build
 python setup.py install
+cd ..
+cd dss_python
+python -m pip install .
 ```
 
 If you are familiar with `conda-build`, there is a complete recipe to build DSS C-API, KLUSolve(X) and DSS Python in the `conda` subfolder.
