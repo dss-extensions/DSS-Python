@@ -7,7 +7,7 @@ try:
     Float32Array = npt.NDArray[np.float32]
     Int32Array = npt.NDArray[np.int32]
     Int8Array = npt.NDArray[np.int8]
-except (ModuleNotFoundError, ImportError):
+except (ModuleNotFoundError, ImportError, AttributeError):
     from typing import List
     ComplexArray = List[complex]
     Float64Array = List[np.float64]

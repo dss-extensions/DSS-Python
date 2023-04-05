@@ -1,5 +1,5 @@
 from setuptools import setup
-import re, shutil, os, io
+import re, os, io
 import glob
 
 # Copy README.md contents
@@ -63,7 +63,7 @@ setup(
     license="BSD",
     packages=['dss', 'dss.UserModels'],
     ext_package="dss",
-    install_requires=["dss_python_backend==0.13.1", "numpy>=1.19.5", "typing_extensions>=4.5,<5"],
+    install_requires=["dss_python_backend==0.13.1", "numpy>=1.21.0", "typing_extensions>=4.5,<5"],
     extras_require={'plot': ["matplotlib", "scipy"]}, #TODO: test which versions should work
     tests_require=["scipy", "ruff", "xmldiff", "pandas", "pytest"],
     zip_safe=False,
