@@ -8,7 +8,7 @@ Copyright (c) 2018-2023 DSS Extensions contributors
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
 from typing import AnyStr, Union
-from .enums import LoadStatus
+from .enums import LoadStatus, LoadModels
 
 class ILoads(Iterable):
     __slots__ = []
@@ -133,12 +133,12 @@ class ILoads(Iterable):
         self.CheckForError(self._lib.Loads_Set_IsDelta(Value))
 
     @property
-    def Model(self) -> int:
+    def Model(self) -> LoadModels:
         '''The Load Model defines variation of P and Q with voltage.'''
         return self.CheckForError(self._lib.Loads_Get_Model())
 
     @Model.setter
-    def Model(self, Value: int):
+    def Model(self, Value: Union[int, LoadModels]):
         self.CheckForError(self._lib.Loads_Set_Model(Value))
 
     @property
