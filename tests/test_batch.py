@@ -364,6 +364,14 @@ def _test_create_ckt13_batch(which):
     assert dss.ActiveCircuit.Transformers.AllNames == ref.ActiveCircuit.Transformers.AllNames
     assert dss.ActiveCircuit.AllElementNames == ref.ActiveCircuit.AllElementNames
 
+    # Check some batch properties
+    line_batch = dss.Obj.Line.batch()
+    assert [l.LineCode for l in ref.ActiveCircuit.Lines] == line_batch.linecode
+
+    load_batch = dss.Obj.Load.batch()
+    assert load_batch.conn_str == ['delta' if l.IsDelta else 'wye' for l in ref.ActiveCircuit.Loads]
+    assert list(load_batch.conn.to_array()) == [Conn.delta if l.IsDelta else Conn.wye for l in ref.ActiveCircuit.Loads]
+    
     # Should be the same result, except for some parsing detail
     assert max(abs(ref.ActiveCircuit.AllBusVolts - dss.ActiveCircuit.AllBusVolts)) < 1e-12, 'Voltages before changing loads differ'
 

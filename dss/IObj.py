@@ -800,7 +800,7 @@ class LoadShape(DSSObj):
         qmult = (file=filename)     !for text file one value per line
         qmult = (dblfile=filename)  !for packed file of doubles
         qmult = (sngfile=filename)  !for packed file of singles 
-        qmult = (file=MyCSVFile.CSV, col=4, header=yes)  !for multicolumn CSV files 
+        qmult = (file=MyCSVFile.csv, col=4, header=yes)  !for multicolumn CSV files 
 
         DSS property name: `qmult`, DSS property index: 11.
         """
@@ -3374,7 +3374,8 @@ class XfmrCode(DSSObj):
         """
         Use this to specify all the Winding connections at once using an array. Example:
 
-        New Transformer.T1 buses="Hibus, lowbus" ~ conns=(delta, wye)
+        New Transformer.T1 buses="Hibus, lowbus"
+        ~ conns=(delta, wye)
 
         DSS property name: `conns`, DSS property index: 11.
         """
@@ -3392,7 +3393,8 @@ class XfmrCode(DSSObj):
         """
         Use this to specify all the Winding connections at once using an array. Example:
 
-        New Transformer.T1 buses="Hibus, lowbus" ~ conns=(delta, wye)
+        New Transformer.T1 buses="Hibus, lowbus"
+        ~ conns=(delta, wye)
 
         DSS property name: `conns`, DSS property index: 11.
         """
@@ -9626,7 +9628,7 @@ class Generator(DSSObj):
     @property
     def debugtrace(self) -> bool:
         """
-        {Yes | No }  Default is no.  Turn this on to capture the progress of the generator model for each iteration.  Creates a separate file for each generator named "GEN_name.CSV".
+        {Yes | No }  Default is no.  Turn this on to capture the progress of the generator model for each iteration.  Creates a separate file for each generator named "GEN_name.csv".
 
         DSS property name: `debugtrace`, DSS property index: 35.
         """
@@ -10900,7 +10902,7 @@ class Storage(DSSObj):
     @property
     def debugtrace(self) -> bool:
         """
-        {Yes | No }  Default is no.  Turn this on to capture the progress of the Storage model for each iteration.  Creates a separate file for each Storage element named "Storage_name.CSV".
+        {Yes | No }  Default is no.  Turn this on to capture the progress of the Storage model for each iteration.  Creates a separate file for each Storage element named "Storage_name.csv".
 
         DSS property name: `debugtrace`, DSS property index: 51.
         """
@@ -14488,7 +14490,7 @@ class PVSystem(DSSObj):
     @property
     def debugtrace(self) -> bool:
         """
-        {Yes | No }  Default is no.  Turn this on to capture the progress of the PVSystem model for each iteration.  Creates a separate file for each PVSystem element named "PVSystem_name.CSV".
+        {Yes | No }  Default is no.  Turn this on to capture the progress of the PVSystem model for each iteration.  Creates a separate file for each PVSystem element named "PVSystem_name.csv".
 
         DSS property name: `debugtrace`, DSS property index: 32.
         """
@@ -17129,7 +17131,7 @@ class RegControl(DSSObj):
     @property
     def debugtrace(self) -> bool:
         """
-        {Yes | No* }  Default is no.  Turn this on to capture the progress of the regulator model for each control iteration.  Creates a separate file for each RegControl named "REG_name.CSV".
+        {Yes | No* }  Default is no.  Turn this on to capture the progress of the regulator model for each control iteration.  Creates a separate file for each RegControl named "REG_name.csv".
 
         DSS property name: `debugtrace`, DSS property index: 17.
         """
@@ -20033,10 +20035,10 @@ class EnergyMeter(DSSObj):
         (C)lear = reset all registers to zero
         (R)educe = reduces zone by merging lines (see Set Keeplist & ReduceOption)
         (S)ave = saves the current register values to a file.
-           File name is "MTR_metername.CSV".
+           File name is "MTR_metername.csv".
         (T)ake = Takes a sample at present solution
         (Z)onedump = Dump names of elements in meter zone to a file
-           File name is "Zone_metername.CSV".
+           File name is "Zone_metername.csv".
 
         DSS property name: `action`, DSS property index: 3.
         """
@@ -21990,7 +21992,7 @@ class LineCodeBatch(DSSBatch):
 
         DSS property name: `units`, DSS property index: 8.
         """
-        return self._get_prop_string(8)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
 
     @units_str.setter
     def units_str(self, value: AnyStr):
@@ -22268,7 +22270,7 @@ class LineCodeBatch(DSSBatch):
 
         DSS property name: `LineType`, DSS property index: 27.
         """
-        return self._get_prop_string(27)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 27)
 
     @linetype_str.setter
     def linetype_str(self, value: AnyStr):
@@ -22427,7 +22429,7 @@ class LoadShapeBatch(DSSBatch):
         qmult = (file=filename)     !for text file one value per line
         qmult = (dblfile=filename)  !for packed file of doubles
         qmult = (sngfile=filename)  !for packed file of singles 
-        qmult = (file=MyCSVFile.CSV, col=4, header=yes)  !for multicolumn CSV files 
+        qmult = (file=MyCSVFile.csv, col=4, header=yes)  !for multicolumn CSV files 
 
         DSS property name: `qmult`, DSS property index: 11.
         """
@@ -23494,7 +23496,7 @@ class WireDataBatch(DSSBatch):
 
         DSS property name: `Runits`, DSS property index: 3.
         """
-        return self._get_prop_string(3)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
 
     @Runits_str.setter
     def Runits_str(self, value: AnyStr):
@@ -23537,7 +23539,7 @@ class WireDataBatch(DSSBatch):
 
         DSS property name: `GMRunits`, DSS property index: 5.
         """
-        return self._get_prop_string(5)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5)
 
     @GMRunits_str.setter
     def GMRunits_str(self, value: AnyStr):
@@ -23580,7 +23582,7 @@ class WireDataBatch(DSSBatch):
 
         DSS property name: `radunits`, DSS property index: 7.
         """
-        return self._get_prop_string(7)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
 
     @radunits_str.setter
     def radunits_str(self, value: AnyStr):
@@ -23838,7 +23840,7 @@ class CNDataBatch(DSSBatch):
 
         DSS property name: `Runits`, DSS property index: 11.
         """
-        return self._get_prop_string(11)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
 
     @Runits_str.setter
     def Runits_str(self, value: AnyStr):
@@ -23881,7 +23883,7 @@ class CNDataBatch(DSSBatch):
 
         DSS property name: `GMRunits`, DSS property index: 13.
         """
-        return self._get_prop_string(13)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 13)
 
     @GMRunits_str.setter
     def GMRunits_str(self, value: AnyStr):
@@ -23924,7 +23926,7 @@ class CNDataBatch(DSSBatch):
 
         DSS property name: `radunits`, DSS property index: 15.
         """
-        return self._get_prop_string(15)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
 
     @radunits_str.setter
     def radunits_str(self, value: AnyStr):
@@ -24169,7 +24171,7 @@ class TSDataBatch(DSSBatch):
 
         DSS property name: `Runits`, DSS property index: 10.
         """
-        return self._get_prop_string(10)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
 
     @Runits_str.setter
     def Runits_str(self, value: AnyStr):
@@ -24212,7 +24214,7 @@ class TSDataBatch(DSSBatch):
 
         DSS property name: `GMRunits`, DSS property index: 12.
         """
-        return self._get_prop_string(12)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
 
     @GMRunits_str.setter
     def GMRunits_str(self, value: AnyStr):
@@ -24255,7 +24257,7 @@ class TSDataBatch(DSSBatch):
 
         DSS property name: `radunits`, DSS property index: 14.
         """
-        return self._get_prop_string(14)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 14)
 
     @radunits_str.setter
     def radunits_str(self, value: AnyStr):
@@ -24441,7 +24443,7 @@ class LineSpacingBatch(DSSBatch):
 
         DSS property name: `units`, DSS property index: 5.
         """
-        return self._get_prop_string(5)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5)
 
     @units_str.setter
     def units_str(self, value: AnyStr):
@@ -24545,7 +24547,7 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `units`, DSS property index: 7.
         """
-        return self._get_prop_string(7)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
 
     @units_str.setter
     def units_str(self, value: AnyStr):
@@ -24789,7 +24791,7 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `LineType`, DSS property index: 19.
         """
-        return self._get_prop_string(19)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
 
     @linetype_str.setter
     def linetype_str(self, value: AnyStr):
@@ -24890,7 +24892,8 @@ class XfmrCodeBatch(DSSBatch):
         """
         Use this to specify all the Winding connections at once using an array. Example:
 
-        New Transformer.T1 buses="Hibus, lowbus" ~ conns=(delta, wye)
+        New Transformer.T1 buses="Hibus, lowbus"
+        ~ conns=(delta, wye)
 
         DSS property name: `conns`, DSS property index: 11.
         """
@@ -24916,7 +24919,8 @@ class XfmrCodeBatch(DSSBatch):
         """
         Use this to specify all the Winding connections at once using an array. Example:
 
-        New Transformer.T1 buses="Hibus, lowbus" ~ conns=(delta, wye)
+        New Transformer.T1 buses="Hibus, lowbus"
+        ~ conns=(delta, wye)
 
         DSS property name: `conns`, DSS property index: 11.
         """
@@ -25664,7 +25668,7 @@ class LineBatch(DSSBatch):
 
         DSS property name: `units`, DSS property index: 20.
         """
-        return self._get_prop_string(20)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 20)
 
     @units_str.setter
     def units_str(self, value: AnyStr):
@@ -25760,7 +25764,7 @@ class LineBatch(DSSBatch):
 
         DSS property name: `EarthModel`, DSS property index: 23.
         """
-        return self._get_prop_string(23)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 23)
 
     @earthmodel_str.setter
     def earthmodel_str(self, value: AnyStr):
@@ -25924,7 +25928,7 @@ class LineBatch(DSSBatch):
 
         DSS property name: `LineType`, DSS property index: 30.
         """
-        return self._get_prop_string(30)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30)
 
     @linetype_str.setter
     def linetype_str(self, value: AnyStr):
@@ -26282,7 +26286,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `ScanType`, DSS property index: 17.
         """
-        return self._get_prop_string(17)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
 
     @scantype_str.setter
     def scantype_str(self, value: AnyStr):
@@ -26312,7 +26316,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Sequence`, DSS property index: 18.
         """
-        return self._get_prop_string(18)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
 
     @Sequence_str.setter
     def Sequence_str(self, value: AnyStr):
@@ -26617,7 +26621,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Model`, DSS property index: 30.
         """
-        return self._get_prop_string(30)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30)
 
     @Model_str.setter
     def Model_str(self, value: AnyStr):
@@ -26819,7 +26823,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `scantype`, DSS property index: 6.
         """
-        return self._get_prop_string(6)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @scantype_str.setter
     def scantype_str(self, value: AnyStr):
@@ -26849,7 +26853,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `sequence`, DSS property index: 7.
         """
-        return self._get_prop_string(7)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
 
     @sequence_str.setter
     def sequence_str(self, value: AnyStr):
@@ -27550,7 +27554,7 @@ class LoadBatch(DSSBatch):
 
         DSS property name: `conn`, DSS property index: 11.
         """
-        return self._get_prop_string(11)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
 
     @conn_str.setter
     def conn_str(self, value: AnyStr):
@@ -27619,7 +27623,7 @@ class LoadBatch(DSSBatch):
 
         DSS property name: `status`, DSS property index: 15.
         """
-        return self._get_prop_string(15)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
 
     @status_str.setter
     def status_str(self, value: AnyStr):
@@ -28632,7 +28636,7 @@ class TransformerBatch(DSSBatch):
 
         DSS property name: `LeadLag`, DSS property index: 44.
         """
-        return self._get_prop_string(44)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 44)
 
     @LeadLag_str.setter
     def LeadLag_str(self, value: AnyStr):
@@ -28672,7 +28676,7 @@ class TransformerBatch(DSSBatch):
 
         DSS property name: `Core`, DSS property index: 46.
         """
-        return self._get_prop_string(46)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 46)
 
     @Core_str.setter
     def Core_str(self, value: AnyStr):
@@ -28932,7 +28936,7 @@ class CapacitorBatch(DSSBatch):
 
         DSS property name: `conn`, DSS property index: 6.
         """
-        return self._get_prop_string(6)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @conn_str.setter
     def conn_str(self, value: AnyStr):
@@ -29257,7 +29261,7 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `conn`, DSS property index: 6.
         """
-        return self._get_prop_string(6)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @conn_str.setter
     def conn_str(self, value: AnyStr):
@@ -29734,7 +29738,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `type`, DSS property index: 4.
         """
-        return self._get_prop_string(4)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4)
 
     @type_str.setter
     def type_str(self, value: AnyStr):
@@ -29903,7 +29907,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `CTPhase`, DSS property index: 15.
         """
-        return self._get_prop_string(15)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
 
     @CTPhase_str.setter
     def CTPhase_str(self, value: AnyStr):
@@ -29933,7 +29937,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `PTPhase`, DSS property index: 16.
         """
-        return self._get_prop_string(16)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 16)
 
     @PTPhase_str.setter
     def PTPhase_str(self, value: AnyStr):
@@ -30394,7 +30398,7 @@ class DynamicExpBatch(DSSBatch):
 
         DSS property name: `Domain`, DSS property index: 6.
         """
-        return self._get_prop_string(6)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @Domain_str.setter
     def Domain_str(self, value: AnyStr):
@@ -30646,7 +30650,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `dispmode`, DSS property index: 13.
         """
-        return self._get_prop_string(13)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 13)
 
     @dispmode_str.setter
     def dispmode_str(self, value: AnyStr):
@@ -30691,7 +30695,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `conn`, DSS property index: 15.
         """
-        return self._get_prop_string(15)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
 
     @conn_str.setter
     def conn_str(self, value: AnyStr):
@@ -30721,7 +30725,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `status`, DSS property index: 16.
         """
-        return self._get_prop_string(16)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 16)
 
     @status_str.setter
     def status_str(self, value: AnyStr):
@@ -30956,7 +30960,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def debugtrace(self) -> List[bool]:
         """
-        {Yes | No }  Default is no.  Turn this on to capture the progress of the generator model for each iteration.  Creates a separate file for each generator named "GEN_name.CSV".
+        {Yes | No }  Default is no.  Turn this on to capture the progress of the generator model for each iteration.  Creates a separate file for each generator named "GEN_name.csv".
 
         DSS property name: `debugtrace`, DSS property index: 35.
         """
@@ -31391,7 +31395,7 @@ class StorageBatch(DSSBatch):
 
         DSS property name: `conn`, DSS property index: 4.
         """
-        return self._get_prop_string(4)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4)
 
     @conn_str.setter
     def conn_str(self, value: AnyStr):
@@ -31702,7 +31706,7 @@ class StorageBatch(DSSBatch):
 
         DSS property name: `State`, DSS property index: 25.
         """
-        return self._get_prop_string(25)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25)
 
     @State_str.setter
     def State_str(self, value: AnyStr):
@@ -31996,7 +32000,7 @@ class StorageBatch(DSSBatch):
 
         DSS property name: `DispMode`, DSS property index: 42.
         """
-        return self._get_prop_string(42)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 42)
 
     @DispMode_str.setter
     def DispMode_str(self, value: AnyStr):
@@ -32119,7 +32123,7 @@ class StorageBatch(DSSBatch):
     @property
     def debugtrace(self) -> List[bool]:
         """
-        {Yes | No }  Default is no.  Turn this on to capture the progress of the Storage model for each iteration.  Creates a separate file for each Storage element named "Storage_name.CSV".
+        {Yes | No }  Default is no.  Turn this on to capture the progress of the Storage model for each iteration.  Creates a separate file for each Storage element named "Storage_name.csv".
 
         DSS property name: `debugtrace`, DSS property index: 51.
         """
@@ -32268,7 +32272,7 @@ class StorageBatch(DSSBatch):
 
         DSS property name: `ControlMode`, DSS property index: 59.
         """
-        return self._get_prop_string(59)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 59)
 
     @ControlMode_str.setter
     def ControlMode_str(self, value: AnyStr):
@@ -32406,7 +32410,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `MonPhase`, DSS property index: 3.
         """
-        return self._get_prop_string(3)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
 
     @MonPhase_str.setter
     def MonPhase_str(self, value: AnyStr):
@@ -32575,7 +32579,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `ModeDischarge`, DSS property index: 12.
         """
-        return self._get_prop_string(12)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
 
     @ModeDischarge_str.setter
     def ModeDischarge_str(self, value: AnyStr):
@@ -32621,7 +32625,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `ModeCharge`, DSS property index: 13.
         """
-        return self._get_prop_string(13)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 13)
 
     @ModeCharge_str.setter
     def ModeCharge_str(self, value: AnyStr):
@@ -33154,7 +33158,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `type`, DSS property index: 5.
         """
-        return self._get_prop_string(5)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5)
 
     @type_str.setter
     def type_str(self, value: AnyStr):
@@ -33539,7 +33543,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `action`, DSS property index: 29.
         """
-        return self._get_prop_string(29)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 29)
 
     @action_str.setter
     def action_str(self, value: AnyStr):
@@ -33689,7 +33693,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `Normal`, DSS property index: 39.
         """
-        return self._get_prop_string(39)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
 
     @Normal_str.setter
     def Normal_str(self, value: AnyStr):
@@ -33719,7 +33723,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `State`, DSS property index: 40.
         """
-        return self._get_prop_string(40)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 40)
 
     @State_str.setter
     def State_str(self, value: AnyStr):
@@ -34290,7 +34294,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `Normal`, DSS property index: 23.
         """
-        return self._get_prop_string(23)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 23)
 
     @Normal_str.setter
     def Normal_str(self, value: AnyStr):
@@ -34320,7 +34324,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `State`, DSS property index: 24.
         """
-        return self._get_prop_string(24)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 24)
 
     @State_str.setter
     def State_str(self, value: AnyStr):
@@ -34717,7 +34721,7 @@ class SwtControlBatch(DSSBatch):
 
         DSS property name: `Normal`, DSS property index: 6.
         """
-        return self._get_prop_string(6)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @Normal_str.setter
     def Normal_str(self, value: AnyStr):
@@ -34747,7 +34751,7 @@ class SwtControlBatch(DSSBatch):
 
         DSS property name: `State`, DSS property index: 7.
         """
-        return self._get_prop_string(7)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
 
     @State_str.setter
     def State_str(self, value: AnyStr):
@@ -34935,7 +34939,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `conn`, DSS property index: 9.
         """
-        return self._get_prop_string(9)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
 
     @conn_str.setter
     def conn_str(self, value: AnyStr):
@@ -35342,7 +35346,7 @@ class PVSystemBatch(DSSBatch):
     @property
     def debugtrace(self) -> List[bool]:
         """
-        {Yes | No }  Default is no.  Turn this on to capture the progress of the PVSystem model for each iteration.  Creates a separate file for each PVSystem element named "PVSystem_name.CSV".
+        {Yes | No }  Default is no.  Turn this on to capture the progress of the PVSystem model for each iteration.  Creates a separate file for each PVSystem element named "PVSystem_name.csv".
 
         DSS property name: `debugtrace`, DSS property index: 32.
         """
@@ -35598,7 +35602,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `ControlMode`, DSS property index: 48.
         """
-        return self._get_prop_string(48)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 48)
 
     @ControlMode_str.setter
     def ControlMode_str(self, value: AnyStr):
@@ -36126,7 +36130,7 @@ class ESPVLControlBatch(DSSBatch):
 
         DSS property name: `Type`, DSS property index: 3.
         """
-        return self._get_prop_string(3)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
 
     @Type_str.setter
     def Type_str(self, value: AnyStr):
@@ -36391,7 +36395,7 @@ class IndMach012Batch(DSSBatch):
 
         DSS property name: `conn`, DSS property index: 6.
         """
-        return self._get_prop_string(6)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @conn_str.setter
     def conn_str(self, value: AnyStr):
@@ -36551,7 +36555,7 @@ class IndMach012Batch(DSSBatch):
 
         DSS property name: `SlipOption`, DSS property index: 17.
         """
-        return self._get_prop_string(17)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
 
     @SlipOption_str.setter
     def SlipOption_str(self, value: AnyStr):
@@ -37007,7 +37011,7 @@ class AutoTransBatch(DSSBatch):
 
         DSS property name: `Core`, DSS property index: 11.
         """
-        return self._get_prop_string(11)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
 
     @Core_str.setter
     def Core_str(self, value: AnyStr):
@@ -37461,7 +37465,7 @@ class AutoTransBatch(DSSBatch):
 
         DSS property name: `LeadLag`, DSS property index: 39.
         """
-        return self._get_prop_string(39)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
 
     @LeadLag_str.setter
     def LeadLag_str(self, value: AnyStr):
@@ -37815,7 +37819,7 @@ class RegControlBatch(DSSBatch):
     @property
     def debugtrace(self) -> List[bool]:
         """
-        {Yes | No* }  Default is no.  Turn this on to capture the progress of the regulator model for each control iteration.  Creates a separate file for each RegControl named "REG_name.CSV".
+        {Yes | No* }  Default is no.  Turn this on to capture the progress of the regulator model for each control iteration.  Creates a separate file for each RegControl named "REG_name.csv".
 
         DSS property name: `debugtrace`, DSS property index: 17.
         """
@@ -37907,7 +37911,7 @@ class RegControlBatch(DSSBatch):
 
         DSS property name: `PTphase`, DSS property index: 22.
         """
-        return self._get_prop_string(22)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 22)
 
     @PTphase_str.setter
     def PTphase_str(self, value: AnyStr):
@@ -38157,7 +38161,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `Mode`, DSS property index: 2.
         """
-        return self._get_prop_string(2)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2)
 
     @Mode_str.setter
     def Mode_str(self, value: AnyStr):
@@ -38201,7 +38205,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `CombiMode`, DSS property index: 3.
         """
-        return self._get_prop_string(3)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
 
     @CombiMode_str.setter
     def CombiMode_str(self, value: AnyStr):
@@ -38310,7 +38314,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `voltage_curvex_ref`, DSS property index: 6.
         """
-        return self._get_prop_string(6)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @voltage_curvex_ref_str.setter
     def voltage_curvex_ref_str(self, value: AnyStr):
@@ -38570,7 +38574,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `VoltwattYAxis`, DSS property index: 17.
         """
-        return self._get_prop_string(17)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
 
     @VoltwattYAxis_str.setter
     def VoltwattYAxis_str(self, value: AnyStr):
@@ -38616,7 +38620,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `RateofChangeMode`, DSS property index: 18.
         """
-        return self._get_prop_string(18)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
 
     @RateofChangeMode_str.setter
     def RateofChangeMode_str(self, value: AnyStr):
@@ -38724,7 +38728,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `RefReactivePower`, DSS property index: 23.
         """
-        return self._get_prop_string(23)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 23)
 
     @RefReactivePower_str.setter
     def RefReactivePower_str(self, value: AnyStr):
@@ -38773,7 +38777,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `monVoltageCalc`, DSS property index: 25.
         """
-        return self._get_prop_string(25)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25)
 
     @monVoltageCalc_str.setter
     def monVoltageCalc_str(self, value: AnyStr):
@@ -39649,7 +39653,7 @@ class GICTransformerBatch(DSSBatch):
 
         DSS property name: `Type`, DSS property index: 6.
         """
-        return self._get_prop_string(6)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
 
     @Type_str.setter
     def Type_str(self, value: AnyStr):
@@ -40166,7 +40170,7 @@ class VSConverterBatch(DSSBatch):
 
         DSS property name: `VscMode`, DSS property index: 19.
         """
-        return self._get_prop_string(19)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
 
     @VscMode_str.setter
     def VscMode_str(self, value: AnyStr):
@@ -40465,10 +40469,10 @@ class EnergyMeterBatch(DSSBatch):
         (C)lear = reset all registers to zero
         (R)educe = reduces zone by merging lines (see Set Keeplist & ReduceOption)
         (S)ave = saves the current register values to a file.
-           File name is "MTR_metername.CSV".
+           File name is "MTR_metername.csv".
         (T)ake = Takes a sample at present solution
         (Z)onedump = Dump names of elements in meter zone to a file
-           File name is "Zone_metername.CSV".
+           File name is "Zone_metername.csv".
 
         DSS property name: `action`, DSS property index: 3.
         """
@@ -40987,7 +40991,7 @@ class SensorBatch(DSSBatch):
 
         DSS property name: `conn`, DSS property index: 9.
         """
-        return self._get_prop_string(9)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
 
     @conn_str.setter
     def conn_str(self, value: AnyStr):
