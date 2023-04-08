@@ -3,6 +3,7 @@ from glob import glob
 from inspect import ismethod
 from math import isfinite
 from time import perf_counter
+from tempfile import TemporaryDirectory
 import numpy as np
 from zipfile import ZipFile, ZIP_DEFLATED
 from dss import enums, DSSException
@@ -415,6 +416,18 @@ if __name__ == '__main__':
                 for csv_live_fn in glob(f'{res_dir}/*/*.csv'):
                     print(csv_live_fn)
                     zip_out.write(csv_live_fn, get_archive_fn(csv_live_fn).replace('.CSV', '.csv'))
+
+            with TemporaryDirectory() as tmp_dir:
+                DSS.Text.Command = f'save circuit dir="{tmp_dir}"'
+                base_zip_dir = get_archive_fn(fn) + '.saved/'
+                for saved_fn in glob(f'{tmp_dir}/**', recursive=True):
+                    if os.path.abspath(saved_fn) == tmp_dir:
+                        continue
+
+                    rel_saved_fn = os.path.relpath(saved_fn, tmp_dir)
+                    # print((json_fn, base_zip_dir, saved_fn, rel_saved_fn.replace('.DSS', '.dss')))
+                    zip_out.write(saved_fn, base_zip_dir + rel_saved_fn.replace('.DSS', '.dss'))
+                    
 
     print(perf_counter() - t0_global, 'seconds')
     print(total_runtime, 'seconds (runtime only)')
