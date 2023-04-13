@@ -4,6 +4,7 @@ import dss
 from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes
 import numpy as np
 import pytest
+import scipy.sparse as sp
 
 try:
     from ._settings import BASE_DIR, WIN32, ZIP_FN
@@ -19,7 +20,14 @@ if WIN32:
 else:
     import dss
 
-DSS.AllowEditor = False
+def setup_function():
+    DSS.ClearAll()
+    DSS.AllowEditor = False
+    DSS.AdvancedTypes = False
+    DSS.AllowChangeDir = True
+    DSS.COMErrorResults = True # TODO: change to False
+    DSS.CompatFlags = 0
+
 
 def test_rxmatrix():
     DSS.ClearAll()
@@ -84,3 +92,12 @@ def test_create_with_circuit():
         else:
             DSS.Text.Command = f'new {cls}.test{cls}'
 
+
+def test_ymatrix_csc():
+    # We accidentally left a np.complex in the ymatrix code before, 
+    # so let's always check if it's working now
+
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    DSS.ActiveCircuit.Solution.Solve()
+    DSS.AdvancedTypes = True
+    assert np.all(DSS.ActiveCircuit.SystemY == sp.csc_matrix(DSS.YMatrix.GetCompressedYMatrix()))
