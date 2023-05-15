@@ -45,7 +45,7 @@ def custom_len(self):
 
 
 def Monitors_AsMatrix(self):
-    '''(read-only) Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1)'''
+    '''Matrix of the active monitor, containing the hour vector, seconds vector, and all channels (index 2 = channel 1)'''
     
     buffer = np.array(self.ByteStream, dtype=np.int8)
     if len(buffer) <= 1:

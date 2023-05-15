@@ -55,12 +55,12 @@ class IPVSystems(Iterable):
 
     @property
     def RegisterNames(self) -> List[str]:
-        '''(read-only) Array of PVSYSTEM energy meter register names'''
+        '''Array of PVSYSTEM energy meter register names'''
         return self.CheckForError(self._get_string_array(self._lib.PVSystems_Get_RegisterNames))
 
     @property
     def RegisterValues(self) -> Float64Array:
-        '''(read-only) Array of doubles containing values in PVSystem registers.'''
+        '''Array of doubles containing values in PVSystem registers.'''
         self.CheckForError(self._lib.PVSystems_Get_RegisterValues_GR())
         return self._get_float64_gr_array()
 
@@ -75,7 +75,7 @@ class IPVSystems(Iterable):
 
     @property
     def kW(self) -> float:
-        '''(read-only) get kW output'''
+        '''Get kW output'''
         return self.CheckForError(self._lib.PVSystems_Get_kW())
 
     @property

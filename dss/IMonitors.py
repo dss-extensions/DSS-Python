@@ -103,7 +103,7 @@ class IMonitors(Iterable):
 
     @property
     def ByteStream(self) -> Int8Array:
-        '''(read-only) Byte Array containing monitor stream values. Make sure a "save" is done first (standard solution modes do this automatically)'''
+        '''Byte Array containing monitor stream values. Make sure a "save" is done first (standard solution modes do this automatically)'''
         self.CheckForError(self._lib.Monitors_Get_ByteStream_GR())
         return self._get_int8_gr_array()
 
@@ -121,17 +121,17 @@ class IMonitors(Iterable):
 
     @property
     def FileName(self) -> str:
-        '''(read-only) Name of CSV file associated with active Monitor.'''
+        '''Name of CSV file associated with active Monitor.'''
         return self._get_string(self.CheckForError(self._lib.Monitors_Get_FileName()))
 
     @property
     def FileVersion(self) -> int:
-        '''(read-only) Monitor File Version (integer)'''
+        '''Monitor File Version (integer)'''
         return self.CheckForError(self._lib.Monitors_Get_FileVersion())
 
     @property
     def Header(self) -> List[str]:
-        '''(read-only) Header string;  Array of strings containing Channel names'''
+        '''Header string;  Array of strings containing Channel names'''
         return self.CheckForError(self._get_string_array(self._lib.Monitors_Get_Header))
 
     @property
@@ -145,17 +145,17 @@ class IMonitors(Iterable):
 
     @property
     def NumChannels(self) -> int:
-        '''(read-only) Number of Channels in the active Monitor'''
+        '''Number of Channels in the active Monitor'''
         return self.CheckForError(self._lib.Monitors_Get_NumChannels())
 
     @property
     def RecordSize(self) -> int:
-        '''(read-only) Size of each record in ByteStream (Integer). Same as NumChannels.'''
+        '''Size of each record in ByteStream (Integer). Same as NumChannels.'''
         return self.CheckForError(self._lib.Monitors_Get_RecordSize())
 
     @property
     def SampleCount(self) -> int:
-        '''(read-only) Number of Samples in Monitor at Present'''
+        '''Number of Samples in Monitor at Present'''
         return self.CheckForError(self._lib.Monitors_Get_SampleCount())
 
     @property
@@ -169,12 +169,12 @@ class IMonitors(Iterable):
 
     @property
     def dblFreq(self) -> Float64Array:
-        '''(read-only) Array of doubles containing frequency values for harmonics mode solutions; Empty for time mode solutions (use dblHour)'''
+        '''Array of doubles containing frequency values for harmonics mode solutions; Empty for time mode solutions (use dblHour)'''
         self.CheckForError(self._lib.Monitors_Get_dblFreq_GR())
         return self._get_float64_gr_array()
 
     @property
     def dblHour(self) -> Float64Array:
-        '''(read-only) Array of doubles containing time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution (see dblFreq)'''
+        '''Array of doubles containing time value in hours for time-sampled monitor values; Empty if frequency-sampled values for harmonics solution (see dblFreq)'''
         self.CheckForError(self._lib.Monitors_Get_dblHour_GR())
         return self._get_float64_gr_array()

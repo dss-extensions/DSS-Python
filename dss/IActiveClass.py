@@ -21,17 +21,17 @@ class IActiveClass(Base):
 
     @property
     def ActiveClassName(self) -> str:
-        '''(read-only) Returns name of active class.'''
+        '''Returns name of active class.'''
         return self._get_string(self.CheckForError(self._lib.ActiveClass_Get_ActiveClassName()))
 
     @property
     def AllNames(self) -> List[str]:
-        '''(read-only) Array of strings consisting of all element names in the active class.'''
+        '''Array of strings consisting of all element names in the active class.'''
         return self.CheckForError(self._get_string_array(self._lib.ActiveClass_Get_AllNames))
 
     @property
     def Count(self) -> int:
-        '''(read-only) Number of elements in Active Class. Same as NumElements Property.'''
+        '''Number of elements in Active Class. Same as NumElements Property.'''
         return self.CheckForError(self._lib.ActiveClass_Get_Count())
 
     def __len__(self) -> int:
@@ -45,7 +45,7 @@ class IActiveClass(Base):
 
     @property
     def First(self) -> int:
-        '''(read-only) Sets first element in the active class to be the active DSS object. If object is a CktElement, ActiveCktELment also points to this element. Returns 0 if none.'''
+        '''Sets first element in the active class to be the active DSS object. If object is a CktElement, ActiveCktELment also points to this element. Returns 0 if none.'''
         return self.CheckForError(self._lib.ActiveClass_Get_First())
 
     @property
@@ -62,12 +62,12 @@ class IActiveClass(Base):
 
     @property
     def Next(self) -> int:
-        '''(read-only) Sets next element in active class to be the active DSS object. If object is a CktElement, ActiveCktElement also points to this element.  Returns 0 if no more.'''
+        '''Sets next element in active class to be the active DSS object. If object is a CktElement, ActiveCktElement also points to this element.  Returns 0 if no more.'''
         return self.CheckForError(self._lib.ActiveClass_Get_Next())
 
     @property
     def NumElements(self) -> int:
-        '''(read-only) Number of elements in this class. Same as Count property.'''
+        '''Number of elements in this class. Same as Count property.'''
         return self.CheckForError(self._lib.ActiveClass_Get_NumElements())
 
     @property

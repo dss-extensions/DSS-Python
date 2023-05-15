@@ -76,12 +76,12 @@ class IMeters(Iterable):
 
     @property
     def AllBranchesInZone(self) -> List[str]:
-        '''(read-only) Wide string list of all branches in zone of the active energymeter object.'''
+        '''Wide string list of all branches in zone of the active energymeter object.'''
         return self.CheckForError(self._get_string_array(self._lib.Meters_Get_AllBranchesInZone))
 
     @property
     def AllEndElements(self) -> List[str]:
-        '''(read-only) Array of names of all zone end elements.'''
+        '''Array of names of all zone end elements.'''
         return self.CheckForError(self._get_string_array(self._lib.Meters_Get_AllEndElements))
 
     @property
@@ -97,7 +97,7 @@ class IMeters(Iterable):
 
     @property
     def AvgRepairTime(self) -> float:
-        '''(read-only) Average Repair time in this section of the meter zone'''
+        '''Average Repair time in this section of the meter zone'''
         return self.CheckForError(self._lib.Meters_Get_AvgRepairTime())
 
     @property
@@ -113,27 +113,27 @@ class IMeters(Iterable):
 
     @property
     def CountBranches(self) -> int:
-        '''(read-only) Number of branches in Active energymeter zone. (Same as sequencelist size)'''
+        '''Number of branches in Active energymeter zone. (Same as sequencelist size)'''
         return self.CheckForError(self._lib.Meters_Get_CountBranches())
 
     @property
     def CountEndElements(self) -> int:
-        '''(read-only) Number of zone end elements in the active meter zone.'''
+        '''Number of zone end elements in the active meter zone.'''
         return self.CheckForError(self._lib.Meters_Get_CountEndElements())
 
     @property
     def CustInterrupts(self) -> float:
-        '''(read-only) Total customer interruptions for this Meter zone based on reliability calcs.'''
+        '''Total customer interruptions for this Meter zone based on reliability calcs.'''
         return self.CheckForError(self._lib.Meters_Get_CustInterrupts())
 
     @property
     def DIFilesAreOpen(self) -> bool:
-        '''(read-only) Global Flag in the DSS to indicate if Demand Interval (DI) files have been properly opened.'''
+        '''Global Flag in the DSS to indicate if Demand Interval (DI) files have been properly opened.'''
         return self.CheckForError(self._lib.Meters_Get_DIFilesAreOpen()) != 0
 
     @property
     def FaultRateXRepairHrs(self) -> float:
-        '''(read-only) Sum of Fault Rate time Repair Hrs in this section of the meter zone'''
+        '''Sum of Fault Rate time Repair Hrs in this section of the meter zone'''
         return self.CheckForError(self._lib.Meters_Get_FaultRateXRepairHrs())
 
     @property
@@ -159,22 +159,22 @@ class IMeters(Iterable):
 
     @property
     def NumSectionBranches(self) -> int:
-        '''(read-only) Number of branches (lines) in this section'''
+        '''Number of branches (lines) in this section'''
         return self.CheckForError(self._lib.Meters_Get_NumSectionBranches())
 
     @property
     def NumSectionCustomers(self) -> int:
-        '''(read-only) Number of Customers in the active section.'''
+        '''Number of Customers in the active section.'''
         return self.CheckForError(self._lib.Meters_Get_NumSectionCustomers())
 
     @property
     def NumSections(self) -> int:
-        '''(read-only) Number of feeder sections in this meter's zone'''
+        '''Number of feeder sections in this meter's zone'''
         return self.CheckForError(self._lib.Meters_Get_NumSections())
 
     @property
     def OCPDeviceType(self) -> int:
-        '''(read-only) Type of OCP device. 1=Fuse; 2=Recloser; 3=Relay'''
+        '''Type of OCP device. 1=Fuse; 2=Recloser; 3=Relay'''
         return self.CheckForError(self._lib.Meters_Get_OCPDeviceType())
 
     @property
@@ -190,43 +190,43 @@ class IMeters(Iterable):
 
     @property
     def RegisterNames(self) -> List[str]:
-        '''(read-only) Array of strings containing the names of the registers.'''
+        '''Array of strings containing the names of the registers.'''
         return self.CheckForError(self._get_string_array(self._lib.Meters_Get_RegisterNames))
 
     @property
     def RegisterValues(self) -> Float64Array:
-        '''(read-only) Array of all the values contained in the Meter registers for the active Meter.'''
+        '''Array of all the values contained in the Meter registers for the active Meter.'''
         self.CheckForError(self._lib.Meters_Get_RegisterValues_GR())
         return self._get_float64_gr_array()
 
     @property
     def SAIDI(self) -> float:
-        '''(read-only) SAIDI for this meter's zone. Execute DoReliabilityCalc first.'''
+        '''SAIDI for this meter's zone. Execute DoReliabilityCalc first.'''
         return self.CheckForError(self._lib.Meters_Get_SAIDI())
 
     @property
     def SAIFI(self) -> float:
-        '''(read-only) Returns SAIFI for this meter's Zone. Execute Reliability Calc method first.'''
+        '''Returns SAIFI for this meter's Zone. Execute Reliability Calc method first.'''
         return self.CheckForError(self._lib.Meters_Get_SAIFI())
 
     @property
     def SAIFIKW(self) -> float:
-        '''(read-only) SAIFI based on kW rather than number of customers. Get after reliability calcs.'''
+        '''SAIFI based on kW rather than number of customers. Get after reliability calcs.'''
         return self.CheckForError(self._lib.Meters_Get_SAIFIKW())
 
     @property
     def SectSeqIdx(self) -> int:
-        '''(read-only) SequenceIndex of the branch at the head of this section'''
+        '''SequenceIndex of the branch at the head of this section'''
         return self.CheckForError(self._lib.Meters_Get_SectSeqIdx())
 
     @property
     def SectTotalCust(self) -> int:
-        '''(read-only) Total Customers downline from this section'''
+        '''Total Customers downline from this section'''
         return self.CheckForError(self._lib.Meters_Get_SectTotalCust())
 
     @property
     def SeqListSize(self) -> int:
-        '''(read-only) Size of Sequence List'''
+        '''Size of Sequence List'''
         return self.CheckForError(self._lib.Meters_Get_SeqListSize())
 
     @property
@@ -240,17 +240,17 @@ class IMeters(Iterable):
 
     @property
     def SumBranchFltRates(self) -> float:
-        '''(read-only) Sum of the branch fault rates in this section of the meter's zone'''
+        '''Sum of the branch fault rates in this section of the meter's zone'''
         return self.CheckForError(self._lib.Meters_Get_SumBranchFltRates())
 
     @property
     def TotalCustomers(self) -> int:
-        '''(read-only) Total Number of customers in this zone (downline from the EnergyMeter)'''
+        '''Total Number of customers in this zone (downline from the EnergyMeter)'''
         return self.CheckForError(self._lib.Meters_Get_TotalCustomers())
 
     @property
     def Totals(self) -> Float64Array:
-        '''(read-only) Totals of all registers of all meters'''
+        '''Totals of all registers of all meters'''
         self.CheckForError(self._lib.Meters_Get_Totals_GR())
         return self._get_float64_gr_array()
 

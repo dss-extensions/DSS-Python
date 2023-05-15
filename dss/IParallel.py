@@ -51,13 +51,13 @@ class IParallel(Base):
 
     @property
     def ActorProgress(self) -> Int32Array:
-        '''(read-only) Gets the progress of all existing actors in pct'''
+        '''Gets the progress of all existing actors in pct'''
         self.CheckForError(self._lib.Parallel_Get_ActorProgress_GR())
         return self._get_int32_gr_array()
 
     @property
     def ActorStatus(self) -> Int32Array:
-        '''(read-only) Gets the status of each actor'''
+        '''Gets the status of each actor'''
         self.CheckForError(self._lib.Parallel_Get_ActorStatus_GR())
         return self._get_int32_gr_array()
 
@@ -75,17 +75,17 @@ class IParallel(Base):
 
     @property
     def NumCPUs(self) -> int:
-        '''(read-only) Delivers the number of CPUs on the current PC'''
+        '''Delivers the number of CPUs on the current PC'''
         return self.CheckForError(self._lib.Parallel_Get_NumCPUs())
 
     @property
     def NumCores(self) -> int:
-        '''(read-only) Delivers the number of Cores of the local PC'''
+        '''Delivers the number of Cores of the local PC'''
         return self.CheckForError(self._lib.Parallel_Get_NumCores())
 
     @property
     def NumOfActors(self) -> int:
-        '''(read-only) Gets the number of Actors created'''
+        '''Gets the number of Actors created'''
         return self.CheckForError(self._lib.Parallel_Get_NumOfActors())
 
 

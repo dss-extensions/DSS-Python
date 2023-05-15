@@ -39,7 +39,7 @@ class ILineGeometries(Iterable):
     
     @property
     def Conductors(self) -> List[str]:
-        '''(read-only) Array of strings with names of all conductors in the active LineGeometry object'''
+        '''Array of strings with names of all conductors in the active LineGeometry object'''
         return self.CheckForError(self._get_string_array(self._lib.LineGeometries_Get_Conductors))
 
     @property
@@ -86,22 +86,22 @@ class ILineGeometries(Iterable):
         self.CheckForError(self._lib.LineGeometries_Set_Phases(Value))
 
     def Rmatrix(self, Frequency: float, Length: float, Units: int) -> Float64Array:
-        '''(read-only) Resistance matrix, ohms'''
+        '''Resistance matrix, ohms'''
         self.CheckForError(self._lib.LineGeometries_Get_Rmatrix_GR(Frequency, Length, Units))
         return self._get_float64_gr_array()
 
     def Xmatrix(self, Frequency: float, Length: float, Units: int) -> Float64Array:
-        '''(read-only) Reactance matrix, ohms'''
+        '''Reactance matrix, ohms'''
         self.CheckForError(self._lib.LineGeometries_Get_Xmatrix_GR(Frequency, Length, Units))
         return self._get_float64_gr_array()
 
     def Zmatrix(self, Frequency: float, Length: float, Units: int) -> Float64ArrayOrComplexArray:
-        '''(read-only) Complex impedance matrix, ohms'''
+        '''Complex impedance matrix, ohms'''
         self.CheckForError(self._lib.LineGeometries_Get_Zmatrix_GR(Frequency, Length, Units))
         return self._get_complex128_gr_array()
 
     def Cmatrix(self, Frequency: float, Length: float, Units: int) -> Float64Array:
-        '''(read-only) Capacitance matrix, nF'''
+        '''Capacitance matrix, nF'''
         self.CheckForError(self._lib.LineGeometries_Get_Cmatrix_GR(Frequency, Length, Units))
         return self._get_float64_gr_array()
 

@@ -105,7 +105,7 @@ class IReclosers(Iterable):
 
     @property
     def RecloseIntervals(self) -> Float64Array:
-        '''(read-only) Array of Doubles: reclose intervals, s, between shots.'''
+        '''Array of Doubles: reclose intervals, s, between shots.'''
         self.CheckForError(self._lib.Reclosers_Get_RecloseIntervals_GR())
         return self._get_float64_gr_array()
 

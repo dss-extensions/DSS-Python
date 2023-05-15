@@ -251,21 +251,21 @@ class ICircuit(Base):
         return self.CheckForError(self._lib.Circuit_FirstPDElement())
 
     def AllNodeDistancesByPhase(self, Phase: int) -> Float64Array:
-        '''(read-only) Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.'''
+        '''Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.'''
         self.CheckForError(self._lib.Circuit_Get_AllNodeDistancesByPhase_GR(Phase))
         return self._get_float64_gr_array()
 
     def AllNodeNamesByPhase(self, Phase: int) -> List[str]:
-        '''(read-only) Return array of strings of the node names for the By Phase criteria. Sequence corresponds to other ByPhase properties.'''
+        '''Return array of strings of the node names for the By Phase criteria. Sequence corresponds to other ByPhase properties.'''
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllNodeNamesByPhase, Phase))
 
     def AllNodeVmagByPhase(self, Phase: int) -> Float64Array:
-        '''(read-only) Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.'''
+        '''Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.'''
         self.CheckForError(self._lib.Circuit_Get_AllNodeVmagByPhase_GR(Phase))
         return self._get_float64_gr_array()
 
     def AllNodeVmagPUByPhase(self, Phase: int) -> Float64Array:
-        '''(read-only) Returns array of per unit voltage magnitudes for each node by phase'''
+        '''Returns array of per unit voltage magnitudes for each node by phase'''
         self.CheckForError(self._lib.Circuit_Get_AllNodeVmagPUByPhase_GR(Phase))
         return self._get_float64_gr_array()
 
@@ -310,95 +310,95 @@ class ICircuit(Base):
 
     @property
     def AllBusDistances(self) -> Float64Array:
-        '''(read-only) Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.'''
+        '''Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.'''
         self.CheckForError(self._lib.Circuit_Get_AllBusDistances_GR())
         return self._get_float64_gr_array()
 
     @property
     def AllBusNames(self) -> List[str]:
-        '''(read-only) Array of strings containing names of all buses in circuit (see AllNodeNames).'''
+        '''Array of strings containing names of all buses in circuit (see AllNodeNames).'''
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllBusNames))
 
     @property
     def AllBusVmag(self) -> Float64Array:
-        '''(read-only) Array of magnitudes (doubles) of voltages at all buses'''
+        '''Array of magnitudes (doubles) of voltages at all buses'''
         self.CheckForError(self._lib.Circuit_Get_AllBusVmag_GR())
         return self._get_float64_gr_array()
 
     @property
     def AllBusVmagPu(self) -> Float64Array:
-        '''(read-only) Double Array of all bus voltages (each node) magnitudes in Per unit'''
+        '''Double Array of all bus voltages (each node) magnitudes in Per unit'''
         self.CheckForError(self._lib.Circuit_Get_AllBusVmagPu_GR())
         return self._get_float64_gr_array()
 
     @property
     def AllBusVolts(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Complex array of all bus, node voltages from most recent solution'''
+        '''Complex array of all bus, node voltages from most recent solution'''
         self.CheckForError(self._lib.Circuit_Get_AllBusVolts_GR())
         return self._get_complex128_gr_array()
 
     @property
     def AllElementLosses(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Array of total losses (complex) in each circuit element'''
+        '''Array of total losses (complex) in each circuit element'''
         self.CheckForError(self._lib.Circuit_Get_AllElementLosses_GR())
         return self._get_complex128_gr_array()
 
     @property
     def AllElementNames(self) -> List[str]:
-        '''(read-only) Array of strings containing Full Name of all elements.'''
+        '''Array of strings containing Full Name of all elements.'''
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllElementNames))
 
     @property
     def AllNodeDistances(self) -> Float64Array:
-        '''(read-only) Returns an array of distances from parent EnergyMeter for each Node. Corresponds to AllBusVMag sequence.'''
+        '''Returns an array of distances from parent EnergyMeter for each Node. Corresponds to AllBusVMag sequence.'''
         self.CheckForError(self._lib.Circuit_Get_AllNodeDistances_GR())
         return self._get_float64_gr_array()
 
     @property
     def AllNodeNames(self) -> List[str]:
-        '''(read-only) Array of strings containing full name of each node in system in same order as returned by AllBusVolts, etc.'''
+        '''Array of strings containing full name of each node in system in same order as returned by AllBusVolts, etc.'''
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllNodeNames))
 
     @property
     def LineLosses(self) -> Float64ArrayOrSimpleComplex:
-        '''(read-only) Complex total line losses in the circuit'''
+        '''Complex total line losses in the circuit'''
         self.CheckForError(self._lib.Circuit_Get_LineLosses_GR())
         return self._get_complex128_gr_simple()
 
     @property
     def Losses(self) -> Float64ArrayOrSimpleComplex:
-        '''(read-only) Total losses in active circuit, complex number (two-element array of double).'''
+        '''Total losses in active circuit, complex number (two-element array of double).'''
         self.CheckForError(self._lib.Circuit_Get_Losses_GR())
         return self._get_complex128_gr_simple()
 
     @property
     def Name(self) -> str:
-        '''(read-only) Name of the active circuit.'''
+        '''Name of the active circuit.'''
         return self._get_string(self.CheckForError(self._lib.Circuit_Get_Name()))
 
     @property
     def NumBuses(self) -> int:
-        '''(read-only) Total number of Buses in the circuit.'''
+        '''Total number of Buses in the circuit.'''
         return self.CheckForError(self._lib.Circuit_Get_NumBuses())
 
     @property
     def NumCktElements(self) -> int:
-        '''(read-only) Number of CktElements in the circuit.'''
+        '''Number of CktElements in the circuit.'''
         return self.CheckForError(self._lib.Circuit_Get_NumCktElements())
 
     @property
     def NumNodes(self) -> int:
-        '''(read-only) Total number of nodes in the circuit.'''
+        '''Total number of nodes in the circuit.'''
         return self.CheckForError(self._lib.Circuit_Get_NumNodes())
 
     @property
     def ParentPDElement(self) -> int:
-        '''(read-only) Sets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
+        '''Sets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
         return self.CheckForError(self._lib.Circuit_Get_ParentPDElement())
 
     @property
     def SubstationLosses(self) -> Float64ArrayOrSimpleComplex:
-        '''(read-only) Complex losses in all transformers designated to substations.'''
+        '''Complex losses in all transformers designated to substations.'''
         self.CheckForError(self._lib.Circuit_Get_SubstationLosses_GR())
         return self._get_complex128_gr_simple()
 
@@ -414,24 +414,24 @@ class ICircuit(Base):
 
     @property
     def TotalPower(self) -> Float64ArrayOrSimpleComplex:
-        '''(read-only) Total power (complex), kVA delivered to the circuit'''
+        '''Total power (complex), kVA delivered to the circuit'''
         self.CheckForError(self._lib.Circuit_Get_TotalPower_GR())
         return self._get_complex128_gr_simple()
 
     @property
     def YCurrents(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Array of doubles containing complex injection currents for the present solution. Is is the "I" vector of I=YV'''
+        '''Array of doubles containing complex injection currents for the present solution. Is is the "I" vector of I=YV'''
         self.CheckForError(self._lib.Circuit_Get_YCurrents_GR())
         return self._get_complex128_gr_array()
 
     @property
     def YNodeOrder(self) -> List[str]:
-        '''(read-only) Array of strings containing the names of the nodes in the same order as the Y matrix'''
+        '''Array of strings containing the names of the nodes in the same order as the Y matrix'''
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_YNodeOrder))
 
     @property
     def YNodeVarray(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Complex array of actual node voltages in same order as SystemY matrix.'''
+        '''Complex array of actual node voltages in same order as SystemY matrix.'''
         self.CheckForError(self._lib.Circuit_Get_YNodeVarray_GR())
         return self._get_complex128_gr_array()
 

@@ -189,7 +189,7 @@ class ISolution(Base):
 
     @property
     def EventLog(self) -> List[str]:
-        '''(read-only) Array of strings containing the Event Log'''
+        '''Array of strings containing the Event Log'''
         return self.CheckForError(self._get_string_array(self._lib.Solution_Get_EventLog))
 
     @property
@@ -250,7 +250,7 @@ class ISolution(Base):
 
     @property
     def Iterations(self) -> int:
-        '''(read-only) Number of iterations taken for last solution. (Same as Totaliterations)'''
+        '''Number of iterations taken for last solution. (Same as Totaliterations)'''
         return self.CheckForError(self._lib.Solution_Get_Iterations())
 
     @property
@@ -321,12 +321,12 @@ class ISolution(Base):
 
     @property
     def ModeID(self) -> str:
-        '''(read-only) ID (text) of the present solution mode'''
+        '''ID (text) of the present solution mode'''
         return self._get_string(self.CheckForError(self._lib.Solution_Get_ModeID()))
 
     @property
     def MostIterationsDone(self) -> int:
-        '''(read-only) Max number of iterations required to converge at any control iteration of the most recent solution.'''
+        '''Max number of iterations required to converge at any control iteration of the most recent solution.'''
         return self.CheckForError(self._lib.Solution_Get_MostIterationsDone())
 
     @property
@@ -340,7 +340,7 @@ class ISolution(Base):
 
     @property
     def Process_Time(self) -> float:
-        '''(read-only) Gets the time required to perform the latest solution (Read only)'''
+        '''Gets the time required to perform the latest solution (Read only)'''
         return self.CheckForError(self._lib.Solution_Get_Process_Time())
 
     @property
@@ -372,12 +372,12 @@ class ISolution(Base):
 
     @property
     def SystemYChanged(self) -> bool:
-        '''(read-only) Flag that indicates if elements of the System Y have been changed by recent activity.'''
+        '''Flag that indicates if elements of the System Y have been changed by recent activity.'''
         return self.CheckForError(self._lib.Solution_Get_SystemYChanged() != 0)
 
     @property
     def Time_of_Step(self) -> float:
-        '''(read-only) Get the solution process time + sample time for time step'''
+        '''Get the solution process time + sample time for time step'''
         return self.CheckForError(self._lib.Solution_Get_Time_of_Step())
 
     @property
@@ -402,7 +402,7 @@ class ISolution(Base):
 
     @property
     def Totaliterations(self) -> int:
-        '''(read-only) Total iterations including control iterations for most recent solution.'''
+        '''Total iterations including control iterations for most recent solution.'''
         return self.CheckForError(self._lib.Solution_Get_Totaliterations())
 
     @property

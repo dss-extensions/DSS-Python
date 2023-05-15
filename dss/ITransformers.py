@@ -190,19 +190,19 @@ class ITransformers(Iterable):
 
     @property
     def WdgVoltages(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Complex array of voltages for active winding'''
+        '''Complex array of voltages for active winding'''
         self.CheckForError(self._lib.Transformers_Get_WdgVoltages_GR())
         return self._get_complex128_gr_array()
 
     @property
     def WdgCurrents(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)'''
+        '''All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)'''
         self.CheckForError(self._lib.Transformers_Get_WdgCurrents_GR())
         return self._get_complex128_gr_array()
 
     @property
     def strWdgCurrents(self) -> str:
-        '''(read-only) All winding currents in CSV string form like the WdgCurrents property'''
+        '''All winding currents in CSV string form like the WdgCurrents property'''
         return self._get_string(self.CheckForError(self._lib.Transformers_Get_strWdgCurrents()))
 
     @property

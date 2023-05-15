@@ -17,17 +17,17 @@ class IParser(Base):
     ]
 
     def Matrix(self, ExpectedOrder: int) -> Float64Array:
-        '''(read-only) Use this property to parse a Matrix token in OpenDSS format.  Returns square matrix of order specified. Order same as default Fortran order: column by column.'''
+        '''Use this property to parse a Matrix token in OpenDSS format.  Returns square matrix of order specified. Order same as default Fortran order: column by column.'''
         self.CheckForError(self._lib.Parser_Get_Matrix_GR(ExpectedOrder))
         return self._get_float64_gr_array()
 
     def SymMatrix(self, ExpectedOrder: int) -> Float64Array:
-        '''(read-only) Use this property to parse a matrix token specified in lower triangle form. Symmetry is forced.'''
+        '''Use this property to parse a matrix token specified in lower triangle form. Symmetry is forced.'''
         self.CheckForError(self._lib.Parser_Get_SymMatrix_GR(ExpectedOrder))
         return self._get_float64_gr_array()
 
     def Vector(self, ExpectedSize: int) -> Float64Array:
-        '''(read-only) Returns token as array of doubles. For parsing quoted array syntax.'''
+        '''Returns token as array of doubles. For parsing quoted array syntax.'''
         self.CheckForError(self._lib.Parser_Get_Vector_GR(ExpectedSize))
         return self._get_float64_gr_array()
 
@@ -71,7 +71,7 @@ class IParser(Base):
 
     @property
     def DblValue(self) -> float:
-        '''(read-only) Return next parameter as a double.'''
+        '''Return next parameter as a double.'''
         return self.CheckForError(self._lib.Parser_Get_DblValue())
 
     @property
@@ -100,17 +100,17 @@ class IParser(Base):
 
     @property
     def IntValue(self) -> int:
-        '''(read-only) Return next parameter as a long integer.'''
+        '''Return next parameter as a long integer.'''
         return self.CheckForError(self._lib.Parser_Get_IntValue())
 
     @property
     def NextParam(self) -> str:
-        '''(read-only) Get next token and return tag name (before = sign) if any. See AutoIncrement.'''
+        '''Get next token and return tag name (before = sign) if any. See AutoIncrement.'''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_NextParam()))
 
     @property
     def StrValue(self) -> str:
-        '''(read-only) Return next parameter as a string'''
+        '''Return next parameter as a string'''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_StrValue()))
 
     @property

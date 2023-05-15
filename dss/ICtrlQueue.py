@@ -36,17 +36,17 @@ class ICtrlQueue(Base):
 
     @property
     def ActionCode(self) -> int:
-        '''(read-only) Code for the active action. Long integer code to tell the control device what to do'''
+        '''Code for the active action. Long integer code to tell the control device what to do'''
         return self.CheckForError(self._lib.CtrlQueue_Get_ActionCode())
 
     @property
     def DeviceHandle(self) -> int:
-        '''(read-only) Handle (User defined) to device that must act on the pending action.'''
+        '''Handle (User defined) to device that must act on the pending action.'''
         return self.CheckForError(self._lib.CtrlQueue_Get_DeviceHandle())
 
     @property
     def NumActions(self) -> int:
-        '''(read-only) Number of Actions on the current actionlist (that have been popped off the control queue by CheckControlActions)'''
+        '''Number of Actions on the current actionlist (that have been popped off the control queue by CheckControlActions)'''
         return self.CheckForError(self._lib.CtrlQueue_Get_NumActions())
 
     def Push(self, Hour: int, Seconds: float, ActionCode: int, DeviceHandle: int):
@@ -55,17 +55,17 @@ class ICtrlQueue(Base):
 
     @property
     def PopAction(self) -> int:
-        '''(read-only) Pops next action off the action list and makes it the active action. Returns zero if none.'''
+        '''Pops next action off the action list and makes it the active action. Returns zero if none.'''
         return self.CheckForError(self._lib.CtrlQueue_Get_PopAction())
 
     @property
     def Queue(self) -> List[str]:
-        '''(read-only) Array of strings containing the entire queue in CSV format'''
+        '''Array of strings containing the entire queue in CSV format'''
         return self.CheckForError(self._get_string_array(self._lib.CtrlQueue_Get_Queue))
 
     @property
     def QueueSize(self) -> int:
-        '''(read-only) Number of items on the OpenDSS control Queue'''
+        '''Number of items on the OpenDSS control Queue'''
         return self.CheckForError(self._lib.CtrlQueue_Get_QueueSize())
 
     @property

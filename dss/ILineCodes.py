@@ -72,7 +72,7 @@ class ILineCodes(Iterable):
 
     @property
     def IsZ1Z0(self) -> bool:
-        '''(read-only) Flag denoting whether impedance data were entered in symmetrical components'''
+        '''Flag denoting whether impedance data were entered in symmetrical components'''
         return self.CheckForError(self._lib.LineCodes_Get_IsZ1Z0()) != 0
 
     @property

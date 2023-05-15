@@ -157,12 +157,12 @@ class ILines(Iterable):
 
     @property
     def NumCust(self) -> int:
-        '''(read-only) Number of customers on this line section.'''
+        '''Number of customers on this line section.'''
         return self.CheckForError(self._lib.Lines_Get_NumCust())
 
     @property
     def Parent(self) -> int:
-        '''(read-only) Sets Parent of the active Line to be the active line. Returns 0 if no parent or action fails.'''
+        '''Sets Parent of the active Line to be the active line. Returns 0 if no parent or action fails.'''
         return self.CheckForError(self._lib.Lines_Get_Parent())
 
     @property
@@ -235,7 +235,7 @@ class ILines(Iterable):
 
     @property
     def TotalCust(self) -> int:
-        '''(read-only) Total Number of customers served from this line section.'''
+        '''Total Number of customers served from this line section.'''
         return self.CheckForError(self._lib.Lines_Get_TotalCust())
 
     @property

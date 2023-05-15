@@ -568,7 +568,7 @@ class Iterable(Base):
 
     @property
     def Next(self) -> int:
-        '''(read-only) Sets next object of this type active. Returns 0 if no more.'''
+        '''Sets next object of this type active. Returns 0 if no more.'''
         return self.CheckForError(self._Get_Next())
 
     @property

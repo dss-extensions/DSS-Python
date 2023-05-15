@@ -27,17 +27,17 @@ class IDSSElement(Base):
 
     @property
     def AllPropertyNames(self) -> List[str]:
-        '''(read-only) Array of strings containing the names of all properties for the active DSS object.'''
+        '''Array of strings containing the names of all properties for the active DSS object.'''
         return self.CheckForError(self._get_string_array(self._lib.DSSElement_Get_AllPropertyNames))
 
     @property
     def Name(self) -> str:
-        '''(read-only) Full Name of Active DSS Object (general element or circuit element).'''
+        '''Full Name of Active DSS Object (general element or circuit element).'''
         return self._get_string(self.CheckForError(self._lib.DSSElement_Get_Name()))
 
     @property
     def NumProperties(self) -> int:
-        '''(read-only) Number of Properties for the active DSS object.'''
+        '''Number of Properties for the active DSS object.'''
         return self.CheckForError(self._lib.DSSElement_Get_NumProperties())
 
     def ToJSON(self, options : DSSJSONFlags = 0) -> str:

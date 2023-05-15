@@ -80,7 +80,7 @@ class IFuses(Iterable):
 
     @property
     def NumPhases(self) -> int:
-        '''(read-only) Number of phases, this fuse. '''
+        '''Number of phases, this fuse. '''
         return self.CheckForError(self._lib.Fuses_Get_NumPhases())
 
     @property

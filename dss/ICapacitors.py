@@ -37,7 +37,7 @@ class ICapacitors(Iterable):
 
     @property
     def AvailableSteps(self) -> int:
-        '''(read-only) Number of Steps available in cap bank to be switched ON.'''
+        '''Number of Steps available in cap bank to be switched ON.'''
         return self.CheckForError(self._lib.Capacitors_Get_AvailableSteps())
 
     @property

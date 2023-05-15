@@ -77,12 +77,12 @@ class IGenerators(Iterable):
 
     @property
     def RegisterNames(self) -> List[str]:
-        '''(read-only) Array of Names of all generator energy meter registers'''
+        '''Array of Names of all generator energy meter registers'''
         return self.CheckForError(self._get_string_array(self._lib.Generators_Get_RegisterNames))
 
     @property
     def RegisterValues(self) -> Float64Array:
-        '''(read-only) Array of valus in generator energy meter registers.'''
+        '''Array of valus in generator energy meter registers.'''
         self.CheckForError(self._lib.Generators_Get_RegisterValues_GR())
         return self._get_float64_gr_array()
 

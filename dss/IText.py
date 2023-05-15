@@ -25,7 +25,7 @@ class IText(Base):
 
     @property
     def Result(self) -> str:
-        '''(read-only) Result string for the last command.'''
+        '''Result string for the last command.'''
         return self._get_string(self.CheckForError(self._lib.Text_Get_Result()))
 
     def Commands(self, Value: Union[AnyStr, List[AnyStr]]):

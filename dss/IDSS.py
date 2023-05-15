@@ -150,7 +150,7 @@ class IDSS(Base):
 
     @property
     def Classes(self) -> List[str]:
-        '''(read-only) List of DSS intrinsic classes (names of the classes)'''
+        '''List of DSS intrinsic classes (names of the classes)'''
         return self.CheckForError(self._get_string_array(self._lib.DSS_Get_Classes))
 
     @property
@@ -167,27 +167,27 @@ class IDSS(Base):
 
     @property
     def DefaultEditor(self) -> str:
-        '''(read-only) Returns the path name for the default text editor.'''
+        '''Returns the path name for the default text editor.'''
         return self._get_string(self.CheckForError(self._lib.DSS_Get_DefaultEditor()))
 
     @property
     def NumCircuits(self) -> int:
-        '''(read-only) Number of Circuits currently defined'''
+        '''Number of Circuits currently defined'''
         return self.CheckForError(self._lib.DSS_Get_NumCircuits())
 
     @property
     def NumClasses(self) -> int:
-        '''(read-only) Number of DSS intrinsic classes'''
+        '''Number of DSS intrinsic classes'''
         return self.CheckForError(self._lib.DSS_Get_NumClasses())
 
     @property
     def NumUserClasses(self) -> int:
-        '''(read-only) Number of user-defined classes'''
+        '''Number of user-defined classes'''
         return self.CheckForError(self._lib.DSS_Get_NumUserClasses())
 
     @property
     def UserClasses(self) -> List[str]:
-        '''(read-only) List of user-defined classes'''
+        '''List of user-defined classes'''
         return self.CheckForError(self._get_string_array(self._lib.DSS_Get_UserClasses))
 
     @property

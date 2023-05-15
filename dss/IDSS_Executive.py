@@ -16,32 +16,32 @@ class IDSS_Executive(Base):
     ]
 
     def Command(self, i: int) -> str:
-        '''(read-only) Get i-th command'''
+        '''Get i-th command'''
         return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_Command(i)))
 
     def CommandHelp(self, i: int) -> str:
-        '''(read-only) Get help string for i-th command'''
+        '''Get help string for i-th command'''
         return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_CommandHelp(i)))
 
     def Option(self, i: int) -> str:
-        '''(read-only) Get i-th option'''
+        '''Get i-th option'''
         return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_Option(i)))
 
     def OptionHelp(self, i: int) -> str:
-        '''(read-only) Get help string for i-th option'''
+        '''Get help string for i-th option'''
         return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_OptionHelp(i)))
 
     def OptionValue(self, i: int) -> str:
-        '''(read-only) Get present value of i-th option'''
+        '''Get present value of i-th option'''
         return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_OptionValue(i)))
 
     @property
     def NumCommands(self) -> int:
-        '''(read-only) Number of DSS Executive Commands'''
+        '''Number of DSS Executive Commands'''
         return self.CheckForError(self._lib.DSS_Executive_Get_NumCommands())
 
     @property
     def NumOptions(self) -> int:
-        '''(read-only) Number of DSS Executive Options'''
+        '''Number of DSS Executive Options'''
         return self.CheckForError(self._lib.DSS_Executive_Get_NumOptions())
 

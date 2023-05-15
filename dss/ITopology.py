@@ -25,32 +25,32 @@ class ITopology(Base):
 
     @property
     def ActiveBranch(self) -> int:
-        '''(read-only) Returns index of the active branch'''
+        '''Returns index of the active branch'''
         return self.CheckForError(self._lib.Topology_Get_ActiveBranch())
 
     @property
     def ActiveLevel(self) -> int:
-        '''(read-only) Topological depth of the active branch'''
+        '''Topological depth of the active branch'''
         return self.CheckForError(self._lib.Topology_Get_ActiveLevel())
 
     @property
     def AllIsolatedBranches(self) -> List[str]:
-        '''(read-only) Array of all isolated branch names.'''
+        '''Array of all isolated branch names.'''
         return self.CheckForError(self._get_string_array(self._lib.Topology_Get_AllIsolatedBranches))
 
     @property
     def AllIsolatedLoads(self) -> List[str]:
-        '''(read-only) Array of all isolated load names.'''
+        '''Array of all isolated load names.'''
         return self.CheckForError(self._get_string_array(self._lib.Topology_Get_AllIsolatedLoads))
 
     @property
     def AllLoopedPairs(self) -> List[str]:
-        '''(read-only) Array of all looped element names, by pairs.'''
+        '''Array of all looped element names, by pairs.'''
         return self.CheckForError(self._get_string_array(self._lib.Topology_Get_AllLoopedPairs))
 
     @property
     def BackwardBranch(self) -> int:
-        '''(read-only) MOve back toward the source, return index of new active branch, or 0 if no more.'''
+        '''Move back toward the source, return index of new active branch, or 0 if no more.'''
         return self.CheckForError(self._lib.Topology_Get_BackwardBranch())
 
     @property
@@ -79,51 +79,51 @@ class ITopology(Base):
 
     @property
     def First(self) -> int:
-        '''(read-only) Sets the first branch active, returns 0 if none.'''
+        '''Sets the first branch active, returns 0 if none.'''
         return self.CheckForError(self._lib.Topology_Get_First())
 
     @property
     def FirstLoad(self) -> int:
-        '''(read-only) First load at the active branch, return index or 0 if none.'''
+        '''First load at the active branch, return index or 0 if none.'''
         return self.CheckForError(self._lib.Topology_Get_FirstLoad())
 
     @property
     def ForwardBranch(self) -> int:
-        '''(read-only) Move forward in the tree, return index of new active branch or 0 if no more'''
+        '''Move forward in the tree, return index of new active branch or 0 if no more'''
         return self.CheckForError(self._lib.Topology_Get_ForwardBranch())
 
     @property
     def LoopedBranch(self) -> int:
-        '''(read-only) Move to looped branch, return index or 0 if none.'''
+        '''Move to looped branch, return index or 0 if none.'''
         return self.CheckForError(self._lib.Topology_Get_LoopedBranch())
 
     @property
     def Next(self) -> int:
-        '''(read-only) Sets the next branch active, returns 0 if no more.'''
+        '''Sets the next branch active, returns 0 if no more.'''
         return self.CheckForError(self._lib.Topology_Get_Next())
 
     @property
     def NextLoad(self) -> int:
-        '''(read-only) Next load at the active branch, return index or 0 if no more.'''
+        '''Next load at the active branch, return index or 0 if no more.'''
         return self.CheckForError(self._lib.Topology_Get_NextLoad())
 
     @property
     def NumIsolatedBranches(self) -> int:
-        '''(read-only) Number of isolated branches (PD elements and capacitors).'''
+        '''Number of isolated branches (PD elements and capacitors).'''
         return self.CheckForError(self._lib.Topology_Get_NumIsolatedBranches())
 
     @property
     def NumIsolatedLoads(self) -> int:
-        '''(read-only) Number of isolated loads'''
+        '''Number of isolated loads'''
         return self.CheckForError(self._lib.Topology_Get_NumIsolatedLoads())
 
     @property
     def NumLoops(self) -> int:
-        '''(read-only) Number of loops'''
+        '''Number of loops'''
         return self.CheckForError(self._lib.Topology_Get_NumLoops())
 
     @property
     def ParallelBranch(self) -> int:
-        '''(read-only) Move to directly parallel branch, return index or 0 if none.'''
+        '''Move to directly parallel branch, return index or 0 if none.'''
         return self.CheckForError(self._lib.Topology_Get_ParallelBranch())
 

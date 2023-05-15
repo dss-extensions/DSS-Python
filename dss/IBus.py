@@ -57,156 +57,156 @@ class IBus(Base):
 
     @property
     def Coorddefined(self) -> bool:
-        '''(read-only) False=0 else True. Indicates whether a coordinate has been defined for this bus'''
+        '''False=0 else True. Indicates whether a coordinate has been defined for this bus'''
         return self.CheckForError(self._lib.Bus_Get_Coorddefined()) != 0
 
     @property
     def CplxSeqVoltages(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Complex Double array of Sequence Voltages (0, 1, 2) at this Bus.'''
+        '''Complex Double array of Sequence Voltages (0, 1, 2) at this Bus.'''
         self.CheckForError(self._lib.Bus_Get_CplxSeqVoltages_GR())
         return self._get_complex128_gr_array()
 
     @property
     def Cust_Duration(self) -> float:
-        '''(read-only) Accumulated customer outage durations'''
+        '''Accumulated customer outage durations'''
         return self.CheckForError(self._lib.Bus_Get_Cust_Duration())
 
     @property
     def Cust_Interrupts(self) -> float:
-        '''(read-only) Annual number of customer-interruptions from this bus'''
+        '''Annual number of customer-interruptions from this bus'''
         return self.CheckForError(self._lib.Bus_Get_Cust_Interrupts())
 
     @property
     def Distance(self) -> float:
-        '''(read-only) Distance from energymeter (if non-zero)'''
+        '''Distance from energymeter (if non-zero)'''
         return self.CheckForError(self._lib.Bus_Get_Distance())
 
     @property
     def Int_Duration(self) -> float:
-        '''(read-only) Average interruption duration, hr.'''
+        '''Average interruption duration, hr.'''
         return self.CheckForError(self._lib.Bus_Get_Int_Duration())
 
     @property
     def Isc(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Short circuit currents at bus; Complex Array.'''
+        '''Short circuit currents at bus; Complex Array.'''
         self.CheckForError(self._lib.Bus_Get_Isc_GR())
         return self._get_complex128_gr_array()
 
     @property
     def Lambda(self) -> float:
-        '''(read-only) Accumulated failure rate downstream from this bus; faults per year'''
+        '''Accumulated failure rate downstream from this bus; faults per year'''
         return self.CheckForError(self._lib.Bus_Get_Lambda())
 
     @property
     def N_Customers(self) -> int:
-        '''(read-only) Total numbers of customers served downline from this bus'''
+        '''Total numbers of customers served downline from this bus'''
         return self.CheckForError(self._lib.Bus_Get_N_Customers())
 
     @property
     def N_interrupts(self) -> float:
-        '''(read-only) Number of interruptions this bus per year'''
+        '''Number of interruptions this bus per year'''
         return self.CheckForError(self._lib.Bus_Get_N_interrupts())
 
     @property
     def Name(self) -> str:
-        '''(read-only) Name of Bus'''
+        '''Name of Bus'''
         return self._get_string(self.CheckForError(self._lib.Bus_Get_Name()))
 
     @property
     def Nodes(self) -> Int32Array:
-        '''(read-only) Integer Array of Node Numbers defined at the bus in same order as the voltages.'''
+        '''Integer Array of Node Numbers defined at the bus in same order as the voltages.'''
         self.CheckForError(self._lib.Bus_Get_Nodes_GR())
         return self._get_int32_gr_array()
 
     @property
     def NumNodes(self) -> int:
-        '''(read-only) Number of Nodes this bus.'''
+        '''Number of Nodes this bus.'''
         return self.CheckForError(self._lib.Bus_Get_NumNodes())
 
     @property
     def SectionID(self) -> int:
-        '''(read-only) Integer ID of the feeder section in which this bus is located.'''
+        '''Integer ID of the feeder section in which this bus is located.'''
         return self.CheckForError(self._lib.Bus_Get_SectionID())
 
     @property
     def SeqVoltages(self) -> Float64Array:
-        '''(read-only) Double Array of sequence voltages at this bus. Magnitudes only.'''
+        '''Double Array of sequence voltages at this bus. Magnitudes only.'''
         self.CheckForError(self._lib.Bus_Get_SeqVoltages_GR())
         return self._get_float64_gr_array()
 
     @property
     def TotalMiles(self) -> float:
-        '''(read-only) Total length of line downline from this bus, in miles. For recloser siting algorithm.'''
+        '''Total length of line downline from this bus, in miles. For recloser siting algorithm.'''
         return self.CheckForError(self._lib.Bus_Get_TotalMiles())
 
     @property
     def VLL(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) For 2- and 3-phase buses, returns array of complex numbers represetin L-L voltages in volts. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only first 3.'''
+        '''For 2- and 3-phase buses, returns array of complex numbers represetin L-L voltages in volts. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only first 3.'''
         self.CheckForError(self._lib.Bus_Get_VLL_GR())
         return self._get_complex128_gr_array()
 
     @property
     def VMagAngle(self) -> Float64Array:
-        '''(read-only) Array of doubles containing voltages in Magnitude (VLN), angle (degrees) '''
+        '''Array of doubles containing voltages in Magnitude (VLN), angle (degrees) '''
         self.CheckForError(self._lib.Bus_Get_VMagAngle_GR())
         return self._get_float64_gr_array()
 
     @property
     def Voc(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Open circuit voltage; Complex array.'''
+        '''Open circuit voltage; Complex array.'''
         self.CheckForError(self._lib.Bus_Get_Voc_GR())
         return self._get_complex128_gr_array()
 
     @property
     def Voltages(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Complex array of voltages at this bus.'''
+        '''Complex array of voltages at this bus.'''
         self.CheckForError(self._lib.Bus_Get_Voltages_GR())
         return self._get_complex128_gr_array()
 
     @property
     def YscMatrix(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Complex array of Ysc matrix at bus. Column by column.'''
+        '''Complex array of Ysc matrix at bus. Column by column.'''
         self.CheckForError(self._lib.Bus_Get_YscMatrix_GR())
         return self._get_complex128_gr_array()
 
     @property
     def Zsc0(self) -> Float64ArrayOrSimpleComplex:
-        '''(read-only) Complex Zero-Sequence short circuit impedance at bus.'''
+        '''Complex Zero-Sequence short circuit impedance at bus.'''
         self.CheckForError(self._lib.Bus_Get_Zsc0_GR())
         return self._get_complex128_gr_simple()
 
     @property
     def Zsc1(self) -> Float64ArrayOrSimpleComplex:
-        '''(read-only) Complex Positive-Sequence short circuit impedance at bus.'''
+        '''Complex Positive-Sequence short circuit impedance at bus.'''
         self.CheckForError(self._lib.Bus_Get_Zsc1_GR())
         return self._get_complex128_gr_simple()
 
     @property
     def ZscMatrix(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Complex array of Zsc matrix at bus. Column by column.'''
+        '''Complex array of Zsc matrix at bus. Column by column.'''
         self.CheckForError(self._lib.Bus_Get_ZscMatrix_GR())
         return self._get_complex128_gr_array()
 
     @property
     def kVBase(self) -> float:
-        '''(read-only) Base voltage at bus in kV'''
+        '''Base voltage at bus in kV'''
         return self.CheckForError(self._lib.Bus_Get_kVBase())
 
     @property
     def puVLL(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Returns Complex array of pu L-L voltages for 2- and 3-phase buses. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only 3 phases.'''
+        '''Returns Complex array of pu L-L voltages for 2- and 3-phase buses. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only 3 phases.'''
         self.CheckForError(self._lib.Bus_Get_puVLL_GR())
         return self._get_complex128_gr_array()
 
     @property
     def puVmagAngle(self) -> Float64Array:
-        '''(read-only) Array of doubles containing voltage magnitude, angle (degrees) pairs in per unit'''
+        '''Array of doubles containing voltage magnitude, angle (degrees) pairs in per unit'''
         self.CheckForError(self._lib.Bus_Get_puVmagAngle_GR())
         return self._get_float64_gr_array()
 
     @property
     def puVoltages(self) -> Float64ArrayOrComplexArray:
-        '''(read-only) Complex Array of pu voltages at the bus.'''
+        '''Complex Array of pu voltages at the bus.'''
         self.CheckForError(self._lib.Bus_Get_puVoltages_GR())
         return self._get_complex128_gr_array()
 

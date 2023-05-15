@@ -20,12 +20,12 @@ class IDSSProperty(Base):
     
     @property
     def Description(self) -> str:
-        '''(read-only) Description of the property.'''
+        '''Description of the property.'''
         return self._get_string(self.CheckForError(self._lib.DSSProperty_Get_Description()))
 
     @property
     def Name(self) -> str:
-        '''(read-only) Name of Property'''
+        '''Name of Property'''
         return self._get_string(self.CheckForError(self._lib.DSSProperty_Get_Name()))
 
     @property

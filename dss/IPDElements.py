@@ -30,12 +30,12 @@ class IPDElements(Base):
 
     @property
     def AccumulatedL(self) -> float:
-        '''(read-only) accummulated failure rate for this branch on downline'''
+        '''accummulated failure rate for this branch on downline'''
         return self.CheckForError(self._lib.PDElements_Get_AccumulatedL())
 
     @property
     def Count(self) -> int:
-        '''(read-only) Number of PD elements (including disabled elements)'''
+        '''Number of PD elements (including disabled elements)'''
         return self.CheckForError(self._lib.PDElements_Get_Count())
 
     def __len__(self) -> int:
@@ -80,7 +80,7 @@ class IPDElements(Base):
 
     @property
     def Lambda(self) -> float:
-        '''(read-only) Failure rate for this branch. Faults per year including length of line.'''
+        '''Failure rate for this branch. Faults per year including length of line.'''
         return self.CheckForError(self._lib.PDElements_Get_Lambda())
 
     @property
@@ -108,7 +108,7 @@ class IPDElements(Base):
 
     @property
     def Numcustomers(self) -> int:
-        '''(read-only) Number of customers, this branch'''
+        '''Number of customers, this branch'''
         return self.CheckForError(self._lib.PDElements_Get_Numcustomers())
 
     @property
@@ -130,17 +130,17 @@ class IPDElements(Base):
 
     @property
     def SectionID(self) -> int:
-        '''(read-only) Integer ID of the feeder section that this PDElement branch is part of'''
+        '''Integer ID of the feeder section that this PDElement branch is part of'''
         return self.CheckForError(self._lib.PDElements_Get_SectionID())
 
     @property
     def TotalMiles(self) -> float:
-        '''(read-only) Total miles of line from this element to the end of the zone. For recloser siting algorithm.'''
+        '''Total miles of line from this element to the end of the zone. For recloser siting algorithm.'''
         return self.CheckForError(self._lib.PDElements_Get_TotalMiles())
 
     @property
     def Totalcustomers(self) -> int:
-        '''(read-only) Total number of customers from this branch to the end of the zone'''
+        '''Total number of customers from this branch to the end of the zone'''
         return self.CheckForError(self._lib.PDElements_Get_Totalcustomers())
 
     @property
