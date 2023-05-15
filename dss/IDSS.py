@@ -43,6 +43,7 @@ class IDSS(Base):
         'YMatrix',
         'ZIP',
         'Obj',
+        '_version',
     ]
     
     _columns = [
@@ -71,6 +72,8 @@ class IDSS(Base):
     Obj: IObj
 
     def __init__(self, api_util):
+        self._version = None
+
         #: Provides access to the circuit attributes and objects in general.
         self.ActiveCircuit = ICircuit(api_util)
         
@@ -189,8 +192,13 @@ class IDSS(Base):
 
     @property
     def Version(self) -> str:
-        '''(read-only) Get version string for the DSS.'''
-        return self._get_string(self.CheckForError(self._lib.DSS_Get_Version()))
+        '''Get version string for the DSS.'''
+
+        if self._version is None:
+            from . import __version__ as dss_python_version
+            self._version = dss_python_version
+
+        return self._get_string(self.CheckForError(self._lib.DSS_Get_Version())) + f'\nDSS-Python version: {self._version}'
 
     @property
     def AllowForms(self) -> bool:
