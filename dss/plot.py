@@ -5,13 +5,14 @@ using the new features from DSS C-API v0.12+ and common Python modules such as m
 This is not a complete implementation and there are known limitations, but should suffice
 for many use-cases. We'd like to add another backend later.
 """
+import warnings
+from typing import List
+import os
 from . import api_util
 from . import DSS as DSSPrime
 from ._cffi_api_util import CffiApiUtil
 from .IDSS import IDSS
 from .IBus import IBus
-from typing import List
-import os
 try:
     import numpy as np
     from matplotlib import pyplot as plt
@@ -86,11 +87,19 @@ str_to_pq = {
     'Currents': pqCurrent,
     'Powers': pqPower,
     'Losses': pqLosses,
-    'Capacities': pqCapacity
+    'Capacities': pqCapacity,
 }
 
 quantity_str = {v: k for k, v in str_to_pq.items()}
 quantity_str[pqLosses] = 'Loss Density'
+
+str_to_pq.update({    
+    'Voltage': pqVoltage,
+    'Current': pqCurrent,
+    'Power': pqPower,
+    'Loss': pqLosses,
+    'Capacity': pqCapacity
+})
 
 # Markers
 DSS_MARKER_37 = Path([(0.0, -0.5), (0.0, 0.196), (-0.36, -0.5), (0.361, -0.5)], [1, 2, 1, 2])
@@ -137,7 +146,7 @@ MARKER_MAP = {
     32: ('v', 2, 0),
     33: (7, 1, 0),
     34: (7, 2, 1),
-    35: (6, 1, 0),
+    35: ('^', 1, 0),
     36: (6, 1, 1), 
     37: (DSS_MARKER_37, 1, 0), 
     38: (DSS_MARKER_38, 1, 0), 
@@ -151,6 +160,8 @@ MARKER_MAP = {
     46: (9, 1, 0), # normal
     47: (9, 1, 1), # normal
 }
+
+LINES_STYLE_CODE = {1: '-', 2: '--', 3: ':', 4: '-.', 5: (0, (5, 1, 1, 1, 1, 1)), 6: (0, (0, 1))}
 
 Colors = [
     '#000000',
@@ -182,9 +193,10 @@ def get_marker_dict(dss_code):
         marker=marker, 
         markersize=sizes[size], 
         markerfacecolor=None if fill else 'none', 
+        # fillstyle='full' if fill else 'none',
         alpha=0.5 if fill not in (0, 1) else 1, 
         markeredgecolor='none' if dss_code == 39 else None,
-        markeredgewidth=2
+        markeredgewidth=1
     )
     for k, v in list(res.items()):
         if v is None:
@@ -194,6 +206,23 @@ def get_marker_dict(dss_code):
 
 def nodot(b):
     return b.split('.', 1)[0]
+
+class ToggleAdvancedTypes:
+    def __init__(self, dss: IDSS, value: bool):
+        self._value = value
+        self._dss = dss
+        self._previous = self._dss.AdvancedTypes
+    
+    def __enter__(self):
+        if self._value != self._previous:
+            self._dss.AdvancedTypes = self._value
+
+        return self
+        
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self._value != self._previous:
+            self._dss.AdvancedTypes = self._previous
+
 
 def dss_monitor_plot(DSS: IDSS, params):
     monitor = DSS.ActiveCircuit.Monitors
@@ -223,7 +252,7 @@ def dss_monitor_plot(DSS: IDSS, params):
 
     separate = False
     if separate:
-        fig, axs = plt.subplots(len(channels), sharex=True, figsize=(8, 9))
+        fig, axs = plt.subplots(len(channels), sharex=True)#, figsize=(8, 9))
         icolor = -1
         for ax, base, ch in zip(axs, bases, channels):
             icolor += 1
@@ -264,7 +293,7 @@ def dss_tshape_plot(DSS, params):
     except:
         interval = 1
 
-    fig, ax = plt.subplots(1, figsize=(8.5, 6))#, num=f"TShape.{params['ObjectName']}")
+    fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"TShape.{params['ObjectName']}")
 
     if not h.size:
         h = interval * np.array(range(len(p)))
@@ -302,7 +331,7 @@ def dss_priceshape_plot(DSS, params):
     except:
         interval = 1
 
-    fig, ax = plt.subplots(1, figsize=(8.5, 6))#, num=f"PriceShape.{params['ObjectName']}")
+    fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"PriceShape.{params['ObjectName']}")
 
     if not h.size:
         h = interval * np.array(range(len(p)))
@@ -332,7 +361,7 @@ def dss_loadshape_plot(DSS, params):
     p = ls.Pmult
     q = ls.Qmult
     
-    fig, ax = plt.subplots(1, figsize=(8.5, 6))#, num=f"LoadShape.{params['ObjectName']}")
+    fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"LoadShape.{params['ObjectName']}")
 
     if not h.size or h is None or len(h) != len(p):
         h = ls.HrInterval * np.array(range(len(p)))
@@ -379,7 +408,7 @@ def remove_nodes(bus):
         
     # return bus[:dot_pos]
 
-def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switches=False, idxs=None):
+def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switches=False, idxs=None, single_ph_line_style =1, three_ph_line_style=1):
     line_count = branch_objects.Count if not idxs else len(idxs)
     lines = np.empty(shape=(line_count, 2, 2), dtype=np.float64)
     lines.fill(np.nan)
@@ -423,7 +452,7 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
         l = branch_objects
         for idx in idxs:
             l.idx = idx
-            buses = DSS.ActiveCircuit.ActiveCktElement.BusNames
+            buses = element.BusNames
             b1 = remove_nodes(buses[0])
             b2 = remove_nodes(buses[1])
             
@@ -449,8 +478,7 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
             l.idx = idx
             
             if do_values == pqPower:
-                S = np.asarray(element.Powers).view(dtype=complex)
-                values[offset] = np.abs(np.sum(S[(S.shape[0] // 2):])) / 2
+                values[offset] = np.abs(element.TotalPowers[0])
             elif do_values == pqLosses:
                 values[offset] = abs(element.Losses[0]) / l.Length
             elif do_values == pqVoltage:
@@ -476,14 +504,14 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
     
     else:
         for i, l in enumerate(branch_objects):
-            buses = DSS.ActiveCircuit.ActiveCktElement.BusNames
+            buses = element.BusNames
             b1 = remove_nodes(buses[0])
             b2 = remove_nodes(buses[1])
             
             fr = bus_coords.get(b1)
             to = bus_coords.get(b2)
             
-            if fr is None or to is None:
+            if fr is None or to is None or not element.Enabled:
                 skip.add(i)
                 continue
 
@@ -510,10 +538,7 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
                 continue
                 
             if do_values == pqPower:
-                S = np.asarray(DSS.ActiveCircuit.ActiveCktElement.Powers).view(dtype=complex)
-                values[offset] = np.abs(np.sum(S[(S.shape[0] // 2):])) / 2
-                if l.Phases < 3:
-                    lines_styles[offset] = 1
+                values[offset] = np.abs(element.TotalPowers[0])
             elif do_values == pqLosses:
                 values[offset] = abs(element.Losses[0]) / l.Length
             elif do_values == pqVoltage:
@@ -537,24 +562,28 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
             elif do_values == pqCapacity:
                 values[offset] = capacities.get(element.Name, np.NaN)
             
+            lines_styles[offset] = single_ph_line_style if l.Phases == 1 else three_ph_line_style
             offset += 1
         
-        return [lines[:offset], values[:offset], lines_styles] + extra
+        return [lines[:offset], values[:offset], lines_styles[:offset]] + extra
     
 
-def get_point_data(DSS, point_objects, bus_coords, do_values=False):
+def get_point_data(DSS: IDSS, point_objects, bus_coords, do_values=False):
+    if isinstance(point_objects, str):
+        cls = point_objects
+        DSS.SetActiveClass(cls)
+        point_objects = DSS.ActiveClass
+    
     point_count = point_objects.Count
+
     points = np.empty(shape=(point_count, 2), dtype=np.float64)
     values = np.empty(shape=(point_count, ), dtype=np.float64)
 
-    # def get_buses_point(l):
-        # b1 = remove_nodes(l.Bus1)
-        # b2 = remove_nodes(l.Bus2)
-
     offset = 0
     skip = set()
-    for i, l in enumerate(point_objects):
-        buses = DSS.ActiveCircuit.ActiveCktElement.BusNames
+    element = DSS.ActiveCircuit.ActiveCktElement
+    for i, _ in enumerate(point_objects):
+        buses = element.BusNames
         all_coords = []
         buses = [remove_nodes(b) for b in buses]
         all_coords = [c for c in (bus_coords.get(b) for b in buses) if c]
@@ -563,7 +592,7 @@ def get_point_data(DSS, point_objects, bus_coords, do_values=False):
             skip.add(i)
             continue
 
-        coords = tuple(sum(c)/len(all_coords) for c in zip(*all_coords)) 
+        coords = tuple(sum(c) / len(all_coords) for c in zip(*all_coords)) 
             
         points[offset] = coords
         offset += 1
@@ -572,18 +601,20 @@ def get_point_data(DSS, point_objects, bus_coords, do_values=False):
         return points[:offset]
         
     offset = 0
-    for i, l in enumerate(DSS.ActiveCircuit.points):
-        S = DSS.ActiveCircuit.ActiveCktElement.Powers.view(dtype=complex)
+    for i, _ in enumerate(point_objects):
         if i in skip:
             continue
             
-        values[offset] = np.abs(np.sum(S[(S.shape[0] // 2):])) / 2
+        values[offset] = np.abs(element.TotalPowers[0])
         offset += 1
     
     return points[:offset], values[:offset]
 
 
 def dss_profile_plot(DSS, params):
+    if len(DSS.ActiveCircuit.Meters) == 0:
+        raise RuntimeError(f"An EnergyMeter is required to use 'plot profile'")
+
     PhasesToPlot = params['PhasesToPlot']
     ProfileScale = params['ProfileScale']
     
@@ -663,7 +694,7 @@ def dss_profile_plot(DSS, params):
                 #TODO: NodeMarkerCode, NodeMarkerWidth
 
     if include_3d in ('both', '2d'):
-        fig = plt.figure(figsize=(9, 5))
+        fig = plt.figure()#figsize=(9, 5))
         ax = fig.add_subplot(1, 1, 1)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
@@ -686,7 +717,7 @@ def dss_profile_plot(DSS, params):
         plt.tight_layout()
        
     if include_3d in ('both', '3d'):
-        fig2 = plt.figure(figsize=(7, 7))
+        fig2 = plt.figure()#figsize=(7, 7))
         ax2 = fig2.add_subplot(1, 1, 1, projection='3d')
         ax2.set_xlabel(xlabel)
         ax2.set_ylabel(ylabel)
@@ -736,7 +767,10 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
     color1 = params.pop('Color1', Colors[0])
     color2 = params.pop('Color2', Colors[1])
     color3 = params.pop('Color3', Colors[2])
-    
+    single_ph_line_style = params.get('SinglePhLineStyle', 1)
+    three_ph_line_style = params.get('ThreePhLineStyle', 1)
+    max_lw = params.get('MaxLineThickness', 5)
+
     norm_min_volts = DSS.ActiveCircuit.Settings.NormVminpu
     # norm_max_volts = DSS.ActiveCircuit.Settings.NormVmaxpu
     emerg_min_volts = DSS.ActiveCircuit.Settings.EmergVminpu
@@ -744,7 +778,7 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
     
     bus_coords = dict((b.Name, (b.x, b.y)) for b in DSS.ActiveCircuit.Buses if (b.x, b.y) != (0.0, 0.0))
     if fig is None:
-        fig = plt.figure(figsize=(8, 7))
+        fig = plt.figure()#figsize=(8, 7))
         
     given_ax = ax is not None
     if not given_ax:
@@ -755,23 +789,36 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
     if not is3d:
         ax.set_aspect('equal', 'datalim')
 
-    lines_lines, lines_values, lines_styles, switch_idxs, isolated_idxs, *extra = get_branch_data(DSS, DSS.ActiveCircuit.Lines, bus_coords, do_values=quantity, do_switches=True)
+    lines_lines, lines_values, lines_styles, switch_idxs, isolated_idxs, *extra = get_branch_data(
+        DSS, 
+        DSS.ActiveCircuit.Lines, 
+        bus_coords, 
+        do_values=quantity, 
+        do_switches=True, 
+        single_ph_line_style=single_ph_line_style, 
+        three_ph_line_style=three_ph_line_style
+    )
     
-    lines_style_code = {0: '-', 1: '--'}
-
     if isolated_idxs:
         line_idx = isolated_idxs
         if not is3d:
-            ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=1, linestyles='-', color='#ff00ff', capstyle='round'))
+            ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=1, linestyle='-', color='#ff00ff', capstyle='round'))
 
     if switch_idxs:
         line_idx = switch_idxs
         if not is3d:
-            ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=1, linestyles='-', color='#000000', capstyle='round'))
+            ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=1, linestyle='-', color='#000000', capstyle='round'))
 
     switch_idxs = set(switch_idxs)
     isolated_idxs = set(isolated_idxs)
-    #lc_lines = LineCollection(lines_lines, linewidths=0.5, color='b')# + 3 * lines_values / np.max(lines_values), linestyles='solid', color='b')
+    #lc_lines = LineCollection(lines_lines, linewidths=0.5, color=color1)# + 3 * lines_values / np.max(lines_values), linestyle='solid', color=color1)
+    try:
+        quantity_max_value = params.pop('MaxScale')
+    except:
+        quantity_max_value = 0
+
+    quantity_suffix = ''
+
     if quantity in (pqVoltage,):
         vbs, = extra
         colors = []
@@ -783,75 +830,109 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
             else:
                 colors.append(color3)
         
-        lines_styles = lines_styles[:len(lines_lines)]
+        
         for ls in set(lines_styles):
             line_idx = [i for i, c in enumerate(lines_styles) if c == ls and i not in isolated_idxs and i not in switch_idxs]
             if not is3d:
-                ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=1, linestyles=lines_style_code[ls], color=[colors[i] for i in line_idx], capstyle='round'))
-                #TODO
-                # if dots:
-                #     ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors='b', s=16)
+                edgecolors = [colors[i] for i in line_idx]
+                ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=1, linestyle=LINES_STYLE_CODE.get(ls, 'solid'), color=edgecolors, capstyle='round'))
+                if dots:
+                    ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors=edgecolors, s=9, lw=1)
+                    # ax.scatter(lines_lines[line_idx, 1, 0].ravel(), lines_lines[line_idx, 1, 1].ravel(), marker='o', facecolors='none', edgecolors=edgecolors, s=9, lw=1)
 
         # if is3d:
-        #     ax.add_collection(Line3DCollection(lines_lines, linewidths=1, linestyles='-', color=[colors[i] for i in line_idx], capstyle='round'))
+        #     ax.add_collection(Line3DCollection(lines_lines, linewidths=1, linestyle='-', color=[colors[i] for i in line_idx], capstyle='round'))
         #     ax.set_xlim(np.min(lines_lines_3d[:, :, 0]), np.max(lines_lines_3d[:, :, 0]))
         #     ax.set_ylim(np.min(lines_lines_3d[:, :, 1]), np.max(lines_lines_3d[:, :, 1]))
 
         quantity_max_value = 0
     elif quantity in (pqLosses,):
-        line_idx = [i for i in range(lines_lines.shape[0]) if i not in isolated_idxs and i not in switch_idxs]
-        try:
-            quantity_max_value = params.pop('MaxScale')
-        except:
-            quantity_max_value = max(lines_values) * 1e3
         
-        lines_values = np.clip(3 * 1e-3 * lines_values / quantity_max_value, 1, 30)
+        if quantity_max_value == 0:
+            # quantity_max_value = max(lines_values) * 1e-3
+            # For compatibility with the official version, loop through all lines instead 
+            # of the actual plotted lines
+            element = DSS.ActiveCircuit.ActiveCktElement
+            quantity_max_value = max(
+                abs(element.Losses[0] / line.Length)
+                for line in DSS.ActiveCircuit.Lines 
+                if element.Enabled
+            ) * 0.001
+
+        lines_values = np.clip(3 * 1e-3 * lines_values / quantity_max_value, 0.5, max_lw)
         if not is3d:
-            ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=lines_values[line_idx], linestyles='-', color='b', capstyle='round'))
-            if dots:
-                ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors='b', s=16)
+            for ls in set(lines_styles):
+                line_idx = [i for i, c in enumerate(lines_styles) if c == ls and i not in isolated_idxs and i not in switch_idxs]
+                # edgecolors = [colors[i] for i in line_idx]
+                ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=lines_values[line_idx], linestyle=LINES_STYLE_CODE.get(ls, 'solid'), color=color1, capstyle='round'))
+                if dots:
+                    ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors=color1, s=9, lw=1)
+                    # ax.scatter(lines_lines[line_idx, 1, 0].ravel(), lines_lines[line_idx, 1, 1].ravel(), marker='o', facecolors='none', edgecolors=color1, s=9, lw=1)
+
+            # line_idx = [i for i in range(lines_lines.shape[0]) if i not in isolated_idxs and i not in switch_idxs]
+            # ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=lines_values[line_idx], linestyle='-', color=color1, capstyle='round'))
+            # if dots:
+            #     ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors=color1, s=9, lw=1)
 
         #quantity_max_value *= 1e-3
     elif quantity in (pqCurrent, pqCapacity):
         line_idx = [i for i in range(lines_lines.shape[0]) if i not in isolated_idxs and i not in switch_idxs]
         colors = [color3 if v > 100 and not np.isnan(v) else color1 for v in lines_values[line_idx]]
 
-        try:
-            quantity_max_value = params.pop('MaxScale')
-        except:
+        if quantity_max_value == 0:
             quantity_max_value = max(lines_values)
 
-        lines_values = np.clip(3 * lines_values / quantity_max_value, 1, 30)
+        lines_values = np.clip(3 * lines_values / quantity_max_value, 0.5, max_lw)
         if not is3d:
-            ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=lines_values[line_idx], linestyles='-', color=colors, capstyle='round'))
-            #TODO
-            # if dots:
-            #     ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors='b', s=16)
+            ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=lines_values[line_idx], linestyle='-', color=colors, capstyle='round'))
+            if dots:
+                ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors=colors, s=9, lw=1)
 
         #quantity_max_value *= 1e-3
     elif quantity != pqNone:
-        quantity_max_value = max(lines_values)
-        lines_styles = lines_styles[:len(lines_lines)]
+        if quantity == pqPower:
+            quantity_suffix = ' kW'
+            if quantity_max_value == 0:
+                #lines_values *= 1e-3
+
+                # For compatibility with the official version, loop through all lines instead 
+                # of the actual plotted lines
+                element = DSS.ActiveCircuit.ActiveCktElement
+                
+                quantity_max_value = max(
+                    element.TotalPowers[0]
+                    for _ in DSS.ActiveCircuit.Lines 
+                    if element.Enabled
+                ) #* 0.001
+        else:
+            #TODO:may need workaround about GeneralPlotQuantity
+            quantity_max_value = max(lines_values)
+
         for ls in set(lines_styles):
             line_idx = [i for i, c in enumerate(lines_styles) if c == ls and i not in isolated_idxs and i not in switch_idxs]
             if not is3d:
-                ax.add_collection(LineCollection(lines_lines[line_idx, :], linewidths=0.5 + 6 * lines_values[line_idx] / quantity_max_value, linestyles=lines_style_code[ls], color='b', capstyle='round'))
+                ax.add_collection(LineCollection(
+                    lines_lines[line_idx, :], 
+                    linewidths=np.clip(0.5 + 3 * lines_values[line_idx] / quantity_max_value, 0.5, max_lw), 
+                    linestyle=LINES_STYLE_CODE.get(ls, 'solid'), 
+                    color=color1,
+                    capstyle='round'
+                ))
                 if dots:
-                    ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors='b', s=16)
-
+                    ax.scatter(lines_lines[line_idx, :, 0].ravel(), lines_lines[line_idx, :, 1].ravel(), marker='o', facecolors='none', edgecolors=color1, s=9, lw=1)
     else:
         #TODO: handle 1 and 3 phase, etc.
         if not is3d:
-            ax.add_collection(LineCollection(lines_lines, linewidths=1, linestyles='-', color=color1, capstyle='round'))
+            ax.add_collection(LineCollection(lines_lines, linewidths=1, linestyle='-', color=color1, capstyle='round'))
         # else:
-        #     ax.add_collection(Line3DCollection(lines_lines, linewidths=1, linestyles='-', color=color1, capstyle='round'))
+        #     ax.add_collection(Line3DCollection(lines_lines, linewidths=1, linestyle='-', color=color1, capstyle='round'))
         #     ax.set_xlim(np.min(lines_lines[:, :, 0]), np.max(lines_lines[:, :, 0]))
         #     ax.set_ylim(np.min(lines_lines[:, :, 1]), np.max(lines_lines[:, :, 1]))
 
     transformers_lines, *_ = get_branch_data(DSS, DSS.ActiveCircuit.Transformers, bus_coords)
 
     if not is3d:
-        lc_transformers = LineCollection(transformers_lines, linewidth=3, linestyles='solid', color='gray')
+        lc_transformers = LineCollection(transformers_lines, linewidth=3, linestyle='solid', color='gray')
         ax.add_collection(lc_transformers)
 
 
@@ -862,7 +943,6 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
         ('MarkSwitches', 'SwitchMarkerCode', None, DSS.ActiveCircuit.Lines, switch_idxs),
         ('MarkFuses', 'FuseMarkerCode', 'FuseMarkerSize', DSS.ActiveCircuit.Fuses, None),
         ('MarkRegulators', 'RegMarkerCode', 'RegMarkerSize', DSS.ActiveCircuit.RegControls, None),
-        #('MarkStorage', 'StoreMarkerCode', 'StoreMarkerSize', DSS.ActiveCircuit.Storage, None), -- TODO
         ('MarkRelays', 'RelayMarkerCode', 'RelayMarkerSize', DSS.ActiveCircuit.Relays, None),
         ('MarkReclosers', 'RecloserMarkerCode', 'RecloserMarkerSize', DSS.ActiveCircuit.Reclosers, None)
     ]
@@ -870,7 +950,8 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
     point_marker_options = [    
         ('MarkTransformers', 'TransMarkerCode', 'TransMarkerSize', DSS.ActiveCircuit.Transformers, None),
         ('MarkCapacitors', 'CapMarkerCode', 'CapMarkerSize', DSS.ActiveCircuit.Capacitors, None),
-        ('MarkPVSystems', 'PVMarkerCode', 'PVMarkerSize', DSS.ActiveCircuit.PVSystems, None)
+        ('MarkPVSystems', 'PVMarkerCode', 'PVMarkerSize', DSS.ActiveCircuit.PVSystems, None),
+        ('MarkStorage', 'StoreMarkerCode', 'StoreMarkerSize', 'Storage', None),
     ]
 
     pmarkers = params.pop('Markers', None)
@@ -910,7 +991,8 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
                 #marker_code = 25
                 
             marker_dict = get_marker_dict(marker_code)
-            marker_dict['markersize'] *= (marker_size / 3.0)**2
+            #marker_dict['markersize'] *= (marker_size / 2.0)**2
+            marker_dict['markersize'] *= (marker_size / 1.2)**2
             
             #marker_dict['marker'] = marker_dict['marker'].vertices
             #marker_dict.pop('markersize')
@@ -925,7 +1007,7 @@ def dss_circuit_plot(DSS, params={}, fig=None, ax=None, is3d=False):
     ax.set_ylabel('Y')
     if not given_ax:       
         if quantity != pqNone:
-            ax.set_title('{}:{}, max={:g}'.format(DSS.ActiveCircuit.Name.upper(), quantity_str[quantity], quantity_max_value))
+            ax.set_title('{}:{}, max={:g}{}'.format(DSS.ActiveCircuit.Name.upper(), quantity_str[quantity], quantity_max_value, quantity_suffix))
         ax.autoscale_view()
         ax.get_xaxis().get_major_formatter().set_scientific(False)
         ax.get_yaxis().get_major_formatter().set_scientific(False)
@@ -954,7 +1036,7 @@ def dss_scatter_plot(DSS, params):
     vmean = np.mean(vabs, axis=1, where=np.isfinite(vabs))
 
     if include_3d in ('both', '2d'):
-        fig, ax = plt.subplots(1, 1, figsize=(8, 7), constrained_layout=True)
+        fig, ax = plt.subplots(1, 1, constrained_layout=True)#, figsize=(8, 7))
         dss_circuit_plot(DSS, fig=fig, ax=ax, params={})
         ax.get_xaxis().get_major_formatter().set_scientific(False)
         ax.get_yaxis().get_major_formatter().set_scientific(False)
@@ -968,14 +1050,14 @@ def dss_scatter_plot(DSS, params):
             if b.Coorddefined:
                 bus_coords[b.Name] = (b.x, b.y, vmean[idx])
 
-        fig = plt.figure(figsize=(7, 7))
+        fig = plt.figure()#figsize=(7, 7))
         ax = fig.add_subplot(projection='3d')
         dss_circuit_plot(DSS, fig=fig, ax=ax, params={}, is3d=True)
         ax.get_xaxis().get_major_formatter().set_scientific(False)
         ax.get_yaxis().get_major_formatter().set_scientific(False)
 
         # if is3d:
-        #     ax.add_collection(Line3DCollection(lines_lines, linewidths=1, linestyles='-', color=[colors[i] for i in line_idx], capstyle='round'))
+        #     ax.add_collection(Line3DCollection(lines_lines, linewidths=1, linestyle='-', color=[colors[i] for i in line_idx], capstyle='round'))
         #     ax.set_xlim(np.min(lines_lines_3d[:, :, 0]), np.max(lines_lines_3d[:, :, 0]))
         #     ax.set_ylim(np.min(lines_lines_3d[:, :, 1]), np.max(lines_lines_3d[:, :, 1]))
 
@@ -1010,6 +1092,14 @@ def dss_visualize_plot(DSS, params):
     XMAX = 300
     #pprint(params)
     quantity = params['Quantity']
+
+    # Fix for backend v0.13.1
+    quantity = {
+        'Power': 'Powers',
+        'Current': 'Currents',
+        'Voltage': 'Voltages',
+    }.get(quantity, quantity)
+
     element = DSS.ActiveCircuit.ActiveCktElement
     etype, ename = params['ElementType'], params['ElementName']
     nconds = element.NumConductors
@@ -1018,7 +1108,7 @@ def dss_visualize_plot(DSS, params):
     vbases = [max(1, 1000 * DSS.ActiveCircuit.Buses[nodot(b)].kVBase) for b in buses]
 
     # assert DSS.ActiveCircuit.ActiveCktElement.Name == params['ElementType'] + '.' + params['ElementName']
-    fig, ax = plt.subplots(1, figsize=(8.6, 7), gridspec_kw=dict(left=0.05, right=0.95, bottom=0.05, top=0.92))
+    fig, ax = plt.subplots(1, gridspec_kw=dict(left=0.05, right=0.95, bottom=0.05, top=0.92))#, figsize=(8.6, 7))
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
     ax.grid(False)
@@ -1228,7 +1318,7 @@ def dss_general_data_plot(DSS, params):
 
 def dss_matrix_plot(DSS, params):
     # plot_id = params.get('PlotId', None)
-    if params['Quantity'] == 'IncMatrix':
+    if params['MatrixType'] == 'IncMatrix':
         title = 'Incidence matrix'
         data = DSS.ActiveCircuit.Solution.IncMatrix[:-1]
     else:
@@ -1240,7 +1330,7 @@ def dss_matrix_plot(DSS, params):
     #fig, [ax, ax2] = plt.subplots(1, 2, figsize=(8.6 * 2, 8.6), constrained_layout=True, num=title)
     
     if include_3d in ('both', '2d'):
-        fig = plt.figure(figsize=(8.6, 8.6), constrained_layout=True)#, num=plot_id)
+        fig = plt.figure(constrained_layout=True)#, num=plot_id) #, figsize=(8.6, 8.6))
         ax = fig.add_subplot(1, 1, 1)
         ax.grid(True)
         ax.spy(m, marker='s', markersize=1, color=params['Color1'])
@@ -1249,7 +1339,7 @@ def dss_matrix_plot(DSS, params):
         ax.set_title(title)
 
     if include_3d in ('both', '3d'):
-        fig = plt.figure(figsize=(8.6, 8.6))#, num=plot_id + '_3D')
+        fig = plt.figure()#figsize=(8.6, 8.6), num=plot_id + '_3D')
         ax2 = fig.add_subplot(1, 1, 1, projection='3d')
         ax2.scatter(x, y, v, c=v, marker='s')
         ax2.set_xlabel('Column')
@@ -1298,7 +1388,7 @@ def dss_daisy_plot(DSS, params):
             lines.append([(bus.x, bus.y), (Xc, Yc)])
             pointx.append(Xc)
             pointy.append(Yc)
-        bus.x, bus.y
+        
 
     lc = LineCollection(lines, linewidth=1, colors='r')
     ax.add_collection(lc)
@@ -1496,8 +1586,15 @@ def dss_plot(DSS, params):
             print('ERROR: not implemented plot type:', ptype)
             return -1
 
-        dss_plot_funcs.get(ptype)(DSS, params)
+        with ToggleAdvancedTypes(DSS, False), warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            dss_plot_funcs.get(ptype)(DSS, params)
+
     except Exception as ex:
+        from traceback import print_exc
+        print('DSS: Error while plotting. Parameters:', params, file=sys.stderr)
+        print_exc()
+
         DSS._errorPtr[0] = 777
         DSS._lib.Error_Set_Description(f"Error in the plot backend: {ex}".encode())
         return 777
@@ -1506,7 +1603,7 @@ def dss_plot(DSS, params):
         
 
 
-def ctx2dss(ctx, instances={}):
+def ctx2dss(ctx, instances={}): #TODO: move this cache to the IDSS class itself
     DSS = instances.get(ctx)
     if DSS is not None:
         return DSS
