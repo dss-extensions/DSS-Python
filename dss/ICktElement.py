@@ -299,13 +299,13 @@ class ICktElement(Base):
 
     @property
     def PhaseLosses(self) -> Float64ArrayOrComplexArray:
-        '''Complex array of losses by phase'''
+        '''Complex array of losses (kVA) by phase'''
         self.CheckForError(self._lib.CktElement_Get_PhaseLosses_GR())
         return self._get_complex128_gr_array()
 
     @property
     def Powers(self) -> Float64ArrayOrComplexArray:
-        '''Complex array of powers into each conductor of each terminal'''
+        '''Complex array of powers (kVA) into each conductor of each terminal'''
         self.CheckForError(self._lib.CktElement_Get_Powers_GR())
         return self._get_complex128_gr_array()
 
@@ -363,7 +363,7 @@ class ICktElement(Base):
 
     @property
     def TotalPowers(self) -> Float64ArrayOrComplexArray:
-        '''Returns the total powers (complex) at ALL terminals of the active circuit element.'''
+        '''Returns an array with the total powers (complex, kVA) at ALL terminals of the active circuit element.'''
         self.CheckForError(self._lib.CktElement_Get_TotalPowers_GR())
         return self._get_complex128_gr_array()
 
