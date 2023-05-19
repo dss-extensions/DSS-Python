@@ -32,7 +32,7 @@ jobs:
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY dss_python
           cd dss_python
           git checkout $GITHUB_SHA
-      - name: 'Download/extract DSS C-API binaries'
+      - name: 'Download/extract message catalogs'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           cd dss_python/dss
@@ -69,7 +69,7 @@ jobs:
       - name: 'Setup Docker'
         run: |
           docker pull $DOCKER_IMAGE
-      - name: 'Download/extract DSS C-API binaries'
+      - name: 'Download/extract message catalogs'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           cd dss_python/dss
@@ -87,16 +87,16 @@ jobs:
 
   build_macos_x64:
     name: 'macOS x64'
-    runs-on: 'macos-10.15'
+    runs-on: 'macos-11'
     env:
       SDKROOT: '${{ github.workspace }}/MacOSX10.13.sdk'
       PYTHON: python3
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with: 
           fetch-depth: 0
           path: 'dss_python'
-      - name: 'Download/extract DSS C-API binaries'
+      - name: 'Download/extract message catalogs'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           cd dss_python/dss
@@ -124,11 +124,11 @@ jobs:
       ARCHFLAGS: '-arch arm64'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with: 
           fetch-depth: 0
           path: 'dss_python'
-      - name: 'Download/extract DSS C-API binaries'
+      - name: 'Download/extract message catalogs'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           cd dss_python/dss
@@ -158,11 +158,11 @@ jobs:
       CONDA_SUBDIR: 'win-64'
       PYTHON: python
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with: 
           fetch-depth: 0
           path: 'dss_python'
-      - name: 'Download/extract DSS C-API binaries'
+      - name: 'Download/extract message catalogs'
         shell: cmd
         run: |
           "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/messages.zip -o messages.zip
@@ -190,7 +190,7 @@ jobs:
       CONDA_SUBDIR: 'win-32'
       PYTHON: python
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with: 
           fetch-depth: 0
           path: 'dss_python'
@@ -198,7 +198,7 @@ jobs:
         with:
           python-version: '3.7'
           architecture: 'x86'
-      - name: 'Download/extract DSS C-API binaries'
+      - name: 'Download/extract message catalogs'
         shell: cmd
         run: |
           "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/messages.zip -o messages.zip
