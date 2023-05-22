@@ -366,7 +366,8 @@ if __name__ == '__main__':
 
     t0_global = perf_counter()
     total_runtime = 0.0
-    with ZipFile(os.path.join(original_working_dir, f'results{suffix}.zip'), mode='a', compression=ZIP_DEFLATED) as zip_out:
+    zip_fn = f'results{suffix}.zip'
+    with ZipFile(os.path.join(original_working_dir, zip_fn), mode='a', compression=ZIP_DEFLATED) as zip_out:
         for fn in test_filenames + cimxml_test_filenames:
             org_fn = fn
             fixed_fn = fn if not fn.startswith('L!') else fn[2:]
@@ -431,4 +432,5 @@ if __name__ == '__main__':
 
     print(perf_counter() - t0_global, 'seconds')
     print(total_runtime, 'seconds (runtime only)')
+    print(zip_fn)
 

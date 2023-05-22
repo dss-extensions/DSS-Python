@@ -21,6 +21,7 @@ tol = 1e-5
 VERBOSE = False
 ENABLE_XML = False
 ENABLE_CSV = True
+ENABLE_JSON = True
 
 KNOWN_COM_DIFF = set([
     # On official COM, uninitialized values for CalcCurrent, AllocFactors
@@ -343,15 +344,20 @@ class ComparisonHandler:
                 try:
                     fB = zipB.open(fn, 'r')
                     fA = zipA.open(fn, 'r')
-                    print(fn)
                 except KeyError:
-                    print('MISSING:', fn)
+                    if not fn.endswith('GISCoords.dss'):
+                        print('MISSING:', fn)
+
                     continue
                 except BadZipFile:
                     print('BAD:', fn)
                     continue
 
-                if fn.endswith('.json'):
+                if ENABLE_JSON and fn.endswith('.json'):
+                    if not ENABLE_JSON:
+                        continue
+
+                    print(fn)
                     dataA = json.load(fA)
                     dataB = json.load(fB)
 
@@ -367,7 +373,12 @@ class ComparisonHandler:
                         print("COMPARE ERROR:", fn)
                         raise
                 
-                elif ENABLE_XML and fn.endswith('.xml'):
+                elif fn.endswith('.xml'):
+                    if not ENABLE_XML:
+                        continue
+
+                    print(fn)
+
                     # Comparing the XMLs is tricky, but this initial implementation 
                     # can still be useful. For DSS C-API 0.13.0, we manually checked.
                     # One issue is that the maintenance of ExportCIMXML.pas is not
@@ -391,7 +402,12 @@ class ComparisonHandler:
 
                             print(type(d))
 
-                elif ENABLE_CSV and fn.endswith('.csv'):
+                elif fn.endswith('.csv'):
+                    if not ENABLE_CSV:
+                        continue
+
+                    print(fn)
+
                     # The CSVs from OpenDSS can havbe some weird header, and we need to compare 
                     # the lowercase data to simplify things.
                     textA = fA.read().decode().lower()
@@ -399,6 +415,9 @@ class ComparisonHandler:
                     with io.StringIO(textA) as sfA, io.StringIO(textB) as sfB:
                         df_a = pd.read_csv(sfA)
                         df_b = pd.read_csv(sfB)
+
+                        df_a.columns = [x.strip() for x in df_a.columns]
+                        df_b.columns = [x.strip() for x in df_b.columns]
 
                     try:
                         pd.testing.assert_frame_equal(df_a, df_b, atol=tol, rtol=tol)
