@@ -291,7 +291,7 @@ class Edit:
 
         return self.obj_or_batch
 
-    def __exit__(self, exc_type, exc_val, exc_tb):    
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.obj_or_batch.end_edit(self.num_changes)
 
 
@@ -635,7 +635,7 @@ class DSSBatch(Base):
         return self._obj_cls(self._api_util, ptr)
 
     def _set_batch_float64_array(self, idx: int, value: Union[BatchFloat64ArrayProxy, float, List[float], Float64Array]):
-        if isinstance(value, BatchFloat64ArrayProxy):
+        if isinstance(value, (BatchFloat64ArrayProxy, BatchInt32ArrayProxy)):
             if self is value._batch and value._idx == idx:
                 # ignore if we're setting to property to itself
                 return
@@ -728,6 +728,89 @@ class DSSBatch(Base):
 
         for x in self._ffi.unpack(self.pointer[0], self.count[0]):
             self._lib.Obj_SetStringArray(x, idx, value_ptr, value_count)
+
+        self._check_for_error()
+
+
+    def _set_batch_float64_array_prop(self, idx: int, value: Union[Float64Array, None]):
+        '''
+        Set values to a FLOAT64 ARRAY property `idx`
+        '''
+        if self.count[0] == 0:
+            return
+        
+        if isinstance(value, (BatchFloat64ArrayProxy, BatchInt32ArrayProxy)):
+            value = value.to_array()
+        
+        # Assume 2-d values at first
+        single_array = False
+
+        # Empty arrays or None
+        if not len(value) or value is None:
+            value_ptr, value_count = self._ffi.NULL, 0
+            single_array = True
+        
+        # Lists of values, 1-d series, or 1-d array
+        elif (isinstance(value, LIST_LIKE) and np.isscalar(value[0])) or (isinstance(value, np.ndarray) and len(value.shape) == 1):
+            value, value_ptr, value_count = self._prepare_float64_array(value)
+            single_array = True
+
+
+        if single_array:
+            # Apply the same array for all objects in the batch
+            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+                self._lib.Obj_SetFloat64Array(x, idx, value_ptr, value_count)
+        else:
+            # Apply one array for each object
+            value_2d = value
+            for x, value in zip(self._ffi.unpack(self.pointer[0], self.count[0]), value_2d):
+                if not len(value) or value is None:
+                    value_ptr, value_count = self._ffi.NULL, 0
+                else:
+                    value, value_ptr, value_count = self._prepare_float64_array(value)
+
+                self._lib.Obj_SetFloat64Array(x, idx, value_ptr, value_count)
+
+        self._check_for_error()
+
+
+    def _set_batch_int32_array_prop(self, idx: int, value: Union[Int32Array, None]):
+        '''
+        Set values to an INT32 ARRAY property `idx`
+        '''
+        if self.count[0] == 0:
+            return
+        
+        if isinstance(value, (BatchFloat64ArrayProxy, BatchInt32ArrayProxy)):
+            value = value.to_array()
+        
+        # Assume 2-d values at first
+        single_array = False
+
+        # Empty arrays or None
+        if not len(value) or value is None:
+            value_ptr, value_count = self._ffi.NULL, 0
+            single_array = True
+        
+        # Lists of values, 1-d series, or 1-d array
+        elif (isinstance(value, LIST_LIKE) and np.isscalar(value[0])) or (isinstance(value, np.ndarray) and len(value.shape) == 1):
+            value, value_ptr, value_count = self._prepare_int32_array(value)
+            single_array = True
+
+        if single_array:
+            # Apply the same array for all objects in the batch
+            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+                self._lib.Obj_SetInt32Array(x, idx, value_ptr, value_count)
+        else:
+            # Apply one array for each object
+            value_2d = value
+            for x, value in zip(self._ffi.unpack(self.pointer[0], self.count[0]), value_2d):
+                if not len(value) or value is None:
+                    value_ptr, value_count = self._ffi.NULL, 0
+                else:
+                    value, value_ptr, value_count = self._prepare_int32_array(value)
+
+                self._lib.Obj_SetInt32Array(x, idx, value_ptr, value_count)
 
         self._check_for_error()
 

@@ -525,11 +525,14 @@ class CffiApiUtil(object):
         value_enc = []
         codec = self.codec
         for v in value:
-            if type(v) is not bytes:
-                v = v.encode(codec)
-                value_enc.append(v)
+            if v is not None:
+                if type(v) is not bytes:
+                    v = v.encode(codec)
+                    value_enc.append(v)
 
-            ptrs.append(self.ffi.new("char[]", v))
+                ptrs.append(self.ffi.new("char[]", v))
+            else:
+                ptrs.append(self.ffi.NULL)
 
         # Need to keep reference to every pointer to they don't get
         # garbage collected too early

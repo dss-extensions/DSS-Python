@@ -343,13 +343,82 @@ def create_ckt13_batch_df(dss: IDSS):
     dss.Text.Command = 'CalcV'
     dss.ActiveCircuit.Solution.Solve()
 
+# def create_from_dump(dss: IDSS):
+#     # Try exporting as dataframes from JSON and reading back.
+#     # NOT RECOMMENDED, but may work in most common scenarios.
+
+#     dss.ClearAll()
+#     Obj = dss.Obj
+
+#     ref: IDSS = dss.NewContext()
+#     create_ref_ckt13(ref)
+
+#     dss.NewCircuit('IEEE13Nodeckt')
+
+#     # Vsource is special since the circuit always creates the first one
+#     src: Vsource = Obj.Vsource[1]
+#     _ = ref.ActiveCircuit.Vsources.First
+#     ref_vsource = json.loads(ref.ActiveCircuit.ActiveDSSElement.ToJSON())
+#     del ref_vsource['DSSClass']
+#     del ref_vsource['name']
+#     with Edit(src):
+#         #NOTE: this wouldn't handle properties like %..., etc.
+#         for prop_name, prop_value in ref_vsource.items():
+#             setattr(src, prop_name, prop_value)
+
+#     for clsname in ref.Classes:
+#         ref.SetActiveClass(clsname)
+#         # This will dump every single property. Not the best idea in general for
+#         # reimporting, but we should test it anyway.
+#         df = pd.read_json(ref.ActiveClass.ToJSON(DSSJSONFlags.Full))
+
+#         if clsname == 'Vsource':
+#             if len(df) == 1:
+#                 continue
+
+#             df = df.iloc[1:]
+
+#         if df.empty:
+#             continue
+
+#         # Handle some column issues
+#         del df['DSSClass']
+#         del df['like']
+#         for col in df.columns:
+#             c = df[col]
+#             if col.lower().endswith('file') or c.isna().all():
+#                 del df[col]
+
+#             try:
+#                 if (c.apply(lambda x: len(x)) == 0).all():
+#                     del df[col]
+#             except:
+#                 pass
+
+#             print(col, c)
+
+
+#         print(clsname)
+
+#         ObjCls = getattr(Obj, clsname)
+#         print(df.T)
+#         print(df.dtypes)
+#         ObjCls.batch_new(df=df)
+       
+#         dss.ActiveCircuit.Settings.VoltageBases = ref.ActiveCircuit.Settings.VoltageBases
+#         dss.Text.Command = 'CalcV'
+#         dss.ActiveCircuit.Solution.Solve()
+
+
 def _test_create_ckt13_batch(which):
     if which == 1:
         create_ckt13_batch_attr(dss)
     elif which == 2:
         create_ckt13_batch_new(dss)
-    else:
+    elif which == 3:
         create_ckt13_batch_df(dss)
+    # else:
+    #     create_from_dump(dss)
 
     ref: IDSS = dss.NewContext()
     create_ref_ckt13(ref)
@@ -410,7 +479,9 @@ def test_create_ckt13_batch_new():
 def test_create_ckt13_batch_df():
     _test_create_ckt13_batch(3)
 
+# def test_create_ckt13_batch_dump_df():
+#     _test_create_ckt13_batch(4)
 
 if __name__ == '__main__':
-    # Adjust for manual running a test-case
+    # Adjust for manually running a test-case
     test_create_ckt13_batch_df()
