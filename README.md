@@ -1,33 +1,32 @@
 [![Builds](https://github.com/dss-extensions/dss_python/actions/workflows/builds.yml/badge.svg)](https://github.com/dss-extensions/dss_python/actions/workflows/builds.yml)
-[![PyPI](https://img.shields.io/pypi/v/dss_python)](https://pypi.org/project/dss-python/)
-[![Install with conda](https://anaconda.org/dss-extensions/dss_python/badges/installer/conda.svg)](https://anaconda.org/dss-extensions/dss_python)
-[![conda package version](https://anaconda.org/dss-extensions/dss_python/badges/version.svg)](https://anaconda.org/dss-extensions/dss_python) <img alt="Supports Linux" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black"> <img alt="Supports macOS" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white"> <img alt="Supports Microsoft Windows" src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white">
+[![PyPI](https://img.shields.io/pypi/v/dss_python)](https://pypi.org/project/dss-python/) <img alt="Supports Linux" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black"> <img alt="Supports macOS" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white"> <img alt="Supports Microsoft Windows" src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white">
 
-# DSS Python: Extended bindings for an implementation of EPRI's OpenDSS
+# DSS-Python: Extended bindings for an alternative implementation of EPRI's OpenDSS
 
-Python bindings and misc tools for using the OpenDSS (EPRI Distribution System Simulator) engine through the alternative/unofficial implementation from the DSS C-API library. Based on DSS C-API, CFFI and NumPy, aiming for enhanced performance and full compatibility with the official COM object API on Windows, Linux and macOS. Support includes Intel-based (x86 and x64) processors, as well as ARM processors for Linux and macOS (including Apple M1 and later).
+Python bindings and misc tools for using our alternative OpenDSS (EPRI Distribution System Simulator) engine, materialized in the DSS C-API library. Based on DSS C-API, CFFI and NumPy, aiming for enhanced performance and full compatibility with the official COM object API on Windows, Linux and macOS. Support includes Intel-based (x86 and x64) processors, as well as ARM processors for Linux (including Raspberry Pi devices) and macOS (including Apple M1 and later).
 
 Please see [FAQ](https://github.com/dss-extensions/dss-extensions#faq) for a couple of notes. Check also the other projects from [DSS-Extensions.org](https://dss-extensions.org/):
 
-- [DSS C-API library](http://github.com/dss-extensions/dss_capi/): the base library that exposes a modified version of EPRI's OpenDSS through a more traditional C interface, built with the open-source Free Pascal compiler instead of Delphi. As of 2022, this base library includes several extensive changes, while retaining very good compatibility.
+- [DSS C-API library](http://github.com/dss-extensions/dss_capi/): the base library that exposes a modified version (**alternative implementation**) of EPRI's OpenDSS through a more traditional C interface, built with the open-source Free Pascal compiler instead of Delphi. As of 2022, this base library includes several extensive changes, while retaining very good compatibility.
 - [dss.hpp](https://dss-extensions.org/dss_capi/): header-only library for C++, hosted within DSS C-API (`include/` directory). Allows using DSS C-API more comfortably from C++, abstract memory management and low-level details such as API conventions of the DSS C-API library.
-- [OpenDSSDirect.py](http://github.com/dss-extensions/OpenDSSDirect.py/): if you don't need COM compatibility, or just would like to check its extra functionalities. You can mix DSS Python and OpenDSSDirect.py -- for example, if you have old code using the official COM objects, you could quickly switch to DSS Python with very few code changes, and then use [`opendssdirect.utils`](https://dss-extensions.org/OpenDSSDirect.py/opendssdirect.html#module-opendssdirect.utils) to generate some DataFrames.
+- [OpenDSSDirect.py](http://github.com/dss-extensions/OpenDSSDirect.py/): if you don't need COM compatibility, or just would like to check its extra functionalities. You can mix DSS-Python and OpenDSSDirect.py — for example, if you have old code using the official COM objects, you could quickly switch to DSS-Python with very few code changes, and then use [`opendssdirect.utils`](https://dss-extensions.org/OpenDSSDirect.py/opendssdirect.html#module-opendssdirect.utils) to generate some DataFrames.
 - [OpenDSSDirect.jl](http://github.com/dss-extensions/OpenDSSDirect.jl/) is a Julia module, created by Tom Short (@tshort), migrated with the help of Dheepak Krishnamurthy (@kdheepak) to DSS C-API instead of the DDLL in Feb 2019.
 - [DSS Sharp](http://github.com/dss-extensions/dss_sharp/) is available for .NET/C#, [packaged on NuGet](https://www.nuget.org/packages/dss_sharp/), also mimics the COM classes (drop-in replacement for `OpenDSSengine.DLL`). The current version is now multi-platform too! Soon it will be possible to use it via COM.
 - [DSS MATLAB](http://github.com/dss-extensions/dss_matlab/) presents multi-platform integration (Windows, Linux, MacOS) with DSS C-API and is also very compatible with the API of the official OpenDSS COM classes.
 
-Version 0.14.x is based on OpenDSS revision 3595 (few commits after OpenDSS v9.6.1.1, but we pick and choose when to port certain features). While we plan to add a lot more functionality into DSS Python, the main goal of creating a COM-compatible API has been reached in 2018. If you find an unexpected missing feature, please report it! Currently missing features that will be implemented eventually are plotting (partial implementation available) and diakoptics (planned for future version).
+Version 0.14.x is based on OpenDSS revision 3604 (few commits after OpenDSS v9.6.1.1, but we pick and choose when to port certain features). While we plan to add a lot more functionality into DSS-Python, the main goal of creating a COM-compatible API has been reached in 2018. If you find an unexpected missing feature, please report it! Currently missing features that will be implemented eventually are interactive features and diakoptics (planned for a future version).
 
-This module mimics the COM structure (as exposed via `win32com` or `comtypes`) -- see [The DSS instance](https://dss-extensions.org/dss_python/#the-dss-instance) for some docs --  effectively enabling multi-platform compatibility at Python level. Compared to other options, it provides easier migration from code that uses the official OpenDSS through COM.
-Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this modules returns/accepts NumPy arrays for numeric data exchange, which is usually preferred by the users.
+This module mimics the COM structure (as exposed via `win32com` or `comtypes`) — see [The DSS instance](https://dss-extensions.org/dss_python/#the-dss-instance) for some docs — effectively enabling multi-platform compatibility at Python level. Compared to other options, it provides easier migration from code that uses the official OpenDSS through COM. See also [DSS-Extensions — OpenDSS: Overview of Python APIs](https://dss-extensions.org/python_apis.html).
+Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this module returns/accepts NumPy arrays for numeric data exchange, which is usually preferred by the users. By toggle `DSS.AdvancedTypes`, complex numbers and matrices (shaped arrays) are also used to provide a more modern experience.
 
-The module depends on CFFI, NumPy and, optionally, SciPy.Sparse for reading the sparse system admittance matrix. Pandas and matplotlib are optional dependencies to enable plotting and other features.
+The module depends mostly on CFFI, NumPy, typing_extensions and, optionally, SciPy.Sparse for reading the sparse system admittance matrix. Pandas and matplotlib are optional dependencies to enable plotting and other features.
 
 ## Brief release history
 
+- **2023-05-24 / version 0.14.2: Complement the plotting backend, fix some batch features, and upgrade the DSS engine, including changes to the JSON export functions.**
 - 2023-04-03 / version 0.14.0: Same as 0.13.1, but splits dss_python into two packages: [dss_python_backend](https://github.com/dss-extensions/dss_python_backend) now contains the native binaries/DLLs. No need for user action.
-- **2023-04-01 / version 0.13.1: Microupdate to the OpenDSS engine; very minor Python changes.**
-- 2023-03-29 / version 0.13.0: Updates to the OpenDSS engine, move plotting and initial notebook integration, matrix shapes and complex numbers, bug fixes, etc.
+- 2023-04-01 / version 0.13.1: Microupdate to the OpenDSS engine; very minor Python changes.
+- 2023-03-29 / version 0.13.0: Updates to the OpenDSS engine, more plotting and initial notebook integration, matrix shapes and complex numbers, bug fixes, etc.
 - 2022-07-16 / version 0.12.1: Very minor release to address a bug found in v0.12.0, to add the Storages API, and include the property descriptions/help.
 - 2022-07-14 / version 0.12.0: Major release merging parallel features, multiple DSS engine instances, ZIP file support, incremental Y matrix updates, new API functions, partial plotting support, better performance, and so on. General usage examples for the new features will be incrementally added to https://github.com/dss-extensions/dss-extensions
 - 2021-03-09 / version 0.10.7-1: Very minor release to fix issues with some of the energy meter reports.
@@ -112,7 +111,7 @@ cd dss_python
 python -m pip install .
 ```
 
-If you are familiar with `conda-build`, there is a complete recipe to build DSS C-API, KLUSolve(X) and DSS Python in the `conda` subfolder.
+If you are familiar with `conda-build`, there is a complete recipe to build DSS C-API, KLUSolve(X) and DSS-Python in the `conda` subfolder.
 
 Example usage
 =============
@@ -159,14 +158,14 @@ The validation scripts is `tests/validation.py` and requires the same folder str
 
 As of version 0.11, the full validation suite can be run on the three supported platforms. This is possible by saving the official COM DLL output and loading it on macOS and Linux. We hope to fully automate this validation in the future.
 
-Roadmap: docs and plotting
-==========================
+Roadmap: docs and interactive features
+======================================
 Besides bug fixes, the main functionality of this library is mostly done. Notable desirable features that may be implemented are:
 
 - More and better documentation. Initial reference at [https://dss-extensions.org/dss_python/](https://dss-extensions.org/dss_python/), watch also https://github.com/dss-extensions/dss-extensions for more.
-- Plotting and reports integrated in Python. Several of the plot types optionally available in DSS Python 0.12.0, but a few are missing. Reports and advanced integration are planned for a future feature.
+- Reports integrated in Python and interactive features on plots. Since most of the plot types from the official OpenDSS are optionally available in DSS-Python 0.14.2, advanced integration and interactive features are planned for a future feature.
 
-Expect news about these items by version 0.13. 
+Expect news about these items by version 1.0. 
 
 While the base library (DSS C-API) will go through some API changes before v1.0, those do not affect usage from the Python side.
 
@@ -181,4 +180,4 @@ DSS-Python is based on EPRI's OpenDSS via the [`dss_capi`](http://github.com/dss
 
 This project is licensed under the (new) BSD, available in the `LICENSE` file. It's the same license OpenDSS uses (`OPENDSS_LICENSE`). OpenDSS itself uses KLUSolve and SuiteSparse, licensed under the GNU LGPL 2.1.
 
-I thank my colleagues at the University of Campinas, Brazil, for providing feedback and helping me test this package during its inception in 2016-2017, as well as the many users and collaborators that have been using this or other DSS Extensions since the public releases in 2018.
+I thank my colleagues at the University of Campinas, Brazil, for providing feedback and helping me test this package during its inception in 2016-2017, as well as the many users and collaborators that have been using this or other DSS-Extensions since the public releases in 2018.

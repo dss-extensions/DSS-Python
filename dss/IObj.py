@@ -1,6 +1,6 @@
 '''
 This module exposes base objects for the pythonic Obj and Batch interfaces from DSS C-API.
-These interfaces are unique to DSS Extensions, they are not present in the official OpenDSS.
+These interfaces are unique to DSS-Extensions, they are not present in the official OpenDSS.
 
 This is still under development and the final implementation might differ in some aspects.
 For example, we plan to adjust the spelling of many properties; `nconds` will become `NConds`, 
@@ -11,7 +11,7 @@ This will also be tweaked after more usage. `NConds`, for example, may also be r
 develop a mechanism to ensure the dimensions match.
 
 Copyright (c) 2021-2023 Paulo Meira
-Copyright (c) 2021-2023 DSS Extensions contributors
+Copyright (c) 2021-2023 DSS-Extensions contributors
 '''
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack

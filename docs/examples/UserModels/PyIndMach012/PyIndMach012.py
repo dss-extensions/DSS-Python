@@ -10,7 +10,7 @@ Original code by EPRI, licensed under the 3-clause BSD. See OPENDSS_LICENSE.
 
 This sample code doesn't interact with the main OpenDSS interface directly,
 it only uses the user-model interface. Thus, it is compatible with the official OpenDSS
-distribution as well as DSS Python. Note that OpenDSS version 7 has a bug on 64-bit 
+distribution as well as DSS-Python. Note that OpenDSS version 7 has a bug on 64-bit 
 system and user-models most likely won't run via COM.
 
 Recent version of OpenDSS 8 also present a bug when handling the edition of 
@@ -103,7 +103,7 @@ class PyIndMach012(Base):
             'Efficiency_pct'
         )
         
-        # These are the state variables. DSS Python will automatically
+        # These are the state variables. DSS-Python will automatically
         # setup auxiliary variables such as dE1_dt, dE1_dtn, E1n used in
         # the solution process
         self.add_state_vars(
@@ -236,7 +236,7 @@ class PyIndMach012(Base):
         input, while Iabc is the ouput used in OpenDSS.
         '''
         
-        # The next version of DSS Python should have an option to 
+        # The next version of DSS-Python should have an option to 
         # provide the values in 012 space to simplify the model code
         V012 = np.dot(Ap2s, Vabc)
         I012 = np.dot(Ap2s, Iabc)

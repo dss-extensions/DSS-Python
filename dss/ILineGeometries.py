@@ -3,7 +3,7 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 
 Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2023 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS-Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from typing import List, Union

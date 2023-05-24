@@ -2,7 +2,7 @@
 Object and batch API bases, used internally.
 
 Copyright (c) 2021-2023 Paulo Meira
-Copyright (c) 2021-2023 DSS Extensions contributors
+Copyright (c) 2021-2023 DSS-Extensions contributors
 '''
 import numpy as np
 from typing import Union, List, AnyStr, Optional, Generator
@@ -348,6 +348,7 @@ class DSSObj(Base):
         - `EnumAsInt`: enumerated properties are returned as integer values instead of strings.
         - `FullNames`: any element reference will use the full name (`{class name}.{element name}`) even if not required.
         - `Pretty`: more whitespace is used in the output for a "prettier" format.
+        - `SkipDSSClass`: do not add the "DSSClass" property to the JSON objects.
 
         **NOT IMPLEMENTED YET**:
         - `State`: include run-time state information

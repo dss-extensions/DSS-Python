@@ -1923,7 +1923,7 @@ _do_show = True
 
 def enable(plot3d: bool = False, plot2d: bool = True, show: bool = True):
     """
-    Enables the plotting subsystem from DSS Extensions.
+    Enables the plotting subsystem from DSS-Extensions.
 
     Set plot3d to `True` to try to reproduce some of the plots from the
     alternative OpenDSS Visualization Tool / OpenDSS Viewer addition 

@@ -20,7 +20,7 @@ from dss import __version__ as ver
 # -- Project information -----------------------------------------------------
 
 project = 'dss_python'
-copyright = '2018-2022, Paulo Meira, DSS Extensions contributors'
+copyright = '2018-2022, Paulo Meira, DSS-Extensions contributors'
 author = 'Paulo Meira'
 
 # The short X.Y version
@@ -90,7 +90,7 @@ html_theme = "guzzle_sphinx_theme" # "sphinx_rtd_theme"
 # documentation.
 #
 html_theme_options = {
-    "project_nav_name": "DSS Python",
+    "project_nav_name": "DSS-Python",
     "projectlink": "http://github.com/dss-extensions/dss_python",
     "globaltoc_depth": 3,
 

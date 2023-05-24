@@ -3,7 +3,7 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 
 Copyright (c) 2016-2023 Paulo Meira
 
-Copyright (c) 2018-2023 DSS Extensions contributors
+Copyright (c) 2018-2023 DSS-Extensions contributors
 '''
 import warnings
 from typing import List, Union, AnyStr
@@ -25,7 +25,7 @@ from .IObj import IObj
 class IDSS(Base):
     '''
     Main OpenDSS interface. Organizes the subclasses trying to mimic the `OpenDSSengine.DSS` object
-    as seems from `win32com.client` or `comtypes.client`.
+    as seen from `win32com.client` or `comtypes.client`.
 
     This main class also includes some global settings. See more settings in `ActiveCircuit.Settings`.
     '''
@@ -80,7 +80,7 @@ class IDSS(Base):
         #: Kept for compatibility. Currently it is an alias to ActiveCircuit.
         self.Circuits = ICircuit(api_util)
         
-        #: The Error interface provides the current error state and messages. In DSS Python, 
+        #: The Error interface provides the current error state and messages. In DSS-Python, 
         #: this is already mapped to Python exceptions, so the user typpically does not need 
         #: to worry about this.
         self.Error = IError(api_util)
@@ -282,7 +282,7 @@ class IDSS(Base):
         '''
         If enabled, the `DOScmd` command is allowed. Otherwise, an error is reported if the user tries to use it.
         
-        Defaults to False/0 (disabled state). Users should consider DOScmd deprecated on DSS Extensions.
+        Defaults to False/0 (disabled state). Users should consider DOScmd deprecated on DSS-Extensions.
         
         This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
         the command.
@@ -432,7 +432,7 @@ class IDSS(Base):
 
         - 0x1 (bit 0): If enabled, don't check for NaNs in the inner solution loop. This can lead to various errors.
             This flag is useful for legacy applications that don't handle OpenDSS API errors properly. Through the 
-            development of DSS Extensions, we noticed this is actually a quite common issue.
+            development of DSS-Extensions, we noticed this is actually a quite common issue.
         - 0x2 (bit 1): Toggle worse precision for certain aspects of the engine. For example, the sequence-to-phase 
             (`As2p`) and sequence-to-phase (`Ap2s`) transform matrices. On DSS C-API, we fill the matrix explicitly
             using higher precision, while numerical inversion of an initially worse precision matrix is used in the 

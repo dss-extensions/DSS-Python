@@ -54,7 +54,7 @@ extra_args = dict(package_data={
 
 setup(
     name="dss_python",
-    description="Python bindings and tools based on the DSS C-API project, the customized OpenDSS implementation from DSS-Extensions.org",
+    description="Python bindings and tools based on the DSS C-API project, the alternative OpenDSS implementation from DSS-Extensions.org",
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="Paulo Meira",
@@ -63,7 +63,7 @@ setup(
     license="BSD",
     packages=['dss', 'dss.UserModels'],
     ext_package="dss",
-    install_requires=["dss_python_backend==0.13.1", "numpy>=1.21.0", "typing_extensions>=4.5,<5"],
+    install_requires=["dss_python_backend==0.13.2", "numpy>=1.21.0", "typing_extensions>=4.5,<5"],
     extras_require={'plot': ["matplotlib", "scipy"]}, #TODO: test which versions should work
     tests_require=["scipy", "ruff", "xmldiff", "pandas", "pytest"],
     zip_safe=False,

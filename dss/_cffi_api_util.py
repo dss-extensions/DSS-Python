@@ -16,7 +16,7 @@ def set_case_insensitive_attributes(use: bool = True, warn: bool = False):
     This function is provided to allow easier migration from `win32com.client`.
     
     When used with late bindings, `win32com` allows using mixed-case names for
-    any of the COM-related items. When migrating or testing with DSS Python,
+    any of the COM-related items. When migrating or testing with DSS-Python,
     users can then use this function to continue using the same code, optionally
     emitting warnings when the canonical casing is different from the one used.
     Note that there is a small overhead for allowing case-insensitive names,

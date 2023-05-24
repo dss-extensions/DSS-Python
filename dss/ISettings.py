@@ -3,7 +3,7 @@ A compatibility layer for DSS C-API that mimics the official OpenDSS COM interfa
 
 Copyright (c) 2016-2022 Paulo Meira
 
-Copyright (c) 2018-2022 DSS Extensions contributors
+Copyright (c) 2018-2022 DSS-Extensions contributors
 '''
 from ._cffi_api_util import Base
 from ._types import Float64Array, Int32Array
@@ -39,7 +39,7 @@ class ISettings(Base):
         '''
         {True | False*} Designates whether to allow duplicate names of objects
         
-        **NOTE**: for DSS Extensions, we are considering removing this option in a future 
+        **NOTE**: for DSS-Extensions, we are considering removing this option in a future 
         release since it has performance impacts even when not used.
         '''
         return self.CheckForError(self._lib.Settings_Get_AllowDuplicates()) != 0
