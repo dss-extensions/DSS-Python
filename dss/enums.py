@@ -165,6 +165,7 @@ class DSSJSONFlags(IntFlag):
     Pretty = 0x00000010
     ExcludeDisabled = 0x00000020
     SkipDSSClass = 0x00000040
+    LowercaseKeys = 0x00000080
 
 class DSSCompatFlags(IntFlag):
     NoSolverFloatChecks = 0x00000001

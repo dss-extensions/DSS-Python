@@ -3,8 +3,8 @@ name: Builds
 # TODO: generalize steps
 
 env:
-  DSS_CAPI_TAG: '0.13.1'
   ARTIFACTS_FOLDER: '${{ github.workspace }}/artifacts'
+  DSS_CAPI_TAG: '0.13.2rc1'
 
 on: 
   # release:

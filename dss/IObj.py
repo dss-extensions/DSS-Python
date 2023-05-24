@@ -47,6 +47,7 @@ PDElement = Union[
     ForwardRef('Transformer'),
 ]
 
+_idx_to_cls = {}
 # Global enumerations
 class EarthModel(IntEnum):
     """Earth Model (DSS enumeration)"""
@@ -591,7 +592,7 @@ class LineCode(DSSObj):
     def linetype(self) -> LineType:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -610,7 +611,7 @@ class LineCode(DSSObj):
     def linetype_str(self) -> str:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -2987,6 +2988,40 @@ class LineGeometry(DSSObj):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
+    def wire(self) -> List[str]:
+        """
+        Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
+        Specifies use of Overhead Line parameter calculation,
+        Unless Tape Shield cable previously assigned to phases, and this wire is a neutral.
+
+        DSS property name: `wire`, DSS property index: 4.
+        """
+        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
+
+    @wire.setter
+    def wire(self, value: List[Union[AnyStr, Union[WireData, TSData, CNData]]]):
+        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
+            self._set_string_array_o(4, value)
+            return
+
+        self._set_obj_array(4, value)
+
+    @property
+    def wire_obj(self) -> List[Union[WireData, TSData, CNData]]:
+        """
+        Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
+        Specifies use of Overhead Line parameter calculation,
+        Unless Tape Shield cable previously assigned to phases, and this wire is a neutral.
+
+        DSS property name: `wire`, DSS property index: 4.
+        """
+        return self._get_obj_array(4, None)
+
+    @wire_obj.setter
+    def wire_obj(self, value: List[Union[WireData, TSData, CNData]]):
+        self._set_obj_array(4, value)
+
+    @property
     def x(self) -> Float64Array:
         """
         x coordinate.
@@ -3117,112 +3152,6 @@ class LineGeometry(DSSObj):
         self._set_obj(11, value)
 
     @property
-    def wires(self) -> List[str]:
-        """
-        Array of WireData names for use in a line constants calculation.
-        Alternative to individual wire inputs. ALL MUST BE PREVIOUSLY DEFINED.
-        Must match "nconds" as previously defined for this geometry,
-        unless TSData or CNData were previously assigned to phases, and these wires are neutrals.
-        Must be used in conjunction with the Spacing property.
-
-        DSS property name: `wires`, DSS property index: 12.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 12)
-
-    @wires.setter
-    def wires(self, value: List[Union[AnyStr, WireData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array_o(12, value)
-            return
-
-        self._set_obj_array(12, value)
-
-    @property
-    def wires_obj(self) -> List[WireData]:
-        """
-        Array of WireData names for use in a line constants calculation.
-        Alternative to individual wire inputs. ALL MUST BE PREVIOUSLY DEFINED.
-        Must match "nconds" as previously defined for this geometry,
-        unless TSData or CNData were previously assigned to phases, and these wires are neutrals.
-        Must be used in conjunction with the Spacing property.
-
-        DSS property name: `wires`, DSS property index: 12.
-        """
-        return self._get_obj_array(12, WireData)
-
-    @wires_obj.setter
-    def wires_obj(self, value: List[WireData]):
-        self._set_obj_array(12, value)
-
-    @property
-    def cncables(self) -> List[str]:
-        """
-        Array of CNData names for cable parameter calculation.
-        All must be previously defined, and match "nphases" for this geometry.
-        You can later define "nconds-nphases" wires for bare neutral conductors.
-
-        DSS property name: `cncables`, DSS property index: 15.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 15)
-
-    @cncables.setter
-    def cncables(self, value: List[Union[AnyStr, CNData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array_o(15, value)
-            return
-
-        self._set_obj_array(15, value)
-
-    @property
-    def cncables_obj(self) -> List[CNData]:
-        """
-        Array of CNData names for cable parameter calculation.
-        All must be previously defined, and match "nphases" for this geometry.
-        You can later define "nconds-nphases" wires for bare neutral conductors.
-
-        DSS property name: `cncables`, DSS property index: 15.
-        """
-        return self._get_obj_array(15, CNData)
-
-    @cncables_obj.setter
-    def cncables_obj(self, value: List[CNData]):
-        self._set_obj_array(15, value)
-
-    @property
-    def tscables(self) -> List[str]:
-        """
-        Array of TSData names for cable parameter calculation.
-        All must be previously defined, and match "nphases" for this geometry.
-        You can later define "nconds-nphases" wires for bare neutral conductors.
-
-        DSS property name: `tscables`, DSS property index: 16.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 16)
-
-    @tscables.setter
-    def tscables(self, value: List[Union[AnyStr, TSData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array_o(16, value)
-            return
-
-        self._set_obj_array(16, value)
-
-    @property
-    def tscables_obj(self) -> List[TSData]:
-        """
-        Array of TSData names for cable parameter calculation.
-        All must be previously defined, and match "nphases" for this geometry.
-        You can later define "nconds-nphases" wires for bare neutral conductors.
-
-        DSS property name: `tscables`, DSS property index: 16.
-        """
-        return self._get_obj_array(16, TSData)
-
-    @tscables_obj.setter
-    def tscables_obj(self, value: List[TSData]):
-        self._set_obj_array(16, value)
-
-    @property
     def Seasons(self) -> int:
         """
         Defines the number of ratings to be defined for the wire, to be used only when defining seasonal ratings using the "Ratings" property. Defaults to first conductor if not specified.
@@ -3253,7 +3182,7 @@ class LineGeometry(DSSObj):
     def linetype(self) -> LineType:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -3272,7 +3201,7 @@ class LineGeometry(DSSObj):
     def linetype_str(self) -> str:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -4241,7 +4170,7 @@ class Line(DSSObj):
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 22)
 
     @wires.setter
-    def wires(self, value: List[Union[AnyStr, WireData]]):
+    def wires(self, value: List[Union[AnyStr, Union[WireData, TSData, CNData]]]):
         if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
             self._set_string_array_o(22, value)
             return
@@ -4249,7 +4178,7 @@ class Line(DSSObj):
         self._set_obj_array(22, value)
 
     @property
-    def wires_obj(self) -> List[WireData]:
+    def wires_obj(self) -> List[Union[WireData, TSData, CNData]]:
         """
         Array of WireData names for use in an overhead line constants calculation.
         Must be used in conjunction with the Spacing property.
@@ -4258,10 +4187,10 @@ class Line(DSSObj):
 
         DSS property name: `wires`, DSS property index: 22.
         """
-        return self._get_obj_array(22, WireData)
+        return self._get_obj_array(22, None)
 
     @wires_obj.setter
-    def wires_obj(self, value: List[WireData]):
+    def wires_obj(self, value: List[Union[WireData, TSData, CNData]]):
         self._set_obj_array(22, value)
 
     @property
@@ -4292,78 +4221,6 @@ class Line(DSSObj):
     @earthmodel_str.setter
     def earthmodel_str(self, value: AnyStr):
         self.earthmodel = value
-
-    @property
-    def cncables(self) -> List[str]:
-        """
-        Array of CNData names for use in a cable constants calculation.
-        Must be used in conjunction with the Spacing property.
-        Specify the Spacing first, using "nphases" cncables.
-        You may later specify "nconds-nphases" wires for separate neutrals
-
-        DSS property name: `cncables`, DSS property index: 24.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 24)
-
-    @cncables.setter
-    def cncables(self, value: List[Union[AnyStr, CNData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array_o(24, value)
-            return
-
-        self._set_obj_array(24, value)
-
-    @property
-    def cncables_obj(self) -> List[CNData]:
-        """
-        Array of CNData names for use in a cable constants calculation.
-        Must be used in conjunction with the Spacing property.
-        Specify the Spacing first, using "nphases" cncables.
-        You may later specify "nconds-nphases" wires for separate neutrals
-
-        DSS property name: `cncables`, DSS property index: 24.
-        """
-        return self._get_obj_array(24, CNData)
-
-    @cncables_obj.setter
-    def cncables_obj(self, value: List[CNData]):
-        self._set_obj_array(24, value)
-
-    @property
-    def tscables(self) -> List[str]:
-        """
-        Array of TSData names for use in a cable constants calculation.
-        Must be used in conjunction with the Spacing property.
-        Specify the Spacing first, using "nphases" tscables.
-        You may later specify "nconds-nphases" wires for separate neutrals
-
-        DSS property name: `tscables`, DSS property index: 25.
-        """
-        return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 25)
-
-    @tscables.setter
-    def tscables(self, value: List[Union[AnyStr, TSData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array_o(25, value)
-            return
-
-        self._set_obj_array(25, value)
-
-    @property
-    def tscables_obj(self) -> List[TSData]:
-        """
-        Array of TSData names for use in a cable constants calculation.
-        Must be used in conjunction with the Spacing property.
-        Specify the Spacing first, using "nphases" tscables.
-        You may later specify "nconds-nphases" wires for separate neutrals
-
-        DSS property name: `tscables`, DSS property index: 25.
-        """
-        return self._get_obj_array(25, TSData)
-
-    @tscables_obj.setter
-    def tscables_obj(self, value: List[TSData]):
-        self._set_obj_array(25, value)
 
     @property
     def B1(self) -> float:
@@ -4422,7 +4279,7 @@ class Line(DSSObj):
     def linetype(self) -> LineType:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -4441,7 +4298,7 @@ class Line(DSSObj):
     def linetype_str(self) -> str:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -8340,7 +8197,7 @@ class CapControl(DSSObj):
     @property
     def type(self) -> CapControlType:
         """
-        {Current | voltage | kvar | PF | time } Control type.  Specify the ONsetting and OFFsetting appropriately with the type of control. (See help for ONsetting)
+        {Current | Voltage | kvar | PF | Time | Follow} Control type.  Specify the ONsetting and OFFsetting appropriately with the type of control. (See help for ONsetting)
 
         DSS property name: `type`, DSS property index: 4.
         """
@@ -8356,7 +8213,7 @@ class CapControl(DSSObj):
     @property
     def type_str(self) -> str:
         """
-        {Current | voltage | kvar | PF | time } Control type.  Specify the ONsetting and OFFsetting appropriately with the type of control. (See help for ONsetting)
+        {Current | Voltage | kvar | PF | Time | Follow} Control type.  Specify the ONsetting and OFFsetting appropriately with the type of control. (See help for ONsetting)
 
         DSS property name: `type`, DSS property index: 4.
         """
@@ -8404,6 +8261,7 @@ class CapControl(DSSObj):
         kvar:    Total kvar, all phases (3-phase for pos seq model). This is directional. 
         PF:      Power Factor, Total power in monitored terminal. Negative for Leading. 
         Time:    Hrs from Midnight as a floating point number (decimal). 7:30am would be entered as 7.5.
+        Follow:  Follows a loadshape (ControlSignal) to determine when to turn ON/OFF the capacitor. If the value is different than 0 the capacitor will connect to the grid, otherwise, it will be disconnected.
 
         DSS property name: `ONsetting`, DSS property index: 7.
         """
@@ -8646,7 +8504,7 @@ class CapControl(DSSObj):
     @property
     def ControlSignal(self) -> str:
         """
-        CapControl.ControlSignal
+        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and conencted to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
@@ -8663,7 +8521,7 @@ class CapControl(DSSObj):
     @property
     def ControlSignal_obj(self) -> LoadShape:
         """
-        CapControl.ControlSignal
+        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and conencted to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
@@ -13807,7 +13665,7 @@ class SwtControl(DSSObj):
     @property
     def Lock(self) -> bool:
         """
-        {Yes | No} Delayed action. Sends CTRL_LOCK or CTRL_UNLOCK message to control queue. After delay time, controlled switch is locked in its present open / close state or unlocked. Switch will not respond to either manual (Action) or automatic (COM interface) control or internal OpenDSS Reset when locked.
+        {Yes | No} Delayed action. Sends CTRL_LOCK or CTRL_UNLOCK message to control queue. After delay time, controlled switch is locked in its present open / close state or unlocked. Switch will not respond to either manual (Action) or automatic (APIs) control or internal OpenDSS Reset when locked.
 
         DSS property name: `Lock`, DSS property index: 4.
         """
@@ -16993,7 +16851,7 @@ class RegControl(DSSObj):
         self._set_string_o(1, value)
 
     @property
-    def transformer_obj(self) -> DSSObj:
+    def transformer_obj(self) -> Union[Transformer, AutoTrans]:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -20897,6 +20755,7 @@ class LineSpacingProperties(TypedDict):
 class LineGeometryProperties(TypedDict):
     nconds: int
     nphases: int
+    wire: List[Union[AnyStr, Union[WireData, TSData, CNData]]]
     x: Float64Array
     h: Float64Array
     units: Union[AnyStr, int, DimensionUnits]
@@ -20904,9 +20763,6 @@ class LineGeometryProperties(TypedDict):
     emergamps: float
     reduce: bool
     spacing: Union[AnyStr, LineSpacing]
-    wires: List[Union[AnyStr, WireData]]
-    cncables: List[Union[AnyStr, CNData]]
-    tscables: List[Union[AnyStr, TSData]]
     Seasons: int
     Ratings: Float64Array
     linetype: Union[AnyStr, int, LineType]
@@ -20971,10 +20827,8 @@ class LineProperties(TypedDict):
     geometry: Union[AnyStr, LineGeometry]
     units: Union[AnyStr, int, DimensionUnits]
     spacing: Union[AnyStr, LineSpacing]
-    wires: List[Union[AnyStr, WireData]]
+    wires: List[Union[AnyStr, Union[WireData, TSData, CNData]]]
     earthmodel: Union[AnyStr, int, EarthModel]
-    cncables: List[Union[AnyStr, CNData]]
-    tscables: List[Union[AnyStr, TSData]]
     B1: float
     B0: float
     Seasons: int
@@ -22320,7 +22174,7 @@ class LineCodeBatch(DSSBatch):
     def linetype(self) -> BatchInt32ArrayProxy:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -22340,7 +22194,7 @@ class LineCodeBatch(DSSBatch):
     def linetype_str(self) -> str:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -24604,6 +24458,40 @@ class LineGeometryBatch(DSSBatch):
         self._set_batch_int32_array(2, value)
 
     @property
+    def wire(self) -> List[List[str]]:
+        """
+        Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
+        Specifies use of Overhead Line parameter calculation,
+        Unless Tape Shield cable previously assigned to phases, and this wire is a neutral.
+
+        DSS property name: `wire`, DSS property index: 4.
+        """
+        return self._get_string_ll(4)
+
+    @wire.setter
+    def wire(self, value: Union[List[AnyStr], List[Union[WireData, TSData, CNData]]]):
+        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
+            self._set_batch_stringlist_prop(4, value)
+            return
+
+        self._set_batch_objlist_prop(4, value)
+
+    @property
+    def wire_obj(self) -> List[List[Union[WireData, TSData, CNData]]]:
+        """
+        Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
+        Specifies use of Overhead Line parameter calculation,
+        Unless Tape Shield cable previously assigned to phases, and this wire is a neutral.
+
+        DSS property name: `wire`, DSS property index: 4.
+        """
+        return self._get_obj_ll(4, None)
+
+    @wire_obj.setter
+    def wire_obj(self, value: List[Union[WireData, TSData, CNData]]):
+        self._set_batch_objlist_prop(4, value)
+
+    @property
     def x(self) -> List[Float64Array]:
         """
         x coordinate.
@@ -24738,112 +24626,6 @@ class LineGeometryBatch(DSSBatch):
         self._set_batch_string(11, value)
 
     @property
-    def wires(self) -> List[List[str]]:
-        """
-        Array of WireData names for use in a line constants calculation.
-        Alternative to individual wire inputs. ALL MUST BE PREVIOUSLY DEFINED.
-        Must match "nconds" as previously defined for this geometry,
-        unless TSData or CNData were previously assigned to phases, and these wires are neutrals.
-        Must be used in conjunction with the Spacing property.
-
-        DSS property name: `wires`, DSS property index: 12.
-        """
-        return self._get_string_ll(12)
-
-    @wires.setter
-    def wires(self, value: Union[List[AnyStr], List[WireData]]):
-        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
-            self._set_batch_stringlist_prop(12, value)
-            return
-
-        self._set_batch_objlist_prop(12, value)
-
-    @property
-    def wires_obj(self) -> List[List[WireData]]:
-        """
-        Array of WireData names for use in a line constants calculation.
-        Alternative to individual wire inputs. ALL MUST BE PREVIOUSLY DEFINED.
-        Must match "nconds" as previously defined for this geometry,
-        unless TSData or CNData were previously assigned to phases, and these wires are neutrals.
-        Must be used in conjunction with the Spacing property.
-
-        DSS property name: `wires`, DSS property index: 12.
-        """
-        return self._get_obj_ll(12, WireData)
-
-    @wires_obj.setter
-    def wires_obj(self, value: List[WireData]):
-        self._set_batch_objlist_prop(12, value)
-
-    @property
-    def cncables(self) -> List[List[str]]:
-        """
-        Array of CNData names for cable parameter calculation.
-        All must be previously defined, and match "nphases" for this geometry.
-        You can later define "nconds-nphases" wires for bare neutral conductors.
-
-        DSS property name: `cncables`, DSS property index: 15.
-        """
-        return self._get_string_ll(15)
-
-    @cncables.setter
-    def cncables(self, value: Union[List[AnyStr], List[CNData]]):
-        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
-            self._set_batch_stringlist_prop(15, value)
-            return
-
-        self._set_batch_objlist_prop(15, value)
-
-    @property
-    def cncables_obj(self) -> List[List[CNData]]:
-        """
-        Array of CNData names for cable parameter calculation.
-        All must be previously defined, and match "nphases" for this geometry.
-        You can later define "nconds-nphases" wires for bare neutral conductors.
-
-        DSS property name: `cncables`, DSS property index: 15.
-        """
-        return self._get_obj_ll(15, CNData)
-
-    @cncables_obj.setter
-    def cncables_obj(self, value: List[CNData]):
-        self._set_batch_objlist_prop(15, value)
-
-    @property
-    def tscables(self) -> List[List[str]]:
-        """
-        Array of TSData names for cable parameter calculation.
-        All must be previously defined, and match "nphases" for this geometry.
-        You can later define "nconds-nphases" wires for bare neutral conductors.
-
-        DSS property name: `tscables`, DSS property index: 16.
-        """
-        return self._get_string_ll(16)
-
-    @tscables.setter
-    def tscables(self, value: Union[List[AnyStr], List[TSData]]):
-        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
-            self._set_batch_stringlist_prop(16, value)
-            return
-
-        self._set_batch_objlist_prop(16, value)
-
-    @property
-    def tscables_obj(self) -> List[List[TSData]]:
-        """
-        Array of TSData names for cable parameter calculation.
-        All must be previously defined, and match "nphases" for this geometry.
-        You can later define "nconds-nphases" wires for bare neutral conductors.
-
-        DSS property name: `tscables`, DSS property index: 16.
-        """
-        return self._get_obj_ll(16, TSData)
-
-    @tscables_obj.setter
-    def tscables_obj(self, value: List[TSData]):
-        self._set_batch_objlist_prop(16, value)
-
-    @property
     def Seasons(self) -> BatchInt32ArrayProxy:
         """
         Defines the number of ratings to be defined for the wire, to be used only when defining seasonal ratings using the "Ratings" property. Defaults to first conductor if not specified.
@@ -24877,7 +24659,7 @@ class LineGeometryBatch(DSSBatch):
     def linetype(self) -> BatchInt32ArrayProxy:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -24897,7 +24679,7 @@ class LineGeometryBatch(DSSBatch):
     def linetype_str(self) -> str:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -25829,7 +25611,7 @@ class LineBatch(DSSBatch):
         return self._get_string_ll(22)
 
     @wires.setter
-    def wires(self, value: Union[List[AnyStr], List[WireData]]):
+    def wires(self, value: Union[List[AnyStr], List[Union[WireData, TSData, CNData]]]):
         if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
             self._set_batch_stringlist_prop(22, value)
             return
@@ -25837,7 +25619,7 @@ class LineBatch(DSSBatch):
         self._set_batch_objlist_prop(22, value)
 
     @property
-    def wires_obj(self) -> List[List[WireData]]:
+    def wires_obj(self) -> List[List[Union[WireData, TSData, CNData]]]:
         """
         Array of WireData names for use in an overhead line constants calculation.
         Must be used in conjunction with the Spacing property.
@@ -25846,10 +25628,10 @@ class LineBatch(DSSBatch):
 
         DSS property name: `wires`, DSS property index: 22.
         """
-        return self._get_obj_ll(22, WireData)
+        return self._get_obj_ll(22, None)
 
     @wires_obj.setter
-    def wires_obj(self, value: List[WireData]):
+    def wires_obj(self, value: List[Union[WireData, TSData, CNData]]):
         self._set_batch_objlist_prop(22, value)
 
     @property
@@ -25881,78 +25663,6 @@ class LineBatch(DSSBatch):
     @earthmodel_str.setter
     def earthmodel_str(self, value: AnyStr):
         self.earthmodel = value
-
-    @property
-    def cncables(self) -> List[List[str]]:
-        """
-        Array of CNData names for use in a cable constants calculation.
-        Must be used in conjunction with the Spacing property.
-        Specify the Spacing first, using "nphases" cncables.
-        You may later specify "nconds-nphases" wires for separate neutrals
-
-        DSS property name: `cncables`, DSS property index: 24.
-        """
-        return self._get_string_ll(24)
-
-    @cncables.setter
-    def cncables(self, value: Union[List[AnyStr], List[CNData]]):
-        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
-            self._set_batch_stringlist_prop(24, value)
-            return
-
-        self._set_batch_objlist_prop(24, value)
-
-    @property
-    def cncables_obj(self) -> List[List[CNData]]:
-        """
-        Array of CNData names for use in a cable constants calculation.
-        Must be used in conjunction with the Spacing property.
-        Specify the Spacing first, using "nphases" cncables.
-        You may later specify "nconds-nphases" wires for separate neutrals
-
-        DSS property name: `cncables`, DSS property index: 24.
-        """
-        return self._get_obj_ll(24, CNData)
-
-    @cncables_obj.setter
-    def cncables_obj(self, value: List[CNData]):
-        self._set_batch_objlist_prop(24, value)
-
-    @property
-    def tscables(self) -> List[List[str]]:
-        """
-        Array of TSData names for use in a cable constants calculation.
-        Must be used in conjunction with the Spacing property.
-        Specify the Spacing first, using "nphases" tscables.
-        You may later specify "nconds-nphases" wires for separate neutrals
-
-        DSS property name: `tscables`, DSS property index: 25.
-        """
-        return self._get_string_ll(25)
-
-    @tscables.setter
-    def tscables(self, value: Union[List[AnyStr], List[TSData]]):
-        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
-            self._set_batch_stringlist_prop(25, value)
-            return
-
-        self._set_batch_objlist_prop(25, value)
-
-    @property
-    def tscables_obj(self) -> List[List[TSData]]:
-        """
-        Array of TSData names for use in a cable constants calculation.
-        Must be used in conjunction with the Spacing property.
-        Specify the Spacing first, using "nphases" tscables.
-        You may later specify "nconds-nphases" wires for separate neutrals
-
-        DSS property name: `tscables`, DSS property index: 25.
-        """
-        return self._get_obj_ll(25, TSData)
-
-    @tscables_obj.setter
-    def tscables_obj(self, value: List[TSData]):
-        self._set_batch_objlist_prop(25, value)
 
     @property
     def B1(self) -> BatchFloat64ArrayProxy:
@@ -26014,7 +25724,7 @@ class LineBatch(DSSBatch):
     def linetype(self) -> BatchInt32ArrayProxy:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -26034,7 +25744,7 @@ class LineBatch(DSSBatch):
     def linetype_str(self) -> str:
         """
         Code designating the type of line. 
-        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW
+        One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
 
         OpenDSS currently does not use this internally. For whatever purpose the user defines. Default is OH.
 
@@ -29829,7 +29539,7 @@ class CapControlBatch(DSSBatch):
     @property
     def type(self) -> BatchInt32ArrayProxy:
         """
-        {Current | voltage | kvar | PF | time } Control type.  Specify the ONsetting and OFFsetting appropriately with the type of control. (See help for ONsetting)
+        {Current | Voltage | kvar | PF | Time | Follow} Control type.  Specify the ONsetting and OFFsetting appropriately with the type of control. (See help for ONsetting)
 
         DSS property name: `type`, DSS property index: 4.
         """
@@ -29846,7 +29556,7 @@ class CapControlBatch(DSSBatch):
     @property
     def type_str(self) -> str:
         """
-        {Current | voltage | kvar | PF | time } Control type.  Specify the ONsetting and OFFsetting appropriately with the type of control. (See help for ONsetting)
+        {Current | Voltage | kvar | PF | Time | Follow} Control type.  Specify the ONsetting and OFFsetting appropriately with the type of control. (See help for ONsetting)
 
         DSS property name: `type`, DSS property index: 4.
         """
@@ -29894,6 +29604,7 @@ class CapControlBatch(DSSBatch):
         kvar:    Total kvar, all phases (3-phase for pos seq model). This is directional. 
         PF:      Power Factor, Total power in monitored terminal. Negative for Leading. 
         Time:    Hrs from Midnight as a floating point number (decimal). 7:30am would be entered as 7.5.
+        Follow:  Follows a loadshape (ControlSignal) to determine when to turn ON/OFF the capacitor. If the value is different than 0 the capacitor will connect to the grid, otherwise, it will be disconnected.
 
         DSS property name: `ONsetting`, DSS property index: 7.
         """
@@ -30135,7 +29846,7 @@ class CapControlBatch(DSSBatch):
     @property
     def ControlSignal(self) -> List[str]:
         """
-        CapControl.ControlSignal
+        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and conencted to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
@@ -30148,7 +29859,7 @@ class CapControlBatch(DSSBatch):
     @property
     def ControlSignal_obj(self) -> List[LoadShape]:
         """
-        CapControl.ControlSignal
+        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and conencted to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
@@ -34811,7 +34522,7 @@ class SwtControlBatch(DSSBatch):
     @property
     def Lock(self) -> List[bool]:
         """
-        {Yes | No} Delayed action. Sends CTRL_LOCK or CTRL_UNLOCK message to control queue. After delay time, controlled switch is locked in its present open / close state or unlocked. Switch will not respond to either manual (Action) or automatic (COM interface) control or internal OpenDSS Reset when locked.
+        {Yes | No} Delayed action. Sends CTRL_LOCK or CTRL_UNLOCK message to control queue. After delay time, controlled switch is locked in its present open / close state or unlocked. Switch will not respond to either manual (Action) or automatic (APIs) control or internal OpenDSS Reset when locked.
 
         DSS property name: `Lock`, DSS property index: 4.
         """
@@ -41407,6 +41118,7 @@ class LineSpacingBatchProperties(TypedDict):
 class LineGeometryBatchProperties(TypedDict):
     nconds: Union[int, Int32Array]
     nphases: Union[int, Int32Array]
+    wire: Union[List[AnyStr], List[Union[WireData, TSData, CNData]]]
     x: Float64Array
     h: Float64Array
     units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
@@ -41414,9 +41126,6 @@ class LineGeometryBatchProperties(TypedDict):
     emergamps: Union[float, Float64Array]
     reduce: bool
     spacing: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]
-    wires: Union[List[AnyStr], List[WireData]]
-    cncables: Union[List[AnyStr], List[CNData]]
-    tscables: Union[List[AnyStr], List[TSData]]
     Seasons: Union[int, Int32Array]
     Ratings: Float64Array
     linetype: Union[AnyStr, int, LineType, List[AnyStr], List[int], List[LineType], Int32Array]
@@ -41481,10 +41190,8 @@ class LineBatchProperties(TypedDict):
     geometry: Union[AnyStr, LineGeometry, List[AnyStr], List[LineGeometry]]
     units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
     spacing: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]
-    wires: Union[List[AnyStr], List[WireData]]
+    wires: Union[List[AnyStr], List[Union[WireData, TSData, CNData]]]
     earthmodel: Union[AnyStr, int, EarthModel, List[AnyStr], List[int], List[EarthModel], Int32Array]
-    cncables: Union[List[AnyStr], List[CNData]]
-    tscables: Union[List[AnyStr], List[TSData]]
     B1: Union[float, Float64Array]
     B0: Union[float, Float64Array]
     Seasons: Union[int, Int32Array]
@@ -45304,12 +45011,13 @@ class IObj(Base):
         'Monitor',
         'EnergyMeter',
         'Sensor',
-        '_idx_to_cls',
     ]
 
     def __init__(self, api_util):
         Base.__init__(self, api_util)
-        self._idx_to_cls = dict()
+        # self._idx_to_cls = dict()
+        DSSObj._idx_to_cls = _idx_to_cls
+
 
         self.LineCode = ILineCode(self)
         self.LoadShape = ILoadShape(self)

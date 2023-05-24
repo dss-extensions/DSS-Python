@@ -428,7 +428,7 @@ class DSSObj(Base):
 
         if pycls is None:
             cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
-            pycls = self._iobj._idx_to_cls[cls_idx]
+            pycls = DSSObj._idx_to_cls[cls_idx]
 
         return pycls(self._api_util, other_ptr)
 
@@ -455,7 +455,7 @@ class DSSObj(Base):
             res = []
             for other_ptr in self._ffi.unpack(ptr[0], cnt[0]):
                 cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
-                pycls = self._iobj._idx_to_cls[cls_idx]
+                pycls = DSSObj._idx_to_cls[cls_idx]
                 res.append(pycls(self._api_util, other_ptr))
         else:
             res = [
@@ -909,7 +909,7 @@ class IDSSObj(Base):
         self.cls_idx = obj_cls._cls_idx
         self._obj_cls = obj_cls
         self._batch_cls = batch_cls
-        iobj._idx_to_cls[self.cls_idx] = self
+        DSSObj._idx_to_cls[self.cls_idx] = obj_cls
 
     def batch(self, **kwargs):
         '''
