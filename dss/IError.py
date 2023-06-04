@@ -61,10 +61,35 @@ class IError(Base):
         off to restore the previous behavior.
         
         (API Extension)
-        
         '''
         return self._lib.Error_Get_ExtendedErrors() != 0
         
     @ExtendedErrors.setter
     def ExtendedErrors(self, Value: bool):
         self._lib.Error_Set_ExtendedErrors(Value)
+
+    @property
+    def UseExceptions(self) -> bool:
+        """
+        Controls whether the automatic error checking mechanism is enable, i.e., if
+        the DSS engine errors (from the `Error` interface) are mapped exception when
+        detected. 
+        
+        **When disabled, the user takes responsibility for checking for errors.**
+        This can be done through the `Error` interface. When `Error.Number` is not
+        zero, there should be an error message in `Error.Description`. This is compatible
+        with the behavior on the official OpenDSS (Windows-only COM implementation) when 
+        `AllowForms` is disabled.
+
+        Users can also use the DSS command `Export ErrorLog` to inspect for errors.
+
+        **WARNING:** This is a global setting, affects all DSS instances from DSS-Python 
+        and OpenDSSDirect.py.
+
+        (API Extension)
+        """
+        return Base._use_exceptions
+    
+    @UseExceptions.setter
+    def UseExceptions(self, value: bool):
+        Base._enable_exceptions(value)

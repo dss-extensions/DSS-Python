@@ -29,7 +29,7 @@ def setup_function():
     DSS.AllowChangeDir = True
     DSS.COMErrorResults = True # TODO: change to False
     DSS.CompatFlags = 0
-
+    DSS.Error.UseExceptions = True
 
 def test_zip_redirect():
     with pytest.raises(DSSException):
@@ -603,6 +603,21 @@ def test_essentials(DSS: IDSS = DSS):
     assert len(DSS.ActiveCircuit.ActiveBus) == 4
     for expected, b in zip(['sourcebus', '1', '2', '3'], DSS.ActiveCircuit.ActiveBus):
         assert expected == b.Name
+
+def test_exception_control(DSS: IDSS = DSS):
+    # Default behavior
+    assert DSS.Error.UseExceptions
+    with pytest.raises(DSSException):
+        DSS.Text.Command = 'this_is_an_invalid_command1'
+
+    # Behavior without exceptions
+    DSS.Error.UseExceptions = False
+    assert not DSS.Error.UseExceptions
+    DSS.Text.Command = 'this_is_an_invalid_command2'
+    # There should be an error code waiting for us...
+    assert DSS.Error.Number != 0
+    # ...but it should be gone after we read it
+    assert DSS.Error.Number == 0
 
 
 def test_patch_comtypes():

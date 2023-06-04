@@ -92,7 +92,7 @@ class IPVSystems(Iterable):
         '''
         Name of the dispatch shape to use for daily simulations. Must be previously
         defined as a Loadshape object of 24 hrs, typically. In the default dispatch
-        mode, the PVSystem element uses this loadshape to trigger State changes.        
+        mode, the PVSystem element uses this loadshape to trigger State changes.
         
         (API Extension)
         '''

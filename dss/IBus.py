@@ -57,7 +57,7 @@ class IBus(Base):
 
     @property
     def Coorddefined(self) -> bool:
-        '''False=0 else True. Indicates whether a coordinate has been defined for this bus'''
+        '''Indicates whether a coordinate has been defined for this bus'''
         return self.CheckForError(self._lib.Bus_Get_Coorddefined()) != 0
 
     @property

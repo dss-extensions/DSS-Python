@@ -43,7 +43,7 @@ class DSSException(Exception):
         return f'(#{self.args[0]}) {self.args[1]}'
 
 
-# For backwards compatibility
+# For backwards compatibility, will be removed for version 1.0
 DssException = DSSException
 use_com_compat = set_case_insensitive_attributes
 
@@ -105,6 +105,8 @@ class Base:
         '_errorPtr',
     ]
 
+    _use_exceptions = True
+
     def __init__(self, api_util):
         self._lib = api_util.lib
         self._api_util = api_util
@@ -137,9 +139,39 @@ class Base:
             cls._dss_attributes = lowercase_map
 
 
+    @staticmethod
+    def _enable_exceptions(do_enable: bool):
+        """
+        Controls whether the automatic error checking mechanism is enable, i.e., if
+        the DSS engine errors (from the `Error` interface) are mapped exception when
+        detected. 
+        
+        **When disabled, the user takes responsibility for checking for errors.**
+        This can be done through the `Error` interface. When `Error.Number` is not
+        zero, there should be an error message in `Error.Description`. This is compatible
+        with the behavior on the official OpenDSS (Windows-only COM implementation) when 
+        `AllowForms` is disabled.
+
+        Users can also use the DSS command `Export ErrorLog` to inspect for errors.
+
+        **WARNING:** This is a global setting, affects all DSS instances from DSS-Python 
+        and OpenDSSDirect.py.
+        """
+        Base._use_exceptions = bool(do_enable)
+
     def _check_for_error(self, result=None):
-        '''Checks for an OpenDSS error. Raises an exception if any, otherwise returns the `result` parameter.'''
-        if self._errorPtr[0]:
+        """
+        Checks for a DSS engine error (on the default configuration).
+
+        By default, raises an exception if any error is detected, otherwise returns the `result` parameter.
+        
+        If the user disabled exceptions, any error is simply ignored. Note that, in this case, manually
+        calling this function would have no purpose/effects.
+
+        Note that, **in the future**, we may try showing a popup form like the official OpenDSS does on Windows
+        if AllowForms is True. This behavior is not very portable though and not adequate for automated scripts.
+        """
+        if self._errorPtr[0] and Base._use_exceptions:
             error_num = self._errorPtr[0]
             self._errorPtr[0] = 0
             raise DSSException(error_num, self._get_string(self._lib.Error_Get_Description()))
