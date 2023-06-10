@@ -212,6 +212,7 @@ Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-var/SnapShot_v
 Version8/Distrib/Examples/InverterModels/PVSystem/InvControl/volt-var/SnapShot_voltvar_Standard_varaval_kvarlimitation-2.dss
 L!Version8/Distrib/Examples/Scripts/Storage-Quasi-Static-Example/Run_Demo1.dss
 L!Version8/Distrib/IEEETestCases/123Bus/Run_YearlySim.dss
+Version8/Distrib/Examples/GICExample/GIC_Example.dss
 '''.strip().split('\n')
 
 cimxml_test_filenames = '''
