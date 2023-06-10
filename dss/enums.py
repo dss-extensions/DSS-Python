@@ -171,3 +171,4 @@ class DSSCompatFlags(IntFlag):
     NoSolverFloatChecks = 0x00000001
     BadPrecision = 0x00000002
     InvControl9611 = 0x00000004
+    SaveCalcVoltageBases = 0x00000008
