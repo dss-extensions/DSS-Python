@@ -190,19 +190,34 @@ class ITransformers(Iterable):
 
     @property
     def WdgVoltages(self) -> Float64ArrayOrComplexArray:
-        '''Complex array of voltages for active winding'''
+        '''
+        Complex array of voltages for active winding
+        
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
+        in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+        '''
         self.CheckForError(self._lib.Transformers_Get_WdgVoltages_GR())
         return self._get_complex128_gr_array()
 
     @property
     def WdgCurrents(self) -> Float64ArrayOrComplexArray:
-        '''All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)'''
+        '''
+        All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)
+
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
+        in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+        '''
         self.CheckForError(self._lib.Transformers_Get_WdgCurrents_GR())
         return self._get_complex128_gr_array()
 
     @property
     def strWdgCurrents(self) -> str:
-        '''All winding currents in CSV string form like the WdgCurrents property'''
+        '''
+        All winding currents in CSV string form like the WdgCurrents property
+
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
+        in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+        '''
         return self._get_string(self.CheckForError(self._lib.Transformers_Get_strWdgCurrents()))
 
     @property
