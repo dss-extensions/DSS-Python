@@ -3,6 +3,7 @@
 #       covers detailed check of API states, etc.
 import sys, os, itertools, threading
 from time import perf_counter
+from math import sqrt, pi
 try:
     from ._settings import BASE_DIR, ZIP_FN, WIN32
 except ImportError:
@@ -17,7 +18,7 @@ if WIN32:
 else:
     import dss
 
-from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags
+from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags, LoadModels
 import numpy as np
 import pytest
 
@@ -30,6 +31,7 @@ def setup_function():
     DSS.COMErrorResults = True # TODO: change to False
     DSS.CompatFlags = 0
     DSS.Error.UseExceptions = True
+    DSS.Text.Command = 'set DefaultBaseFreq=60'
 
 def test_zip_redirect():
     with pytest.raises(DSSException):
@@ -620,6 +622,116 @@ def test_exception_control(DSS: IDSS = DSS):
     assert DSS.Error.Number == 0
 
 
+def debug_print(s):
+    # print(s)
+    pass
+
+def test_capacitor_reactor(DSS: IDSS = DSS):
+    from itertools import product
+    kVA = 1329.53
+    kV = 2.222
+    DSS.AdvancedTypes = True
+
+    for component, f in product(('Capacitor', 'Reactor'), (50, 60)):
+        bus = 1
+        sign = 1 if component[0] == 'C' else -1
+        DSS.Text.Command = 'clear'
+        debug_print('clear')
+        DSS.Text.Command = f'set DefaultBaseFreq={f}'
+        debug_print(DSS.Text.Command)
+        DSS.Text.Command = f'new circuit.test{f} bus1={bus}'
+        debug_print(DSS.Text.Command)
+        for conn in ('delta', 'wye'):
+            for phases0 in (1, 2, 3):
+                phases = phases0
+                if conn == 'wye':
+                    V_eff_ln = kV * 1000
+                    if phases == 1:
+                        kV_eff = kV
+                    else:
+                        kV_eff = kV * sqrt(3)
+                else:                    
+                    V_eff_ll = kV * sqrt(3) * 1000
+                    kV_eff = kV * sqrt(3)
+
+                DSS.Text.Command = f'new Line.{bus}-{bus + 1} bus1={bus} bus2={bus + 1}'
+                debug_print(DSS.Text.Command)
+                bus += 1
+                DSS.Text.Command = f'new {component}.{conn}_{phases} bus1={bus} phases={phases} conn={conn} kva={kVA} kV={kV_eff}'
+                debug_print(DSS.Text.Command)
+                DSS.Text.Command = 'solve'
+                # debug_print(DSS.Text.Command)
+                assert DSS.ActiveCircuit.ActiveCktElement.Name == f'{component}.{conn}_{phases}'
+                Y_dss = DSS.ActiveCircuit.ActiveCktElement.Yprim
+
+                DSS.Text.Command = f'new {component}.{conn}_{phases}_alt bus1={bus} phases=1 conn={conn} phases={phases} kva={kVA} kV={kV_eff}'
+                # debug_print(DSS.Text.Command)
+                DSS.Text.Command = 'solve'
+                # debug_print(DSS.Text.Command)
+                assert DSS.ActiveCircuit.ActiveCktElement.Name == f'{component}.{conn}_{phases}_alt'
+                Y_dss2 = DSS.ActiveCircuit.ActiveCktElement.Yprim
+
+                np.testing.assert_allclose(Y_dss, Y_dss2)
+
+                if conn == 'wye':
+                    VA_branch = 1000 * kVA / phases
+                    y = sign * 1j * VA_branch / (V_eff_ln**2)
+                    Y_py = np.zeros(shape=(phases * 2, phases * 2), dtype=complex)
+                    for ph1 in range(phases):
+                        ph2 = ph1 + phases
+                        Y_py[ph1, ph1] += y
+                        Y_py[ph2, ph2] += y
+                        Y_py[ph2, ph1] += -y
+                        Y_py[ph1, ph2] += -y
+
+                    np.testing.assert_allclose(Y_py, Y_dss)
+                elif conn == 'delta':
+                    VA_branch = 1000 * kVA / phases
+                    y = sign * 1j * VA_branch / (V_eff_ll**2)
+                    if phases0 == 1:
+                        branches = [(0, 1)]
+                        phases = 2
+                    elif phases0 == 2:
+                        branches = [(0, 1), (1, 2)]
+                        phases = 3
+                    elif phases0 == 3:
+                        branches = [(0, 1), (1, 2), (2, 0)]
+                        phases = 3
+
+                    Y_py = np.zeros(shape=(phases, phases), dtype=complex)
+                    for ph1, ph2 in branches:
+                        Y_py[ph1, ph1] += y
+                        Y_py[ph2, ph2] += y
+                        Y_py[ph2, ph1] += -y
+                        Y_py[ph1, ph2] += -y
+
+                    np.testing.assert_allclose(Y_py, Y_dss)
+
+                phases = phases0
+                model = int(LoadModels.ConstZ)
+                DSS.Text.Command = f'new Line.{bus}-{bus + 1} bus1={bus} bus2={bus + 1}'
+                debug_print(DSS.Text.Command)
+                bus += 1
+                DSS.Text.Command = f'new Load.{conn}_{phases} bus1={bus} phases={phases} conn={conn} kw=0 kvar={-sign * kVA} kV={kV_eff} model={model} Xneut=0 Rneut=0'
+                debug_print(DSS.Text.Command)
+                DSS.Text.Command = 'solve'
+                # debug_print(DSS.Text.Command)
+                assert DSS.ActiveCircuit.ActiveCktElement.Name == f'Load.{conn}_{phases}'
+                Y_load = DSS.ActiveCircuit.ActiveCktElement.Yprim
+                Y_load -= Y_load.real
+                if conn == 'wye':
+                    n = Y_load.shape[0] # wye load is 1 terminal
+                    Y_py2 = np.copy(Y_py[:n, :n])
+                    Y_py2[:, n - 1] += np.sum(Y_py[:n, n:], axis=1)
+                    Y_py2[n - 1, :] += np.sum(Y_py[n:, :n], axis=0)
+                    Y_py2[n - 1, n - 1] += np.sum(np.diag(Y_py)[n:])
+                    Y_py = Y_py2
+                else:
+                    n = Y_load.shape[0]
+                
+                np.testing.assert_allclose(Y_py[:n, :n], Y_load[:n, :n], atol=1e-6)
+
+
 def test_patch_comtypes():
     if WIN32:
         import comtypes.client
@@ -634,5 +746,6 @@ def test_patch_win32com():
         test_essentials(DSS_COM)
 
 if __name__ == '__main__':
-    for _ in range(250):
-        test_pm_threads()
+    # for _ in range(250):
+    #     test_pm_threads()
+    test_capacitor_reactor()
