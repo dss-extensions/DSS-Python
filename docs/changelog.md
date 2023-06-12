@@ -1,5 +1,13 @@
 # 0.14.x
 
+## 0.14.3
+
+- Upgrade the backend to [**DSS C-API 0.13.3**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.3). Includes important fixes to some OpenDSS components affected by bugs for several years. This matches the changes in OpenDSS v9.6.1.2, plus our custom changes as usual.
+- Add `DSS.Error.UseExceptions` to allow disabling the automatic mapping of error numbers to Python exceptions. When disabling, users take full responsibility to actually check for errors through the `DSS.Error` interface.
+- Add `DSSCompatFlags.SaveCalcVoltageBases`.
+- Transformers: add a warning in the docstrings of `WdgCurrents`, `WdgVoltages` (these don't work well when the transformer has open terminals).
+- Plotting: handle GICLines in circuit plots.
+
 ## 0.14.2
 
 - Append DSS-Python's version in `DSS.Version`.

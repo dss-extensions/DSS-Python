@@ -19,32 +19,11 @@ Version 0.14.x is based on OpenDSS revision 3604 (few commits after OpenDSS v9.6
 This module mimics the COM structure (as exposed via `win32com` or `comtypes`) — see [The DSS instance](https://dss-extensions.org/dss_python/#the-dss-instance) for some docs — effectively enabling multi-platform compatibility at Python level. Compared to other options, it provides easier migration from code that uses the official OpenDSS through COM. See also [DSS-Extensions — OpenDSS: Overview of Python APIs](https://dss-extensions.org/python_apis.html).
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this module returns/accepts NumPy arrays for numeric data exchange, which is usually preferred by the users. By toggle `DSS.AdvancedTypes`, complex numbers and matrices (shaped arrays) are also used to provide a more modern experience.
 
-The module depends mostly on CFFI, NumPy, typing_extensions and, optionally, SciPy.Sparse for reading the sparse system admittance matrix. Pandas and matplotlib are optional dependencies to enable plotting and other features.
+The module depends mostly on CFFI, NumPy, typing_extensions and, optionally, SciPy.Sparse for reading the sparse system admittance matrix. Pandas and matplotlib are optional dependencies [to enable plotting](https://github.com/dss-extensions/dss_python/blob/master/docs/examples/Plotting.ipynb) and other features.
 
-## Brief release history
+## Release history
 
-- **2023-05-24 / version 0.14.2: Complement the plotting backend, fix some batch features, and upgrade the DSS engine, including changes to the JSON export functions.**
-- 2023-04-03 / version 0.14.0: Same as 0.13.1, but splits dss_python into two packages: [dss_python_backend](https://github.com/dss-extensions/dss_python_backend) now contains the native binaries/DLLs. No need for user action.
-- 2023-04-01 / version 0.13.1: Microupdate to the OpenDSS engine; very minor Python changes.
-- 2023-03-29 / version 0.13.0: Updates to the OpenDSS engine, more plotting and initial notebook integration, matrix shapes and complex numbers, bug fixes, etc.
-- 2022-07-16 / version 0.12.1: Very minor release to address a bug found in v0.12.0, to add the Storages API, and include the property descriptions/help.
-- 2022-07-14 / version 0.12.0: Major release merging parallel features, multiple DSS engine instances, ZIP file support, incremental Y matrix updates, new API functions, partial plotting support, better performance, and so on. General usage examples for the new features will be incrementally added to https://github.com/dss-extensions/dss-extensions
-- 2021-03-09 / version 0.10.7-1: Very minor release to fix issues with some of the energy meter reports.
-- 2020-12-28 / version 0.10.7: Maintenance release to match DSS C-API 0.10.7, based on on OpenDSS revision 2963. Includes fixes and new features from the official OpenDSS.
-- 2020-07-31 / version 0.10.6: Maintenance release to match DSS C-API 0.10.6, based on on OpenDSS revision 2909. New important settings: `DSS.LegacyModels` and `DSS.Error.ExtendedErrors`.
-- 2020-03-03 / version 0.10.5: Maintenance release to match DSS C-API 0.10.5, based on on OpenDSS revision 2837. Temporarily drops the v8 parallel-machine functions, as well as conda packages on Windows.
-- 2019-11-16 / version 0.10.4: Maintenance release to match DSS C-API 0.10.4.
-- 2019-05-22 / version 0.10.3: Some important fixes, better general performance, new API extensions, new features ported from COM and the OpenDSS version 8 codebase.
-- 2019-02-28 / version 0.10.2: Some small fixes, adds the missing `CtrlQueue.Push`, faster LoadShapes and new property `DSS.AllowEditor` to toggle editor calls.
-- 2019-02-17 / version 0.10.1: Integrate DSS C-API changes/fix, some small fixes, and more error-checking. 
-- 2018-11-17 / version 0.10.0: Lots of changes, fixes and new features. Check the new [changelog](docs/changelog.md#0100) document for a list.
-- 2018-08-12 / version 0.9.8: Reorganize modules (v7 and v8), adds 8 missing methods and new backend methods for OpenDSSDirect.py v0.3+. Integrates many fixes from DSS_CAPI and the upstream OpenDSS.
-- 2018-04-30 / version 0.9.7: Fix some of the setters that used array data.
-- 2018-04-05 / version 0.9.6: Adds missing `ActiveCircuit.CktElements[index]` (or `...CktElements(index)`) and `ActiveCircuit.Buses[index]` (or `...Buses(index)`).
-- 2018-03-07 / version 0.9.4: Allows using `len` on several classes, fixes DSSProperty, and includes COM helpstrings as docstrings. Contains changes up to OpenDSS revision 2152.
-- 2018-02-16 / version 0.9.3: Integrates COM interface fixes from revision 2136 (`First` `Next` iteration on some elements)
-- 2018-02-12 / version 0.9.2: Experimental support for OpenDSS-PM (at the moment, a custom patch is provided for FreePascal support) and port COM interface fixes (OpenDSS revision 2134)
-- 2018-02-08 / version 0.9.1: First public release (OpenDSS revision 2123)
+Check [the Releases page](https://github.com/dss-extensions/dss_python/releases) and [the changelog](https://github.com/dss-extensions/dss_python/blob/master/docs/changelog.md).
 
 ## Missing features and limitations
 
