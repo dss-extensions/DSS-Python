@@ -12,15 +12,14 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
+import os, sys, shutil
 import guzzle_sphinx_theme
 sys.path.insert(0, os.path.abspath('..'))
 from dss import __version__ as ver
 # -- Project information -----------------------------------------------------
 
 project = 'dss_python'
-copyright = '2018-2022, Paulo Meira, DSS-Extensions contributors'
+copyright = '2018-2023, Paulo Meira, DSS-Extensions contributors'
 author = 'Paulo Meira'
 
 # The short X.Y version
@@ -44,7 +43,9 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.autosectionlabel',
     'sphinx_autodoc_typehints',
-    'guzzle_sphinx_theme'
+    'guzzle_sphinx_theme',
+    'nbsphinx',
+    'myst_parser',
 ]
 
 autosummary_generate = True
@@ -55,8 +56,7 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.
 master_doc = 'index'
@@ -71,7 +71,7 @@ language = 'en'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints', '**README.md', '**electricdss-tst'] 
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -88,11 +88,10 @@ html_theme = "guzzle_sphinx_theme" # "sphinx_rtd_theme"
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#
 html_theme_options = {
     "project_nav_name": "DSS-Python",
     "projectlink": "http://github.com/dss-extensions/dss_python",
-    "globaltoc_depth": 3,
+    # "globaltoc_depth": 3,
 
 }
 
@@ -146,7 +145,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'dss_python.tex', 'dss\\_python Documentation',
+    (master_doc, 'dss_python.tex', 'DSS-Python Documentation',
      'Paulo Meira', 'manual'),
 ]
 
@@ -185,6 +184,7 @@ autodoc_default_options = {
 
 autodoc_default_flags = ['members'] 
 
+# nbsphinx_execute = 'always'
 
 def add_emph(app, what, name, obj, options, lines):
     if len(lines) == 0:
@@ -193,5 +193,10 @@ def add_emph(app, what, name, obj, options, lines):
     lines[:] = [x.replace('(API Extension)', '**(API Extension)**') for x in lines]
 
 
+def try_cleaning(app, docname, source):
+    if os.path.exists('examples/electricdss-tst'):
+        shutil.rmtree('examples/electricdss-tst')
+
 def setup(app):
     app.connect('autodoc-process-docstring', add_emph)
+    app.connect('source-read', try_cleaning)

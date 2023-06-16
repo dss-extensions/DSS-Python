@@ -2,14 +2,25 @@ The new DSS.Obj API
 ===================
 
 This represents a work-in-progress effort to expose all OpenDSS data classes to the end user without requiring
-frequent string manipulation. All data is available using native Python types and wrapper objects.
+frequent string manipulation, which the added bonus of type hints and maybe better performance. All data is 
+available using native Python types and wrapper objects.
 
 A new batch API is also integrated, allowing easy manipulation of multiple objects of the same type in a consistent
 manner.
 
 Changes are expected to adjust naming of the properties. New features are also planned.
 
-**TODO: add minimal examples and links to further examples**
+A few examples are available in our tests:
+
+   * https://github.com/dss-extensions/dss_python/blob/master/tests/test_obj.py
+   * https://github.com/dss-extensions/dss_python/blob/master/tests/test_batch.py
+
+More notes and guided usage will be added here when we feel the package is ready. Currently, this document works
+as a vague reference. A detailed version with per-class docs will be generated in the future when the files are
+reorganized.
+
+Obj/Batch API reference
+-----------------------
 
 .. automodule:: dss.IObj
 

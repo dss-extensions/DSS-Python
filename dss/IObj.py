@@ -9,10 +9,9 @@ For example, we plan to adjust the spelling of many properties; `nconds` will be
 Currently, we're already removed `wdg` and the indirect properties in favour of the array versions.
 This will also be tweaked after more usage. `NConds`, for example, may also be removed if we can
 develop a mechanism to ensure the dimensions match.
-
-Copyright (c) 2021-2023 Paulo Meira
-Copyright (c) 2021-2023 DSS-Extensions contributors
 '''
+# Copyright (c) 2021-2023 Paulo Meira
+# Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 import numpy as np
@@ -45089,5 +45088,54 @@ __all__ = [
     "AutoAddDeviceType",
     "LoadShapeClass",
     "MonitoredPhase",
+    "ILineCode",
+    "ILoadShape",
+    "ITShape",
+    "IPriceShape",
+    "IXYcurve",
+    "IGrowthShape",
+    "ITCC_Curve",
+    "ISpectrum",
+    "IWireData",
+    "ICNData",
+    "ITSData",
+    "ILineSpacing",
+    "ILineGeometry",
+    "IXfmrCode",
+    "ILine",
+    "IVsource",
+    "IIsource",
+    "IVCCS",
+    "ILoad",
+    "ITransformer",
+    "ICapacitor",
+    "IReactor",
+    "ICapControl",
+    "IFault",
+    "IDynamicExp",
+    "IGenerator",
+    "IGenDispatcher",
+    "IStorage",
+    "IStorageController",
+    "IRelay",
+    "IRecloser",
+    "IFuse",
+    "ISwtControl",
+    "IPVSystem",
+    "IUPFC",
+    "IUPFCControl",
+    "IESPVLControl",
+    "IIndMach012",
+    "IGICsource",
+    "IAutoTrans",
+    "IRegControl",
+    "IInvControl",
+    "IExpControl",
+    "IGICLine",
+    "IGICTransformer",
+    "IVSConverter",
+    "IMonitor",
+    "IEnergyMeter",
+    "ISensor",
 ]
 

@@ -1,6 +1,6 @@
 // This is a slightly simplified version of the InductionMachine example from
 // the official OpenDSS distribution (found in Examples/InductionMachine)
-// to illustrate UserModels in DSS Python.
+// to illustrate UserModels in DSS-Python.
 // Since it's a small system, all files were merged into this one.
 Clear
 

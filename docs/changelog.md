@@ -1,6 +1,13 @@
-# 0.14.x
+# DSS-Python changelog
 
-## 0.14.3
+Remember that changes in our alternative OpenDSS engine, currently known as DSS C-API, are always
+relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_capi/) for more information.
+
+## 0.14.x
+
+### 0.14.3
+
+Released on 2023-06-12.
 
 - Upgrade the backend to [**DSS C-API 0.13.3**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.3). Includes important fixes to some OpenDSS components affected by bugs for several years. This matches the changes in OpenDSS v9.6.1.2, plus our custom changes as usual.
 - Add `DSS.Error.UseExceptions` to allow disabling the automatic mapping of error numbers to Python exceptions. When disabling, users take full responsibility to actually check for errors through the `DSS.Error` interface.
@@ -8,7 +15,9 @@
 - Transformers: add a warning in the docstrings of `WdgCurrents`, `WdgVoltages` (these don't work well when the transformer has open terminals).
 - Plotting: handle GICLines in circuit plots.
 
-## 0.14.2
+### 0.14.2
+
+Released on 2023-05-25.
 
 - Append DSS-Python's version in `DSS.Version`.
 - Complement and fix most plot types, leaving only a couple of plots without implementation. An example notebook will be added later.
@@ -18,25 +27,33 @@
 - Add JSON option `SkipDSSClass`.
 - Coupled with the backend changes, the JSON output should be more well-behaved for Transformer and Line variations.
 
-## 0.14.1
+### 0.14.1
+
+Released on 2023-04-13.
 
 - Fix issue with newer NumPy versions with YMatrix (`GetCompressedYMatrix`), after the removal of `numpy.complex`.
 - Use some mode enums.
 
-## 0.14.0
+### 0.14.0
+
+Released on 2023-04-03.
 
 Same as version 0.13.1, except that the organization of the module has changed to facilitate fast iteration of the Python side of the code.
 
 We introduced the new package `dss_python_backend` that will contain all native libs and CFFI bindings from this point on. This leaves DSS-Python itself as a pure Python package, which is much easier to package and distribute.
 
-# 0.13.x
+## 0.13.x
 
-## 0.13.1
+### 0.13.1
+
+Released on 2023-04-02.
 
 - Engine updated to [**DSS C-API 0.13.1**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.1). Contains tiny changes to address potential issues with a few PVSystem properties (which passed undetected by our tests).
 - `DSS.AdvancedTypes`: fix `Lines.Yprim` and `PDElements.AllCurrentsMagAng` when `AdvancedTypes` is enabled.
 
-## 0.13.0
+### 0.13.0
+
+Released on 2023-03-28.
 
 - Engine updated to [**DSS C-API 0.13.0**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.0), which is very compatible with OpenDSS 9.6.1.1 (plus some official SVN commits up to rev 3595, plus our own changes.
 - **New test suite,** which runs many more files and validates more of the API. We now use `pytest` for some more complex tests, while the numeric validation is done with the new `compare_outputs.py`.
@@ -56,7 +73,7 @@ We introduced the new package `dss_python_backend` that will contain all native 
 - Docs: mark more properties as "**(API Extension)**".
 - Internal code refactoring and clean-up.
 
-## DSS C-API 0.13.0 changes 
+#### DSS C-API 0.13.0 changes 
 
 [**check its repo for more info**](https://github.com/dss-extensions/dss_capi/)
 
@@ -107,13 +124,17 @@ Note that a couple of SVN changes were ignored on purpose since they introduced 
 
 
 
-# 0.12.1
+## 0.12.1
+
+Released on 2022-07-16.
 
 - Expose `Storages` in Python
 - Include the missing property descriptions from 0.12.0
 - Use DSS C-API v0.12.1 for some incremental fixes
 
-# 0.12.0
+## 0.12.0
+
+Released on 2022-07-14.
 
 - Removed CmathLib: not useful in Python or most programming languages targeted by DSS-Extensions.
 - Allow creating multiple DSS engine instances via `DSS.NewContext()`.
@@ -125,7 +146,7 @@ Note that a couple of SVN changes were ignored on purpose since they introduced 
 - Due to some changes ported from the official OpenDSS since 0.10.7, some results may change, especially for circuits that used miles as length units. The same is observed across the official OpenDSS releases.
 
 
-DSS C-API 0.12.0 changes:
+### DSS C-API 0.12.0 changes
 
 **Includes porting of most official OpenDSS features up to revision 3460.** Check the OpenDSS SVN commits for details.
 
@@ -140,25 +161,27 @@ This version still maintains basic compatibility with the 0.10.x series of relea
 - Initial ARM64/AARCH64 support added. ARM32 building scripts were also added. Support includes Apple M1 support, including parallel/multi-threading features.
 - Finally use KLUSolveX (our KLUSolve fork, rewritten and extended), enabling incremental Y updates for transformers and capacitor banks. **Documentation including usage notes and limitations still not written.** This was planned for version v0.13, but moved back to v0.12 to enable ARM32 (armv7l) support and better results in ARM64 (aarch64).
 - Experimental callbacks for plotting and message output. Expect initial support in Python soon after DSS C-API v0.12 is released.
-- Introduce `AllowChangeDir` mechanism: defaults to enabled state for backwards compatibility. When disabled, the engine will not change the current working directory in any situation. This is exposed through a new pair of functions
-`DSS_Set_AllowChangeDir` and `DSS_Get_AllowChangeDir`, besides the environment variable `DSS_CAPI_ALLOW_CHANGE_DIR`.
+- Introduce `AllowChangeDir` mechanism: defaults to enabled state for backwards compatibility. When disabled, the engine will not change the current working directory in any situation. This is exposed through a new pair of functions `DSS_Set_AllowChangeDir` and `DSS_Get_AllowChangeDir`, besides the environment variable `DSS_CAPI_ALLOW_CHANGE_DIR`.
 - New setting to toggle `DOScmd` command. Can be controlled through the environment variable `DSS_CAPI_ALLOW_DOSCMD` or functions `DSS_Get_AllowDOScmd`/`DSS_Set_AllowDOScmd`.
 - Use `OutputDirectory` more. `OutputDirectory` is set to the current `DataPath` if `DataPath` is writable. If not, it's set to a general location (`%LOCALAPPDATA%/dss-extensions` and `/tmp/dss-extensions` since this release). This should make life easier for a user running files from a read-only location. Note that this is only an issue when running a `compile` command. If the user only uses `redirect` commands, the `DataPath` and `OutputDirectory` are left empty, meaning the files are written to the current working directory (CWD), which the user can control through the programming language driving DSS C-API. Note that the official OpenDSS COM behavior is different, since it loads the `DataPath` saved in the registry and modifies the CWD accordingly when OpenDSS is initialized.
 - File IO rewritten to drop deprecated Pascal functions and features. This removes some limitations related to long paths due to the legacy implementation being limited to 255 chars.
 - Reworked `TPowerTerminal` to achieve better memory layout. This makes simulations running `LoadsTerminalCheck=false` and `LoadsTerminalCheck=true` closer in performance, yet disabling the check is still faster.
 - Use `TFPHashList` where possible (replacing the custom, original THashList implementation from OpenDSS).
 - New LoadShape functions and internals: 
+
     - Port memory-mapped files from the official OpenDSS, used when `MemoryMapping=Yes` from a DSS script while creating a LoadShape object.
     - Release the `LoadShape_Set_Points` function, which can be used for faster LoadShape input, memory-mapping externally, shared memory, chunked input, etc.
+
 - Some new functions: 
+
     - `Circuit_Get_ElementLosses`
     - `CktElement_Get_NodeRef`
+
 - `DSS_Get_COMErrorResults`/`DSS_Set_COMErrorResults`: New compatibility setting for error/empty result. If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the official OpenDSS COM interface. 
     
     For example, consider the function Loads_Get_ZIPV. If there is no active circuit or active load element:
     - In the disabled state (COMErrorResults=False), the function will return "[]", an array with 0 elements.
-    - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
-      be compatible with the return value of the official COM interface.
+    - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should be compatible with the return value of the official COM interface.
     
     Defaults to True/1 (enabled state) in the v0.12.x series. This will change to false in future series.
     
@@ -180,7 +203,9 @@ This version still maintains basic compatibility with the 0.10.x series of relea
 Due to the high number of IO changes, we recommend checking the performance before and after the upgrade to ensure your use case is not affected negatively, especially if your application relies heavily on OpenDSS text output. If issues are found, please do report.
 
 
-# 0.10.7
+## 0.10.7
+
+Released on 2020-12-29.
 
 - Maintenance release. 
 - Updated to DSS C-API 0.10.7, which includes most changes up to OpenDSS v9.1.3.4.
@@ -204,7 +229,9 @@ DSS C-API 0.10.7 changes:
     - "Fixing bug found when calculating voltage bases with large amount of numbers (large array)."
 
 
-# 0.10.6
+## 0.10.6
+
+Released on 2020-08-01.
 
 - Updated to DSS C-API 0.10.6, which includes most changes up to OpenDSS v9.0.0.3.
 - Debug builds of DSS C-API are now included. See the [Debugging](https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/debug.md) document.
@@ -246,7 +273,7 @@ DSS C-API 0.10.6 changes:
     - `PVsystem2`, `Storage2`, `InvControl2`, `StorageController2` updated and renamed.
 
 
-# 0.10.5
+## 0.10.5
 
 Released on 2020-03-03. This is a maintenance release.
 
@@ -270,7 +297,7 @@ DSS C-API 0.10.5 changes:
     - `Bus_Get_puVLL` and `Bus_Get_VLL` — see revision 2836 (official SVN). Included an extra fix in DSS C-API to avoid some corner cases.
     - Other small bug fixes like the Full Carson fix — see https://sourceforge.net/p/electricdss/discussion/861976/thread/2de01d0cdb/ and revision 2805 (official SVN)
 
-# 0.10.4
+## 0.10.4
 
 Released on 2019-11-16. This is a maintenance release.
 
@@ -285,9 +312,7 @@ DSS C-API 0.10.4 changes include:
 - This version should be fully compatible with 0.10.3.
 - Fixes issue with long paths on Linux, potentially other platforms too.
 
-To be released on 2019-11-XX. 
-
-# 0.10.3
+## 0.10.3
 
 Released on 2019-05-22. This is the last release to provide pre-built binaries for Python 3.4.
 
@@ -307,7 +332,7 @@ Released on 2019-05-22. This is the last release to provide pre-built binaries f
     - `Lines.IsSwitch`
     - `Transformers.LossesByType` and `Transformers.AllLossesByType`
 
-# 0.10.2
+## 0.10.2
 
 Released on 2019-02-28.
 
@@ -318,7 +343,7 @@ Released on 2019-02-28.
 - `LoadShapes` are faster due to [changes from DSS C-API](https://github.com/dss-extensions/dss_capi/blob/master/docs/changelog.md#version-0102)
 
 
-# 0.10.1
+## 0.10.1
 
 Released on 2019-02-17.
 
@@ -326,18 +351,19 @@ This is a minor DSS-Python release that contains lots of changes from DSS C-API.
 
 DSS-Python has recently moved from https://github.com/PMeira/dss_python/ to the new https://dss-extensions.org/ and https://github.com/dss-extensions/dss_python/
 
-## Major changes:
+Major changes:
 
 - More and faster error-checking! Python exception will be raised for more errors and with a lower overhead.
 - Fix for `YMatrix.getI` and `YMatrix.getV` (ported from OpenDSSDirect.py)
 - Fix for `ActiveCircuit.ActiveCktElement.Variable` and `ActiveCircuit.ActiveCktElement.Variablei`: now returns a tuple of `(value, errorcode)`, compatible with COM.
 - New `DSS.Error.EarlyAbort`: controls whether all errors halts the DSS script processing (Compile/Redirect), defaults to True.
 
-# 0.10.0
+## 0.10.0
 
 Released on 2018-11-17.
 
-## Major changes:
+Major changes:
+
 - The creation of the binary modules has been automated using Travis-CI and AppVeyor. We expect that this will allow us to release more often, bringing new features sooner.
 - Integrates many fixes from the upstream OpenDSS and changes specific to DSS C-API.
 - Reorganizes and reuses the code across DSS versions (v7 and v8) 
@@ -347,11 +373,14 @@ Released on 2018-11-17.
 - Error checking is now done for most API writes. That is, if a an OpenDSS error occurs, it should cause a Python exception soon after. Previously, you need to call `CheckForError()` manually to trigger this. This change was introduced after user reports indicated that manually checking for errors is a common behavior.
 - Exposes API extensions for the classes `LineGeometry`, `WireData`, `LineSpacing`, `CNData`, `TSData`, `Reactor`.
 - Makes most DSS classes iterable (including buses), e.g. you can now use:
+
 ```python
 for l in DSS.ActiveCircuit.Loads:
     print(l.Name)
 ```
+
 - Adds a COM patching function (`dss.patch_dss_com`) — that is, extend the COM instance with iterators like above and some other few functions to make it easier to exchange between COM and DSS-Python:
+
 ```python
 
 import win32com.client, dss
@@ -366,9 +395,7 @@ for b in com.ActiveCircuit.ActiveBus:
     print(b.Name, b.x, b.y)
 ```
 
-## Performance
-On microbenchmarks, the GR interface can reduce the running time up to 50% (typically 25%) on properties that return arrays. If you find issues using the default GR interface, you can always use the classic interface from 0.9.8 by importing the appropriate module: `from dss import DSS_IR as DSS`. Currently, the GR changes do not affect writing data (setting properties), only reading them.
-
 ## Mixed-cased handling
-If you were using `use_com_compat` to allow mixed-cased attributes, it should work better than before. You may now use `use_com_compat(warn=True)` to warn when you use an attribute that wouldn't exist without calling `use_com_compat`. The intention is that the user should run their code to get a list of warnings, fix it, and then remove `use_com_compat` since it does have a small performance impact.
+
+If you were using `set_case_insensitive_attributes` (previously `use_com_compat`) to allow mixed-cased attributes, it should work better than before. You may now use `set_case_insensitive_attributes(warn=True)` to warn when you use an attribute that wouldn't exist without calling `set_case_insensitive_attributes`. The intention is that the user should run their code to get a list of warnings, fix it, and then remove `set_case_insensitive_attributes` since it does have a small performance impact.
 
