@@ -25,6 +25,7 @@ assert os.path.exists(BASE_DIR)
 #"L!Distrib/IEEETestCases/4wire-Delta/Kersting4wireIndMotor.dss",
 
 test_filenames = '''
+Test/CapControlFollow.dss
 Test/CapacitorConfigs.dss
 Test/ReactorConfigs.dss
 L!Version8/Distrib/Examples/Dynamic_Expressions/Dynamic_KundurDynExp.dss
