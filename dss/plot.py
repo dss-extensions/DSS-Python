@@ -229,8 +229,10 @@ def dss_monitor_plot(DSS: IDSS, params):
     monitor.Name = params['ObjectName']
     data = monitor.AsMatrix()
     channels = params['Channels']
-    if min(channels) < 1 or max(channels) > monitor.NumChannels:
-        raise IndexError("Invalid channel number")
+    num_ch = monitor.NumChannels
+    channels = [ch for ch in channels if ch >= 1 and ch <= num_ch]
+    if len(channels) == 0:
+        raise IndexError(f"No valid channel numbers were specified.")
 
     bases = params['Bases']
     header = monitor.Header
