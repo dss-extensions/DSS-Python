@@ -228,11 +228,14 @@ def dss_monitor_plot(DSS: IDSS, params):
     monitor = DSS.ActiveCircuit.Monitors
     monitor.Name = params['ObjectName']
     data = monitor.AsMatrix()
+    if data is None or len(data) == 0:
+        raise ValueError("There is not data to plot in the monitor. Hint: check the solution mode, solve the circuit and retry.")
+    
     channels = params['Channels']
     num_ch = monitor.NumChannels
     channels = [ch for ch in channels if ch >= 1 and ch <= num_ch]
     if len(channels) == 0:
-        raise IndexError(f"No valid channel numbers were specified.")
+        raise IndexError("No valid channel numbers were specified.")
 
     bases = params['Bases']
     header = monitor.Header
