@@ -1870,22 +1870,12 @@ def dss_plot(DSS, params):
         
 
 
-def ctx2dss(ctx, instances={}): #TODO: move this cache to the IDSS class itself
-    DSS = instances.get(ctx)
-    if DSS is not None:
-        return DSS
+def _ctx2dss(ctx):
+    DSS = IDSS._ctx_to_dss.get(ctx)
+    if DSS is None:
+        #TODO: maybe warn here?
+        DSS = IDSS._ctx_to_dss.get(None)
 
-    # Handle the most likely case    
-    if DSSPrime._api_util.ctx == ctx:
-        instances[ctx] = DSSPrime
-        return DSSPrime
-
-    # For new ctx references, wrap the ctx in a 
-    # new DSS instance and cache it for later
-    util = CffiApiUtil(api_util.ffi, api_util.lib_unpatched, ctx)
-    util.owns_ctx = False
-    DSS = IDSS(util)
-    instances[ctx] = DSS
     return DSS
 
 # dss_progress_bar = None
@@ -1897,7 +1887,7 @@ def dss_python_cb_write(ctx, message_str, message_type):
     global dss_progress_bar
     global dss_progress_desc
 
-    # DSS = ctx2dss(ctx)
+    # DSS = _ctx2dss(ctx)
     
     message_str = api_util.ffi.string(message_str).decode(api_util.codec)
     if message_type == api_util.lib.DSSMessageType_Error:
@@ -1964,7 +1954,7 @@ def dss_python_cb_plot(ctx, paramsStr):
     params = json.loads(api_util.ffi.string(paramsStr))
     result = 0
     try:
-        DSS = ctx2dss(ctx)
+        DSS = _ctx2dss(ctx)
         result = dss_plot(DSS, params)
         if _do_show:
             plt.show()

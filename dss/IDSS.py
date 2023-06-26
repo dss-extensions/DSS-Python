@@ -57,6 +57,8 @@ class IDSS(Base):
         'DefaultEditor',
     ]
 
+    _ctx_to_dss = {}
+
     ActiveCircuit: ICircuit
     Circuits: ICircuit
     Error: IError
@@ -72,6 +74,13 @@ class IDSS(Base):
     Obj: IObj
 
     def __init__(self, api_util):
+        if api_util.ctx not in IDSS._ctx_to_dss:
+            IDSS._ctx_to_dss[api_util.ctx] = self
+
+        if None not in IDSS._ctx_to_dss:
+            # use this as the default instance
+            IDSS._ctx_to_dss[None] = self
+
         self._version = None
 
         #: Provides access to the circuit attributes and objects in general.
