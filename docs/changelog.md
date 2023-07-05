@@ -5,6 +5,11 @@ relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_cap
 
 ## 0.14.x
 
+### 0.14.4 (WIP)
+
+- Add `DSSCompatFlags.ActiveLine`.
+- Convert enum comments to docstrings for better user experience.
+
 ### 0.14.3
 
 Released on 2023-06-12.

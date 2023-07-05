@@ -197,6 +197,22 @@ def test_compat_precision():
     assert max(abs(good - bad)) > 1e-6
 
 
+def test_compat_activeline():
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    
+    Lines = DSS.ActiveCircuit.Lines
+    Lines.First
+    Lines.Next
+    Lines.Next
+    name = Lines.Name
+
+    DSS.ActiveCircuit.Loads.First
+    
+    assert name == Lines.Name
+
+    DSS.CompatFlags = DSSCompatFlags.ActiveLine
+    with pytest.raises(DSSException):
+        assert name == Lines.Name
 
 
 def test_set_mode():

@@ -368,3 +368,15 @@ class DSSCompatFlags(IntFlag):
     saved script. We found that it is not always a good idea, so we removed the command (leaving it commented).
     Use this flag to enable the command in the saved script.
     """
+    
+    ActiveLine = 0x00000010
+    """
+    In the official OpenDSS implementation, the Lines API use the active circuit element instead of the
+    active line. This can lead to unexpected behavior if the user is not aware of this detail.
+    For example, if the user accidentally enables any other circuit element, the next time they use
+    the Lines API, the line object that was previously enabled is overwritten with another unrelated
+    object.
+    This flag enables this behavior above if compatibility at this level is required. On DSS-Extensions,
+    we changed the behavior to follow what most of the other APIs do: use the active object in the internal
+    list. This change was done for DSS C-API v0.13.5, as well as the introduction of this flag.
+    """
