@@ -387,12 +387,12 @@ class DSSObj(Base):
             self._lib.Obj_GetFloat64Array,
             self._ptr,
             idx
-        ).astype(complex)[0]
+        ).view(complex)[0]
 
     def _set_complex(self, idx: int, value: complex):
         data = np.array([complex(value)])
-        data, data_ptr, cnt_ptr = self._prepare_float64_array(data)
-        self._lib.Obj_SetFloat64Array(self._ptr, data_ptr, cnt_ptr)
+        data, data_ptr, cnt_ptr = self._prepare_float64_array(data.view(dtype=np.float64))
+        self._lib.Obj_SetFloat64Array(self._ptr, idx, data_ptr, cnt_ptr)
         self._check_for_error()
 
     def _get_prop_string(self, idx: int) -> str:

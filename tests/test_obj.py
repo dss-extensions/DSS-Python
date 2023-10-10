@@ -1,4 +1,6 @@
+import json
 import numpy as np
+
 try:
     from ._settings import BASE_DIR, WIN32
 except ImportError:
@@ -634,6 +636,32 @@ def test_create_ckt13_shortcut():
 
     # Should also be the same result now
     assert max(abs(ref.ActiveCircuit.AllBusVolts - dss.ActiveCircuit.AllBusVolts)) < 1e-12, 'Voltages after changing loads differ'
+
+
+def test_complex_property():
+    dss.ClearAll()
+    dss.NewCircuit('TestReactor')
+    Obj = dss.Obj
+    reactor1 = Obj.Reactor.new('reactor1')
+    reactor1.Z1 = (1.1 + 4.5j)
+    reactor2 = Obj.Reactor.new('reactor2')
+    reactor2.Z1 = (7.6 + 2.7j)
+
+    assert reactor1.Z1 == (1.1 + 4.5j)
+    assert reactor1.Z2 == (1.1 + 4.5j)
+    assert reactor2.Z1 == (7.6 + 2.7j)
+
+    z1_json = complex(*json.loads(reactor1.to_json())['Z1'])
+    assert z1_json == (1.1 + 4.5j)
+
+    batch = Obj.Reactor.batch()
+    z1s = batch.Z1
+    np.testing.assert_equal(z1s, [(1.1 + 4.5j), (7.6 + 2.7j)])
+
+    batch.Z1 = [(31.1 + 24.5j), (27.6 + 52.7j)]
+    assert reactor1.Z1 == (31.1 + 24.5j)
+    assert reactor2.Z1 == (27.6 + 52.7j)
+
 
 if __name__ == '__main__':
     # Adjust for manual running a test-case

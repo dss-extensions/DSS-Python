@@ -26179,7 +26179,7 @@ class VsourceBatch(DSSBatch):
                 self._lib.Obj_GetFloat64Array, 
                 x,
                 22,
-            ).astype(complex)[0]
+            ).view(dtype=complex)[0]
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
 
@@ -26213,7 +26213,7 @@ class VsourceBatch(DSSBatch):
                 self._lib.Obj_GetFloat64Array, 
                 x,
                 23,
-            ).astype(complex)[0]
+            ).view(dtype=complex)[0]
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
 
@@ -26247,7 +26247,7 @@ class VsourceBatch(DSSBatch):
                 self._lib.Obj_GetFloat64Array, 
                 x,
                 24,
-            ).astype(complex)[0]
+            ).view(dtype=complex)[0]
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
 
@@ -26281,7 +26281,7 @@ class VsourceBatch(DSSBatch):
                 self._lib.Obj_GetFloat64Array, 
                 x,
                 25,
-            ).astype(complex)[0]
+            ).view(dtype=complex)[0]
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
 
@@ -26460,7 +26460,7 @@ class VsourceBatch(DSSBatch):
                 self._lib.Obj_GetFloat64Array, 
                 x,
                 31,
-            ).astype(complex)[0]
+            ).view(dtype=complex)[0]
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
 
@@ -29191,7 +29191,7 @@ class ReactorBatch(DSSBatch):
                 self._lib.Obj_GetFloat64Array, 
                 x,
                 13,
-            ).astype(complex)[0]
+            ).view(dtype=complex)[0]
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
 
@@ -29231,7 +29231,7 @@ class ReactorBatch(DSSBatch):
                 self._lib.Obj_GetFloat64Array, 
                 x,
                 14,
-            ).astype(complex)[0]
+            ).view(dtype=complex)[0]
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
 
@@ -29271,7 +29271,7 @@ class ReactorBatch(DSSBatch):
                 self._lib.Obj_GetFloat64Array, 
                 x,
                 15,
-            ).astype(complex)[0]
+            ).view(dtype=complex)[0]
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
 
