@@ -1883,7 +1883,7 @@ def _ctx2dss(ctx):
 
 
 @api_util.ffi.def_extern()
-def dss_python_cb_write(ctx, message_str, message_type):
+def dss_python_cb_write(ctx, message_str, message_type: int, message_size: int, message_subtype: int):
     global dss_progress_bar
     global dss_progress_desc
 
