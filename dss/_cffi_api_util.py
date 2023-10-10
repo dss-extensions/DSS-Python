@@ -2,7 +2,7 @@ import warnings
 from functools import partial
 import numpy as np
 from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
-from typing import Any, AnyStr, Callable, List #, Iterator
+from typing import Any, AnyStr, Callable, List, Union #, Iterator
 
 # UTF8 under testing
 codec = 'UTF8'
@@ -107,29 +107,48 @@ class Base:
 
     _use_exceptions = True
 
-    def __init__(self, api_util):
+    def __init__(self, api_util, prefer_lists=False):
         self._lib = api_util.lib
         self._api_util = api_util
         self._get_string = api_util.get_string
-        self._get_float64_array = api_util.get_float64_array
-        self._get_float64_gr_array = api_util.get_float64_gr_array
-        self._get_int32_array = api_util.get_int32_array
-        self._get_int32_gr_array = api_util.get_int32_gr_array
-        self._get_int8_array = api_util.get_int8_array
-        self._get_int8_gr_array = api_util.get_int8_gr_array
-        self._get_string_array = api_util.get_string_array
+
+        if not prefer_lists:
+            # Use NumPy arrays for most functions
+            self._get_float64_array = api_util.get_float64_array
+            self._get_float64_gr_array = api_util.get_float64_gr_array
+            self._get_int32_array = api_util.get_int32_array
+            self._get_int32_gr_array = api_util.get_int32_gr_array
+            self._get_int8_array = api_util.get_int8_array
+            self._get_int8_gr_array = api_util.get_int8_gr_array
+            self._get_string_array = api_util.get_string_array
+            
+            self._get_complex128_array = api_util.get_complex128_array
+            self._get_complex128_simple = api_util.get_complex128_simple
+            self._get_complex128_gr_array = api_util.get_complex128_gr_array
+            self._get_complex128_gr_simple = api_util.get_complex128_gr_simple
+        else:
+            # Classic OpenDSSDirect.py style, using mostly lists
+            self._get_float64_array = api_util.get_float64_array2
+            self._get_float64_gr_array = api_util.get_float64_gr_array2
+            self._get_int32_array = api_util.get_int32_array2
+            self._get_int32_gr_array = api_util.get_int32_gr_array2
+            self._get_int8_array = api_util.get_int8_array2
+            self._get_int8_gr_array = api_util.get_int8_gr_array2
+            self._get_string_array = api_util.get_string_array2
+            
+            self._get_complex128_array = api_util.get_complex128_array2
+            self._get_complex128_simple = api_util.get_complex128_simple2
+            self._get_complex128_gr_array = api_util.get_complex128_gr_array2
+            self._get_complex128_gr_simple = api_util.get_complex128_gr_simple2
+
+        self._prepare_complex128_array = api_util.prepare_complex128_array
+        self._prepare_complex128_simple = api_util.prepare_complex128_simple
         self._set_string_array = api_util.set_string_array
         self._prepare_float64_array = api_util.prepare_float64_array
         self._prepare_int32_array = api_util.prepare_int32_array
         self._prepare_string_array = api_util.prepare_string_array
         self._errorPtr = self._lib.Error_Get_NumberPtr()
-        
-        self._prepare_complex128_array = api_util.prepare_complex128_array
-        self._prepare_complex128_simple = api_util.prepare_complex128_simple
-        self._get_complex128_array = api_util.get_complex128_array
-        self._get_complex128_simple = api_util.get_complex128_simple
-        self._get_complex128_gr_array = api_util.get_complex128_gr_array
-        self._get_complex128_gr_simple = api_util.get_complex128_gr_simple
+
 
         cls = type(self)
         if cls not in interface_classes:
@@ -232,8 +251,6 @@ class CffiApiUtil(object):
         self._allow_complex = False
         self.init_buffers()
 
-
-
     # def __delete__(self):
     #     if self.ctx is None:
     #         return
@@ -308,9 +325,38 @@ class CffiApiUtil(object):
         return res
 
 
+    def get_complex128_array2(self, func, *args) -> Float64ArrayOrComplexArray:
+        if not self._allow_complex:
+            return self.get_float64_array2(func, *args)
+
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr = self.ffi.new('double**')
+        cnt = self.ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        ptr = self.ffi.cast('double _Complex **', ptr)
+        res = self.ffi.unpack(ptr[0], cnt[0] >> 1)
+        self.lib.DSS_Dispose_PDouble(ptr)
+        return res
+
+
     def get_complex128_simple(self, func, *args) -> Float64ArrayOrSimpleComplex:
         if not self._allow_complex:
             return self.get_float64_array(func, *args)
+
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr = self.ffi.new('double**')
+        cnt = self.ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        try:
+            assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
+            return self.ffi.cast('double _Complex**', ptr)[0][0]
+        finally:
+            self.lib.DSS_Dispose_PDouble(ptr)
+
+
+    def get_complex128_simple2(self, func, *args) -> List[Union[complex, float]]:
+        if not self._allow_complex:
+            return self.get_float64_array2(func, *args)
 
         # Currently we use the same as API as get_float64_array, may change later
         ptr = self.ffi.new('double**')
@@ -343,9 +389,29 @@ class CffiApiUtil(object):
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
 
 
+    def get_complex128_gr_array2(self) -> List[Union[complex, float]]:
+        if not self._allow_complex:
+            return self.get_float64_gr_array2()
+
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr, cnt = self.gr_float64_pointers
+        ptr = self.ffi.cast('double _Complex **', ptr)
+        return self.ffi.unpack(ptr[0], cnt[0] >> 1)
+
+
     def get_complex128_gr_simple(self) -> Float64ArrayOrSimpleComplex:
         if not self._allow_complex:
             return self.get_float64_gr_array()
+
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr, cnt = self.gr_cfloat64_pointers
+        assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
+        return ptr[0][0]
+
+
+    def get_complex128_gr_simple2(self) -> List[Union[complex, float]]:
+        if not self._allow_complex:
+            return self.get_float64_gr_array2()
 
         # Currently we use the same as API as get_float64_array, may change later
         ptr, cnt = self.gr_cfloat64_pointers
@@ -376,6 +442,7 @@ class CffiApiUtil(object):
         self.lib.DSS_Dispose_PPointer(ptr)
         return res
 
+
     def get_int32_gr_array(self) -> Int32Array:
         ptr, cnt = self.gr_int32_pointers
         if self._allow_complex and cnt[3]:
@@ -398,12 +465,14 @@ class CffiApiUtil(object):
 
         return res
 
+
     def get_int8_gr_array(self) -> Int8Array:
         ptr, cnt = self.gr_int8_pointers
         if self._allow_complex and cnt[3]:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy().reshape((cnt[2], cnt[3]), order='F')
 
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
+
 
     def get_string_array(self, func: Callable, *args: Any) -> List[str]:
         ptr = self.ffi.new('char***')
