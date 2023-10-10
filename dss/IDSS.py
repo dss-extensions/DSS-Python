@@ -20,7 +20,6 @@ from .IParser import IParser
 from .IDSSimComs import IDSSimComs
 from .IYMatrix import IYMatrix
 from .IZIP import IZIP
-from .IObj import IObj
 
 class IDSS(Base):
     '''
@@ -42,8 +41,9 @@ class IDSS(Base):
         'DSSim_Coms',
         'YMatrix',
         'ZIP',
-        'Obj',
+        # 'Obj',
         '_version',
+        '_obj',
     ]
     
     _columns = [
@@ -71,7 +71,7 @@ class IDSS(Base):
     DSSim_Coms: IDSSimComs
     YMatrix: IYMatrix
     ZIP: IZIP
-    Obj: IObj
+    # Obj: IObj
 
     def __init__(self, api_util):
         if api_util.ctx not in IDSS._ctx_to_dss:
@@ -82,6 +82,7 @@ class IDSS(Base):
             IDSS._ctx_to_dss[None] = self
 
         self._version = None
+        self._obj = None
 
         #: Provides access to the circuit attributes and objects in general.
         self.ActiveCircuit = ICircuit(api_util)
@@ -138,9 +139,28 @@ class IDSS(Base):
         #: new and pythonic API.
         #:
         #: (API Extension)
-        self.Obj = IObj(api_util)
+        # self.Obj = IObj(api_util)
 
         Base.__init__(self, api_util)    
+
+    @property
+    def Obj(self):
+        """
+        Returns the Obj API instance.
+        Since this will be moved out of DSS-Python eventually, the Obj API is created lazily,
+        only when the user actually uses it, since it has some overhead.
+        """
+        if self._obj is not None:
+            return self._obj
+
+        #: An experimental API that exposes all data classes of the DSS engine in a
+        #: new and pythonic API.
+        #:
+        #: (API Extension)
+        from .IObj import IObj
+        self._obj = IObj(self._api_util)
+        return self._obj
+
 
     def ClearAll(self):
         self.CheckForError(self._lib.DSS_ClearAll())
