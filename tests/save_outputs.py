@@ -337,11 +337,15 @@ if __name__ == '__main__':
 
     if SAVE_DSSX_OUTPUT:
         from dss import DSS, DSSCompatFlags
-        # DSS.CompatFlags = DSSCompatFlags.InvControl9611
+        DSS.CompatFlags = DSSCompatFlags.InvControl9611
         print("Using DSS-Extensions:", DSS.Version)
         match = re.match('DSS C-API Library version ([^ ]+) revision.* ([0-9]+);.*', DSS.Version)
         dssx_ver, dssx_timestamp = match.groups()
-        suffix = f'-dssx-{sys.platform}-{platform.machine()}-{dssx_ver}-{dssx_timestamp}'
+        if (DSSCompatFlags.InvControl9611 & DSS.CompatFlags):
+            suffix = f'-dssx_InvControl9611-{sys.platform}-{platform.machine()}-{dssx_ver}-{dssx_timestamp}'
+        else:
+            suffix = f'-dssx-{sys.platform}-{platform.machine()}-{dssx_ver}-{dssx_timestamp}'
+
         DSS.AllowEditor = False
     else:
         import comtypes.client
