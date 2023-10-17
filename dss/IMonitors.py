@@ -8,7 +8,7 @@ Copyright (c) 2018-2023 DSS-Extensions contributors
 from ._cffi_api_util import DSSException, Iterable
 import numpy as np
 from typing import List, AnyStr
-from ._types import Float64Array, Int8Array
+from ._types import Float64Array, Float32Array, Int8Array
 
 class IMonitors(Iterable):
     __slots__ = []
@@ -29,7 +29,7 @@ class IMonitors(Iterable):
         'SampleCount',
     ]
 
-    def Channel(self, Index: int) -> Float64Array:
+    def Channel(self, Index: int) -> Float32Array:
         '''
         (read-only) Array of float32 for the specified channel (usage: MyArray = DSSMonitor.Channel(i)).
         A Save or SaveAll should be executed first. Done automatically by most standard solution modes.
