@@ -48,6 +48,22 @@ PDElement = Union[
 
 _idx_to_cls = {}
 # Global enumerations
+class VisualizeQuantity(IntEnum):
+    """Visualize: Quantity (DSS enumeration)"""
+    Currents = 1 # Currents
+    Voltages = 2 # Voltages
+    Powers = 3 # Powers
+
+class ReductionStrategy(IntEnum):
+    """Reduction Strategy (DSS enumeration)"""
+    Default = 0 # Default
+    ShortLines = 1 # ShortLines
+    MergeParallel = 2 # MergeParallel
+    BreakLoop = 3 # BreakLoop
+    Dangling = 4 # Dangling
+    Switches = 5 # Switches
+    Laterals = 6 # Laterals
+
 class EarthModel(IntEnum):
     """Earth Model (DSS enumeration)"""
     Carson = 1 # Carson
@@ -69,8 +85,8 @@ class LineType(IntEnum):
     swt_elbow = 11 # swt_elbow
     busbar = 12 # busbar
 
-class DimensionUnits(IntEnum):
-    """Dimension Units (DSS enumeration)"""
+class LengthUnit(IntEnum):
+    """Length Unit (DSS enumeration)"""
     none = 0 # none
     mi = 1 # mi
     kft = 2 # kft
@@ -201,6 +217,15 @@ class MonitoredPhase(IntEnum):
     max = -2 # max
     avg = -1 # avg
 
+class PlotProfilePhases(IntEnum):
+    """Plot: Profile Phases (DSS enumeration)"""
+    Default = -1 # Default
+    All = -2 # All
+    Primary = -3 # Primary
+    LL3Ph = -4 # LL3Ph
+    LLAll = -5 # LLAll
+    LLPrimary = -6 # LLPrimary
+
 
 class LineCode(DSSObj):
     __slots__ = []
@@ -329,16 +354,16 @@ class LineCode(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
     @property
-    def units(self) -> DimensionUnits:
+    def units(self) -> LengthUnit:
         """
-        One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length unitsgiven in Line object
+        One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length units given in Line object
 
         DSS property name: `units`, DSS property index: 8.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 8))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 8))
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits]):
+    def units(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(8, value)
             return
@@ -347,7 +372,7 @@ class LineCode(DSSObj):
     @property
     def units_str(self) -> str:
         """
-        One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length unitsgiven in Line object
+        One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length units given in Line object
 
         DSS property name: `units`, DSS property index: 8.
         """
@@ -939,7 +964,7 @@ class LoadShape(DSSObj):
     def MemoryMapping(self) -> bool:
         """
         {Yes | No* | True | False*} Enables the memory mapping functionality for dealing with large amounts of load shapes. 
-        By defaul is False. Use it to accelerate the model loading when the containing a large number of load shapes.
+        By default is False. Use it to accelerate the model loading when the containing a large number of load shapes.
 
         DSS property name: `MemoryMapping`, DSS property index: 21.
         """
@@ -954,7 +979,7 @@ class LoadShape(DSSObj):
         """
         {AVG* | EDGE} Defines the interpolation method used for connecting distant dots within the load shape.
 
-        By defaul is AVG (average), which will return a multiplier for missing intervals based on the closest multiplier in time.
+        By default is AVG (average), which will return a multiplier for missing intervals based on the closest multiplier in time.
         EDGE interpolation keeps the last known value for missing intervals until the next defined multiplier arrives.
 
         DSS property name: `Interpolation`, DSS property index: 22.
@@ -973,7 +998,7 @@ class LoadShape(DSSObj):
         """
         {AVG* | EDGE} Defines the interpolation method used for connecting distant dots within the load shape.
 
-        By defaul is AVG (average), which will return a multiplier for missing intervals based on the closest multiplier in time.
+        By default is AVG (average), which will return a multiplier for missing intervals based on the closest multiplier in time.
         EDGE interpolation keeps the last known value for missing intervals until the next defined multiplier arrives.
 
         DSS property name: `Interpolation`, DSS property index: 22.
@@ -1920,16 +1945,16 @@ class WireData(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 2, value)
 
     @property
-    def Runits(self) -> DimensionUnits:
+    def Runits(self) -> LengthUnit:
         """
         Length units for resistance: ohms per {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
         DSS property name: `Runits`, DSS property index: 3.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 3))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 3))
 
     @Runits.setter
-    def Runits(self, value: Union[AnyStr, int, DimensionUnits]):
+    def Runits(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(3, value)
             return
@@ -1962,16 +1987,16 @@ class WireData(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
     @property
-    def GMRunits(self) -> DimensionUnits:
+    def GMRunits(self) -> LengthUnit:
         """
         Units for GMR: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
         DSS property name: `GMRunits`, DSS property index: 5.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 5))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 5))
 
     @GMRunits.setter
-    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits]):
+    def GMRunits(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(5, value)
             return
@@ -2004,16 +2029,16 @@ class WireData(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
     @property
-    def radunits(self) -> DimensionUnits:
+    def radunits(self) -> LengthUnit:
         """
         Units for outside radius: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
         DSS property name: `radunits`, DSS property index: 7.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 7))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 7))
 
     @radunits.setter
-    def radunits(self, value: Union[AnyStr, int, DimensionUnits]):
+    def radunits(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(7, value)
             return
@@ -2281,16 +2306,16 @@ class CNData(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
     @property
-    def Runits(self) -> DimensionUnits:
+    def Runits(self) -> LengthUnit:
         """
         Length units for resistance: ohms per {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
         DSS property name: `Runits`, DSS property index: 11.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 11))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 11))
 
     @Runits.setter
-    def Runits(self, value: Union[AnyStr, int, DimensionUnits]):
+    def Runits(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(11, value)
             return
@@ -2323,16 +2348,16 @@ class CNData(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
     @property
-    def GMRunits(self) -> DimensionUnits:
+    def GMRunits(self) -> LengthUnit:
         """
         Units for GMR: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
         DSS property name: `GMRunits`, DSS property index: 13.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 13))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 13))
 
     @GMRunits.setter
-    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits]):
+    def GMRunits(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(13, value)
             return
@@ -2365,16 +2390,16 @@ class CNData(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
     @property
-    def radunits(self) -> DimensionUnits:
+    def radunits(self) -> LengthUnit:
         """
         Units for outside radius: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
         DSS property name: `radunits`, DSS property index: 15.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 15))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 15))
 
     @radunits.setter
-    def radunits(self, value: Union[AnyStr, int, DimensionUnits]):
+    def radunits(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(15, value)
             return
@@ -2628,16 +2653,16 @@ class TSData(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
     @property
-    def Runits(self) -> DimensionUnits:
+    def Runits(self) -> LengthUnit:
         """
         Length units for resistance: ohms per {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
         DSS property name: `Runits`, DSS property index: 10.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 10))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 10))
 
     @Runits.setter
-    def Runits(self, value: Union[AnyStr, int, DimensionUnits]):
+    def Runits(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(10, value)
             return
@@ -2670,16 +2695,16 @@ class TSData(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
     @property
-    def GMRunits(self) -> DimensionUnits:
+    def GMRunits(self) -> LengthUnit:
         """
         Units for GMR: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
         DSS property name: `GMRunits`, DSS property index: 12.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 12))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 12))
 
     @GMRunits.setter
-    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits]):
+    def GMRunits(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(12, value)
             return
@@ -2712,16 +2737,16 @@ class TSData(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
     @property
-    def radunits(self) -> DimensionUnits:
+    def radunits(self) -> LengthUnit:
         """
         Units for outside radius: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
         DSS property name: `radunits`, DSS property index: 14.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 14))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 14))
 
     @radunits.setter
-    def radunits(self, value: Union[AnyStr, int, DimensionUnits]):
+    def radunits(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(14, value)
             return
@@ -2895,16 +2920,16 @@ class LineSpacing(DSSObj):
         self._set_float64_array_o(4, value)
 
     @property
-    def units(self) -> DimensionUnits:
+    def units(self) -> LengthUnit:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
         DSS property name: `units`, DSS property index: 5.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 5))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 5))
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits]):
+    def units(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(5, value)
             return
@@ -3047,16 +3072,16 @@ class LineGeometry(DSSObj):
         self._set_float64_array_o(6, value)
 
     @property
-    def units(self) -> DimensionUnits:
+    def units(self) -> LengthUnit:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
         DSS property name: `units`, DSS property index: 7.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 7))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 7))
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits]):
+    def units(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(7, value)
             return
@@ -3556,7 +3581,7 @@ class XfmrCode(DSSObj):
     @property
     def pctnoloadloss(self) -> float:
         """
-        Percent no load losses at rated excitatation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
+        Percent no load losses at rated excitation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
 
         DSS property name: `%noloadloss`, DSS property index: 25.
         """
@@ -3569,7 +3594,7 @@ class XfmrCode(DSSObj):
     @property
     def normhkVA(self) -> float:
         """
-        Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% ofmaximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
+        Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% of maximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
 
         DSS property name: `normhkVA`, DSS property index: 26.
         """
@@ -3582,7 +3607,7 @@ class XfmrCode(DSSObj):
     @property
     def emerghkVA(self) -> float:
         """
-        Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% ofmaximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
+        Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% of maximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
 
         DSS property name: `emerghkVA`, DSS property index: 27.
         """
@@ -4053,7 +4078,7 @@ class Line(DSSObj):
     @property
     def rho(self) -> float:
         """
-        Default=100 meter ohms.  Earth resitivity used to compute earth correction factor. Overrides Line geometry definition if specified.
+        Default=100 meter ohms.  Earth resistivity used to compute earth correction factor. Overrides Line geometry definition if specified.
 
         DSS property name: `rho`, DSS property index: 18.
         """
@@ -4066,7 +4091,7 @@ class Line(DSSObj):
     @property
     def geometry(self) -> str:
         """
-        Geometry code for LineGeometry Object. Supercedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
+        Geometry code for LineGeometry Object. Supersedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
 
         DSS property name: `geometry`, DSS property index: 19.
         """
@@ -4083,7 +4108,7 @@ class Line(DSSObj):
     @property
     def geometry_obj(self) -> LineGeometry:
         """
-        Geometry code for LineGeometry Object. Supercedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
+        Geometry code for LineGeometry Object. Supersedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
 
         DSS property name: `geometry`, DSS property index: 19.
         """
@@ -4094,16 +4119,16 @@ class Line(DSSObj):
         self._set_obj(19, value)
 
     @property
-    def units(self) -> DimensionUnits:
+    def units(self) -> LengthUnit:
         """
         Length Units = {none | mi|kft|km|m|Ft|in|cm } Default is None - assumes length units match impedance units.
 
         DSS property name: `units`, DSS property index: 20.
         """
-        return DimensionUnits(self._lib.Obj_GetInt32(self._ptr, 20))
+        return LengthUnit(self._lib.Obj_GetInt32(self._ptr, 20))
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits]):
+    def units(self, value: Union[AnyStr, int, LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(20, value)
             return
@@ -4466,7 +4491,7 @@ class Vsource(DSSObj):
         bus1=busname
         bus1=busname.1.2.3
 
-        The VSOURCE object is a two-terminal voltage source (thevenin equivalent). Bus2 defaults to Bus1 with all phases connected to ground (node 0) unless previously specified. This is a Yg connection. If you want something different, define the Bus2 property ezplicitly.
+        The VSOURCE object is a two-terminal voltage source (thevenin equivalent). Bus2 defaults to Bus1 with all phases connected to ground (node 0) unless previously specified. This is a Yg connection. If you want something different, define the Bus2 property explicitly.
 
         DSS property name: `bus1`, DSS property index: 1.
         """
@@ -4814,7 +4839,7 @@ class Vsource(DSSObj):
     @property
     def baseMVA(self) -> float:
         """
-        Default value is 100. Base used to convert values specifiied with puZ1, puZ0, and puZ2 properties to ohms on kV base specified by BasekV property.
+        Default value is 100. Base used to convert values specified with puZ1, puZ0, and puZ2 properties to ohms on kV base specified by BasekV property.
 
         DSS property name: `baseMVA`, DSS property index: 26.
         """
@@ -4831,7 +4856,7 @@ class Vsource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 27.
         """
@@ -4852,7 +4877,7 @@ class Vsource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 27.
         """
@@ -4869,7 +4894,7 @@ class Vsource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Daily`, DSS property index: 28.
         """
@@ -4890,7 +4915,7 @@ class Vsource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Daily`, DSS property index: 28.
         """
@@ -4907,7 +4932,7 @@ class Vsource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Duty`, DSS property index: 29.
         """
@@ -4928,7 +4953,7 @@ class Vsource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Duty`, DSS property index: 29.
         """
@@ -5201,7 +5226,7 @@ class Isource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 8.
         """
@@ -5222,7 +5247,7 @@ class Isource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 8.
         """
@@ -5239,7 +5264,7 @@ class Isource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Daily`, DSS property index: 9.
         """
@@ -5260,7 +5285,7 @@ class Isource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Daily`, DSS property index: 9.
         """
@@ -5277,7 +5302,7 @@ class Isource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Duty`, DSS property index: 10.
         """
@@ -5298,7 +5323,7 @@ class Isource(DSSObj):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Duty`, DSS property index: 10.
         """
@@ -5874,7 +5899,7 @@ class Load(DSSObj):
     @property
     def yearly(self) -> str:
         """
-        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
+        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
         DSS property name: `yearly`, DSS property index: 7.
         """
@@ -5891,7 +5916,7 @@ class Load(DSSObj):
     @property
     def yearly_obj(self) -> LoadShape:
         """
-        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
+        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
         DSS property name: `yearly`, DSS property index: 7.
         """
@@ -5904,7 +5929,7 @@ class Load(DSSObj):
     @property
     def daily(self) -> str:
         """
-        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
+        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `daily`, DSS property index: 8.
         """
@@ -5921,7 +5946,7 @@ class Load(DSSObj):
     @property
     def daily_obj(self) -> LoadShape:
         """
-        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
+        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `daily`, DSS property index: 8.
         """
@@ -5934,7 +5959,7 @@ class Load(DSSObj):
     @property
     def duty(self) -> str:
         """
-        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
+        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `duty`, DSS property index: 9.
         """
@@ -5951,7 +5976,7 @@ class Load(DSSObj):
     @property
     def duty_obj(self) -> LoadShape:
         """
-        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
+        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `duty`, DSS property index: 9.
         """
@@ -6871,7 +6896,7 @@ class Transformer(DSSObj):
     @property
     def normhkVA(self) -> float:
         """
-        Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% ofmaximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
+        Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% of maximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
 
         DSS property name: `normhkVA`, DSS property index: 28.
         """
@@ -6884,7 +6909,7 @@ class Transformer(DSSObj):
     @property
     def emerghkVA(self) -> float:
         """
-        Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% ofmaximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
+        Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% of maximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
 
         DSS property name: `emerghkVA`, DSS property index: 29.
         """
@@ -7127,6 +7152,8 @@ class Transformer(DSSObj):
     def WdgCurrents(self) -> str:
         """
         (Read only) Makes winding currents available via return on query (? Transformer.TX.WdgCurrents). Order: Phase 1, Wdg 1, Wdg 2, ..., Phase 2 ...
+
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
 
         DSS property name: `WdgCurrents`, DSS property index: 45.
         """
@@ -7531,7 +7558,7 @@ class Capacitor(DSSObj):
     @property
     def normamps(self) -> float:
         """
-        Normal rated current.
+        Normal rated current. Defaults to 180% of per-phase rated current.
 
         DSS property name: `normamps`, DSS property index: 14.
         """
@@ -7544,7 +7571,7 @@ class Capacitor(DSSObj):
     @property
     def emergamps(self) -> float:
         """
-        Maximum or emerg current.
+        Maximum or emerg current. Defaults to 180% of per-phase rated current.
 
         DSS property name: `emergamps`, DSS property index: 15.
         """
@@ -7974,7 +8001,7 @@ class Reactor(DSSObj):
     @property
     def normamps(self) -> float:
         """
-        Normal rated current.
+        Normal rated current. Defaults to per-phase rated current when reactor is specified with rated power and voltage.
 
         DSS property name: `normamps`, DSS property index: 20.
         """
@@ -7987,7 +8014,7 @@ class Reactor(DSSObj):
     @property
     def emergamps(self) -> float:
         """
-        Maximum or emerg current.
+        Maximum or emerg current. Defaults to 135% of per-phase rated current when reactor is specified with rated power and voltage.
 
         DSS property name: `emergamps`, DSS property index: 21.
         """
@@ -8443,7 +8470,7 @@ class CapControl(DSSObj):
     @property
     def EventLog(self) -> bool:
         """
-        {Yes/True* | No/False} Default is YES for CapControl. Log control actions to Eventlog.
+        {Yes/True | No/False*} Default is NO for CapControl. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 18.
         """
@@ -8503,7 +8530,7 @@ class CapControl(DSSObj):
     @property
     def ControlSignal(self) -> str:
         """
-        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and conencted to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
+        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and connected to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
@@ -8520,7 +8547,7 @@ class CapControl(DSSObj):
     @property
     def ControlSignal_obj(self) -> LoadShape:
         """
-        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and conencted to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
+        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and connected to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
@@ -9002,6 +9029,16 @@ class Generator(DSSObj):
     }
 
     # Class-specific enumerations
+    class GeneratorModel(IntEnum):
+        """Generator: Model (DSS enumeration for Generator)"""
+        ConstantPQ = 1 # Constant PQ
+        ConstantZ = 2 # Constant Z
+        ConstantPV = 3 # Constant P|V|
+        ConstantP_fixedQ = 4 # Constant P, fixed Q
+        ConstantP_fixedX = 5 # Constant P, fixed X
+        Usermodel = 6 # User model
+        Approximateinvertermodel = 7 # Approximate inverter model
+
     class GeneratorDispatchMode(IntEnum):
         """Generator: Dispatch Mode (DSS enumeration for Generator)"""
         Default = 0 # Default
@@ -9097,7 +9134,7 @@ class Generator(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
     @property
-    def model(self) -> int:
+    def model(self) -> GeneratorModel:
         """
         Integer code for the model to use for generation variation with voltage. Valid values are:
 
@@ -9111,10 +9148,10 @@ class Generator(DSSObj):
 
         DSS property name: `model`, DSS property index: 7.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 7)
+        return Generator.GeneratorModel(self._lib.Obj_GetInt32(self._ptr, 7))
 
     @model.setter
-    def model(self, value: int):
+    def model(self, value: Union[int, GeneratorModel]):
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
     @property
@@ -9146,7 +9183,7 @@ class Generator(DSSObj):
     @property
     def yearly(self) -> str:
         """
-        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadahape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
+        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
         DSS property name: `yearly`, DSS property index: 10.
         """
@@ -9163,7 +9200,7 @@ class Generator(DSSObj):
     @property
     def yearly_obj(self) -> LoadShape:
         """
-        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadahape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
+        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
         DSS property name: `yearly`, DSS property index: 10.
         """
@@ -9176,7 +9213,7 @@ class Generator(DSSObj):
     @property
     def daily(self) -> str:
         """
-        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape objectthat is 1.0 perunit for all hours. Set to NONE to reset to no loadahape. 
+        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
         DSS property name: `daily`, DSS property index: 11.
         """
@@ -9193,7 +9230,7 @@ class Generator(DSSObj):
     @property
     def daily_obj(self) -> LoadShape:
         """
-        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape objectthat is 1.0 perunit for all hours. Set to NONE to reset to no loadahape. 
+        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
         DSS property name: `daily`, DSS property index: 11.
         """
@@ -9206,7 +9243,7 @@ class Generator(DSSObj):
     @property
     def duty(self) -> str:
         """
-        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
+        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
         DSS property name: `duty`, DSS property index: 12.
         """
@@ -9223,7 +9260,7 @@ class Generator(DSSObj):
     @property
     def duty_obj(self) -> LoadShape:
         """
-        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
+        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
         DSS property name: `duty`, DSS property index: 12.
         """
@@ -9429,7 +9466,7 @@ class Generator(DSSObj):
     @property
     def Xd(self) -> float:
         """
-        Per unit synchronous reactance of machine. Presently used only for Thevinen impedance for power flow calcs of user models (model=6). Typically use a value 0.4 to 1.0. Default is 1.0
+        Per unit synchronous reactance of machine. Presently used only for Thevenin impedance for power flow calcs of user models (model=6). Typically use a value 0.4 to 1.0. Default is 1.0
 
         DSS property name: `Xd`, DSS property index: 25.
         """
@@ -9442,7 +9479,7 @@ class Generator(DSSObj):
     @property
     def Xdp(self) -> float:
         """
-        Per unit transient reactance of the machine.  Used for Dynamics mode and Fault studies.  Default is 0.27.For user models, this value is used for the Thevinen/Norton impedance for Dynamics Mode.
+        Per unit transient reactance of the machine.  Used for Dynamics mode and Fault studies.  Default is 0.27.For user models, this value is used for the Thevenin/Norton impedance for Dynamics Mode.
 
         DSS property name: `Xdp`, DSS property index: 26.
         """
@@ -9624,7 +9661,7 @@ class Generator(DSSObj):
     @property
     def pctFuel(self) -> float:
         """
-        It is a number between 0 and 100 representing the current amount of fuel avaiable in percentage of FuelkWh. It only applies if UseFuel = Yes/True
+        It is a number between 0 and 100 representing the current amount of fuel available in percentage of FuelkWh. It only applies if UseFuel = Yes/True
 
         DSS property name: `%Fuel`, DSS property index: 40.
         """
@@ -9886,7 +9923,7 @@ class GenDispatcher(DSSObj):
     @property
     def Weights(self) -> Float64Array:
         """
-        GenDispatcher.Weights
+        Array of proportional weights corresponding to each generator in the GenList. The needed kW to get back to center band is dispatched to each generator according to these weights. Default is to set all weights to 1.0.
 
         DSS property name: `Weights`, DSS property index: 7.
         """
@@ -10012,10 +10049,12 @@ class Storage(DSSObj):
         'dynamiceq': 57,
         'dynout': 58,
         'controlmode': 59,
-        'spectrum': 60,
-        'basefreq': 61,
-        'enabled': 62,
-        'like': 63,
+        'amplimit': 60,
+        'amplimitgain': 61,
+        'spectrum': 62,
+        'basefreq': 63,
+        'enabled': 64,
+        'like': 65,
     }
 
     # Class-specific enumerations
@@ -10958,7 +10997,7 @@ class Storage(DSSObj):
     @property
     def ControlMode(self) -> InverterControlMode:
         """
-        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
         GFM control mode disables any control action set by the InvControl device.
 
@@ -10976,7 +11015,7 @@ class Storage(DSSObj):
     @property
     def ControlMode_str(self) -> str:
         """
-        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
         GFM control mode disables any control action set by the InvControl device.
 
@@ -10989,60 +11028,87 @@ class Storage(DSSObj):
         self.ControlMode = value
 
     @property
+    def AmpLimit(self) -> float:
+        """
+        The current limiter per phase for the IBR when operating in GFM mode. This limit is imposed to prevent the IBR to enter into Safe Mode when reaching the IBR power ratings.
+        Once the IBR reaches this value, it remains there without moving into Safe Mode. This value needs to be set lower than the IBR Amps rating.
+
+        DSS property name: `AmpLimit`, DSS property index: 60.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 60)
+
+    @AmpLimit.setter
+    def AmpLimit(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 60, value)
+
+    @property
+    def AmpLimitGain(self) -> float:
+        """
+        Use it for fine tunning the current limiter when active, by default is 0.8, it has to be a value between 0.1 and 1. This value allows users to fine tune the IBRs current limiter to match with the user requirements.
+
+        DSS property name: `AmpLimitGain`, DSS property index: 61.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 61)
+
+    @AmpLimitGain.setter
+    def AmpLimitGain(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 61, value)
+
+    @property
     def spectrum(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 60.
+        DSS property name: `spectrum`, DSS property index: 62.
         """
-        return self._get_prop_string(60)
+        return self._get_prop_string(62)
 
     @spectrum.setter
     def spectrum(self, value: Union[AnyStr, Spectrum]):
         if isinstance(value, DSSObj):
-            self._set_obj(60, value)
+            self._set_obj(62, value)
             return
 
-        self._set_string_o(60, value)
+        self._set_string_o(62, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 60.
+        DSS property name: `spectrum`, DSS property index: 62.
         """
-        return self._get_obj(60, Spectrum)
+        return self._get_obj(62, Spectrum)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_obj(60, value)
+        self._set_obj(62, value)
 
     @property
     def basefreq(self) -> float:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 61.
+        DSS property name: `basefreq`, DSS property index: 63.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 61)
+        return self._lib.Obj_GetFloat64(self._ptr, 63)
 
     @basefreq.setter
     def basefreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 61, value)
+        self._lib.Obj_SetFloat64(self._ptr, 63, value)
 
     @property
     def enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 62.
+        DSS property name: `enabled`, DSS property index: 64.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 62) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 64) != 0
 
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 62, value)
+        self._lib.Obj_SetInt32(self._ptr, 64, value)
 
     def like(self, value: AnyStr):
         """
@@ -11050,9 +11116,9 @@ class Storage(DSSObj):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 63.
+        DSS property name: `like`, DSS property index: 65.
         """
-        self._set_string_o(63, value)
+        self._set_string_o(65, value)
 
 class StorageController(DSSObj):
     __slots__ = []
@@ -11107,8 +11173,8 @@ class StorageController(DSSObj):
     }
 
     # Class-specific enumerations
-    class StorageControllerDischargemode(IntEnum):
-        """StorageController: Discharge mode (DSS enumeration for StorageController)"""
+    class StorageControllerDischargeMode(IntEnum):
+        """StorageController: Discharge Mode (DSS enumeration for StorageController)"""
         Peakshave = 5 # Peakshave
         Follow = 1 # Follow
         Support = 3 # Support
@@ -11117,8 +11183,8 @@ class StorageController(DSSObj):
         Schedule = 6 # Schedule
         I_Peakshave = 8 # I-Peakshave
 
-    class StorageControllerChargemode(IntEnum):
-        """StorageController: Charge mode (DSS enumeration for StorageController)"""
+    class StorageControllerChargeMode(IntEnum):
+        """StorageController: Charge Mode (DSS enumeration for StorageController)"""
         Loadshape = 2 # Loadshape
         Time = 4 # Time
         PeakshaveLow = 7 # PeakshaveLow
@@ -11128,7 +11194,7 @@ class StorageController(DSSObj):
     @property
     def Element(self) -> str:
         """
-        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.
+        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
         DSS property name: `Element`, DSS property index: 1.
         """
@@ -11145,7 +11211,7 @@ class StorageController(DSSObj):
     @property
     def Element_obj(self) -> DSSObj:
         """
-        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.
+        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
         DSS property name: `Element`, DSS property index: 1.
         """
@@ -11308,7 +11374,7 @@ class StorageController(DSSObj):
         self._set_float64_array_o(11, value)
 
     @property
-    def ModeDischarge(self) -> StorageControllerDischargemode:
+    def ModeDischarge(self) -> StorageControllerDischargeMode:
         """
         {PeakShave* | Follow | Support | Loadshape | Time | Schedule | I-PeakShave} Mode of operation for the DISCHARGE FUNCTION of this controller. 
 
@@ -11328,10 +11394,10 @@ class StorageController(DSSObj):
 
         DSS property name: `ModeDischarge`, DSS property index: 12.
         """
-        return StorageController.StorageControllerDischargemode(self._lib.Obj_GetInt32(self._ptr, 12))
+        return StorageController.StorageControllerDischargeMode(self._lib.Obj_GetInt32(self._ptr, 12))
 
     @ModeDischarge.setter
-    def ModeDischarge(self, value: Union[AnyStr, int, StorageControllerDischargemode]):
+    def ModeDischarge(self, value: Union[AnyStr, int, StorageControllerDischargeMode]):
         if not isinstance(value, int):
             self._set_string_o(12, value)
             return
@@ -11365,7 +11431,7 @@ class StorageController(DSSObj):
         self.ModeDischarge = value
 
     @property
-    def ModeCharge(self) -> StorageControllerChargemode:
+    def ModeCharge(self) -> StorageControllerChargeMode:
         """
         {Loadshape | Time* | PeakShaveLow | I-PeakShaveLow} Mode of operation for the CHARGE FUNCTION of this controller. 
 
@@ -11373,16 +11439,16 @@ class StorageController(DSSObj):
 
         In Time mode, the Storage charging FUNCTION is triggered at the specified %RateCharge at the specified charge trigger time in fractional hours.
 
-        In PeakShaveLow mode, the charging operation will charge the Storage fleet when the power at amonitored element is below a specified KW target (kWTarget_low). The Storage will charge as much power as necessary to keep the power within the deadband around kWTarget_low.
+        In PeakShaveLow mode, the charging operation will charge the Storage fleet when the power at a monitored element is below a specified KW target (kWTarget_low). The Storage will charge as much power as necessary to keep the power within the deadband around kWTarget_low.
 
-        In I-PeakShaveLow mode, the charging operation will charge the Storage fleet when the current (Amps) at amonitored element is below a specified amps target (kWTarget_low). The Storage will charge as much power as necessary to keep the amps within the deadband around kWTarget_low. When this control mode is active, the property kWTarget_low will be expressed in k-amps and all the other parameters will be adjusted to match the amps (current) control criteria.
+        In I-PeakShaveLow mode, the charging operation will charge the Storage fleet when the current (Amps) at a monitored element is below a specified amps target (kWTarget_low). The Storage will charge as much power as necessary to keep the amps within the deadband around kWTarget_low. When this control mode is active, the property kWTarget_low will be expressed in k-amps and all the other parameters will be adjusted to match the amps (current) control criteria.
 
         DSS property name: `ModeCharge`, DSS property index: 13.
         """
-        return StorageController.StorageControllerChargemode(self._lib.Obj_GetInt32(self._ptr, 13))
+        return StorageController.StorageControllerChargeMode(self._lib.Obj_GetInt32(self._ptr, 13))
 
     @ModeCharge.setter
-    def ModeCharge(self, value: Union[AnyStr, int, StorageControllerChargemode]):
+    def ModeCharge(self, value: Union[AnyStr, int, StorageControllerChargeMode]):
         if not isinstance(value, int):
             self._set_string_o(13, value)
             return
@@ -11397,9 +11463,9 @@ class StorageController(DSSObj):
 
         In Time mode, the Storage charging FUNCTION is triggered at the specified %RateCharge at the specified charge trigger time in fractional hours.
 
-        In PeakShaveLow mode, the charging operation will charge the Storage fleet when the power at amonitored element is below a specified KW target (kWTarget_low). The Storage will charge as much power as necessary to keep the power within the deadband around kWTarget_low.
+        In PeakShaveLow mode, the charging operation will charge the Storage fleet when the power at a monitored element is below a specified KW target (kWTarget_low). The Storage will charge as much power as necessary to keep the power within the deadband around kWTarget_low.
 
-        In I-PeakShaveLow mode, the charging operation will charge the Storage fleet when the current (Amps) at amonitored element is below a specified amps target (kWTarget_low). The Storage will charge as much power as necessary to keep the amps within the deadband around kWTarget_low. When this control mode is active, the property kWTarget_low will be expressed in k-amps and all the other parameters will be adjusted to match the amps (current) control criteria.
+        In I-PeakShaveLow mode, the charging operation will charge the Storage fleet when the current (Amps) at a monitored element is below a specified amps target (kWTarget_low). The Storage will charge as much power as necessary to keep the amps within the deadband around kWTarget_low. When this control mode is active, the property kWTarget_low will be expressed in k-amps and all the other parameters will be adjusted to match the amps (current) control criteria.
 
         DSS property name: `ModeCharge`, DSS property index: 13.
         """
@@ -11725,7 +11791,7 @@ class StorageController(DSSObj):
     @property
     def ResetLevel(self) -> float:
         """
-        The level of charge required for allowing the storage to discharge again after reaching the reserve storage level. After reaching this level, the storage control  will not allow the storage device to discharge, forcing the storage to charge. Once the storage reaches thislevel, the storage will be able to discharge again. This value is a number between 0.2 and 1
+        The level of charge required for allowing the storage to discharge again after reaching the reserve storage level. After reaching this level, the storage control  will not allow the storage device to discharge, forcing the storage to charge. Once the storage reaches this level, the storage will be able to discharge again. This value is a number between 0.2 and 1
 
         DSS property name: `ResetLevel`, DSS property index: 34.
         """
@@ -12514,7 +12580,7 @@ class Relay(DSSObj):
     @property
     def EventLog(self) -> bool:
         """
-        {Yes/True* | No/False} Default is Yes for Relay. Write trips, reclose and reset events to EventLog.
+        {Yes/True | No/False* } Default is No for Relay. Write trips, reclose and reset events to EventLog.
 
         DSS property name: `EventLog`, DSS property index: 36.
         """
@@ -12527,7 +12593,7 @@ class Relay(DSSObj):
     @property
     def DebugTrace(self) -> bool:
         """
-        {Yes/True* | No/False} Default is No for Relay. Write extra details to Eventlog.
+        {Yes/True* | No/False* } Default is No for Relay. Write extra details to Eventlog.
 
         DSS property name: `DebugTrace`, DSS property index: 37.
         """
@@ -12687,17 +12753,34 @@ class Relay(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 46, value)
 
     @property
-    def DOC_PhaseCurveInner(self) -> float:
+    def DOC_PhaseCurveInner(self) -> str:
         """
         Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
         DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 47)
+        return self._get_prop_string(47)
 
     @DOC_PhaseCurveInner.setter
-    def DOC_PhaseCurveInner(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 47, value)
+    def DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve]):
+        if isinstance(value, DSSObj):
+            self._set_obj(47, value)
+            return
+
+        self._set_string_o(47, value)
+
+    @property
+    def DOC_PhaseCurveInner_obj(self) -> TCC_Curve:
+        """
+        Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
+
+        DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
+        """
+        return self._get_obj(47, TCC_Curve)
+
+    @DOC_PhaseCurveInner_obj.setter
+    def DOC_PhaseCurveInner_obj(self, value: TCC_Curve):
+        self._set_obj(47, value)
 
     @property
     def DOC_PhaseTripInner(self) -> float:
@@ -12713,34 +12796,17 @@ class Relay(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 48, value)
 
     @property
-    def DOC_TDPhaseInner(self) -> str:
+    def DOC_TDPhaseInner(self) -> float:
         """
         Time dial for "DOC_PhaseCurveInner" TCC curve. Multiplier on time axis of specified curve. Default=1.0.
 
         DSS property name: `DOC_TDPhaseInner`, DSS property index: 49.
         """
-        return self._get_prop_string(49)
+        return self._lib.Obj_GetFloat64(self._ptr, 49)
 
     @DOC_TDPhaseInner.setter
-    def DOC_TDPhaseInner(self, value: Union[AnyStr, TCC_Curve]):
-        if isinstance(value, DSSObj):
-            self._set_obj(49, value)
-            return
-
-        self._set_string_o(49, value)
-
-    @property
-    def DOC_TDPhaseInner_obj(self) -> TCC_Curve:
-        """
-        Time dial for "DOC_PhaseCurveInner" TCC curve. Multiplier on time axis of specified curve. Default=1.0.
-
-        DSS property name: `DOC_TDPhaseInner`, DSS property index: 49.
-        """
-        return self._get_obj(49, TCC_Curve)
-
-    @DOC_TDPhaseInner_obj.setter
-    def DOC_TDPhaseInner_obj(self, value: TCC_Curve):
-        self._set_obj(49, value)
+    def DOC_TDPhaseInner(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 49, value)
 
     @property
     def DOC_P1Blocking(self) -> bool:
@@ -13217,7 +13283,7 @@ class Recloser(DSSObj):
     @property
     def Normal(self) -> RecloserState:
         """
-        {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specificallt declared.
+        {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
         DSS property name: `Normal`, DSS property index: 23.
         """
@@ -13233,7 +13299,7 @@ class Recloser(DSSObj):
     @property
     def Normal_str(self) -> str:
         """
-        {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specificallt declared.
+        {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
         DSS property name: `Normal`, DSS property index: 23.
         """
@@ -13851,11 +13917,21 @@ class PVSystem(DSSObj):
         'dynamiceq': 46,
         'dynout': 47,
         'controlmode': 48,
-        'spectrum': 49,
-        'basefreq': 50,
-        'enabled': 51,
-        'like': 52,
+        'amplimit': 49,
+        'amplimitgain': 50,
+        'spectrum': 51,
+        'basefreq': 52,
+        'enabled': 53,
+        'like': 54,
     }
+
+    # Class-specific enumerations
+    class PVSystemModel(IntEnum):
+        """PVSystem: Model (DSS enumeration for PVSystem)"""
+        ConstantP_PF = 1 # Constant P, PF
+        ConstantY = 2 # Constant Y
+        Usermodel = 3 # User model
+
 
     @property
     def phases(self) -> int:
@@ -14131,7 +14207,7 @@ class PVSystem(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
     @property
-    def model(self) -> int:
+    def model(self) -> PVSystemModel:
         """
         Integer code (default=1) for the model to use for power output variation with voltage. Valid values are:
 
@@ -14141,10 +14217,10 @@ class PVSystem(DSSObj):
 
         DSS property name: `model`, DSS property index: 18.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 18)
+        return PVSystem.PVSystemModel(self._lib.Obj_GetInt32(self._ptr, 18))
 
     @model.setter
-    def model(self, value: int):
+    def model(self, value: Union[int, PVSystemModel]):
         self._lib.Obj_SetInt32(self._ptr, 18, value)
 
     @property
@@ -14650,7 +14726,7 @@ class PVSystem(DSSObj):
     @property
     def ControlMode(self) -> InverterControlMode:
         """
-        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
         GFM control mode disables any control action set by the InvControl device.
 
@@ -14668,7 +14744,7 @@ class PVSystem(DSSObj):
     @property
     def ControlMode_str(self) -> str:
         """
-        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
         GFM control mode disables any control action set by the InvControl device.
 
@@ -14681,60 +14757,87 @@ class PVSystem(DSSObj):
         self.ControlMode = value
 
     @property
+    def AmpLimit(self) -> float:
+        """
+        The current limiter per phase for the IBR when operating in GFM mode. This limit is imposed to prevent the IBR to enter into Safe Mode when reaching the IBR power ratings.
+        Once the IBR reaches this value, it remains there without moving into Safe Mode. This value needs to be set lower than the IBR Amps rating.
+
+        DSS property name: `AmpLimit`, DSS property index: 49.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 49)
+
+    @AmpLimit.setter
+    def AmpLimit(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 49, value)
+
+    @property
+    def AmpLimitGain(self) -> float:
+        """
+        Use it for fine tunning the current limiter when active, by default is 0.8, it has to be a value between 0.1 and 1. This value allows users to fine tune the IBRs current limiter to match with the user requirements.
+
+        DSS property name: `AmpLimitGain`, DSS property index: 50.
+        """
+        return self._lib.Obj_GetFloat64(self._ptr, 50)
+
+    @AmpLimitGain.setter
+    def AmpLimitGain(self, value: float):
+        self._lib.Obj_SetFloat64(self._ptr, 50, value)
+
+    @property
     def spectrum(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 49.
+        DSS property name: `spectrum`, DSS property index: 51.
         """
-        return self._get_prop_string(49)
+        return self._get_prop_string(51)
 
     @spectrum.setter
     def spectrum(self, value: Union[AnyStr, Spectrum]):
         if isinstance(value, DSSObj):
-            self._set_obj(49, value)
+            self._set_obj(51, value)
             return
 
-        self._set_string_o(49, value)
+        self._set_string_o(51, value)
 
     @property
     def spectrum_obj(self) -> Spectrum:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 49.
+        DSS property name: `spectrum`, DSS property index: 51.
         """
-        return self._get_obj(49, Spectrum)
+        return self._get_obj(51, Spectrum)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_obj(49, value)
+        self._set_obj(51, value)
 
     @property
     def basefreq(self) -> float:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 50.
+        DSS property name: `basefreq`, DSS property index: 52.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 50)
+        return self._lib.Obj_GetFloat64(self._ptr, 52)
 
     @basefreq.setter
     def basefreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 50, value)
+        self._lib.Obj_SetFloat64(self._ptr, 52, value)
 
     @property
     def enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 51.
+        DSS property name: `enabled`, DSS property index: 53.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 51) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 53) != 0
 
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 51, value)
+        self._lib.Obj_SetInt32(self._ptr, 53, value)
 
     def like(self, value: AnyStr):
         """
@@ -14742,9 +14845,9 @@ class PVSystem(DSSObj):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 52.
+        DSS property name: `like`, DSS property index: 54.
         """
-        self._set_string_o(52, value)
+        self._set_string_o(54, value)
 
 class UPFC(DSSObj):
     __slots__ = []
@@ -14773,6 +14876,17 @@ class UPFC(DSSObj):
         'enabled': 20,
         'like': 21,
     }
+
+    # Class-specific enumerations
+    class UPFCMode(IntEnum):
+        """UPFC: Mode (DSS enumeration for UPFC)"""
+        Off = 0 # Off
+        VoltageRegulator = 1 # Voltage Regulator
+        PhaseAngleRegulator = 2 # Phase Angle Regulator
+        DualRegulator = 3 # Dual Regulator
+        DoubleReference_Voltage = 4 # Double Reference (Voltage)
+        DoubleReference_Dual = 5 # Double Reference (Dual)
+
 
     @property
     def bus1(self) -> str:
@@ -14807,7 +14921,9 @@ class UPFC(DSSObj):
     @property
     def refkV(self) -> float:
         """
-        UPFC.refkV
+        Base Voltage expected at the output of the UPFC
+
+        "refkv=0.24"
 
         DSS property name: `refkV`, DSS property index: 3.
         """
@@ -14820,7 +14936,7 @@ class UPFC(DSSObj):
     @property
     def PF(self) -> float:
         """
-        UPFC.PF
+        Power factor target at the input terminal.
 
         DSS property name: `PF`, DSS property index: 4.
         """
@@ -14833,7 +14949,7 @@ class UPFC(DSSObj):
     @property
     def Frequency(self) -> float:
         """
-        UPFC.Frequency
+        UPFC working frequency.  Defaults to system default base frequency.
 
         DSS property name: `Frequency`, DSS property index: 5.
         """
@@ -14846,7 +14962,7 @@ class UPFC(DSSObj):
     @property
     def Phases(self) -> int:
         """
-        UPFC.Phases
+        Number of phases.  Defaults to 1 phase (2 terminals, 1 conductor per terminal).
 
         DSS property name: `Phases`, DSS property index: 6.
         """
@@ -14884,7 +15000,7 @@ class UPFC(DSSObj):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
     @property
-    def Mode(self) -> int:
+    def Mode(self) -> UPFCMode:
         """
         Integer used to define the control mode of the UPFC: 
 
@@ -14897,10 +15013,10 @@ class UPFC(DSSObj):
 
         DSS property name: `Mode`, DSS property index: 9.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 9)
+        return UPFC.UPFCMode(self._lib.Obj_GetInt32(self._ptr, 9))
 
     @Mode.setter
-    def Mode(self, value: int):
+    def Mode(self, value: Union[int, UPFCMode]):
         self._lib.Obj_SetInt32(self._ptr, 9, value)
 
     @property
@@ -14988,7 +15104,9 @@ class UPFC(DSSObj):
     @property
     def refkV2(self) -> float:
         """
-        UPFC.refkV2
+        Base Voltage expected at the output of the UPFC for control modes 4 and 5.
+
+        This reference must be lower than refkv, see control modes 4 and 5 for details
 
         DSS property name: `refkV2`, DSS property index: 15.
         """
@@ -15001,7 +15119,7 @@ class UPFC(DSSObj):
     @property
     def kvarLimit(self) -> float:
         """
-        Maximum amount of reactive power (kvar) that can be absorved by the UPFC (Default = 5)
+        Maximum amount of reactive power (kvar) that can be absorbed by the UPFC (Default = 5)
 
         DSS property name: `kvarLimit`, DSS property index: 16.
         """
@@ -15711,7 +15829,7 @@ class IndMach012(DSSObj):
     @property
     def Yearly(self) -> str:
         """
-        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
+        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 18.
         """
@@ -15728,7 +15846,7 @@ class IndMach012(DSSObj):
     @property
     def Yearly_obj(self) -> LoadShape:
         """
-        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
+        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 18.
         """
@@ -15741,7 +15859,7 @@ class IndMach012(DSSObj):
     @property
     def Daily(self) -> str:
         """
-        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
+        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `Daily`, DSS property index: 19.
         """
@@ -15758,7 +15876,7 @@ class IndMach012(DSSObj):
     @property
     def Daily_obj(self) -> LoadShape:
         """
-        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
+        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `Daily`, DSS property index: 19.
         """
@@ -15771,7 +15889,7 @@ class IndMach012(DSSObj):
     @property
     def Duty(self) -> str:
         """
-        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
+        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `Duty`, DSS property index: 20.
         """
@@ -15788,7 +15906,7 @@ class IndMach012(DSSObj):
     @property
     def Duty_obj(self) -> LoadShape:
         """
-        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
+        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `Duty`, DSS property index: 20.
         """
@@ -16149,17 +16267,18 @@ class AutoTrans(DSSObj):
         'ppm_antifloat': 36,
         'pctrs': 37,
         '%rs': 37,
-        'xrconst': 38,
-        'leadlag': 39,
-        'wdgcurrents': 40,
-        'normamps': 41,
-        'emergamps': 42,
-        'faultrate': 43,
-        'pctperm': 44,
-        'repair': 45,
-        'basefreq': 46,
-        'enabled': 47,
-        'like': 48,
+        'bank': 38,
+        'xrconst': 39,
+        'leadlag': 40,
+        'wdgcurrents': 41,
+        'normamps': 42,
+        'emergamps': 43,
+        'faultrate': 44,
+        'pctperm': 45,
+        'repair': 46,
+        'basefreq': 47,
+        'enabled': 48,
+        'like': 49,
     }
 
     # Class-specific enumerations
@@ -16189,7 +16308,7 @@ class AutoTrans(DSSObj):
     @property
     def windings(self) -> int:
         """
-        Number of windings, this AutoTranss. (Also is the number of terminals) Default is 2. This property triggers memory allocation for the AutoTrans and will cause other properties to revert to default values.
+        Number of windings, this AutoTrans. (Also is the number of terminals) Default is 2. This property triggers memory allocation for the AutoTrans and will cause other properties to revert to default values.
 
         DSS property name: `windings`, DSS property index: 2.
         """
@@ -16486,7 +16605,7 @@ class AutoTrans(DSSObj):
     @property
     def pctnoloadloss(self) -> float:
         """
-        Percent no load losses at rated excitatation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
+        Percent no load losses at rated excitation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
 
         DSS property name: `%noloadloss`, DSS property index: 27.
         """
@@ -16499,7 +16618,7 @@ class AutoTrans(DSSObj):
     @property
     def normhkVA(self) -> float:
         """
-        Normal maximum kVA rating of H winding (winding 1+2).  Usually 100% - 110% ofmaximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
+        Normal maximum kVA rating of H winding (winding 1+2).  Usually 100% - 110% of maximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
 
         DSS property name: `normhkVA`, DSS property index: 28.
         """
@@ -16512,7 +16631,7 @@ class AutoTrans(DSSObj):
     @property
     def emerghkVA(self) -> float:
         """
-        Emergency (contingency)  kVA rating of H winding (winding 1+2).  Usually 140% - 150% ofmaximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
+        Emergency (contingency)  kVA rating of H winding (winding 1+2).  Usually 140% - 150% of maximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
 
         DSS property name: `emerghkVA`, DSS property index: 29.
         """
@@ -16629,42 +16748,55 @@ class AutoTrans(DSSObj):
         self._set_float64_array_o(37, value)
 
     @property
+    def bank(self) -> str:
+        """
+        Name of the bank this transformer is part of, for CIM, MultiSpeak, and other interfaces.
+
+        DSS property name: `bank`, DSS property index: 38.
+        """
+        return self._get_prop_string(38)
+
+    @bank.setter
+    def bank(self, value: AnyStr):
+        self._set_string_o(38, value)
+
+    @property
     def XRConst(self) -> bool:
         """
-        ={Yes|No} Default is NO. Signifies whether or not the X/R is assumed contant for harmonic studies.
+        ={Yes|No} Default is NO. Signifies whether or not the X/R is assumed constant for harmonic studies.
 
-        DSS property name: `XRConst`, DSS property index: 38.
+        DSS property name: `XRConst`, DSS property index: 39.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 38) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 39) != 0
 
     @XRConst.setter
     def XRConst(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 38, value)
+        self._lib.Obj_SetInt32(self._ptr, 39, value)
 
     @property
     def LeadLag(self) -> PhaseSequence:
         """
         {Lead | Lag (default) | ANSI (default) | Euro } Designation in mixed Delta-wye connections the relationship between HV to LV winding. Default is ANSI 30 deg lag, e.g., Dy1 of Yd1 vector group. To get typical European Dy11 connection, specify either "lead" or "Euro"
 
-        DSS property name: `LeadLag`, DSS property index: 39.
+        DSS property name: `LeadLag`, DSS property index: 40.
         """
-        return PhaseSequence(self._lib.Obj_GetInt32(self._ptr, 39))
+        return PhaseSequence(self._lib.Obj_GetInt32(self._ptr, 40))
 
     @LeadLag.setter
     def LeadLag(self, value: Union[AnyStr, int, PhaseSequence]):
         if not isinstance(value, int):
-            self._set_string_o(39, value)
+            self._set_string_o(40, value)
             return
-        self._lib.Obj_SetInt32(self._ptr, 39, value)
+        self._lib.Obj_SetInt32(self._ptr, 40, value)
 
     @property
     def LeadLag_str(self) -> str:
         """
         {Lead | Lag (default) | ANSI (default) | Euro } Designation in mixed Delta-wye connections the relationship between HV to LV winding. Default is ANSI 30 deg lag, e.g., Dy1 of Yd1 vector group. To get typical European Dy11 connection, specify either "lead" or "Euro"
 
-        DSS property name: `LeadLag`, DSS property index: 39.
+        DSS property name: `LeadLag`, DSS property index: 40.
         """
-        return self._get_prop_string(39)
+        return self._get_prop_string(40)
 
     @LeadLag_str.setter
     def LeadLag_str(self, value: AnyStr):
@@ -16674,102 +16806,104 @@ class AutoTrans(DSSObj):
         """
         (Read only) Makes winding currents available via return on query (? AutoTrans.TX.WdgCurrents). Order: Phase 1, Wdg 1, Wdg 2, ..., Phase 2 ...
 
-        DSS property name: `WdgCurrents`, DSS property index: 40.
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+
+        DSS property name: `WdgCurrents`, DSS property index: 41.
         """
         # []
         # StringSilentROFunction
-        return self._get_prop_string(self._lib.Obj_GetString(self._ptr, 40))
+        return self._get_prop_string(self._lib.Obj_GetString(self._ptr, 41))
 
     @property
     def normamps(self) -> float:
         """
         Normal rated current.
 
-        DSS property name: `normamps`, DSS property index: 41.
+        DSS property name: `normamps`, DSS property index: 42.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 41)
+        return self._lib.Obj_GetFloat64(self._ptr, 42)
 
     @normamps.setter
     def normamps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 41, value)
+        self._lib.Obj_SetFloat64(self._ptr, 42, value)
 
     @property
     def emergamps(self) -> float:
         """
         Maximum or emerg current.
 
-        DSS property name: `emergamps`, DSS property index: 42.
+        DSS property name: `emergamps`, DSS property index: 43.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 42)
+        return self._lib.Obj_GetFloat64(self._ptr, 43)
 
     @emergamps.setter
     def emergamps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 42, value)
+        self._lib.Obj_SetFloat64(self._ptr, 43, value)
 
     @property
     def faultrate(self) -> float:
         """
         Failure rate per year.
 
-        DSS property name: `faultrate`, DSS property index: 43.
+        DSS property name: `faultrate`, DSS property index: 44.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 43)
+        return self._lib.Obj_GetFloat64(self._ptr, 44)
 
     @faultrate.setter
     def faultrate(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 43, value)
+        self._lib.Obj_SetFloat64(self._ptr, 44, value)
 
     @property
     def pctperm(self) -> float:
         """
         Percent of failures that become permanent.
 
-        DSS property name: `pctperm`, DSS property index: 44.
+        DSS property name: `pctperm`, DSS property index: 45.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 44)
+        return self._lib.Obj_GetFloat64(self._ptr, 45)
 
     @pctperm.setter
     def pctperm(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 44, value)
+        self._lib.Obj_SetFloat64(self._ptr, 45, value)
 
     @property
     def repair(self) -> float:
         """
         Hours to repair.
 
-        DSS property name: `repair`, DSS property index: 45.
+        DSS property name: `repair`, DSS property index: 46.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 45)
+        return self._lib.Obj_GetFloat64(self._ptr, 46)
 
     @repair.setter
     def repair(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 45, value)
+        self._lib.Obj_SetFloat64(self._ptr, 46, value)
 
     @property
     def basefreq(self) -> float:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 46.
+        DSS property name: `basefreq`, DSS property index: 47.
         """
-        return self._lib.Obj_GetFloat64(self._ptr, 46)
+        return self._lib.Obj_GetFloat64(self._ptr, 47)
 
     @basefreq.setter
     def basefreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 46, value)
+        self._lib.Obj_SetFloat64(self._ptr, 47, value)
 
     @property
     def enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 47.
+        DSS property name: `enabled`, DSS property index: 48.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 47) != 0
+        return self._lib.Obj_GetInt32(self._ptr, 48) != 0
 
     @enabled.setter
     def enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 47, value)
+        self._lib.Obj_SetInt32(self._ptr, 48, value)
 
     def like(self, value: AnyStr):
         """
@@ -16777,9 +16911,9 @@ class AutoTrans(DSSObj):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 48.
+        DSS property name: `like`, DSS property index: 49.
         """
-        self._set_string_o(48, value)
+        self._set_string_o(49, value)
 
 class RegControl(DSSObj):
     __slots__ = []
@@ -17203,7 +17337,7 @@ class RegControl(DSSObj):
     @property
     def EventLog(self) -> bool:
         """
-        {Yes/True* | No/False} Default is YES for regulator control. Log control actions to Eventlog.
+        {Yes/True | No/False*} Default is NO for regulator control. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 26.
         """
@@ -17389,7 +17523,7 @@ class InvControl(DSSObj):
         RAvg = 2 # RAvg
 
     class InvControlVoltWattYAxis(IntEnum):
-        """InvControl: Volt-watt Y-Axis (DSS enumeration for InvControl)"""
+        """InvControl: Volt-Watt Y-Axis (DSS enumeration for InvControl)"""
         PAvailablePU = 0 # PAvailablePU
         PMPPPU = 1 # PMPPPU
         PctPMPPPU = 2 # PctPMPPPU
@@ -17434,10 +17568,10 @@ class InvControl(DSSObj):
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
-        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
+        Must be one of: {VOLTVAR | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
         if the user desires to use modes simultaneously, then set the CombiMode property. Setting the Mode to any valid value disables combination mode.
 
-        In volt-var mode (Default). This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
+        In volt-var mode. This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
 
         In volt-watt mode. This mode attempts to LIMIT the watts, according to one defined volt-watt curve, depending on the monitored voltages and the capabilities of the PVSystem/Storage. 
 
@@ -17448,6 +17582,9 @@ class InvControl(DSSObj):
         In watt-var mode. This mode attempts to CONTROL the vars, according to a watt-var curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
 
         In GFM mode this control will trigger the GFM control routine for the DERs within the DERList. The GFM actiosn will only take place if the pointed DERs are in GFM mode. The controller parameters are locally setup at the DER.
+
+
+        NO DEFAULT
 
         DSS property name: `Mode`, DSS property index: 2.
         """
@@ -17465,10 +17602,10 @@ class InvControl(DSSObj):
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
-        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
+        Must be one of: {VOLTVAR | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
         if the user desires to use modes simultaneously, then set the CombiMode property. Setting the Mode to any valid value disables combination mode.
 
-        In volt-var mode (Default). This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
+        In volt-var mode. This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
 
         In volt-watt mode. This mode attempts to LIMIT the watts, according to one defined volt-watt curve, depending on the monitored voltages and the capabilities of the PVSystem/Storage. 
 
@@ -17479,6 +17616,9 @@ class InvControl(DSSObj):
         In watt-var mode. This mode attempts to CONTROL the vars, according to a watt-var curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
 
         In GFM mode this control will trigger the GFM control routine for the DERs within the DERList. The GFM actiosn will only take place if the pointed DERs are in GFM mode. The controller parameters are locally setup at the DER.
+
+
+        NO DEFAULT
 
         DSS property name: `Mode`, DSS property index: 2.
         """
@@ -17809,7 +17949,7 @@ class InvControl(DSSObj):
 
         if the maximum control iterations are exceeded, and no numerical instability is seen in the EventLog of via monitors, then try increasing the value of this parameter to reduce the number of control iterations needed to achieve the control criteria, and move to the power flow solution. 
 
-        When operating the controller using expoenential control model (see CtrlModel), this parameter represents the sampling time gain of the controller, which is used for accelrating the controller response in terms of control iterations required.
+        When operating the controller using exponential control model (see CtrlModel), this parameter represents the sampling time gain of the controller, which is used for accelrating the controller response in terms of control iterations required.
 
         DSS property name: `deltaQ_Factor`, DSS property index: 14.
         """
@@ -18112,7 +18252,7 @@ class InvControl(DSSObj):
     @property
     def monBus(self) -> List[str]:
         """
-        Name of monitored bus used by the voltage-dependente control modes. Default is bus of the controlled PVSystem/Storage or Storage.
+        Name of monitored bus used by the voltage-dependent control modes. Default is bus of the controlled PVSystem/Storage or Storage.
 
         DSS property name: `monBus`, DSS property index: 26.
         """
@@ -18142,7 +18282,7 @@ class InvControl(DSSObj):
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
-        The name of an XYCurve object that describes the variation in active power output (in per unit of maximum active power outut for the Storage). 
+        The name of an XYCurve object that describes the variation in active power output (in per unit of maximum active power output for the Storage). 
 
         Units for the x-axis are per-unit voltage, which may be in per unit of the rated voltage for the Storage, or may be in per unit of the average voltage at the terminals over a user-defined number of prior solutions. 
 
@@ -18167,7 +18307,7 @@ class InvControl(DSSObj):
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
-        The name of an XYCurve object that describes the variation in active power output (in per unit of maximum active power outut for the Storage). 
+        The name of an XYCurve object that describes the variation in active power output (in per unit of maximum active power output for the Storage). 
 
         Units for the x-axis are per-unit voltage, which may be in per unit of the rated voltage for the Storage, or may be in per unit of the average voltage at the terminals over a user-defined number of prior solutions. 
 
@@ -18199,7 +18339,7 @@ class InvControl(DSSObj):
 
         The user needs to translate this curve into a plot in which the y-axis reference is equal to 0 power factor.It means that two new XY coordinates need to be included, in this case they are: (0.35, 1); (0.35, -1).
         Try to plot them considering the y-axis reference equal to 0 power factor.
-        The discontinity in 0.35pu is not a problem since var is zero for either power factor equal to 1 or -1.
+        The discontinuity in 0.35pu is not a problem since var is zero for either power factor equal to 1 or -1.
 
         DSS property name: `wattpf_curve`, DSS property index: 29.
         """
@@ -18229,7 +18369,7 @@ class InvControl(DSSObj):
 
         The user needs to translate this curve into a plot in which the y-axis reference is equal to 0 power factor.It means that two new XY coordinates need to be included, in this case they are: (0.35, 1); (0.35, -1).
         Try to plot them considering the y-axis reference equal to 0 power factor.
-        The discontinity in 0.35pu is not a problem since var is zero for either power factor equal to 1 or -1.
+        The discontinuity in 0.35pu is not a problem since var is zero for either power factor equal to 1 or -1.
 
         DSS property name: `wattpf_curve`, DSS property index: 29.
         """
@@ -18301,7 +18441,7 @@ class InvControl(DSSObj):
         1 = Exponential
 
         Use this property for better tunning your controller and improve the controller response in terms of control iterations needed to reach the target.
-        This property alters the meaning of deltaQ_factor and deltaP_factor properties accroding to its value (Check help). The method can also be combined with the controller tolerance for improving performance.
+        This property alters the meaning of deltaQ_factor and deltaP_factor properties according to its value (Check help). The method can also be combined with the controller tolerance for improving performance.
 
         DSS property name: `ControlModel`, DSS property index: 34.
         """
@@ -18393,7 +18533,7 @@ class ExpControl(DSSObj):
         """
         Per-unit voltage at which reactive power is zero; defaults to 1.0.
 
-        This may dynamically self-adjust when VregTau > 0, limited by VregMin and VregMax.If imput as 0, Vreg will be initialized from a snapshot solution with no inverter Q.The equilibrium point of reactive power is also affected by Qbias
+        This may dynamically self-adjust when VregTau > 0, limited by VregMin and VregMax.If input as 0, Vreg will be initialized from a snapshot solution with no inverter Q.The equilibrium point of reactive power is also affected by Qbias
 
         DSS property name: `Vreg`, DSS property index: 2.
         """
@@ -18552,7 +18692,7 @@ class ExpControl(DSSObj):
         """
         Open-loop response time for changes in Q.
 
-        The value of Q reaches 90% of the target change within Tresponse, which corresponds to a low-pass filter having tau = Tresponse / 2.3026. The behavior is similar to LPFTAU in InvControl, but here the response time is input instead of the time constant. IEEE1547-2018 default is 10s for Catagory A and 5s for Category B, adjustable from 1s to 90s for both categories. However, the default is 0 for backward compatibility of OpenDSS models.
+        The value of Q reaches 90% of the target change within Tresponse, which corresponds to a low-pass filter having tau = Tresponse / 2.3026. The behavior is similar to LPFTAU in InvControl, but here the response time is input instead of the time constant. IEEE1547-2018 default is 10s for Category A and 5s for Category B, adjustable from 1s to 90s for both categories. However, the default is 0 for backward compatibility of OpenDSS models.
 
         DSS property name: `Tresponse`, DSS property index: 13.
         """
@@ -18676,7 +18816,7 @@ class GICLine(DSSObj):
     @property
     def Volts(self) -> float:
         """
-        Voltage magnitude, in volts, of the GIC voltage induced across this line. When spedified, voltage source is assumed defined by Voltage and Angle properties. 
+        Voltage magnitude, in volts, of the GIC voltage induced across this line. When specified, voltage source is assumed defined by Voltage and Angle properties. 
 
         Specify this value
 
@@ -20384,17 +20524,12 @@ class Sensor(DSSObj):
     def kvbase(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def clear(self) -> bool:
+    def clear(self, value: bool):
         """
         { Yes | No }. Clear=Yes clears sensor values. Should be issued before putting in a new set of measurements.
 
         DSS property name: `clear`, DSS property index: 4.
         """
-        return self._lib.Obj_GetInt32(self._ptr, 4) != 0
-
-    @clear.setter
-    def clear(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
     @property
@@ -20566,7 +20701,7 @@ class LineCodeProperties(TypedDict):
     x0: float
     C1: float
     C0: float
-    units: Union[AnyStr, int, DimensionUnits]
+    units: Union[AnyStr, int, LengthUnit]
     rmatrix: Float64Array
     xmatrix: Float64Array
     cmatrix: Float64Array
@@ -20683,11 +20818,11 @@ class SpectrumProperties(TypedDict):
 class WireDataProperties(TypedDict):
     Rdc: float
     Rac: float
-    Runits: Union[AnyStr, int, DimensionUnits]
+    Runits: Union[AnyStr, int, LengthUnit]
     GMRac: float
-    GMRunits: Union[AnyStr, int, DimensionUnits]
+    GMRunits: Union[AnyStr, int, LengthUnit]
     radius: float
-    radunits: Union[AnyStr, int, DimensionUnits]
+    radunits: Union[AnyStr, int, LengthUnit]
     normamps: float
     emergamps: float
     diam: float
@@ -20707,11 +20842,11 @@ class CNDataProperties(TypedDict):
     DiaCable: float
     Rdc: float
     Rac: float
-    Runits: Union[AnyStr, int, DimensionUnits]
+    Runits: Union[AnyStr, int, LengthUnit]
     GMRac: float
-    GMRunits: Union[AnyStr, int, DimensionUnits]
+    GMRunits: Union[AnyStr, int, LengthUnit]
     radius: float
-    radunits: Union[AnyStr, int, DimensionUnits]
+    radunits: Union[AnyStr, int, LengthUnit]
     normamps: float
     emergamps: float
     diam: float
@@ -20730,11 +20865,11 @@ class TSDataProperties(TypedDict):
     DiaCable: float
     Rdc: float
     Rac: float
-    Runits: Union[AnyStr, int, DimensionUnits]
+    Runits: Union[AnyStr, int, LengthUnit]
     GMRac: float
-    GMRunits: Union[AnyStr, int, DimensionUnits]
+    GMRunits: Union[AnyStr, int, LengthUnit]
     radius: float
-    radunits: Union[AnyStr, int, DimensionUnits]
+    radunits: Union[AnyStr, int, LengthUnit]
     normamps: float
     emergamps: float
     diam: float
@@ -20748,7 +20883,7 @@ class LineSpacingProperties(TypedDict):
     nphases: int
     x: Float64Array
     h: Float64Array
-    units: Union[AnyStr, int, DimensionUnits]
+    units: Union[AnyStr, int, LengthUnit]
     like: AnyStr
 
 class LineGeometryProperties(TypedDict):
@@ -20757,7 +20892,7 @@ class LineGeometryProperties(TypedDict):
     wire: List[Union[AnyStr, Union[WireData, TSData, CNData]]]
     x: Float64Array
     h: Float64Array
-    units: Union[AnyStr, int, DimensionUnits]
+    units: Union[AnyStr, int, LengthUnit]
     normamps: float
     emergamps: float
     reduce: bool
@@ -20824,7 +20959,7 @@ class LineProperties(TypedDict):
     Xg: float
     rho: float
     geometry: Union[AnyStr, LineGeometry]
-    units: Union[AnyStr, int, DimensionUnits]
+    units: Union[AnyStr, int, LengthUnit]
     spacing: Union[AnyStr, LineSpacing]
     wires: List[Union[AnyStr, Union[WireData, TSData, CNData]]]
     earthmodel: Union[AnyStr, int, EarthModel]
@@ -21123,7 +21258,7 @@ class GeneratorProperties(TypedDict):
     kW: float
     pf: float
     kvar: float
-    model: int
+    model: Union[int, Generator.GeneratorModel]
     Vminpu: float
     Vmaxpu: float
     yearly: Union[AnyStr, LoadShape]
@@ -21236,6 +21371,8 @@ class StorageProperties(TypedDict):
     DynamicEq: Union[AnyStr, DynamicExp]
     DynOut: AnyStr
     ControlMode: Union[AnyStr, int, InverterControlMode]
+    AmpLimit: float
+    AmpLimitGain: float
     spectrum: Union[AnyStr, Spectrum]
     basefreq: float
     enabled: bool
@@ -21253,8 +21390,8 @@ class StorageControllerProperties(TypedDict):
     kWBandLow: float
     ElementList: List[AnyStr]
     Weights: Float64Array
-    ModeDischarge: Union[AnyStr, int, StorageController.StorageControllerDischargemode]
-    ModeCharge: Union[AnyStr, int, StorageController.StorageControllerChargemode]
+    ModeDischarge: Union[AnyStr, int, StorageController.StorageControllerDischargeMode]
+    ModeCharge: Union[AnyStr, int, StorageController.StorageControllerChargeMode]
     TimeDischargeTrigger: float
     TimeChargeTrigger: float
     pctRatekW: float
@@ -21330,9 +21467,9 @@ class RelayProperties(TypedDict):
     DOC_TripSettingHigh: float
     DOC_TripSettingMag: float
     DOC_DelayInner: float
-    DOC_PhaseCurveInner: float
+    DOC_PhaseCurveInner: Union[AnyStr, TCC_Curve]
     DOC_PhaseTripInner: float
-    DOC_TDPhaseInner: Union[AnyStr, TCC_Curve]
+    DOC_TDPhaseInner: float
     DOC_P1Blocking: bool
     basefreq: float
     enabled: bool
@@ -21411,7 +21548,7 @@ class PVSystemProperties(TypedDict):
     PTCurve: Union[AnyStr, XYcurve]
     pctR: float
     pctX: float
-    model: int
+    model: Union[int, PVSystem.PVSystemModel]
     Vminpu: float
     Vmaxpu: float
     Balanced: bool
@@ -21442,6 +21579,8 @@ class PVSystemProperties(TypedDict):
     DynamicEq: Union[AnyStr, DynamicExp]
     DynOut: AnyStr
     ControlMode: Union[AnyStr, int, InverterControlMode]
+    AmpLimit: float
+    AmpLimitGain: float
     spectrum: Union[AnyStr, Spectrum]
     basefreq: float
     enabled: bool
@@ -21456,7 +21595,7 @@ class UPFCProperties(TypedDict):
     Phases: int
     Xs: float
     Tol1: float
-    Mode: int
+    Mode: Union[int, UPFC.UPFCMode]
     VpqMax: float
     LossCurve: Union[AnyStr, XYcurve]
     VHLimit: float
@@ -21567,6 +21706,7 @@ class AutoTransProperties(TypedDict):
     pctimag: float
     ppm_antifloat: float
     pctRs: Float64Array
+    bank: AnyStr
     XRConst: bool
     LeadLag: Union[AnyStr, int, PhaseSequence]
     normamps: float
@@ -21900,14 +22040,14 @@ class LineCodeBatch(DSSBatch):
     @property
     def units(self) -> BatchInt32ArrayProxy:
         """
-        One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length unitsgiven in Line object
+        One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length units given in Line object
 
         DSS property name: `units`, DSS property index: 8.
         """
         return BatchInt32ArrayProxy(self, 8)
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def units(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(8, value)
             return
@@ -21917,7 +22057,7 @@ class LineCodeBatch(DSSBatch):
     @property
     def units_str(self) -> str:
         """
-        One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length unitsgiven in Line object
+        One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length units given in Line object
 
         DSS property name: `units`, DSS property index: 8.
         """
@@ -22498,7 +22638,7 @@ class LoadShapeBatch(DSSBatch):
     def MemoryMapping(self) -> List[bool]:
         """
         {Yes | No* | True | False*} Enables the memory mapping functionality for dealing with large amounts of load shapes. 
-        By defaul is False. Use it to accelerate the model loading when the containing a large number of load shapes.
+        By default is False. Use it to accelerate the model loading when the containing a large number of load shapes.
 
         DSS property name: `MemoryMapping`, DSS property index: 21.
         """
@@ -22514,7 +22654,7 @@ class LoadShapeBatch(DSSBatch):
         """
         {AVG* | EDGE} Defines the interpolation method used for connecting distant dots within the load shape.
 
-        By defaul is AVG (average), which will return a multiplier for missing intervals based on the closest multiplier in time.
+        By default is AVG (average), which will return a multiplier for missing intervals based on the closest multiplier in time.
         EDGE interpolation keeps the last known value for missing intervals until the next defined multiplier arrives.
 
         DSS property name: `Interpolation`, DSS property index: 22.
@@ -22534,7 +22674,7 @@ class LoadShapeBatch(DSSBatch):
         """
         {AVG* | EDGE} Defines the interpolation method used for connecting distant dots within the load shape.
 
-        By defaul is AVG (average), which will return a multiplier for missing intervals based on the closest multiplier in time.
+        By default is AVG (average), which will return a multiplier for missing intervals based on the closest multiplier in time.
         EDGE interpolation keeps the last known value for missing intervals until the next defined multiplier arrives.
 
         DSS property name: `Interpolation`, DSS property index: 22.
@@ -23447,7 +23587,7 @@ class WireDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 3)
 
     @Runits.setter
-    def Runits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def Runits(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(3, value)
             return
@@ -23490,7 +23630,7 @@ class WireDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 5)
 
     @GMRunits.setter
-    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def GMRunits(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(5, value)
             return
@@ -23533,7 +23673,7 @@ class WireDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 7)
 
     @radunits.setter
-    def radunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def radunits(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(7, value)
             return
@@ -23791,7 +23931,7 @@ class CNDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 11)
 
     @Runits.setter
-    def Runits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def Runits(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(11, value)
             return
@@ -23834,7 +23974,7 @@ class CNDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 13)
 
     @GMRunits.setter
-    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def GMRunits(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(13, value)
             return
@@ -23877,7 +24017,7 @@ class CNDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 15)
 
     @radunits.setter
-    def radunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def radunits(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(15, value)
             return
@@ -24122,7 +24262,7 @@ class TSDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 10)
 
     @Runits.setter
-    def Runits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def Runits(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(10, value)
             return
@@ -24165,7 +24305,7 @@ class TSDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 12)
 
     @GMRunits.setter
-    def GMRunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def GMRunits(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(12, value)
             return
@@ -24208,7 +24348,7 @@ class TSDataBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 14)
 
     @radunits.setter
-    def radunits(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def radunits(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(14, value)
             return
@@ -24394,7 +24534,7 @@ class LineSpacingBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 5)
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def units(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(5, value)
             return
@@ -24532,7 +24672,7 @@ class LineGeometryBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 7)
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def units(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(7, value)
             return
@@ -25017,7 +25157,7 @@ class XfmrCodeBatch(DSSBatch):
     @property
     def pctnoloadloss(self) -> BatchFloat64ArrayProxy:
         """
-        Percent no load losses at rated excitatation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
+        Percent no load losses at rated excitation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
 
         DSS property name: `%noloadloss`, DSS property index: 25.
         """
@@ -25030,7 +25170,7 @@ class XfmrCodeBatch(DSSBatch):
     @property
     def normhkVA(self) -> BatchFloat64ArrayProxy:
         """
-        Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% ofmaximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
+        Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% of maximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
 
         DSS property name: `normhkVA`, DSS property index: 26.
         """
@@ -25043,7 +25183,7 @@ class XfmrCodeBatch(DSSBatch):
     @property
     def emerghkVA(self) -> BatchFloat64ArrayProxy:
         """
-        Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% ofmaximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
+        Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% of maximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
 
         DSS property name: `emerghkVA`, DSS property index: 27.
         """
@@ -25501,7 +25641,7 @@ class LineBatch(DSSBatch):
     @property
     def rho(self) -> BatchFloat64ArrayProxy:
         """
-        Default=100 meter ohms.  Earth resitivity used to compute earth correction factor. Overrides Line geometry definition if specified.
+        Default=100 meter ohms.  Earth resistivity used to compute earth correction factor. Overrides Line geometry definition if specified.
 
         DSS property name: `rho`, DSS property index: 18.
         """
@@ -25514,7 +25654,7 @@ class LineBatch(DSSBatch):
     @property
     def geometry(self) -> List[str]:
         """
-        Geometry code for LineGeometry Object. Supercedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
+        Geometry code for LineGeometry Object. Supersedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
 
         DSS property name: `geometry`, DSS property index: 19.
         """
@@ -25527,7 +25667,7 @@ class LineBatch(DSSBatch):
     @property
     def geometry_obj(self) -> List[LineGeometry]:
         """
-        Geometry code for LineGeometry Object. Supercedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
+        Geometry code for LineGeometry Object. Supersedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
 
         DSS property name: `geometry`, DSS property index: 19.
         """
@@ -25547,7 +25687,7 @@ class LineBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 20)
 
     @units.setter
-    def units(self, value: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]):
+    def units(self, value: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(20, value)
             return
@@ -25870,7 +26010,7 @@ class VsourceBatch(DSSBatch):
         bus1=busname
         bus1=busname.1.2.3
 
-        The VSOURCE object is a two-terminal voltage source (thevenin equivalent). Bus2 defaults to Bus1 with all phases connected to ground (node 0) unless previously specified. This is a Yg connection. If you want something different, define the Bus2 property ezplicitly.
+        The VSOURCE object is a two-terminal voltage source (thevenin equivalent). Bus2 defaults to Bus1 with all phases connected to ground (node 0) unless previously specified. This is a Yg connection. If you want something different, define the Bus2 property explicitly.
 
         DSS property name: `bus1`, DSS property index: 1.
         """
@@ -26306,7 +26446,7 @@ class VsourceBatch(DSSBatch):
     @property
     def baseMVA(self) -> BatchFloat64ArrayProxy:
         """
-        Default value is 100. Base used to convert values specifiied with puZ1, puZ0, and puZ2 properties to ohms on kV base specified by BasekV property.
+        Default value is 100. Base used to convert values specified with puZ1, puZ0, and puZ2 properties to ohms on kV base specified by BasekV property.
 
         DSS property name: `baseMVA`, DSS property index: 26.
         """
@@ -26323,7 +26463,7 @@ class VsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 27.
         """
@@ -26340,7 +26480,7 @@ class VsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 27.
         """
@@ -26357,7 +26497,7 @@ class VsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Daily`, DSS property index: 28.
         """
@@ -26374,7 +26514,7 @@ class VsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Daily`, DSS property index: 28.
         """
@@ -26391,7 +26531,7 @@ class VsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Duty`, DSS property index: 29.
         """
@@ -26408,7 +26548,7 @@ class VsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Duty`, DSS property index: 29.
         """
@@ -26687,7 +26827,7 @@ class IsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 8.
         """
@@ -26704,7 +26844,7 @@ class IsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Is set to the Daily load shape when Daily is defined.  The daily load shape is repeated in this case. Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 8.
         """
@@ -26721,7 +26861,7 @@ class IsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Daily`, DSS property index: 9.
         """
@@ -26738,7 +26878,7 @@ class IsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Sets Yearly curve if it is not already defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Daily`, DSS property index: 9.
         """
@@ -26755,7 +26895,7 @@ class IsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Duty`, DSS property index: 10.
         """
@@ -26772,7 +26912,7 @@ class IsourceBatch(DSSBatch):
 
         Must be previously defined as a LOADSHAPE object. 
 
-        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadahape for Yearly mode. The default is no variation.
+        Defaults to Daily load shape when Daily is defined.   Set to NONE to reset to no loadshape for Yearly mode. The default is no variation.
 
         DSS property name: `Duty`, DSS property index: 10.
         """
@@ -27250,7 +27390,7 @@ class LoadBatch(DSSBatch):
     @property
     def yearly(self) -> List[str]:
         """
-        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
+        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
         DSS property name: `yearly`, DSS property index: 7.
         """
@@ -27263,7 +27403,7 @@ class LoadBatch(DSSBatch):
     @property
     def yearly_obj(self) -> List[LoadShape]:
         """
-        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
+        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
         DSS property name: `yearly`, DSS property index: 7.
         """
@@ -27276,7 +27416,7 @@ class LoadBatch(DSSBatch):
     @property
     def daily(self) -> List[str]:
         """
-        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
+        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `daily`, DSS property index: 8.
         """
@@ -27289,7 +27429,7 @@ class LoadBatch(DSSBatch):
     @property
     def daily_obj(self) -> List[LoadShape]:
         """
-        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
+        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `daily`, DSS property index: 8.
         """
@@ -27302,7 +27442,7 @@ class LoadBatch(DSSBatch):
     @property
     def duty(self) -> List[str]:
         """
-        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
+        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `duty`, DSS property index: 9.
         """
@@ -27315,7 +27455,7 @@ class LoadBatch(DSSBatch):
     @property
     def duty_obj(self) -> List[LoadShape]:
         """
-        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
+        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `duty`, DSS property index: 9.
         """
@@ -28197,7 +28337,7 @@ class TransformerBatch(DSSBatch):
     @property
     def normhkVA(self) -> BatchFloat64ArrayProxy:
         """
-        Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% ofmaximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
+        Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% of maximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
 
         DSS property name: `normhkVA`, DSS property index: 28.
         """
@@ -28210,7 +28350,7 @@ class TransformerBatch(DSSBatch):
     @property
     def emerghkVA(self) -> BatchFloat64ArrayProxy:
         """
-        Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% ofmaximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
+        Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% of maximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
 
         DSS property name: `emerghkVA`, DSS property index: 29.
         """
@@ -28466,6 +28606,8 @@ class TransformerBatch(DSSBatch):
     def WdgCurrents(self) -> List[str]:
         """
         (Read only) Makes winding currents available via return on query (? Transformer.TX.WdgCurrents). Order: Phase 1, Wdg 1, Wdg 2, ..., Phase 2 ...
+
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
 
         DSS property name: `WdgCurrents`, DSS property index: 45.
         """
@@ -28880,7 +29022,7 @@ class CapacitorBatch(DSSBatch):
     @property
     def normamps(self) -> BatchFloat64ArrayProxy:
         """
-        Normal rated current.
+        Normal rated current. Defaults to 180% of per-phase rated current.
 
         DSS property name: `normamps`, DSS property index: 14.
         """
@@ -28893,7 +29035,7 @@ class CapacitorBatch(DSSBatch):
     @property
     def emergamps(self) -> BatchFloat64ArrayProxy:
         """
-        Maximum or emerg current.
+        Maximum or emerg current. Defaults to 180% of per-phase rated current.
 
         DSS property name: `emergamps`, DSS property index: 15.
         """
@@ -29361,7 +29503,7 @@ class ReactorBatch(DSSBatch):
     @property
     def normamps(self) -> BatchFloat64ArrayProxy:
         """
-        Normal rated current.
+        Normal rated current. Defaults to per-phase rated current when reactor is specified with rated power and voltage.
 
         DSS property name: `normamps`, DSS property index: 20.
         """
@@ -29374,7 +29516,7 @@ class ReactorBatch(DSSBatch):
     @property
     def emergamps(self) -> BatchFloat64ArrayProxy:
         """
-        Maximum or emerg current.
+        Maximum or emerg current. Defaults to 135% of per-phase rated current when reactor is specified with rated power and voltage.
 
         DSS property name: `emergamps`, DSS property index: 21.
         """
@@ -29782,7 +29924,7 @@ class CapControlBatch(DSSBatch):
     @property
     def EventLog(self) -> List[bool]:
         """
-        {Yes/True* | No/False} Default is YES for CapControl. Log control actions to Eventlog.
+        {Yes/True | No/False*} Default is NO for CapControl. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 18.
         """
@@ -29845,7 +29987,7 @@ class CapControlBatch(DSSBatch):
     @property
     def ControlSignal(self) -> List[str]:
         """
-        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and conencted to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
+        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and connected to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
@@ -29858,7 +30000,7 @@ class CapControlBatch(DSSBatch):
     @property
     def ControlSignal_obj(self) -> List[LoadShape]:
         """
-        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and conencted to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
+        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and connected to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
@@ -30367,7 +30509,7 @@ class GeneratorBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 7)
 
     @model.setter
-    def model(self, value: Union[int, Int32Array]):
+    def model(self, value: Union[int, Generator.GeneratorModel, Int32Array]):
         self._set_batch_int32_array(7, value)
 
     @property
@@ -30399,7 +30541,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def yearly(self) -> List[str]:
         """
-        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadahape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
+        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
         DSS property name: `yearly`, DSS property index: 10.
         """
@@ -30412,7 +30554,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def yearly_obj(self) -> List[LoadShape]:
         """
-        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadahape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
+        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
         DSS property name: `yearly`, DSS property index: 10.
         """
@@ -30425,7 +30567,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def daily(self) -> List[str]:
         """
-        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape objectthat is 1.0 perunit for all hours. Set to NONE to reset to no loadahape. 
+        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
         DSS property name: `daily`, DSS property index: 11.
         """
@@ -30438,7 +30580,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def daily_obj(self) -> List[LoadShape]:
         """
-        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape objectthat is 1.0 perunit for all hours. Set to NONE to reset to no loadahape. 
+        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
         DSS property name: `daily`, DSS property index: 11.
         """
@@ -30451,7 +30593,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def duty(self) -> List[str]:
         """
-        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
+        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
         DSS property name: `duty`, DSS property index: 12.
         """
@@ -30464,7 +30606,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def duty_obj(self) -> List[LoadShape]:
         """
-        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
+        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
         DSS property name: `duty`, DSS property index: 12.
         """
@@ -30674,7 +30816,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def Xd(self) -> BatchFloat64ArrayProxy:
         """
-        Per unit synchronous reactance of machine. Presently used only for Thevinen impedance for power flow calcs of user models (model=6). Typically use a value 0.4 to 1.0. Default is 1.0
+        Per unit synchronous reactance of machine. Presently used only for Thevenin impedance for power flow calcs of user models (model=6). Typically use a value 0.4 to 1.0. Default is 1.0
 
         DSS property name: `Xd`, DSS property index: 25.
         """
@@ -30687,7 +30829,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def Xdp(self) -> BatchFloat64ArrayProxy:
         """
-        Per unit transient reactance of the machine.  Used for Dynamics mode and Fault studies.  Default is 0.27.For user models, this value is used for the Thevinen/Norton impedance for Dynamics Mode.
+        Per unit transient reactance of the machine.  Used for Dynamics mode and Fault studies.  Default is 0.27.For user models, this value is used for the Thevenin/Norton impedance for Dynamics Mode.
 
         DSS property name: `Xdp`, DSS property index: 26.
         """
@@ -30876,7 +31018,7 @@ class GeneratorBatch(DSSBatch):
     @property
     def pctFuel(self) -> BatchFloat64ArrayProxy:
         """
-        It is a number between 0 and 100 representing the current amount of fuel avaiable in percentage of FuelkWh. It only applies if UseFuel = Yes/True
+        It is a number between 0 and 100 representing the current amount of fuel available in percentage of FuelkWh. It only applies if UseFuel = Yes/True
 
         DSS property name: `%Fuel`, DSS property index: 40.
         """
@@ -31119,7 +31261,7 @@ class GenDispatcherBatch(DSSBatch):
     @property
     def Weights(self) -> List[Float64Array]:
         """
-        GenDispatcher.Weights
+        Array of proportional weights corresponding to each generator in the GenList. The needed kW to get back to center band is dispatched to each generator according to these weights. Default is to set all weights to 1.0.
 
         DSS property name: `Weights`, DSS property index: 7.
         """
@@ -32095,7 +32237,7 @@ class StorageBatch(DSSBatch):
     @property
     def ControlMode(self) -> BatchInt32ArrayProxy:
         """
-        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
         GFM control mode disables any control action set by the InvControl device.
 
@@ -32114,7 +32256,7 @@ class StorageBatch(DSSBatch):
     @property
     def ControlMode_str(self) -> str:
         """
-        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
         GFM control mode disables any control action set by the InvControl device.
 
@@ -32127,57 +32269,84 @@ class StorageBatch(DSSBatch):
         self.ControlMode = value
 
     @property
+    def AmpLimit(self) -> BatchFloat64ArrayProxy:
+        """
+        The current limiter per phase for the IBR when operating in GFM mode. This limit is imposed to prevent the IBR to enter into Safe Mode when reaching the IBR power ratings.
+        Once the IBR reaches this value, it remains there without moving into Safe Mode. This value needs to be set lower than the IBR Amps rating.
+
+        DSS property name: `AmpLimit`, DSS property index: 60.
+        """
+        return BatchFloat64ArrayProxy(self, 60)
+
+    @AmpLimit.setter
+    def AmpLimit(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(60, value)
+
+    @property
+    def AmpLimitGain(self) -> BatchFloat64ArrayProxy:
+        """
+        Use it for fine tunning the current limiter when active, by default is 0.8, it has to be a value between 0.1 and 1. This value allows users to fine tune the IBRs current limiter to match with the user requirements.
+
+        DSS property name: `AmpLimitGain`, DSS property index: 61.
+        """
+        return BatchFloat64ArrayProxy(self, 61)
+
+    @AmpLimitGain.setter
+    def AmpLimitGain(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(61, value)
+
+    @property
     def spectrum(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 60.
+        DSS property name: `spectrum`, DSS property index: 62.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 60)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 62)
 
     @spectrum.setter
     def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
-        self._set_batch_obj_prop(60, value)
+        self._set_batch_obj_prop(62, value)
 
     @property
     def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 60.
+        DSS property name: `spectrum`, DSS property index: 62.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 60)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 62)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_batch_string(60, value)
+        self._set_batch_string(62, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 61.
+        DSS property name: `basefreq`, DSS property index: 63.
         """
-        return BatchFloat64ArrayProxy(self, 61)
+        return BatchFloat64ArrayProxy(self, 63)
 
     @basefreq.setter
     def basefreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(61, value)
+        self._set_batch_float64_array(63, value)
 
     @property
     def enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 62.
+        DSS property name: `enabled`, DSS property index: 64.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 62)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 64)
         ]
     @enabled.setter
     def enabled(self, value: bool):
-        self._set_batch_int32_array(62, value)
+        self._set_batch_int32_array(64, value)
 
     def like(self, value: AnyStr):
         """
@@ -32185,9 +32354,9 @@ class StorageBatch(DSSBatch):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 63.
+        DSS property name: `like`, DSS property index: 65.
         """
-        self._set_batch_string(63, value)
+        self._set_batch_string(65, value)
 
 class StorageControllerBatch(DSSBatch):
     _cls_name = 'StorageController'
@@ -32198,7 +32367,7 @@ class StorageControllerBatch(DSSBatch):
     @property
     def Element(self) -> List[str]:
         """
-        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.
+        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
         DSS property name: `Element`, DSS property index: 1.
         """
@@ -32211,7 +32380,7 @@ class StorageControllerBatch(DSSBatch):
     @property
     def Element_obj(self) -> List[DSSObj]:
         """
-        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.
+        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
         DSS property name: `Element`, DSS property index: 1.
         """
@@ -32399,7 +32568,7 @@ class StorageControllerBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 12)
 
     @ModeDischarge.setter
-    def ModeDischarge(self, value: Union[AnyStr, int, StorageController.StorageControllerDischargemode, List[AnyStr], List[int], List[StorageController.StorageControllerDischargemode], Int32Array]):
+    def ModeDischarge(self, value: Union[AnyStr, int, StorageController.StorageControllerDischargeMode, List[AnyStr], List[int], List[StorageController.StorageControllerDischargeMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(12, value)
             return
@@ -32442,16 +32611,16 @@ class StorageControllerBatch(DSSBatch):
 
         In Time mode, the Storage charging FUNCTION is triggered at the specified %RateCharge at the specified charge trigger time in fractional hours.
 
-        In PeakShaveLow mode, the charging operation will charge the Storage fleet when the power at amonitored element is below a specified KW target (kWTarget_low). The Storage will charge as much power as necessary to keep the power within the deadband around kWTarget_low.
+        In PeakShaveLow mode, the charging operation will charge the Storage fleet when the power at a monitored element is below a specified KW target (kWTarget_low). The Storage will charge as much power as necessary to keep the power within the deadband around kWTarget_low.
 
-        In I-PeakShaveLow mode, the charging operation will charge the Storage fleet when the current (Amps) at amonitored element is below a specified amps target (kWTarget_low). The Storage will charge as much power as necessary to keep the amps within the deadband around kWTarget_low. When this control mode is active, the property kWTarget_low will be expressed in k-amps and all the other parameters will be adjusted to match the amps (current) control criteria.
+        In I-PeakShaveLow mode, the charging operation will charge the Storage fleet when the current (Amps) at a monitored element is below a specified amps target (kWTarget_low). The Storage will charge as much power as necessary to keep the amps within the deadband around kWTarget_low. When this control mode is active, the property kWTarget_low will be expressed in k-amps and all the other parameters will be adjusted to match the amps (current) control criteria.
 
         DSS property name: `ModeCharge`, DSS property index: 13.
         """
         return BatchInt32ArrayProxy(self, 13)
 
     @ModeCharge.setter
-    def ModeCharge(self, value: Union[AnyStr, int, StorageController.StorageControllerChargemode, List[AnyStr], List[int], List[StorageController.StorageControllerChargemode], Int32Array]):
+    def ModeCharge(self, value: Union[AnyStr, int, StorageController.StorageControllerChargeMode, List[AnyStr], List[int], List[StorageController.StorageControllerChargeMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(13, value)
             return
@@ -32467,9 +32636,9 @@ class StorageControllerBatch(DSSBatch):
 
         In Time mode, the Storage charging FUNCTION is triggered at the specified %RateCharge at the specified charge trigger time in fractional hours.
 
-        In PeakShaveLow mode, the charging operation will charge the Storage fleet when the power at amonitored element is below a specified KW target (kWTarget_low). The Storage will charge as much power as necessary to keep the power within the deadband around kWTarget_low.
+        In PeakShaveLow mode, the charging operation will charge the Storage fleet when the power at a monitored element is below a specified KW target (kWTarget_low). The Storage will charge as much power as necessary to keep the power within the deadband around kWTarget_low.
 
-        In I-PeakShaveLow mode, the charging operation will charge the Storage fleet when the current (Amps) at amonitored element is below a specified amps target (kWTarget_low). The Storage will charge as much power as necessary to keep the amps within the deadband around kWTarget_low. When this control mode is active, the property kWTarget_low will be expressed in k-amps and all the other parameters will be adjusted to match the amps (current) control criteria.
+        In I-PeakShaveLow mode, the charging operation will charge the Storage fleet when the current (Amps) at a monitored element is below a specified amps target (kWTarget_low). The Storage will charge as much power as necessary to keep the amps within the deadband around kWTarget_low. When this control mode is active, the property kWTarget_low will be expressed in k-amps and all the other parameters will be adjusted to match the amps (current) control criteria.
 
         DSS property name: `ModeCharge`, DSS property index: 13.
         """
@@ -32784,7 +32953,7 @@ class StorageControllerBatch(DSSBatch):
     @property
     def ResetLevel(self) -> BatchFloat64ArrayProxy:
         """
-        The level of charge required for allowing the storage to discharge again after reaching the reserve storage level. After reaching this level, the storage control  will not allow the storage device to discharge, forcing the storage to charge. Once the storage reaches thislevel, the storage will be able to discharge again. This value is a number between 0.2 and 1
+        The level of charge required for allowing the storage to discharge again after reaching the reserve storage level. After reaching this level, the storage control  will not allow the storage device to discharge, forcing the storage to charge. Once the storage reaches this level, the storage will be able to discharge again. This value is a number between 0.2 and 1
 
         DSS property name: `ResetLevel`, DSS property index: 34.
         """
@@ -33478,7 +33647,7 @@ class RelayBatch(DSSBatch):
     @property
     def EventLog(self) -> List[bool]:
         """
-        {Yes/True* | No/False} Default is Yes for Relay. Write trips, reclose and reset events to EventLog.
+        {Yes/True | No/False* } Default is No for Relay. Write trips, reclose and reset events to EventLog.
 
         DSS property name: `EventLog`, DSS property index: 36.
         """
@@ -33492,7 +33661,7 @@ class RelayBatch(DSSBatch):
     @property
     def DebugTrace(self) -> List[bool]:
         """
-        {Yes/True* | No/False} Default is No for Relay. Write extra details to Eventlog.
+        {Yes/True* | No/False* } Default is No for Relay. Write extra details to Eventlog.
 
         DSS property name: `DebugTrace`, DSS property index: 37.
         """
@@ -33656,17 +33825,30 @@ class RelayBatch(DSSBatch):
         self._set_batch_float64_array(46, value)
 
     @property
-    def DOC_PhaseCurveInner(self) -> BatchFloat64ArrayProxy:
+    def DOC_PhaseCurveInner(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
         DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
         """
-        return BatchFloat64ArrayProxy(self, 47)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 47)
 
     @DOC_PhaseCurveInner.setter
-    def DOC_PhaseCurveInner(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(47, value)
+    def DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(47, value)
+
+    @property
+    def DOC_PhaseCurveInner_obj(self) -> List[TCC_Curve]:
+        """
+        Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
+
+        DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
+        """
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 47)
+
+    @DOC_PhaseCurveInner_obj.setter
+    def DOC_PhaseCurveInner_obj(self, value: TCC_Curve):
+        self._set_batch_string(47, value)
 
     @property
     def DOC_PhaseTripInner(self) -> BatchFloat64ArrayProxy:
@@ -33682,30 +33864,17 @@ class RelayBatch(DSSBatch):
         self._set_batch_float64_array(48, value)
 
     @property
-    def DOC_TDPhaseInner(self) -> List[str]:
+    def DOC_TDPhaseInner(self) -> BatchFloat64ArrayProxy:
         """
         Time dial for "DOC_PhaseCurveInner" TCC curve. Multiplier on time axis of specified curve. Default=1.0.
 
         DSS property name: `DOC_TDPhaseInner`, DSS property index: 49.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 49)
+        return BatchFloat64ArrayProxy(self, 49)
 
     @DOC_TDPhaseInner.setter
-    def DOC_TDPhaseInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(49, value)
-
-    @property
-    def DOC_TDPhaseInner_obj(self) -> List[TCC_Curve]:
-        """
-        Time dial for "DOC_PhaseCurveInner" TCC curve. Multiplier on time axis of specified curve. Default=1.0.
-
-        DSS property name: `DOC_TDPhaseInner`, DSS property index: 49.
-        """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 49)
-
-    @DOC_TDPhaseInner_obj.setter
-    def DOC_TDPhaseInner_obj(self, value: TCC_Curve):
-        self._set_batch_string(49, value)
+    def DOC_TDPhaseInner(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(49, value)
 
     @property
     def DOC_P1Blocking(self) -> List[bool]:
@@ -34121,7 +34290,7 @@ class RecloserBatch(DSSBatch):
     @property
     def Normal(self) -> BatchInt32ArrayProxy:
         """
-        {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specificallt declared.
+        {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
         DSS property name: `Normal`, DSS property index: 23.
         """
@@ -34138,7 +34307,7 @@ class RecloserBatch(DSSBatch):
     @property
     def Normal_str(self) -> str:
         """
-        {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specificallt declared.
+        {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
         DSS property name: `Normal`, DSS property index: 23.
         """
@@ -34937,7 +35106,7 @@ class PVSystemBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 18)
 
     @model.setter
-    def model(self, value: Union[int, Int32Array]):
+    def model(self, value: Union[int, PVSystem.PVSystemModel, Int32Array]):
         self._set_batch_int32_array(18, value)
 
     @property
@@ -35425,7 +35594,7 @@ class PVSystemBatch(DSSBatch):
     @property
     def ControlMode(self) -> BatchInt32ArrayProxy:
         """
-        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
         GFM control mode disables any control action set by the InvControl device.
 
@@ -35444,7 +35613,7 @@ class PVSystemBatch(DSSBatch):
     @property
     def ControlMode_str(self) -> str:
         """
-        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is conencted to the grid, it is highly recommended to use GFL.
+        Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
         GFM control mode disables any control action set by the InvControl device.
 
@@ -35457,57 +35626,84 @@ class PVSystemBatch(DSSBatch):
         self.ControlMode = value
 
     @property
+    def AmpLimit(self) -> BatchFloat64ArrayProxy:
+        """
+        The current limiter per phase for the IBR when operating in GFM mode. This limit is imposed to prevent the IBR to enter into Safe Mode when reaching the IBR power ratings.
+        Once the IBR reaches this value, it remains there without moving into Safe Mode. This value needs to be set lower than the IBR Amps rating.
+
+        DSS property name: `AmpLimit`, DSS property index: 49.
+        """
+        return BatchFloat64ArrayProxy(self, 49)
+
+    @AmpLimit.setter
+    def AmpLimit(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(49, value)
+
+    @property
+    def AmpLimitGain(self) -> BatchFloat64ArrayProxy:
+        """
+        Use it for fine tunning the current limiter when active, by default is 0.8, it has to be a value between 0.1 and 1. This value allows users to fine tune the IBRs current limiter to match with the user requirements.
+
+        DSS property name: `AmpLimitGain`, DSS property index: 50.
+        """
+        return BatchFloat64ArrayProxy(self, 50)
+
+    @AmpLimitGain.setter
+    def AmpLimitGain(self, value: Union[float, Float64Array]):
+        self._set_batch_float64_array(50, value)
+
+    @property
     def spectrum(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 49.
+        DSS property name: `spectrum`, DSS property index: 51.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 49)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 51)
 
     @spectrum.setter
     def spectrum(self, value: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]):
-        self._set_batch_obj_prop(49, value)
+        self._set_batch_obj_prop(51, value)
 
     @property
     def spectrum_obj(self) -> List[Spectrum]:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
-        DSS property name: `spectrum`, DSS property index: 49.
+        DSS property name: `spectrum`, DSS property index: 51.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 49)
+        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 51)
 
     @spectrum_obj.setter
     def spectrum_obj(self, value: Spectrum):
-        self._set_batch_string(49, value)
+        self._set_batch_string(51, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 50.
+        DSS property name: `basefreq`, DSS property index: 52.
         """
-        return BatchFloat64ArrayProxy(self, 50)
+        return BatchFloat64ArrayProxy(self, 52)
 
     @basefreq.setter
     def basefreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(50, value)
+        self._set_batch_float64_array(52, value)
 
     @property
     def enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 51.
+        DSS property name: `enabled`, DSS property index: 53.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 51)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 53)
         ]
     @enabled.setter
     def enabled(self, value: bool):
-        self._set_batch_int32_array(51, value)
+        self._set_batch_int32_array(53, value)
 
     def like(self, value: AnyStr):
         """
@@ -35515,9 +35711,9 @@ class PVSystemBatch(DSSBatch):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 52.
+        DSS property name: `like`, DSS property index: 54.
         """
-        self._set_batch_string(52, value)
+        self._set_batch_string(54, value)
 
 class UPFCBatch(DSSBatch):
     _cls_name = 'UPFC'
@@ -35560,7 +35756,9 @@ class UPFCBatch(DSSBatch):
     @property
     def refkV(self) -> BatchFloat64ArrayProxy:
         """
-        UPFC.refkV
+        Base Voltage expected at the output of the UPFC
+
+        "refkv=0.24"
 
         DSS property name: `refkV`, DSS property index: 3.
         """
@@ -35573,7 +35771,7 @@ class UPFCBatch(DSSBatch):
     @property
     def PF(self) -> BatchFloat64ArrayProxy:
         """
-        UPFC.PF
+        Power factor target at the input terminal.
 
         DSS property name: `PF`, DSS property index: 4.
         """
@@ -35586,7 +35784,7 @@ class UPFCBatch(DSSBatch):
     @property
     def Frequency(self) -> BatchFloat64ArrayProxy:
         """
-        UPFC.Frequency
+        UPFC working frequency.  Defaults to system default base frequency.
 
         DSS property name: `Frequency`, DSS property index: 5.
         """
@@ -35599,7 +35797,7 @@ class UPFCBatch(DSSBatch):
     @property
     def Phases(self) -> BatchInt32ArrayProxy:
         """
-        UPFC.Phases
+        Number of phases.  Defaults to 1 phase (2 terminals, 1 conductor per terminal).
 
         DSS property name: `Phases`, DSS property index: 6.
         """
@@ -35653,7 +35851,7 @@ class UPFCBatch(DSSBatch):
         return BatchInt32ArrayProxy(self, 9)
 
     @Mode.setter
-    def Mode(self, value: Union[int, Int32Array]):
+    def Mode(self, value: Union[int, UPFC.UPFCMode, Int32Array]):
         self._set_batch_int32_array(9, value)
 
     @property
@@ -35737,7 +35935,9 @@ class UPFCBatch(DSSBatch):
     @property
     def refkV2(self) -> BatchFloat64ArrayProxy:
         """
-        UPFC.refkV2
+        Base Voltage expected at the output of the UPFC for control modes 4 and 5.
+
+        This reference must be lower than refkv, see control modes 4 and 5 for details
 
         DSS property name: `refkV2`, DSS property index: 15.
         """
@@ -35750,7 +35950,7 @@ class UPFCBatch(DSSBatch):
     @property
     def kvarLimit(self) -> BatchFloat64ArrayProxy:
         """
-        Maximum amount of reactive power (kvar) that can be absorved by the UPFC (Default = 5)
+        Maximum amount of reactive power (kvar) that can be absorbed by the UPFC (Default = 5)
 
         DSS property name: `kvarLimit`, DSS property index: 16.
         """
@@ -36412,7 +36612,7 @@ class IndMach012Batch(DSSBatch):
     @property
     def Yearly(self) -> List[str]:
         """
-        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
+        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 18.
         """
@@ -36425,7 +36625,7 @@ class IndMach012Batch(DSSBatch):
     @property
     def Yearly_obj(self) -> List[LoadShape]:
         """
-        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. The default is no variation.
+        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 18.
         """
@@ -36438,7 +36638,7 @@ class IndMach012Batch(DSSBatch):
     @property
     def Daily(self) -> List[str]:
         """
-        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
+        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `Daily`, DSS property index: 19.
         """
@@ -36451,7 +36651,7 @@ class IndMach012Batch(DSSBatch):
     @property
     def Daily_obj(self) -> List[LoadShape]:
         """
-        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadahape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
+        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `Daily`, DSS property index: 19.
         """
@@ -36464,7 +36664,7 @@ class IndMach012Batch(DSSBatch):
     @property
     def Duty(self) -> List[str]:
         """
-        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
+        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `Duty`, DSS property index: 20.
         """
@@ -36477,7 +36677,7 @@ class IndMach012Batch(DSSBatch):
     @property
     def Duty_obj(self) -> List[LoadShape]:
         """
-        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadahape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
+        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `Duty`, DSS property index: 20.
         """
@@ -36793,7 +36993,7 @@ class AutoTransBatch(DSSBatch):
     @property
     def windings(self) -> BatchInt32ArrayProxy:
         """
-        Number of windings, this AutoTranss. (Also is the number of terminals) Default is 2. This property triggers memory allocation for the AutoTrans and will cause other properties to revert to default values.
+        Number of windings, this AutoTrans. (Also is the number of terminals) Default is 2. This property triggers memory allocation for the AutoTrans and will cause other properties to revert to default values.
 
         DSS property name: `windings`, DSS property index: 2.
         """
@@ -37119,7 +37319,7 @@ class AutoTransBatch(DSSBatch):
     @property
     def pctnoloadloss(self) -> BatchFloat64ArrayProxy:
         """
-        Percent no load losses at rated excitatation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
+        Percent no load losses at rated excitation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
 
         DSS property name: `%noloadloss`, DSS property index: 27.
         """
@@ -37132,7 +37332,7 @@ class AutoTransBatch(DSSBatch):
     @property
     def normhkVA(self) -> BatchFloat64ArrayProxy:
         """
-        Normal maximum kVA rating of H winding (winding 1+2).  Usually 100% - 110% ofmaximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
+        Normal maximum kVA rating of H winding (winding 1+2).  Usually 100% - 110% of maximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
 
         DSS property name: `normhkVA`, DSS property index: 28.
         """
@@ -37145,7 +37345,7 @@ class AutoTransBatch(DSSBatch):
     @property
     def emerghkVA(self) -> BatchFloat64ArrayProxy:
         """
-        Emergency (contingency)  kVA rating of H winding (winding 1+2).  Usually 140% - 150% ofmaximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
+        Emergency (contingency)  kVA rating of H winding (winding 1+2).  Usually 140% - 150% of maximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
 
         DSS property name: `emerghkVA`, DSS property index: 29.
         """
@@ -37276,44 +37476,58 @@ class AutoTransBatch(DSSBatch):
         self._set_batch_float64_array_prop(37, value)
 
     @property
+    def bank(self) -> List[str]:
+        """
+        Name of the bank this transformer is part of, for CIM, MultiSpeak, and other interfaces.
+
+        DSS property name: `bank`, DSS property index: 38.
+        """
+
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 38) 
+
+    @bank.setter
+    def bank(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(38, value)
+
+    @property
     def XRConst(self) -> List[bool]:
         """
-        ={Yes|No} Default is NO. Signifies whether or not the X/R is assumed contant for harmonic studies.
+        ={Yes|No} Default is NO. Signifies whether or not the X/R is assumed constant for harmonic studies.
 
-        DSS property name: `XRConst`, DSS property index: 38.
+        DSS property name: `XRConst`, DSS property index: 39.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 38)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 39)
         ]
     @XRConst.setter
     def XRConst(self, value: bool):
-        self._set_batch_int32_array(38, value)
+        self._set_batch_int32_array(39, value)
 
     @property
     def LeadLag(self) -> BatchInt32ArrayProxy:
         """
         {Lead | Lag (default) | ANSI (default) | Euro } Designation in mixed Delta-wye connections the relationship between HV to LV winding. Default is ANSI 30 deg lag, e.g., Dy1 of Yd1 vector group. To get typical European Dy11 connection, specify either "lead" or "Euro"
 
-        DSS property name: `LeadLag`, DSS property index: 39.
+        DSS property name: `LeadLag`, DSS property index: 40.
         """
-        return BatchInt32ArrayProxy(self, 39)
+        return BatchInt32ArrayProxy(self, 40)
 
     @LeadLag.setter
     def LeadLag(self, value: Union[AnyStr, int, PhaseSequence, List[AnyStr], List[int], List[PhaseSequence], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(39, value)
+            self._set_batch_string(40, value)
             return
     
-        self._set_batch_int32_array(39, value)
+        self._set_batch_int32_array(40, value)
 
     @property
     def LeadLag_str(self) -> str:
         """
         {Lead | Lag (default) | ANSI (default) | Euro } Designation in mixed Delta-wye connections the relationship between HV to LV winding. Default is ANSI 30 deg lag, e.g., Dy1 of Yd1 vector group. To get typical European Dy11 connection, specify either "lead" or "Euro"
 
-        DSS property name: `LeadLag`, DSS property index: 39.
+        DSS property name: `LeadLag`, DSS property index: 40.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 40)
 
     @LeadLag_str.setter
     def LeadLag_str(self, value: AnyStr):
@@ -37323,103 +37537,105 @@ class AutoTransBatch(DSSBatch):
         """
         (Read only) Makes winding currents available via return on query (? AutoTrans.TX.WdgCurrents). Order: Phase 1, Wdg 1, Wdg 2, ..., Phase 2 ...
 
-        DSS property name: `WdgCurrents`, DSS property index: 40.
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+
+        DSS property name: `WdgCurrents`, DSS property index: 41.
         """
         # []
         # StringSilentROFunction
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 40)
+        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 41)
 
     @property
     def normamps(self) -> BatchFloat64ArrayProxy:
         """
         Normal rated current.
 
-        DSS property name: `normamps`, DSS property index: 41.
+        DSS property name: `normamps`, DSS property index: 42.
         """
-        return BatchFloat64ArrayProxy(self, 41)
+        return BatchFloat64ArrayProxy(self, 42)
 
     @normamps.setter
     def normamps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(41, value)
+        self._set_batch_float64_array(42, value)
 
     @property
     def emergamps(self) -> BatchFloat64ArrayProxy:
         """
         Maximum or emerg current.
 
-        DSS property name: `emergamps`, DSS property index: 42.
+        DSS property name: `emergamps`, DSS property index: 43.
         """
-        return BatchFloat64ArrayProxy(self, 42)
+        return BatchFloat64ArrayProxy(self, 43)
 
     @emergamps.setter
     def emergamps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(42, value)
+        self._set_batch_float64_array(43, value)
 
     @property
     def faultrate(self) -> BatchFloat64ArrayProxy:
         """
         Failure rate per year.
 
-        DSS property name: `faultrate`, DSS property index: 43.
+        DSS property name: `faultrate`, DSS property index: 44.
         """
-        return BatchFloat64ArrayProxy(self, 43)
+        return BatchFloat64ArrayProxy(self, 44)
 
     @faultrate.setter
     def faultrate(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(43, value)
+        self._set_batch_float64_array(44, value)
 
     @property
     def pctperm(self) -> BatchFloat64ArrayProxy:
         """
         Percent of failures that become permanent.
 
-        DSS property name: `pctperm`, DSS property index: 44.
+        DSS property name: `pctperm`, DSS property index: 45.
         """
-        return BatchFloat64ArrayProxy(self, 44)
+        return BatchFloat64ArrayProxy(self, 45)
 
     @pctperm.setter
     def pctperm(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(44, value)
+        self._set_batch_float64_array(45, value)
 
     @property
     def repair(self) -> BatchFloat64ArrayProxy:
         """
         Hours to repair.
 
-        DSS property name: `repair`, DSS property index: 45.
+        DSS property name: `repair`, DSS property index: 46.
         """
-        return BatchFloat64ArrayProxy(self, 45)
+        return BatchFloat64ArrayProxy(self, 46)
 
     @repair.setter
     def repair(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(45, value)
+        self._set_batch_float64_array(46, value)
 
     @property
     def basefreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
-        DSS property name: `basefreq`, DSS property index: 46.
+        DSS property name: `basefreq`, DSS property index: 47.
         """
-        return BatchFloat64ArrayProxy(self, 46)
+        return BatchFloat64ArrayProxy(self, 47)
 
     @basefreq.setter
     def basefreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(46, value)
+        self._set_batch_float64_array(47, value)
 
     @property
     def enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
-        DSS property name: `enabled`, DSS property index: 47.
+        DSS property name: `enabled`, DSS property index: 48.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 47)
+            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 48)
         ]
     @enabled.setter
     def enabled(self, value: bool):
-        self._set_batch_int32_array(47, value)
+        self._set_batch_int32_array(48, value)
 
     def like(self, value: AnyStr):
         """
@@ -37427,9 +37643,9 @@ class AutoTransBatch(DSSBatch):
 
         New Capacitor.C2 like=c1  ...
 
-        DSS property name: `like`, DSS property index: 48.
+        DSS property name: `like`, DSS property index: 49.
         """
-        self._set_batch_string(48, value)
+        self._set_batch_string(49, value)
 
 class RegControlBatch(DSSBatch):
     _cls_name = 'RegControl'
@@ -37808,7 +38024,7 @@ class RegControlBatch(DSSBatch):
     @property
     def EventLog(self) -> List[bool]:
         """
-        {Yes/True* | No/False} Default is YES for regulator control. Log control actions to Eventlog.
+        {Yes/True | No/False*} Default is NO for regulator control. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 26.
         """
@@ -37960,10 +38176,10 @@ class InvControlBatch(DSSBatch):
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
-        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
+        Must be one of: {VOLTVAR | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
         if the user desires to use modes simultaneously, then set the CombiMode property. Setting the Mode to any valid value disables combination mode.
 
-        In volt-var mode (Default). This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
+        In volt-var mode. This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
 
         In volt-watt mode. This mode attempts to LIMIT the watts, according to one defined volt-watt curve, depending on the monitored voltages and the capabilities of the PVSystem/Storage. 
 
@@ -37974,6 +38190,9 @@ class InvControlBatch(DSSBatch):
         In watt-var mode. This mode attempts to CONTROL the vars, according to a watt-var curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
 
         In GFM mode this control will trigger the GFM control routine for the DERs within the DERList. The GFM actiosn will only take place if the pointed DERs are in GFM mode. The controller parameters are locally setup at the DER.
+
+
+        NO DEFAULT
 
         DSS property name: `Mode`, DSS property index: 2.
         """
@@ -37992,10 +38211,10 @@ class InvControlBatch(DSSBatch):
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
-        Must be one of: {VOLTVAR* | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
+        Must be one of: {VOLTVAR | VOLTWATT | DYNAMICREACCURR | WATTPF | WATTVAR | GFM} 
         if the user desires to use modes simultaneously, then set the CombiMode property. Setting the Mode to any valid value disables combination mode.
 
-        In volt-var mode (Default). This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
+        In volt-var mode. This mode attempts to CONTROL the vars, according to one or two volt-var curves, depending on the monitored voltages, present active power output, and the capabilities of the PVSystem/Storage. 
 
         In volt-watt mode. This mode attempts to LIMIT the watts, according to one defined volt-watt curve, depending on the monitored voltages and the capabilities of the PVSystem/Storage. 
 
@@ -38006,6 +38225,9 @@ class InvControlBatch(DSSBatch):
         In watt-var mode. This mode attempts to CONTROL the vars, according to a watt-var curve, depending on the present active power output, and the capabilities of the PVSystem/Storage. 
 
         In GFM mode this control will trigger the GFM control routine for the DERs within the DERList. The GFM actiosn will only take place if the pointed DERs are in GFM mode. The controller parameters are locally setup at the DER.
+
+
+        NO DEFAULT
 
         DSS property name: `Mode`, DSS property index: 2.
         """
@@ -38330,7 +38552,7 @@ class InvControlBatch(DSSBatch):
 
         if the maximum control iterations are exceeded, and no numerical instability is seen in the EventLog of via monitors, then try increasing the value of this parameter to reduce the number of control iterations needed to achieve the control criteria, and move to the power flow solution. 
 
-        When operating the controller using expoenential control model (see CtrlModel), this parameter represents the sampling time gain of the controller, which is used for accelrating the controller response in terms of control iterations required.
+        When operating the controller using exponential control model (see CtrlModel), this parameter represents the sampling time gain of the controller, which is used for accelrating the controller response in terms of control iterations required.
 
         DSS property name: `deltaQ_Factor`, DSS property index: 14.
         """
@@ -38634,7 +38856,7 @@ class InvControlBatch(DSSBatch):
     @property
     def monBus(self) -> List[List[str]]:
         """
-        Name of monitored bus used by the voltage-dependente control modes. Default is bus of the controlled PVSystem/Storage or Storage.
+        Name of monitored bus used by the voltage-dependent control modes. Default is bus of the controlled PVSystem/Storage or Storage.
 
         DSS property name: `monBus`, DSS property index: 26.
         """
@@ -38669,7 +38891,7 @@ class InvControlBatch(DSSBatch):
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
-        The name of an XYCurve object that describes the variation in active power output (in per unit of maximum active power outut for the Storage). 
+        The name of an XYCurve object that describes the variation in active power output (in per unit of maximum active power output for the Storage). 
 
         Units for the x-axis are per-unit voltage, which may be in per unit of the rated voltage for the Storage, or may be in per unit of the average voltage at the terminals over a user-defined number of prior solutions. 
 
@@ -38690,7 +38912,7 @@ class InvControlBatch(DSSBatch):
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
-        The name of an XYCurve object that describes the variation in active power output (in per unit of maximum active power outut for the Storage). 
+        The name of an XYCurve object that describes the variation in active power output (in per unit of maximum active power output for the Storage). 
 
         Units for the x-axis are per-unit voltage, which may be in per unit of the rated voltage for the Storage, or may be in per unit of the average voltage at the terminals over a user-defined number of prior solutions. 
 
@@ -38722,7 +38944,7 @@ class InvControlBatch(DSSBatch):
 
         The user needs to translate this curve into a plot in which the y-axis reference is equal to 0 power factor.It means that two new XY coordinates need to be included, in this case they are: (0.35, 1); (0.35, -1).
         Try to plot them considering the y-axis reference equal to 0 power factor.
-        The discontinity in 0.35pu is not a problem since var is zero for either power factor equal to 1 or -1.
+        The discontinuity in 0.35pu is not a problem since var is zero for either power factor equal to 1 or -1.
 
         DSS property name: `wattpf_curve`, DSS property index: 29.
         """
@@ -38748,7 +38970,7 @@ class InvControlBatch(DSSBatch):
 
         The user needs to translate this curve into a plot in which the y-axis reference is equal to 0 power factor.It means that two new XY coordinates need to be included, in this case they are: (0.35, 1); (0.35, -1).
         Try to plot them considering the y-axis reference equal to 0 power factor.
-        The discontinity in 0.35pu is not a problem since var is zero for either power factor equal to 1 or -1.
+        The discontinuity in 0.35pu is not a problem since var is zero for either power factor equal to 1 or -1.
 
         DSS property name: `wattpf_curve`, DSS property index: 29.
         """
@@ -38816,7 +39038,7 @@ class InvControlBatch(DSSBatch):
         1 = Exponential
 
         Use this property for better tunning your controller and improve the controller response in terms of control iterations needed to reach the target.
-        This property alters the meaning of deltaQ_factor and deltaP_factor properties accroding to its value (Check help). The method can also be combined with the controller tolerance for improving performance.
+        This property alters the meaning of deltaQ_factor and deltaP_factor properties according to its value (Check help). The method can also be combined with the controller tolerance for improving performance.
 
         DSS property name: `ControlModel`, DSS property index: 34.
         """
@@ -38893,7 +39115,7 @@ class ExpControlBatch(DSSBatch):
         """
         Per-unit voltage at which reactive power is zero; defaults to 1.0.
 
-        This may dynamically self-adjust when VregTau > 0, limited by VregMin and VregMax.If imput as 0, Vreg will be initialized from a snapshot solution with no inverter Q.The equilibrium point of reactive power is also affected by Qbias
+        This may dynamically self-adjust when VregTau > 0, limited by VregMin and VregMax.If input as 0, Vreg will be initialized from a snapshot solution with no inverter Q.The equilibrium point of reactive power is also affected by Qbias
 
         DSS property name: `Vreg`, DSS property index: 2.
         """
@@ -39054,7 +39276,7 @@ class ExpControlBatch(DSSBatch):
         """
         Open-loop response time for changes in Q.
 
-        The value of Q reaches 90% of the target change within Tresponse, which corresponds to a low-pass filter having tau = Tresponse / 2.3026. The behavior is similar to LPFTAU in InvControl, but here the response time is input instead of the time constant. IEEE1547-2018 default is 10s for Catagory A and 5s for Category B, adjustable from 1s to 90s for both categories. However, the default is 0 for backward compatibility of OpenDSS models.
+        The value of Q reaches 90% of the target change within Tresponse, which corresponds to a low-pass filter having tau = Tresponse / 2.3026. The behavior is similar to LPFTAU in InvControl, but here the response time is input instead of the time constant. IEEE1547-2018 default is 10s for Category A and 5s for Category B, adjustable from 1s to 90s for both categories. However, the default is 0 for backward compatibility of OpenDSS models.
 
         DSS property name: `Tresponse`, DSS property index: 13.
         """
@@ -39163,7 +39385,7 @@ class GICLineBatch(DSSBatch):
     @property
     def Volts(self) -> BatchFloat64ArrayProxy:
         """
-        Voltage magnitude, in volts, of the GIC voltage induced across this line. When spedified, voltage source is assumed defined by Voltage and Angle properties. 
+        Voltage magnitude, in volts, of the GIC voltage induced across this line. When specified, voltage source is assumed defined by Voltage and Angle properties. 
 
         Specify this value
 
@@ -40732,18 +40954,12 @@ class SensorBatch(DSSBatch):
     def kvbase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def clear(self) -> List[bool]:
+    def clear(self, value: Union[bool, List[bool]]):
         """
         { Yes | No }. Clear=Yes clears sensor values. Should be issued before putting in a new set of measurements.
 
         DSS property name: `clear`, DSS property index: 4.
         """
-        return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 4)
-        ]
-    @clear.setter
-    def clear(self, value: bool):
         self._set_batch_int32_array(4, value)
 
     @property
@@ -40929,7 +41145,7 @@ class LineCodeBatchProperties(TypedDict):
     x0: Union[float, Float64Array]
     C1: Union[float, Float64Array]
     C0: Union[float, Float64Array]
-    units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    units: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     rmatrix: Float64Array
     xmatrix: Float64Array
     cmatrix: Float64Array
@@ -41046,11 +41262,11 @@ class SpectrumBatchProperties(TypedDict):
 class WireDataBatchProperties(TypedDict):
     Rdc: Union[float, Float64Array]
     Rac: Union[float, Float64Array]
-    Runits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    Runits: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     GMRac: Union[float, Float64Array]
-    GMRunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    GMRunits: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     radius: Union[float, Float64Array]
-    radunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    radunits: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     normamps: Union[float, Float64Array]
     emergamps: Union[float, Float64Array]
     diam: Union[float, Float64Array]
@@ -41070,11 +41286,11 @@ class CNDataBatchProperties(TypedDict):
     DiaCable: Union[float, Float64Array]
     Rdc: Union[float, Float64Array]
     Rac: Union[float, Float64Array]
-    Runits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    Runits: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     GMRac: Union[float, Float64Array]
-    GMRunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    GMRunits: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     radius: Union[float, Float64Array]
-    radunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    radunits: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     normamps: Union[float, Float64Array]
     emergamps: Union[float, Float64Array]
     diam: Union[float, Float64Array]
@@ -41093,11 +41309,11 @@ class TSDataBatchProperties(TypedDict):
     DiaCable: Union[float, Float64Array]
     Rdc: Union[float, Float64Array]
     Rac: Union[float, Float64Array]
-    Runits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    Runits: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     GMRac: Union[float, Float64Array]
-    GMRunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    GMRunits: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     radius: Union[float, Float64Array]
-    radunits: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    radunits: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     normamps: Union[float, Float64Array]
     emergamps: Union[float, Float64Array]
     diam: Union[float, Float64Array]
@@ -41111,7 +41327,7 @@ class LineSpacingBatchProperties(TypedDict):
     nphases: Union[int, Int32Array]
     x: Float64Array
     h: Float64Array
-    units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    units: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     like: AnyStr
 
 class LineGeometryBatchProperties(TypedDict):
@@ -41120,7 +41336,7 @@ class LineGeometryBatchProperties(TypedDict):
     wire: Union[List[AnyStr], List[Union[WireData, TSData, CNData]]]
     x: Float64Array
     h: Float64Array
-    units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    units: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     normamps: Union[float, Float64Array]
     emergamps: Union[float, Float64Array]
     reduce: bool
@@ -41187,7 +41403,7 @@ class LineBatchProperties(TypedDict):
     Xg: Union[float, Float64Array]
     rho: Union[float, Float64Array]
     geometry: Union[AnyStr, LineGeometry, List[AnyStr], List[LineGeometry]]
-    units: Union[AnyStr, int, DimensionUnits, List[AnyStr], List[int], List[DimensionUnits], Int32Array]
+    units: Union[AnyStr, int, LengthUnit, List[AnyStr], List[int], List[LengthUnit], Int32Array]
     spacing: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]
     wires: Union[List[AnyStr], List[Union[WireData, TSData, CNData]]]
     earthmodel: Union[AnyStr, int, EarthModel, List[AnyStr], List[int], List[EarthModel], Int32Array]
@@ -41486,7 +41702,7 @@ class GeneratorBatchProperties(TypedDict):
     kW: Union[float, Float64Array]
     pf: Union[float, Float64Array]
     kvar: Union[float, Float64Array]
-    model: Union[int, Int32Array]
+    model: Union[int, Generator.GeneratorModel, Int32Array]
     Vminpu: Union[float, Float64Array]
     Vmaxpu: Union[float, Float64Array]
     yearly: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]
@@ -41599,6 +41815,8 @@ class StorageBatchProperties(TypedDict):
     DynamicEq: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]
     DynOut: Union[AnyStr, List[AnyStr]]
     ControlMode: Union[AnyStr, int, InverterControlMode, List[AnyStr], List[int], List[InverterControlMode], Int32Array]
+    AmpLimit: Union[float, Float64Array]
+    AmpLimitGain: Union[float, Float64Array]
     spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
     basefreq: Union[float, Float64Array]
     enabled: bool
@@ -41616,8 +41834,8 @@ class StorageControllerBatchProperties(TypedDict):
     kWBandLow: Union[float, Float64Array]
     ElementList: List[AnyStr]
     Weights: Float64Array
-    ModeDischarge: Union[AnyStr, int, StorageController.StorageControllerDischargemode, List[AnyStr], List[int], List[StorageController.StorageControllerDischargemode], Int32Array]
-    ModeCharge: Union[AnyStr, int, StorageController.StorageControllerChargemode, List[AnyStr], List[int], List[StorageController.StorageControllerChargemode], Int32Array]
+    ModeDischarge: Union[AnyStr, int, StorageController.StorageControllerDischargeMode, List[AnyStr], List[int], List[StorageController.StorageControllerDischargeMode], Int32Array]
+    ModeCharge: Union[AnyStr, int, StorageController.StorageControllerChargeMode, List[AnyStr], List[int], List[StorageController.StorageControllerChargeMode], Int32Array]
     TimeDischargeTrigger: Union[float, Float64Array]
     TimeChargeTrigger: Union[float, Float64Array]
     pctRatekW: Union[float, Float64Array]
@@ -41693,9 +41911,9 @@ class RelayBatchProperties(TypedDict):
     DOC_TripSettingHigh: Union[float, Float64Array]
     DOC_TripSettingMag: Union[float, Float64Array]
     DOC_DelayInner: Union[float, Float64Array]
-    DOC_PhaseCurveInner: Union[float, Float64Array]
+    DOC_PhaseCurveInner: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
     DOC_PhaseTripInner: Union[float, Float64Array]
-    DOC_TDPhaseInner: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
+    DOC_TDPhaseInner: Union[float, Float64Array]
     DOC_P1Blocking: bool
     basefreq: Union[float, Float64Array]
     enabled: bool
@@ -41774,7 +41992,7 @@ class PVSystemBatchProperties(TypedDict):
     PTCurve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
     pctR: Union[float, Float64Array]
     pctX: Union[float, Float64Array]
-    model: Union[int, Int32Array]
+    model: Union[int, PVSystem.PVSystemModel, Int32Array]
     Vminpu: Union[float, Float64Array]
     Vmaxpu: Union[float, Float64Array]
     Balanced: bool
@@ -41805,6 +42023,8 @@ class PVSystemBatchProperties(TypedDict):
     DynamicEq: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]
     DynOut: Union[AnyStr, List[AnyStr]]
     ControlMode: Union[AnyStr, int, InverterControlMode, List[AnyStr], List[int], List[InverterControlMode], Int32Array]
+    AmpLimit: Union[float, Float64Array]
+    AmpLimitGain: Union[float, Float64Array]
     spectrum: Union[AnyStr, Spectrum, List[AnyStr], List[Spectrum]]
     basefreq: Union[float, Float64Array]
     enabled: bool
@@ -41819,7 +42039,7 @@ class UPFCBatchProperties(TypedDict):
     Phases: Union[int, Int32Array]
     Xs: Union[float, Float64Array]
     Tol1: Union[float, Float64Array]
-    Mode: Union[int, Int32Array]
+    Mode: Union[int, UPFC.UPFCMode, Int32Array]
     VpqMax: Union[float, Float64Array]
     LossCurve: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]
     VHLimit: Union[float, Float64Array]
@@ -41930,6 +42150,7 @@ class AutoTransBatchProperties(TypedDict):
     pctimag: Union[float, Float64Array]
     ppm_antifloat: Union[float, Float64Array]
     pctRs: Float64Array
+    bank: Union[AnyStr, List[AnyStr]]
     XRConst: bool
     LeadLag: Union[AnyStr, int, PhaseSequence, List[AnyStr], List[int], List[PhaseSequence], Int32Array]
     normamps: Union[float, Float64Array]
@@ -45070,9 +45291,11 @@ class IObj(Base):
 
 __all__ = [
     "IObj",
+    "VisualizeQuantity",
+    "ReductionStrategy",
     "EarthModel",
     "LineType",
-    "DimensionUnits",
+    "LengthUnit",
     "ScanType",
     "SequenceType",
     "Connection",
@@ -45088,6 +45311,7 @@ __all__ = [
     "AutoAddDeviceType",
     "LoadShapeClass",
     "MonitoredPhase",
+    "PlotProfilePhases",
     "ILineCode",
     "ILoadShape",
     "ITShape",
