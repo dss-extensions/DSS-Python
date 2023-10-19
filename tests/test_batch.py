@@ -14,10 +14,11 @@ if WIN32:
 else:
     import dss
 
-from dss import dss, Edit, IDSS
+from dss import dss, Edit, IDSS, set_case_insensitive_attributes
+
 from dss.IObj import (
     Vsource, Transformer, LineCode, Load, Line, Capacitor,
-    Connection as Conn, RegControl, DimensionUnits as Units,
+    Connection as Conn, RegControl, LengthUnit as Units,
 )
 LoadModel = Load.LoadModel
 
@@ -86,6 +87,12 @@ lines_data_csv = '''name,phases,bus1,bus2,linecode,length,units
 684611,1,684.3,611.3,mtx605,300,ft
 684652,1,684.1,652.1,mtx607,800,ft
 '''
+
+def setup_function():
+    set_case_insensitive_attributes(True, False)
+
+def teardown_function():
+    set_case_insensitive_attributes(False, False)
 
 def create_ref_ckt13(ref):
     ref.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'

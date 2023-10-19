@@ -948,7 +948,7 @@ class IDSSObj(Base):
                     names = df['names'].astype(str)
                     columns.remove('names')
 
-            batch = super().batch_new(names=names, begin_edit=True)
+            batch = IDSSObj.batch_new(self, names=names, begin_edit=True)
             try:
                 for k in columns:
                     setattr(batch, k, df[k])
@@ -962,7 +962,7 @@ class IDSSObj(Base):
             if names is None and count is None and 'name' in props:
                 names = props.pop('name')
 
-            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            batch = IDSSObj.batch_new(self, names=names, count=count, begin_edit=True)
             try:
                 for k, v in props.items():
                     setattr(batch, k, v)
@@ -971,7 +971,7 @@ class IDSSObj(Base):
 
             return batch
 
-        return super().batch_new(names, count, begin_edit)
+        return IDSSObj.batch_new(self, names, count, begin_edit)
 
 
     def new(self, name: str, begin_edit=True, activate=False):
@@ -997,7 +997,7 @@ class IDSSObj(Base):
         Aux. function used by the descendant classes (which provide typing info) to create the objects.
         '''
         if props:
-            obj = super().new(name, True, activate)
+            obj = IDSSObj.new(self, name, True, activate)
             try:
                 for k, v in props.items():
                     setattr(obj, k, v)
@@ -1006,7 +1006,7 @@ class IDSSObj(Base):
 
             return obj
 
-        return super().new(name, begin_edit, activate)
+        return IDSSObj.new(self, name, begin_edit, activate)
         
 
     def find(self, name_or_idx):

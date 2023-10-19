@@ -33,9 +33,13 @@ def set_case_insensitive_attributes(use: bool = True, warn: bool = False):
             Base.__getattr__ = Base._getattr
             Base.__setattr__ = Base._setattr
 
-    elif Base.__getattr__ == Base._getattr or Base.__getattr__ == Base._getattr_case_check:
+    elif getattr(Base, '__getattr__', None) == Base._getattr or getattr(Base, '__getattr__', None) == Base._getattr_case_check:
         del Base.__setattr__
         del Base.__getattr__
+
+
+def _is_case_insensitive() -> bool:
+    return (getattr(Base, '__getattr__', None) == Base._getattr or getattr(Base, '__getattr__', None) == Base._getattr_case_check)
 
 
 class DSSException(Exception):
@@ -201,30 +205,38 @@ class Base:
     CheckForError = _check_for_error
 
     def _getattr(self, key):
-        if key.startswith('_'):
+        if key[0] == '_':
             return object.__getattribute__(self, key)
 
         key = self.__class__._dss_attributes.get(key.lower(), key)
         return object.__getattribute__(self, key)
 
     def _getattr_case_check(self, key):
-        if key.startswith('_'):
+        if key[0] == '_':
             return object.__getattribute__(self, key)
 
         correct_key = self.__class__._dss_attributes.get(key.lower(), key)
         if key != correct_key:
-            warnings.warn('Wrong case for getter {}.{}: {}'.format(self.__class__.__name__, correct_key, key))
+            warnings.warn('Wrong capitalization for attribute (getter) {}.{}: {}'.format(self.__class__.__name__, correct_key, key))
 
         return object.__getattribute__(self, correct_key)
 
     def _setattr(self, key, value):
+        if key[0] == '_':
+            object.__setattr__(self, key, value)
+            return
+
         key = self.__class__._dss_attributes.get(key.lower(), key)
         object.__setattr__(self, key, value)
 
     def _setattr_case_check(self, key, value):
+        if key[0] == '_':
+            object.__setattr__(self, key, value)
+            return
+
         correct_key = self.__class__._dss_attributes.get(key.lower(), key)
         if key != correct_key:
-            warnings.warn('Wrong case for setter {}.{}: {}'.format(self.__class__.__name__, correct_key, key))
+            warnings.warn('Wrong capitalization for attribute (setter) {}.{}: {}'.format(self.__class__.__name__, correct_key, key))
 
         key = self.__class__._dss_attributes.get(key.lower(), key)
         object.__setattr__(self, key, value)
