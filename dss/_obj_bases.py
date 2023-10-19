@@ -5,10 +5,11 @@ Copyright (c) 2021-2023 Paulo Meira
 Copyright (c) 2021-2023 DSS-Extensions contributors
 '''
 import numpy as np
-from typing import Union, List, AnyStr, Optional, Generator
-from ._types import Float64Array, Int32Array
+from typing import Union, List, AnyStr, Optional, Generator, Dict
+from ._types import Float64Array, Int32Array, Int8Array, Float32Array
 from ._cffi_api_util import Base
 from .enums import DSSJSONFlags
+from ._cffi_api_util import DSSException
 
 try:
     import pandas as pd
@@ -933,6 +934,45 @@ class IDSSObj(Base):
 
         raise ValueError("Provide either names or count to create a new batch")
 
+    def _batch_new_aux(self, names: Optional[List[AnyStr]] = None, df = None, count: Optional[int] = None, begin_edit=True, props=None):
+        '''
+        Aux. function used by the descendant classes (which provide typing info) to create the batches.
+        '''
+        if df is not None:
+            columns = list(df.columns)
+            if names is None:
+                if 'name' in df.columns:
+                    names = df['name'].astype(str)
+                    columns.remove('name')
+                elif 'names' in df.columns:
+                    names = df['names'].astype(str)
+                    columns.remove('names')
+
+            batch = super().batch_new(names=names, begin_edit=True)
+            try:
+                for k in columns:
+                    setattr(batch, k, df[k])
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        if props:
+            # Allow using name instead of names if passing kwargs for pre-filling
+            if names is None and count is None and 'name' in props:
+                names = props.pop('name')
+
+            batch = super().batch_new(names=names, count=count, begin_edit=True)
+            try:
+                for k, v in props.items():
+                    setattr(batch, k, v)
+            finally:
+                batch.end_edit()
+
+            return batch
+
+        return super().batch_new(names, count, begin_edit)
+
 
     def new(self, name: str, begin_edit=True, activate=False):
         if not isinstance(name, bytes):
@@ -951,6 +991,23 @@ class IDSSObj(Base):
 
         return self._obj_cls(self._api_util, ptr)
 
+
+    def _new(self, name: AnyStr, begin_edit=True, activate=False, props=None):
+        '''
+        Aux. function used by the descendant classes (which provide typing info) to create the objects.
+        '''
+        if props:
+            obj = super().new(name, True, activate)
+            try:
+                for k, v in props.items():
+                    setattr(obj, k, v)
+            finally:
+                obj.end_edit()
+
+            return obj
+
+        return super().new(name, begin_edit, activate)
+        
 
     def find(self, name_or_idx):
         lib = self._lib

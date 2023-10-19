@@ -199,8 +199,9 @@ class ICircuit(Base):
         self.LoadShapes = ILoadShapes(api_util)
         self.Fuses = IFuses(api_util)
 
-        self.Isources = IISources(api_util)
-        self.ISources = self.Isources
+        Isources = IISources(api_util)
+        object.__setattr__(self, 'Isources', Isources)
+        object.__setattr__(self, 'ISources', Isources)
 
         self.DSSim_Coms = IDSSimComs(api_util)
         self.PVSystems = IPVSystems(api_util)
