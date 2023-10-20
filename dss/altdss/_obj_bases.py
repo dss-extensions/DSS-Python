@@ -6,10 +6,9 @@ Copyright (c) 2021-2023 DSS-Extensions contributors
 '''
 import numpy as np
 from typing import Union, List, AnyStr, Optional, Generator, Dict
-from ._types import Float64Array, Int32Array, Int8Array, Float32Array
-from ._cffi_api_util import Base
-from .enums import DSSJSONFlags
-from ._cffi_api_util import DSSException
+from .._types import Float64Array, Int32Array, Int8Array, Float32Array, Float64ArrayOrComplexArray
+from .._cffi_api_util import Base, DSSException
+from ..enums import DSSJSONFlags
 
 try:
     import pandas as pd
@@ -421,6 +420,17 @@ class DSSObj(Base):
         self._lib.Obj_SetStringArray(self._ptr, idx, value_ptr, value_count)
         self._check_for_error()
 
+    def _get_obj_from_ptr(self, other_ptr, pycls):
+        self._check_for_error()
+        if other_ptr == self._ffi.NULL:
+            return None
+
+        if pycls is None:
+            cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
+            pycls = DSSObj._idx_to_cls[cls_idx]
+
+        return pycls(self._api_util, other_ptr)
+
     def _get_obj(self, idx: int, pycls):
         other_ptr = self._lib.Obj_GetObject(self._ptr, idx)
         self._check_for_error()
@@ -480,7 +490,7 @@ class DSSObj(Base):
         self._lib.Obj_SetObjectArray(self._ptr, idx, other_ptr, other_cnt)
         self._check_for_error()
 
-    def begin_edit(self):
+    def begin_edit(self) -> None:
         '''
         Marks a DSS object for editing
 
@@ -495,7 +505,7 @@ class DSSObj(Base):
         self._lib.Obj_BeginEdit(self._ptr)
         self._check_for_error()
 
-    def end_edit(self, num_changes: int = 1):
+    def end_edit(self, num_changes: int = 1) -> None:
         '''
         Leaves the editing state of a DSS object
 
@@ -587,7 +597,7 @@ class DSSBatch(Base):
         self._check_for_error()
         return self._ffi.string(s).decode(self._api_util.codec)
 
-    def begin_edit(self):
+    def begin_edit(self) -> None:
         '''
         Marks for editing all DSS objects in the batch
 
@@ -602,7 +612,7 @@ class DSSBatch(Base):
         self._lib.Batch_BeginEdit(self.pointer[0], self.count[0])
         self._check_for_error()
 
-    def end_edit(self, num_changes: int = 1):
+    def end_edit(self, num_changes: int = 1) -> None:
         '''
         Leaves the editing states of all DSS objects in the batch
 
@@ -822,6 +832,10 @@ class DSSBatch(Base):
             self._get_string_array(self._lib.Obj_GetStringArray, x, idx)
             for x in self._ffi.unpack(self.pointer[0], self.count[0])
         ]
+    
+    def _get_string(self, str_ptr) -> str:
+        self._check_for_error()
+        return self._ffi.string(str_ptr).decode(self._api_util.codec)
 
     @property
     def name(self) -> List[str]:
@@ -1036,3 +1050,352 @@ class IDSSObj(Base):
 
     def __getitem__(self, name_or_idx):
         return self.find(name_or_idx)
+
+
+class CktElementMixin:
+    def GUID(self) -> str:
+        return self._get_string(self._lib.Alt_CE_Get_GUID(self._ptr))
+
+    def GetDisplayName(self) -> str:
+        return self._get_string(self._lib.Alt_CE_Get_DisplayName(self._ptr))
+    
+    def SetDisplayName(self, value: AnyStr):
+        if not isinstance(value, bytes):
+            value = value.encode(self._api_util.codec)
+        self._lib.Alt_CE_Set_DisplayName(self._ptr, value)
+        self._check_for_error()
+
+    DisplayName = property(GetDisplayName, SetDisplayName)
+
+    # TODO: is BusNames too redundant to keep?
+    # def GetBusNames(self) -> List[str]:
+    #     return self._get_string_array(self._lib.Alt_CE_Get_BusNames, self._ptr)
+
+    # def SetBusNames(self, value: List[AnyStr]):
+    #     value, value_ptr, value_count = self._prepare_string_array(value)
+    #     self._lib.Alt_CE_Set_BusNames(self._ptr, value_ptr, value_count)
+    #     self._check_for_error()
+
+    # BusNames = property(GetBusNames, SetBusNames)
+
+    def ControllerName(self, idx: int) -> str:
+        return self._get_string(self._lib.Alt_CE_Get_ControllerName(self._ptr, idx))
+
+    def Controller(self, idx: int) -> DSSObj:
+        return self._get_obj_from_ptr(self._lib.Alt_CE_Get_Controller(self._ptr, idx))
+
+    def Handle(self) -> int:
+        return self._lib.Alt_CE_Get_Handle(self._ptr)
+
+    def NumConductors(self) -> int:
+        return self._lib.Alt_CE_Get_NumConductors(self._ptr)
+
+    def NumPhases(self) -> int:
+        return self._lib.Alt_CE_Get_NumPhases(self._ptr)
+
+    def NumTerminals(self) -> int:
+        return self._lib.Alt_CE_Get_NumTerminals(self._ptr)
+
+    def NumControllers(self) -> int:
+        return self._lib.Alt_CE_Get_NumControllers(self._ptr)
+
+    def OCPDevIndex(self) -> int:
+        return self._lib.Alt_CE_Get_OCPDevIndex(self._ptr)
+
+    def OCPDevType(self) -> int: #TODO: enum
+        return self._lib.Alt_CE_Get_OCPDevType(self._ptr)
+
+    def IsIsolated(self) -> bool:
+        return self._lib.Alt_CE_Get_IsIsolated(self._ptr) != 0
+
+    def HasOCPDevice(self) -> bool:
+        return self._lib.Alt_CE_Get_HasOCPDevice(self._ptr) != 0
+
+    def HasSwitchControl(self) -> bool:
+        return self._lib.Alt_CE_Get_HasSwitchControl(self._ptr) != 0
+
+    def HasVoltControl(self) -> bool:
+        return self._lib.Alt_CE_Get_HasVoltControl(self._ptr) != 0
+
+    def IsOpen(self, terminal: int, phase: int) -> bool:
+        return self._lib.Alt_CE_IsOpen(self._ptr, terminal, phase) != 0
+
+    def MaxCurrent(self, terminal: int) -> float:
+        return self._lib.Alt_CE_MaxCurrent(self._ptr, terminal)
+
+    def Open(self, terminal: int, phase: int) -> None:
+        self._lib.Alt_CE_Open(self._ptr, terminal, phase)
+
+    def Close(self, terminal: int, phase: int) -> None:
+        self._lib.Alt_CE_Close(self._ptr, terminal, phase)
+
+    def NodeOrder(self) -> Float64Array:
+        return self._get_int32_array(self._lib.Alt_CE_Get_NodeOrder, self._ptr)
+
+    def NodeRef(self) -> Float64Array:
+        return self._get_int32_array(self._lib.Alt_CE_Get_NodeRef, self._ptr)
+
+    def CplxSeqVoltages(self) -> Float64Array:
+        return self._get_complex128_array(self._lib.Alt_CE_Get_CplxSeqVoltages, self._ptr)
+
+    def CplxSeqCurrents(self) -> Float64Array:
+        return self._get_complex128_array(self._lib.Alt_CE_Get_CplxSeqCurrents, self._ptr)
+
+    def Currents(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_Currents, self._ptr)
+
+    def Voltages(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_Voltages, self._ptr)
+
+    def Losses(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_Losses, self._ptr)
+
+    def PhaseLosses(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_PhaseLosses, self._ptr)
+
+    def Powers(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_Powers, self._ptr)
+
+    def SeqCurrents(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_SeqCurrents, self._ptr)
+
+    def SeqPowers(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_SeqPowers, self._ptr)
+
+    def SeqVoltages(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_SeqVoltages, self._ptr)
+
+    def Residuals(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_Residuals, self._ptr)
+
+    def Yprim(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_Yprim, self._ptr)
+
+    def CurrentsMagAng(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_CurrentsMagAng, self._ptr)
+
+    def VoltagesMagAng(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_VoltagesMagAng, self._ptr)
+
+    def TotalPowers(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_TotalPowers, self._ptr)
+
+
+class ElementHasRegistersMixin:
+    def RegisterNames(self) -> List[str]:
+        return self._get_string_array(self._lib.Alt_CE_Get_RegisterNames, self._ptr)
+
+    def RegisterValues(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CE_Get_RegisterValues, self._ptr)
+
+    def RegistersDict(self) -> Dict[str, float]:
+        return dict(*zip(self.RegisterNames(), self.RegisterValues()))
+
+
+class PCElementMixin:
+    def VariableNames(self) -> List[str]:
+        return self._get_string_array(self._lib.Alt_PCE_Get_VariableNames, self._ptr)
+
+    def VariableValues(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_PCE_Get_VariableValues, self._ptr)
+    
+    def VariablesDict(self) -> Dict[str, float]:
+        return dict(*zip(self.VariableNames(), self.VariableValues()))
+
+    def GetVariableValue(self, varIdxName: Union[AnyStr, int]) -> float:
+        if isinstance(varIdxName, int):
+            return self._check_for_error(self._lib.Alt_PCE_Get_VariableValue(self._ptr, varIdxName))
+        else:
+            if not isinstance(varIdxName, bytes):
+                varIdxName = varIdxName.encode(self._api_util.codec)
+
+            return self._check_for_error(self._lib.Alt_PCE_Get_VariableValueS(self._ptr, varIdxName))
+
+
+    def SetVariableValue(self, varIdxName: Union[AnyStr, int], value: float):
+        if isinstance(varIdxName, int):
+            self._lib.Alt_PCE_Set_VariableValue(self._ptr, varIdxName, value)
+        else:
+            if not isinstance(varIdxName, bytes):
+                varIdxName = varIdxName.encode(self._api_util.codec)
+
+            self._lib.Alt_PCE_Set_VariableValueS(self._ptr, varIdxName, value)
+
+        self._check_for_error()
+
+
+    def EnergyMeter(self) -> DSSObj:
+        return self._get_obj_from_ptr(self._lib.Alt_PCE_Get_EnergyMeter(self._ptr))
+
+    def EnergyMeterName(self) -> str:
+        return self._get_string(self._lib.Alt_PCE_Get_EnergyMeterName(self._ptr))
+
+
+class PDElementMixin:
+
+    def EnergyMeter(self) -> DSSObj:
+        return self._get_obj_from_ptr(self._lib.Alt_PDE_Get_EnergyMeter(self._ptr))
+
+    def EnergyMeterName(self) -> str:
+        return self._get_string(self._lib.Alt_PDE_Get_EnergyMeterName(self._ptr))
+
+    def IsShunt(self) -> bool:
+        return self._lib.Alt_PDE_Get_IsShunt(self._ptr) != 0
+
+    def AccumulatedL(self) -> float:
+        return self._lib.Alt_PDE_Get_AccumulatedL(self._ptr)
+
+    def Lambda(self) -> float:
+        return self._lib.Alt_PDE_Get_Lambda(self._ptr)
+
+    def NumCustomers(self) -> int:
+        return self._lib.Alt_PDE_Get_NumCustomers(self._ptr)
+
+    def ParentPDElement(self) -> DSSObj:
+        return self._lib.Alt_PDE_Get_ParentPDElement(self._ptr)
+
+    def TotalCustomers(self) -> int:
+        return self._lib.Alt_PDE_Get_TotalCustomers(self._ptr)
+
+    def FromTerminal(self) -> int:
+        return self._lib.Alt_PDE_Get_FromTerminal(self._ptr)
+
+    def TotalMiles(self) -> float:
+        return self._lib.Alt_PDE_Get_TotalMiles(self._ptr)
+
+    def SectionID(self) -> int:
+        return self._lib.Alt_PDE_Get_SectionID(self._ptr)
+
+
+class LoadShapeObjMixin:
+    # TODO: integrate Alt_LoadShape_Set_Points
+
+    def UseFloat32(self):
+        '''
+        If this loadshape is using float64/double precision internal data, use this function
+        to convert to float32/single precision. If the data is not owned by the loadshape,
+        this operation is not allowed.
+        '''
+        self._lib.Alt_LoadShape_UseFloat32(self._ptr)
+        self._check_for_error()
+
+    def UseFloat64(self):
+        '''
+        If this loadshape is using float32/single precision internal data, use this function
+        to convert to float64/double precision. If the data is not owned by the loadshape,
+        this operation is not allowed.
+        '''
+        self._lib.Alt_LoadShape_UseFloat64(self._ptr)
+        self._check_for_error()
+
+
+class MonitorObjMixin:
+    #TODO: dataframe
+
+    def Show(self):
+        self._lib.Alt_Monitor_Show(self._ptr)
+
+    def Header(self) -> List[str]:
+        return self._get_string_array(self._lib.Alt_Monitor_Get_Header, self._ptr)
+
+    def ByteStream(self) -> Int8Array:
+        return self._get_int8_array(self._lib.Alt_Monitor_Get_ByteStream, self._ptr)
+
+    def FileName(self) -> str:
+        return self._get_string(self._lib.Alt_Monitor_Get_FileName(self._ptr))
+
+    def SampleCount(self) -> int:
+        return self._check_for_error(self._lib.Alt_Monitor_Get_SampleCount(self._ptr))
+
+    def NumChannels(self) -> int:
+        return self._check_for_error(self._lib.Alt_Monitor_Get_NumChannels(self._ptr))
+
+    def RecordSize(self) -> int:
+        return self._check_for_error(self._lib.Alt_Monitor_Get_RecordSize(self._ptr))
+
+    def dblFreq(self) -> Float64Array:
+        '''
+        Frequency values for harmonics mode solutions.
+        Empty for time mode solutions (use dblHour instead).
+        '''
+        return self._get_float64_array(self._lib.Alt_Monitor_Get_dblFreq, self._ptr)
+
+    def dblHour(self) -> Float64Array:
+        '''
+        Time value in hours for time-sampled monitor values. 
+        Empty if frequency-sampled values for harmonics solution (use dblFreq instead).
+        '''
+        return self._get_float64_array(self._lib.Alt_Monitor_Get_dblHour, self._ptr)
+
+    def Channel(self, index: int) -> Float32Array:
+        '''
+        Array of float32 for the specified channel.
+        A Save or SaveAll should be executed first, and that is done automatically by most standard solution modes.
+        Channels start at index 1.
+        '''
+        num_channels = self.NumChannels()
+        if index < 1 or index > num_channels:
+            raise DSSException(
+                'Monitor.Channel: Invalid channel index ({}), monitor "{}" has {} channels.'.format(
+                index, self.name, num_channels
+            ))
+        
+        buffer = self._get_int8_array(self._lib.Alt_Monitor_Get_ByteStream, self._ptr)
+        self._check_for_error()
+
+        if len(buffer) <= 1:
+            return None
+        record_size = buffer.view(dtype=np.int32)[2] + 2
+        data = buffer[272:].view(dtype=np.float32)
+        data = data.reshape((len(data) // record_size, record_size)).copy()
+        return data
+
+    def AsMatrix(self) -> Float64Array:
+        '''
+        Returns a copy of the matrix of this monitor, containing the hour vector, seconds vector, and all channels
+        (index 2 = channel 1). If you need multiple channels, prefer using this function as it processes the monitor 
+        byte-stream once.
+
+        For harmonic solutions, the first two columns are the frequency and the harmonic, respectively.
+        '''
+
+        buffer = self._get_int8_array(self._lib.Alt_Monitor_Get_ByteStream, self._ptr)
+        self._check_for_error()
+
+        if len(buffer) <= 1:
+            return None
+        record_size = buffer.view(dtype=np.int32)[2] + 2
+        data = buffer[272:].view(dtype=np.float32)
+        data = data.reshape((len(data) // record_size, record_size)).copy()
+        return data
+
+
+class TransformerObjMixin:
+    def WindingCurrents(self) -> Float64ArrayOrComplexArray:
+        '''
+        Complex array of voltages for active winding
+        
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
+        in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+        '''
+        return self._get_float64_array(self._lib.Alt_Transformer_Get_WdgCurrents, self._ptr)
+
+    def WindingVoltages(self) -> Float64ArrayOrComplexArray:
+        '''
+        All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)
+
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
+        in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+        '''
+        return self._get_float64_array(self._lib.Alt_Transformer_Get_WdgVoltages, self._ptr)
+
+    def LossesByType(self) -> Float64ArrayOrComplexArray:
+        '''
+        Complex array with the losses by type (total losses, load losses, no-load losses), in VA
+        '''
+        return self._get_float64_array(self._lib.Alt_Transformer_Get_LossesByType, self._ptr)
+
+
+class EnergyMeterObjMixin:
+    pass
+

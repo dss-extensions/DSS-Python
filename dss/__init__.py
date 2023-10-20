@@ -17,7 +17,7 @@ if os.path.exists(_properties_mo):
     lib.DSS_SetPropertiesMO(_properties_mo.encode())
 
 from ._cffi_api_util import CffiApiUtil, DSSException, set_case_insensitive_attributes
-from ._obj_bases import Edit
+from .altdss._obj_bases import Edit
 from .IDSS import IDSS
 from .enums import *
 

@@ -16,11 +16,11 @@ else:
 
 from dss import dss, Edit, IDSS, set_case_insensitive_attributes
 
-from dss.IObj import (
+from dss.altdss import (
     Vsource, Transformer, LineCode, Load, Line, Capacitor,
     Connection as Conn, RegControl, LengthUnit as Units,
+    LoadModel
 )
-LoadModel = Load.LoadModel
 
 loads_cols = 'name,bus1,phases,conn,model,kV,kW,kvar'.split(',')
 loads_data = (

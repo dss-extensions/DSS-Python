@@ -16,25 +16,23 @@ else:
     import dss
 
 from dss import dss, Edit, IDSS #, YMatrixModes
-from dss.IObj import (
+from dss.altdss import (
     Vsource, Transformer, LineCode, Load, Line, Capacitor, 
     Connection as Conn, RegControl, LengthUnit as Units,
-    IObj
+    IObj, LoadModel
 )    
-
-LoadModel = Load.LoadModel
 
 def create_ref_ckt13(ref):
     ref.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
 
 
-def create_ckt13_verbose(dss):
+def create_ckt13_verbose(dss: IDSS):
     dss.ClearAll()
     dss.NewCircuit('IEEE13Nodeckt')
     dss.AdvancedTypes = True
-    Obj: IObj = dss.Obj
+    Obj = dss.Obj
 
-    src: Vsource = Obj.Vsource[1]
+    src = Obj.Vsource[1]
     with Edit(src):
         src.BasekV = 115
         src.pu = 1.0001
@@ -454,7 +452,7 @@ def create_ckt13_shortcut(dss: IDSS):
     Capacitor = Obj.Capacitor
     RegControl = Obj.RegControl
 
-    src: Vsource = Obj.Vsource[1]
+    src = Obj.Vsource[1]
     with Edit(src):
         src.BasekV = 115
         src.pu = 1.0001
