@@ -45,30 +45,39 @@ class IMeters(Iterable):
     ]
 
     def CloseAllDIFiles(self):
+        '''Close All Demand Interval Files. Users are required to close the DI files at the end of a run.'''
         self.CheckForError(self._lib.Meters_CloseAllDIFiles())
 
     def DoReliabilityCalc(self, AssumeRestoration: bool):
+        '''Calculate reliability indices'''
         self.CheckForError(self._lib.Meters_DoReliabilityCalc(AssumeRestoration))
 
     def OpenAllDIFiles(self):
+        '''Open Demand Interval (DI) files'''
         self.CheckForError(self._lib.Meters_OpenAllDIFiles())
 
     def Reset(self):
+        '''Resets registers of active meter.'''
         self.CheckForError(self._lib.Meters_Reset())
 
     def ResetAll(self):
+        '''Resets registers of all meter objects.'''
         self.CheckForError(self._lib.Meters_ResetAll())
 
     def Sample(self):
+        '''Forces active Meter to take a sample.'''
         self.CheckForError(self._lib.Meters_Sample())
 
     def SampleAll(self):
+        '''Causes all EnergyMeter objects to take a sample at the present time.'''
         self.CheckForError(self._lib.Meters_SampleAll())
 
     def Save(self):
+        '''Saves meter register values.'''
         self.CheckForError(self._lib.Meters_Save())
 
     def SaveAll(self):
+        '''Save All EnergyMeter objects'''
         self.CheckForError(self._lib.Meters_SaveAll())
 
     def SetActiveSection(self, SectIdx: int):
@@ -76,7 +85,7 @@ class IMeters(Iterable):
 
     @property
     def AllBranchesInZone(self) -> List[str]:
-        '''Wide string list of all branches in zone of the active energymeter object.'''
+        '''Wide string list of all branches in zone of the active EnergyMeter object.'''
         return self.CheckForError(self._get_string_array(self._lib.Meters_Get_AllBranchesInZone))
 
     @property
