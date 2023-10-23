@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PCElementMixin,
@@ -21,7 +19,7 @@ from . import enums
 from .Spectrum import Spectrum as SpectrumObj
 
 class GICsource(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'GICsource'
     _cls_idx = 40
     _cls_prop_idx = {
@@ -486,6 +484,8 @@ class GICsourceBatchProperties(TypedDict):
     Like: AnyStr
 
 class IGICsource(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, GICsource, GICsourceBatch)
 

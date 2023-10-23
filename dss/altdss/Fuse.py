@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     BatchFloat64ArrayProxy,
@@ -20,7 +18,7 @@ from . import enums
 from .TCC_Curve import TCC_Curve
 
 class Fuse(DSSObj, CktElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots
     _cls_name = 'Fuse'
     _cls_idx = 33
     _cls_prop_idx = {
@@ -181,7 +179,7 @@ class Fuse(DSSObj, CktElementMixin):
     def Delay(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.FuseAction]):
+    def Action(self, value: Union[AnyStr, int, enums.FuseAction]):
         """
         DEPRECATED. See "State" property.
 
@@ -192,6 +190,14 @@ class Fuse(DSSObj, CktElementMixin):
             return
     
         self._set_string_o(8, value)
+
+    def close(self):
+        '''Shortcut to Action(FuseAction.close)'''
+        self._lib.Obj_SetInt32(self._ptr, 8, enums.FuseAction.close)
+
+    def open(self):
+        '''Shortcut to Action(FuseAction.open)'''
+        self._lib.Obj_SetInt32(self._ptr, 8, enums.FuseAction.open)
 
     @property
     def Normal(self) -> List[enums.FuseState]:
@@ -296,7 +302,7 @@ class FuseProperties(TypedDict):
     FuseCurve: Union[AnyStr, TCC_Curve]
     RatedCurrent: float
     Delay: float
-    Action: Union[str, bytes, int, enums.FuseAction]
+    Action: Union[AnyStr, int, enums.FuseAction]
     Normal: Union[List[Union[int, enums.FuseState]], List[AnyStr]]
     State: Union[List[Union[int, enums.FuseState]], List[AnyStr]]
     BaseFreq: float
@@ -439,7 +445,7 @@ class FuseBatch(DSSBatch):
     def Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.FuseAction]):
+    def Action(self, value: Union[AnyStr, int, enums.FuseAction]):
         """
         DEPRECATED. See "State" property.
 
@@ -449,6 +455,14 @@ class FuseBatch(DSSBatch):
             self._set_batch_string(8, value)
         else:
             self._set_batch_int32_array(8, value)
+
+    def close(self):
+        '''Shortcut to Action(FuseAction.close)'''
+        self._set_batch_int32_array(8, enums.FuseAction.close)
+
+    def open(self):
+        '''Shortcut to Action(FuseAction.open)'''
+        self._set_batch_int32_array(8, enums.FuseAction.open)
 
     @property
     def Normal(self) -> List[Int32Array]:
@@ -569,7 +583,7 @@ class FuseBatchProperties(TypedDict):
     FuseCurve: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]
     RatedCurrent: Union[float, Float64Array]
     Delay: Union[float, Float64Array]
-    Action: Union[str, bytes, int, enums.FuseAction]
+    Action: Union[AnyStr, int, enums.FuseAction]
     Normal: Union[List[Union[int, enums.FuseState]], List[AnyStr]]
     State: Union[List[Union[int, enums.FuseState]], List[AnyStr]]
     BaseFreq: Union[float, Float64Array]
@@ -577,6 +591,8 @@ class FuseBatchProperties(TypedDict):
     Like: AnyStr
 
 class IFuse(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, Fuse, FuseBatch)
 

@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PDElementMixin,
@@ -21,7 +19,7 @@ from . import enums
 from .XYcurve import XYcurve
 
 class Reactor(DSSObj, CktElementMixin, PDElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots
     _cls_name = 'Reactor'
     _cls_idx = 23
     _cls_prop_idx = {
@@ -1002,6 +1000,8 @@ class ReactorBatchProperties(TypedDict):
     Like: AnyStr
 
 class IReactor(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, Reactor, ReactorBatch)
 

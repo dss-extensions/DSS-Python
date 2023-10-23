@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PDElementMixin,
@@ -18,13 +16,13 @@ from ._obj_bases import (
 from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
-from .LineCode import LineCode as LineCodeObj
 from .LineSpacing import LineSpacing
 from .WireData import WireData
 from .LineGeometry import LineGeometry
+from .LineCode import LineCode as LineCodeObj
 
 class Line(DSSObj, CktElementMixin, PDElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots
     _cls_name = 'Line'
     _cls_idx = 15
     _cls_prop_idx = {
@@ -1368,6 +1366,8 @@ class LineBatchProperties(TypedDict):
     Like: AnyStr
 
 class ILine(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, Line, LineBatch)
 

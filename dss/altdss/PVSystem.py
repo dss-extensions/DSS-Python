@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PCElementMixin,
@@ -21,12 +19,12 @@ from .._cffi_api_util import Base
 from . import enums
 from .LoadShape import LoadShape
 from .XYcurve import XYcurve
-from .TShape import TShape
 from .Spectrum import Spectrum as SpectrumObj
+from .TShape import TShape
 from .DynamicExp import DynamicExp
 
 class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
     _cls_name = 'PVSystem'
     _cls_idx = 35
     _cls_prop_idx = {
@@ -2021,6 +2019,8 @@ class PVSystemBatchProperties(TypedDict):
     Like: AnyStr
 
 class IPVSystem(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, PVSystem, PVSystemBatch)
 

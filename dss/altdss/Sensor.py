@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     BatchFloat64ArrayProxy,
@@ -19,7 +17,7 @@ from .._cffi_api_util import Base
 from . import enums
 
 class Sensor(DSSObj, CktElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots
     _cls_name = 'Sensor'
     _cls_idx = 49
     _cls_prop_idx = {
@@ -98,7 +96,7 @@ class Sensor(DSSObj, CktElementMixin):
     def kVBase(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    def Clear(self, value: bool):
+    def Clear(self, value: bool = True):
         """
         { Yes | No }. Clear=Yes clears sensor values. Should be issued before putting in a new set of measurements.
 
@@ -344,7 +342,7 @@ class SensorBatch(DSSBatch):
     def kVBase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    def Clear(self, value: Union[bool, List[bool]]):
+    def Clear(self, value: Union[bool, List[bool]] = True):
         """
         { Yes | No }. Clear=Yes clears sensor values. Should be issued before putting in a new set of measurements.
 
@@ -547,6 +545,8 @@ class SensorBatchProperties(TypedDict):
 #TODO: warn that begin_edit=False with extra params will be ignored?
 
 class ISensor(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, Sensor, SensorBatch)
 

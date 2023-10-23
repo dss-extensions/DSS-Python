@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
@@ -17,7 +15,7 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class TShape(DSSObj, ):
+class TShape(DSSObj):
     __slots__ = []
     _cls_name = 'TShape'
     _cls_idx = 3
@@ -192,7 +190,7 @@ class TShape(DSSObj, ):
     def MInterval(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.TShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.TShapeAction]):
         """
         {DblSave | SngSave} After defining temperature curve data... Setting action=DblSave or SngSave will cause the present "Temp" values to be written to either a packed file of double or single. The filename is the Tshape name. 
 
@@ -203,6 +201,14 @@ class TShape(DSSObj, ):
             return
     
         self._set_string_o(12, value)
+
+    def DblSave(self):
+        '''Shortcut to Action(TShapeAction.DblSave)'''
+        self._lib.Obj_SetInt32(self._ptr, 12, enums.TShapeAction.DblSave)
+
+    def SngSave(self):
+        '''Shortcut to Action(TShapeAction.SngSave)'''
+        self._lib.Obj_SetInt32(self._ptr, 12, enums.TShapeAction.SngSave)
 
     def Like(self, value: AnyStr):
         """
@@ -227,7 +233,7 @@ class TShapeProperties(TypedDict):
     DblFile: AnyStr
     SInterval: float
     MInterval: float
-    Action: Union[str, bytes, int, enums.TShapeAction]
+    Action: Union[AnyStr, int, enums.TShapeAction]
     Like: AnyStr
 
 class TShapeBatch(DSSBatch):
@@ -400,7 +406,7 @@ class TShapeBatch(DSSBatch):
     def MInterval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.TShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.TShapeAction]):
         """
         {DblSave | SngSave} After defining temperature curve data... Setting action=DblSave or SngSave will cause the present "Temp" values to be written to either a packed file of double or single. The filename is the Tshape name. 
 
@@ -410,6 +416,14 @@ class TShapeBatch(DSSBatch):
             self._set_batch_string(12, value)
         else:
             self._set_batch_int32_array(12, value)
+
+    def DblSave(self):
+        '''Shortcut to Action(TShapeAction.DblSave)'''
+        self._set_batch_int32_array(12, enums.TShapeAction.DblSave)
+
+    def SngSave(self):
+        '''Shortcut to Action(TShapeAction.SngSave)'''
+        self._set_batch_int32_array(12, enums.TShapeAction.SngSave)
 
     def Like(self, value: AnyStr):
         """
@@ -433,10 +447,12 @@ class TShapeBatchProperties(TypedDict):
     DblFile: Union[AnyStr, List[AnyStr]]
     SInterval: Union[float, Float64Array]
     MInterval: Union[float, Float64Array]
-    Action: Union[str, bytes, int, enums.TShapeAction]
+    Action: Union[AnyStr, int, enums.TShapeAction]
     Like: AnyStr
 
 class ITShape(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, TShape, TShapeBatch)
 

@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PCElementMixin,
@@ -18,11 +16,11 @@ from ._obj_bases import (
 from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
-from .LoadShape import LoadShape
 from .Spectrum import Spectrum as SpectrumObj
+from .LoadShape import LoadShape
 
 class Vsource(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'Vsource'
     _cls_idx = 16
     _cls_prop_idx = {
@@ -1410,6 +1408,8 @@ class VsourceBatchProperties(TypedDict):
     Like: AnyStr
 
 class IVsource(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, Vsource, VsourceBatch)
 

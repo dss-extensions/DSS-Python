@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PCElementMixin,
@@ -19,12 +17,12 @@ from ._obj_bases import (
 from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
+from .Spectrum import Spectrum as SpectrumObj
 from .DynamicExp import DynamicExp
 from .LoadShape import LoadShape
-from .Spectrum import Spectrum as SpectrumObj
 
 class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
     _cls_name = 'Generator'
     _cls_idx = 27
     _cls_prop_idx = {
@@ -714,7 +712,7 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
     def pctReserve(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 41, value)
 
-    def Refuel(self, value: bool):
+    def Refuel(self, value: bool = True):
         """
         It is a boolean value (Yes/True, No/False) that can be used to manually refuel the generator when needed. It only applies if UseFuel = Yes/True
 
@@ -1525,7 +1523,7 @@ class GeneratorBatch(DSSBatch):
     def pctReserve(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(41, value)
 
-    def Refuel(self, value: Union[bool, List[bool]]):
+    def Refuel(self, value: Union[bool, List[bool]] = True):
         """
         It is a boolean value (Yes/True, No/False) that can be used to manually refuel the generator when needed. It only applies if UseFuel = Yes/True
 
@@ -1691,6 +1689,8 @@ class GeneratorBatchProperties(TypedDict):
     Like: AnyStr
 
 class IGenerator(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, Generator, GeneratorBatch)
 

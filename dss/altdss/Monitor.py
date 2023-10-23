@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     MonitorObjMixin,
@@ -20,7 +18,7 @@ from .._cffi_api_util import Base
 from . import enums
 
 class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + MonitorObjMixin._extra_slots
     _cls_name = 'Monitor'
     _cls_idx = 47
     _cls_prop_idx = {
@@ -116,7 +114,7 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
     def Mode(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.MonitorAction]):
+    def Action(self, value: Union[AnyStr, int, enums.MonitorAction]):
         """
         {Clear | Save | Take | Process}
         (C)lears or (S)aves current buffer.
@@ -132,6 +130,26 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
             return
     
         self._set_string_o(4, value)
+
+    def Clear(self):
+        '''Shortcut to Action(MonitorAction.Clear)'''
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Clear)
+
+    def Save(self):
+        '''Shortcut to Action(MonitorAction.Save)'''
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Save)
+
+    def TakeSample(self):
+        '''Shortcut to Action(MonitorAction.TakeSample)'''
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.TakeSample)
+
+    def Process(self):
+        '''Shortcut to Action(MonitorAction.Process)'''
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Process)
+
+    def Reset(self):
+        '''Shortcut to Action(MonitorAction.Reset)'''
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Reset)
 
     @property
     def Residual(self) -> bool:
@@ -213,7 +231,7 @@ class MonitorProperties(TypedDict):
     Element: Union[AnyStr, DSSObj]
     Terminal: int
     Mode: int
-    Action: Union[str, bytes, int, enums.MonitorAction]
+    Action: Union[AnyStr, int, enums.MonitorAction]
     Residual: bool
     VIPolar: bool
     PPolar: bool
@@ -303,7 +321,7 @@ class MonitorBatch(DSSBatch):
     def Mode(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(3, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.MonitorAction]):
+    def Action(self, value: Union[AnyStr, int, enums.MonitorAction]):
         """
         {Clear | Save | Take | Process}
         (C)lears or (S)aves current buffer.
@@ -318,6 +336,26 @@ class MonitorBatch(DSSBatch):
             self._set_batch_string(4, value)
         else:
             self._set_batch_int32_array(4, value)
+
+    def Clear(self):
+        '''Shortcut to Action(MonitorAction.Clear)'''
+        self._set_batch_int32_array(4, enums.MonitorAction.Clear)
+
+    def Save(self):
+        '''Shortcut to Action(MonitorAction.Save)'''
+        self._set_batch_int32_array(4, enums.MonitorAction.Save)
+
+    def TakeSample(self):
+        '''Shortcut to Action(MonitorAction.TakeSample)'''
+        self._set_batch_int32_array(4, enums.MonitorAction.TakeSample)
+
+    def Process(self):
+        '''Shortcut to Action(MonitorAction.Process)'''
+        self._set_batch_int32_array(4, enums.MonitorAction.Process)
+
+    def Reset(self):
+        '''Shortcut to Action(MonitorAction.Reset)'''
+        self._set_batch_int32_array(4, enums.MonitorAction.Reset)
 
     @property
     def Residual(self) -> List[bool]:
@@ -402,7 +440,7 @@ class MonitorBatchProperties(TypedDict):
     Element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
     Terminal: Union[int, Int32Array]
     Mode: Union[int, Int32Array]
-    Action: Union[str, bytes, int, enums.MonitorAction]
+    Action: Union[AnyStr, int, enums.MonitorAction]
     Residual: bool
     VIPolar: bool
     PPolar: bool
@@ -411,6 +449,8 @@ class MonitorBatchProperties(TypedDict):
     Like: AnyStr
 
 class IMonitor(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, Monitor, MonitorBatch)
 

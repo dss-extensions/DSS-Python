@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     BatchFloat64ArrayProxy,
@@ -19,7 +17,7 @@ from .._cffi_api_util import Base
 from . import enums
 
 class GenDispatcher(DSSObj, CktElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots
     _cls_name = 'GenDispatcher'
     _cls_idx = 28
     _cls_prop_idx = {
@@ -361,6 +359,8 @@ class GenDispatcherBatchProperties(TypedDict):
     Like: AnyStr
 
 class IGenDispatcher(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, GenDispatcher, GenDispatcherBatch)
 

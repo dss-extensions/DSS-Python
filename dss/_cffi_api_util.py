@@ -56,7 +56,26 @@ class CtxLib:
     Exposes a CFFI Lib object pre-binding the DSSContext (`ctx`) object to the
     `ctx_*` functions.
     '''
-    def __init__(self, ctx, lib):
+
+    def _get_string(self, b) -> str:
+        if b != self._ffi.NULL:
+            return self._ffi.string(b).decode()
+        return ''
+
+    def _error_checked(self, _errorPtr, f, *args):
+        result = f(*args)
+        if _errorPtr[0] and Base._use_exceptions:
+            error_num = _errorPtr[0]
+            _errorPtr[0] = 0
+            raise DSSException(error_num, self._get_string(self.Error_Get_Description()))
+            
+        return result
+
+    def __init__(self, ctx, ffi, lib):
+        self._ctx = ctx
+        self._ffi = ffi
+        self._errorPtr = _errorPtr = lib.ctx_Error_Get_NumberPtr(ctx)
+
         done = set()
 
         # First, process all `ctx_*`` functions
@@ -66,22 +85,40 @@ class CtxLib:
                 continue
 
             # Keep the basic management functions alone
-            if name not in ('ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', ):
-                if is_ctx:
+            if name in ('ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'ctx_Error_Set_Description'):
+                if name == 'ctx_Error_Set_Description':
                     name = name[4:]
-
+                    setattr(self, name, partial(value, ctx))
+                else:
+                    setattr(self, name, value)
+            elif is_ctx:
+                name = name[4:]
                 setattr(self, name, partial(value, ctx))
-            else:            
-                setattr(self, name, value)
+                # setattr(self, name, partial(self._error_checked, _errorPtr, partial(value, ctx)))
+            else:
+                setattr(self, name, partial(value, ctx))
+                # setattr(self, name, partial(self._error_checked, _errorPtr, partial(value, ctx)))
 
             done.add(name)
 
-        # Then the remaining fields
+        # Then the new Alt_* family
+        for name, value in vars(lib).items():
+            if (not name.startswith('Alt_')) or name in done:
+                continue
+
+            setattr(self, name, partial(self._error_checked, _errorPtr, value))
+
+
+        # Finally the remaining fields
         for name, value in vars(lib).items():
             if name.startswith('ctx_') or name in done:
                 continue
 
             setattr(self, name, value)
+            # if isinstance(value, int):
+            #     setattr(self, name, value)
+            # else:
+            #     setattr(self, name, partial(self._error_checked, _errorPtr, value))
 
 
 class Base:
@@ -258,7 +295,7 @@ class CffiApiUtil(object):
         if ctx is None:
             self.lib = lib
         else:
-            self.lib = CtxLib(ctx, lib)
+            self.lib = CtxLib(ctx, ffi, lib)
 
         self._allow_complex = False
         self.init_buffers()
@@ -316,7 +353,6 @@ class CffiApiUtil(object):
             return res.reshape((cnt[2], cnt[3]), order='F')
 
         return res
-
 
     def get_complex128_array(self, func, *args) -> Float64ArrayOrComplexArray:
         if not self._allow_complex:

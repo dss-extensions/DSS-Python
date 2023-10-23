@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
@@ -17,7 +15,7 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class TSData(DSSObj, ):
+class TSData(DSSObj):
     __slots__ = []
     _cls_name = 'TSData'
     _cls_idx = 11
@@ -743,6 +741,8 @@ class TSDataBatchProperties(TypedDict):
     Like: AnyStr
 
 class ITSData(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, TSData, TSDataBatch)
 

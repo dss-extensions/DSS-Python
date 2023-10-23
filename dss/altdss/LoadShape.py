@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     LoadShapeObjMixin,
     BatchFloat64ArrayProxy,
@@ -19,7 +17,7 @@ from .._cffi_api_util import Base
 from . import enums
 
 class LoadShape(DSSObj, LoadShapeObjMixin):
-    __slots__ = []
+    __slots__ = LoadShapeObjMixin._extra_slots
     _cls_name = 'LoadShape'
     _cls_idx = 2
     _cls_prop_idx = {
@@ -159,7 +157,7 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
     def DblFile(self, value: AnyStr):
         self._set_string_o(9, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.LoadShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.LoadShapeAction]):
         """
         {NORMALIZE | DblSave | SngSave} After defining load curve data, setting action=normalize will modify the multipliers so that the peak is 1.0. The mean and std deviation are recomputed.
 
@@ -172,6 +170,18 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
             return
     
         self._set_string_o(10, value)
+
+    def Normalize(self):
+        '''Shortcut to Action(LoadShapeAction.Normalize)'''
+        self._lib.Obj_SetInt32(self._ptr, 10, enums.LoadShapeAction.Normalize)
+
+    def DblSave(self):
+        '''Shortcut to Action(LoadShapeAction.DblSave)'''
+        self._lib.Obj_SetInt32(self._ptr, 10, enums.LoadShapeAction.DblSave)
+
+    def SngSave(self):
+        '''Shortcut to Action(LoadShapeAction.SngSave)'''
+        self._lib.Obj_SetInt32(self._ptr, 10, enums.LoadShapeAction.SngSave)
 
     @property
     def QMult(self) -> Float64Array:
@@ -377,7 +387,7 @@ class LoadShapeProperties(TypedDict):
     CSVFile: AnyStr
     SngFile: AnyStr
     DblFile: AnyStr
-    Action: Union[str, bytes, int, enums.LoadShapeAction]
+    Action: Union[AnyStr, int, enums.LoadShapeAction]
     QMult: Float64Array
     UseActual: bool
     PMax: float
@@ -515,7 +525,7 @@ class LoadShapeBatch(DSSBatch):
     def DblFile(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(9, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.LoadShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.LoadShapeAction]):
         """
         {NORMALIZE | DblSave | SngSave} After defining load curve data, setting action=normalize will modify the multipliers so that the peak is 1.0. The mean and std deviation are recomputed.
 
@@ -527,6 +537,18 @@ class LoadShapeBatch(DSSBatch):
             self._set_batch_string(10, value)
         else:
             self._set_batch_int32_array(10, value)
+
+    def Normalize(self):
+        '''Shortcut to Action(LoadShapeAction.Normalize)'''
+        self._set_batch_int32_array(10, enums.LoadShapeAction.Normalize)
+
+    def DblSave(self):
+        '''Shortcut to Action(LoadShapeAction.DblSave)'''
+        self._set_batch_int32_array(10, enums.LoadShapeAction.DblSave)
+
+    def SngSave(self):
+        '''Shortcut to Action(LoadShapeAction.SngSave)'''
+        self._set_batch_int32_array(10, enums.LoadShapeAction.SngSave)
 
     @property
     def QMult(self) -> List[Float64Array]:
@@ -741,7 +763,7 @@ class LoadShapeBatchProperties(TypedDict):
     CSVFile: Union[AnyStr, List[AnyStr]]
     SngFile: Union[AnyStr, List[AnyStr]]
     DblFile: Union[AnyStr, List[AnyStr]]
-    Action: Union[str, bytes, int, enums.LoadShapeAction]
+    Action: Union[AnyStr, int, enums.LoadShapeAction]
     QMult: Float64Array
     UseActual: bool
     PMax: Union[float, Float64Array]
@@ -757,6 +779,8 @@ class LoadShapeBatchProperties(TypedDict):
     Like: AnyStr
 
 class ILoadShape(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, LoadShape, LoadShapeBatch)
 

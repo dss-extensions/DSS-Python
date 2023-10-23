@@ -493,7 +493,7 @@ class MonitorAction(IntEnum):
     """Monitor: Action (DSS enumeration)"""
     Clear = 0 # Clear
     Save = 1 # Save
-    Take = 2 # Take
+    TakeSample = 2 # TakeSample
     Process = 3 # Process
     Reset = 0 # Reset
 
@@ -504,7 +504,7 @@ class EnergyMeterAction(IntEnum):
     Clear = 1 # Clear
     Reduce = 2 # Reduce
     Save = 3 # Save
-    Take = 4 # Take
+    TakeSample = 4 # TakeSample
     ZoneDump = 5 # ZoneDump
 
 

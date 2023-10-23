@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     BatchFloat64ArrayProxy,
@@ -20,7 +18,7 @@ from . import enums
 from .TCC_Curve import TCC_Curve
 
 class Relay(DSSObj, CktElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots
     _cls_name = 'Relay'
     _cls_idx = 31
     _cls_prop_idx = {
@@ -1972,6 +1970,8 @@ class RelayBatchProperties(TypedDict):
     Like: AnyStr
 
 class IRelay(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, Relay, RelayBatch)
 

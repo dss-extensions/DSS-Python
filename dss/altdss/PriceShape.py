@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
@@ -17,7 +15,7 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class PriceShape(DSSObj, ):
+class PriceShape(DSSObj):
     __slots__ = []
     _cls_name = 'PriceShape'
     _cls_idx = 4
@@ -192,7 +190,7 @@ class PriceShape(DSSObj, ):
     def MInterval(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.PriceShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.PriceShapeAction]):
         """
         {DblSave | SngSave} After defining Price curve data... Setting action=DblSave or SngSave will cause the present "Price" values to be written to either a packed file of double or single. The filename is the PriceShape name. 
 
@@ -203,6 +201,14 @@ class PriceShape(DSSObj, ):
             return
     
         self._set_string_o(12, value)
+
+    def DblSave(self):
+        '''Shortcut to Action(PriceShapeAction.DblSave)'''
+        self._lib.Obj_SetInt32(self._ptr, 12, enums.PriceShapeAction.DblSave)
+
+    def SngSave(self):
+        '''Shortcut to Action(PriceShapeAction.SngSave)'''
+        self._lib.Obj_SetInt32(self._ptr, 12, enums.PriceShapeAction.SngSave)
 
     def Like(self, value: AnyStr):
         """
@@ -227,7 +233,7 @@ class PriceShapeProperties(TypedDict):
     DblFile: AnyStr
     SInterval: float
     MInterval: float
-    Action: Union[str, bytes, int, enums.PriceShapeAction]
+    Action: Union[AnyStr, int, enums.PriceShapeAction]
     Like: AnyStr
 
 class PriceShapeBatch(DSSBatch):
@@ -400,7 +406,7 @@ class PriceShapeBatch(DSSBatch):
     def MInterval(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.PriceShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.PriceShapeAction]):
         """
         {DblSave | SngSave} After defining Price curve data... Setting action=DblSave or SngSave will cause the present "Price" values to be written to either a packed file of double or single. The filename is the PriceShape name. 
 
@@ -410,6 +416,14 @@ class PriceShapeBatch(DSSBatch):
             self._set_batch_string(12, value)
         else:
             self._set_batch_int32_array(12, value)
+
+    def DblSave(self):
+        '''Shortcut to Action(PriceShapeAction.DblSave)'''
+        self._set_batch_int32_array(12, enums.PriceShapeAction.DblSave)
+
+    def SngSave(self):
+        '''Shortcut to Action(PriceShapeAction.SngSave)'''
+        self._set_batch_int32_array(12, enums.PriceShapeAction.SngSave)
 
     def Like(self, value: AnyStr):
         """
@@ -433,10 +447,12 @@ class PriceShapeBatchProperties(TypedDict):
     DblFile: Union[AnyStr, List[AnyStr]]
     SInterval: Union[float, Float64Array]
     MInterval: Union[float, Float64Array]
-    Action: Union[str, bytes, int, enums.PriceShapeAction]
+    Action: Union[AnyStr, int, enums.PriceShapeAction]
     Like: AnyStr
 
 class IPriceShape(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, PriceShape, PriceShapeBatch)
 

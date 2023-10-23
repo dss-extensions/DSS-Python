@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
@@ -17,7 +15,7 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class LineCode(DSSObj, ):
+class LineCode(DSSObj):
     __slots__ = []
     _cls_name = 'LineCode'
     _cls_idx = 1
@@ -289,7 +287,7 @@ class LineCode(DSSObj, ):
     def Repair(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    def Kron(self, value: bool):
+    def Kron(self, value: bool = True):
         """
         Kron = Y/N. Default=N.  Perform Kron reduction on the impedance matrix after it is formed, reducing order by 1. Eliminates the conductor designated by the "Neutral=" property. Do this after the R, X, and C matrices are defined. Ignored for symmetrical components. May be issued more than once to eliminate more than one conductor by resetting the Neutral property after the previous invoking of this property. Generally, you do not want to do a Kron reduction on the matrix if you intend to solve at a frequency other than the base frequency and exploit the Rg and Xg values.
 
@@ -731,7 +729,7 @@ class LineCodeBatch(DSSBatch):
     def Repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    def Kron(self, value: Union[bool, List[bool]]):
+    def Kron(self, value: Union[bool, List[bool]] = True):
         """
         Kron = Y/N. Default=N.  Perform Kron reduction on the impedance matrix after it is formed, reducing order by 1. Eliminates the conductor designated by the "Neutral=" property. Do this after the R, X, and C matrices are defined. Ignored for symmetrical components. May be issued more than once to eliminate more than one conductor by resetting the Neutral property after the previous invoking of this property. Generally, you do not want to do a Kron reduction on the matrix if you intend to solve at a frequency other than the base frequency and exploit the Rg and Xg values.
 
@@ -924,6 +922,8 @@ class LineCodeBatchProperties(TypedDict):
     Like: AnyStr
 
 class ILineCode(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, LineCode, LineCodeBatch)
 

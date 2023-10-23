@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PCElementMixin,
@@ -19,7 +17,6 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 from .Spectrum import Spectrum as SpectrumObj
-from .XYcurve import XYcurve
 
 from .AutoTrans import AutoTrans
 from .Capacitor import Capacitor
@@ -33,9 +30,10 @@ PDElement = Union[
     Reactor,
     Transformer,
 ]
+from .XYcurve import XYcurve
 
 class UPFC(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'UPFC'
     _cls_idx = 36
     _cls_prop_idx = {
@@ -781,6 +779,8 @@ class UPFCBatchProperties(TypedDict):
     Like: AnyStr
 
 class IUPFC(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, UPFC, UPFCBatch)
 

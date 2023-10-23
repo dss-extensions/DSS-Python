@@ -1,13 +1,12 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     EnergyMeterObjMixin,
     ElementHasRegistersMixin,
+    IEnergyMeterMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -21,7 +20,7 @@ from .._cffi_api_util import Base
 from . import enums
 
 class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegistersMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + EnergyMeterObjMixin._extra_slots + ElementHasRegistersMixin._extra_slots
     _cls_name = 'EnergyMeter'
     _cls_idx = 48
     _cls_prop_idx = {
@@ -39,9 +38,8 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         'linelosses': 12,
         'xfmrlosses': 13,
         'seqlosses': 14,
-        'threepaselosses': 15,
-        '3phaselosses': 15,
         'threephaselosses': 15,
+        '3phaselosses': 15,
         'vbaselosses': 16,
         'phasevoltagereport': 17,
         'int_rate': 18,
@@ -99,7 +97,7 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
     def Terminal(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.EnergyMeterAction]):
+    def Action(self, value: Union[AnyStr, int, enums.EnergyMeterAction]):
         """
         {Clear (reset) | Save | Take | Zonedump | Allocate | Reduce} 
 
@@ -119,6 +117,30 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
             return
     
         self._set_string_o(3, value)
+
+    def Allocate(self):
+        '''Shortcut to Action(EnergyMeterAction.Allocate)'''
+        self._lib.Obj_SetInt32(self._ptr, 3, enums.EnergyMeterAction.Allocate)
+
+    def Clear(self):
+        '''Shortcut to Action(EnergyMeterAction.Clear)'''
+        self._lib.Obj_SetInt32(self._ptr, 3, enums.EnergyMeterAction.Clear)
+
+    def Reduce(self):
+        '''Shortcut to Action(EnergyMeterAction.Reduce)'''
+        self._lib.Obj_SetInt32(self._ptr, 3, enums.EnergyMeterAction.Reduce)
+
+    def Save(self):
+        '''Shortcut to Action(EnergyMeterAction.Save)'''
+        self._lib.Obj_SetInt32(self._ptr, 3, enums.EnergyMeterAction.Save)
+
+    def TakeSample(self):
+        '''Shortcut to Action(EnergyMeterAction.TakeSample)'''
+        self._lib.Obj_SetInt32(self._ptr, 3, enums.EnergyMeterAction.TakeSample)
+
+    def ZoneDump(self):
+        '''Shortcut to Action(EnergyMeterAction.ZoneDump)'''
+        self._lib.Obj_SetInt32(self._ptr, 3, enums.EnergyMeterAction.ZoneDump)
 
     @property
     def Option(self) -> List[str]:
@@ -449,7 +471,7 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
 class EnergyMeterProperties(TypedDict):
     Element: Union[AnyStr, DSSObj]
     Terminal: int
-    Action: Union[str, bytes, int, enums.EnergyMeterAction]
+    Action: Union[AnyStr, int, enums.EnergyMeterAction]
     Option: List[AnyStr]
     kVANormal: float
     kVAEmerg: float
@@ -520,7 +542,7 @@ class EnergyMeterBatch(DSSBatch):
     def Terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    def Action(self, value: Union[str, bytes, int, enums.EnergyMeterAction]):
+    def Action(self, value: Union[AnyStr, int, enums.EnergyMeterAction]):
         """
         {Clear (reset) | Save | Take | Zonedump | Allocate | Reduce} 
 
@@ -539,6 +561,30 @@ class EnergyMeterBatch(DSSBatch):
             self._set_batch_string(3, value)
         else:
             self._set_batch_int32_array(3, value)
+
+    def Allocate(self):
+        '''Shortcut to Action(EnergyMeterAction.Allocate)'''
+        self._set_batch_int32_array(3, enums.EnergyMeterAction.Allocate)
+
+    def Clear(self):
+        '''Shortcut to Action(EnergyMeterAction.Clear)'''
+        self._set_batch_int32_array(3, enums.EnergyMeterAction.Clear)
+
+    def Reduce(self):
+        '''Shortcut to Action(EnergyMeterAction.Reduce)'''
+        self._set_batch_int32_array(3, enums.EnergyMeterAction.Reduce)
+
+    def Save(self):
+        '''Shortcut to Action(EnergyMeterAction.Save)'''
+        self._set_batch_int32_array(3, enums.EnergyMeterAction.Save)
+
+    def TakeSample(self):
+        '''Shortcut to Action(EnergyMeterAction.TakeSample)'''
+        self._set_batch_int32_array(3, enums.EnergyMeterAction.TakeSample)
+
+    def ZoneDump(self):
+        '''Shortcut to Action(EnergyMeterAction.ZoneDump)'''
+        self._set_batch_int32_array(3, enums.EnergyMeterAction.ZoneDump)
 
     @property
     def Option(self) -> List[List[str]]:
@@ -887,7 +933,7 @@ class EnergyMeterBatch(DSSBatch):
 class EnergyMeterBatchProperties(TypedDict):
     Element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]
     Terminal: Union[int, Int32Array]
-    Action: Union[str, bytes, int, enums.EnergyMeterAction]
+    Action: Union[AnyStr, int, enums.EnergyMeterAction]
     Option: List[AnyStr]
     kVANormal: Union[float, Float64Array]
     kVAEmerg: Union[float, Float64Array]
@@ -913,7 +959,9 @@ class EnergyMeterBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IEnergyMeter(IDSSObj):
+class IEnergyMeter(IDSSObj, IEnergyMeterMixin):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, EnergyMeter, EnergyMeterBatch)
 

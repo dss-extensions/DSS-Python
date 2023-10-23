@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PDElementMixin,
@@ -22,7 +20,7 @@ from . import enums
 from .XfmrCode import XfmrCode as XfmrCodeObj
 
 class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots + TransformerObjMixin._extra_slots
     _cls_name = 'Transformer'
     _cls_idx = 20
     _cls_prop_idx = {
@@ -652,18 +650,6 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
     @LeadLag_str.setter
     def LeadLag_str(self, value: AnyStr):
         self.LeadLag = value
-
-    def WdgCurrents(self) -> str:
-        """
-        (Read only) Makes winding currents available via return on query (? Transformer.TX.WdgCurrents). Order: Phase 1, Wdg 1, Wdg 2, ..., Phase 2 ...
-
-        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
-
-        DSS property name: `WdgCurrents`, DSS property index: 45.
-        """
-        # []
-        # StringSilentROFunction
-        return self._get_prop_string(self._lib.Obj_GetString(self._ptr, 45))
 
     @property
     def Core(self) -> enums.CoreType:
@@ -1501,18 +1487,6 @@ class TransformerBatch(DSSBatch):
     def LeadLag_str(self, value: AnyStr):
         self.LeadLag = value
 
-    def WdgCurrents(self) -> List[str]:
-        """
-        (Read only) Makes winding currents available via return on query (? Transformer.TX.WdgCurrents). Order: Phase 1, Wdg 1, Wdg 2, ..., Phase 2 ...
-
-        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
-
-        DSS property name: `WdgCurrents`, DSS property index: 45.
-        """
-        # []
-        # StringSilentROFunction
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 45)
-
     @property
     def Core(self) -> BatchInt32ArrayProxy:
         """
@@ -1744,6 +1718,8 @@ class TransformerBatchProperties(TypedDict):
     Like: AnyStr
 
 class ITransformer(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, Transformer, TransformerBatch)
 

@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PDElementMixin,
@@ -20,7 +18,7 @@ from .._cffi_api_util import Base
 from . import enums
 
 class AutoTrans(DSSObj, CktElementMixin, PDElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots
     _cls_name = 'AutoTrans'
     _cls_idx = 41
     _cls_prop_idx = {
@@ -589,18 +587,6 @@ class AutoTrans(DSSObj, CktElementMixin, PDElementMixin):
     @LeadLag_str.setter
     def LeadLag_str(self, value: AnyStr):
         self.LeadLag = value
-
-    def WdgCurrents(self) -> str:
-        """
-        (Read only) Makes winding currents available via return on query (? AutoTrans.TX.WdgCurrents). Order: Phase 1, Wdg 1, Wdg 2, ..., Phase 2 ...
-
-        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
-
-        DSS property name: `WdgCurrents`, DSS property index: 41.
-        """
-        # []
-        # StringSilentROFunction
-        return self._get_prop_string(self._lib.Obj_GetString(self._ptr, 41))
 
     @property
     def NormAmps(self) -> float:
@@ -1310,18 +1296,6 @@ class AutoTransBatch(DSSBatch):
     def LeadLag_str(self, value: AnyStr):
         self.LeadLag = value
 
-    def WdgCurrents(self) -> List[str]:
-        """
-        (Read only) Makes winding currents available via return on query (? AutoTrans.TX.WdgCurrents). Order: Phase 1, Wdg 1, Wdg 2, ..., Phase 2 ...
-
-        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
-
-        DSS property name: `WdgCurrents`, DSS property index: 41.
-        """
-        # []
-        # StringSilentROFunction
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 41)
-
     @property
     def NormAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -1469,6 +1443,8 @@ class AutoTransBatchProperties(TypedDict):
     Like: AnyStr
 
 class IAutoTrans(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, AutoTrans, AutoTransBatch)
 

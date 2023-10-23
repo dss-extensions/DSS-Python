@@ -1,9 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
 from typing_extensions import TypedDict, Unpack
-import numpy as np
 from ._obj_bases import (
     CktElementMixin,
     PCElementMixin,
@@ -22,7 +20,7 @@ from .Spectrum import Spectrum as SpectrumObj
 from .XYcurve import XYcurve
 
 class VCCS(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = []
+    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'VCCS'
     _cls_idx = 18
     _cls_prop_idx = {
@@ -654,6 +652,8 @@ class VCCSBatchProperties(TypedDict):
     Like: AnyStr
 
 class IVCCS(IDSSObj):
+    __slots__ = ()
+
     def __init__(self, iobj):
         super().__init__(iobj, VCCS, VCCSBatch)
 
