@@ -435,8 +435,7 @@ class VSConverterBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 2.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
+        return self._get_batch_str_prop(2) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -680,7 +679,7 @@ class VSConverterBatch(DSSBatch):
 
         DSS property name: `VSCMode`, DSS property index: 19.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
+        return self._get_batch_str_prop(19)
 
     @VSCMode_str.setter
     def VSCMode_str(self, value: AnyStr):
@@ -693,7 +692,7 @@ class VSConverterBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 20.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 20)
+        return self._get_batch_str_prop(20)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
@@ -706,7 +705,7 @@ class VSConverterBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 20.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 20)
+        return self._get_batch_obj_prop(20)
 
     @Spectrum_obj.setter
     def Spectrum_obj(self, value: SpectrumObj):
@@ -733,7 +732,7 @@ class VSConverterBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 22.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 22)
+            self._get_batch_int32_prop(22)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -774,11 +773,13 @@ class VSConverterBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IVSConverter(IDSSObj):
-    __slots__ = ()
+class IVSConverter(IDSSObj,VSConverterBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, VSConverter, VSConverterBatch)
+        IDSSObj.__init__(self, iobj, VSConverter, VSConverterBatch)
+        VSConverterBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> VSConverter:

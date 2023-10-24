@@ -597,7 +597,7 @@ class LineCodeBatch(DSSBatch):
 
         DSS property name: `Units`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_batch_str_prop(8)
 
     @Units_str.setter
     def Units_str(self, value: AnyStr):
@@ -612,7 +612,7 @@ class LineCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 9)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @RMatrix.setter
@@ -628,7 +628,7 @@ class LineCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 10)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @XMatrix.setter
@@ -644,7 +644,7 @@ class LineCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 11)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @CMatrix.setter
@@ -838,7 +838,7 @@ class LineCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 26)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Ratings.setter
@@ -875,7 +875,7 @@ class LineCodeBatch(DSSBatch):
 
         DSS property name: `LineType`, DSS property index: 27.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 27)
+        return self._get_batch_str_prop(27)
 
     @LineType_str.setter
     def LineType_str(self, value: AnyStr):
@@ -921,11 +921,13 @@ class LineCodeBatchProperties(TypedDict):
     LineType: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array]
     Like: AnyStr
 
-class ILineCode(IDSSObj):
-    __slots__ = ()
+class ILineCode(IDSSObj,LineCodeBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, LineCode, LineCodeBatch)
+        IDSSObj.__init__(self, iobj, LineCode, LineCodeBatch)
+        LineCodeBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> LineCode:

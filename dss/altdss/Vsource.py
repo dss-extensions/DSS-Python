@@ -16,8 +16,8 @@ from ._obj_bases import (
 from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
-from .Spectrum import Spectrum as SpectrumObj
 from .LoadShape import LoadShape
+from .Spectrum import Spectrum as SpectrumObj
 
 class Vsource(DSSObj, CktElementMixin, PCElementMixin):
     __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
@@ -701,8 +701,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
+        return self._get_batch_str_prop(1) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -934,7 +933,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `ScanType`, DSS property index: 17.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
+        return self._get_batch_str_prop(17)
 
     @ScanType_str.setter
     def ScanType_str(self, value: AnyStr):
@@ -964,7 +963,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Sequence`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
+        return self._get_batch_str_prop(18)
 
     @Sequence_str.setter
     def Sequence_str(self, value: AnyStr):
@@ -981,8 +980,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 19.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19) 
+        return self._get_batch_str_prop(19) 
 
     @Bus2.setter
     def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1007,23 +1005,23 @@ class VsourceBatch(DSSBatch):
                 x,
                 22,
             ).view(dtype=complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Z2.setter
     def Z2(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetFloat64Array(x, 22, value_ptr, value_count)
             return
 
         values = value
-        if len(values) != self.count[0]:
+        if len(values) != len(self):
             raise ValueError('Number of elements provided must match the number of objects in the batch.')
 
         value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
+        for v, x in zip(values, self._unpack()):
             value[0] = v.real
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 22, value_ptr, value_count)
@@ -1041,23 +1039,23 @@ class VsourceBatch(DSSBatch):
                 x,
                 23,
             ).view(dtype=complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @puZ1.setter
     def puZ1(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetFloat64Array(x, 23, value_ptr, value_count)
             return
 
         values = value
-        if len(values) != self.count[0]:
+        if len(values) != len(self):
             raise ValueError('Number of elements provided must match the number of objects in the batch.')
 
         value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
+        for v, x in zip(values, self._unpack()):
             value[0] = v.real
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 23, value_ptr, value_count)
@@ -1075,23 +1073,23 @@ class VsourceBatch(DSSBatch):
                 x,
                 24,
             ).view(dtype=complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @puZ0.setter
     def puZ0(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetFloat64Array(x, 24, value_ptr, value_count)
             return
 
         values = value
-        if len(values) != self.count[0]:
+        if len(values) != len(self):
             raise ValueError('Number of elements provided must match the number of objects in the batch.')
 
         value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
+        for v, x in zip(values, self._unpack()):
             value[0] = v.real
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 24, value_ptr, value_count)
@@ -1109,23 +1107,23 @@ class VsourceBatch(DSSBatch):
                 x,
                 25,
             ).view(dtype=complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @puZ2.setter
     def puZ2(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetFloat64Array(x, 25, value_ptr, value_count)
             return
 
         values = value
-        if len(values) != self.count[0]:
+        if len(values) != len(self):
             raise ValueError('Number of elements provided must match the number of objects in the batch.')
 
         value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
+        for v, x in zip(values, self._unpack()):
             value[0] = v.real
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 25, value_ptr, value_count)
@@ -1154,7 +1152,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 27.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 27)
+        return self._get_batch_str_prop(27)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1171,7 +1169,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 27.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 27)
+        return self._get_batch_obj_prop(27)
 
     @Yearly_obj.setter
     def Yearly_obj(self, value: LoadShape):
@@ -1188,7 +1186,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 28.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 28)
+        return self._get_batch_str_prop(28)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1205,7 +1203,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 28.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 28)
+        return self._get_batch_obj_prop(28)
 
     @Daily_obj.setter
     def Daily_obj(self, value: LoadShape):
@@ -1222,7 +1220,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 29.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 29)
+        return self._get_batch_str_prop(29)
 
     @Duty.setter
     def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1239,7 +1237,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 29.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 29)
+        return self._get_batch_obj_prop(29)
 
     @Duty_obj.setter
     def Duty_obj(self, value: LoadShape):
@@ -1269,7 +1267,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Model`, DSS property index: 30.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30)
+        return self._get_batch_str_prop(30)
 
     @Model_str.setter
     def Model_str(self, value: AnyStr):
@@ -1288,23 +1286,23 @@ class VsourceBatch(DSSBatch):
                 x,
                 31,
             ).view(dtype=complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @puZIdeal.setter
     def puZIdeal(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetFloat64Array(x, 31, value_ptr, value_count)
             return
 
         values = value
-        if len(values) != self.count[0]:
+        if len(values) != len(self):
             raise ValueError('Number of elements provided must match the number of objects in the batch.')
 
         value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
+        for v, x in zip(values, self._unpack()):
             value[0] = v.real
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 31, value_ptr, value_count)
@@ -1316,7 +1314,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 32.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 32)
+        return self._get_batch_str_prop(32)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
@@ -1329,7 +1327,7 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 32.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 32)
+        return self._get_batch_obj_prop(32)
 
     @Spectrum_obj.setter
     def Spectrum_obj(self, value: SpectrumObj):
@@ -1356,7 +1354,7 @@ class VsourceBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 34.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 34)
+            self._get_batch_int32_prop(34)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -1407,11 +1405,13 @@ class VsourceBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IVsource(IDSSObj):
-    __slots__ = ()
+class IVsource(IDSSObj,VsourceBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Vsource, VsourceBatch)
+        IDSSObj.__init__(self, iobj, Vsource, VsourceBatch)
+        VsourceBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Vsource:

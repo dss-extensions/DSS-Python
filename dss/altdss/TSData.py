@@ -533,7 +533,7 @@ class TSDataBatch(DSSBatch):
 
         DSS property name: `RUnits`, DSS property index: 10.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
+        return self._get_batch_str_prop(10)
 
     @RUnits_str.setter
     def RUnits_str(self, value: AnyStr):
@@ -576,7 +576,7 @@ class TSDataBatch(DSSBatch):
 
         DSS property name: `GMRUnits`, DSS property index: 12.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
+        return self._get_batch_str_prop(12)
 
     @GMRUnits_str.setter
     def GMRUnits_str(self, value: AnyStr):
@@ -619,7 +619,7 @@ class TSDataBatch(DSSBatch):
 
         DSS property name: `RadUnits`, DSS property index: 14.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 14)
+        return self._get_batch_str_prop(14)
 
     @RadUnits_str.setter
     def RadUnits_str(self, value: AnyStr):
@@ -687,7 +687,7 @@ class TSDataBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 19)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Ratings.setter
@@ -740,11 +740,13 @@ class TSDataBatchProperties(TypedDict):
     CapRadius: Union[float, Float64Array]
     Like: AnyStr
 
-class ITSData(IDSSObj):
-    __slots__ = ()
+class ITSData(IDSSObj,TSDataBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, TSData, TSDataBatch)
+        IDSSObj.__init__(self, iobj, TSData, TSDataBatch)
+        TSDataBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> TSData:

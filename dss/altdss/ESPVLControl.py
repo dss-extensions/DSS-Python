@@ -285,7 +285,7 @@ class ESPVLControlBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -298,7 +298,7 @@ class ESPVLControlBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -341,7 +341,7 @@ class ESPVLControlBatch(DSSBatch):
 
         DSS property name: `Type`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_batch_str_prop(3)
 
     @Type_str.setter
     def Type_str(self, value: AnyStr):
@@ -385,7 +385,7 @@ class ESPVLControlBatch(DSSBatch):
     @LocalControlList.setter
     def LocalControlList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 6, value_ptr, value_count)
     
         self._check_for_error()
@@ -399,7 +399,7 @@ class ESPVLControlBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 7)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @LocalControlWeights.setter
@@ -418,7 +418,7 @@ class ESPVLControlBatch(DSSBatch):
     @PVSystemList.setter
     def PVSystemList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 8, value_ptr, value_count)
     
         self._check_for_error()
@@ -432,7 +432,7 @@ class ESPVLControlBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 9)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @PVSystemWeights.setter
@@ -451,7 +451,7 @@ class ESPVLControlBatch(DSSBatch):
     @StorageList.setter
     def StorageList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 10, value_ptr, value_count)
     
         self._check_for_error()
@@ -465,7 +465,7 @@ class ESPVLControlBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 11)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @StorageWeights.setter
@@ -493,7 +493,7 @@ class ESPVLControlBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 13.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 13)
+            self._get_batch_int32_prop(13)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -525,11 +525,13 @@ class ESPVLControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IESPVLControl(IDSSObj):
-    __slots__ = ()
+class IESPVLControl(IDSSObj,ESPVLControlBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, ESPVLControl, ESPVLControlBatch)
+        IDSSObj.__init__(self, iobj, ESPVLControl, ESPVLControlBatch)
+        ESPVLControlBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> ESPVLControl:

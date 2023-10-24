@@ -562,7 +562,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @MonitoredObj.setter
     def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -575,7 +575,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @MonitoredObj_obj.setter
     def MonitoredObj_obj(self, value: DSSObj):
@@ -601,7 +601,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_batch_str_prop(3)
 
     @SwitchedObj.setter
     def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -614,7 +614,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 3)
+        return self._get_batch_obj_prop(3)
 
     @SwitchedObj_obj.setter
     def SwitchedObj_obj(self, value: DSSObj):
@@ -653,7 +653,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `PhaseFast`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @PhaseFast.setter
     def PhaseFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -666,7 +666,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `PhaseFast`, DSS property index: 6.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 6)
+        return self._get_batch_obj_prop(6)
 
     @PhaseFast_obj.setter
     def PhaseFast_obj(self, value: TCC_Curve):
@@ -679,7 +679,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `PhaseDelayed`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_batch_str_prop(7)
 
     @PhaseDelayed.setter
     def PhaseDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -692,7 +692,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `PhaseDelayed`, DSS property index: 7.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 7)
+        return self._get_batch_obj_prop(7)
 
     @PhaseDelayed_obj.setter
     def PhaseDelayed_obj(self, value: TCC_Curve):
@@ -705,7 +705,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `GroundFast`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_batch_str_prop(8)
 
     @GroundFast.setter
     def GroundFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -718,7 +718,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `GroundFast`, DSS property index: 8.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 8)
+        return self._get_batch_obj_prop(8)
 
     @GroundFast_obj.setter
     def GroundFast_obj(self, value: TCC_Curve):
@@ -731,7 +731,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `GroundDelayed`, DSS property index: 9.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
+        return self._get_batch_str_prop(9)
 
     @GroundDelayed.setter
     def GroundDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -744,7 +744,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `GroundDelayed`, DSS property index: 9.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 9)
+        return self._get_batch_obj_prop(9)
 
     @GroundDelayed_obj.setter
     def GroundDelayed_obj(self, value: TCC_Curve):
@@ -837,7 +837,7 @@ class RecloserBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 16)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @RecloseIntervals.setter
@@ -933,7 +933,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `Normal`, DSS property index: 23.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 23)
+        return self._get_batch_str_prop(23)
 
     @Normal_str.setter
     def Normal_str(self, value: AnyStr):
@@ -963,7 +963,7 @@ class RecloserBatch(DSSBatch):
 
         DSS property name: `State`, DSS property index: 24.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 24)
+        return self._get_batch_str_prop(24)
 
     @State_str.setter
     def State_str(self, value: AnyStr):
@@ -990,7 +990,7 @@ class RecloserBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 26.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 26)
+            self._get_batch_int32_prop(26)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -1034,11 +1034,13 @@ class RecloserBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IRecloser(IDSSObj):
-    __slots__ = ()
+class IRecloser(IDSSObj,RecloserBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Recloser, RecloserBatch)
+        IDSSObj.__init__(self, iobj, Recloser, RecloserBatch)
+        RecloserBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Recloser:

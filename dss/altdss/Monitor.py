@@ -252,7 +252,7 @@ class MonitorBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -265,7 +265,7 @@ class MonitorBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -365,7 +365,7 @@ class MonitorBatch(DSSBatch):
         DSS property name: `Residual`, DSS property index: 5.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 5)
+            self._get_batch_int32_prop(5)
         ]
     @Residual.setter
     def Residual(self, value: bool):
@@ -379,7 +379,7 @@ class MonitorBatch(DSSBatch):
         DSS property name: `VIPolar`, DSS property index: 6.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 6)
+            self._get_batch_int32_prop(6)
         ]
     @VIPolar.setter
     def VIPolar(self, value: bool):
@@ -393,7 +393,7 @@ class MonitorBatch(DSSBatch):
         DSS property name: `PPolar`, DSS property index: 7.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 7)
+            self._get_batch_int32_prop(7)
         ]
     @PPolar.setter
     def PPolar(self, value: bool):
@@ -420,7 +420,7 @@ class MonitorBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 9.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 9)
+            self._get_batch_int32_prop(9)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -448,11 +448,13 @@ class MonitorBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IMonitor(IDSSObj):
-    __slots__ = ()
+class IMonitor(IDSSObj,MonitorBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Monitor, MonitorBatch)
+        IDSSObj.__init__(self, iobj, Monitor, MonitorBatch)
+        MonitorBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Monitor:

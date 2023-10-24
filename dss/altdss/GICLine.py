@@ -356,8 +356,7 @@ class GICLineBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
+        return self._get_batch_str_prop(1) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -374,8 +373,7 @@ class GICLineBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
+        return self._get_batch_str_prop(2) 
 
     @Bus2.setter
     def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
@@ -565,7 +563,7 @@ class GICLineBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 16.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 16)
+        return self._get_batch_str_prop(16)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
@@ -578,7 +576,7 @@ class GICLineBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 16.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 16)
+        return self._get_batch_obj_prop(16)
 
     @Spectrum_obj.setter
     def Spectrum_obj(self, value: SpectrumObj):
@@ -605,7 +603,7 @@ class GICLineBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 18.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 18)
+            self._get_batch_int32_prop(18)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -642,11 +640,13 @@ class GICLineBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IGICLine(IDSSObj):
-    __slots__ = ()
+class IGICLine(IDSSObj,GICLineBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, GICLine, GICLineBatch)
+        IDSSObj.__init__(self, iobj, GICLine, GICLineBatch)
+        GICLineBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> GICLine:

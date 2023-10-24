@@ -16,8 +16,8 @@ from ._obj_bases import (
 from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
-from .Spectrum import Spectrum as SpectrumObj
 from .LoadShape import LoadShape
+from .Spectrum import Spectrum as SpectrumObj
 
 class Isource(DSSObj, CktElementMixin, PCElementMixin):
     __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
@@ -397,8 +397,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
+        return self._get_batch_str_prop(1) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -481,7 +480,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `ScanType`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @ScanType_str.setter
     def ScanType_str(self, value: AnyStr):
@@ -511,7 +510,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Sequence`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_batch_str_prop(7)
 
     @Sequence_str.setter
     def Sequence_str(self, value: AnyStr):
@@ -528,7 +527,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_batch_str_prop(8)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -545,7 +544,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 8.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 8)
+        return self._get_batch_obj_prop(8)
 
     @Yearly_obj.setter
     def Yearly_obj(self, value: LoadShape):
@@ -562,7 +561,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 9.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
+        return self._get_batch_str_prop(9)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -579,7 +578,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 9.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 9)
+        return self._get_batch_obj_prop(9)
 
     @Daily_obj.setter
     def Daily_obj(self, value: LoadShape):
@@ -596,7 +595,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 10.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
+        return self._get_batch_str_prop(10)
 
     @Duty.setter
     def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -613,7 +612,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 10.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 10)
+        return self._get_batch_obj_prop(10)
 
     @Duty_obj.setter
     def Duty_obj(self, value: LoadShape):
@@ -630,8 +629,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 11.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11) 
+        return self._get_batch_str_prop(11) 
 
     @Bus2.setter
     def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
@@ -644,7 +642,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 12.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
+        return self._get_batch_str_prop(12)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
@@ -657,7 +655,7 @@ class IsourceBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 12.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 12)
+        return self._get_batch_obj_prop(12)
 
     @Spectrum_obj.setter
     def Spectrum_obj(self, value: SpectrumObj):
@@ -684,7 +682,7 @@ class IsourceBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 14.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 14)
+            self._get_batch_int32_prop(14)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -717,11 +715,13 @@ class IsourceBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IIsource(IDSSObj):
-    __slots__ = ()
+class IIsource(IDSSObj,IsourceBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Isource, IsourceBatch)
+        IDSSObj.__init__(self, iobj, Isource, IsourceBatch)
+        IsourceBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Isource:

@@ -17,9 +17,9 @@ from ._obj_bases import (
 from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
-from .Spectrum import Spectrum as SpectrumObj
 from .DynamicExp import DynamicExp
 from .LoadShape import LoadShape
+from .Spectrum import Spectrum as SpectrumObj
 
 class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin):
     __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
@@ -910,8 +910,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 2.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
+        return self._get_batch_str_prop(2) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1027,7 +1026,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 10.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 10)
+        return self._get_batch_str_prop(10)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1040,7 +1039,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 10.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 10)
+        return self._get_batch_obj_prop(10)
 
     @Yearly_obj.setter
     def Yearly_obj(self, value: LoadShape):
@@ -1053,7 +1052,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_batch_str_prop(11)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1066,7 +1065,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 11.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 11)
+        return self._get_batch_obj_prop(11)
 
     @Daily_obj.setter
     def Daily_obj(self, value: LoadShape):
@@ -1079,7 +1078,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 12.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
+        return self._get_batch_str_prop(12)
 
     @Duty.setter
     def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1092,7 +1091,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 12.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 12)
+        return self._get_batch_obj_prop(12)
 
     @Duty_obj.setter
     def Duty_obj(self, value: LoadShape):
@@ -1122,7 +1121,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `DispMode`, DSS property index: 13.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 13)
+        return self._get_batch_str_prop(13)
 
     @DispMode_str.setter
     def DispMode_str(self, value: AnyStr):
@@ -1167,7 +1166,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Conn`, DSS property index: 15.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
+        return self._get_batch_str_prop(15)
 
     @Conn_str.setter
     def Conn_str(self, value: AnyStr):
@@ -1197,7 +1196,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Status`, DSS property index: 16.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 16)
+        return self._get_batch_str_prop(16)
 
     @Status_str.setter
     def Status_str(self, value: AnyStr):
@@ -1276,7 +1275,7 @@ class GeneratorBatch(DSSBatch):
         DSS property name: `ForceOn`, DSS property index: 22.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 22)
+            self._get_batch_int32_prop(22)
         ]
     @ForceOn.setter
     def ForceOn(self, value: bool):
@@ -1367,8 +1366,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `UserModel`, DSS property index: 30.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30) 
+        return self._get_batch_str_prop(30) 
 
     @UserModel.setter
     def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1381,8 +1379,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `UserData`, DSS property index: 31.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 31) 
+        return self._get_batch_str_prop(31) 
 
     @UserData.setter
     def UserData(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1395,8 +1392,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `ShaftModel`, DSS property index: 32.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 32) 
+        return self._get_batch_str_prop(32) 
 
     @ShaftModel.setter
     def ShaftModel(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1409,8 +1405,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `ShaftData`, DSS property index: 33.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 33) 
+        return self._get_batch_str_prop(33) 
 
     @ShaftData.setter
     def ShaftData(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1437,7 +1432,7 @@ class GeneratorBatch(DSSBatch):
         DSS property name: `DebugTrace`, DSS property index: 35.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 35)
+            self._get_batch_int32_prop(35)
         ]
     @DebugTrace.setter
     def DebugTrace(self, value: bool):
@@ -1451,7 +1446,7 @@ class GeneratorBatch(DSSBatch):
         DSS property name: `Balanced`, DSS property index: 36.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 36)
+            self._get_batch_int32_prop(36)
         ]
     @Balanced.setter
     def Balanced(self, value: bool):
@@ -1478,7 +1473,7 @@ class GeneratorBatch(DSSBatch):
         DSS property name: `UseFuel`, DSS property index: 38.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 38)
+            self._get_batch_int32_prop(38)
         ]
     @UseFuel.setter
     def UseFuel(self, value: bool):
@@ -1538,7 +1533,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `DynamicEq`, DSS property index: 43.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 43)
+        return self._get_batch_str_prop(43)
 
     @DynamicEq.setter
     def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
@@ -1551,7 +1546,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `DynamicEq`, DSS property index: 43.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 43)
+        return self._get_batch_obj_prop(43)
 
     @DynamicEq_obj.setter
     def DynamicEq_obj(self, value: DynamicExp):
@@ -1569,8 +1564,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `DynOut`, DSS property index: 44.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 44) 
+        return self._get_batch_str_prop(44) 
 
     @DynOut.setter
     def DynOut(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1583,7 +1577,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 45.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 45)
+        return self._get_batch_str_prop(45)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
@@ -1596,7 +1590,7 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 45.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 45)
+        return self._get_batch_obj_prop(45)
 
     @Spectrum_obj.setter
     def Spectrum_obj(self, value: SpectrumObj):
@@ -1623,7 +1617,7 @@ class GeneratorBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 47.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 47)
+            self._get_batch_int32_prop(47)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -1688,11 +1682,13 @@ class GeneratorBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IGenerator(IDSSObj):
-    __slots__ = ()
+class IGenerator(IDSSObj,GeneratorBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Generator, GeneratorBatch)
+        IDSSObj.__init__(self, iobj, Generator, GeneratorBatch)
+        GeneratorBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Generator:

@@ -1045,7 +1045,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @MonitoredObj.setter
     def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -1058,7 +1058,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @MonitoredObj_obj.setter
     def MonitoredObj_obj(self, value: DSSObj):
@@ -1084,7 +1084,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_batch_str_prop(3)
 
     @SwitchedObj.setter
     def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -1097,7 +1097,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 3)
+        return self._get_batch_obj_prop(3)
 
     @SwitchedObj_obj.setter
     def SwitchedObj_obj(self, value: DSSObj):
@@ -1162,7 +1162,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `Type`, DSS property index: 5.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5)
+        return self._get_batch_str_prop(5)
 
     @Type_str.setter
     def Type_str(self, value: AnyStr):
@@ -1175,7 +1175,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `PhaseCurve`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @PhaseCurve.setter
     def PhaseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -1188,7 +1188,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `PhaseCurve`, DSS property index: 6.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 6)
+        return self._get_batch_obj_prop(6)
 
     @PhaseCurve_obj.setter
     def PhaseCurve_obj(self, value: TCC_Curve):
@@ -1201,7 +1201,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `GroundCurve`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_batch_str_prop(7)
 
     @GroundCurve.setter
     def GroundCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -1214,7 +1214,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `GroundCurve`, DSS property index: 7.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 7)
+        return self._get_batch_obj_prop(7)
 
     @GroundCurve_obj.setter
     def GroundCurve_obj(self, value: TCC_Curve):
@@ -1333,7 +1333,7 @@ class RelayBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 16)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @RecloseIntervals.setter
@@ -1360,7 +1360,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `OvervoltCurve`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
+        return self._get_batch_str_prop(18)
 
     @OvervoltCurve.setter
     def OvervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -1373,7 +1373,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `OvervoltCurve`, DSS property index: 18.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 18)
+        return self._get_batch_obj_prop(18)
 
     @OvervoltCurve_obj.setter
     def OvervoltCurve_obj(self, value: TCC_Curve):
@@ -1386,7 +1386,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `UndervoltCurve`, DSS property index: 19.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
+        return self._get_batch_str_prop(19)
 
     @UndervoltCurve.setter
     def UndervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -1399,7 +1399,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `UndervoltCurve`, DSS property index: 19.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 19)
+        return self._get_batch_obj_prop(19)
 
     @UndervoltCurve_obj.setter
     def UndervoltCurve_obj(self, value: TCC_Curve):
@@ -1477,8 +1477,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `Variable`, DSS property index: 25.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25) 
+        return self._get_batch_str_prop(25) 
 
     @Variable.setter
     def Variable(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1547,7 +1546,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `Action`, DSS property index: 29.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 29)
+        return self._get_batch_str_prop(29)
 
     @Action_str.setter
     def Action_str(self, value: AnyStr):
@@ -1639,7 +1638,7 @@ class RelayBatch(DSSBatch):
         DSS property name: `EventLog`, DSS property index: 36.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 36)
+            self._get_batch_int32_prop(36)
         ]
     @EventLog.setter
     def EventLog(self, value: bool):
@@ -1653,7 +1652,7 @@ class RelayBatch(DSSBatch):
         DSS property name: `DebugTrace`, DSS property index: 37.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 37)
+            self._get_batch_int32_prop(37)
         ]
     @DebugTrace.setter
     def DebugTrace(self, value: bool):
@@ -1667,7 +1666,7 @@ class RelayBatch(DSSBatch):
         DSS property name: `DistReverse`, DSS property index: 38.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 38)
+            self._get_batch_int32_prop(38)
         ]
     @DistReverse.setter
     def DistReverse(self, value: bool):
@@ -1697,7 +1696,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `Normal`, DSS property index: 39.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
+        return self._get_batch_str_prop(39)
 
     @Normal_str.setter
     def Normal_str(self, value: AnyStr):
@@ -1727,7 +1726,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `State`, DSS property index: 40.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 40)
+        return self._get_batch_str_prop(40)
 
     @State_str.setter
     def State_str(self, value: AnyStr):
@@ -1818,7 +1817,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 47)
+        return self._get_batch_str_prop(47)
 
     @DOC_PhaseCurveInner.setter
     def DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -1831,7 +1830,7 @@ class RelayBatch(DSSBatch):
 
         DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 47)
+        return self._get_batch_obj_prop(47)
 
     @DOC_PhaseCurveInner_obj.setter
     def DOC_PhaseCurveInner_obj(self, value: TCC_Curve):
@@ -1871,7 +1870,7 @@ class RelayBatch(DSSBatch):
         DSS property name: `DOC_P1Blocking`, DSS property index: 50.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 50)
+            self._get_batch_int32_prop(50)
         ]
     @DOC_P1Blocking.setter
     def DOC_P1Blocking(self, value: bool):
@@ -1898,7 +1897,7 @@ class RelayBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 52.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 52)
+            self._get_batch_int32_prop(52)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -1969,11 +1968,13 @@ class RelayBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IRelay(IDSSObj):
-    __slots__ = ()
+class IRelay(IDSSObj,RelayBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Relay, RelayBatch)
+        IDSSObj.__init__(self, iobj, Relay, RelayBatch)
+        RelayBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Relay:

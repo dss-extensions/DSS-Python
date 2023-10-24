@@ -411,7 +411,7 @@ class GICsourceBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_batch_str_prop(11)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
@@ -424,7 +424,7 @@ class GICsourceBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 11.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 11)
+        return self._get_batch_obj_prop(11)
 
     @Spectrum_obj.setter
     def Spectrum_obj(self, value: SpectrumObj):
@@ -451,7 +451,7 @@ class GICsourceBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 13.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 13)
+            self._get_batch_int32_prop(13)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -483,11 +483,13 @@ class GICsourceBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IGICsource(IDSSObj):
-    __slots__ = ()
+class IGICsource(IDSSObj,GICsourceBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, GICsource, GICsourceBatch)
+        IDSSObj.__init__(self, iobj, GICsource, GICsourceBatch)
+        GICsourceBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> GICsource:

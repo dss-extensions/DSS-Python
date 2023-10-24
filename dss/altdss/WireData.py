@@ -337,7 +337,7 @@ class WireDataBatch(DSSBatch):
 
         DSS property name: `RUnits`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_batch_str_prop(3)
 
     @RUnits_str.setter
     def RUnits_str(self, value: AnyStr):
@@ -380,7 +380,7 @@ class WireDataBatch(DSSBatch):
 
         DSS property name: `GMRUnits`, DSS property index: 5.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5)
+        return self._get_batch_str_prop(5)
 
     @GMRUnits_str.setter
     def GMRUnits_str(self, value: AnyStr):
@@ -423,7 +423,7 @@ class WireDataBatch(DSSBatch):
 
         DSS property name: `RadUnits`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_batch_str_prop(7)
 
     @RadUnits_str.setter
     def RadUnits_str(self, value: AnyStr):
@@ -491,7 +491,7 @@ class WireDataBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 12)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Ratings.setter
@@ -537,11 +537,13 @@ class WireDataBatchProperties(TypedDict):
     CapRadius: Union[float, Float64Array]
     Like: AnyStr
 
-class IWireData(IDSSObj):
-    __slots__ = ()
+class IWireData(IDSSObj,WireDataBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, WireData, WireDataBatch)
+        IDSSObj.__init__(self, iobj, WireData, WireDataBatch)
+        WireDataBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> WireData:

@@ -176,7 +176,7 @@ class DynamicExpBatch(DSSBatch):
     @VarNames.setter
     def VarNames(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 2, value_ptr, value_count)
     
         self._check_for_error()
@@ -188,8 +188,7 @@ class DynamicExpBatch(DSSBatch):
 
         DSS property name: `Var`, DSS property index: 3.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3) 
+        return self._get_batch_str_prop(3) 
 
     @Var.setter
     def Var(self, value: Union[AnyStr, List[AnyStr]]):
@@ -217,8 +216,7 @@ class DynamicExpBatch(DSSBatch):
 
         DSS property name: `Expression`, DSS property index: 5.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5) 
+        return self._get_batch_str_prop(5) 
 
     @Expression.setter
     def Expression(self, value: Union[AnyStr, List[AnyStr]]):
@@ -248,7 +246,7 @@ class DynamicExpBatch(DSSBatch):
 
         DSS property name: `Domain`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @Domain_str.setter
     def Domain_str(self, value: AnyStr):
@@ -271,11 +269,13 @@ class DynamicExpBatchProperties(TypedDict):
     Domain: Union[AnyStr, int, enums.DynamicExpDomain, List[AnyStr], List[int], List[enums.DynamicExpDomain], Int32Array]
     Like: AnyStr
 
-class IDynamicExp(IDSSObj):
-    __slots__ = ()
+class IDynamicExp(IDSSObj,DynamicExpBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, DynamicExp, DynamicExpBatch)
+        IDSSObj.__init__(self, iobj, DynamicExp, DynamicExpBatch)
+        DynamicExpBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> DynamicExp:

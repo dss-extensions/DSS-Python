@@ -605,7 +605,7 @@ class RegControlBatch(DSSBatch):
 
         DSS property name: `Transformer`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @Transformer.setter
     def Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans, List[AnyStr], List[Union[TransformerObj, AutoTrans]]]):
@@ -620,7 +620,7 @@ class RegControlBatch(DSSBatch):
 
         DSS property name: `Transformer`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @Transformer_obj.setter
     def Transformer_obj(self, value: Union[TransformerObj, AutoTrans]):
@@ -724,8 +724,7 @@ class RegControlBatch(DSSBatch):
 
         DSS property name: `Bus`, DSS property index: 9.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9) 
+        return self._get_batch_str_prop(9) 
 
     @Bus.setter
     def Bus(self, value: Union[AnyStr, List[AnyStr]]):
@@ -752,7 +751,7 @@ class RegControlBatch(DSSBatch):
         DSS property name: `Reversible`, DSS property index: 11.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 11)
+            self._get_batch_int32_prop(11)
         ]
     @Reversible.setter
     def Reversible(self, value: bool):
@@ -831,7 +830,7 @@ class RegControlBatch(DSSBatch):
         DSS property name: `DebugTrace`, DSS property index: 17.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 17)
+            self._get_batch_int32_prop(17)
         ]
     @DebugTrace.setter
     def DebugTrace(self, value: bool):
@@ -862,7 +861,7 @@ class RegControlBatch(DSSBatch):
         DSS property name: `InverseTime`, DSS property index: 19.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 19)
+            self._get_batch_int32_prop(19)
         ]
     @InverseTime.setter
     def InverseTime(self, value: bool):
@@ -918,7 +917,7 @@ class RegControlBatch(DSSBatch):
 
         DSS property name: `PTPhase`, DSS property index: 22.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 22)
+        return self._get_batch_str_prop(22)
 
     @PTPhase_str.setter
     def PTPhase_str(self, value: AnyStr):
@@ -958,7 +957,7 @@ class RegControlBatch(DSSBatch):
         DSS property name: `RevNeutral`, DSS property index: 25.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 25)
+            self._get_batch_int32_prop(25)
         ]
     @RevNeutral.setter
     def RevNeutral(self, value: bool):
@@ -972,7 +971,7 @@ class RegControlBatch(DSSBatch):
         DSS property name: `EventLog`, DSS property index: 26.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 26)
+            self._get_batch_int32_prop(26)
         ]
     @EventLog.setter
     def EventLog(self, value: bool):
@@ -1046,7 +1045,7 @@ class RegControlBatch(DSSBatch):
         DSS property name: `Cogen`, DSS property index: 32.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 32)
+            self._get_batch_int32_prop(32)
         ]
     @Cogen.setter
     def Cogen(self, value: bool):
@@ -1073,7 +1072,7 @@ class RegControlBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 34.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 34)
+            self._get_batch_int32_prop(34)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -1126,11 +1125,13 @@ class RegControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IRegControl(IDSSObj):
-    __slots__ = ()
+class IRegControl(IDSSObj,RegControlBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, RegControl, RegControlBatch)
+        IDSSObj.__init__(self, iobj, RegControl, RegControlBatch)
+        RegControlBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> RegControl:

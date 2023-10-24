@@ -17,11 +17,11 @@ from ._obj_bases import (
 from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
+from .DynamicExp import DynamicExp
 from .LoadShape import LoadShape
-from .XYcurve import XYcurve
 from .Spectrum import Spectrum as SpectrumObj
 from .TShape import TShape
-from .DynamicExp import DynamicExp
+from .XYcurve import XYcurve
 
 class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin):
     __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
@@ -1092,8 +1092,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 2.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
+        return self._get_batch_str_prop(2) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1203,7 +1202,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Conn`, DSS property index: 9.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
+        return self._get_batch_str_prop(9)
 
     @Conn_str.setter
     def Conn_str(self, value: AnyStr):
@@ -1268,7 +1267,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `EffCurve`, DSS property index: 14.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 14)
+        return self._get_batch_str_prop(14)
 
     @EffCurve.setter
     def EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -1281,7 +1280,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `EffCurve`, DSS property index: 14.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 14)
+        return self._get_batch_obj_prop(14)
 
     @EffCurve_obj.setter
     def EffCurve_obj(self, value: XYcurve):
@@ -1294,7 +1293,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `P-TCurve`, DSS property index: 15.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
+        return self._get_batch_str_prop(15)
 
     @PTCurve.setter
     def PTCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -1307,7 +1306,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `P-TCurve`, DSS property index: 15.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 15)
+        return self._get_batch_obj_prop(15)
 
     @PTCurve_obj.setter
     def PTCurve_obj(self, value: XYcurve):
@@ -1390,7 +1389,7 @@ class PVSystemBatch(DSSBatch):
         DSS property name: `Balanced`, DSS property index: 21.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 21)
+            self._get_batch_int32_prop(21)
         ]
     @Balanced.setter
     def Balanced(self, value: bool):
@@ -1404,7 +1403,7 @@ class PVSystemBatch(DSSBatch):
         DSS property name: `LimitCurrent`, DSS property index: 22.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 22)
+            self._get_batch_int32_prop(22)
         ]
     @LimitCurrent.setter
     def LimitCurrent(self, value: bool):
@@ -1417,7 +1416,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 23.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 23)
+        return self._get_batch_str_prop(23)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1430,7 +1429,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 23.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 23)
+        return self._get_batch_obj_prop(23)
 
     @Yearly_obj.setter
     def Yearly_obj(self, value: LoadShape):
@@ -1443,7 +1442,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 24.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 24)
+        return self._get_batch_str_prop(24)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1456,7 +1455,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 24.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 24)
+        return self._get_batch_obj_prop(24)
 
     @Daily_obj.setter
     def Daily_obj(self, value: LoadShape):
@@ -1469,7 +1468,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 25.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25)
+        return self._get_batch_str_prop(25)
 
     @Duty.setter
     def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1482,7 +1481,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 25.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 25)
+        return self._get_batch_obj_prop(25)
 
     @Duty_obj.setter
     def Duty_obj(self, value: LoadShape):
@@ -1495,7 +1494,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `TYearly`, DSS property index: 26.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 26)
+        return self._get_batch_str_prop(26)
 
     @TYearly.setter
     def TYearly(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
@@ -1508,7 +1507,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `TYearly`, DSS property index: 26.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 26)
+        return self._get_batch_obj_prop(26)
 
     @TYearly_obj.setter
     def TYearly_obj(self, value: TShape):
@@ -1521,7 +1520,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `TDaily`, DSS property index: 27.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 27)
+        return self._get_batch_str_prop(27)
 
     @TDaily.setter
     def TDaily(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
@@ -1534,7 +1533,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `TDaily`, DSS property index: 27.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 27)
+        return self._get_batch_obj_prop(27)
 
     @TDaily_obj.setter
     def TDaily_obj(self, value: TShape):
@@ -1547,7 +1546,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `TDuty`, DSS property index: 28.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 28)
+        return self._get_batch_str_prop(28)
 
     @TDuty.setter
     def TDuty(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
@@ -1560,7 +1559,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `TDuty`, DSS property index: 28.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 28)
+        return self._get_batch_obj_prop(28)
 
     @TDuty_obj.setter
     def TDuty_obj(self, value: TShape):
@@ -1586,8 +1585,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `UserModel`, DSS property index: 30.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30) 
+        return self._get_batch_str_prop(30) 
 
     @UserModel.setter
     def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1600,8 +1598,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `UserData`, DSS property index: 31.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 31) 
+        return self._get_batch_str_prop(31) 
 
     @UserData.setter
     def UserData(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1615,7 +1612,7 @@ class PVSystemBatch(DSSBatch):
         DSS property name: `DebugTrace`, DSS property index: 32.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 32)
+            self._get_batch_int32_prop(32)
         ]
     @DebugTrace.setter
     def DebugTrace(self, value: bool):
@@ -1629,7 +1626,7 @@ class PVSystemBatch(DSSBatch):
         DSS property name: `VarFollowInverter`, DSS property index: 33.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 33)
+            self._get_batch_int32_prop(33)
         ]
     @VarFollowInverter.setter
     def VarFollowInverter(self, value: bool):
@@ -1656,7 +1653,7 @@ class PVSystemBatch(DSSBatch):
         DSS property name: `WattPriority`, DSS property index: 35.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 35)
+            self._get_batch_int32_prop(35)
         ]
     @WattPriority.setter
     def WattPriority(self, value: bool):
@@ -1670,7 +1667,7 @@ class PVSystemBatch(DSSBatch):
         DSS property name: `PFPriority`, DSS property index: 36.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 36)
+            self._get_batch_int32_prop(36)
         ]
     @PFPriority.setter
     def PFPriority(self, value: bool):
@@ -1788,7 +1785,7 @@ class PVSystemBatch(DSSBatch):
         DSS property name: `SafeMode`, DSS property index: 45.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 45)
+            self._get_batch_int32_prop(45)
         ]
     @SafeMode.setter
     def SafeMode(self, value: bool):
@@ -1801,7 +1798,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `DynamicEq`, DSS property index: 46.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 46)
+        return self._get_batch_str_prop(46)
 
     @DynamicEq.setter
     def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
@@ -1814,7 +1811,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `DynamicEq`, DSS property index: 46.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 46)
+        return self._get_batch_obj_prop(46)
 
     @DynamicEq_obj.setter
     def DynamicEq_obj(self, value: DynamicExp):
@@ -1831,8 +1828,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `DynOut`, DSS property index: 47.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 47) 
+        return self._get_batch_str_prop(47) 
 
     @DynOut.setter
     def DynOut(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1866,7 +1862,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `ControlMode`, DSS property index: 48.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 48)
+        return self._get_batch_str_prop(48)
 
     @ControlMode_str.setter
     def ControlMode_str(self, value: AnyStr):
@@ -1906,7 +1902,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 51.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 51)
+        return self._get_batch_str_prop(51)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
@@ -1919,7 +1915,7 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 51.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 51)
+        return self._get_batch_obj_prop(51)
 
     @Spectrum_obj.setter
     def Spectrum_obj(self, value: SpectrumObj):
@@ -1946,7 +1942,7 @@ class PVSystemBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 53.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 53)
+            self._get_batch_int32_prop(53)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -2018,11 +2014,13 @@ class PVSystemBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IPVSystem(IDSSObj):
-    __slots__ = ()
+class IPVSystem(IDSSObj,PVSystemBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, PVSystem, PVSystemBatch)
+        IDSSObj.__init__(self, iobj, PVSystem, PVSystemBatch)
+        PVSystemBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> PVSystem:

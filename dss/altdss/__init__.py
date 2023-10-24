@@ -8,7 +8,7 @@ One recent change, as planned, was to adjust the spelling of many properties; `n
 `kv` became `kV`, and so on. This is still open to suggestions, since we also considered forcing 
 camelCase instead of PascalCase. There is no common naming convention in the OpenDSS properties
 across different components and we could not reach a great solution yet changing only the capitalization. 
-Note that a plain snake_case convention, forcing all lower-case characters, do not benefit us since it
+Note that a plain snake_case convention, forcing all lower-case characters, does not benefit us since it
 obfuscates important information, besides deviating too much from the OpenDSS property names in the 
 input data.
 

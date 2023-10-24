@@ -510,7 +510,7 @@ class EnergyMeterBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -523,7 +523,7 @@ class EnergyMeterBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -607,7 +607,7 @@ class EnergyMeterBatch(DSSBatch):
     @Option.setter
     def Option(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 4, value_ptr, value_count)
     
         self._check_for_error()
@@ -647,7 +647,7 @@ class EnergyMeterBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 7)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @PeakCurrent.setter
@@ -669,7 +669,7 @@ class EnergyMeterBatch(DSSBatch):
     @ZoneList.setter
     def ZoneList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 8, value_ptr, value_count)
     
         self._check_for_error()
@@ -682,7 +682,7 @@ class EnergyMeterBatch(DSSBatch):
         DSS property name: `LocalOnly`, DSS property index: 9.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 9)
+            self._get_batch_int32_prop(9)
         ]
     @LocalOnly.setter
     def LocalOnly(self, value: bool):
@@ -697,7 +697,7 @@ class EnergyMeterBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 10)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Mask.setter
@@ -712,7 +712,7 @@ class EnergyMeterBatch(DSSBatch):
         DSS property name: `Losses`, DSS property index: 11.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 11)
+            self._get_batch_int32_prop(11)
         ]
     @Losses.setter
     def Losses(self, value: bool):
@@ -726,7 +726,7 @@ class EnergyMeterBatch(DSSBatch):
         DSS property name: `LineLosses`, DSS property index: 12.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 12)
+            self._get_batch_int32_prop(12)
         ]
     @LineLosses.setter
     def LineLosses(self, value: bool):
@@ -740,7 +740,7 @@ class EnergyMeterBatch(DSSBatch):
         DSS property name: `XfmrLosses`, DSS property index: 13.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 13)
+            self._get_batch_int32_prop(13)
         ]
     @XfmrLosses.setter
     def XfmrLosses(self, value: bool):
@@ -754,7 +754,7 @@ class EnergyMeterBatch(DSSBatch):
         DSS property name: `SeqLosses`, DSS property index: 14.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 14)
+            self._get_batch_int32_prop(14)
         ]
     @SeqLosses.setter
     def SeqLosses(self, value: bool):
@@ -768,7 +768,7 @@ class EnergyMeterBatch(DSSBatch):
         DSS property name: `3PhaseLosses`, DSS property index: 15.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 15)
+            self._get_batch_int32_prop(15)
         ]
     @ThreePhaseLosses.setter
     def ThreePhaseLosses(self, value: bool):
@@ -782,7 +782,7 @@ class EnergyMeterBatch(DSSBatch):
         DSS property name: `VBaseLosses`, DSS property index: 16.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 16)
+            self._get_batch_int32_prop(16)
         ]
     @VBaseLosses.setter
     def VBaseLosses(self, value: bool):
@@ -796,7 +796,7 @@ class EnergyMeterBatch(DSSBatch):
         DSS property name: `PhaseVoltageReport`, DSS property index: 17.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 17)
+            self._get_batch_int32_prop(17)
         ]
     @PhaseVoltageReport.setter
     def PhaseVoltageReport(self, value: bool):
@@ -914,7 +914,7 @@ class EnergyMeterBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 26.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 26)
+            self._get_batch_int32_prop(26)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -959,11 +959,13 @@ class EnergyMeterBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IEnergyMeter(IDSSObj, IEnergyMeterMixin):
-    __slots__ = ()
+class IEnergyMeter(IDSSObj,EnergyMeterBatch, IEnergyMeterMixin):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, EnergyMeter, EnergyMeterBatch)
+        IDSSObj.__init__(self, iobj, EnergyMeter, EnergyMeterBatch)
+        EnergyMeterBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> EnergyMeter:

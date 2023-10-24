@@ -507,8 +507,7 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
+        return self._get_batch_str_prop(1) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -523,8 +522,7 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
+        return self._get_batch_str_prop(2) 
 
     @Bus2.setter
     def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
@@ -593,7 +591,7 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `Conn`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @Conn_str.setter
     def Conn_str(self, value: AnyStr):
@@ -608,7 +606,7 @@ class ReactorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 7)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @RMatrix.setter
@@ -624,7 +622,7 @@ class ReactorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 8)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @XMatrix.setter
@@ -639,7 +637,7 @@ class ReactorBatch(DSSBatch):
         DSS property name: `Parallel`, DSS property index: 9.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 9)
+            self._get_batch_int32_prop(9)
         ]
     @Parallel.setter
     def Parallel(self, value: bool):
@@ -703,23 +701,23 @@ class ReactorBatch(DSSBatch):
                 x,
                 13,
             ).view(dtype=complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Z1.setter
     def Z1(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetFloat64Array(x, 13, value_ptr, value_count)
             return
 
         values = value
-        if len(values) != self.count[0]:
+        if len(values) != len(self):
             raise ValueError('Number of elements provided must match the number of objects in the batch.')
 
         value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
+        for v, x in zip(values, self._unpack()):
             value[0] = v.real
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 13, value_ptr, value_count)
@@ -743,23 +741,23 @@ class ReactorBatch(DSSBatch):
                 x,
                 14,
             ).view(dtype=complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Z2.setter
     def Z2(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetFloat64Array(x, 14, value_ptr, value_count)
             return
 
         values = value
-        if len(values) != self.count[0]:
+        if len(values) != len(self):
             raise ValueError('Number of elements provided must match the number of objects in the batch.')
 
         value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
+        for v, x in zip(values, self._unpack()):
             value[0] = v.real
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 14, value_ptr, value_count)
@@ -783,23 +781,23 @@ class ReactorBatch(DSSBatch):
                 x,
                 15,
             ).view(dtype=complex)[0]
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Z0.setter
     def Z0(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetFloat64Array(x, 15, value_ptr, value_count)
             return
 
         values = value
-        if len(values) != self.count[0]:
+        if len(values) != len(self):
             raise ValueError('Number of elements provided must match the number of objects in the batch.')
 
         value, value_ptr, value_count = self._prepare_float64_array([0, 0])
-        for v, x in zip(values, self._ffi.unpack(self.pointer[0], self.count[0])):
+        for v, x in zip(values, self._unpack()):
             value[0] = v.real
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 15, value_ptr, value_count)
@@ -811,7 +809,7 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `RCurve`, DSS property index: 17.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
+        return self._get_batch_str_prop(17)
 
     @RCurve.setter
     def RCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -824,7 +822,7 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `RCurve`, DSS property index: 17.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 17)
+        return self._get_batch_obj_prop(17)
 
     @RCurve_obj.setter
     def RCurve_obj(self, value: XYcurve):
@@ -837,7 +835,7 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `LCurve`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
+        return self._get_batch_str_prop(18)
 
     @LCurve.setter
     def LCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -850,7 +848,7 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `LCurve`, DSS property index: 18.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 18)
+        return self._get_batch_obj_prop(18)
 
     @LCurve_obj.setter
     def LCurve_obj(self, value: XYcurve):
@@ -955,7 +953,7 @@ class ReactorBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 26.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 26)
+            self._get_batch_int32_prop(26)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -999,11 +997,13 @@ class ReactorBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IReactor(IDSSObj):
-    __slots__ = ()
+class IReactor(IDSSObj,ReactorBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Reactor, ReactorBatch)
+        IDSSObj.__init__(self, iobj, Reactor, ReactorBatch)
+        ReactorBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Reactor:

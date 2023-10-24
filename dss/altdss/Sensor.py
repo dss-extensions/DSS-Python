@@ -296,7 +296,7 @@ class SensorBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -309,7 +309,7 @@ class SensorBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -359,7 +359,7 @@ class SensorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 5)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kVs.setter
@@ -375,7 +375,7 @@ class SensorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 6)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Currents.setter
@@ -392,7 +392,7 @@ class SensorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 7)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kWs.setter
@@ -408,7 +408,7 @@ class SensorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 8)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kvars.setter
@@ -443,7 +443,7 @@ class SensorBatch(DSSBatch):
 
         DSS property name: `Conn`, DSS property index: 9.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9)
+        return self._get_batch_str_prop(9)
 
     @Conn_str.setter
     def Conn_str(self, value: AnyStr):
@@ -509,7 +509,7 @@ class SensorBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 14.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 14)
+            self._get_batch_int32_prop(14)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -544,11 +544,13 @@ class SensorBatchProperties(TypedDict):
 
 #TODO: warn that begin_edit=False with extra params will be ignored?
 
-class ISensor(IDSSObj):
-    __slots__ = ()
+class ISensor(IDSSObj,SensorBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Sensor, SensorBatch)
+        IDSSObj.__init__(self, iobj, Sensor, SensorBatch)
+        SensorBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Sensor:

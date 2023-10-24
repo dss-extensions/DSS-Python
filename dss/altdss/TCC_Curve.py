@@ -116,7 +116,7 @@ class TCC_CurveBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 2)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @C_Array.setter
@@ -138,7 +138,7 @@ class TCC_CurveBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 3)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @T_Array.setter
@@ -161,11 +161,13 @@ class TCC_CurveBatchProperties(TypedDict):
     T_Array: Float64Array
     Like: AnyStr
 
-class ITCC_Curve(IDSSObj):
-    __slots__ = ()
+class ITCC_Curve(IDSSObj,TCC_CurveBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, TCC_Curve, TCC_CurveBatch)
+        IDSSObj.__init__(self, iobj, TCC_Curve, TCC_CurveBatch)
+        TCC_CurveBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> TCC_Curve:

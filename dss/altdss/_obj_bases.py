@@ -28,19 +28,13 @@ class BatchFloat64ArrayProxy:
         self._lib = batch._api_util.lib
 
     def to_array(self):
-        batch = self._batch
-        return batch._get_float64_array(
-            batch._lib.Batch_GetFloat64,
-            batch.pointer[0],
-            batch.count[0],
-            self._idx
-        )
+        return self._batch._get_batch_float_prop(self._idx)
 
     def __call__(self):
         return self.to_array()
 
     def __len__(self):
-        return self._batch.count[0]
+        return len(self._batch)
 
     def __mul__(self, other):
         return self.to_array() * other
@@ -62,25 +56,23 @@ class BatchFloat64ArrayProxy:
 
     def __iadd__(self, other):
         batch = self._batch
-
+        ptr_cnt = batch._get_ptr_cnt()
         if np.isscalar(other):
             self._lib.Batch_Float64(
-                batch.pointer[0],
-                batch.count[0],
+                *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Increment,
                 other
             )
             return self
 
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
+        if len(other) != len(batch):
+            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({len(batch)})")
 
         data = self.to_array() + other
         data, data_ptr, _ = batch._prepare_float64_array(data)
         batch._lib.Batch_SetFloat64Array(
-            batch.pointer[0],
-            batch.count[0],
+            *ptr_cnt,
             self._idx,
             data_ptr
         )
@@ -92,25 +84,23 @@ class BatchFloat64ArrayProxy:
 
     def __imul__(self, other):
         batch = self._batch
-
+        ptr_cnt = batch._get_ptr_cnt()
         if np.isscalar(other):
             self._lib.Batch_Float64(
-                batch.pointer[0],
-                batch.count[0],
+                *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Multiply,
                 other
             )
             return self
 
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
+        if len(other) != len(batch):
+            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({len(batch)})")
 
         data = self.to_array() * other
         data, data_ptr, _ = batch._prepare_float64_array(data)
         batch._lib.Batch_SetFloat64Array(
-            batch.pointer[0],
-            batch.count[0],
+            *ptr_cnt,
             self._idx,
             data_ptr
         )
@@ -119,25 +109,23 @@ class BatchFloat64ArrayProxy:
 
     def __idiv__(self, other):
         batch = self._batch
-
+        ptr_cnt = batch._get_ptr_cnt()
         if np.isscalar(other):
             self._lib.Batch_Float64(
-                batch.pointer[0],
-                batch.count[0],
+                *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Multiply,
                 1 / other
             )
             return self
 
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
+        if len(other) != len(batch):
+            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({len(batch)})")
 
         data = self.to_array() / other
         data, data_ptr, _ = batch._prepare_float64_array(data)
         batch._lib.Batch_SetFloat64Array(
-            batch.pointer[0],
-            batch.count[0],
+            *ptr_cnt,
             self._idx,
             data_ptr
         )
@@ -152,19 +140,13 @@ class BatchInt32ArrayProxy:
         self._lib = batch._api_util.lib
 
     def to_array(self):
-        batch = self._batch
-        return batch._get_int32_array(
-            batch._lib.Batch_GetInt32,
-            batch.pointer[0],
-            batch.count[0],
-            self._idx
-        )
+        return self._batch._get_batch_int32_prop(self._idx)
 
     def __call__(self):
         return self.to_array()
 
     def __len__(self):
-        return self._batch.count[0]
+        return len(self._batch)
 
     def __mul__(self, other):
         return self.to_array() * other
@@ -186,25 +168,23 @@ class BatchInt32ArrayProxy:
 
     def __iadd__(self, other):
         batch = self._batch
-
+        ptr_cnt = batch._get_ptr_cnt()
         if np.isscalar(other):
             self._lib.Batch_Int32(
-                batch.pointer[0],
-                batch.count[0],
+                *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Increment,
                 other
             )
             return self
 
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
+        if len(other) != len(batch):
+            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({len(batch)})")
 
         data = self.to_array() + other
         data, data_ptr, _ = batch._api_util.prepare_int32_array(data)
         batch._lib.Batch_SetInt32Array(
-            batch.pointer[0],
-            batch.count[0],
+            *ptr_cnt,
             self._idx,
             data_ptr
         )
@@ -216,25 +196,23 @@ class BatchInt32ArrayProxy:
 
     def __imul__(self, other):
         batch = self._batch
-
+        ptr_cnt = batch._get_ptr_cnt()
         if np.isscalar(other):
             self._lib.Batch_Int32(
-                batch.pointer[0],
-                batch.count[0],
+                *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Multiply,
                 other
             )
             return self
 
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
+        if len(other) != len(batch):
+            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({len(batch)})")
 
         data = self.to_array() * other
         data, data_ptr, _ = batch._prepare_int32_array(data)
         batch._lib.Batch_SetInt32Array(
-            batch.pointer[0],
-            batch.count[0],
+            *ptr_cnt,
             self._idx,
             data_ptr
         )
@@ -243,25 +221,23 @@ class BatchInt32ArrayProxy:
 
     def __idiv__(self, other):
         batch = self._batch
-
+        ptr_cnt = batch._get_ptr_cnt()
         if np.isscalar(other):
             self._lib.Batch_Int32(
-                batch.pointer[0],
-                batch.count[0],
+                *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Multiply,
                 1 / other
             )
             return self
 
-        if len(other) != batch.count[0]:
-            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({batch.count[0]})")
+        if len(other) != len(batch):
+            raise ValueError(f"Number of elements ({len(other)}) doesn't match the batch size ({len(batch)})")
 
         data = self.to_array() / other
         data, data_ptr, _ = batch._prepare_int32_array(data)
         self._lib.Batch_SetInt32Array(
-            batch.pointer[0],
-            batch.count[0],
+            *ptr_cnt,
             self._idx,
             data_ptr
         )
@@ -471,15 +447,21 @@ class DSSObj(Base):
             return []
 
         # wrap the results with Python classes
+        NULL = self._ffi.NULL
+
         if pycls is None:
             res = []
             for other_ptr in self._ffi.unpack(ptr[0], cnt[0]):
+                if other_ptr == NULL:
+                    res.append(None)
+                    continue
+
                 cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
                 pycls = DSSObj._idx_to_cls[cls_idx]
                 res.append(pycls(self._api_util, other_ptr))
         else:
             res = [
-                pycls(self._api_util, other_ptr)
+                pycls(self._api_util, other_ptr) if other_ptr != NULL else None
                 for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
             ]
 
@@ -497,15 +479,20 @@ class DSSObj(Base):
             return []
 
         # wrap the results with Python classes
+        NULL = self._ffi.NULL
         if pycls is None:
             res = []
             for other_ptr in self._ffi.unpack(ptr[0], cnt[0]):
+                if other_ptr == NULL:
+                    res.append(None)
+                    continue
+
                 cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
                 pycls = DSSObj._idx_to_cls[cls_idx]
                 res.append(pycls(self._api_util, other_ptr))
         else:
             res = [
-                pycls(self._api_util, other_ptr)
+                pycls(self._api_util, other_ptr) if other_ptr != NULL else None
                 for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
             ]
 
@@ -555,14 +542,17 @@ class DSSObj(Base):
 
 def _get_dispose_batch(lib, ffi):
     def _dispose_batch(ptr):
-        if ptr != ffi.NULL and ptr[0] != ffi.NULL:
-            lib.Batch_Dispose(ptr[0])
+        if ptr != ffi.NULL:
+            lib.Batch_Dispose(ptr)
 
     return _dispose_batch
 
 class DSSBatch(Base):
 
     #TODO: keep property name for debugging? Or maybe use from the parent object
+    def _wrap_ptr(self, ptrptr, countptr):
+        self._pointer = self._ffi.gc(ptrptr[0] if ptrptr != self._ffi.NULL else self._ffi.NULL, _get_dispose_batch(self._lib, self._ffi))
+        self._count = countptr[0] if countptr != self._ffi.NULL else 0
 
     def __init__(self, api_util, **kwargs):
         begin_edit = kwargs.pop('begin_edit', None)
@@ -572,26 +562,40 @@ class DSSBatch(Base):
         if len(kwargs) > 1:
             raise ValueError('Exactly one argument is expected.')
 
-        Base.__init__(self, api_util)
-        self._ffi = api_util.ffi
-        self.pointer = self._ffi.gc(self._ffi.new('void***'), _get_dispose_batch(self._lib, self._ffi))
-        self.count = self._ffi.new('int32_t[4]')
+        self._sync_cls = kwargs.get('sync_cls', False)
 
-        if len(kwargs) == 0:
-            self._lib.Batch_CreateByClass(self.pointer, self.count, self._cls_idx)
+        if not self._sync_cls:
+            Base.__init__(self, api_util)
+
+        self._ffi = api_util.ffi
+        self._ptrptr = ptrptr = self._ffi.new('void***')
+        self._countptr = countptr = self._ffi.new('int32_t[4]')
+
+        #TODO: weakref
+
+        if len(kwargs) == 0 or (len(kwargs) == 1 and self._sync_cls):
+            if not self._sync_cls:
+                self._lib.Batch_CreateByClass(ptrptr, countptr, self._cls_idx)
+                self._wrap_ptr(ptrptr, countptr)
+            else:
+                self._pointer = self._lib.Obj_GetListPointer(self._api_util.ctx, self._cls_idx)                
+                self._count = self._lib.Obj_GetCount(self._api_util.ctx, self._cls_idx)
+
             self._check_for_error()
             return
 
         new_names = kwargs.get('new_names')
         if new_names is not None:
             names, names_ptr, names_count = self._prepare_string_array(new_names)
-            self._lib.Batch_CreateFromNew(self.pointer, self.count, self._cls_idx, names_ptr, names_count, begin_edit)
+            self._lib.Batch_CreateFromNew(ptrptr, countptr, self._cls_idx, names_ptr, names_count, begin_edit)
+            self._wrap_ptr(ptrptr, countptr)
             self._check_for_error()
             return
 
         new_count = kwargs.get('new_count')
         if new_count is not None:
-            self._lib.Batch_CreateFromNew(self.pointer, self.count, self._cls_idx, self._ffi.NULL, new_count, begin_edit)
+            self._lib.Batch_CreateFromNew(ptrptr, countptr, self._cls_idx, self._ffi.NULL, new_count, begin_edit)
+            self._wrap_ptr(ptrptr, countptr)
             self._check_for_error()
             return
 
@@ -600,14 +604,16 @@ class DSSBatch(Base):
             if not isinstance(regexp, bytes):
                 regexp = regexp.encode(self._api_util.codec)
 
-            self._lib.Batch_CreateByRegExp(self.pointer, self.count, self._cls_idx, regexp)
+            self._lib.Batch_CreateByRegExp(ptrptr, countptr, self._cls_idx, regexp)
+            self._wrap_ptr(ptrptr, countptr)
             self._check_for_error()
             return
 
         idx = kwargs.get('idx')
         if regexp is not None:
             idx, idx_ptr, idx_cnt = self._prepare_int32_array(idx)
-            self._lib.Batch_CreateByIndex(self.pointer, self.count, self._cls_idx, idx_ptr, idx_cnt)
+            self._lib.Batch_CreateByIndex(ptrptr, countptr, self._cls_idx, idx_ptr, idx_cnt)
+            self._wrap_ptr(ptrptr, countptr)
             self._check_for_error()
             return
 
@@ -615,8 +621,10 @@ class DSSBatch(Base):
         prop_idx = self._obj_cls._cls_prop_idx.get(prop_name.lower())
         if prop_idx is None:
             raise ValueError('Invalid property name "{}"'.format(prop_name))
-        self._lib.Batch_CreateByInt32Property(self.pointer, self.count, self._cls_idx, prop_idx, intval)
+        self._lib.Batch_CreateByInt32Property(ptrptr, countptr, self._cls_idx, prop_idx, intval)
+        self._wrap_ptr(ptrptr, countptr)
         self._check_for_error()
+
 
     def to_json(self, options: Union[int, DSSJSONFlags] = 0):
         '''
@@ -629,7 +637,7 @@ class DSSBatch(Base):
 
         (API Extension)
         '''
-        s = self._lib.Batch_ToJSON(self.pointer[0], self.count[0], options)
+        s = self._lib.Batch_ToJSON(*self._get_ptr_cnt(), options)
         self._check_for_error()
         return self._ffi.string(s).decode(self._api_util.codec)
 
@@ -645,7 +653,7 @@ class DSSBatch(Base):
         without worrying about using `begin_edit` and `end_edit`. For convenience, those are
         emitted automatically when editing single properties outside an edit block.
         '''
-        self._lib.Batch_BeginEdit(self.pointer[0], self.count[0])
+        self._lib.Batch_BeginEdit(*self._get_ptr_cnt())
         self._check_for_error()
 
     def end_edit(self, num_changes: int = 1) -> None:
@@ -657,20 +665,30 @@ class DSSBatch(Base):
         v0.13, this is only required for the Monitor class, when the `Action` property is used with 
         the `Process` value.
         '''
-        self._lib.Batch_EndEdit(self.pointer[0], self.count[0], num_changes)
+        self._lib.Batch_EndEdit(*self._get_ptr_cnt(), num_changes)
         self._check_for_error()
 
     def __eq__(self, other):
         return self is other
 
     def __len__(self):
-        if self.count is None or self.count == self._ffi.NULL:
+        if self._sync_cls:
+            return self._lib.Obj_GetCount(self._api_util.ctx, self._cls_idx)
+
+        if self._count is None or self._count == self._ffi.NULL:
             return 0
 
-        return self.count[0]
+        return self._count
+    
+    def _get_ptr_cnt(self):
+        if self._sync_cls:
+            self._pointer = self._lib.Obj_GetListPointer(self._api_util.ctx, self._cls_idx)                
+            self._count = self._lib.Obj_GetCount(self._api_util.ctx, self._cls_idx)
+
+        return (self._pointer, self._count)
 
     def __iter__(self):
-        for ptr in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for ptr in self._unpack():
             yield self._obj_cls(self._api_util, ptr)
 
     def __getitem__(self, idx0) -> DSSObj:
@@ -679,7 +697,8 @@ class DSSBatch(Base):
         if idx0 >= len(self) or idx0 < 0:
             raise IndexError
 
-        ptr = self.pointer[0][idx0]
+        _pointer, _count = self._get_ptr_cnt()
+        ptr = _pointer[idx0]
         return self._obj_cls(self._api_util, ptr)
 
     def _set_batch_float64_array(self, idx: int, value: Union[BatchFloat64ArrayProxy, float, List[float], Float64Array]):
@@ -690,10 +709,10 @@ class DSSBatch(Base):
 
             value = value.to_array()
 
+        ptr_cnt = self._get_ptr_cnt()
         if np.isscalar(value):
             self._lib.Batch_Float64(
-                self.pointer[0],
-                self.count[0],
+                *ptr_cnt,
                 idx,
                 self._lib.BatchOperation_Set,
                 value
@@ -701,12 +720,11 @@ class DSSBatch(Base):
             return
 
         data, data_ptr, data_cnt = self._prepare_float64_array(value)
-        if data_cnt != self.count[0]:
+        if data_cnt != len(self):
             raise ValueError("Number of elements must match")
 
         self._lib.Batch_SetFloat64Array(
-            self.pointer[0],
-            self.count[0],
+            *ptr_cnt,
             idx,
             data_ptr
         )
@@ -720,10 +738,10 @@ class DSSBatch(Base):
 
             value = value.to_array()
 
+        ptr_cnt = self._get_ptr_cnt()
         if np.isscalar(value):
             self._lib.Batch_Int32(
-                self.pointer[0],
-                self.count[0],
+                *ptr_cnt,
                 idx,
                 self._lib.BatchOperation_Set,
                 value
@@ -731,12 +749,11 @@ class DSSBatch(Base):
             return
 
         data, data_ptr, data_cnt = self._prepare_int32_array(value)
-        if data_cnt != self.count[0]:
+        if data_cnt != len(self):
             raise ValueError("Number of elements must match")
 
         self._lib.Batch_SetInt32Array(
-            self.pointer[0],
-            self.count[0],
+            *ptr_cnt,
             idx,
             data_ptr
         )
@@ -745,12 +762,12 @@ class DSSBatch(Base):
         if isinstance(value, (bytes, str)):
             if not isinstance(value, bytes):
                 value = value.encode(self._api_util.codec)
-            self._lib.Batch_SetString(self.pointer[0], self.count[0], idx, value)
+            self._lib.Batch_SetString(*self._get_ptr_cnt(), idx, value)
             self._check_for_error()
             return
 
         # Assume it's a list otherwise
-        if len(value) != self.count[0]:
+        if len(value) != len(self):
             raise ValueError("The number of elements must match the number of elements in the batch.")
 
         if not len(value):
@@ -758,15 +775,57 @@ class DSSBatch(Base):
         else:
             value, value_ptr, _ = self._prepare_string_array(value)
 
-        self._lib.Batch_SetStringArray(self.pointer[0], self.count[0], idx, value_ptr)
+        self._lib.Batch_SetStringArray(*self._get_ptr_cnt(), idx, value_ptr)
         self._check_for_error()
 
+    def _unpack(self):
+        return self._ffi.unpack(*self._get_ptr_cnt())
+
+    def _get_batch_float_prop(self, index):
+        return self._get_float64_array(self._lib.Batch_GetFloat64, *self._get_ptr_cnt(), index)
+
+    def _get_batch_int32_prop(self, index):
+        return self._get_int32_array(self._lib.Batch_GetInt32, *self._get_ptr_cnt(), index)
+
+    def _get_batch_str_prop(self, index):
+        return self._get_string_array(self._lib.Batch_GetString, *self._get_ptr_cnt(), index)
+
+    def _get_batch_obj_prop(self, index, pycls=None):
+        ptr = self._ffi.new('void***')
+        cnt = self._ffi.new('int32_t[4]')
+        self._lib.Batch_GetObject(ptr, cnt, *self._get_ptr_cnt(), index)
+        if not cnt[0]:
+            self._lib.DSS_Dispose_PPointer(ptr)
+            self._check_for_error()
+            return []
+
+        # wrap the results with Python classes
+        NULL = self._ffi.NULL
+        if pycls is None:
+            res = []
+            for other_ptr in self._ffi.unpack(ptr[0], cnt[0]):
+                if other_ptr == NULL:
+                    res.append(None)
+                    continue
+    
+                cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
+                pycls = DSSObj._idx_to_cls[cls_idx]
+                res.append(pycls(self._api_util, other_ptr))
+        else:
+            res = [
+                pycls(self._api_util, other_ptr) if other_ptr != NULL else None
+                for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
+            ]
+
+        self._lib.DSS_Dispose_PPointer(ptr)
+        self._check_for_error()
+        return res
 
     def _set_batch_stringlist_prop(self, idx: int, value: List[AnyStr]):
         '''
         A SINGLE STRING LIST is applied to all objects in the batch for property `idx`
         '''
-        if self.count[0] == 0:
+        if len(self) == 0:
             return
 
         if not len(value):
@@ -774,7 +833,7 @@ class DSSBatch(Base):
         else:
             value, value_ptr, value_count = self._prepare_string_array(value)
 
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, idx, value_ptr, value_count)
 
         self._check_for_error()
@@ -784,7 +843,7 @@ class DSSBatch(Base):
         '''
         Set values to a FLOAT64 ARRAY property `idx`
         '''
-        if self.count[0] == 0:
+        if len(self) == 0:
             return
         
         if isinstance(value, (BatchFloat64ArrayProxy, BatchInt32ArrayProxy)):
@@ -806,12 +865,12 @@ class DSSBatch(Base):
 
         if single_array:
             # Apply the same array for all objects in the batch
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetFloat64Array(x, idx, value_ptr, value_count)
         else:
             # Apply one array for each object
             value_2d = value
-            for x, value in zip(self._ffi.unpack(self.pointer[0], self.count[0]), value_2d):
+            for x, value in zip(self._unpack(), value_2d):
                 if not len(value) or value is None:
                     value_ptr, value_count = self._ffi.NULL, 0
                 else:
@@ -826,7 +885,7 @@ class DSSBatch(Base):
         '''
         Set values to an INT32 ARRAY property `idx`
         '''
-        if self.count[0] == 0:
+        if len(self) == 0:
             return
         
         if isinstance(value, (BatchFloat64ArrayProxy, BatchInt32ArrayProxy)):
@@ -847,12 +906,12 @@ class DSSBatch(Base):
 
         if single_array:
             # Apply the same array for all objects in the batch
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetInt32Array(x, idx, value_ptr, value_count)
         else:
             # Apply one array for each object
             value_2d = value
-            for x, value in zip(self._ffi.unpack(self.pointer[0], self.count[0]), value_2d):
+            for x, value in zip(self._unpack(), value_2d):
                 if not len(value) or value is None:
                     value_ptr, value_count = self._ffi.NULL, 0
                 else:
@@ -866,7 +925,7 @@ class DSSBatch(Base):
     def _get_string_ll(self, idx: int):
         return [
             self._get_string_array(self._lib.Obj_GetStringArray, x, idx)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
     
     def _get_string(self, str_ptr) -> str:
@@ -877,31 +936,32 @@ class DSSBatch(Base):
     def name(self) -> List[str]:
         res = [
             self._ffi.string(self._lib.Obj_GetName(ptr)).decode(self._api_util.codec)
-            for ptr in self._ffi.unpack(self.pointer[0], self.count[0])
+            for ptr in self._unpack()
         ]
         self._check_for_error()
         return res
 
 
     def _get_obj_ll(self, idx: int, pycls):
-        if self.count[0] == 0:
+        if len(self) == 0:
             return []
 
-        obj = self._obj_cls(self._api_util, self.pointer[0])
+        _pointer, _ = self._get_ptr_cnt()
+        obj = self._obj_cls(self._api_util, _pointer[0])
         res = []
-        for ptr in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for ptr in self._unpack():
             obj._ptr = ptr
             res.append(obj._get_obj_array(idx, pycls))
 
         return res
 
     def _set_batch_obj_prop(self, idx: int, other: Optional[Union[DSSObj, List[DSSObj]]]):
-        if self.count[0] == 0:
+        if len(self) == 0:
             return
 
         if other is None or (isinstance(other, LIST_LIKE) and len(other) == 0):
             # Set each object to empty
-            self._lib.Batch_SetObject(self.pointer[0], self.count[0], idx, self._ffi.NULL)
+            self._lib.Batch_SetObject(*self._get_ptr_cnt(), idx, self._ffi.NULL)
             self._check_for_error()
             return
 
@@ -910,23 +970,23 @@ class DSSBatch(Base):
             return
 
         if isinstance(other, DSSObj):
-            self._lib.Batch_SetObject(self.pointer[0], self.count[0], idx, other._ptr)
+            self._lib.Batch_SetObject(*self._get_ptr_cnt(), idx, other._ptr)
             self._check_for_error()
             return
 
         # Assume it's a list otherwise
-        if len(other) != self.count[0]:
+        if len(other) != len(self):
             raise ValueError("The number of elements must match the number of elements in the batch.")
 
         other_ptr = self._ffi.new('void*[]', len(other))
         other_ptr[:] = [o._ptr if o is not None else self._ffi.NULL for o in other]
         other_cnt = len(other)
-        self._lib.Batch_SetObjectArray(self.pointer[0], self.count[0], idx, other_ptr)
+        self._lib.Batch_SetObjectArray(*self._get_ptr_cnt(), idx, other_ptr)
         self._check_for_error()
 
 
     def _set_batch_objlist_prop(self, idx: int, other: List[DSSObj]):
-        if self.count[0] == 0:
+        if len(self) == 0:
             return
 
         if other is None or (isinstance(other, LIST_LIKE) and len(other) == 0):
@@ -937,15 +997,15 @@ class DSSBatch(Base):
             other_ptr[:] = [o._ptr if o is not None else self._ffi.NULL for o in other]
             other_cnt = len(other)
 
-        for ptr in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for ptr in self._unpack():
             self._lib.Obj_SetObjectArray(ptr, idx, other_ptr, other_cnt)
 
         self._check_for_error()
 
-        # if len(other) != self.count[0]:
+        # if len(other) != len(self):
         #     raise ValueError("Number of element in the list must match the number of elements in the batch.")
-        # obj = self._obj_cls(self._api_util, self.pointer[0])
-        # for other_objs, ptr in zip(other, self._ffi.unpack(self.pointer[0], self.count[0])):
+        # obj = self._obj_cls(self._api_util, self._pointer[0])
+        # for other_objs, ptr in zip(other, self._unpack()):
         #     # this could be further optimized to reuse the pointers, but it's 
         #     # not usually in the hot path
         #     obj._ptr = ptr

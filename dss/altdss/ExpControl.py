@@ -324,7 +324,7 @@ class ExpControlBatch(DSSBatch):
     @PVSystemList.setter
     def PVSystemList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
     
         self._check_for_error()
@@ -453,7 +453,7 @@ class ExpControlBatch(DSSBatch):
         DSS property name: `EventLog`, DSS property index: 10.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 10)
+            self._get_batch_int32_prop(10)
         ]
     @EventLog.setter
     def EventLog(self, value: bool):
@@ -484,7 +484,7 @@ class ExpControlBatch(DSSBatch):
         DSS property name: `PreferQ`, DSS property index: 12.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 12)
+            self._get_batch_int32_prop(12)
         ]
     @PreferQ.setter
     def PreferQ(self, value: bool):
@@ -519,7 +519,7 @@ class ExpControlBatch(DSSBatch):
     @DERList.setter
     def DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 14, value_ptr, value_count)
     
         self._check_for_error()
@@ -545,7 +545,7 @@ class ExpControlBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 16.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 16)
+            self._get_batch_int32_prop(16)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -580,11 +580,13 @@ class ExpControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IExpControl(IDSSObj):
-    __slots__ = ()
+class IExpControl(IDSSObj,ExpControlBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, ExpControl, ExpControlBatch)
+        IDSSObj.__init__(self, iobj, ExpControl, ExpControlBatch)
+        ExpControlBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> ExpControl:

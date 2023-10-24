@@ -103,7 +103,7 @@ class UPFCControlBatch(DSSBatch):
     @UPFCList.setter
     def UPFCList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
     
         self._check_for_error()
@@ -129,7 +129,7 @@ class UPFCControlBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 3.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 3)
+            self._get_batch_int32_prop(3)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -151,11 +151,13 @@ class UPFCControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IUPFCControl(IDSSObj):
-    __slots__ = ()
+class IUPFCControl(IDSSObj,UPFCControlBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, UPFCControl, UPFCControlBatch)
+        IDSSObj.__init__(self, iobj, UPFCControl, UPFCControlBatch)
+        UPFCControlBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> UPFCControl:

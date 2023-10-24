@@ -561,7 +561,7 @@ class CNDataBatch(DSSBatch):
 
         DSS property name: `RUnits`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_batch_str_prop(11)
 
     @RUnits_str.setter
     def RUnits_str(self, value: AnyStr):
@@ -604,7 +604,7 @@ class CNDataBatch(DSSBatch):
 
         DSS property name: `GMRUnits`, DSS property index: 13.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 13)
+        return self._get_batch_str_prop(13)
 
     @GMRUnits_str.setter
     def GMRUnits_str(self, value: AnyStr):
@@ -647,7 +647,7 @@ class CNDataBatch(DSSBatch):
 
         DSS property name: `RadUnits`, DSS property index: 15.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
+        return self._get_batch_str_prop(15)
 
     @RadUnits_str.setter
     def RadUnits_str(self, value: AnyStr):
@@ -715,7 +715,7 @@ class CNDataBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 20)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Ratings.setter
@@ -769,11 +769,13 @@ class CNDataBatchProperties(TypedDict):
     CapRadius: Union[float, Float64Array]
     Like: AnyStr
 
-class ICNData(IDSSObj):
-    __slots__ = ()
+class ICNData(IDSSObj,CNDataBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, CNData, CNDataBatch)
+        IDSSObj.__init__(self, iobj, CNData, CNDataBatch)
+        CNDataBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> CNData:

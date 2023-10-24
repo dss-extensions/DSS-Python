@@ -284,7 +284,7 @@ class TShapeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 3)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Temp.setter
@@ -303,7 +303,7 @@ class TShapeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 4)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Hour.setter
@@ -345,8 +345,7 @@ class TShapeBatch(DSSBatch):
 
         DSS property name: `CSVFile`, DSS property index: 7.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7) 
+        return self._get_batch_str_prop(7) 
 
     @CSVFile.setter
     def CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
@@ -359,8 +358,7 @@ class TShapeBatch(DSSBatch):
 
         DSS property name: `SngFile`, DSS property index: 8.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8) 
+        return self._get_batch_str_prop(8) 
 
     @SngFile.setter
     def SngFile(self, value: Union[AnyStr, List[AnyStr]]):
@@ -373,8 +371,7 @@ class TShapeBatch(DSSBatch):
 
         DSS property name: `DblFile`, DSS property index: 9.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 9) 
+        return self._get_batch_str_prop(9) 
 
     @DblFile.setter
     def DblFile(self, value: Union[AnyStr, List[AnyStr]]):
@@ -450,11 +447,13 @@ class TShapeBatchProperties(TypedDict):
     Action: Union[AnyStr, int, enums.TShapeAction]
     Like: AnyStr
 
-class ITShape(IDSSObj):
-    __slots__ = ()
+class ITShape(IDSSObj,TShapeBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, TShape, TShapeBatch)
+        IDSSObj.__init__(self, iobj, TShape, TShapeBatch)
+        TShapeBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> TShape:

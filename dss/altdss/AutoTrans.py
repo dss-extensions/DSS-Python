@@ -775,7 +775,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 9)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @pctR.setter
@@ -791,7 +791,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 10)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @RDCOhms.setter
@@ -822,7 +822,7 @@ class AutoTransBatch(DSSBatch):
 
         DSS property name: `Core`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_batch_str_prop(11)
 
     @Core_str.setter
     def Core_str(self, value: AnyStr):
@@ -842,7 +842,7 @@ class AutoTransBatch(DSSBatch):
     @Buses.setter
     def Buses(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 12, value_ptr, value_count)
     
         self._check_for_error()
@@ -858,14 +858,14 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_int32_array(self._lib.Obj_GetInt32Array, x, 13)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Conns.setter
     def Conns(self, value: Union[List[Union[int, enums.AutoTransConnection]], List[AnyStr]]): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetStringArray(x, 13, value_ptr, value_count)
 
             self._check_for_error()
@@ -903,7 +903,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 14)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kVs.setter
@@ -919,7 +919,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 15)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kVAs.setter
@@ -935,7 +935,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 16)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Taps.setter
@@ -994,7 +994,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 20)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @XSCArray.setter
@@ -1126,7 +1126,7 @@ class AutoTransBatch(DSSBatch):
         DSS property name: `Sub`, DSS property index: 30.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 30)
+            self._get_batch_int32_prop(30)
         ]
     @Sub.setter
     def Sub(self, value: bool):
@@ -1141,7 +1141,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 31)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @MaxTap.setter
@@ -1157,7 +1157,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 32)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @MinTap.setter
@@ -1173,7 +1173,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_int32_array(self._lib.Obj_GetInt32Array, x, 33)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @NumTaps.setter
@@ -1187,8 +1187,7 @@ class AutoTransBatch(DSSBatch):
 
         DSS property name: `SubName`, DSS property index: 34.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 34) 
+        return self._get_batch_str_prop(34) 
 
     @SubName.setter
     def SubName(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1231,7 +1230,7 @@ class AutoTransBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 37)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @pctRs.setter
@@ -1245,8 +1244,7 @@ class AutoTransBatch(DSSBatch):
 
         DSS property name: `Bank`, DSS property index: 38.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 38) 
+        return self._get_batch_str_prop(38) 
 
     @Bank.setter
     def Bank(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1260,7 +1258,7 @@ class AutoTransBatch(DSSBatch):
         DSS property name: `XRConst`, DSS property index: 39.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 39)
+            self._get_batch_int32_prop(39)
         ]
     @XRConst.setter
     def XRConst(self, value: bool):
@@ -1290,7 +1288,7 @@ class AutoTransBatch(DSSBatch):
 
         DSS property name: `LeadLag`, DSS property index: 40.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 40)
+        return self._get_batch_str_prop(40)
 
     @LeadLag_str.setter
     def LeadLag_str(self, value: AnyStr):
@@ -1382,7 +1380,7 @@ class AutoTransBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 48.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 48)
+            self._get_batch_int32_prop(48)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -1442,11 +1440,13 @@ class AutoTransBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IAutoTrans(IDSSObj):
-    __slots__ = ()
+class IAutoTrans(IDSSObj,AutoTransBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, AutoTrans, AutoTransBatch)
+        IDSSObj.__init__(self, iobj, AutoTrans, AutoTransBatch)
+        AutoTransBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> AutoTrans:

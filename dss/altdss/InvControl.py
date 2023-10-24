@@ -1060,7 +1060,7 @@ class InvControlBatch(DSSBatch):
     @DERList.setter
     def DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
     
         self._check_for_error()
@@ -1125,7 +1125,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `Mode`, DSS property index: 2.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2)
+        return self._get_batch_str_prop(2)
 
     @Mode_str.setter
     def Mode_str(self, value: AnyStr):
@@ -1169,7 +1169,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `CombiMode`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_batch_str_prop(3)
 
     @CombiMode_str.setter
     def CombiMode_str(self, value: AnyStr):
@@ -1187,7 +1187,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `VVC_Curve1`, DSS property index: 4.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4)
+        return self._get_batch_str_prop(4)
 
     @VVC_Curve1.setter
     def VVC_Curve1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -1205,7 +1205,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `VVC_Curve1`, DSS property index: 4.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 4)
+        return self._get_batch_obj_prop(4)
 
     @VVC_Curve1_obj.setter
     def VVC_Curve1_obj(self, value: XYcurve):
@@ -1278,7 +1278,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `Voltage_CurveX_Ref`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @Voltage_CurveX_Ref_str.setter
     def Voltage_CurveX_Ref_str(self, value: AnyStr):
@@ -1318,7 +1318,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `VoltWatt_Curve`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_batch_str_prop(8)
 
     @VoltWatt_Curve.setter
     def VoltWatt_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -1337,7 +1337,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `VoltWatt_Curve`, DSS property index: 8.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 8)
+        return self._get_batch_obj_prop(8)
 
     @VoltWatt_Curve_obj.setter
     def VoltWatt_Curve_obj(self, value: XYcurve):
@@ -1538,7 +1538,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `VoltWattYAxis`, DSS property index: 17.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
+        return self._get_batch_str_prop(17)
 
     @VoltWattYAxis_str.setter
     def VoltWattYAxis_str(self, value: AnyStr):
@@ -1584,7 +1584,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `RateOfChangeMode`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
+        return self._get_batch_str_prop(18)
 
     @RateOfChangeMode_str.setter
     def RateOfChangeMode_str(self, value: AnyStr):
@@ -1650,7 +1650,7 @@ class InvControlBatch(DSSBatch):
         DSS property name: `EventLog`, DSS property index: 22.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 22)
+            self._get_batch_int32_prop(22)
         ]
     @EventLog.setter
     def EventLog(self, value: bool):
@@ -1692,7 +1692,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `RefReactivePower`, DSS property index: 23.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 23)
+        return self._get_batch_str_prop(23)
 
     @RefReactivePower_str.setter
     def RefReactivePower_str(self, value: AnyStr):
@@ -1741,7 +1741,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `MonVoltageCalc`, DSS property index: 25.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25)
+        return self._get_batch_str_prop(25)
 
     @MonVoltageCalc_str.setter
     def MonVoltageCalc_str(self, value: AnyStr):
@@ -1759,7 +1759,7 @@ class InvControlBatch(DSSBatch):
     @MonBus.setter
     def MonBus(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 26, value_ptr, value_count)
     
         self._check_for_error()
@@ -1773,7 +1773,7 @@ class InvControlBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 27)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @MonBusesVBase.setter
@@ -1795,7 +1795,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `VoltWattCH_Curve`, DSS property index: 28.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 28)
+        return self._get_batch_str_prop(28)
 
     @VoltWattCH_Curve.setter
     def VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -1816,7 +1816,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `VoltWattCH_Curve`, DSS property index: 28.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 28)
+        return self._get_batch_obj_prop(28)
 
     @VoltWattCH_Curve_obj.setter
     def VoltWattCH_Curve_obj(self, value: XYcurve):
@@ -1842,7 +1842,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `WattPF_Curve`, DSS property index: 29.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 29)
+        return self._get_batch_str_prop(29)
 
     @WattPF_Curve.setter
     def WattPF_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -1868,7 +1868,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `WattPF_Curve`, DSS property index: 29.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 29)
+        return self._get_batch_obj_prop(29)
 
     @WattPF_Curve_obj.setter
     def WattPF_Curve_obj(self, value: XYcurve):
@@ -1886,7 +1886,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `WattVar_Curve`, DSS property index: 30.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 30)
+        return self._get_batch_str_prop(30)
 
     @WattVar_Curve.setter
     def WattVar_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -1904,7 +1904,7 @@ class InvControlBatch(DSSBatch):
 
         DSS property name: `WattVar_Curve`, DSS property index: 30.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 30)
+        return self._get_batch_obj_prop(30)
 
     @WattVar_Curve_obj.setter
     def WattVar_Curve_obj(self, value: XYcurve):
@@ -1963,7 +1963,7 @@ class InvControlBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 36.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 36)
+            self._get_batch_int32_prop(36)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -2016,11 +2016,13 @@ class InvControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IInvControl(IDSSObj):
-    __slots__ = ()
+class IInvControl(IDSSObj,InvControlBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, InvControl, InvControlBatch)
+        IDSSObj.__init__(self, iobj, InvControl, InvControlBatch)
+        InvControlBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> InvControl:

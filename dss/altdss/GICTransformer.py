@@ -430,8 +430,7 @@ class GICTransformerBatch(DSSBatch):
 
         DSS property name: `BusH`, DSS property index: 1.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
+        return self._get_batch_str_prop(1) 
 
     @BusH.setter
     def BusH(self, value: Union[AnyStr, List[AnyStr]]):
@@ -444,8 +443,7 @@ class GICTransformerBatch(DSSBatch):
 
         DSS property name: `BusNH`, DSS property index: 2.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
+        return self._get_batch_str_prop(2) 
 
     @BusNH.setter
     def BusNH(self, value: Union[AnyStr, List[AnyStr]]):
@@ -458,8 +456,7 @@ class GICTransformerBatch(DSSBatch):
 
         DSS property name: `BusX`, DSS property index: 3.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3) 
+        return self._get_batch_str_prop(3) 
 
     @BusX.setter
     def BusX(self, value: Union[AnyStr, List[AnyStr]]):
@@ -472,8 +469,7 @@ class GICTransformerBatch(DSSBatch):
 
         DSS property name: `BusNX`, DSS property index: 4.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4) 
+        return self._get_batch_str_prop(4) 
 
     @BusNX.setter
     def BusNX(self, value: Union[AnyStr, List[AnyStr]]):
@@ -516,7 +512,7 @@ class GICTransformerBatch(DSSBatch):
 
         DSS property name: `Type`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @Type_str.setter
     def Type_str(self, value: AnyStr):
@@ -594,7 +590,7 @@ class GICTransformerBatch(DSSBatch):
 
         DSS property name: `VarCurve`, DSS property index: 12.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
+        return self._get_batch_str_prop(12)
 
     @VarCurve.setter
     def VarCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -607,7 +603,7 @@ class GICTransformerBatch(DSSBatch):
 
         DSS property name: `VarCurve`, DSS property index: 12.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 12)
+        return self._get_batch_obj_prop(12)
 
     @VarCurve_obj.setter
     def VarCurve_obj(self, value: XYcurve):
@@ -746,7 +742,7 @@ class GICTransformerBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 22.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 22)
+            self._get_batch_int32_prop(22)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -787,11 +783,13 @@ class GICTransformerBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IGICTransformer(IDSSObj):
-    __slots__ = ()
+class IGICTransformer(IDSSObj,GICTransformerBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, GICTransformer, GICTransformerBatch)
+        IDSSObj.__init__(self, iobj, GICTransformer, GICTransformerBatch)
+        GICTransformerBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> GICTransformer:

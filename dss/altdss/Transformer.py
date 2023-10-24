@@ -915,7 +915,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 9)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @pctR.setter
@@ -931,7 +931,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 10)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @RNeut.setter
@@ -947,7 +947,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 11)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @XNeut.setter
@@ -968,7 +968,7 @@ class TransformerBatch(DSSBatch):
     @Buses.setter
     def Buses(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 12, value_ptr, value_count)
     
         self._check_for_error()
@@ -984,14 +984,14 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_int32_array(self._lib.Obj_GetInt32Array, x, 13)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Conns.setter
     def Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]]): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetStringArray(x, 13, value_ptr, value_count)
 
             self._check_for_error()
@@ -1029,7 +1029,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 14)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kVs.setter
@@ -1045,7 +1045,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 15)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kVAs.setter
@@ -1061,7 +1061,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 16)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Taps.setter
@@ -1120,7 +1120,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 20)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @XSCArray.setter
@@ -1252,7 +1252,7 @@ class TransformerBatch(DSSBatch):
         DSS property name: `Sub`, DSS property index: 30.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 30)
+            self._get_batch_int32_prop(30)
         ]
     @Sub.setter
     def Sub(self, value: bool):
@@ -1267,7 +1267,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 31)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @MaxTap.setter
@@ -1283,7 +1283,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 32)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @MinTap.setter
@@ -1299,7 +1299,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_int32_array(self._lib.Obj_GetInt32Array, x, 33)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @NumTaps.setter
@@ -1313,8 +1313,7 @@ class TransformerBatch(DSSBatch):
 
         DSS property name: `SubName`, DSS property index: 34.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 34) 
+        return self._get_batch_str_prop(34) 
 
     @SubName.setter
     def SubName(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1357,7 +1356,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 37)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @pctRs.setter
@@ -1371,8 +1370,7 @@ class TransformerBatch(DSSBatch):
 
         DSS property name: `Bank`, DSS property index: 38.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 38) 
+        return self._get_batch_str_prop(38) 
 
     @Bank.setter
     def Bank(self, value: Union[AnyStr, List[AnyStr]]):
@@ -1385,7 +1383,7 @@ class TransformerBatch(DSSBatch):
 
         DSS property name: `XfmrCode`, DSS property index: 39.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 39)
+        return self._get_batch_str_prop(39)
 
     @XfmrCode.setter
     def XfmrCode(self, value: Union[AnyStr, XfmrCodeObj, List[AnyStr], List[XfmrCodeObj]]):
@@ -1398,7 +1396,7 @@ class TransformerBatch(DSSBatch):
 
         DSS property name: `XfmrCode`, DSS property index: 39.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 39)
+        return self._get_batch_obj_prop(39)
 
     @XfmrCode_obj.setter
     def XfmrCode_obj(self, value: XfmrCodeObj):
@@ -1412,7 +1410,7 @@ class TransformerBatch(DSSBatch):
         DSS property name: `XRConst`, DSS property index: 40.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 40)
+            self._get_batch_int32_prop(40)
         ]
     @XRConst.setter
     def XRConst(self, value: bool):
@@ -1481,7 +1479,7 @@ class TransformerBatch(DSSBatch):
 
         DSS property name: `LeadLag`, DSS property index: 44.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 44)
+        return self._get_batch_str_prop(44)
 
     @LeadLag_str.setter
     def LeadLag_str(self, value: AnyStr):
@@ -1511,7 +1509,7 @@ class TransformerBatch(DSSBatch):
 
         DSS property name: `Core`, DSS property index: 46.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 46)
+        return self._get_batch_str_prop(46)
 
     @Core_str.setter
     def Core_str(self, value: AnyStr):
@@ -1526,7 +1524,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 47)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @RDCOhms.setter
@@ -1556,7 +1554,7 @@ class TransformerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 49)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Ratings.setter
@@ -1649,7 +1647,7 @@ class TransformerBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 56.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 56)
+            self._get_batch_int32_prop(56)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -1717,11 +1715,13 @@ class TransformerBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ITransformer(IDSSObj):
-    __slots__ = ()
+class ITransformer(IDSSObj,TransformerBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Transformer, TransformerBatch)
+        IDSSObj.__init__(self, iobj, Transformer, TransformerBatch)
+        TransformerBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Transformer:

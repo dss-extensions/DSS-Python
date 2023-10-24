@@ -16,7 +16,6 @@ from ._obj_bases import (
 from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
-from .Spectrum import Spectrum as SpectrumObj
 
 from .AutoTrans import AutoTrans
 from .Capacitor import Capacitor
@@ -30,6 +29,7 @@ PDElement = Union[
     Reactor,
     Transformer,
 ]
+from .Spectrum import Spectrum as SpectrumObj
 from .XYcurve import XYcurve
 
 class UPFC(DSSObj, CktElementMixin, PCElementMixin):
@@ -436,8 +436,7 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
+        return self._get_batch_str_prop(1) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -452,8 +451,7 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
+        return self._get_batch_str_prop(2) 
 
     @Bus2.setter
     def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
@@ -580,7 +578,7 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `LossCurve`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_batch_str_prop(11)
 
     @LossCurve.setter
     def LossCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -593,7 +591,7 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `LossCurve`, DSS property index: 11.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 11)
+        return self._get_batch_obj_prop(11)
 
     @LossCurve_obj.setter
     def LossCurve_obj(self, value: XYcurve):
@@ -673,7 +671,7 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 17.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17)
+        return self._get_batch_str_prop(17)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, PDElement, List[AnyStr], List[PDElement]]):
@@ -686,7 +684,7 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 17.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 17)
+        return self._get_batch_obj_prop(17)
 
     @Element_obj.setter
     def Element_obj(self, value: PDElement):
@@ -699,7 +697,7 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 18.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 18)
+        return self._get_batch_str_prop(18)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
@@ -712,7 +710,7 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 18.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 18)
+        return self._get_batch_obj_prop(18)
 
     @Spectrum_obj.setter
     def Spectrum_obj(self, value: SpectrumObj):
@@ -739,7 +737,7 @@ class UPFCBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 20.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 20)
+            self._get_batch_int32_prop(20)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -778,11 +776,13 @@ class UPFCBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IUPFC(IDSSObj):
-    __slots__ = ()
+class IUPFC(IDSSObj,UPFCBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, UPFC, UPFCBatch)
+        IDSSObj.__init__(self, iobj, UPFC, UPFCBatch)
+        UPFCBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> UPFC:

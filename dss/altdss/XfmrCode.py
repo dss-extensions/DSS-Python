@@ -633,7 +633,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 8)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @pctR.setter
@@ -649,7 +649,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 9)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @RNeut.setter
@@ -665,7 +665,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 10)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @XNeut.setter
@@ -684,14 +684,14 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_int32_array(self._lib.Obj_GetInt32Array, x, 11)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Conns.setter
     def Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]]): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetStringArray(x, 11, value_ptr, value_count)
 
             self._check_for_error()
@@ -730,7 +730,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 12)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kVs.setter
@@ -746,7 +746,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 13)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kVAs.setter
@@ -762,7 +762,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 14)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Taps.setter
@@ -821,7 +821,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 18)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @XSCArray.setter
@@ -954,7 +954,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 28)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @MaxTap.setter
@@ -970,7 +970,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 29)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @MinTap.setter
@@ -986,7 +986,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_int32_array(self._lib.Obj_GetInt32Array, x, 30)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @NumTaps.setter
@@ -1030,7 +1030,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 33)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @pctRs.setter
@@ -1085,7 +1085,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 37)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @RDCOhms.setter
@@ -1115,7 +1115,7 @@ class XfmrCodeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 39)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Ratings.setter
@@ -1169,11 +1169,13 @@ class XfmrCodeBatchProperties(TypedDict):
     Ratings: Float64Array
     Like: AnyStr
 
-class IXfmrCode(IDSSObj):
-    __slots__ = ()
+class IXfmrCode(IDSSObj,XfmrCodeBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, XfmrCode, XfmrCodeBatch)
+        IDSSObj.__init__(self, iobj, XfmrCode, XfmrCodeBatch)
+        XfmrCodeBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> XfmrCode:

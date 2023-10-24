@@ -261,7 +261,7 @@ class XYcurveBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 3)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @YArray.setter
@@ -282,7 +282,7 @@ class XYcurveBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 4)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @XArray.setter
@@ -296,8 +296,7 @@ class XYcurveBatch(DSSBatch):
 
         DSS property name: `CSVFile`, DSS property index: 5.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5) 
+        return self._get_batch_str_prop(5) 
 
     @CSVFile.setter
     def CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
@@ -310,8 +309,7 @@ class XYcurveBatch(DSSBatch):
 
         DSS property name: `SngFile`, DSS property index: 6.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6) 
+        return self._get_batch_str_prop(6) 
 
     @SngFile.setter
     def SngFile(self, value: Union[AnyStr, List[AnyStr]]):
@@ -324,8 +322,7 @@ class XYcurveBatch(DSSBatch):
 
         DSS property name: `DblFile`, DSS property index: 7.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7) 
+        return self._get_batch_str_prop(7) 
 
     @DblFile.setter
     def DblFile(self, value: Union[AnyStr, List[AnyStr]]):
@@ -434,11 +431,13 @@ class XYcurveBatchProperties(TypedDict):
     YScale: Union[float, Float64Array]
     Like: AnyStr
 
-class IXYcurve(IDSSObj):
-    __slots__ = ()
+class IXYcurve(IDSSObj,XYcurveBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, XYcurve, XYcurveBatch)
+        IDSSObj.__init__(self, iobj, XYcurve, XYcurveBatch)
+        XYcurveBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> XYcurve:

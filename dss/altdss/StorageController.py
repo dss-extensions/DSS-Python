@@ -810,7 +810,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -823,7 +823,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -866,7 +866,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `MonPhase`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_batch_str_prop(3)
 
     @MonPhase_str.setter
     def MonPhase_str(self, value: AnyStr):
@@ -962,7 +962,7 @@ class StorageControllerBatch(DSSBatch):
     @ElementList.setter
     def ElementList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 10, value_ptr, value_count)
     
         self._check_for_error()
@@ -976,7 +976,7 @@ class StorageControllerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 11)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Weights.setter
@@ -1035,7 +1035,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `ModeDischarge`, DSS property index: 12.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 12)
+        return self._get_batch_str_prop(12)
 
     @ModeDischarge_str.setter
     def ModeDischarge_str(self, value: AnyStr):
@@ -1081,7 +1081,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `ModeCharge`, DSS property index: 13.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 13)
+        return self._get_batch_str_prop(13)
 
     @ModeCharge_str.setter
     def ModeCharge_str(self, value: AnyStr):
@@ -1224,7 +1224,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 24.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 24)
+        return self._get_batch_str_prop(24)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1237,7 +1237,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `Yearly`, DSS property index: 24.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 24)
+        return self._get_batch_obj_prop(24)
 
     @Yearly_obj.setter
     def Yearly_obj(self, value: LoadShape):
@@ -1250,7 +1250,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 25.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 25)
+        return self._get_batch_str_prop(25)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1263,7 +1263,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `Daily`, DSS property index: 25.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 25)
+        return self._get_batch_obj_prop(25)
 
     @Daily_obj.setter
     def Daily_obj(self, value: LoadShape):
@@ -1276,7 +1276,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 26.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 26)
+        return self._get_batch_str_prop(26)
 
     @Duty.setter
     def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -1289,7 +1289,7 @@ class StorageControllerBatch(DSSBatch):
 
         DSS property name: `Duty`, DSS property index: 26.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 26)
+        return self._get_batch_obj_prop(26)
 
     @Duty_obj.setter
     def Duty_obj(self, value: LoadShape):
@@ -1303,7 +1303,7 @@ class StorageControllerBatch(DSSBatch):
         DSS property name: `EventLog`, DSS property index: 27.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 27)
+            self._get_batch_int32_prop(27)
         ]
     @EventLog.setter
     def EventLog(self, value: bool):
@@ -1424,7 +1424,7 @@ class StorageControllerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 36)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @SeasonTargets.setter
@@ -1440,7 +1440,7 @@ class StorageControllerBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 37)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @SeasonTargetsLow.setter
@@ -1468,7 +1468,7 @@ class StorageControllerBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 39.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 39)
+            self._get_batch_int32_prop(39)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -1526,11 +1526,13 @@ class StorageControllerBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IStorageController(IDSSObj):
-    __slots__ = ()
+class IStorageController(IDSSObj,StorageControllerBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, StorageController, StorageControllerBatch)
+        IDSSObj.__init__(self, iobj, StorageController, StorageControllerBatch)
+        StorageControllerBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> StorageController:

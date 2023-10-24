@@ -399,7 +399,7 @@ class LineGeometryBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 5)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @X.setter
@@ -415,7 +415,7 @@ class LineGeometryBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 6)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @H.setter
@@ -446,7 +446,7 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `Units`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_batch_str_prop(7)
 
     @Units_str.setter
     def Units_str(self, value: AnyStr):
@@ -486,7 +486,7 @@ class LineGeometryBatch(DSSBatch):
         DSS property name: `Reduce`, DSS property index: 10.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 10)
+            self._get_batch_int32_prop(10)
         ]
     @Reduce.setter
     def Reduce(self, value: bool):
@@ -502,7 +502,7 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `Spacing`, DSS property index: 11.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 11)
+        return self._get_batch_str_prop(11)
 
     @Spacing.setter
     def Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
@@ -518,7 +518,7 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `Spacing`, DSS property index: 11.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 11)
+        return self._get_batch_obj_prop(11)
 
     @Spacing_obj.setter
     def Spacing_obj(self, value: LineSpacing):
@@ -547,7 +547,7 @@ class LineGeometryBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 18)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Ratings.setter
@@ -584,7 +584,7 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `LineType`, DSS property index: 19.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19)
+        return self._get_batch_str_prop(19)
 
     @LineType_str.setter
     def LineType_str(self, value: AnyStr):
@@ -616,11 +616,13 @@ class LineGeometryBatchProperties(TypedDict):
     LineType: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array]
     Like: AnyStr
 
-class ILineGeometry(IDSSObj):
-    __slots__ = ()
+class ILineGeometry(IDSSObj,LineGeometryBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, LineGeometry, LineGeometryBatch)
+        IDSSObj.__init__(self, iobj, LineGeometry, LineGeometryBatch)
+        LineGeometryBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> LineGeometry:

@@ -305,8 +305,7 @@ class FaultBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
+        return self._get_batch_str_prop(1) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -321,8 +320,7 @@ class FaultBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
+        return self._get_batch_str_prop(2) 
 
     @Bus2.setter
     def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
@@ -376,7 +374,7 @@ class FaultBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 6)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @GMatrix.setter
@@ -404,7 +402,7 @@ class FaultBatch(DSSBatch):
         DSS property name: `Temporary`, DSS property index: 8.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 8)
+            self._get_batch_int32_prop(8)
         ]
     @Temporary.setter
     def Temporary(self, value: bool):
@@ -509,7 +507,7 @@ class FaultBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 16.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 16)
+            self._get_batch_int32_prop(16)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -544,11 +542,13 @@ class FaultBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IFault(IDSSObj):
-    __slots__ = ()
+class IFault(IDSSObj,FaultBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Fault, FaultBatch)
+        IDSSObj.__init__(self, iobj, Fault, FaultBatch)
+        FaultBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Fault:

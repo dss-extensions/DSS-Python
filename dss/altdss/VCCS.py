@@ -366,8 +366,7 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
+        return self._get_batch_str_prop(1) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -432,7 +431,7 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `BP1`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @BP1.setter
     def BP1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -445,7 +444,7 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `BP1`, DSS property index: 6.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 6)
+        return self._get_batch_obj_prop(6)
 
     @BP1_obj.setter
     def BP1_obj(self, value: XYcurve):
@@ -458,7 +457,7 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `BP2`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_batch_str_prop(7)
 
     @BP2.setter
     def BP2(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -471,7 +470,7 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `BP2`, DSS property index: 7.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 7)
+        return self._get_batch_obj_prop(7)
 
     @BP2_obj.setter
     def BP2_obj(self, value: XYcurve):
@@ -484,7 +483,7 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `Filter`, DSS property index: 8.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 8)
+        return self._get_batch_str_prop(8)
 
     @Filter.setter
     def Filter(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
@@ -497,7 +496,7 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `Filter`, DSS property index: 8.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 8)
+        return self._get_batch_obj_prop(8)
 
     @Filter_obj.setter
     def Filter_obj(self, value: XYcurve):
@@ -524,7 +523,7 @@ class VCCSBatch(DSSBatch):
         DSS property name: `RMSMode`, DSS property index: 10.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 10)
+            self._get_batch_int32_prop(10)
         ]
     @RMSMode.setter
     def RMSMode(self, value: bool):
@@ -576,7 +575,7 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 14.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 14)
+        return self._get_batch_str_prop(14)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
@@ -589,7 +588,7 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `Spectrum`, DSS property index: 14.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 14)
+        return self._get_batch_obj_prop(14)
 
     @Spectrum_obj.setter
     def Spectrum_obj(self, value: SpectrumObj):
@@ -616,7 +615,7 @@ class VCCSBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 16.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 16)
+            self._get_batch_int32_prop(16)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -651,11 +650,13 @@ class VCCSBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IVCCS(IDSSObj):
-    __slots__ = ()
+class IVCCS(IDSSObj,VCCSBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, VCCS, VCCSBatch)
+        IDSSObj.__init__(self, iobj, VCCS, VCCSBatch)
+        VCCSBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> VCCS:

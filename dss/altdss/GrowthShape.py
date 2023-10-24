@@ -162,7 +162,7 @@ class GrowthShapeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 2)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Year.setter
@@ -185,7 +185,7 @@ class GrowthShapeBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 3)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Mult.setter
@@ -199,8 +199,7 @@ class GrowthShapeBatch(DSSBatch):
 
         DSS property name: `CSVFile`, DSS property index: 4.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4) 
+        return self._get_batch_str_prop(4) 
 
     @CSVFile.setter
     def CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
@@ -213,8 +212,7 @@ class GrowthShapeBatch(DSSBatch):
 
         DSS property name: `SngFile`, DSS property index: 5.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5) 
+        return self._get_batch_str_prop(5) 
 
     @SngFile.setter
     def SngFile(self, value: Union[AnyStr, List[AnyStr]]):
@@ -227,8 +225,7 @@ class GrowthShapeBatch(DSSBatch):
 
         DSS property name: `DblFile`, DSS property index: 6.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6) 
+        return self._get_batch_str_prop(6) 
 
     @DblFile.setter
     def DblFile(self, value: Union[AnyStr, List[AnyStr]]):
@@ -253,11 +250,13 @@ class GrowthShapeBatchProperties(TypedDict):
     DblFile: Union[AnyStr, List[AnyStr]]
     Like: AnyStr
 
-class IGrowthShape(IDSSObj):
-    __slots__ = ()
+class IGrowthShape(IDSSObj,GrowthShapeBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, GrowthShape, GrowthShapeBatch)
+        IDSSObj.__init__(self, iobj, GrowthShape, GrowthShapeBatch)
+        GrowthShapeBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> GrowthShape:

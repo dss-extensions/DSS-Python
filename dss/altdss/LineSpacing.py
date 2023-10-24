@@ -169,7 +169,7 @@ class LineSpacingBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 3)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @X.setter
@@ -185,7 +185,7 @@ class LineSpacingBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 4)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @H.setter
@@ -216,7 +216,7 @@ class LineSpacingBatch(DSSBatch):
 
         DSS property name: `Units`, DSS property index: 5.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5)
+        return self._get_batch_str_prop(5)
 
     @Units_str.setter
     def Units_str(self, value: AnyStr):
@@ -240,11 +240,13 @@ class LineSpacingBatchProperties(TypedDict):
     Units: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]
     Like: AnyStr
 
-class ILineSpacing(IDSSObj):
-    __slots__ = ()
+class ILineSpacing(IDSSObj,LineSpacingBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, LineSpacing, LineSpacingBatch)
+        IDSSObj.__init__(self, iobj, LineSpacing, LineSpacingBatch)
+        LineSpacingBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> LineSpacing:

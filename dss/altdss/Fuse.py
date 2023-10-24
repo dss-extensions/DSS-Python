@@ -322,7 +322,7 @@ class FuseBatch(DSSBatch):
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @MonitoredObj.setter
     def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -335,7 +335,7 @@ class FuseBatch(DSSBatch):
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @MonitoredObj_obj.setter
     def MonitoredObj_obj(self, value: DSSObj):
@@ -361,7 +361,7 @@ class FuseBatch(DSSBatch):
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_batch_str_prop(3)
 
     @SwitchedObj.setter
     def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -374,7 +374,7 @@ class FuseBatch(DSSBatch):
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 3)
+        return self._get_batch_obj_prop(3)
 
     @SwitchedObj_obj.setter
     def SwitchedObj_obj(self, value: DSSObj):
@@ -400,7 +400,7 @@ class FuseBatch(DSSBatch):
 
         DSS property name: `FuseCurve`, DSS property index: 5.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 5)
+        return self._get_batch_str_prop(5)
 
     @FuseCurve.setter
     def FuseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
@@ -413,7 +413,7 @@ class FuseBatch(DSSBatch):
 
         DSS property name: `FuseCurve`, DSS property index: 5.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 5)
+        return self._get_batch_obj_prop(5)
 
     @FuseCurve_obj.setter
     def FuseCurve_obj(self, value: TCC_Curve):
@@ -473,14 +473,14 @@ class FuseBatch(DSSBatch):
         """
         return [
             self._get_int32_array(self._lib.Obj_GetInt32Array, x, 9)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Normal.setter
     def Normal(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetStringArray(x, 9, value_ptr, value_count)
 
             self._check_for_error()
@@ -510,14 +510,14 @@ class FuseBatch(DSSBatch):
         """
         return [
             self._get_int32_array(self._lib.Obj_GetInt32Array, x, 10)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @State.setter
     def State(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+            for x in self._unpack():
                 self._lib.Obj_SetStringArray(x, 10, value_ptr, value_count)
 
             self._check_for_error()
@@ -559,7 +559,7 @@ class FuseBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 12.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 12)
+            self._get_batch_int32_prop(12)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -590,11 +590,13 @@ class FuseBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IFuse(IDSSObj):
-    __slots__ = ()
+class IFuse(IDSSObj,FuseBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Fuse, FuseBatch)
+        IDSSObj.__init__(self, iobj, Fuse, FuseBatch)
+        FuseBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Fuse:

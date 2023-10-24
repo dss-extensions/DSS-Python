@@ -231,7 +231,7 @@ class SwtControlBatch(DSSBatch):
 
         DSS property name: `SwitchedObj`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @SwitchedObj.setter
     def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -244,7 +244,7 @@ class SwtControlBatch(DSSBatch):
 
         DSS property name: `SwitchedObj`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @SwitchedObj_obj.setter
     def SwitchedObj_obj(self, value: DSSObj):
@@ -271,7 +271,7 @@ class SwtControlBatch(DSSBatch):
         DSS property name: `Lock`, DSS property index: 4.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 4)
+            self._get_batch_int32_prop(4)
         ]
     @Lock.setter
     def Lock(self, value: bool):
@@ -314,7 +314,7 @@ class SwtControlBatch(DSSBatch):
 
         DSS property name: `Normal`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @Normal_str.setter
     def Normal_str(self, value: AnyStr):
@@ -344,7 +344,7 @@ class SwtControlBatch(DSSBatch):
 
         DSS property name: `State`, DSS property index: 7.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 7)
+        return self._get_batch_str_prop(7)
 
     @State_str.setter
     def State_str(self, value: AnyStr):
@@ -379,7 +379,7 @@ class SwtControlBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 10.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 10)
+            self._get_batch_int32_prop(10)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -407,11 +407,13 @@ class SwtControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ISwtControl(IDSSObj):
-    __slots__ = ()
+class ISwtControl(IDSSObj,SwtControlBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, SwtControl, SwtControlBatch)
+        IDSSObj.__init__(self, iobj, SwtControl, SwtControlBatch)
+        SwtControlBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> SwtControl:

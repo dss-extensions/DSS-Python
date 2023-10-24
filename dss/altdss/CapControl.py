@@ -543,7 +543,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -556,7 +556,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -584,7 +584,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `Capacitor`, DSS property index: 3.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 3)
+        return self._get_batch_str_prop(3)
 
     @Capacitor.setter
     def Capacitor(self, value: Union[AnyStr, CapacitorObj, List[AnyStr], List[CapacitorObj]]):
@@ -599,7 +599,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `Capacitor`, DSS property index: 3.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 3)
+        return self._get_batch_obj_prop(3)
 
     @Capacitor_obj.setter
     def Capacitor_obj(self, value: CapacitorObj):
@@ -629,7 +629,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `Type`, DSS property index: 4.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 4)
+        return self._get_batch_str_prop(4)
 
     @Type_str.setter
     def Type_str(self, value: AnyStr):
@@ -717,7 +717,7 @@ class CapControlBatch(DSSBatch):
         DSS property name: `VoltOverride`, DSS property index: 10.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 10)
+            self._get_batch_int32_prop(10)
         ]
     @VoltOverride.setter
     def VoltOverride(self, value: bool):
@@ -799,7 +799,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `CTPhase`, DSS property index: 15.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 15)
+        return self._get_batch_str_prop(15)
 
     @CTPhase_str.setter
     def CTPhase_str(self, value: AnyStr):
@@ -829,7 +829,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `PTPhase`, DSS property index: 16.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 16)
+        return self._get_batch_str_prop(16)
 
     @PTPhase_str.setter
     def PTPhase_str(self, value: AnyStr):
@@ -842,8 +842,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `VBus`, DSS property index: 17.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 17) 
+        return self._get_batch_str_prop(17) 
 
     @VBus.setter
     def VBus(self, value: Union[AnyStr, List[AnyStr]]):
@@ -857,7 +856,7 @@ class CapControlBatch(DSSBatch):
         DSS property name: `EventLog`, DSS property index: 18.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 18)
+            self._get_batch_int32_prop(18)
         ]
     @EventLog.setter
     def EventLog(self, value: bool):
@@ -870,8 +869,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `UserModel`, DSS property index: 19.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 19) 
+        return self._get_batch_str_prop(19) 
 
     @UserModel.setter
     def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
@@ -884,8 +882,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `UserData`, DSS property index: 20.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 20) 
+        return self._get_batch_str_prop(20) 
 
     @UserData.setter
     def UserData(self, value: Union[AnyStr, List[AnyStr]]):
@@ -919,7 +916,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 23)
+        return self._get_batch_str_prop(23)
 
     @ControlSignal.setter
     def ControlSignal(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
@@ -932,7 +929,7 @@ class CapControlBatch(DSSBatch):
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 23)
+        return self._get_batch_obj_prop(23)
 
     @ControlSignal_obj.setter
     def ControlSignal_obj(self, value: LoadShape):
@@ -959,7 +956,7 @@ class CapControlBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 25.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 25)
+            self._get_batch_int32_prop(25)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -1003,11 +1000,13 @@ class CapControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ICapControl(IDSSObj):
-    __slots__ = ()
+class ICapControl(IDSSObj,CapControlBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, CapControl, CapControlBatch)
+        IDSSObj.__init__(self, iobj, CapControl, CapControlBatch)
+        CapControlBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> CapControl:

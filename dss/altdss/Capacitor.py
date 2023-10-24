@@ -383,8 +383,7 @@ class CapacitorBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1) 
+        return self._get_batch_str_prop(1) 
 
     @Bus1.setter
     def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
@@ -399,8 +398,7 @@ class CapacitorBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 2) 
+        return self._get_batch_str_prop(2) 
 
     @Bus2.setter
     def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
@@ -428,7 +426,7 @@ class CapacitorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 4)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @kvar.setter
@@ -472,7 +470,7 @@ class CapacitorBatch(DSSBatch):
 
         DSS property name: `Conn`, DSS property index: 6.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 6)
+        return self._get_batch_str_prop(6)
 
     @Conn_str.setter
     def Conn_str(self, value: AnyStr):
@@ -491,7 +489,7 @@ class CapacitorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 7)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @CMatrix.setter
@@ -508,7 +506,7 @@ class CapacitorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 8)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Cuf.setter
@@ -524,7 +522,7 @@ class CapacitorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 9)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @R.setter
@@ -540,7 +538,7 @@ class CapacitorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 10)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @XL.setter
@@ -556,7 +554,7 @@ class CapacitorBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 11)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Harm.setter
@@ -585,7 +583,7 @@ class CapacitorBatch(DSSBatch):
         """
         return [
             self._get_int32_array(self._lib.Obj_GetInt32Array, x, 13)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @States.setter
@@ -678,7 +676,7 @@ class CapacitorBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 20.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 20)
+            self._get_batch_int32_prop(20)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -717,11 +715,13 @@ class CapacitorBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ICapacitor(IDSSObj):
-    __slots__ = ()
+class ICapacitor(IDSSObj,CapacitorBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, Capacitor, CapacitorBatch)
+        IDSSObj.__init__(self, iobj, Capacitor, CapacitorBatch)
+        CapacitorBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Capacitor:

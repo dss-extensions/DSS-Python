@@ -205,7 +205,7 @@ class GenDispatcherBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_string_array(self._lib.Batch_GetString, self.pointer[0], self.count[0], 1)
+        return self._get_batch_str_prop(1)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
@@ -218,7 +218,7 @@ class GenDispatcherBatch(DSSBatch):
 
         DSS property name: `Element`, DSS property index: 1.
         """
-        return self._get_obj_array(self._lib.Batch_GetObject, self.pointer[0], self.count[0], 1)
+        return self._get_batch_obj_prop(1)
 
     @Element_obj.setter
     def Element_obj(self, value: DSSObj):
@@ -288,7 +288,7 @@ class GenDispatcherBatch(DSSBatch):
     @GenList.setter
     def GenList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        for x in self._ffi.unpack(self.pointer[0], self.count[0]):
+        for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 6, value_ptr, value_count)
     
         self._check_for_error()
@@ -302,7 +302,7 @@ class GenDispatcherBatch(DSSBatch):
         """
         return [
             self._get_float64_array(self._lib.Obj_GetFloat64Array, x, 7)
-            for x in self._ffi.unpack(self.pointer[0], self.count[0])
+            for x in self._unpack()
         ]
 
     @Weights.setter
@@ -330,7 +330,7 @@ class GenDispatcherBatch(DSSBatch):
         DSS property name: `Enabled`, DSS property index: 9.
         """
         return [v != 0 for v in 
-            self._get_int32_array(self._lib.Batch_GetInt32, self.pointer[0], self.count[0], 9)
+            self._get_batch_int32_prop(9)
         ]
     @Enabled.setter
     def Enabled(self, value: bool):
@@ -358,11 +358,13 @@ class GenDispatcherBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IGenDispatcher(IDSSObj):
-    __slots__ = ()
+class IGenDispatcher(IDSSObj,GenDispatcherBatch):
+    # __slots__ = () #TODO
 
     def __init__(self, iobj):
-        super().__init__(iobj, GenDispatcher, GenDispatcherBatch)
+        IDSSObj.__init__(self, iobj, GenDispatcher, GenDispatcherBatch)
+        GenDispatcherBatch.__init__(self, self._api_util, sync_cls=True)
+        
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> GenDispatcher:
