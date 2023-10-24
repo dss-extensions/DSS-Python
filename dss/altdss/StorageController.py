@@ -70,13 +70,26 @@ class StorageController(DSSObj, CktElementMixin):
     }
 
     @property
-    def Element(self) -> str:
+    def Element_str(self) -> str:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
         DSS property name: `Element`, DSS property index: 1.
         """
         return self._get_prop_string(1)
+
+    @Element_str.setter
+    def Element_str(self, value: AnyStr):
+        self._set_string_o(1, value)
+
+    @property
+    def Element(self) -> DSSObj:
+        """
+        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
+
+        DSS property name: `Element`, DSS property index: 1.
+        """
+        return self._get_obj(1, None)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj]):
@@ -85,19 +98,6 @@ class StorageController(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(1, value)
-
-    @property
-    def Element_obj(self) -> DSSObj:
-        """
-        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
-
-        DSS property name: `Element`, DSS property index: 1.
-        """
-        return self._get_obj(1, None)
-
-    @Element_obj.setter
-    def Element_obj(self, value: DSSObj):
-        self._set_obj(1, value)
 
     @property
     def Terminal(self) -> int:
@@ -484,13 +484,26 @@ class StorageController(DSSObj, CktElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
     @property
-    def Yearly(self) -> str:
+    def Yearly_str(self) -> str:
         """
         Dispatch loadshape object, If any, for Yearly solution Mode.
 
         DSS property name: `Yearly`, DSS property index: 24.
         """
         return self._get_prop_string(24)
+
+    @Yearly_str.setter
+    def Yearly_str(self, value: AnyStr):
+        self._set_string_o(24, value)
+
+    @property
+    def Yearly(self) -> LoadShape:
+        """
+        Dispatch loadshape object, If any, for Yearly solution Mode.
+
+        DSS property name: `Yearly`, DSS property index: 24.
+        """
+        return self._get_obj(24, LoadShape)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape]):
@@ -501,26 +514,26 @@ class StorageController(DSSObj, CktElementMixin):
         self._set_string_o(24, value)
 
     @property
-    def Yearly_obj(self) -> LoadShape:
-        """
-        Dispatch loadshape object, If any, for Yearly solution Mode.
-
-        DSS property name: `Yearly`, DSS property index: 24.
-        """
-        return self._get_obj(24, LoadShape)
-
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_obj(24, value)
-
-    @property
-    def Daily(self) -> str:
+    def Daily_str(self) -> str:
         """
         Dispatch loadshape object, If any, for Daily solution mode.
 
         DSS property name: `Daily`, DSS property index: 25.
         """
         return self._get_prop_string(25)
+
+    @Daily_str.setter
+    def Daily_str(self, value: AnyStr):
+        self._set_string_o(25, value)
+
+    @property
+    def Daily(self) -> LoadShape:
+        """
+        Dispatch loadshape object, If any, for Daily solution mode.
+
+        DSS property name: `Daily`, DSS property index: 25.
+        """
+        return self._get_obj(25, LoadShape)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape]):
@@ -531,26 +544,26 @@ class StorageController(DSSObj, CktElementMixin):
         self._set_string_o(25, value)
 
     @property
-    def Daily_obj(self) -> LoadShape:
-        """
-        Dispatch loadshape object, If any, for Daily solution mode.
-
-        DSS property name: `Daily`, DSS property index: 25.
-        """
-        return self._get_obj(25, LoadShape)
-
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_obj(25, value)
-
-    @property
-    def Duty(self) -> str:
+    def Duty_str(self) -> str:
         """
         Dispatch loadshape object, If any, for Dutycycle solution mode.
 
         DSS property name: `Duty`, DSS property index: 26.
         """
         return self._get_prop_string(26)
+
+    @Duty_str.setter
+    def Duty_str(self, value: AnyStr):
+        self._set_string_o(26, value)
+
+    @property
+    def Duty(self) -> LoadShape:
+        """
+        Dispatch loadshape object, If any, for Dutycycle solution mode.
+
+        DSS property name: `Duty`, DSS property index: 26.
+        """
+        return self._get_obj(26, LoadShape)
 
     @Duty.setter
     def Duty(self, value: Union[AnyStr, LoadShape]):
@@ -559,19 +572,6 @@ class StorageController(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(26, value)
-
-    @property
-    def Duty_obj(self) -> LoadShape:
-        """
-        Dispatch loadshape object, If any, for Dutycycle solution mode.
-
-        DSS property name: `Duty`, DSS property index: 26.
-        """
-        return self._get_obj(26, LoadShape)
-
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_obj(26, value)
 
     @property
     def EventLog(self) -> bool:
@@ -804,7 +804,7 @@ class StorageControllerBatch(DSSBatch):
 
 
     @property
-    def Element(self) -> List[str]:
+    def Element_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
@@ -812,12 +812,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    @Element_str.setter
+    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
-    def Element_obj(self) -> List[DSSObj]:
+    def Element(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
@@ -825,9 +825,9 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Element_obj.setter
-    def Element_obj(self, value: DSSObj):
-        self._set_batch_string(1, value)
+    @Element.setter
+    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
     def Terminal(self) -> BatchInt32ArrayProxy:
@@ -1218,7 +1218,7 @@ class StorageControllerBatch(DSSBatch):
         self._set_batch_float64_array(23, value)
 
     @property
-    def Yearly(self) -> List[str]:
+    def Yearly_str(self) -> List[str]:
         """
         Dispatch loadshape object, If any, for Yearly solution Mode.
 
@@ -1226,12 +1226,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(24)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(24, value)
+    @Yearly_str.setter
+    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(24, value)
 
     @property
-    def Yearly_obj(self) -> List[LoadShape]:
+    def Yearly(self) -> List[LoadShape]:
         """
         Dispatch loadshape object, If any, for Yearly solution Mode.
 
@@ -1239,12 +1239,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(24)
 
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_batch_string(24, value)
+    @Yearly.setter
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(24, value)
 
     @property
-    def Daily(self) -> List[str]:
+    def Daily_str(self) -> List[str]:
         """
         Dispatch loadshape object, If any, for Daily solution mode.
 
@@ -1252,12 +1252,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(25)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(25, value)
+    @Daily_str.setter
+    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(25, value)
 
     @property
-    def Daily_obj(self) -> List[LoadShape]:
+    def Daily(self) -> List[LoadShape]:
         """
         Dispatch loadshape object, If any, for Daily solution mode.
 
@@ -1265,12 +1265,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(25)
 
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_batch_string(25, value)
+    @Daily.setter
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(25, value)
 
     @property
-    def Duty(self) -> List[str]:
+    def Duty_str(self) -> List[str]:
         """
         Dispatch loadshape object, If any, for Dutycycle solution mode.
 
@@ -1278,12 +1278,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(26)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(26, value)
+    @Duty_str.setter
+    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(26, value)
 
     @property
-    def Duty_obj(self) -> List[LoadShape]:
+    def Duty(self) -> List[LoadShape]:
         """
         Dispatch loadshape object, If any, for Dutycycle solution mode.
 
@@ -1291,9 +1291,9 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(26)
 
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_batch_string(26, value)
+    @Duty.setter
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(26, value)
 
     @property
     def EventLog(self) -> List[bool]:

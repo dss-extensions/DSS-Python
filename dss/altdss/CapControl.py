@@ -52,13 +52,26 @@ class CapControl(DSSObj, CktElementMixin):
     }
 
     @property
-    def Element(self) -> str:
+    def Element_str(self) -> str:
         """
         Full object name of the circuit element, typically a line or transformer, to which the capacitor control's PT and/or CT are connected.There is no default; must be specified.
 
         DSS property name: `Element`, DSS property index: 1.
         """
         return self._get_prop_string(1)
+
+    @Element_str.setter
+    def Element_str(self, value: AnyStr):
+        self._set_string_o(1, value)
+
+    @property
+    def Element(self) -> DSSObj:
+        """
+        Full object name of the circuit element, typically a line or transformer, to which the capacitor control's PT and/or CT are connected.There is no default; must be specified.
+
+        DSS property name: `Element`, DSS property index: 1.
+        """
+        return self._get_obj(1, None)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj]):
@@ -67,19 +80,6 @@ class CapControl(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(1, value)
-
-    @property
-    def Element_obj(self) -> DSSObj:
-        """
-        Full object name of the circuit element, typically a line or transformer, to which the capacitor control's PT and/or CT are connected.There is no default; must be specified.
-
-        DSS property name: `Element`, DSS property index: 1.
-        """
-        return self._get_obj(1, None)
-
-    @Element_obj.setter
-    def Element_obj(self, value: DSSObj):
-        self._set_obj(1, value)
 
     @property
     def Terminal(self) -> int:
@@ -95,7 +95,7 @@ class CapControl(DSSObj, CktElementMixin):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
-    def Capacitor(self) -> str:
+    def Capacitor_str(self) -> str:
         """
         Name of Capacitor element which the CapControl controls. No Default; Must be specified.Do not specify the full object name; "Capacitor" is assumed for the object class.  Example:
 
@@ -105,16 +105,12 @@ class CapControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(3)
 
-    @Capacitor.setter
-    def Capacitor(self, value: Union[AnyStr, CapacitorObj]):
-        if isinstance(value, DSSObj):
-            self._set_obj(3, value)
-            return
-
+    @Capacitor_str.setter
+    def Capacitor_str(self, value: AnyStr):
         self._set_string_o(3, value)
 
     @property
-    def Capacitor_obj(self) -> CapacitorObj:
+    def Capacitor(self) -> CapacitorObj:
         """
         Name of Capacitor element which the CapControl controls. No Default; Must be specified.Do not specify the full object name; "Capacitor" is assumed for the object class.  Example:
 
@@ -124,9 +120,13 @@ class CapControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(3, CapacitorObj)
 
-    @Capacitor_obj.setter
-    def Capacitor_obj(self, value: CapacitorObj):
-        self._set_obj(3, value)
+    @Capacitor.setter
+    def Capacitor(self, value: Union[AnyStr, CapacitorObj]):
+        if isinstance(value, DSSObj):
+            self._set_obj(3, value)
+            return
+
+        self._set_string_o(3, value)
 
     @property
     def Type(self) -> enums.CapControlType:
@@ -436,13 +436,26 @@ class CapControl(DSSObj, CktElementMixin):
         self._lib.Obj_SetInt32(self._ptr, 22, value)
 
     @property
-    def ControlSignal(self) -> str:
+    def ControlSignal_str(self) -> str:
         """
         Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and connected to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
         DSS property name: `ControlSignal`, DSS property index: 23.
         """
         return self._get_prop_string(23)
+
+    @ControlSignal_str.setter
+    def ControlSignal_str(self, value: AnyStr):
+        self._set_string_o(23, value)
+
+    @property
+    def ControlSignal(self) -> LoadShape:
+        """
+        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and connected to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
+
+        DSS property name: `ControlSignal`, DSS property index: 23.
+        """
+        return self._get_obj(23, LoadShape)
 
     @ControlSignal.setter
     def ControlSignal(self, value: Union[AnyStr, LoadShape]):
@@ -451,19 +464,6 @@ class CapControl(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(23, value)
-
-    @property
-    def ControlSignal_obj(self) -> LoadShape:
-        """
-        Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and connected to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
-
-        DSS property name: `ControlSignal`, DSS property index: 23.
-        """
-        return self._get_obj(23, LoadShape)
-
-    @ControlSignal_obj.setter
-    def ControlSignal_obj(self, value: LoadShape):
-        self._set_obj(23, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -537,7 +537,7 @@ class CapControlBatch(DSSBatch):
 
 
     @property
-    def Element(self) -> List[str]:
+    def Element_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line or transformer, to which the capacitor control's PT and/or CT are connected.There is no default; must be specified.
 
@@ -545,12 +545,12 @@ class CapControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    @Element_str.setter
+    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
-    def Element_obj(self) -> List[DSSObj]:
+    def Element(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line or transformer, to which the capacitor control's PT and/or CT are connected.There is no default; must be specified.
 
@@ -558,9 +558,9 @@ class CapControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Element_obj.setter
-    def Element_obj(self, value: DSSObj):
-        self._set_batch_string(1, value)
+    @Element.setter
+    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
     def Terminal(self) -> BatchInt32ArrayProxy:
@@ -576,7 +576,7 @@ class CapControlBatch(DSSBatch):
         self._set_batch_int32_array(2, value)
 
     @property
-    def Capacitor(self) -> List[str]:
+    def Capacitor_str(self) -> List[str]:
         """
         Name of Capacitor element which the CapControl controls. No Default; Must be specified.Do not specify the full object name; "Capacitor" is assumed for the object class.  Example:
 
@@ -586,12 +586,12 @@ class CapControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @Capacitor.setter
-    def Capacitor(self, value: Union[AnyStr, CapacitorObj, List[AnyStr], List[CapacitorObj]]):
-        self._set_batch_obj_prop(3, value)
+    @Capacitor_str.setter
+    def Capacitor_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(3, value)
 
     @property
-    def Capacitor_obj(self) -> List[CapacitorObj]:
+    def Capacitor(self) -> List[CapacitorObj]:
         """
         Name of Capacitor element which the CapControl controls. No Default; Must be specified.Do not specify the full object name; "Capacitor" is assumed for the object class.  Example:
 
@@ -601,9 +601,9 @@ class CapControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(3)
 
-    @Capacitor_obj.setter
-    def Capacitor_obj(self, value: CapacitorObj):
-        self._set_batch_string(3, value)
+    @Capacitor.setter
+    def Capacitor(self, value: Union[AnyStr, CapacitorObj, List[AnyStr], List[CapacitorObj]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
     def Type(self) -> BatchInt32ArrayProxy:
@@ -910,7 +910,7 @@ class CapControlBatch(DSSBatch):
         self._set_batch_int32_array(22, value)
 
     @property
-    def ControlSignal(self) -> List[str]:
+    def ControlSignal_str(self) -> List[str]:
         """
         Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and connected to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
@@ -918,12 +918,12 @@ class CapControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(23)
 
-    @ControlSignal.setter
-    def ControlSignal(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(23, value)
+    @ControlSignal_str.setter
+    def ControlSignal_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(23, value)
 
     @property
-    def ControlSignal_obj(self) -> List[LoadShape]:
+    def ControlSignal(self) -> List[LoadShape]:
         """
         Load shape used for controlling the connection/disconnection of the capacitor to the grid, when the load shape is DIFFERENT than ZERO (0) the capacitor will be ON and connected to the grid. Otherwise, if the load shape value is EQUAL to ZERO (0) the capacitor bank will be OFF and disconnected from the grid.
 
@@ -931,9 +931,9 @@ class CapControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(23)
 
-    @ControlSignal_obj.setter
-    def ControlSignal_obj(self, value: LoadShape):
-        self._set_batch_string(23, value)
+    @ControlSignal.setter
+    def ControlSignal(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(23, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

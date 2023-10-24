@@ -111,13 +111,26 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
     @property
-    def BP1(self) -> str:
+    def BP1_str(self) -> str:
         """
         XYCurve defining the input piece-wise linear block.
 
         DSS property name: `BP1`, DSS property index: 6.
         """
         return self._get_prop_string(6)
+
+    @BP1_str.setter
+    def BP1_str(self, value: AnyStr):
+        self._set_string_o(6, value)
+
+    @property
+    def BP1(self) -> XYcurve:
+        """
+        XYCurve defining the input piece-wise linear block.
+
+        DSS property name: `BP1`, DSS property index: 6.
+        """
+        return self._get_obj(6, XYcurve)
 
     @BP1.setter
     def BP1(self, value: Union[AnyStr, XYcurve]):
@@ -128,26 +141,26 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         self._set_string_o(6, value)
 
     @property
-    def BP1_obj(self) -> XYcurve:
-        """
-        XYCurve defining the input piece-wise linear block.
-
-        DSS property name: `BP1`, DSS property index: 6.
-        """
-        return self._get_obj(6, XYcurve)
-
-    @BP1_obj.setter
-    def BP1_obj(self, value: XYcurve):
-        self._set_obj(6, value)
-
-    @property
-    def BP2(self) -> str:
+    def BP2_str(self) -> str:
         """
         XYCurve defining the output piece-wise linear block.
 
         DSS property name: `BP2`, DSS property index: 7.
         """
         return self._get_prop_string(7)
+
+    @BP2_str.setter
+    def BP2_str(self, value: AnyStr):
+        self._set_string_o(7, value)
+
+    @property
+    def BP2(self) -> XYcurve:
+        """
+        XYCurve defining the output piece-wise linear block.
+
+        DSS property name: `BP2`, DSS property index: 7.
+        """
+        return self._get_obj(7, XYcurve)
 
     @BP2.setter
     def BP2(self, value: Union[AnyStr, XYcurve]):
@@ -158,26 +171,26 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         self._set_string_o(7, value)
 
     @property
-    def BP2_obj(self) -> XYcurve:
-        """
-        XYCurve defining the output piece-wise linear block.
-
-        DSS property name: `BP2`, DSS property index: 7.
-        """
-        return self._get_obj(7, XYcurve)
-
-    @BP2_obj.setter
-    def BP2_obj(self, value: XYcurve):
-        self._set_obj(7, value)
-
-    @property
-    def Filter(self) -> str:
+    def Filter_str(self) -> str:
         """
         XYCurve defining the digital filter coefficients (x numerator, y denominator).
 
         DSS property name: `Filter`, DSS property index: 8.
         """
         return self._get_prop_string(8)
+
+    @Filter_str.setter
+    def Filter_str(self, value: AnyStr):
+        self._set_string_o(8, value)
+
+    @property
+    def Filter(self) -> XYcurve:
+        """
+        XYCurve defining the digital filter coefficients (x numerator, y denominator).
+
+        DSS property name: `Filter`, DSS property index: 8.
+        """
+        return self._get_obj(8, XYcurve)
 
     @Filter.setter
     def Filter(self, value: Union[AnyStr, XYcurve]):
@@ -186,19 +199,6 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(8, value)
-
-    @property
-    def Filter_obj(self) -> XYcurve:
-        """
-        XYCurve defining the digital filter coefficients (x numerator, y denominator).
-
-        DSS property name: `Filter`, DSS property index: 8.
-        """
-        return self._get_obj(8, XYcurve)
-
-    @Filter_obj.setter
-    def Filter_obj(self, value: XYcurve):
-        self._set_obj(8, value)
 
     @property
     def FSample(self) -> float:
@@ -266,13 +266,26 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
     @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Harmonic spectrum assumed for this source.  Default is "default".
 
         DSS property name: `Spectrum`, DSS property index: 14.
         """
         return self._get_prop_string(14)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(14, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Harmonic spectrum assumed for this source.  Default is "default".
+
+        DSS property name: `Spectrum`, DSS property index: 14.
+        """
+        return self._get_obj(14, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -281,19 +294,6 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(14, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Harmonic spectrum assumed for this source.  Default is "default".
-
-        DSS property name: `Spectrum`, DSS property index: 14.
-        """
-        return self._get_obj(14, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(14, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -425,7 +425,7 @@ class VCCSBatch(DSSBatch):
         self._set_batch_float64_array(5, value)
 
     @property
-    def BP1(self) -> List[str]:
+    def BP1_str(self) -> List[str]:
         """
         XYCurve defining the input piece-wise linear block.
 
@@ -433,12 +433,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @BP1.setter
-    def BP1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(6, value)
+    @BP1_str.setter
+    def BP1_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(6, value)
 
     @property
-    def BP1_obj(self) -> List[XYcurve]:
+    def BP1(self) -> List[XYcurve]:
         """
         XYCurve defining the input piece-wise linear block.
 
@@ -446,12 +446,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(6)
 
-    @BP1_obj.setter
-    def BP1_obj(self, value: XYcurve):
-        self._set_batch_string(6, value)
+    @BP1.setter
+    def BP1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(6, value)
 
     @property
-    def BP2(self) -> List[str]:
+    def BP2_str(self) -> List[str]:
         """
         XYCurve defining the output piece-wise linear block.
 
@@ -459,12 +459,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @BP2.setter
-    def BP2(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(7, value)
+    @BP2_str.setter
+    def BP2_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(7, value)
 
     @property
-    def BP2_obj(self) -> List[XYcurve]:
+    def BP2(self) -> List[XYcurve]:
         """
         XYCurve defining the output piece-wise linear block.
 
@@ -472,12 +472,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(7)
 
-    @BP2_obj.setter
-    def BP2_obj(self, value: XYcurve):
-        self._set_batch_string(7, value)
+    @BP2.setter
+    def BP2(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(7, value)
 
     @property
-    def Filter(self) -> List[str]:
+    def Filter_str(self) -> List[str]:
         """
         XYCurve defining the digital filter coefficients (x numerator, y denominator).
 
@@ -485,12 +485,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    @Filter.setter
-    def Filter(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(8, value)
+    @Filter_str.setter
+    def Filter_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(8, value)
 
     @property
-    def Filter_obj(self) -> List[XYcurve]:
+    def Filter(self) -> List[XYcurve]:
         """
         XYCurve defining the digital filter coefficients (x numerator, y denominator).
 
@@ -498,9 +498,9 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(8)
 
-    @Filter_obj.setter
-    def Filter_obj(self, value: XYcurve):
-        self._set_batch_string(8, value)
+    @Filter.setter
+    def Filter(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(8, value)
 
     @property
     def FSample(self) -> BatchFloat64ArrayProxy:
@@ -569,7 +569,7 @@ class VCCSBatch(DSSBatch):
         self._set_batch_float64_array(13, value)
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Harmonic spectrum assumed for this source.  Default is "default".
 
@@ -577,12 +577,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_str_prop(14)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(14, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(14, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Harmonic spectrum assumed for this source.  Default is "default".
 
@@ -590,9 +590,9 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(14)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(14, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(14, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

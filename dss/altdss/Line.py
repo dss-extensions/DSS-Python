@@ -97,7 +97,7 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
         self._set_string_o(2, value)
 
     @property
-    def LineCode(self) -> str:
+    def LineCode_str(self) -> str:
         """
         Name of linecode object describing line impedances.
         If you use a line code, you do not need to specify the impedances here. The line code must have been PREVIOUSLY defined. The values specified last will prevail over those specified earlier (left-to-right sequence of properties).  You can subsequently change the number of phases if symmetrical component quantities are specified.If no line code or impedance data are specified, the line object defaults to 336 MCM ACSR on 4 ft spacing.
@@ -106,16 +106,12 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(3)
 
-    @LineCode.setter
-    def LineCode(self, value: Union[AnyStr, LineCodeObj]):
-        if isinstance(value, DSSObj):
-            self._set_obj(3, value)
-            return
-
+    @LineCode_str.setter
+    def LineCode_str(self, value: AnyStr):
         self._set_string_o(3, value)
 
     @property
-    def LineCode_obj(self) -> LineCodeObj:
+    def LineCode(self) -> LineCodeObj:
         """
         Name of linecode object describing line impedances.
         If you use a line code, you do not need to specify the impedances here. The line code must have been PREVIOUSLY defined. The values specified last will prevail over those specified earlier (left-to-right sequence of properties).  You can subsequently change the number of phases if symmetrical component quantities are specified.If no line code or impedance data are specified, the line object defaults to 336 MCM ACSR on 4 ft spacing.
@@ -124,9 +120,13 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_obj(3, LineCodeObj)
 
-    @LineCode_obj.setter
-    def LineCode_obj(self, value: LineCodeObj):
-        self._set_obj(3, value)
+    @LineCode.setter
+    def LineCode(self, value: Union[AnyStr, LineCodeObj]):
+        if isinstance(value, DSSObj):
+            self._set_obj(3, value)
+            return
+
+        self._set_string_o(3, value)
 
     @property
     def Length(self) -> float:
@@ -325,13 +325,26 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
     @property
-    def Geometry(self) -> str:
+    def Geometry_str(self) -> str:
         """
         Geometry code for LineGeometry Object. Supersedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
 
         DSS property name: `Geometry`, DSS property index: 19.
         """
         return self._get_prop_string(19)
+
+    @Geometry_str.setter
+    def Geometry_str(self, value: AnyStr):
+        self._set_string_o(19, value)
+
+    @property
+    def Geometry(self) -> LineGeometry:
+        """
+        Geometry code for LineGeometry Object. Supersedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
+
+        DSS property name: `Geometry`, DSS property index: 19.
+        """
+        return self._get_obj(19, LineGeometry)
 
     @Geometry.setter
     def Geometry(self, value: Union[AnyStr, LineGeometry]):
@@ -340,19 +353,6 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
             return
 
         self._set_string_o(19, value)
-
-    @property
-    def Geometry_obj(self) -> LineGeometry:
-        """
-        Geometry code for LineGeometry Object. Supersedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
-
-        DSS property name: `Geometry`, DSS property index: 19.
-        """
-        return self._get_obj(19, LineGeometry)
-
-    @Geometry_obj.setter
-    def Geometry_obj(self, value: LineGeometry):
-        self._set_obj(19, value)
 
     @property
     def Units(self) -> enums.LengthUnit:
@@ -384,7 +384,7 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
         self.Units = value
 
     @property
-    def Spacing(self) -> str:
+    def Spacing_str(self) -> str:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Must be used in conjunction with the Wires property.
@@ -393,6 +393,21 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
         DSS property name: `Spacing`, DSS property index: 21.
         """
         return self._get_prop_string(21)
+
+    @Spacing_str.setter
+    def Spacing_str(self, value: AnyStr):
+        self._set_string_o(21, value)
+
+    @property
+    def Spacing(self) -> LineSpacing:
+        """
+        Reference to a LineSpacing for use in a line constants calculation.
+        Must be used in conjunction with the Wires property.
+        Specify this before the wires property.
+
+        DSS property name: `Spacing`, DSS property index: 21.
+        """
+        return self._get_obj(21, LineSpacing)
 
     @Spacing.setter
     def Spacing(self, value: Union[AnyStr, LineSpacing]):
@@ -403,22 +418,7 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
         self._set_string_o(21, value)
 
     @property
-    def Spacing_obj(self) -> LineSpacing:
-        """
-        Reference to a LineSpacing for use in a line constants calculation.
-        Must be used in conjunction with the Wires property.
-        Specify this before the wires property.
-
-        DSS property name: `Spacing`, DSS property index: 21.
-        """
-        return self._get_obj(21, LineSpacing)
-
-    @Spacing_obj.setter
-    def Spacing_obj(self, value: LineSpacing):
-        self._set_obj(21, value)
-
-    @property
-    def conductors(self) -> List[str]:
+    def conductors_str(self) -> List[str]:
         """
         Array of WireData names for use in an overhead line constants calculation.
         Must be used in conjunction with the Spacing property.
@@ -429,16 +429,12 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 22)
 
-    @conductors.setter
-    def conductors(self, value: List[Union[AnyStr, WireData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array_o(22, value)
-            return
-
-        self._set_obj_array(22, value)
-
+    @conductors_str.setter
+    def conductors_str(self, value: List[AnyStr]):
+        self._set_string_array_o(22, value)
+    
     @property
-    def conductors_obj(self) -> List[WireData]:
+    def conductors(self) -> List[WireData]:
         """
         Array of WireData names for use in an overhead line constants calculation.
         Must be used in conjunction with the Spacing property.
@@ -449,8 +445,12 @@ class Line(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_obj_array(22, WireData)
 
-    @conductors_obj.setter
-    def conductors_obj(self, value: List[WireData]):
+    @conductors.setter
+    def conductors(self, value: List[Union[AnyStr, WireData]]):
+        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
+            self._set_string_array_o(22, value)
+            return
+
         self._set_obj_array(22, value)
 
     @property
@@ -746,7 +746,7 @@ class LineBatch(DSSBatch):
         self._set_batch_string(2, value)
 
     @property
-    def LineCode(self) -> List[str]:
+    def LineCode_str(self) -> List[str]:
         """
         Name of linecode object describing line impedances.
         If you use a line code, you do not need to specify the impedances here. The line code must have been PREVIOUSLY defined. The values specified last will prevail over those specified earlier (left-to-right sequence of properties).  You can subsequently change the number of phases if symmetrical component quantities are specified.If no line code or impedance data are specified, the line object defaults to 336 MCM ACSR on 4 ft spacing.
@@ -755,12 +755,12 @@ class LineBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @LineCode.setter
-    def LineCode(self, value: Union[AnyStr, LineCodeObj, List[AnyStr], List[LineCodeObj]]):
-        self._set_batch_obj_prop(3, value)
+    @LineCode_str.setter
+    def LineCode_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(3, value)
 
     @property
-    def LineCode_obj(self) -> List[LineCodeObj]:
+    def LineCode(self) -> List[LineCodeObj]:
         """
         Name of linecode object describing line impedances.
         If you use a line code, you do not need to specify the impedances here. The line code must have been PREVIOUSLY defined. The values specified last will prevail over those specified earlier (left-to-right sequence of properties).  You can subsequently change the number of phases if symmetrical component quantities are specified.If no line code or impedance data are specified, the line object defaults to 336 MCM ACSR on 4 ft spacing.
@@ -769,9 +769,9 @@ class LineBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(3)
 
-    @LineCode_obj.setter
-    def LineCode_obj(self, value: LineCodeObj):
-        self._set_batch_string(3, value)
+    @LineCode.setter
+    def LineCode(self, value: Union[AnyStr, LineCodeObj, List[AnyStr], List[LineCodeObj]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
     def Length(self) -> BatchFloat64ArrayProxy:
@@ -980,7 +980,7 @@ class LineBatch(DSSBatch):
         self._set_batch_float64_array(18, value)
 
     @property
-    def Geometry(self) -> List[str]:
+    def Geometry_str(self) -> List[str]:
         """
         Geometry code for LineGeometry Object. Supersedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
 
@@ -988,12 +988,12 @@ class LineBatch(DSSBatch):
         """
         return self._get_batch_str_prop(19)
 
-    @Geometry.setter
-    def Geometry(self, value: Union[AnyStr, LineGeometry, List[AnyStr], List[LineGeometry]]):
-        self._set_batch_obj_prop(19, value)
+    @Geometry_str.setter
+    def Geometry_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(19, value)
 
     @property
-    def Geometry_obj(self) -> List[LineGeometry]:
+    def Geometry(self) -> List[LineGeometry]:
         """
         Geometry code for LineGeometry Object. Supersedes any previous definition of line impedance. Line constants are computed for each frequency change or rho change. CAUTION: may alter number of phases. You cannot subsequently change the number of phases unless you change how the line impedance is defined.
 
@@ -1001,9 +1001,9 @@ class LineBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(19)
 
-    @Geometry_obj.setter
-    def Geometry_obj(self, value: LineGeometry):
-        self._set_batch_string(19, value)
+    @Geometry.setter
+    def Geometry(self, value: Union[AnyStr, LineGeometry, List[AnyStr], List[LineGeometry]]):
+        self._set_batch_obj_prop(19, value)
 
     @property
     def Units(self) -> BatchInt32ArrayProxy:
@@ -1036,7 +1036,7 @@ class LineBatch(DSSBatch):
         self.Units = value
 
     @property
-    def Spacing(self) -> List[str]:
+    def Spacing_str(self) -> List[str]:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Must be used in conjunction with the Wires property.
@@ -1046,12 +1046,12 @@ class LineBatch(DSSBatch):
         """
         return self._get_batch_str_prop(21)
 
-    @Spacing.setter
-    def Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
-        self._set_batch_obj_prop(21, value)
+    @Spacing_str.setter
+    def Spacing_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(21, value)
 
     @property
-    def Spacing_obj(self) -> List[LineSpacing]:
+    def Spacing(self) -> List[LineSpacing]:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Must be used in conjunction with the Wires property.
@@ -1061,12 +1061,12 @@ class LineBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(21)
 
-    @Spacing_obj.setter
-    def Spacing_obj(self, value: LineSpacing):
-        self._set_batch_string(21, value)
+    @Spacing.setter
+    def Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
+        self._set_batch_obj_prop(21, value)
 
     @property
-    def conductors(self) -> List[List[str]]:
+    def conductors_str(self) -> List[List[str]]:
         """
         Array of WireData names for use in an overhead line constants calculation.
         Must be used in conjunction with the Spacing property.
@@ -1077,16 +1077,12 @@ class LineBatch(DSSBatch):
         """
         return self._get_string_ll(22)
 
-    @conductors.setter
-    def conductors(self, value: Union[List[AnyStr], List[WireData]]):
-        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
-            self._set_batch_stringlist_prop(22, value)
-            return
-
-        self._set_batch_objlist_prop(22, value)
+    @conductors_str.setter
+    def conductors_str(self, value: List[AnyStr]):
+        self._set_batch_stringlist_prop(22, value)
 
     @property
-    def conductors_obj(self) -> List[List[WireData]]:
+    def conductors(self) -> List[List[WireData]]:
         """
         Array of WireData names for use in an overhead line constants calculation.
         Must be used in conjunction with the Spacing property.
@@ -1097,8 +1093,12 @@ class LineBatch(DSSBatch):
         """
         return self._get_obj_ll(22, WireData)
 
-    @conductors_obj.setter
-    def conductors_obj(self, value: List[WireData]):
+    @conductors.setter
+    def conductors(self, value: Union[List[AnyStr], List[WireData]]):
+        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
+            self._set_batch_stringlist_prop(22, value)
+            return
+
         self._set_batch_objlist_prop(22, value)
 
     @property

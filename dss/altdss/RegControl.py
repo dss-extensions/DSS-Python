@@ -61,7 +61,7 @@ class RegControl(DSSObj, CktElementMixin):
     }
 
     @property
-    def Transformer(self) -> str:
+    def Transformer_str(self) -> str:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -71,16 +71,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Transformer.setter
-    def Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans]):
-        if isinstance(value, DSSObj):
-            self._set_obj(1, value)
-            return
-
+    @Transformer_str.setter
+    def Transformer_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
     @property
-    def Transformer_obj(self) -> Union[TransformerObj, AutoTrans]:
+    def Transformer(self) -> Union[TransformerObj, AutoTrans]:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -90,9 +86,13 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(1, None)
 
-    @Transformer_obj.setter
-    def Transformer_obj(self, value: Union[TransformerObj, AutoTrans]):
-        self._set_obj(1, value)
+    @Transformer.setter
+    def Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans]):
+        if isinstance(value, DSSObj):
+            self._set_obj(1, value)
+            return
+
+        self._set_string_o(1, value)
 
     @property
     def Winding(self) -> int:
@@ -597,7 +597,7 @@ class RegControlBatch(DSSBatch):
 
 
     @property
-    def Transformer(self) -> List[str]:
+    def Transformer_str(self) -> List[str]:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -607,12 +607,12 @@ class RegControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Transformer.setter
-    def Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans, List[AnyStr], List[Union[TransformerObj, AutoTrans]]]):
-        self._set_batch_obj_prop(1, value)
+    @Transformer_str.setter
+    def Transformer_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
-    def Transformer_obj(self) -> List[Union[TransformerObj, AutoTrans]]:
+    def Transformer(self) -> List[Union[TransformerObj, AutoTrans]]:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -622,9 +622,9 @@ class RegControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Transformer_obj.setter
-    def Transformer_obj(self, value: Union[TransformerObj, AutoTrans]):
-        self._set_batch_string(1, value)
+    @Transformer.setter
+    def Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans, List[AnyStr], List[Union[TransformerObj, AutoTrans]]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
     def Winding(self) -> BatchInt32ArrayProxy:

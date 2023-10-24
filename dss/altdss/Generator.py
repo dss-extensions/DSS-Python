@@ -209,13 +209,26 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
     @property
-    def Yearly(self) -> str:
+    def Yearly_str(self) -> str:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
         DSS property name: `Yearly`, DSS property index: 10.
         """
         return self._get_prop_string(10)
+
+    @Yearly_str.setter
+    def Yearly_str(self, value: AnyStr):
+        self._set_string_o(10, value)
+
+    @property
+    def Yearly(self) -> LoadShape:
+        """
+        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
+
+        DSS property name: `Yearly`, DSS property index: 10.
+        """
+        return self._get_obj(10, LoadShape)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape]):
@@ -226,26 +239,26 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         self._set_string_o(10, value)
 
     @property
-    def Yearly_obj(self) -> LoadShape:
-        """
-        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
-
-        DSS property name: `Yearly`, DSS property index: 10.
-        """
-        return self._get_obj(10, LoadShape)
-
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_obj(10, value)
-
-    @property
-    def Daily(self) -> str:
+    def Daily_str(self) -> str:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
         DSS property name: `Daily`, DSS property index: 11.
         """
         return self._get_prop_string(11)
+
+    @Daily_str.setter
+    def Daily_str(self, value: AnyStr):
+        self._set_string_o(11, value)
+
+    @property
+    def Daily(self) -> LoadShape:
+        """
+        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
+
+        DSS property name: `Daily`, DSS property index: 11.
+        """
+        return self._get_obj(11, LoadShape)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape]):
@@ -256,26 +269,26 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         self._set_string_o(11, value)
 
     @property
-    def Daily_obj(self) -> LoadShape:
-        """
-        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
-
-        DSS property name: `Daily`, DSS property index: 11.
-        """
-        return self._get_obj(11, LoadShape)
-
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_obj(11, value)
-
-    @property
-    def Duty(self) -> str:
+    def Duty_str(self) -> str:
         """
         Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
         DSS property name: `Duty`, DSS property index: 12.
         """
         return self._get_prop_string(12)
+
+    @Duty_str.setter
+    def Duty_str(self, value: AnyStr):
+        self._set_string_o(12, value)
+
+    @property
+    def Duty(self) -> LoadShape:
+        """
+        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
+
+        DSS property name: `Duty`, DSS property index: 12.
+        """
+        return self._get_obj(12, LoadShape)
 
     @Duty.setter
     def Duty(self, value: Union[AnyStr, LoadShape]):
@@ -284,19 +297,6 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
             return
 
         self._set_string_o(12, value)
-
-    @property
-    def Duty_obj(self) -> LoadShape:
-        """
-        Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
-
-        DSS property name: `Duty`, DSS property index: 12.
-        """
-        return self._get_obj(12, LoadShape)
-
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_obj(12, value)
 
     @property
     def DispMode(self) -> enums.GeneratorDispatchMode:
@@ -721,13 +721,26 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         self._lib.Obj_SetInt32(self._ptr, 42, value)
 
     @property
-    def DynamicEq(self) -> str:
+    def DynamicEq_str(self) -> str:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
 
         DSS property name: `DynamicEq`, DSS property index: 43.
         """
         return self._get_prop_string(43)
+
+    @DynamicEq_str.setter
+    def DynamicEq_str(self, value: AnyStr):
+        self._set_string_o(43, value)
+
+    @property
+    def DynamicEq(self) -> DynamicExp:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 43.
+        """
+        return self._get_obj(43, DynamicExp)
 
     @DynamicEq.setter
     def DynamicEq(self, value: Union[AnyStr, DynamicExp]):
@@ -736,19 +749,6 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
             return
 
         self._set_string_o(43, value)
-
-    @property
-    def DynamicEq_obj(self) -> DynamicExp:
-        """
-        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
-
-        DSS property name: `DynamicEq`, DSS property index: 43.
-        """
-        return self._get_obj(43, DynamicExp)
-
-    @DynamicEq_obj.setter
-    def DynamicEq_obj(self, value: DynamicExp):
-        self._set_obj(43, value)
 
     @property
     def DynOut(self) -> str:
@@ -769,13 +769,26 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         self._set_string_o(44, value)
 
     @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
         DSS property name: `Spectrum`, DSS property index: 45.
         """
         return self._get_prop_string(45)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(45, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
+
+        DSS property name: `Spectrum`, DSS property index: 45.
+        """
+        return self._get_obj(45, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -784,19 +797,6 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
             return
 
         self._set_string_o(45, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
-
-        DSS property name: `Spectrum`, DSS property index: 45.
-        """
-        return self._get_obj(45, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(45, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -1020,7 +1020,7 @@ class GeneratorBatch(DSSBatch):
         self._set_batch_float64_array(9, value)
 
     @property
-    def Yearly(self) -> List[str]:
+    def Yearly_str(self) -> List[str]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
@@ -1028,12 +1028,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(10)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(10, value)
+    @Yearly_str.setter
+    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(10, value)
 
     @property
-    def Yearly_obj(self) -> List[LoadShape]:
+    def Yearly(self) -> List[LoadShape]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
@@ -1041,12 +1041,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(10)
 
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_batch_string(10, value)
+    @Yearly.setter
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(10, value)
 
     @property
-    def Daily(self) -> List[str]:
+    def Daily_str(self) -> List[str]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
@@ -1054,12 +1054,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(11, value)
+    @Daily_str.setter
+    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(11, value)
 
     @property
-    def Daily_obj(self) -> List[LoadShape]:
+    def Daily(self) -> List[LoadShape]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
@@ -1067,12 +1067,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_batch_string(11, value)
+    @Daily.setter
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
-    def Duty(self) -> List[str]:
+    def Duty_str(self) -> List[str]:
         """
         Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -1080,12 +1080,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(12)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(12, value)
+    @Duty_str.setter
+    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(12, value)
 
     @property
-    def Duty_obj(self) -> List[LoadShape]:
+    def Duty(self) -> List[LoadShape]:
         """
         Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -1093,9 +1093,9 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(12)
 
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_batch_string(12, value)
+    @Duty.setter
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(12, value)
 
     @property
     def DispMode(self) -> BatchInt32ArrayProxy:
@@ -1527,7 +1527,7 @@ class GeneratorBatch(DSSBatch):
         self._set_batch_int32_array(42, value)
 
     @property
-    def DynamicEq(self) -> List[str]:
+    def DynamicEq_str(self) -> List[str]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -1535,12 +1535,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(43)
 
-    @DynamicEq.setter
-    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
-        self._set_batch_obj_prop(43, value)
+    @DynamicEq_str.setter
+    def DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(43, value)
 
     @property
-    def DynamicEq_obj(self) -> List[DynamicExp]:
+    def DynamicEq(self) -> List[DynamicExp]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -1548,9 +1548,9 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(43)
 
-    @DynamicEq_obj.setter
-    def DynamicEq_obj(self, value: DynamicExp):
-        self._set_batch_string(43, value)
+    @DynamicEq.setter
+    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
+        self._set_batch_obj_prop(43, value)
 
     @property
     def DynOut(self) -> List[str]:
@@ -1571,7 +1571,7 @@ class GeneratorBatch(DSSBatch):
         self._set_batch_string(44, value)
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1579,12 +1579,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(45)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(45, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(45, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1592,9 +1592,9 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(45)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(45, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(45, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

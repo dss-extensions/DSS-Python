@@ -55,13 +55,26 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
     }
 
     @property
-    def Element(self) -> str:
+    def Element_str(self) -> str:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
         DSS property name: `Element`, DSS property index: 1.
         """
         return self._get_prop_string(1)
+
+    @Element_str.setter
+    def Element_str(self, value: AnyStr):
+        self._set_string_o(1, value)
+
+    @property
+    def Element(self) -> DSSObj:
+        """
+        Name (Full Object name) of element to which the monitor is connected.
+
+        DSS property name: `Element`, DSS property index: 1.
+        """
+        return self._get_obj(1, None)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj]):
@@ -70,19 +83,6 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
             return
 
         self._set_string_o(1, value)
-
-    @property
-    def Element_obj(self) -> DSSObj:
-        """
-        Name (Full Object name) of element to which the monitor is connected.
-
-        DSS property name: `Element`, DSS property index: 1.
-        """
-        return self._get_obj(1, None)
-
-    @Element_obj.setter
-    def Element_obj(self, value: DSSObj):
-        self._set_obj(1, value)
 
     @property
     def Terminal(self) -> int:
@@ -504,7 +504,7 @@ class EnergyMeterBatch(DSSBatch):
 
 
     @property
-    def Element(self) -> List[str]:
+    def Element_str(self) -> List[str]:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -512,12 +512,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    @Element_str.setter
+    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
-    def Element_obj(self) -> List[DSSObj]:
+    def Element(self) -> List[DSSObj]:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -525,9 +525,9 @@ class EnergyMeterBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Element_obj.setter
-    def Element_obj(self, value: DSSObj):
-        self._set_batch_string(1, value)
+    @Element.setter
+    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
     def Terminal(self) -> BatchInt32ArrayProxy:

@@ -38,13 +38,26 @@ class ESPVLControl(DSSObj, CktElementMixin):
     }
 
     @property
-    def Element(self) -> str:
+    def Element_str(self) -> str:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
 
         DSS property name: `Element`, DSS property index: 1.
         """
         return self._get_prop_string(1)
+
+    @Element_str.setter
+    def Element_str(self, value: AnyStr):
+        self._set_string_o(1, value)
+
+    @property
+    def Element(self) -> DSSObj:
+        """
+        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
+
+        DSS property name: `Element`, DSS property index: 1.
+        """
+        return self._get_obj(1, None)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, DSSObj]):
@@ -53,19 +66,6 @@ class ESPVLControl(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(1, value)
-
-    @property
-    def Element_obj(self) -> DSSObj:
-        """
-        Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
-
-        DSS property name: `Element`, DSS property index: 1.
-        """
-        return self._get_obj(1, None)
-
-    @Element_obj.setter
-    def Element_obj(self, value: DSSObj):
-        self._set_obj(1, value)
 
     @property
     def Terminal(self) -> int:
@@ -279,7 +279,7 @@ class ESPVLControlBatch(DSSBatch):
 
 
     @property
-    def Element(self) -> List[str]:
+    def Element_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
 
@@ -287,12 +287,12 @@ class ESPVLControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    @Element_str.setter
+    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
-    def Element_obj(self) -> List[DSSObj]:
+    def Element(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
 
@@ -300,9 +300,9 @@ class ESPVLControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Element_obj.setter
-    def Element_obj(self, value: DSSObj):
-        self._set_batch_string(1, value)
+    @Element.setter
+    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
     def Terminal(self) -> BatchInt32ArrayProxy:

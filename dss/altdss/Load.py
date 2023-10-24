@@ -170,13 +170,26 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
     @property
-    def Yearly(self) -> str:
+    def Yearly_str(self) -> str:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
         DSS property name: `Yearly`, DSS property index: 7.
         """
         return self._get_prop_string(7)
+
+    @Yearly_str.setter
+    def Yearly_str(self, value: AnyStr):
+        self._set_string_o(7, value)
+
+    @property
+    def Yearly(self) -> LoadShape:
+        """
+        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
+
+        DSS property name: `Yearly`, DSS property index: 7.
+        """
+        return self._get_obj(7, LoadShape)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape]):
@@ -187,26 +200,26 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         self._set_string_o(7, value)
 
     @property
-    def Yearly_obj(self) -> LoadShape:
-        """
-        LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
-
-        DSS property name: `Yearly`, DSS property index: 7.
-        """
-        return self._get_obj(7, LoadShape)
-
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_obj(7, value)
-
-    @property
-    def Daily(self) -> str:
+    def Daily_str(self) -> str:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
         DSS property name: `Daily`, DSS property index: 8.
         """
         return self._get_prop_string(8)
+
+    @Daily_str.setter
+    def Daily_str(self, value: AnyStr):
+        self._set_string_o(8, value)
+
+    @property
+    def Daily(self) -> LoadShape:
+        """
+        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
+
+        DSS property name: `Daily`, DSS property index: 8.
+        """
+        return self._get_obj(8, LoadShape)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape]):
@@ -217,26 +230,26 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         self._set_string_o(8, value)
 
     @property
-    def Daily_obj(self) -> LoadShape:
-        """
-        LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
-
-        DSS property name: `Daily`, DSS property index: 8.
-        """
-        return self._get_obj(8, LoadShape)
-
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_obj(8, value)
-
-    @property
-    def Duty(self) -> str:
+    def Duty_str(self) -> str:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
         DSS property name: `Duty`, DSS property index: 9.
         """
         return self._get_prop_string(9)
+
+    @Duty_str.setter
+    def Duty_str(self, value: AnyStr):
+        self._set_string_o(9, value)
+
+    @property
+    def Duty(self) -> LoadShape:
+        """
+        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
+
+        DSS property name: `Duty`, DSS property index: 9.
+        """
+        return self._get_obj(9, LoadShape)
 
     @Duty.setter
     def Duty(self, value: Union[AnyStr, LoadShape]):
@@ -247,26 +260,26 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         self._set_string_o(9, value)
 
     @property
-    def Duty_obj(self) -> LoadShape:
-        """
-        LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
-
-        DSS property name: `Duty`, DSS property index: 9.
-        """
-        return self._get_obj(9, LoadShape)
-
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_obj(9, value)
-
-    @property
-    def Growth(self) -> str:
+    def Growth_str(self) -> str:
         """
         Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
 
         DSS property name: `Growth`, DSS property index: 10.
         """
         return self._get_prop_string(10)
+
+    @Growth_str.setter
+    def Growth_str(self, value: AnyStr):
+        self._set_string_o(10, value)
+
+    @property
+    def Growth(self) -> GrowthShape:
+        """
+        Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
+
+        DSS property name: `Growth`, DSS property index: 10.
+        """
+        return self._get_obj(10, GrowthShape)
 
     @Growth.setter
     def Growth(self, value: Union[AnyStr, GrowthShape]):
@@ -275,19 +288,6 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(10, value)
-
-    @property
-    def Growth_obj(self) -> GrowthShape:
-        """
-        Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
-
-        DSS property name: `Growth`, DSS property index: 10.
-        """
-        return self._get_obj(10, GrowthShape)
-
-    @Growth_obj.setter
-    def Growth_obj(self, value: GrowthShape):
-        self._set_obj(10, value)
 
     @property
     def Conn(self) -> enums.Connection:
@@ -593,13 +593,26 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 30, value)
 
     @property
-    def CVRCurve(self) -> str:
+    def CVRCurve_str(self) -> str:
         """
         Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
 
         DSS property name: `CVRCurve`, DSS property index: 31.
         """
         return self._get_prop_string(31)
+
+    @CVRCurve_str.setter
+    def CVRCurve_str(self, value: AnyStr):
+        self._set_string_o(31, value)
+
+    @property
+    def CVRCurve(self) -> LoadShape:
+        """
+        Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
+
+        DSS property name: `CVRCurve`, DSS property index: 31.
+        """
+        return self._get_obj(31, LoadShape)
 
     @CVRCurve.setter
     def CVRCurve(self, value: Union[AnyStr, LoadShape]):
@@ -608,19 +621,6 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(31, value)
-
-    @property
-    def CVRCurve_obj(self) -> LoadShape:
-        """
-        Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
-
-        DSS property name: `CVRCurve`, DSS property index: 31.
-        """
-        return self._get_obj(31, LoadShape)
-
-    @CVRCurve_obj.setter
-    def CVRCurve_obj(self, value: LoadShape):
-        self._set_obj(31, value)
 
     @property
     def NumCust(self) -> int:
@@ -725,13 +725,26 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 38, value)
 
     @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
 
         DSS property name: `Spectrum`, DSS property index: 39.
         """
         return self._get_prop_string(39)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(39, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
+
+        DSS property name: `Spectrum`, DSS property index: 39.
+        """
+        return self._get_obj(39, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -740,19 +753,6 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(39, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
-
-        DSS property name: `Spectrum`, DSS property index: 39.
-        """
-        return self._get_obj(39, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(39, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -938,7 +938,7 @@ class LoadBatch(DSSBatch):
         self._set_batch_int32_array(6, value)
 
     @property
-    def Yearly(self) -> List[str]:
+    def Yearly_str(self) -> List[str]:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -946,12 +946,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(7, value)
+    @Yearly_str.setter
+    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(7, value)
 
     @property
-    def Yearly_obj(self) -> List[LoadShape]:
+    def Yearly(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -959,12 +959,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(7)
 
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_batch_string(7, value)
+    @Yearly.setter
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(7, value)
 
     @property
-    def Daily(self) -> List[str]:
+    def Daily_str(self) -> List[str]:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -972,12 +972,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(8, value)
+    @Daily_str.setter
+    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(8, value)
 
     @property
-    def Daily_obj(self) -> List[LoadShape]:
+    def Daily(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -985,12 +985,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(8)
 
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_batch_string(8, value)
+    @Daily.setter
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(8, value)
 
     @property
-    def Duty(self) -> List[str]:
+    def Duty_str(self) -> List[str]:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -998,12 +998,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(9)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(9, value)
+    @Duty_str.setter
+    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(9, value)
 
     @property
-    def Duty_obj(self) -> List[LoadShape]:
+    def Duty(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -1011,12 +1011,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(9)
 
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_batch_string(9, value)
+    @Duty.setter
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(9, value)
 
     @property
-    def Growth(self) -> List[str]:
+    def Growth_str(self) -> List[str]:
         """
         Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
 
@@ -1024,12 +1024,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(10)
 
-    @Growth.setter
-    def Growth(self, value: Union[AnyStr, GrowthShape, List[AnyStr], List[GrowthShape]]):
-        self._set_batch_obj_prop(10, value)
+    @Growth_str.setter
+    def Growth_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(10, value)
 
     @property
-    def Growth_obj(self) -> List[GrowthShape]:
+    def Growth(self) -> List[GrowthShape]:
         """
         Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
 
@@ -1037,9 +1037,9 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(10)
 
-    @Growth_obj.setter
-    def Growth_obj(self, value: GrowthShape):
-        self._set_batch_string(10, value)
+    @Growth.setter
+    def Growth(self, value: Union[AnyStr, GrowthShape, List[AnyStr], List[GrowthShape]]):
+        self._set_batch_obj_prop(10, value)
 
     @property
     def Conn(self) -> BatchInt32ArrayProxy:
@@ -1347,7 +1347,7 @@ class LoadBatch(DSSBatch):
         self._set_batch_float64_array(30, value)
 
     @property
-    def CVRCurve(self) -> List[str]:
+    def CVRCurve_str(self) -> List[str]:
         """
         Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
 
@@ -1355,12 +1355,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(31)
 
-    @CVRCurve.setter
-    def CVRCurve(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(31, value)
+    @CVRCurve_str.setter
+    def CVRCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(31, value)
 
     @property
-    def CVRCurve_obj(self) -> List[LoadShape]:
+    def CVRCurve(self) -> List[LoadShape]:
         """
         Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
 
@@ -1368,9 +1368,9 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(31)
 
-    @CVRCurve_obj.setter
-    def CVRCurve_obj(self, value: LoadShape):
-        self._set_batch_string(31, value)
+    @CVRCurve.setter
+    def CVRCurve(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(31, value)
 
     @property
     def NumCust(self) -> BatchInt32ArrayProxy:
@@ -1478,7 +1478,7 @@ class LoadBatch(DSSBatch):
         self._set_batch_float64_array(38, value)
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
 
@@ -1486,12 +1486,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(39)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(39, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(39, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
 
@@ -1499,9 +1499,9 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(39)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(39, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(39, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

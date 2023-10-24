@@ -541,13 +541,26 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         self._set_string_o(38, value)
 
     @property
-    def XfmrCode(self) -> str:
+    def XfmrCode_str(self) -> str:
         """
         Name of a library entry for transformer properties. The named XfmrCode must already be defined.
 
         DSS property name: `XfmrCode`, DSS property index: 39.
         """
         return self._get_prop_string(39)
+
+    @XfmrCode_str.setter
+    def XfmrCode_str(self, value: AnyStr):
+        self._set_string_o(39, value)
+
+    @property
+    def XfmrCode(self) -> XfmrCodeObj:
+        """
+        Name of a library entry for transformer properties. The named XfmrCode must already be defined.
+
+        DSS property name: `XfmrCode`, DSS property index: 39.
+        """
+        return self._get_obj(39, XfmrCodeObj)
 
     @XfmrCode.setter
     def XfmrCode(self, value: Union[AnyStr, XfmrCodeObj]):
@@ -556,19 +569,6 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
             return
 
         self._set_string_o(39, value)
-
-    @property
-    def XfmrCode_obj(self) -> XfmrCodeObj:
-        """
-        Name of a library entry for transformer properties. The named XfmrCode must already be defined.
-
-        DSS property name: `XfmrCode`, DSS property index: 39.
-        """
-        return self._get_obj(39, XfmrCodeObj)
-
-    @XfmrCode_obj.setter
-    def XfmrCode_obj(self, value: XfmrCodeObj):
-        self._set_obj(39, value)
 
     @property
     def XRConst(self) -> bool:
@@ -1377,7 +1377,7 @@ class TransformerBatch(DSSBatch):
         self._set_batch_string(38, value)
 
     @property
-    def XfmrCode(self) -> List[str]:
+    def XfmrCode_str(self) -> List[str]:
         """
         Name of a library entry for transformer properties. The named XfmrCode must already be defined.
 
@@ -1385,12 +1385,12 @@ class TransformerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(39)
 
-    @XfmrCode.setter
-    def XfmrCode(self, value: Union[AnyStr, XfmrCodeObj, List[AnyStr], List[XfmrCodeObj]]):
-        self._set_batch_obj_prop(39, value)
+    @XfmrCode_str.setter
+    def XfmrCode_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(39, value)
 
     @property
-    def XfmrCode_obj(self) -> List[XfmrCodeObj]:
+    def XfmrCode(self) -> List[XfmrCodeObj]:
         """
         Name of a library entry for transformer properties. The named XfmrCode must already be defined.
 
@@ -1398,9 +1398,9 @@ class TransformerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(39)
 
-    @XfmrCode_obj.setter
-    def XfmrCode_obj(self, value: XfmrCodeObj):
-        self._set_batch_string(39, value)
+    @XfmrCode.setter
+    def XfmrCode(self, value: Union[AnyStr, XfmrCodeObj, List[AnyStr], List[XfmrCodeObj]]):
+        self._set_batch_obj_prop(39, value)
 
     @property
     def XRConst(self) -> List[bool]:

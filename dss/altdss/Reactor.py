@@ -288,13 +288,26 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         self._set_complex(15, value)
 
     @property
-    def RCurve(self) -> str:
+    def RCurve_str(self) -> str:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
 
         DSS property name: `RCurve`, DSS property index: 17.
         """
         return self._get_prop_string(17)
+
+    @RCurve_str.setter
+    def RCurve_str(self, value: AnyStr):
+        self._set_string_o(17, value)
+
+    @property
+    def RCurve(self) -> XYcurve:
+        """
+        Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
+
+        DSS property name: `RCurve`, DSS property index: 17.
+        """
+        return self._get_obj(17, XYcurve)
 
     @RCurve.setter
     def RCurve(self, value: Union[AnyStr, XYcurve]):
@@ -305,26 +318,26 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         self._set_string_o(17, value)
 
     @property
-    def RCurve_obj(self) -> XYcurve:
-        """
-        Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
-
-        DSS property name: `RCurve`, DSS property index: 17.
-        """
-        return self._get_obj(17, XYcurve)
-
-    @RCurve_obj.setter
-    def RCurve_obj(self, value: XYcurve):
-        self._set_obj(17, value)
-
-    @property
-    def LCurve(self) -> str:
+    def LCurve_str(self) -> str:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
 
         DSS property name: `LCurve`, DSS property index: 18.
         """
         return self._get_prop_string(18)
+
+    @LCurve_str.setter
+    def LCurve_str(self, value: AnyStr):
+        self._set_string_o(18, value)
+
+    @property
+    def LCurve(self) -> XYcurve:
+        """
+        Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
+
+        DSS property name: `LCurve`, DSS property index: 18.
+        """
+        return self._get_obj(18, XYcurve)
 
     @LCurve.setter
     def LCurve(self, value: Union[AnyStr, XYcurve]):
@@ -333,19 +346,6 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
             return
 
         self._set_string_o(18, value)
-
-    @property
-    def LCurve_obj(self) -> XYcurve:
-        """
-        Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
-
-        DSS property name: `LCurve`, DSS property index: 18.
-        """
-        return self._get_obj(18, XYcurve)
-
-    @LCurve_obj.setter
-    def LCurve_obj(self, value: XYcurve):
-        self._set_obj(18, value)
 
     @property
     def LmH(self) -> float:
@@ -803,7 +803,7 @@ class ReactorBatch(DSSBatch):
             self._lib.Obj_SetFloat64Array(x, 15, value_ptr, value_count)
 
     @property
-    def RCurve(self) -> List[str]:
+    def RCurve_str(self) -> List[str]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
 
@@ -811,12 +811,12 @@ class ReactorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(17)
 
-    @RCurve.setter
-    def RCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(17, value)
+    @RCurve_str.setter
+    def RCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(17, value)
 
     @property
-    def RCurve_obj(self) -> List[XYcurve]:
+    def RCurve(self) -> List[XYcurve]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
 
@@ -824,12 +824,12 @@ class ReactorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(17)
 
-    @RCurve_obj.setter
-    def RCurve_obj(self, value: XYcurve):
-        self._set_batch_string(17, value)
+    @RCurve.setter
+    def RCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(17, value)
 
     @property
-    def LCurve(self) -> List[str]:
+    def LCurve_str(self) -> List[str]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
 
@@ -837,12 +837,12 @@ class ReactorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(18)
 
-    @LCurve.setter
-    def LCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(18, value)
+    @LCurve_str.setter
+    def LCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(18, value)
 
     @property
-    def LCurve_obj(self) -> List[XYcurve]:
+    def LCurve(self) -> List[XYcurve]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
 
@@ -850,9 +850,9 @@ class ReactorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(18)
 
-    @LCurve_obj.setter
-    def LCurve_obj(self, value: XYcurve):
-        self._set_batch_string(18, value)
+    @LCurve.setter
+    def LCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(18, value)
 
     @property
     def LmH(self) -> BatchFloat64ArrayProxy:

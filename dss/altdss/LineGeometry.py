@@ -72,7 +72,7 @@ class LineGeometry(DSSObj):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
-    def Wire(self) -> List[str]:
+    def Wire_str(self) -> List[str]:
         """
         Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
         Specifies use of Overhead Line parameter calculation,
@@ -82,16 +82,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
 
-    @Wire.setter
-    def Wire(self, value: List[Union[AnyStr, WireData]]):
-        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array_o(4, value)
-            return
-
-        self._set_obj_array(4, value)
-
+    @Wire_str.setter
+    def Wire_str(self, value: List[AnyStr]):
+        self._set_string_array_o(4, value)
+    
     @property
-    def Wire_obj(self) -> List[WireData]:
+    def Wire(self) -> List[WireData]:
         """
         Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
         Specifies use of Overhead Line parameter calculation,
@@ -101,8 +97,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_obj_array(4, WireData)
 
-    @Wire_obj.setter
-    def Wire_obj(self, value: List[WireData]):
+    @Wire.setter
+    def Wire(self, value: List[Union[AnyStr, WireData]]):
+        if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
+            self._set_string_array_o(4, value)
+            return
+
         self._set_obj_array(4, value)
 
     @property
@@ -200,7 +200,7 @@ class LineGeometry(DSSObj):
         self._lib.Obj_SetInt32(self._ptr, 10, value)
 
     @property
-    def Spacing(self) -> str:
+    def Spacing_str(self) -> str:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Alternative to x, h, and units. MUST BE PREVIOUSLY DEFINED.
@@ -211,16 +211,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_prop_string(11)
 
-    @Spacing.setter
-    def Spacing(self, value: Union[AnyStr, LineSpacing]):
-        if isinstance(value, DSSObj):
-            self._set_obj(11, value)
-            return
-
+    @Spacing_str.setter
+    def Spacing_str(self, value: AnyStr):
         self._set_string_o(11, value)
 
     @property
-    def Spacing_obj(self) -> LineSpacing:
+    def Spacing(self) -> LineSpacing:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Alternative to x, h, and units. MUST BE PREVIOUSLY DEFINED.
@@ -231,9 +227,13 @@ class LineGeometry(DSSObj):
         """
         return self._get_obj(11, LineSpacing)
 
-    @Spacing_obj.setter
-    def Spacing_obj(self, value: LineSpacing):
-        self._set_obj(11, value)
+    @Spacing.setter
+    def Spacing(self, value: Union[AnyStr, LineSpacing]):
+        if isinstance(value, DSSObj):
+            self._set_obj(11, value)
+            return
+
+        self._set_string_o(11, value)
 
     @property
     def Seasons(self) -> int:
@@ -357,7 +357,7 @@ class LineGeometryBatch(DSSBatch):
         self._set_batch_int32_array(2, value)
 
     @property
-    def Wire(self) -> List[List[str]]:
+    def Wire_str(self) -> List[List[str]]:
         """
         Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
         Specifies use of Overhead Line parameter calculation,
@@ -367,16 +367,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_string_ll(4)
 
-    @Wire.setter
-    def Wire(self, value: Union[List[AnyStr], List[WireData]]):
-        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
-            self._set_batch_stringlist_prop(4, value)
-            return
-
-        self._set_batch_objlist_prop(4, value)
+    @Wire_str.setter
+    def Wire_str(self, value: List[AnyStr]):
+        self._set_batch_stringlist_prop(4, value)
 
     @property
-    def Wire_obj(self) -> List[List[WireData]]:
+    def Wire(self) -> List[List[WireData]]:
         """
         Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
         Specifies use of Overhead Line parameter calculation,
@@ -386,8 +382,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_obj_ll(4, WireData)
 
-    @Wire_obj.setter
-    def Wire_obj(self, value: List[WireData]):
+    @Wire.setter
+    def Wire(self, value: Union[List[AnyStr], List[WireData]]):
+        if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
+            self._set_batch_stringlist_prop(4, value)
+            return
+
         self._set_batch_objlist_prop(4, value)
 
     @property
@@ -493,7 +493,7 @@ class LineGeometryBatch(DSSBatch):
         self._set_batch_int32_array(10, value)
 
     @property
-    def Spacing(self) -> List[str]:
+    def Spacing_str(self) -> List[str]:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Alternative to x, h, and units. MUST BE PREVIOUSLY DEFINED.
@@ -504,12 +504,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @Spacing.setter
-    def Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
-        self._set_batch_obj_prop(11, value)
+    @Spacing_str.setter
+    def Spacing_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(11, value)
 
     @property
-    def Spacing_obj(self) -> List[LineSpacing]:
+    def Spacing(self) -> List[LineSpacing]:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Alternative to x, h, and units. MUST BE PREVIOUSLY DEFINED.
@@ -520,9 +520,9 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    @Spacing_obj.setter
-    def Spacing_obj(self, value: LineSpacing):
-        self._set_batch_string(11, value)
+    @Spacing.setter
+    def Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
     def Seasons(self) -> BatchInt32ArrayProxy:

@@ -281,13 +281,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
     @property
-    def EffCurve(self) -> str:
+    def EffCurve_str(self) -> str:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
 
         DSS property name: `EffCurve`, DSS property index: 14.
         """
         return self._get_prop_string(14)
+
+    @EffCurve_str.setter
+    def EffCurve_str(self, value: AnyStr):
+        self._set_string_o(14, value)
+
+    @property
+    def EffCurve(self) -> XYcurve:
+        """
+        An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
+
+        DSS property name: `EffCurve`, DSS property index: 14.
+        """
+        return self._get_obj(14, XYcurve)
 
     @EffCurve.setter
     def EffCurve(self, value: Union[AnyStr, XYcurve]):
@@ -298,26 +311,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._set_string_o(14, value)
 
     @property
-    def EffCurve_obj(self) -> XYcurve:
-        """
-        An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
-
-        DSS property name: `EffCurve`, DSS property index: 14.
-        """
-        return self._get_obj(14, XYcurve)
-
-    @EffCurve_obj.setter
-    def EffCurve_obj(self, value: XYcurve):
-        self._set_obj(14, value)
-
-    @property
-    def PTCurve(self) -> str:
+    def PTCurve_str(self) -> str:
         """
         An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
 
         DSS property name: `P-TCurve`, DSS property index: 15.
         """
         return self._get_prop_string(15)
+
+    @PTCurve_str.setter
+    def PTCurve_str(self, value: AnyStr):
+        self._set_string_o(15, value)
+
+    @property
+    def PTCurve(self) -> XYcurve:
+        """
+        An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
+
+        DSS property name: `P-TCurve`, DSS property index: 15.
+        """
+        return self._get_obj(15, XYcurve)
 
     @PTCurve.setter
     def PTCurve(self, value: Union[AnyStr, XYcurve]):
@@ -326,19 +339,6 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
             return
 
         self._set_string_o(15, value)
-
-    @property
-    def PTCurve_obj(self) -> XYcurve:
-        """
-        An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
-
-        DSS property name: `P-TCurve`, DSS property index: 15.
-        """
-        return self._get_obj(15, XYcurve)
-
-    @PTCurve_obj.setter
-    def PTCurve_obj(self, value: XYcurve):
-        self._set_obj(15, value)
 
     @property
     def pctR(self) -> float:
@@ -436,13 +436,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._lib.Obj_SetInt32(self._ptr, 22, value)
 
     @property
-    def Yearly(self) -> str:
+    def Yearly_str(self) -> str:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
         DSS property name: `Yearly`, DSS property index: 23.
         """
         return self._get_prop_string(23)
+
+    @Yearly_str.setter
+    def Yearly_str(self, value: AnyStr):
+        self._set_string_o(23, value)
+
+    @property
+    def Yearly(self) -> LoadShape:
+        """
+        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
+
+        DSS property name: `Yearly`, DSS property index: 23.
+        """
+        return self._get_obj(23, LoadShape)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape]):
@@ -453,26 +466,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._set_string_o(23, value)
 
     @property
-    def Yearly_obj(self) -> LoadShape:
-        """
-        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
-
-        DSS property name: `Yearly`, DSS property index: 23.
-        """
-        return self._get_obj(23, LoadShape)
-
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_obj(23, value)
-
-    @property
-    def Daily(self) -> str:
+    def Daily_str(self) -> str:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
         DSS property name: `Daily`, DSS property index: 24.
         """
         return self._get_prop_string(24)
+
+    @Daily_str.setter
+    def Daily_str(self, value: AnyStr):
+        self._set_string_o(24, value)
+
+    @property
+    def Daily(self) -> LoadShape:
+        """
+        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
+
+        DSS property name: `Daily`, DSS property index: 24.
+        """
+        return self._get_obj(24, LoadShape)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape]):
@@ -483,26 +496,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._set_string_o(24, value)
 
     @property
-    def Daily_obj(self) -> LoadShape:
-        """
-        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
-
-        DSS property name: `Daily`, DSS property index: 24.
-        """
-        return self._get_obj(24, LoadShape)
-
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_obj(24, value)
-
-    @property
-    def Duty(self) -> str:
+    def Duty_str(self) -> str:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
         DSS property name: `Duty`, DSS property index: 25.
         """
         return self._get_prop_string(25)
+
+    @Duty_str.setter
+    def Duty_str(self, value: AnyStr):
+        self._set_string_o(25, value)
+
+    @property
+    def Duty(self) -> LoadShape:
+        """
+        Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
+
+        DSS property name: `Duty`, DSS property index: 25.
+        """
+        return self._get_obj(25, LoadShape)
 
     @Duty.setter
     def Duty(self, value: Union[AnyStr, LoadShape]):
@@ -513,26 +526,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._set_string_o(25, value)
 
     @property
-    def Duty_obj(self) -> LoadShape:
-        """
-        Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
-
-        DSS property name: `Duty`, DSS property index: 25.
-        """
-        return self._get_obj(25, LoadShape)
-
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_obj(25, value)
-
-    @property
-    def TYearly(self) -> str:
+    def TYearly_str(self) -> str:
         """
         Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
         DSS property name: `TYearly`, DSS property index: 26.
         """
         return self._get_prop_string(26)
+
+    @TYearly_str.setter
+    def TYearly_str(self, value: AnyStr):
+        self._set_string_o(26, value)
+
+    @property
+    def TYearly(self) -> TShape:
+        """
+        Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
+
+        DSS property name: `TYearly`, DSS property index: 26.
+        """
+        return self._get_obj(26, TShape)
 
     @TYearly.setter
     def TYearly(self, value: Union[AnyStr, TShape]):
@@ -543,26 +556,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._set_string_o(26, value)
 
     @property
-    def TYearly_obj(self) -> TShape:
-        """
-        Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
-
-        DSS property name: `TYearly`, DSS property index: 26.
-        """
-        return self._get_obj(26, TShape)
-
-    @TYearly_obj.setter
-    def TYearly_obj(self, value: TShape):
-        self._set_obj(26, value)
-
-    @property
-    def TDaily(self) -> str:
+    def TDaily_str(self) -> str:
         """
         Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
         DSS property name: `TDaily`, DSS property index: 27.
         """
         return self._get_prop_string(27)
+
+    @TDaily_str.setter
+    def TDaily_str(self, value: AnyStr):
+        self._set_string_o(27, value)
+
+    @property
+    def TDaily(self) -> TShape:
+        """
+        Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
+
+        DSS property name: `TDaily`, DSS property index: 27.
+        """
+        return self._get_obj(27, TShape)
 
     @TDaily.setter
     def TDaily(self, value: Union[AnyStr, TShape]):
@@ -573,26 +586,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._set_string_o(27, value)
 
     @property
-    def TDaily_obj(self) -> TShape:
-        """
-        Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
-
-        DSS property name: `TDaily`, DSS property index: 27.
-        """
-        return self._get_obj(27, TShape)
-
-    @TDaily_obj.setter
-    def TDaily_obj(self, value: TShape):
-        self._set_obj(27, value)
-
-    @property
-    def TDuty(self) -> str:
+    def TDuty_str(self) -> str:
         """
         Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
         DSS property name: `TDuty`, DSS property index: 28.
         """
         return self._get_prop_string(28)
+
+    @TDuty_str.setter
+    def TDuty_str(self, value: AnyStr):
+        self._set_string_o(28, value)
+
+    @property
+    def TDuty(self) -> TShape:
+        """
+        Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
+
+        DSS property name: `TDuty`, DSS property index: 28.
+        """
+        return self._get_obj(28, TShape)
 
     @TDuty.setter
     def TDuty(self, value: Union[AnyStr, TShape]):
@@ -601,19 +614,6 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
             return
 
         self._set_string_o(28, value)
-
-    @property
-    def TDuty_obj(self) -> TShape:
-        """
-        Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
-
-        DSS property name: `TDuty`, DSS property index: 28.
-        """
-        return self._get_obj(28, TShape)
-
-    @TDuty_obj.setter
-    def TDuty_obj(self, value: TShape):
-        self._set_obj(28, value)
 
     @property
     def Class(self) -> int:
@@ -837,13 +837,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._lib.Obj_SetInt32(self._ptr, 45, value)
 
     @property
-    def DynamicEq(self) -> str:
+    def DynamicEq_str(self) -> str:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
         DSS property name: `DynamicEq`, DSS property index: 46.
         """
         return self._get_prop_string(46)
+
+    @DynamicEq_str.setter
+    def DynamicEq_str(self, value: AnyStr):
+        self._set_string_o(46, value)
+
+    @property
+    def DynamicEq(self) -> DynamicExp:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 46.
+        """
+        return self._get_obj(46, DynamicExp)
 
     @DynamicEq.setter
     def DynamicEq(self, value: Union[AnyStr, DynamicExp]):
@@ -852,19 +865,6 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
             return
 
         self._set_string_o(46, value)
-
-    @property
-    def DynamicEq_obj(self) -> DynamicExp:
-        """
-        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
-
-        DSS property name: `DynamicEq`, DSS property index: 46.
-        """
-        return self._get_obj(46, DynamicExp)
-
-    @DynamicEq_obj.setter
-    def DynamicEq_obj(self, value: DynamicExp):
-        self._set_obj(46, value)
 
     @property
     def DynOut(self) -> str:
@@ -944,13 +944,26 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         self._lib.Obj_SetFloat64(self._ptr, 50, value)
 
     @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
         DSS property name: `Spectrum`, DSS property index: 51.
         """
         return self._get_prop_string(51)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(51, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
+
+        DSS property name: `Spectrum`, DSS property index: 51.
+        """
+        return self._get_obj(51, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -959,19 +972,6 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
             return
 
         self._set_string_o(51, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
-
-        DSS property name: `Spectrum`, DSS property index: 51.
-        """
-        return self._get_obj(51, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(51, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -1261,7 +1261,7 @@ class PVSystemBatch(DSSBatch):
         self._set_batch_float64_array(13, value)
 
     @property
-    def EffCurve(self) -> List[str]:
+    def EffCurve_str(self) -> List[str]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
 
@@ -1269,12 +1269,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(14)
 
-    @EffCurve.setter
-    def EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(14, value)
+    @EffCurve_str.setter
+    def EffCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(14, value)
 
     @property
-    def EffCurve_obj(self) -> List[XYcurve]:
+    def EffCurve(self) -> List[XYcurve]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
 
@@ -1282,12 +1282,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(14)
 
-    @EffCurve_obj.setter
-    def EffCurve_obj(self, value: XYcurve):
-        self._set_batch_string(14, value)
+    @EffCurve.setter
+    def EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(14, value)
 
     @property
-    def PTCurve(self) -> List[str]:
+    def PTCurve_str(self) -> List[str]:
         """
         An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
 
@@ -1295,12 +1295,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(15)
 
-    @PTCurve.setter
-    def PTCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(15, value)
+    @PTCurve_str.setter
+    def PTCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(15, value)
 
     @property
-    def PTCurve_obj(self) -> List[XYcurve]:
+    def PTCurve(self) -> List[XYcurve]:
         """
         An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
 
@@ -1308,9 +1308,9 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(15)
 
-    @PTCurve_obj.setter
-    def PTCurve_obj(self, value: XYcurve):
-        self._set_batch_string(15, value)
+    @PTCurve.setter
+    def PTCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(15, value)
 
     @property
     def pctR(self) -> BatchFloat64ArrayProxy:
@@ -1410,7 +1410,7 @@ class PVSystemBatch(DSSBatch):
         self._set_batch_int32_array(22, value)
 
     @property
-    def Yearly(self) -> List[str]:
+    def Yearly_str(self) -> List[str]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -1418,12 +1418,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(23)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(23, value)
+    @Yearly_str.setter
+    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(23, value)
 
     @property
-    def Yearly_obj(self) -> List[LoadShape]:
+    def Yearly(self) -> List[LoadShape]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -1431,12 +1431,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(23)
 
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_batch_string(23, value)
+    @Yearly.setter
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(23, value)
 
     @property
-    def Daily(self) -> List[str]:
+    def Daily_str(self) -> List[str]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -1444,12 +1444,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(24)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(24, value)
+    @Daily_str.setter
+    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(24, value)
 
     @property
-    def Daily_obj(self) -> List[LoadShape]:
+    def Daily(self) -> List[LoadShape]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -1457,12 +1457,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(24)
 
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_batch_string(24, value)
+    @Daily.setter
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(24, value)
 
     @property
-    def Duty(self) -> List[str]:
+    def Duty_str(self) -> List[str]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -1470,12 +1470,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(25)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(25, value)
+    @Duty_str.setter
+    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(25, value)
 
     @property
-    def Duty_obj(self) -> List[LoadShape]:
+    def Duty(self) -> List[LoadShape]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -1483,12 +1483,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(25)
 
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_batch_string(25, value)
+    @Duty.setter
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(25, value)
 
     @property
-    def TYearly(self) -> List[str]:
+    def TYearly_str(self) -> List[str]:
         """
         Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1496,12 +1496,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(26)
 
-    @TYearly.setter
-    def TYearly(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
-        self._set_batch_obj_prop(26, value)
+    @TYearly_str.setter
+    def TYearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(26, value)
 
     @property
-    def TYearly_obj(self) -> List[TShape]:
+    def TYearly(self) -> List[TShape]:
         """
         Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1509,12 +1509,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(26)
 
-    @TYearly_obj.setter
-    def TYearly_obj(self, value: TShape):
-        self._set_batch_string(26, value)
+    @TYearly.setter
+    def TYearly(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
+        self._set_batch_obj_prop(26, value)
 
     @property
-    def TDaily(self) -> List[str]:
+    def TDaily_str(self) -> List[str]:
         """
         Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1522,12 +1522,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(27)
 
-    @TDaily.setter
-    def TDaily(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
-        self._set_batch_obj_prop(27, value)
+    @TDaily_str.setter
+    def TDaily_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(27, value)
 
     @property
-    def TDaily_obj(self) -> List[TShape]:
+    def TDaily(self) -> List[TShape]:
         """
         Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1535,12 +1535,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(27)
 
-    @TDaily_obj.setter
-    def TDaily_obj(self, value: TShape):
-        self._set_batch_string(27, value)
+    @TDaily.setter
+    def TDaily(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
+        self._set_batch_obj_prop(27, value)
 
     @property
-    def TDuty(self) -> List[str]:
+    def TDuty_str(self) -> List[str]:
         """
         Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1548,12 +1548,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(28)
 
-    @TDuty.setter
-    def TDuty(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
-        self._set_batch_obj_prop(28, value)
+    @TDuty_str.setter
+    def TDuty_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(28, value)
 
     @property
-    def TDuty_obj(self) -> List[TShape]:
+    def TDuty(self) -> List[TShape]:
         """
         Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1561,9 +1561,9 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(28)
 
-    @TDuty_obj.setter
-    def TDuty_obj(self, value: TShape):
-        self._set_batch_string(28, value)
+    @TDuty.setter
+    def TDuty(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
+        self._set_batch_obj_prop(28, value)
 
     @property
     def Class(self) -> BatchInt32ArrayProxy:
@@ -1792,7 +1792,7 @@ class PVSystemBatch(DSSBatch):
         self._set_batch_int32_array(45, value)
 
     @property
-    def DynamicEq(self) -> List[str]:
+    def DynamicEq_str(self) -> List[str]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -1800,12 +1800,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(46)
 
-    @DynamicEq.setter
-    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
-        self._set_batch_obj_prop(46, value)
+    @DynamicEq_str.setter
+    def DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(46, value)
 
     @property
-    def DynamicEq_obj(self) -> List[DynamicExp]:
+    def DynamicEq(self) -> List[DynamicExp]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -1813,9 +1813,9 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(46)
 
-    @DynamicEq_obj.setter
-    def DynamicEq_obj(self, value: DynamicExp):
-        self._set_batch_string(46, value)
+    @DynamicEq.setter
+    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
+        self._set_batch_obj_prop(46, value)
 
     @property
     def DynOut(self) -> List[str]:
@@ -1896,7 +1896,7 @@ class PVSystemBatch(DSSBatch):
         self._set_batch_float64_array(50, value)
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1904,12 +1904,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(51)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(51, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(51, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1917,9 +1917,9 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(51)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(51, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(51, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

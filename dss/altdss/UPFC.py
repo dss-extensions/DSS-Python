@@ -205,13 +205,26 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
     @property
-    def LossCurve(self) -> str:
+    def LossCurve_str(self) -> str:
         """
         Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
 
         DSS property name: `LossCurve`, DSS property index: 11.
         """
         return self._get_prop_string(11)
+
+    @LossCurve_str.setter
+    def LossCurve_str(self, value: AnyStr):
+        self._set_string_o(11, value)
+
+    @property
+    def LossCurve(self) -> XYcurve:
+        """
+        Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
+
+        DSS property name: `LossCurve`, DSS property index: 11.
+        """
+        return self._get_obj(11, XYcurve)
 
     @LossCurve.setter
     def LossCurve(self, value: Union[AnyStr, XYcurve]):
@@ -220,19 +233,6 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(11, value)
-
-    @property
-    def LossCurve_obj(self) -> XYcurve:
-        """
-        Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
-
-        DSS property name: `LossCurve`, DSS property index: 11.
-        """
-        return self._get_obj(11, XYcurve)
-
-    @LossCurve_obj.setter
-    def LossCurve_obj(self, value: XYcurve):
-        self._set_obj(11, value)
 
     @property
     def VHLimit(self) -> float:
@@ -302,13 +302,26 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
     @property
-    def Element(self) -> str:
+    def Element_str(self) -> str:
         """
         The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
 
         DSS property name: `Element`, DSS property index: 17.
         """
         return self._get_prop_string(17)
+
+    @Element_str.setter
+    def Element_str(self, value: AnyStr):
+        self._set_string_o(17, value)
+
+    @property
+    def Element(self) -> PDElement:
+        """
+        The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
+
+        DSS property name: `Element`, DSS property index: 17.
+        """
+        return self._get_obj(17, PDElement)
 
     @Element.setter
     def Element(self, value: Union[AnyStr, PDElement]):
@@ -319,26 +332,26 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         self._set_string_o(17, value)
 
     @property
-    def Element_obj(self) -> PDElement:
-        """
-        The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
-
-        DSS property name: `Element`, DSS property index: 17.
-        """
-        return self._get_obj(17, PDElement)
-
-    @Element_obj.setter
-    def Element_obj(self, value: PDElement):
-        self._set_obj(17, value)
-
-    @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
         DSS property name: `Spectrum`, DSS property index: 18.
         """
         return self._get_prop_string(18)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(18, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
+
+        DSS property name: `Spectrum`, DSS property index: 18.
+        """
+        return self._get_obj(18, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -347,19 +360,6 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(18, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
-
-        DSS property name: `Spectrum`, DSS property index: 18.
-        """
-        return self._get_obj(18, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(18, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -572,7 +572,7 @@ class UPFCBatch(DSSBatch):
         self._set_batch_float64_array(10, value)
 
     @property
-    def LossCurve(self) -> List[str]:
+    def LossCurve_str(self) -> List[str]:
         """
         Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
 
@@ -580,12 +580,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @LossCurve.setter
-    def LossCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(11, value)
+    @LossCurve_str.setter
+    def LossCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(11, value)
 
     @property
-    def LossCurve_obj(self) -> List[XYcurve]:
+    def LossCurve(self) -> List[XYcurve]:
         """
         Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
 
@@ -593,9 +593,9 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    @LossCurve_obj.setter
-    def LossCurve_obj(self, value: XYcurve):
-        self._set_batch_string(11, value)
+    @LossCurve.setter
+    def LossCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
     def VHLimit(self) -> BatchFloat64ArrayProxy:
@@ -665,7 +665,7 @@ class UPFCBatch(DSSBatch):
         self._set_batch_float64_array(16, value)
 
     @property
-    def Element(self) -> List[str]:
+    def Element_str(self) -> List[str]:
         """
         The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
 
@@ -673,12 +673,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_str_prop(17)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, PDElement, List[AnyStr], List[PDElement]]):
-        self._set_batch_obj_prop(17, value)
+    @Element_str.setter
+    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(17, value)
 
     @property
-    def Element_obj(self) -> List[PDElement]:
+    def Element(self) -> List[PDElement]:
         """
         The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
 
@@ -686,12 +686,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(17)
 
-    @Element_obj.setter
-    def Element_obj(self, value: PDElement):
-        self._set_batch_string(17, value)
+    @Element.setter
+    def Element(self, value: Union[AnyStr, PDElement, List[AnyStr], List[PDElement]]):
+        self._set_batch_obj_prop(17, value)
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
@@ -699,12 +699,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_str_prop(18)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(18, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(18, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
@@ -712,9 +712,9 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(18)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(18, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(18, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

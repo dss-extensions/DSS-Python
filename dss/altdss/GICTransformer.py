@@ -212,13 +212,26 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
     @property
-    def VarCurve(self) -> str:
+    def VarCurve_str(self) -> str:
         """
         Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
 
         DSS property name: `VarCurve`, DSS property index: 12.
         """
         return self._get_prop_string(12)
+
+    @VarCurve_str.setter
+    def VarCurve_str(self, value: AnyStr):
+        self._set_string_o(12, value)
+
+    @property
+    def VarCurve(self) -> XYcurve:
+        """
+        Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
+
+        DSS property name: `VarCurve`, DSS property index: 12.
+        """
+        return self._get_obj(12, XYcurve)
 
     @VarCurve.setter
     def VarCurve(self, value: Union[AnyStr, XYcurve]):
@@ -227,19 +240,6 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
             return
 
         self._set_string_o(12, value)
-
-    @property
-    def VarCurve_obj(self) -> XYcurve:
-        """
-        Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
-
-        DSS property name: `VarCurve`, DSS property index: 12.
-        """
-        return self._get_obj(12, XYcurve)
-
-    @VarCurve_obj.setter
-    def VarCurve_obj(self, value: XYcurve):
-        self._set_obj(12, value)
 
     @property
     def pctR1(self) -> float:
@@ -584,7 +584,7 @@ class GICTransformerBatch(DSSBatch):
         self._set_batch_float64_array(11, value)
 
     @property
-    def VarCurve(self) -> List[str]:
+    def VarCurve_str(self) -> List[str]:
         """
         Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
 
@@ -592,12 +592,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(12)
 
-    @VarCurve.setter
-    def VarCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(12, value)
+    @VarCurve_str.setter
+    def VarCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(12, value)
 
     @property
-    def VarCurve_obj(self) -> List[XYcurve]:
+    def VarCurve(self) -> List[XYcurve]:
         """
         Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
 
@@ -605,9 +605,9 @@ class GICTransformerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(12)
 
-    @VarCurve_obj.setter
-    def VarCurve_obj(self, value: XYcurve):
-        self._set_batch_string(12, value)
+    @VarCurve.setter
+    def VarCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(12, value)
 
     @property
     def pctR1(self) -> BatchFloat64ArrayProxy:

@@ -254,13 +254,26 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
     @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
         DSS property name: `Spectrum`, DSS property index: 16.
         """
         return self._get_prop_string(16)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(16, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
+
+        DSS property name: `Spectrum`, DSS property index: 16.
+        """
+        return self._get_obj(16, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -269,19 +282,6 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(16, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
-
-        DSS property name: `Spectrum`, DSS property index: 16.
-        """
-        return self._get_obj(16, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(16, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -557,7 +557,7 @@ class GICLineBatch(DSSBatch):
         self._set_batch_float64_array(15, value)
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -565,12 +565,12 @@ class GICLineBatch(DSSBatch):
         """
         return self._get_batch_str_prop(16)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(16, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(16, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -578,9 +578,9 @@ class GICLineBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(16)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(16, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(16, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

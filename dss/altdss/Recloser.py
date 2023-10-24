@@ -52,13 +52,26 @@ class Recloser(DSSObj, CktElementMixin):
     }
 
     @property
-    def MonitoredObj(self) -> str:
+    def MonitoredObj_str(self) -> str:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
         return self._get_prop_string(1)
+
+    @MonitoredObj_str.setter
+    def MonitoredObj_str(self, value: AnyStr):
+        self._set_string_o(1, value)
+
+    @property
+    def MonitoredObj(self) -> DSSObj:
+        """
+        Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
+
+        DSS property name: `MonitoredObj`, DSS property index: 1.
+        """
+        return self._get_obj(1, None)
 
     @MonitoredObj.setter
     def MonitoredObj(self, value: Union[AnyStr, DSSObj]):
@@ -67,19 +80,6 @@ class Recloser(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(1, value)
-
-    @property
-    def MonitoredObj_obj(self) -> DSSObj:
-        """
-        Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
-
-        DSS property name: `MonitoredObj`, DSS property index: 1.
-        """
-        return self._get_obj(1, None)
-
-    @MonitoredObj_obj.setter
-    def MonitoredObj_obj(self, value: DSSObj):
-        self._set_obj(1, value)
 
     @property
     def MonitoredTerm(self) -> int:
@@ -95,13 +95,26 @@ class Recloser(DSSObj, CktElementMixin):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
-    def SwitchedObj(self) -> str:
+    def SwitchedObj_str(self) -> str:
         """
         Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
         return self._get_prop_string(3)
+
+    @SwitchedObj_str.setter
+    def SwitchedObj_str(self, value: AnyStr):
+        self._set_string_o(3, value)
+
+    @property
+    def SwitchedObj(self) -> DSSObj:
+        """
+        Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
+
+        DSS property name: `SwitchedObj`, DSS property index: 3.
+        """
+        return self._get_obj(3, None)
 
     @SwitchedObj.setter
     def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
@@ -110,19 +123,6 @@ class Recloser(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(3, value)
-
-    @property
-    def SwitchedObj_obj(self) -> DSSObj:
-        """
-        Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
-
-        DSS property name: `SwitchedObj`, DSS property index: 3.
-        """
-        return self._get_obj(3, None)
-
-    @SwitchedObj_obj.setter
-    def SwitchedObj_obj(self, value: DSSObj):
-        self._set_obj(3, value)
 
     @property
     def SwitchedTerm(self) -> int:
@@ -151,13 +151,26 @@ class Recloser(DSSObj, CktElementMixin):
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
     @property
-    def PhaseFast(self) -> str:
+    def PhaseFast_str(self) -> str:
         """
         Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
         DSS property name: `PhaseFast`, DSS property index: 6.
         """
         return self._get_prop_string(6)
+
+    @PhaseFast_str.setter
+    def PhaseFast_str(self, value: AnyStr):
+        self._set_string_o(6, value)
+
+    @property
+    def PhaseFast(self) -> TCC_Curve:
+        """
+        Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
+
+        DSS property name: `PhaseFast`, DSS property index: 6.
+        """
+        return self._get_obj(6, TCC_Curve)
 
     @PhaseFast.setter
     def PhaseFast(self, value: Union[AnyStr, TCC_Curve]):
@@ -168,26 +181,26 @@ class Recloser(DSSObj, CktElementMixin):
         self._set_string_o(6, value)
 
     @property
-    def PhaseFast_obj(self) -> TCC_Curve:
-        """
-        Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
-
-        DSS property name: `PhaseFast`, DSS property index: 6.
-        """
-        return self._get_obj(6, TCC_Curve)
-
-    @PhaseFast_obj.setter
-    def PhaseFast_obj(self, value: TCC_Curve):
-        self._set_obj(6, value)
-
-    @property
-    def PhaseDelayed(self) -> str:
+    def PhaseDelayed_str(self) -> str:
         """
         Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
         DSS property name: `PhaseDelayed`, DSS property index: 7.
         """
         return self._get_prop_string(7)
+
+    @PhaseDelayed_str.setter
+    def PhaseDelayed_str(self, value: AnyStr):
+        self._set_string_o(7, value)
+
+    @property
+    def PhaseDelayed(self) -> TCC_Curve:
+        """
+        Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
+
+        DSS property name: `PhaseDelayed`, DSS property index: 7.
+        """
+        return self._get_obj(7, TCC_Curve)
 
     @PhaseDelayed.setter
     def PhaseDelayed(self, value: Union[AnyStr, TCC_Curve]):
@@ -198,26 +211,26 @@ class Recloser(DSSObj, CktElementMixin):
         self._set_string_o(7, value)
 
     @property
-    def PhaseDelayed_obj(self) -> TCC_Curve:
-        """
-        Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
-
-        DSS property name: `PhaseDelayed`, DSS property index: 7.
-        """
-        return self._get_obj(7, TCC_Curve)
-
-    @PhaseDelayed_obj.setter
-    def PhaseDelayed_obj(self, value: TCC_Curve):
-        self._set_obj(7, value)
-
-    @property
-    def GroundFast(self) -> str:
+    def GroundFast_str(self) -> str:
         """
         Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
         DSS property name: `GroundFast`, DSS property index: 8.
         """
         return self._get_prop_string(8)
+
+    @GroundFast_str.setter
+    def GroundFast_str(self, value: AnyStr):
+        self._set_string_o(8, value)
+
+    @property
+    def GroundFast(self) -> TCC_Curve:
+        """
+        Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
+
+        DSS property name: `GroundFast`, DSS property index: 8.
+        """
+        return self._get_obj(8, TCC_Curve)
 
     @GroundFast.setter
     def GroundFast(self, value: Union[AnyStr, TCC_Curve]):
@@ -228,26 +241,26 @@ class Recloser(DSSObj, CktElementMixin):
         self._set_string_o(8, value)
 
     @property
-    def GroundFast_obj(self) -> TCC_Curve:
-        """
-        Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
-
-        DSS property name: `GroundFast`, DSS property index: 8.
-        """
-        return self._get_obj(8, TCC_Curve)
-
-    @GroundFast_obj.setter
-    def GroundFast_obj(self, value: TCC_Curve):
-        self._set_obj(8, value)
-
-    @property
-    def GroundDelayed(self) -> str:
+    def GroundDelayed_str(self) -> str:
         """
         Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
         DSS property name: `GroundDelayed`, DSS property index: 9.
         """
         return self._get_prop_string(9)
+
+    @GroundDelayed_str.setter
+    def GroundDelayed_str(self, value: AnyStr):
+        self._set_string_o(9, value)
+
+    @property
+    def GroundDelayed(self) -> TCC_Curve:
+        """
+        Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
+
+        DSS property name: `GroundDelayed`, DSS property index: 9.
+        """
+        return self._get_obj(9, TCC_Curve)
 
     @GroundDelayed.setter
     def GroundDelayed(self, value: Union[AnyStr, TCC_Curve]):
@@ -256,19 +269,6 @@ class Recloser(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(9, value)
-
-    @property
-    def GroundDelayed_obj(self) -> TCC_Curve:
-        """
-        Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
-
-        DSS property name: `GroundDelayed`, DSS property index: 9.
-        """
-        return self._get_obj(9, TCC_Curve)
-
-    @GroundDelayed_obj.setter
-    def GroundDelayed_obj(self, value: TCC_Curve):
-        self._set_obj(9, value)
 
     @property
     def PhaseTrip(self) -> float:
@@ -556,7 +556,7 @@ class RecloserBatch(DSSBatch):
 
 
     @property
-    def MonitoredObj(self) -> List[str]:
+    def MonitoredObj_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -564,12 +564,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    @MonitoredObj_str.setter
+    def MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
-    def MonitoredObj_obj(self) -> List[DSSObj]:
+    def MonitoredObj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -577,9 +577,9 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @MonitoredObj_obj.setter
-    def MonitoredObj_obj(self, value: DSSObj):
-        self._set_batch_string(1, value)
+    @MonitoredObj.setter
+    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
     def MonitoredTerm(self) -> BatchInt32ArrayProxy:
@@ -595,7 +595,7 @@ class RecloserBatch(DSSBatch):
         self._set_batch_int32_array(2, value)
 
     @property
-    def SwitchedObj(self) -> List[str]:
+    def SwitchedObj_str(self) -> List[str]:
         """
         Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -603,12 +603,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(3, value)
+    @SwitchedObj_str.setter
+    def SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(3, value)
 
     @property
-    def SwitchedObj_obj(self) -> List[DSSObj]:
+    def SwitchedObj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -616,9 +616,9 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(3)
 
-    @SwitchedObj_obj.setter
-    def SwitchedObj_obj(self, value: DSSObj):
-        self._set_batch_string(3, value)
+    @SwitchedObj.setter
+    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
     def SwitchedTerm(self) -> BatchInt32ArrayProxy:
@@ -647,7 +647,7 @@ class RecloserBatch(DSSBatch):
         self._set_batch_int32_array(5, value)
 
     @property
-    def PhaseFast(self) -> List[str]:
+    def PhaseFast_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -655,12 +655,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @PhaseFast.setter
-    def PhaseFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(6, value)
+    @PhaseFast_str.setter
+    def PhaseFast_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(6, value)
 
     @property
-    def PhaseFast_obj(self) -> List[TCC_Curve]:
+    def PhaseFast(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -668,12 +668,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(6)
 
-    @PhaseFast_obj.setter
-    def PhaseFast_obj(self, value: TCC_Curve):
-        self._set_batch_string(6, value)
+    @PhaseFast.setter
+    def PhaseFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(6, value)
 
     @property
-    def PhaseDelayed(self) -> List[str]:
+    def PhaseDelayed_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -681,12 +681,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @PhaseDelayed.setter
-    def PhaseDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(7, value)
+    @PhaseDelayed_str.setter
+    def PhaseDelayed_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(7, value)
 
     @property
-    def PhaseDelayed_obj(self) -> List[TCC_Curve]:
+    def PhaseDelayed(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -694,12 +694,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(7)
 
-    @PhaseDelayed_obj.setter
-    def PhaseDelayed_obj(self, value: TCC_Curve):
-        self._set_batch_string(7, value)
+    @PhaseDelayed.setter
+    def PhaseDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(7, value)
 
     @property
-    def GroundFast(self) -> List[str]:
+    def GroundFast_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -707,12 +707,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    @GroundFast.setter
-    def GroundFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(8, value)
+    @GroundFast_str.setter
+    def GroundFast_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(8, value)
 
     @property
-    def GroundFast_obj(self) -> List[TCC_Curve]:
+    def GroundFast(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -720,12 +720,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(8)
 
-    @GroundFast_obj.setter
-    def GroundFast_obj(self, value: TCC_Curve):
-        self._set_batch_string(8, value)
+    @GroundFast.setter
+    def GroundFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(8, value)
 
     @property
-    def GroundDelayed(self) -> List[str]:
+    def GroundDelayed_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -733,12 +733,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(9)
 
-    @GroundDelayed.setter
-    def GroundDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(9, value)
+    @GroundDelayed_str.setter
+    def GroundDelayed_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(9, value)
 
     @property
-    def GroundDelayed_obj(self) -> List[TCC_Curve]:
+    def GroundDelayed(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -746,9 +746,9 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(9)
 
-    @GroundDelayed_obj.setter
-    def GroundDelayed_obj(self, value: TCC_Curve):
-        self._set_batch_string(9, value)
+    @GroundDelayed.setter
+    def GroundDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(9, value)
 
     @property
     def PhaseTrip(self) -> BatchFloat64ArrayProxy:

@@ -318,13 +318,26 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         self.VSCMode = value
 
     @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Name of harmonic spectrum for this device.
 
         DSS property name: `Spectrum`, DSS property index: 20.
         """
         return self._get_prop_string(20)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(20, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Name of harmonic spectrum for this device.
+
+        DSS property name: `Spectrum`, DSS property index: 20.
+        """
+        return self._get_obj(20, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -333,19 +346,6 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(20, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Name of harmonic spectrum for this device.
-
-        DSS property name: `Spectrum`, DSS property index: 20.
-        """
-        return self._get_obj(20, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(20, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -686,7 +686,7 @@ class VSConverterBatch(DSSBatch):
         self.VSCMode = value
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Name of harmonic spectrum for this device.
 
@@ -694,12 +694,12 @@ class VSConverterBatch(DSSBatch):
         """
         return self._get_batch_str_prop(20)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(20, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(20, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic spectrum for this device.
 
@@ -707,9 +707,9 @@ class VSConverterBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(20)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(20, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(20, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

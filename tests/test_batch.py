@@ -442,7 +442,7 @@ def _test_create_ckt13_batch(which):
 
     # Check some batch properties
     line_batch = dss.Obj.Line.batch()
-    assert [l.LineCode for l in ref.ActiveCircuit.Lines] == line_batch.linecode
+    assert [l.LineCode for l in ref.ActiveCircuit.Lines] == line_batch.linecode_str
 
     load_batch = dss.Obj.Load.batch()
     assert load_batch.conn_str == ['delta' if l.IsDelta else 'wye' for l in ref.ActiveCircuit.Loads]

@@ -86,13 +86,26 @@ class Relay(DSSObj, CktElementMixin):
     }
 
     @property
-    def MonitoredObj(self) -> str:
+    def MonitoredObj_str(self) -> str:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
         return self._get_prop_string(1)
+
+    @MonitoredObj_str.setter
+    def MonitoredObj_str(self, value: AnyStr):
+        self._set_string_o(1, value)
+
+    @property
+    def MonitoredObj(self) -> DSSObj:
+        """
+        Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
+
+        DSS property name: `MonitoredObj`, DSS property index: 1.
+        """
+        return self._get_obj(1, None)
 
     @MonitoredObj.setter
     def MonitoredObj(self, value: Union[AnyStr, DSSObj]):
@@ -101,19 +114,6 @@ class Relay(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(1, value)
-
-    @property
-    def MonitoredObj_obj(self) -> DSSObj:
-        """
-        Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
-
-        DSS property name: `MonitoredObj`, DSS property index: 1.
-        """
-        return self._get_obj(1, None)
-
-    @MonitoredObj_obj.setter
-    def MonitoredObj_obj(self, value: DSSObj):
-        self._set_obj(1, value)
 
     @property
     def MonitoredTerm(self) -> int:
@@ -129,13 +129,26 @@ class Relay(DSSObj, CktElementMixin):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
-    def SwitchedObj(self) -> str:
+    def SwitchedObj_str(self) -> str:
         """
         Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
         return self._get_prop_string(3)
+
+    @SwitchedObj_str.setter
+    def SwitchedObj_str(self, value: AnyStr):
+        self._set_string_o(3, value)
+
+    @property
+    def SwitchedObj(self) -> DSSObj:
+        """
+        Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
+
+        DSS property name: `SwitchedObj`, DSS property index: 3.
+        """
+        return self._get_obj(3, None)
 
     @SwitchedObj.setter
     def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
@@ -144,19 +157,6 @@ class Relay(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(3, value)
-
-    @property
-    def SwitchedObj_obj(self) -> DSSObj:
-        """
-        Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
-
-        DSS property name: `SwitchedObj`, DSS property index: 3.
-        """
-        return self._get_obj(3, None)
-
-    @SwitchedObj_obj.setter
-    def SwitchedObj_obj(self, value: DSSObj):
-        self._set_obj(3, value)
 
     @property
     def SwitchedTerm(self) -> int:
@@ -223,13 +223,26 @@ class Relay(DSSObj, CktElementMixin):
         self.Type = value
 
     @property
-    def PhaseCurve(self) -> str:
+    def PhaseCurve_str(self) -> str:
         """
         Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
         DSS property name: `PhaseCurve`, DSS property index: 6.
         """
         return self._get_prop_string(6)
+
+    @PhaseCurve_str.setter
+    def PhaseCurve_str(self, value: AnyStr):
+        self._set_string_o(6, value)
+
+    @property
+    def PhaseCurve(self) -> TCC_Curve:
+        """
+        Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
+
+        DSS property name: `PhaseCurve`, DSS property index: 6.
+        """
+        return self._get_obj(6, TCC_Curve)
 
     @PhaseCurve.setter
     def PhaseCurve(self, value: Union[AnyStr, TCC_Curve]):
@@ -240,26 +253,26 @@ class Relay(DSSObj, CktElementMixin):
         self._set_string_o(6, value)
 
     @property
-    def PhaseCurve_obj(self) -> TCC_Curve:
-        """
-        Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
-
-        DSS property name: `PhaseCurve`, DSS property index: 6.
-        """
-        return self._get_obj(6, TCC_Curve)
-
-    @PhaseCurve_obj.setter
-    def PhaseCurve_obj(self, value: TCC_Curve):
-        self._set_obj(6, value)
-
-    @property
-    def GroundCurve(self) -> str:
+    def GroundCurve_str(self) -> str:
         """
         Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
 
         DSS property name: `GroundCurve`, DSS property index: 7.
         """
         return self._get_prop_string(7)
+
+    @GroundCurve_str.setter
+    def GroundCurve_str(self, value: AnyStr):
+        self._set_string_o(7, value)
+
+    @property
+    def GroundCurve(self) -> TCC_Curve:
+        """
+        Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
+
+        DSS property name: `GroundCurve`, DSS property index: 7.
+        """
+        return self._get_obj(7, TCC_Curve)
 
     @GroundCurve.setter
     def GroundCurve(self, value: Union[AnyStr, TCC_Curve]):
@@ -268,19 +281,6 @@ class Relay(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(7, value)
-
-    @property
-    def GroundCurve_obj(self) -> TCC_Curve:
-        """
-        Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
-
-        DSS property name: `GroundCurve`, DSS property index: 7.
-        """
-        return self._get_obj(7, TCC_Curve)
-
-    @GroundCurve_obj.setter
-    def GroundCurve_obj(self, value: TCC_Curve):
-        self._set_obj(7, value)
 
     @property
     def PhaseTrip(self) -> float:
@@ -413,13 +413,26 @@ class Relay(DSSObj, CktElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
     @property
-    def OvervoltCurve(self) -> str:
+    def OvervoltCurve_str(self) -> str:
         """
         TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
         DSS property name: `OvervoltCurve`, DSS property index: 18.
         """
         return self._get_prop_string(18)
+
+    @OvervoltCurve_str.setter
+    def OvervoltCurve_str(self, value: AnyStr):
+        self._set_string_o(18, value)
+
+    @property
+    def OvervoltCurve(self) -> TCC_Curve:
+        """
+        TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
+
+        DSS property name: `OvervoltCurve`, DSS property index: 18.
+        """
+        return self._get_obj(18, TCC_Curve)
 
     @OvervoltCurve.setter
     def OvervoltCurve(self, value: Union[AnyStr, TCC_Curve]):
@@ -430,26 +443,26 @@ class Relay(DSSObj, CktElementMixin):
         self._set_string_o(18, value)
 
     @property
-    def OvervoltCurve_obj(self) -> TCC_Curve:
-        """
-        TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
-
-        DSS property name: `OvervoltCurve`, DSS property index: 18.
-        """
-        return self._get_obj(18, TCC_Curve)
-
-    @OvervoltCurve_obj.setter
-    def OvervoltCurve_obj(self, value: TCC_Curve):
-        self._set_obj(18, value)
-
-    @property
-    def UndervoltCurve(self) -> str:
+    def UndervoltCurve_str(self) -> str:
         """
         TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
         DSS property name: `UndervoltCurve`, DSS property index: 19.
         """
         return self._get_prop_string(19)
+
+    @UndervoltCurve_str.setter
+    def UndervoltCurve_str(self, value: AnyStr):
+        self._set_string_o(19, value)
+
+    @property
+    def UndervoltCurve(self) -> TCC_Curve:
+        """
+        TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
+
+        DSS property name: `UndervoltCurve`, DSS property index: 19.
+        """
+        return self._get_obj(19, TCC_Curve)
 
     @UndervoltCurve.setter
     def UndervoltCurve(self, value: Union[AnyStr, TCC_Curve]):
@@ -458,19 +471,6 @@ class Relay(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(19, value)
-
-    @property
-    def UndervoltCurve_obj(self) -> TCC_Curve:
-        """
-        TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
-
-        DSS property name: `UndervoltCurve`, DSS property index: 19.
-        """
-        return self._get_obj(19, TCC_Curve)
-
-    @UndervoltCurve_obj.setter
-    def UndervoltCurve_obj(self, value: TCC_Curve):
-        self._set_obj(19, value)
 
     @property
     def kVBase(self) -> float:
@@ -872,13 +872,26 @@ class Relay(DSSObj, CktElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 46, value)
 
     @property
-    def DOC_PhaseCurveInner(self) -> str:
+    def DOC_PhaseCurveInner_str(self) -> str:
         """
         Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
         DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
         """
         return self._get_prop_string(47)
+
+    @DOC_PhaseCurveInner_str.setter
+    def DOC_PhaseCurveInner_str(self, value: AnyStr):
+        self._set_string_o(47, value)
+
+    @property
+    def DOC_PhaseCurveInner(self) -> TCC_Curve:
+        """
+        Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
+
+        DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
+        """
+        return self._get_obj(47, TCC_Curve)
 
     @DOC_PhaseCurveInner.setter
     def DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve]):
@@ -887,19 +900,6 @@ class Relay(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(47, value)
-
-    @property
-    def DOC_PhaseCurveInner_obj(self) -> TCC_Curve:
-        """
-        Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
-
-        DSS property name: `DOC_PhaseCurveInner`, DSS property index: 47.
-        """
-        return self._get_obj(47, TCC_Curve)
-
-    @DOC_PhaseCurveInner_obj.setter
-    def DOC_PhaseCurveInner_obj(self, value: TCC_Curve):
-        self._set_obj(47, value)
 
     @property
     def DOC_PhaseTripInner(self) -> float:
@@ -1039,7 +1039,7 @@ class RelayBatch(DSSBatch):
 
 
     @property
-    def MonitoredObj(self) -> List[str]:
+    def MonitoredObj_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -1047,12 +1047,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    @MonitoredObj_str.setter
+    def MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
-    def MonitoredObj_obj(self) -> List[DSSObj]:
+    def MonitoredObj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -1060,9 +1060,9 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @MonitoredObj_obj.setter
-    def MonitoredObj_obj(self, value: DSSObj):
-        self._set_batch_string(1, value)
+    @MonitoredObj.setter
+    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
     def MonitoredTerm(self) -> BatchInt32ArrayProxy:
@@ -1078,7 +1078,7 @@ class RelayBatch(DSSBatch):
         self._set_batch_int32_array(2, value)
 
     @property
-    def SwitchedObj(self) -> List[str]:
+    def SwitchedObj_str(self) -> List[str]:
         """
         Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -1086,12 +1086,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(3, value)
+    @SwitchedObj_str.setter
+    def SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(3, value)
 
     @property
-    def SwitchedObj_obj(self) -> List[DSSObj]:
+    def SwitchedObj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -1099,9 +1099,9 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(3)
 
-    @SwitchedObj_obj.setter
-    def SwitchedObj_obj(self, value: DSSObj):
-        self._set_batch_string(3, value)
+    @SwitchedObj.setter
+    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
     def SwitchedTerm(self) -> BatchInt32ArrayProxy:
@@ -1169,7 +1169,7 @@ class RelayBatch(DSSBatch):
         self.Type = value
 
     @property
-    def PhaseCurve(self) -> List[str]:
+    def PhaseCurve_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -1177,12 +1177,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @PhaseCurve.setter
-    def PhaseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(6, value)
+    @PhaseCurve_str.setter
+    def PhaseCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(6, value)
 
     @property
-    def PhaseCurve_obj(self) -> List[TCC_Curve]:
+    def PhaseCurve(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -1190,12 +1190,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(6)
 
-    @PhaseCurve_obj.setter
-    def PhaseCurve_obj(self, value: TCC_Curve):
-        self._set_batch_string(6, value)
+    @PhaseCurve.setter
+    def PhaseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(6, value)
 
     @property
-    def GroundCurve(self) -> List[str]:
+    def GroundCurve_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
 
@@ -1203,12 +1203,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @GroundCurve.setter
-    def GroundCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(7, value)
+    @GroundCurve_str.setter
+    def GroundCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(7, value)
 
     @property
-    def GroundCurve_obj(self) -> List[TCC_Curve]:
+    def GroundCurve(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
 
@@ -1216,9 +1216,9 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(7)
 
-    @GroundCurve_obj.setter
-    def GroundCurve_obj(self, value: TCC_Curve):
-        self._set_batch_string(7, value)
+    @GroundCurve.setter
+    def GroundCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(7, value)
 
     @property
     def PhaseTrip(self) -> BatchFloat64ArrayProxy:
@@ -1354,7 +1354,7 @@ class RelayBatch(DSSBatch):
         self._set_batch_float64_array(17, value)
 
     @property
-    def OvervoltCurve(self) -> List[str]:
+    def OvervoltCurve_str(self) -> List[str]:
         """
         TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -1362,12 +1362,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(18)
 
-    @OvervoltCurve.setter
-    def OvervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(18, value)
+    @OvervoltCurve_str.setter
+    def OvervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(18, value)
 
     @property
-    def OvervoltCurve_obj(self) -> List[TCC_Curve]:
+    def OvervoltCurve(self) -> List[TCC_Curve]:
         """
         TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -1375,12 +1375,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(18)
 
-    @OvervoltCurve_obj.setter
-    def OvervoltCurve_obj(self, value: TCC_Curve):
-        self._set_batch_string(18, value)
+    @OvervoltCurve.setter
+    def OvervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(18, value)
 
     @property
-    def UndervoltCurve(self) -> List[str]:
+    def UndervoltCurve_str(self) -> List[str]:
         """
         TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -1388,12 +1388,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(19)
 
-    @UndervoltCurve.setter
-    def UndervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(19, value)
+    @UndervoltCurve_str.setter
+    def UndervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(19, value)
 
     @property
-    def UndervoltCurve_obj(self) -> List[TCC_Curve]:
+    def UndervoltCurve(self) -> List[TCC_Curve]:
         """
         TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -1401,9 +1401,9 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(19)
 
-    @UndervoltCurve_obj.setter
-    def UndervoltCurve_obj(self, value: TCC_Curve):
-        self._set_batch_string(19, value)
+    @UndervoltCurve.setter
+    def UndervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(19, value)
 
     @property
     def kVBase(self) -> BatchFloat64ArrayProxy:
@@ -1811,7 +1811,7 @@ class RelayBatch(DSSBatch):
         self._set_batch_float64_array(46, value)
 
     @property
-    def DOC_PhaseCurveInner(self) -> List[str]:
+    def DOC_PhaseCurveInner_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
@@ -1819,12 +1819,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(47)
 
-    @DOC_PhaseCurveInner.setter
-    def DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(47, value)
+    @DOC_PhaseCurveInner_str.setter
+    def DOC_PhaseCurveInner_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(47, value)
 
     @property
-    def DOC_PhaseCurveInner_obj(self) -> List[TCC_Curve]:
+    def DOC_PhaseCurveInner(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
@@ -1832,9 +1832,9 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(47)
 
-    @DOC_PhaseCurveInner_obj.setter
-    def DOC_PhaseCurveInner_obj(self, value: TCC_Curve):
-        self._set_batch_string(47, value)
+    @DOC_PhaseCurveInner.setter
+    def DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(47, value)
 
     @property
     def DOC_PhaseTripInner(self) -> BatchFloat64ArrayProxy:

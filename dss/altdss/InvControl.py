@@ -187,7 +187,7 @@ class InvControl(DSSObj, CktElementMixin):
         self.CombiMode = value
 
     @property
-    def VVC_Curve1(self) -> str:
+    def VVC_Curve1_str(self) -> str:
         """
         Required for VOLTVAR mode. 
 
@@ -200,16 +200,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(4)
 
-    @VVC_Curve1.setter
-    def VVC_Curve1(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_obj(4, value)
-            return
-
+    @VVC_Curve1_str.setter
+    def VVC_Curve1_str(self, value: AnyStr):
         self._set_string_o(4, value)
 
     @property
-    def VVC_Curve1_obj(self) -> XYcurve:
+    def VVC_Curve1(self) -> XYcurve:
         """
         Required for VOLTVAR mode. 
 
@@ -222,9 +218,13 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(4, XYcurve)
 
-    @VVC_Curve1_obj.setter
-    def VVC_Curve1_obj(self, value: XYcurve):
-        self._set_obj(4, value)
+    @VVC_Curve1.setter
+    def VVC_Curve1(self, value: Union[AnyStr, XYcurve]):
+        if isinstance(value, DSSObj):
+            self._set_obj(4, value)
+            return
+
+        self._set_string_o(4, value)
 
     @property
     def Hysteresis_Offset(self) -> float:
@@ -320,7 +320,7 @@ class InvControl(DSSObj, CktElementMixin):
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
     @property
-    def VoltWatt_Curve(self) -> str:
+    def VoltWatt_Curve_str(self) -> str:
         """
         Required for VOLTWATT mode. 
 
@@ -334,16 +334,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(8)
 
-    @VoltWatt_Curve.setter
-    def VoltWatt_Curve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_obj(8, value)
-            return
-
+    @VoltWatt_Curve_str.setter
+    def VoltWatt_Curve_str(self, value: AnyStr):
         self._set_string_o(8, value)
 
     @property
-    def VoltWatt_Curve_obj(self) -> XYcurve:
+    def VoltWatt_Curve(self) -> XYcurve:
         """
         Required for VOLTWATT mode. 
 
@@ -357,9 +353,13 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(8, XYcurve)
 
-    @VoltWatt_Curve_obj.setter
-    def VoltWatt_Curve_obj(self, value: XYcurve):
-        self._set_obj(8, value)
+    @VoltWatt_Curve.setter
+    def VoltWatt_Curve(self, value: Union[AnyStr, XYcurve]):
+        if isinstance(value, DSSObj):
+            self._set_obj(8, value)
+            return
+
+        self._set_string_o(8, value)
 
     @property
     def DbVMin(self) -> float:
@@ -793,7 +793,7 @@ class InvControl(DSSObj, CktElementMixin):
         self._set_float64_array_o(27, value)
 
     @property
-    def VoltWattCH_Curve(self) -> str:
+    def VoltWattCH_Curve_str(self) -> str:
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
@@ -809,16 +809,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(28)
 
-    @VoltWattCH_Curve.setter
-    def VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_obj(28, value)
-            return
-
+    @VoltWattCH_Curve_str.setter
+    def VoltWattCH_Curve_str(self, value: AnyStr):
         self._set_string_o(28, value)
 
     @property
-    def VoltWattCH_Curve_obj(self) -> XYcurve:
+    def VoltWattCH_Curve(self) -> XYcurve:
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
@@ -834,12 +830,16 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(28, XYcurve)
 
-    @VoltWattCH_Curve_obj.setter
-    def VoltWattCH_Curve_obj(self, value: XYcurve):
-        self._set_obj(28, value)
+    @VoltWattCH_Curve.setter
+    def VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve]):
+        if isinstance(value, DSSObj):
+            self._set_obj(28, value)
+            return
+
+        self._set_string_o(28, value)
 
     @property
-    def WattPF_Curve(self) -> str:
+    def WattPF_Curve_str(self) -> str:
         """
         Required for WATTPF mode.
 
@@ -860,16 +860,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(29)
 
-    @WattPF_Curve.setter
-    def WattPF_Curve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_obj(29, value)
-            return
-
+    @WattPF_Curve_str.setter
+    def WattPF_Curve_str(self, value: AnyStr):
         self._set_string_o(29, value)
 
     @property
-    def WattPF_Curve_obj(self) -> XYcurve:
+    def WattPF_Curve(self) -> XYcurve:
         """
         Required for WATTPF mode.
 
@@ -890,12 +886,16 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(29, XYcurve)
 
-    @WattPF_Curve_obj.setter
-    def WattPF_Curve_obj(self, value: XYcurve):
-        self._set_obj(29, value)
+    @WattPF_Curve.setter
+    def WattPF_Curve(self, value: Union[AnyStr, XYcurve]):
+        if isinstance(value, DSSObj):
+            self._set_obj(29, value)
+            return
+
+        self._set_string_o(29, value)
 
     @property
-    def WattVar_Curve(self) -> str:
+    def WattVar_Curve_str(self) -> str:
         """
         Required for WATTVAR mode. 
 
@@ -908,16 +908,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(30)
 
-    @WattVar_Curve.setter
-    def WattVar_Curve(self, value: Union[AnyStr, XYcurve]):
-        if isinstance(value, DSSObj):
-            self._set_obj(30, value)
-            return
-
+    @WattVar_Curve_str.setter
+    def WattVar_Curve_str(self, value: AnyStr):
         self._set_string_o(30, value)
 
     @property
-    def WattVar_Curve_obj(self) -> XYcurve:
+    def WattVar_Curve(self) -> XYcurve:
         """
         Required for WATTVAR mode. 
 
@@ -930,9 +926,13 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(30, XYcurve)
 
-    @WattVar_Curve_obj.setter
-    def WattVar_Curve_obj(self, value: XYcurve):
-        self._set_obj(30, value)
+    @WattVar_Curve.setter
+    def WattVar_Curve(self, value: Union[AnyStr, XYcurve]):
+        if isinstance(value, DSSObj):
+            self._set_obj(30, value)
+            return
+
+        self._set_string_o(30, value)
 
     @property
     def VSetPoint(self) -> float:
@@ -1176,7 +1176,7 @@ class InvControlBatch(DSSBatch):
         self.CombiMode = value
 
     @property
-    def VVC_Curve1(self) -> List[str]:
+    def VVC_Curve1_str(self) -> List[str]:
         """
         Required for VOLTVAR mode. 
 
@@ -1189,12 +1189,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(4)
 
-    @VVC_Curve1.setter
-    def VVC_Curve1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(4, value)
+    @VVC_Curve1_str.setter
+    def VVC_Curve1_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(4, value)
 
     @property
-    def VVC_Curve1_obj(self) -> List[XYcurve]:
+    def VVC_Curve1(self) -> List[XYcurve]:
         """
         Required for VOLTVAR mode. 
 
@@ -1207,9 +1207,9 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(4)
 
-    @VVC_Curve1_obj.setter
-    def VVC_Curve1_obj(self, value: XYcurve):
-        self._set_batch_string(4, value)
+    @VVC_Curve1.setter
+    def VVC_Curve1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(4, value)
 
     @property
     def Hysteresis_Offset(self) -> BatchFloat64ArrayProxy:
@@ -1306,7 +1306,7 @@ class InvControlBatch(DSSBatch):
         self._set_batch_int32_array(7, value)
 
     @property
-    def VoltWatt_Curve(self) -> List[str]:
+    def VoltWatt_Curve_str(self) -> List[str]:
         """
         Required for VOLTWATT mode. 
 
@@ -1320,12 +1320,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    @VoltWatt_Curve.setter
-    def VoltWatt_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(8, value)
+    @VoltWatt_Curve_str.setter
+    def VoltWatt_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(8, value)
 
     @property
-    def VoltWatt_Curve_obj(self) -> List[XYcurve]:
+    def VoltWatt_Curve(self) -> List[XYcurve]:
         """
         Required for VOLTWATT mode. 
 
@@ -1339,9 +1339,9 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(8)
 
-    @VoltWatt_Curve_obj.setter
-    def VoltWatt_Curve_obj(self, value: XYcurve):
-        self._set_batch_string(8, value)
+    @VoltWatt_Curve.setter
+    def VoltWatt_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(8, value)
 
     @property
     def DbVMin(self) -> BatchFloat64ArrayProxy:
@@ -1781,7 +1781,7 @@ class InvControlBatch(DSSBatch):
         self._set_batch_float64_array_prop(27, value)
 
     @property
-    def VoltWattCH_Curve(self) -> List[str]:
+    def VoltWattCH_Curve_str(self) -> List[str]:
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
@@ -1797,12 +1797,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(28)
 
-    @VoltWattCH_Curve.setter
-    def VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(28, value)
+    @VoltWattCH_Curve_str.setter
+    def VoltWattCH_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(28, value)
 
     @property
-    def VoltWattCH_Curve_obj(self) -> List[XYcurve]:
+    def VoltWattCH_Curve(self) -> List[XYcurve]:
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
@@ -1818,12 +1818,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(28)
 
-    @VoltWattCH_Curve_obj.setter
-    def VoltWattCH_Curve_obj(self, value: XYcurve):
-        self._set_batch_string(28, value)
+    @VoltWattCH_Curve.setter
+    def VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(28, value)
 
     @property
-    def WattPF_Curve(self) -> List[str]:
+    def WattPF_Curve_str(self) -> List[str]:
         """
         Required for WATTPF mode.
 
@@ -1844,12 +1844,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(29)
 
-    @WattPF_Curve.setter
-    def WattPF_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(29, value)
+    @WattPF_Curve_str.setter
+    def WattPF_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(29, value)
 
     @property
-    def WattPF_Curve_obj(self) -> List[XYcurve]:
+    def WattPF_Curve(self) -> List[XYcurve]:
         """
         Required for WATTPF mode.
 
@@ -1870,12 +1870,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(29)
 
-    @WattPF_Curve_obj.setter
-    def WattPF_Curve_obj(self, value: XYcurve):
-        self._set_batch_string(29, value)
+    @WattPF_Curve.setter
+    def WattPF_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(29, value)
 
     @property
-    def WattVar_Curve(self) -> List[str]:
+    def WattVar_Curve_str(self) -> List[str]:
         """
         Required for WATTVAR mode. 
 
@@ -1888,12 +1888,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(30)
 
-    @WattVar_Curve.setter
-    def WattVar_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(30, value)
+    @WattVar_Curve_str.setter
+    def WattVar_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(30, value)
 
     @property
-    def WattVar_Curve_obj(self) -> List[XYcurve]:
+    def WattVar_Curve(self) -> List[XYcurve]:
         """
         Required for WATTVAR mode. 
 
@@ -1906,9 +1906,9 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(30)
 
-    @WattVar_Curve_obj.setter
-    def WattVar_Curve_obj(self, value: XYcurve):
-        self._set_batch_string(30, value)
+    @WattVar_Curve.setter
+    def WattVar_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(30, value)
 
     @property
     def VSetPoint(self) -> BatchFloat64ArrayProxy:

@@ -265,13 +265,26 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
     @property
-    def EffCurve(self) -> str:
+    def EffCurve_str(self) -> str:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
 
         DSS property name: `EffCurve`, DSS property index: 11.
         """
         return self._get_prop_string(11)
+
+    @EffCurve_str.setter
+    def EffCurve_str(self, value: AnyStr):
+        self._set_string_o(11, value)
+
+    @property
+    def EffCurve(self) -> XYcurve:
+        """
+        An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
+
+        DSS property name: `EffCurve`, DSS property index: 11.
+        """
+        return self._get_obj(11, XYcurve)
 
     @EffCurve.setter
     def EffCurve(self, value: Union[AnyStr, XYcurve]):
@@ -280,19 +293,6 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
             return
 
         self._set_string_o(11, value)
-
-    @property
-    def EffCurve_obj(self) -> XYcurve:
-        """
-        An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
-
-        DSS property name: `EffCurve`, DSS property index: 11.
-        """
-        return self._get_obj(11, XYcurve)
-
-    @EffCurve_obj.setter
-    def EffCurve_obj(self, value: XYcurve):
-        self._set_obj(11, value)
 
     @property
     def VarFollowInverter(self) -> bool:
@@ -654,13 +654,26 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         self._lib.Obj_SetInt32(self._ptr, 38, value)
 
     @property
-    def Yearly(self) -> str:
+    def Yearly_str(self) -> str:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
         DSS property name: `Yearly`, DSS property index: 39.
         """
         return self._get_prop_string(39)
+
+    @Yearly_str.setter
+    def Yearly_str(self, value: AnyStr):
+        self._set_string_o(39, value)
+
+    @property
+    def Yearly(self) -> LoadShape:
+        """
+        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
+
+        DSS property name: `Yearly`, DSS property index: 39.
+        """
+        return self._get_obj(39, LoadShape)
 
     @Yearly.setter
     def Yearly(self, value: Union[AnyStr, LoadShape]):
@@ -671,26 +684,26 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         self._set_string_o(39, value)
 
     @property
-    def Yearly_obj(self) -> LoadShape:
-        """
-        Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
-
-        DSS property name: `Yearly`, DSS property index: 39.
-        """
-        return self._get_obj(39, LoadShape)
-
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_obj(39, value)
-
-    @property
-    def Daily(self) -> str:
+    def Daily_str(self) -> str:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
         DSS property name: `Daily`, DSS property index: 40.
         """
         return self._get_prop_string(40)
+
+    @Daily_str.setter
+    def Daily_str(self, value: AnyStr):
+        self._set_string_o(40, value)
+
+    @property
+    def Daily(self) -> LoadShape:
+        """
+        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
+
+        DSS property name: `Daily`, DSS property index: 40.
+        """
+        return self._get_obj(40, LoadShape)
 
     @Daily.setter
     def Daily(self, value: Union[AnyStr, LoadShape]):
@@ -701,20 +714,7 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         self._set_string_o(40, value)
 
     @property
-    def Daily_obj(self) -> LoadShape:
-        """
-        Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
-
-        DSS property name: `Daily`, DSS property index: 40.
-        """
-        return self._get_obj(40, LoadShape)
-
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_obj(40, value)
-
-    @property
-    def Duty(self) -> str:
+    def Duty_str(self) -> str:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. 
 
@@ -726,16 +726,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(41)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_obj(41, value)
-            return
-
+    @Duty_str.setter
+    def Duty_str(self, value: AnyStr):
         self._set_string_o(41, value)
 
     @property
-    def Duty_obj(self) -> LoadShape:
+    def Duty(self) -> LoadShape:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. 
 
@@ -747,9 +743,13 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_obj(41, LoadShape)
 
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_obj(41, value)
+    @Duty.setter
+    def Duty(self, value: Union[AnyStr, LoadShape]):
+        if isinstance(value, DSSObj):
+            self._set_obj(41, value)
+            return
+
+        self._set_string_o(41, value)
 
     @property
     def DispMode(self) -> enums.StorageDispatchMode:
@@ -985,13 +985,26 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         self._lib.Obj_SetInt32(self._ptr, 56, value)
 
     @property
-    def DynamicEq(self) -> str:
+    def DynamicEq_str(self) -> str:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
         DSS property name: `DynamicEq`, DSS property index: 57.
         """
         return self._get_prop_string(57)
+
+    @DynamicEq_str.setter
+    def DynamicEq_str(self, value: AnyStr):
+        self._set_string_o(57, value)
+
+    @property
+    def DynamicEq(self) -> DynamicExp:
+        """
+        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
+
+        DSS property name: `DynamicEq`, DSS property index: 57.
+        """
+        return self._get_obj(57, DynamicExp)
 
     @DynamicEq.setter
     def DynamicEq(self, value: Union[AnyStr, DynamicExp]):
@@ -1000,19 +1013,6 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
             return
 
         self._set_string_o(57, value)
-
-    @property
-    def DynamicEq_obj(self) -> DynamicExp:
-        """
-        The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
-
-        DSS property name: `DynamicEq`, DSS property index: 57.
-        """
-        return self._get_obj(57, DynamicExp)
-
-    @DynamicEq_obj.setter
-    def DynamicEq_obj(self, value: DynamicExp):
-        self._set_obj(57, value)
 
     @property
     def DynOut(self) -> str:
@@ -1092,13 +1092,26 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         self._lib.Obj_SetFloat64(self._ptr, 61, value)
 
     @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
         DSS property name: `Spectrum`, DSS property index: 62.
         """
         return self._get_prop_string(62)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(62, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
+
+        DSS property name: `Spectrum`, DSS property index: 62.
+        """
+        return self._get_obj(62, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -1107,19 +1120,6 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
             return
 
         self._set_string_o(62, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
-
-        DSS property name: `Spectrum`, DSS property index: 62.
-        """
-        return self._get_obj(62, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(62, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -1386,7 +1386,7 @@ class StorageBatch(DSSBatch):
         self._set_batch_float64_array(10, value)
 
     @property
-    def EffCurve(self) -> List[str]:
+    def EffCurve_str(self) -> List[str]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
 
@@ -1394,12 +1394,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @EffCurve.setter
-    def EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(11, value)
+    @EffCurve_str.setter
+    def EffCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(11, value)
 
     @property
-    def EffCurve_obj(self) -> List[XYcurve]:
+    def EffCurve(self) -> List[XYcurve]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
 
@@ -1407,9 +1407,9 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    @EffCurve_obj.setter
-    def EffCurve_obj(self, value: XYcurve):
-        self._set_batch_string(11, value)
+    @EffCurve.setter
+    def EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
     def VarFollowInverter(self) -> List[bool]:
@@ -1777,7 +1777,7 @@ class StorageBatch(DSSBatch):
         self._set_batch_int32_array(38, value)
 
     @property
-    def Yearly(self) -> List[str]:
+    def Yearly_str(self) -> List[str]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -1785,12 +1785,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(39)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(39, value)
+    @Yearly_str.setter
+    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(39, value)
 
     @property
-    def Yearly_obj(self) -> List[LoadShape]:
+    def Yearly(self) -> List[LoadShape]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -1798,12 +1798,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(39)
 
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_batch_string(39, value)
+    @Yearly.setter
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(39, value)
 
     @property
-    def Daily(self) -> List[str]:
+    def Daily_str(self) -> List[str]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -1811,12 +1811,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(40)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(40, value)
+    @Daily_str.setter
+    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(40, value)
 
     @property
-    def Daily_obj(self) -> List[LoadShape]:
+    def Daily(self) -> List[LoadShape]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -1824,12 +1824,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(40)
 
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_batch_string(40, value)
+    @Daily.setter
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(40, value)
 
     @property
-    def Duty(self) -> List[str]:
+    def Duty_str(self) -> List[str]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. 
 
@@ -1841,12 +1841,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(41)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(41, value)
+    @Duty_str.setter
+    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(41, value)
 
     @property
-    def Duty_obj(self) -> List[LoadShape]:
+    def Duty(self) -> List[LoadShape]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. 
 
@@ -1858,9 +1858,9 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(41)
 
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_batch_string(41, value)
+    @Duty.setter
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(41, value)
 
     @property
     def DispMode(self) -> BatchInt32ArrayProxy:
@@ -2099,7 +2099,7 @@ class StorageBatch(DSSBatch):
         self._set_batch_int32_array(56, value)
 
     @property
-    def DynamicEq(self) -> List[str]:
+    def DynamicEq_str(self) -> List[str]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -2107,12 +2107,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(57)
 
-    @DynamicEq.setter
-    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
-        self._set_batch_obj_prop(57, value)
+    @DynamicEq_str.setter
+    def DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(57, value)
 
     @property
-    def DynamicEq_obj(self) -> List[DynamicExp]:
+    def DynamicEq(self) -> List[DynamicExp]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -2120,9 +2120,9 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(57)
 
-    @DynamicEq_obj.setter
-    def DynamicEq_obj(self, value: DynamicExp):
-        self._set_batch_string(57, value)
+    @DynamicEq.setter
+    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
+        self._set_batch_obj_prop(57, value)
 
     @property
     def DynOut(self) -> List[str]:
@@ -2203,7 +2203,7 @@ class StorageBatch(DSSBatch):
         self._set_batch_float64_array(61, value)
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -2211,12 +2211,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(62)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(62, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(62, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -2224,9 +2224,9 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(62)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(62, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(62, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

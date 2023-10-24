@@ -38,13 +38,26 @@ class Fuse(DSSObj, CktElementMixin):
     }
 
     @property
-    def MonitoredObj(self) -> str:
+    def MonitoredObj_str(self) -> str:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
 
         DSS property name: `MonitoredObj`, DSS property index: 1.
         """
         return self._get_prop_string(1)
+
+    @MonitoredObj_str.setter
+    def MonitoredObj_str(self, value: AnyStr):
+        self._set_string_o(1, value)
+
+    @property
+    def MonitoredObj(self) -> DSSObj:
+        """
+        Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
+
+        DSS property name: `MonitoredObj`, DSS property index: 1.
+        """
+        return self._get_obj(1, None)
 
     @MonitoredObj.setter
     def MonitoredObj(self, value: Union[AnyStr, DSSObj]):
@@ -53,19 +66,6 @@ class Fuse(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(1, value)
-
-    @property
-    def MonitoredObj_obj(self) -> DSSObj:
-        """
-        Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
-
-        DSS property name: `MonitoredObj`, DSS property index: 1.
-        """
-        return self._get_obj(1, None)
-
-    @MonitoredObj_obj.setter
-    def MonitoredObj_obj(self, value: DSSObj):
-        self._set_obj(1, value)
 
     @property
     def MonitoredTerm(self) -> int:
@@ -81,13 +81,26 @@ class Fuse(DSSObj, CktElementMixin):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
     @property
-    def SwitchedObj(self) -> str:
+    def SwitchedObj_str(self) -> str:
         """
         Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
         DSS property name: `SwitchedObj`, DSS property index: 3.
         """
         return self._get_prop_string(3)
+
+    @SwitchedObj_str.setter
+    def SwitchedObj_str(self, value: AnyStr):
+        self._set_string_o(3, value)
+
+    @property
+    def SwitchedObj(self) -> DSSObj:
+        """
+        Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
+
+        DSS property name: `SwitchedObj`, DSS property index: 3.
+        """
+        return self._get_obj(3, None)
 
     @SwitchedObj.setter
     def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
@@ -96,19 +109,6 @@ class Fuse(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(3, value)
-
-    @property
-    def SwitchedObj_obj(self) -> DSSObj:
-        """
-        Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
-
-        DSS property name: `SwitchedObj`, DSS property index: 3.
-        """
-        return self._get_obj(3, None)
-
-    @SwitchedObj_obj.setter
-    def SwitchedObj_obj(self, value: DSSObj):
-        self._set_obj(3, value)
 
     @property
     def SwitchedTerm(self) -> int:
@@ -124,13 +124,26 @@ class Fuse(DSSObj, CktElementMixin):
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
     @property
-    def FuseCurve(self) -> str:
+    def FuseCurve_str(self) -> str:
         """
         Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
 
         DSS property name: `FuseCurve`, DSS property index: 5.
         """
         return self._get_prop_string(5)
+
+    @FuseCurve_str.setter
+    def FuseCurve_str(self, value: AnyStr):
+        self._set_string_o(5, value)
+
+    @property
+    def FuseCurve(self) -> TCC_Curve:
+        """
+        Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
+
+        DSS property name: `FuseCurve`, DSS property index: 5.
+        """
+        return self._get_obj(5, TCC_Curve)
 
     @FuseCurve.setter
     def FuseCurve(self, value: Union[AnyStr, TCC_Curve]):
@@ -139,19 +152,6 @@ class Fuse(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(5, value)
-
-    @property
-    def FuseCurve_obj(self) -> TCC_Curve:
-        """
-        Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
-
-        DSS property name: `FuseCurve`, DSS property index: 5.
-        """
-        return self._get_obj(5, TCC_Curve)
-
-    @FuseCurve_obj.setter
-    def FuseCurve_obj(self, value: TCC_Curve):
-        self._set_obj(5, value)
 
     @property
     def RatedCurrent(self) -> float:
@@ -316,7 +316,7 @@ class FuseBatch(DSSBatch):
 
 
     @property
-    def MonitoredObj(self) -> List[str]:
+    def MonitoredObj_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -324,12 +324,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    @MonitoredObj_str.setter
+    def MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
-    def MonitoredObj_obj(self) -> List[DSSObj]:
+    def MonitoredObj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -337,9 +337,9 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @MonitoredObj_obj.setter
-    def MonitoredObj_obj(self, value: DSSObj):
-        self._set_batch_string(1, value)
+    @MonitoredObj.setter
+    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
     def MonitoredTerm(self) -> BatchInt32ArrayProxy:
@@ -355,7 +355,7 @@ class FuseBatch(DSSBatch):
         self._set_batch_int32_array(2, value)
 
     @property
-    def SwitchedObj(self) -> List[str]:
+    def SwitchedObj_str(self) -> List[str]:
         """
         Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -363,12 +363,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(3, value)
+    @SwitchedObj_str.setter
+    def SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(3, value)
 
     @property
-    def SwitchedObj_obj(self) -> List[DSSObj]:
+    def SwitchedObj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -376,9 +376,9 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(3)
 
-    @SwitchedObj_obj.setter
-    def SwitchedObj_obj(self, value: DSSObj):
-        self._set_batch_string(3, value)
+    @SwitchedObj.setter
+    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(3, value)
 
     @property
     def SwitchedTerm(self) -> BatchInt32ArrayProxy:
@@ -394,7 +394,7 @@ class FuseBatch(DSSBatch):
         self._set_batch_int32_array(4, value)
 
     @property
-    def FuseCurve(self) -> List[str]:
+    def FuseCurve_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
 
@@ -402,12 +402,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_str_prop(5)
 
-    @FuseCurve.setter
-    def FuseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(5, value)
+    @FuseCurve_str.setter
+    def FuseCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(5, value)
 
     @property
-    def FuseCurve_obj(self) -> List[TCC_Curve]:
+    def FuseCurve(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
 
@@ -415,9 +415,9 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(5)
 
-    @FuseCurve_obj.setter
-    def FuseCurve_obj(self, value: TCC_Curve):
-        self._set_batch_string(5, value)
+    @FuseCurve.setter
+    def FuseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+        self._set_batch_obj_prop(5, value)
 
     @property
     def RatedCurrent(self) -> BatchFloat64ArrayProxy:

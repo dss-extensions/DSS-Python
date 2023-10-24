@@ -178,13 +178,26 @@ class GICsource(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
     @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Not used.
 
         DSS property name: `Spectrum`, DSS property index: 11.
         """
         return self._get_prop_string(11)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(11, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Not used.
+
+        DSS property name: `Spectrum`, DSS property index: 11.
+        """
+        return self._get_obj(11, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -193,19 +206,6 @@ class GICsource(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(11, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Not used.
-
-        DSS property name: `Spectrum`, DSS property index: 11.
-        """
-        return self._get_obj(11, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(11, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -405,7 +405,7 @@ class GICsourceBatch(DSSBatch):
         self._set_batch_float64_array(10, value)
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Not used.
 
@@ -413,12 +413,12 @@ class GICsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(11, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(11, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Not used.
 
@@ -426,9 +426,9 @@ class GICsourceBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(11, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(11, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

@@ -427,7 +427,7 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         self._lib.Obj_SetFloat64(self._ptr, 26, value)
 
     @property
-    def Yearly(self) -> str:
+    def Yearly_str(self) -> str:
         """
         LOADSHAPE object to use for the per-unit voltage for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -439,16 +439,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(27)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_obj(27, value)
-            return
-
+    @Yearly_str.setter
+    def Yearly_str(self, value: AnyStr):
         self._set_string_o(27, value)
 
     @property
-    def Yearly_obj(self) -> LoadShape:
+    def Yearly(self) -> LoadShape:
         """
         LOADSHAPE object to use for the per-unit voltage for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -460,12 +456,16 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(27, LoadShape)
 
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_obj(27, value)
+    @Yearly.setter
+    def Yearly(self, value: Union[AnyStr, LoadShape]):
+        if isinstance(value, DSSObj):
+            self._set_obj(27, value)
+            return
+
+        self._set_string_o(27, value)
 
     @property
-    def Daily(self) -> str:
+    def Daily_str(self) -> str:
         """
         LOADSHAPE object to use for the per-unit voltage for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -477,16 +477,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(28)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_obj(28, value)
-            return
-
+    @Daily_str.setter
+    def Daily_str(self, value: AnyStr):
         self._set_string_o(28, value)
 
     @property
-    def Daily_obj(self) -> LoadShape:
+    def Daily(self) -> LoadShape:
         """
         LOADSHAPE object to use for the per-unit voltage for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -498,12 +494,16 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(28, LoadShape)
 
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_obj(28, value)
+    @Daily.setter
+    def Daily(self, value: Union[AnyStr, LoadShape]):
+        if isinstance(value, DSSObj):
+            self._set_obj(28, value)
+            return
+
+        self._set_string_o(28, value)
 
     @property
-    def Duty(self) -> str:
+    def Duty_str(self) -> str:
         """
         LOADSHAPE object to use for the per-unit voltage for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -515,16 +515,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(29)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
-        if isinstance(value, DSSObj):
-            self._set_obj(29, value)
-            return
-
+    @Duty_str.setter
+    def Duty_str(self, value: AnyStr):
         self._set_string_o(29, value)
 
     @property
-    def Duty_obj(self) -> LoadShape:
+    def Duty(self) -> LoadShape:
         """
         LOADSHAPE object to use for the per-unit voltage for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -536,9 +532,13 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(29, LoadShape)
 
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_obj(29, value)
+    @Duty.setter
+    def Duty(self, value: Union[AnyStr, LoadShape]):
+        if isinstance(value, DSSObj):
+            self._set_obj(29, value)
+            return
+
+        self._set_string_o(29, value)
 
     @property
     def Model(self) -> enums.VSourceModel:
@@ -583,13 +583,26 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         self._set_complex(31, value)
 
     @property
-    def Spectrum(self) -> str:
+    def Spectrum_str(self) -> str:
         """
         Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
         DSS property name: `Spectrum`, DSS property index: 32.
         """
         return self._get_prop_string(32)
+
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: AnyStr):
+        self._set_string_o(32, value)
+
+    @property
+    def Spectrum(self) -> SpectrumObj:
+        """
+        Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
+
+        DSS property name: `Spectrum`, DSS property index: 32.
+        """
+        return self._get_obj(32, SpectrumObj)
 
     @Spectrum.setter
     def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
@@ -598,19 +611,6 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
             return
 
         self._set_string_o(32, value)
-
-    @property
-    def Spectrum_obj(self) -> SpectrumObj:
-        """
-        Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
-
-        DSS property name: `Spectrum`, DSS property index: 32.
-        """
-        return self._get_obj(32, SpectrumObj)
-
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_obj(32, value)
 
     @property
     def BaseFreq(self) -> float:
@@ -1142,7 +1142,7 @@ class VsourceBatch(DSSBatch):
         self._set_batch_float64_array(26, value)
 
     @property
-    def Yearly(self) -> List[str]:
+    def Yearly_str(self) -> List[str]:
         """
         LOADSHAPE object to use for the per-unit voltage for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1154,12 +1154,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(27)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(27, value)
+    @Yearly_str.setter
+    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(27, value)
 
     @property
-    def Yearly_obj(self) -> List[LoadShape]:
+    def Yearly(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit voltage for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1171,12 +1171,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(27)
 
-    @Yearly_obj.setter
-    def Yearly_obj(self, value: LoadShape):
-        self._set_batch_string(27, value)
+    @Yearly.setter
+    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(27, value)
 
     @property
-    def Daily(self) -> List[str]:
+    def Daily_str(self) -> List[str]:
         """
         LOADSHAPE object to use for the per-unit voltage for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1188,12 +1188,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(28)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(28, value)
+    @Daily_str.setter
+    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(28, value)
 
     @property
-    def Daily_obj(self) -> List[LoadShape]:
+    def Daily(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit voltage for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1205,12 +1205,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(28)
 
-    @Daily_obj.setter
-    def Daily_obj(self, value: LoadShape):
-        self._set_batch_string(28, value)
+    @Daily.setter
+    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(28, value)
 
     @property
-    def Duty(self) -> List[str]:
+    def Duty_str(self) -> List[str]:
         """
         LOADSHAPE object to use for the per-unit voltage for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1222,12 +1222,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(29)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(29, value)
+    @Duty_str.setter
+    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(29, value)
 
     @property
-    def Duty_obj(self) -> List[LoadShape]:
+    def Duty(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit voltage for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1239,9 +1239,9 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(29)
 
-    @Duty_obj.setter
-    def Duty_obj(self, value: LoadShape):
-        self._set_batch_string(29, value)
+    @Duty.setter
+    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+        self._set_batch_obj_prop(29, value)
 
     @property
     def Model(self) -> BatchInt32ArrayProxy:
@@ -1308,7 +1308,7 @@ class VsourceBatch(DSSBatch):
             self._lib.Obj_SetFloat64Array(x, 31, value_ptr, value_count)
 
     @property
-    def Spectrum(self) -> List[str]:
+    def Spectrum_str(self) -> List[str]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -1316,12 +1316,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(32)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(32, value)
+    @Spectrum_str.setter
+    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(32, value)
 
     @property
-    def Spectrum_obj(self) -> List[SpectrumObj]:
+    def Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -1329,9 +1329,9 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(32)
 
-    @Spectrum_obj.setter
-    def Spectrum_obj(self, value: SpectrumObj):
-        self._set_batch_string(32, value)
+    @Spectrum.setter
+    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+        self._set_batch_obj_prop(32, value)
 
     @property
     def BaseFreq(self) -> BatchFloat64ArrayProxy:

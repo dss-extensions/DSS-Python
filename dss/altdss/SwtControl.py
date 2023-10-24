@@ -35,13 +35,26 @@ class SwtControl(DSSObj, CktElementMixin):
     }
 
     @property
-    def SwitchedObj(self) -> str:
+    def SwitchedObj_str(self) -> str:
         """
         Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
 
         DSS property name: `SwitchedObj`, DSS property index: 1.
         """
         return self._get_prop_string(1)
+
+    @SwitchedObj_str.setter
+    def SwitchedObj_str(self, value: AnyStr):
+        self._set_string_o(1, value)
+
+    @property
+    def SwitchedObj(self) -> DSSObj:
+        """
+        Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
+
+        DSS property name: `SwitchedObj`, DSS property index: 1.
+        """
+        return self._get_obj(1, None)
 
     @SwitchedObj.setter
     def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
@@ -50,19 +63,6 @@ class SwtControl(DSSObj, CktElementMixin):
             return
 
         self._set_string_o(1, value)
-
-    @property
-    def SwitchedObj_obj(self) -> DSSObj:
-        """
-        Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
-
-        DSS property name: `SwitchedObj`, DSS property index: 1.
-        """
-        return self._get_obj(1, None)
-
-    @SwitchedObj_obj.setter
-    def SwitchedObj_obj(self, value: DSSObj):
-        self._set_obj(1, value)
 
     @property
     def SwitchedTerm(self) -> int:
@@ -225,7 +225,7 @@ class SwtControlBatch(DSSBatch):
 
 
     @property
-    def SwitchedObj(self) -> List[str]:
+    def SwitchedObj_str(self) -> List[str]:
         """
         Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
 
@@ -233,12 +233,12 @@ class SwtControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    @SwitchedObj_str.setter
+    def SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+        self._set_batch_string(1, value)
 
     @property
-    def SwitchedObj_obj(self) -> List[DSSObj]:
+    def SwitchedObj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
 
@@ -246,9 +246,9 @@ class SwtControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @SwitchedObj_obj.setter
-    def SwitchedObj_obj(self, value: DSSObj):
-        self._set_batch_string(1, value)
+    @SwitchedObj.setter
+    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+        self._set_batch_obj_prop(1, value)
 
     @property
     def SwitchedTerm(self) -> BatchInt32ArrayProxy:
