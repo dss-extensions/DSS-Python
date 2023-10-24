@@ -88,8 +88,7 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         'like': 57,
     }
 
-    @property
-    def Phases(self) -> int:
+    def _get_Phases(self) -> int:
         """
         Number of phases this transformer. Default is 3.
 
@@ -97,12 +96,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def Windings(self) -> int:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Windings(self) -> int:
         """
         Number of windings, this transformers. (Also is the number of terminals) Default is 2. This property triggers memory allocation for the Transformer and will cause other properties to revert to default values.
 
@@ -110,12 +109,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @Windings.setter
-    def Windings(self, value: int):
+    def _set_Windings(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def pctR(self) -> Float64Array:
+    Windings = property(_get_Windings, _set_Windings)
+
+    def _get_pctR(self) -> Float64Array:
         """
         Percent resistance this winding.  (half of total for a 2-winding).
 
@@ -123,12 +122,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 9)
 
-    @pctR.setter
-    def pctR(self, value: Float64Array):
+    def _set_pctR(self, value: Float64Array):
         self._set_float64_array_o(9, value)
 
-    @property
-    def RNeut(self) -> Float64Array:
+    pctR = property(_get_pctR, _set_pctR)
+
+    def _get_RNeut(self) -> Float64Array:
         """
         Default = -1. Neutral resistance of wye (star)-connected winding in actual ohms. If entered as a negative value, the neutral is assumed to be open, or floating. To solidly ground the neutral, connect the neutral conductor to Node 0 in the Bus property spec for this winding. For example: Bus=MyBusName.1.2.3.0, which is generally the default connection.
 
@@ -136,12 +135,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 10)
 
-    @RNeut.setter
-    def RNeut(self, value: Float64Array):
+    def _set_RNeut(self, value: Float64Array):
         self._set_float64_array_o(10, value)
 
-    @property
-    def XNeut(self) -> Float64Array:
+    RNeut = property(_get_RNeut, _set_RNeut)
+
+    def _get_XNeut(self) -> Float64Array:
         """
         Neutral reactance of wye(star)-connected winding in actual ohms.  May be + or -.
 
@@ -149,12 +148,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 11)
 
-    @XNeut.setter
-    def XNeut(self, value: Float64Array):
+    def _set_XNeut(self, value: Float64Array):
         self._set_float64_array_o(11, value)
 
-    @property
-    def Buses(self) -> List[str]:
+    XNeut = property(_get_XNeut, _set_XNeut)
+
+    def _get_Buses(self) -> List[str]:
         """
         Use this to specify all the bus connections at once using an array. Example:
 
@@ -164,14 +163,14 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 12)
 
-    @Buses.setter
-    def Buses(self, value: List[AnyStr]):
+    def _set_Buses(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 12, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def Conns(self) -> List[enums.Connection]:
+    Buses = property(_get_Buses, _set_Buses)
+
+    def _get_Conns(self) -> List[enums.Connection]:
         """
         Use this to specify all the Winding connections at once using an array. Example:
 
@@ -181,15 +180,15 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return [enums.Connection(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 13)]
 
-    @Conns.setter
-    def Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]]):
+    def _set_Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]]):
         if len(value) and not isinstance(value[0], int):
             self._set_string_array_o(13, value)
-            return    
+            return
         self._set_int32_array_o(13, value)
 
-    @property
-    def Conns_str(self) -> List[str]:
+    Conns = property(_get_Conns, _set_Conns)
+
+    def _get_Conns_str(self) -> List[str]:
         """
         Use this to specify all the Winding connections at once using an array. Example:
 
@@ -199,12 +198,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 13)
 
-    @Conns_str.setter
-    def Conns_str(self, value: AnyStr):
+    def _set_Conns_str(self, value: AnyStr):
         self.Conns = value
 
-    @property
-    def kVs(self) -> Float64Array:
+    Conns_str = property(_get_Conns_str, _set_Conns_str)
+
+    def _get_kVs(self) -> Float64Array:
         """
         Use this to specify the kV ratings of all windings at once using an array. Example:
 
@@ -218,12 +217,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 14)
 
-    @kVs.setter
-    def kVs(self, value: Float64Array):
+    def _set_kVs(self, value: Float64Array):
         self._set_float64_array_o(14, value)
 
-    @property
-    def kVAs(self) -> Float64Array:
+    kVs = property(_get_kVs, _set_kVs)
+
+    def _get_kVAs(self) -> Float64Array:
         """
         Use this to specify the kVA ratings of all windings at once using an array.
 
@@ -231,12 +230,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 15)
 
-    @kVAs.setter
-    def kVAs(self, value: Float64Array):
+    def _set_kVAs(self, value: Float64Array):
         self._set_float64_array_o(15, value)
 
-    @property
-    def Taps(self) -> Float64Array:
+    kVAs = property(_get_kVAs, _set_kVAs)
+
+    def _get_Taps(self) -> Float64Array:
         """
         Use this to specify the p.u. tap of all windings at once using an array.
 
@@ -244,12 +243,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 16)
 
-    @Taps.setter
-    def Taps(self, value: Float64Array):
+    def _set_Taps(self, value: Float64Array):
         self._set_float64_array_o(16, value)
 
-    @property
-    def XHL(self) -> float:
+    Taps = property(_get_Taps, _set_Taps)
+
+    def _get_XHL(self) -> float:
         """
         Use this to specify the percent reactance, H-L (winding 1 to winding 2).  Use for 2- or 3-winding transformers. On the kVA base of winding 1. See also X12.
 
@@ -257,12 +256,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @XHL.setter
-    def XHL(self, value: float):
+    def _set_XHL(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def XHT(self) -> float:
+    XHL = property(_get_XHL, _set_XHL)
+
+    def _get_XHT(self) -> float:
         """
         Use this to specify the percent reactance, H-T (winding 1 to winding 3).  Use for 3-winding transformers only. On the kVA base of winding 1. See also X13.
 
@@ -270,12 +269,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    @XHT.setter
-    def XHT(self, value: float):
+    def _set_XHT(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
-    @property
-    def XLT(self) -> float:
+    XHT = property(_get_XHT, _set_XHT)
+
+    def _get_XLT(self) -> float:
         """
         Use this to specify the percent reactance, L-T (winding 2 to winding 3).  Use for 3-winding transformers only. On the kVA base of winding 1.  See also X23.
 
@@ -283,12 +282,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @XLT.setter
-    def XLT(self, value: float):
+    def _set_XLT(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def XSCArray(self) -> Float64Array:
+    XLT = property(_get_XLT, _set_XLT)
+
+    def _get_XSCArray(self) -> Float64Array:
         """
         Use this to specify the percent reactance between all pairs of windings as an array. All values are on the kVA base of winding 1.  The order of the values is as follows:
 
@@ -300,12 +299,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 20)
 
-    @XSCArray.setter
-    def XSCArray(self, value: Float64Array):
+    def _set_XSCArray(self, value: Float64Array):
         self._set_float64_array_o(20, value)
 
-    @property
-    def Thermal(self) -> float:
+    XSCArray = property(_get_XSCArray, _set_XSCArray)
+
+    def _get_Thermal(self) -> float:
         """
         Thermal time constant of the transformer in hours.  Typically about 2.
 
@@ -313,12 +312,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @Thermal.setter
-    def Thermal(self, value: float):
+    def _set_Thermal(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def n(self) -> float:
+    Thermal = property(_get_Thermal, _set_Thermal)
+
+    def _get_n(self) -> float:
         """
         n Exponent for thermal properties in IEEE C57.  Typically 0.8.
 
@@ -326,12 +325,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    @n.setter
-    def n(self, value: float):
+    def _set_n(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 22, value)
 
-    @property
-    def m(self) -> float:
+    n = property(_get_n, _set_n)
+
+    def _get_m(self) -> float:
         """
         m Exponent for thermal properties in IEEE C57.  Typically 0.9 - 1.0
 
@@ -339,12 +338,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @m.setter
-    def m(self, value: float):
+    def _set_m(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def FLRise(self) -> float:
+    m = property(_get_m, _set_m)
+
+    def _get_FLRise(self) -> float:
         """
         Temperature rise, deg C, for full load.  Default is 65.
 
@@ -352,12 +351,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    @FLRise.setter
-    def FLRise(self, value: float):
+    def _set_FLRise(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 24, value)
 
-    @property
-    def HSRise(self) -> float:
+    FLRise = property(_get_FLRise, _set_FLRise)
+
+    def _get_HSRise(self) -> float:
         """
         Hot spot temperature rise, deg C.  Default is 15.
 
@@ -365,12 +364,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 25)
 
-    @HSRise.setter
-    def HSRise(self, value: float):
+    def _set_HSRise(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 25, value)
 
-    @property
-    def pctLoadLoss(self) -> float:
+    HSRise = property(_get_HSRise, _set_HSRise)
+
+    def _get_pctLoadLoss(self) -> float:
         """
         Percent load loss at full load. The %R of the High and Low windings (1 and 2) are adjusted to agree at rated kVA loading.
 
@@ -378,12 +377,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 26)
 
-    @pctLoadLoss.setter
-    def pctLoadLoss(self, value: float):
+    def _set_pctLoadLoss(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 26, value)
 
-    @property
-    def pctNoLoadLoss(self) -> float:
+    pctLoadLoss = property(_get_pctLoadLoss, _set_pctLoadLoss)
+
+    def _get_pctNoLoadLoss(self) -> float:
         """
         Percent no load losses at rated excitatation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
 
@@ -391,12 +390,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    @pctNoLoadLoss.setter
-    def pctNoLoadLoss(self, value: float):
+    def _set_pctNoLoadLoss(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 27, value)
 
-    @property
-    def NormHkVA(self) -> float:
+    pctNoLoadLoss = property(_get_pctNoLoadLoss, _set_pctNoLoadLoss)
+
+    def _get_NormHkVA(self) -> float:
         """
         Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% of maximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
 
@@ -404,12 +403,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 28)
 
-    @NormHkVA.setter
-    def NormHkVA(self, value: float):
+    def _set_NormHkVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 28, value)
 
-    @property
-    def EmergHkVA(self) -> float:
+    NormHkVA = property(_get_NormHkVA, _set_NormHkVA)
+
+    def _get_EmergHkVA(self) -> float:
         """
         Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% of maximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
 
@@ -417,12 +416,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 29)
 
-    @EmergHkVA.setter
-    def EmergHkVA(self, value: float):
+    def _set_EmergHkVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 29, value)
 
-    @property
-    def Sub(self) -> bool:
+    EmergHkVA = property(_get_EmergHkVA, _set_EmergHkVA)
+
+    def _get_Sub(self) -> bool:
         """
         ={Yes|No}  Designates whether this transformer is to be considered a substation.Default is No.
 
@@ -430,12 +429,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 30) != 0
 
-    @Sub.setter
-    def Sub(self, value: bool):
+    def _set_Sub(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 30, value)
 
-    @property
-    def MaxTap(self) -> Float64Array:
+    Sub = property(_get_Sub, _set_Sub)
+
+    def _get_MaxTap(self) -> Float64Array:
         """
         Max per unit tap for the active winding.  Default is 1.10
 
@@ -443,12 +442,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 31)
 
-    @MaxTap.setter
-    def MaxTap(self, value: Float64Array):
+    def _set_MaxTap(self, value: Float64Array):
         self._set_float64_array_o(31, value)
 
-    @property
-    def MinTap(self) -> Float64Array:
+    MaxTap = property(_get_MaxTap, _set_MaxTap)
+
+    def _get_MinTap(self) -> Float64Array:
         """
         Min per unit tap for the active winding.  Default is 0.90
 
@@ -456,12 +455,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 32)
 
-    @MinTap.setter
-    def MinTap(self, value: Float64Array):
+    def _set_MinTap(self, value: Float64Array):
         self._set_float64_array_o(32, value)
 
-    @property
-    def NumTaps(self) -> Int32Array:
+    MinTap = property(_get_MinTap, _set_MinTap)
+
+    def _get_NumTaps(self) -> Int32Array:
         """
         Total number of taps between min and max tap.  Default is 32 (16 raise and 16 lower taps about the neutral position). The neutral position is not counted.
 
@@ -469,12 +468,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_int32_array(self._lib.Obj_GetInt32Array, self._ptr, 33)
 
-    @NumTaps.setter
-    def NumTaps(self, value: Int32Array):
+    def _set_NumTaps(self, value: Int32Array):
         self._set_int32_array_o(33, value)
 
-    @property
-    def SubName(self) -> str:
+    NumTaps = property(_get_NumTaps, _set_NumTaps)
+
+    def _get_SubName(self) -> str:
         """
         Substation Name. Optional. Default is null. If specified, printed on plots
 
@@ -482,12 +481,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_prop_string(34)
 
-    @SubName.setter
-    def SubName(self, value: AnyStr):
+    def _set_SubName(self, value: AnyStr):
         self._set_string_o(34, value)
 
-    @property
-    def pctIMag(self) -> float:
+    SubName = property(_get_SubName, _set_SubName)
+
+    def _get_pctIMag(self) -> float:
         """
         Percent magnetizing current. Default=0.0. Magnetizing branch is in parallel with windings in each phase. Also, see "ppm_antifloat".
 
@@ -495,12 +494,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 35)
 
-    @pctIMag.setter
-    def pctIMag(self, value: float):
+    def _set_pctIMag(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 35, value)
 
-    @property
-    def ppm_Antifloat(self) -> float:
+    pctIMag = property(_get_pctIMag, _set_pctIMag)
+
+    def _get_ppm_Antifloat(self) -> float:
         """
         Default=1 ppm.  Parts per million of transformer winding VA rating connected to ground to protect against accidentally floating a winding without a reference. If positive then the effect is adding a very large reactance to ground.  If negative, then a capacitor.
 
@@ -508,12 +507,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 36)
 
-    @ppm_Antifloat.setter
-    def ppm_Antifloat(self, value: float):
+    def _set_ppm_Antifloat(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 36, value)
 
-    @property
-    def pctRs(self) -> Float64Array:
+    ppm_Antifloat = property(_get_ppm_Antifloat, _set_ppm_Antifloat)
+
+    def _get_pctRs(self) -> Float64Array:
         """
         Use this property to specify all the winding %resistances using an array. Example:
 
@@ -523,12 +522,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 37)
 
-    @pctRs.setter
-    def pctRs(self, value: Float64Array):
+    def _set_pctRs(self, value: Float64Array):
         self._set_float64_array_o(37, value)
 
-    @property
-    def Bank(self) -> str:
+    pctRs = property(_get_pctRs, _set_pctRs)
+
+    def _get_Bank(self) -> str:
         """
         Name of the bank this transformer is part of, for CIM, MultiSpeak, and other interfaces.
 
@@ -536,12 +535,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_prop_string(38)
 
-    @Bank.setter
-    def Bank(self, value: AnyStr):
+    def _set_Bank(self, value: AnyStr):
         self._set_string_o(38, value)
 
-    @property
-    def XfmrCode_str(self) -> str:
+    Bank = property(_get_Bank, _set_Bank)
+
+    def _get_XfmrCode_str(self) -> str:
         """
         Name of a library entry for transformer properties. The named XfmrCode must already be defined.
 
@@ -549,12 +548,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_prop_string(39)
 
-    @XfmrCode_str.setter
-    def XfmrCode_str(self, value: AnyStr):
+    def _set_XfmrCode_str(self, value: AnyStr):
         self._set_string_o(39, value)
 
-    @property
-    def XfmrCode(self) -> XfmrCodeObj:
+    XfmrCode_str = property(_get_XfmrCode_str, _set_XfmrCode_str)
+
+    def _get_XfmrCode(self) -> XfmrCodeObj:
         """
         Name of a library entry for transformer properties. The named XfmrCode must already be defined.
 
@@ -562,16 +561,16 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_obj(39, XfmrCodeObj)
 
-    @XfmrCode.setter
-    def XfmrCode(self, value: Union[AnyStr, XfmrCodeObj]):
+    def _set_XfmrCode(self, value: Union[AnyStr, XfmrCodeObj]):
         if isinstance(value, DSSObj):
             self._set_obj(39, value)
             return
 
         self._set_string_o(39, value)
 
-    @property
-    def XRConst(self) -> bool:
+    XfmrCode = property(_get_XfmrCode, _set_XfmrCode)
+
+    def _get_XRConst(self) -> bool:
         """
         ={Yes|No} Default is NO. Signifies whether or not the X/R is assumed contant for harmonic studies.
 
@@ -579,12 +578,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 40) != 0
 
-    @XRConst.setter
-    def XRConst(self, value: bool):
+    def _set_XRConst(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 40, value)
 
-    @property
-    def X12(self) -> float:
+    XRConst = property(_get_XRConst, _set_XRConst)
+
+    def _get_X12(self) -> float:
         """
         Alternative to XHL for specifying the percent reactance from winding 1 to winding 2.  Use for 2- or 3-winding transformers. Percent on the kVA base of winding 1. 
 
@@ -592,12 +591,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 41)
 
-    @X12.setter
-    def X12(self, value: float):
+    def _set_X12(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 41, value)
 
-    @property
-    def X13(self) -> float:
+    X12 = property(_get_X12, _set_X12)
+
+    def _get_X13(self) -> float:
         """
         Alternative to XHT for specifying the percent reactance from winding 1 to winding 3.  Use for 3-winding transformers only. Percent on the kVA base of winding 1. 
 
@@ -605,12 +604,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 42)
 
-    @X13.setter
-    def X13(self, value: float):
+    def _set_X13(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 42, value)
 
-    @property
-    def X23(self) -> float:
+    X13 = property(_get_X13, _set_X13)
+
+    def _get_X23(self) -> float:
         """
         Alternative to XLT for specifying the percent reactance from winding 2 to winding 3.Use for 3-winding transformers only. Percent on the kVA base of winding 1.  
 
@@ -618,12 +617,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 43)
 
-    @X23.setter
-    def X23(self, value: float):
+    def _set_X23(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 43, value)
 
-    @property
-    def LeadLag(self) -> enums.PhaseSequence:
+    X23 = property(_get_X23, _set_X23)
+
+    def _get_LeadLag(self) -> enums.PhaseSequence:
         """
         {Lead | Lag (default) | ANSI (default) | Euro } Designation in mixed Delta-wye connections the relationship between HV to LV winding. Default is ANSI 30 deg lag, e.g., Dy1 of Yd1 vector group. To get typical European Dy11 connection, specify either "lead" or "Euro"
 
@@ -631,15 +630,15 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return enums.PhaseSequence(self._lib.Obj_GetInt32(self._ptr, 44))
 
-    @LeadLag.setter
-    def LeadLag(self, value: Union[AnyStr, int, enums.PhaseSequence]):
+    def _set_LeadLag(self, value: Union[AnyStr, int, enums.PhaseSequence]):
         if not isinstance(value, int):
             self._set_string_o(44, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 44, value)
 
-    @property
-    def LeadLag_str(self) -> str:
+    LeadLag = property(_get_LeadLag, _set_LeadLag)
+
+    def _get_LeadLag_str(self) -> str:
         """
         {Lead | Lag (default) | ANSI (default) | Euro } Designation in mixed Delta-wye connections the relationship between HV to LV winding. Default is ANSI 30 deg lag, e.g., Dy1 of Yd1 vector group. To get typical European Dy11 connection, specify either "lead" or "Euro"
 
@@ -647,12 +646,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_prop_string(44)
 
-    @LeadLag_str.setter
-    def LeadLag_str(self, value: AnyStr):
+    def _set_LeadLag_str(self, value: AnyStr):
         self.LeadLag = value
 
-    @property
-    def Core(self) -> enums.CoreType:
+    LeadLag_str = property(_get_LeadLag_str, _set_LeadLag_str)
+
+    def _get_Core(self) -> enums.CoreType:
         """
         {Shell*|5-leg|3-Leg|1-phase|core-1-phase|4-leg} Core Type. Used for GIC analysis
 
@@ -660,15 +659,15 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return enums.CoreType(self._lib.Obj_GetInt32(self._ptr, 46))
 
-    @Core.setter
-    def Core(self, value: Union[AnyStr, int, enums.CoreType]):
+    def _set_Core(self, value: Union[AnyStr, int, enums.CoreType]):
         if not isinstance(value, int):
             self._set_string_o(46, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 46, value)
 
-    @property
-    def Core_str(self) -> str:
+    Core = property(_get_Core, _set_Core)
+
+    def _get_Core_str(self) -> str:
         """
         {Shell*|5-leg|3-Leg|1-phase|core-1-phase|4-leg} Core Type. Used for GIC analysis
 
@@ -676,12 +675,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_prop_string(46)
 
-    @Core_str.setter
-    def Core_str(self, value: AnyStr):
+    def _set_Core_str(self, value: AnyStr):
         self.Core = value
 
-    @property
-    def RDCOhms(self) -> Float64Array:
+    Core_str = property(_get_Core_str, _set_Core_str)
+
+    def _get_RDCOhms(self) -> Float64Array:
         """
         Winding dc resistance in OHMS. Useful for GIC analysis. From transformer test report. Defaults to 85% of %R property
 
@@ -689,12 +688,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 47)
 
-    @RDCOhms.setter
-    def RDCOhms(self, value: Float64Array):
+    def _set_RDCOhms(self, value: Float64Array):
         self._set_float64_array_o(47, value)
 
-    @property
-    def Seasons(self) -> int:
+    RDCOhms = property(_get_RDCOhms, _set_RDCOhms)
+
+    def _get_Seasons(self) -> int:
         """
         Defines the number of ratings to be defined for the transfomer, to be used only when defining seasonal ratings using the "Ratings" property.
 
@@ -702,12 +701,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 48)
 
-    @Seasons.setter
-    def Seasons(self, value: int):
+    def _set_Seasons(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 48, value)
 
-    @property
-    def Ratings(self) -> Float64Array:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_Ratings(self) -> Float64Array:
         """
         An array of ratings to be used when the seasonal ratings flag is True. It can be used to insert
         multiple ratings to change during a QSTS simulation to evaluate different ratings in transformers. Is given in kVA
@@ -716,12 +715,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 49)
 
-    @Ratings.setter
-    def Ratings(self, value: Float64Array):
+    def _set_Ratings(self, value: Float64Array):
         self._set_float64_array_o(49, value)
 
-    @property
-    def NormAmps(self) -> float:
+    Ratings = property(_get_Ratings, _set_Ratings)
+
+    def _get_NormAmps(self) -> float:
         """
         Normal rated current.
 
@@ -729,12 +728,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 50)
 
-    @NormAmps.setter
-    def NormAmps(self, value: float):
+    def _set_NormAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 50, value)
 
-    @property
-    def EmergAmps(self) -> float:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> float:
         """
         Maximum or emerg current.
 
@@ -742,12 +741,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 51)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: float):
+    def _set_EmergAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 51, value)
 
-    @property
-    def FaultRate(self) -> float:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> float:
         """
         Failure rate per year.
 
@@ -755,12 +754,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 52)
 
-    @FaultRate.setter
-    def FaultRate(self, value: float):
+    def _set_FaultRate(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 52, value)
 
-    @property
-    def pctPerm(self) -> float:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> float:
         """
         Percent of failures that become permanent.
 
@@ -768,12 +767,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 53)
 
-    @pctPerm.setter
-    def pctPerm(self, value: float):
+    def _set_pctPerm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 53, value)
 
-    @property
-    def Repair(self) -> float:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> float:
         """
         Hours to repair.
 
@@ -781,12 +780,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 54)
 
-    @Repair.setter
-    def Repair(self, value: float):
+    def _set_Repair(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 54, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -794,12 +793,12 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 55)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 55, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -807,9 +806,10 @@ class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 56) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 56, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -880,8 +880,7 @@ class TransformerBatch(DSSBatch):
     _cls_idx = 20
 
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of phases this transformer. Default is 3.
 
@@ -889,12 +888,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def Windings(self) -> BatchInt32ArrayProxy:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Windings(self) -> BatchInt32ArrayProxy:
         """
         Number of windings, this transformers. (Also is the number of terminals) Default is 2. This property triggers memory allocation for the Transformer and will cause other properties to revert to default values.
 
@@ -902,12 +901,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @Windings.setter
-    def Windings(self, value: Union[int, Int32Array]):
+    def _set_Windings(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def pctR(self) -> List[Float64Array]:
+    Windings = property(_get_Windings, _set_Windings)
+
+    def _get_pctR(self) -> List[Float64Array]:
         """
         Percent resistance this winding.  (half of total for a 2-winding).
 
@@ -918,12 +917,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @pctR.setter
-    def pctR(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_pctR(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(9, value)
 
-    @property
-    def RNeut(self) -> List[Float64Array]:
+    pctR = property(_get_pctR, _set_pctR)
+
+    def _get_RNeut(self) -> List[Float64Array]:
         """
         Default = -1. Neutral resistance of wye (star)-connected winding in actual ohms. If entered as a negative value, the neutral is assumed to be open, or floating. To solidly ground the neutral, connect the neutral conductor to Node 0 in the Bus property spec for this winding. For example: Bus=MyBusName.1.2.3.0, which is generally the default connection.
 
@@ -934,12 +933,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @RNeut.setter
-    def RNeut(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_RNeut(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(10, value)
 
-    @property
-    def XNeut(self) -> List[Float64Array]:
+    RNeut = property(_get_RNeut, _set_RNeut)
+
+    def _get_XNeut(self) -> List[Float64Array]:
         """
         Neutral reactance of wye(star)-connected winding in actual ohms.  May be + or -.
 
@@ -950,12 +949,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @XNeut.setter
-    def XNeut(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_XNeut(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(11, value)
 
-    @property
-    def Buses(self) -> List[List[str]]:
+    XNeut = property(_get_XNeut, _set_XNeut)
+
+    def _get_Buses(self) -> List[List[str]]:
         """
         Use this to specify all the bus connections at once using an array. Example:
 
@@ -965,16 +964,16 @@ class TransformerBatch(DSSBatch):
         """
         return self._get_string_ll(12)
 
-    @Buses.setter
-    def Buses(self, value: List[AnyStr]):
+    def _set_Buses(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 12, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def Conns(self) -> List[Int32Array]:
+    Buses = property(_get_Buses, _set_Buses)
+
+    def _get_Conns(self) -> List[Int32Array]:
         """
         Use this to specify all the Winding connections at once using an array. Example:
 
@@ -987,8 +986,7 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Conns.setter
-    def Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]]): #TODO: list of lists
+    def _set_Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]]): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
             for x in self._unpack():
@@ -999,8 +997,9 @@ class TransformerBatch(DSSBatch):
 
         self._set_batch_int32_array(13, value)
 
-    @property
-    def Conns_str(self) -> List[List[str]]:
+    Conns = property(_get_Conns, _set_Conns)
+
+    def _get_Conns_str(self) -> List[List[str]]:
         """
         Use this to specify all the Winding connections at once using an array. Example:
 
@@ -1010,12 +1009,12 @@ class TransformerBatch(DSSBatch):
         """
         return self._get_string_ll(13)
 
-    @Conns_str.setter
-    def Conns_str(self, value: AnyStr):
+    def _set_Conns_str(self, value: AnyStr):
         self.Conns = value
 
-    @property
-    def kVs(self) -> List[Float64Array]:
+    Conns_str = property(_get_Conns_str, _set_Conns_str)
+
+    def _get_kVs(self) -> List[Float64Array]:
         """
         Use this to specify the kV ratings of all windings at once using an array. Example:
 
@@ -1032,12 +1031,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @kVs.setter
-    def kVs(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_kVs(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(14, value)
 
-    @property
-    def kVAs(self) -> List[Float64Array]:
+    kVs = property(_get_kVs, _set_kVs)
+
+    def _get_kVAs(self) -> List[Float64Array]:
         """
         Use this to specify the kVA ratings of all windings at once using an array.
 
@@ -1048,12 +1047,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @kVAs.setter
-    def kVAs(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_kVAs(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(15, value)
 
-    @property
-    def Taps(self) -> List[Float64Array]:
+    kVAs = property(_get_kVAs, _set_kVAs)
+
+    def _get_Taps(self) -> List[Float64Array]:
         """
         Use this to specify the p.u. tap of all windings at once using an array.
 
@@ -1064,12 +1063,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Taps.setter
-    def Taps(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Taps(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(16, value)
 
-    @property
-    def XHL(self) -> BatchFloat64ArrayProxy:
+    Taps = property(_get_Taps, _set_Taps)
+
+    def _get_XHL(self) -> BatchFloat64ArrayProxy:
         """
         Use this to specify the percent reactance, H-L (winding 1 to winding 2).  Use for 2- or 3-winding transformers. On the kVA base of winding 1. See also X12.
 
@@ -1077,12 +1076,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @XHL.setter
-    def XHL(self, value: Union[float, Float64Array]):
+    def _set_XHL(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def XHT(self) -> BatchFloat64ArrayProxy:
+    XHL = property(_get_XHL, _set_XHL)
+
+    def _get_XHT(self) -> BatchFloat64ArrayProxy:
         """
         Use this to specify the percent reactance, H-T (winding 1 to winding 3).  Use for 3-winding transformers only. On the kVA base of winding 1. See also X13.
 
@@ -1090,12 +1089,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    @XHT.setter
-    def XHT(self, value: Union[float, Float64Array]):
+    def _set_XHT(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
-    @property
-    def XLT(self) -> BatchFloat64ArrayProxy:
+    XHT = property(_get_XHT, _set_XHT)
+
+    def _get_XLT(self) -> BatchFloat64ArrayProxy:
         """
         Use this to specify the percent reactance, L-T (winding 2 to winding 3).  Use for 3-winding transformers only. On the kVA base of winding 1.  See also X23.
 
@@ -1103,12 +1102,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @XLT.setter
-    def XLT(self, value: Union[float, Float64Array]):
+    def _set_XLT(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def XSCArray(self) -> List[Float64Array]:
+    XLT = property(_get_XLT, _set_XLT)
+
+    def _get_XSCArray(self) -> List[Float64Array]:
         """
         Use this to specify the percent reactance between all pairs of windings as an array. All values are on the kVA base of winding 1.  The order of the values is as follows:
 
@@ -1123,12 +1122,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @XSCArray.setter
-    def XSCArray(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_XSCArray(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(20, value)
 
-    @property
-    def Thermal(self) -> BatchFloat64ArrayProxy:
+    XSCArray = property(_get_XSCArray, _set_XSCArray)
+
+    def _get_Thermal(self) -> BatchFloat64ArrayProxy:
         """
         Thermal time constant of the transformer in hours.  Typically about 2.
 
@@ -1136,12 +1135,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @Thermal.setter
-    def Thermal(self, value: Union[float, Float64Array]):
+    def _set_Thermal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def n(self) -> BatchFloat64ArrayProxy:
+    Thermal = property(_get_Thermal, _set_Thermal)
+
+    def _get_n(self) -> BatchFloat64ArrayProxy:
         """
         n Exponent for thermal properties in IEEE C57.  Typically 0.8.
 
@@ -1149,12 +1148,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    @n.setter
-    def n(self, value: Union[float, Float64Array]):
+    def _set_n(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
-    @property
-    def m(self) -> BatchFloat64ArrayProxy:
+    n = property(_get_n, _set_n)
+
+    def _get_m(self) -> BatchFloat64ArrayProxy:
         """
         m Exponent for thermal properties in IEEE C57.  Typically 0.9 - 1.0
 
@@ -1162,12 +1161,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @m.setter
-    def m(self, value: Union[float, Float64Array]):
+    def _set_m(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def FLRise(self) -> BatchFloat64ArrayProxy:
+    m = property(_get_m, _set_m)
+
+    def _get_FLRise(self) -> BatchFloat64ArrayProxy:
         """
         Temperature rise, deg C, for full load.  Default is 65.
 
@@ -1175,12 +1174,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    @FLRise.setter
-    def FLRise(self, value: Union[float, Float64Array]):
+    def _set_FLRise(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
-    @property
-    def HSRise(self) -> BatchFloat64ArrayProxy:
+    FLRise = property(_get_FLRise, _set_FLRise)
+
+    def _get_HSRise(self) -> BatchFloat64ArrayProxy:
         """
         Hot spot temperature rise, deg C.  Default is 15.
 
@@ -1188,12 +1187,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 25)
 
-    @HSRise.setter
-    def HSRise(self, value: Union[float, Float64Array]):
+    def _set_HSRise(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
-    @property
-    def pctLoadLoss(self) -> BatchFloat64ArrayProxy:
+    HSRise = property(_get_HSRise, _set_HSRise)
+
+    def _get_pctLoadLoss(self) -> BatchFloat64ArrayProxy:
         """
         Percent load loss at full load. The %R of the High and Low windings (1 and 2) are adjusted to agree at rated kVA loading.
 
@@ -1201,12 +1200,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 26)
 
-    @pctLoadLoss.setter
-    def pctLoadLoss(self, value: Union[float, Float64Array]):
+    def _set_pctLoadLoss(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
-    @property
-    def pctNoLoadLoss(self) -> BatchFloat64ArrayProxy:
+    pctLoadLoss = property(_get_pctLoadLoss, _set_pctLoadLoss)
+
+    def _get_pctNoLoadLoss(self) -> BatchFloat64ArrayProxy:
         """
         Percent no load losses at rated excitatation voltage. Default is 0. Converts to a resistance in parallel with the magnetizing impedance in each winding.
 
@@ -1214,12 +1213,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    @pctNoLoadLoss.setter
-    def pctNoLoadLoss(self, value: Union[float, Float64Array]):
+    def _set_pctNoLoadLoss(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
-    @property
-    def NormHkVA(self) -> BatchFloat64ArrayProxy:
+    pctNoLoadLoss = property(_get_pctNoLoadLoss, _set_pctNoLoadLoss)
+
+    def _get_NormHkVA(self) -> BatchFloat64ArrayProxy:
         """
         Normal maximum kVA rating of H winding (winding 1).  Usually 100% - 110% of maximum nameplate rating, depending on load shape. Defaults to 110% of kVA rating of Winding 1.
 
@@ -1227,12 +1226,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 28)
 
-    @NormHkVA.setter
-    def NormHkVA(self, value: Union[float, Float64Array]):
+    def _set_NormHkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
-    @property
-    def EmergHkVA(self) -> BatchFloat64ArrayProxy:
+    NormHkVA = property(_get_NormHkVA, _set_NormHkVA)
+
+    def _get_EmergHkVA(self) -> BatchFloat64ArrayProxy:
         """
         Emergency (contingency)  kVA rating of H winding (winding 1).  Usually 140% - 150% of maximum nameplate rating, depending on load shape. Defaults to 150% of kVA rating of Winding 1.
 
@@ -1240,26 +1239,27 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 29)
 
-    @EmergHkVA.setter
-    def EmergHkVA(self, value: Union[float, Float64Array]):
+    def _set_EmergHkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
-    @property
-    def Sub(self) -> List[bool]:
+    EmergHkVA = property(_get_EmergHkVA, _set_EmergHkVA)
+
+    def _get_Sub(self) -> List[bool]:
         """
         ={Yes|No}  Designates whether this transformer is to be considered a substation.Default is No.
 
         DSS property name: `Sub`, DSS property index: 30.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(30)
         ]
-    @Sub.setter
-    def Sub(self, value: bool):
+
+    def _set_Sub(self, value: bool):
         self._set_batch_int32_array(30, value)
 
-    @property
-    def MaxTap(self) -> List[Float64Array]:
+    Sub = property(_get_Sub, _set_Sub)
+
+    def _get_MaxTap(self) -> List[Float64Array]:
         """
         Max per unit tap for the active winding.  Default is 1.10
 
@@ -1270,12 +1270,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @MaxTap.setter
-    def MaxTap(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_MaxTap(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(31, value)
 
-    @property
-    def MinTap(self) -> List[Float64Array]:
+    MaxTap = property(_get_MaxTap, _set_MaxTap)
+
+    def _get_MinTap(self) -> List[Float64Array]:
         """
         Min per unit tap for the active winding.  Default is 0.90
 
@@ -1286,12 +1286,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @MinTap.setter
-    def MinTap(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_MinTap(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(32, value)
 
-    @property
-    def NumTaps(self) -> List[Int32Array]:
+    MinTap = property(_get_MinTap, _set_MinTap)
+
+    def _get_NumTaps(self) -> List[Int32Array]:
         """
         Total number of taps between min and max tap.  Default is 32 (16 raise and 16 lower taps about the neutral position). The neutral position is not counted.
 
@@ -1302,25 +1302,25 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @NumTaps.setter
-    def NumTaps(self, value: Union[Int32Array, List[Int32Array]]):
+    def _set_NumTaps(self, value: Union[Int32Array, List[Int32Array]]):
         self._set_batch_int32_array_prop(33, value)
 
-    @property
-    def SubName(self) -> List[str]:
+    NumTaps = property(_get_NumTaps, _set_NumTaps)
+
+    def _get_SubName(self) -> List[str]:
         """
         Substation Name. Optional. Default is null. If specified, printed on plots
 
         DSS property name: `SubName`, DSS property index: 34.
         """
-        return self._get_batch_str_prop(34) 
+        return self._get_batch_str_prop(34)
 
-    @SubName.setter
-    def SubName(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_SubName(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(34, value)
 
-    @property
-    def pctIMag(self) -> BatchFloat64ArrayProxy:
+    SubName = property(_get_SubName, _set_SubName)
+
+    def _get_pctIMag(self) -> BatchFloat64ArrayProxy:
         """
         Percent magnetizing current. Default=0.0. Magnetizing branch is in parallel with windings in each phase. Also, see "ppm_antifloat".
 
@@ -1328,12 +1328,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 35)
 
-    @pctIMag.setter
-    def pctIMag(self, value: Union[float, Float64Array]):
+    def _set_pctIMag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
-    @property
-    def ppm_Antifloat(self) -> BatchFloat64ArrayProxy:
+    pctIMag = property(_get_pctIMag, _set_pctIMag)
+
+    def _get_ppm_Antifloat(self) -> BatchFloat64ArrayProxy:
         """
         Default=1 ppm.  Parts per million of transformer winding VA rating connected to ground to protect against accidentally floating a winding without a reference. If positive then the effect is adding a very large reactance to ground.  If negative, then a capacitor.
 
@@ -1341,12 +1341,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 36)
 
-    @ppm_Antifloat.setter
-    def ppm_Antifloat(self, value: Union[float, Float64Array]):
+    def _set_ppm_Antifloat(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(36, value)
 
-    @property
-    def pctRs(self) -> List[Float64Array]:
+    ppm_Antifloat = property(_get_ppm_Antifloat, _set_ppm_Antifloat)
+
+    def _get_pctRs(self) -> List[Float64Array]:
         """
         Use this property to specify all the winding %resistances using an array. Example:
 
@@ -1359,25 +1359,25 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @pctRs.setter
-    def pctRs(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_pctRs(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(37, value)
 
-    @property
-    def Bank(self) -> List[str]:
+    pctRs = property(_get_pctRs, _set_pctRs)
+
+    def _get_Bank(self) -> List[str]:
         """
         Name of the bank this transformer is part of, for CIM, MultiSpeak, and other interfaces.
 
         DSS property name: `Bank`, DSS property index: 38.
         """
-        return self._get_batch_str_prop(38) 
+        return self._get_batch_str_prop(38)
 
-    @Bank.setter
-    def Bank(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bank(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(38, value)
 
-    @property
-    def XfmrCode_str(self) -> List[str]:
+    Bank = property(_get_Bank, _set_Bank)
+
+    def _get_XfmrCode_str(self) -> List[str]:
         """
         Name of a library entry for transformer properties. The named XfmrCode must already be defined.
 
@@ -1385,12 +1385,12 @@ class TransformerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(39)
 
-    @XfmrCode_str.setter
-    def XfmrCode_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_XfmrCode_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(39, value)
 
-    @property
-    def XfmrCode(self) -> List[XfmrCodeObj]:
+    XfmrCode_str = property(_get_XfmrCode_str, _set_XfmrCode_str)
+
+    def _get_XfmrCode(self) -> List[XfmrCodeObj]:
         """
         Name of a library entry for transformer properties. The named XfmrCode must already be defined.
 
@@ -1398,26 +1398,27 @@ class TransformerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(39)
 
-    @XfmrCode.setter
-    def XfmrCode(self, value: Union[AnyStr, XfmrCodeObj, List[AnyStr], List[XfmrCodeObj]]):
+    def _set_XfmrCode(self, value: Union[AnyStr, XfmrCodeObj, List[AnyStr], List[XfmrCodeObj]]):
         self._set_batch_obj_prop(39, value)
 
-    @property
-    def XRConst(self) -> List[bool]:
+    XfmrCode = property(_get_XfmrCode, _set_XfmrCode)
+
+    def _get_XRConst(self) -> List[bool]:
         """
         ={Yes|No} Default is NO. Signifies whether or not the X/R is assumed contant for harmonic studies.
 
         DSS property name: `XRConst`, DSS property index: 40.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(40)
         ]
-    @XRConst.setter
-    def XRConst(self, value: bool):
+
+    def _set_XRConst(self, value: bool):
         self._set_batch_int32_array(40, value)
 
-    @property
-    def X12(self) -> BatchFloat64ArrayProxy:
+    XRConst = property(_get_XRConst, _set_XRConst)
+
+    def _get_X12(self) -> BatchFloat64ArrayProxy:
         """
         Alternative to XHL for specifying the percent reactance from winding 1 to winding 2.  Use for 2- or 3-winding transformers. Percent on the kVA base of winding 1. 
 
@@ -1425,12 +1426,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 41)
 
-    @X12.setter
-    def X12(self, value: Union[float, Float64Array]):
+    def _set_X12(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(41, value)
 
-    @property
-    def X13(self) -> BatchFloat64ArrayProxy:
+    X12 = property(_get_X12, _set_X12)
+
+    def _get_X13(self) -> BatchFloat64ArrayProxy:
         """
         Alternative to XHT for specifying the percent reactance from winding 1 to winding 3.  Use for 3-winding transformers only. Percent on the kVA base of winding 1. 
 
@@ -1438,12 +1439,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 42)
 
-    @X13.setter
-    def X13(self, value: Union[float, Float64Array]):
+    def _set_X13(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(42, value)
 
-    @property
-    def X23(self) -> BatchFloat64ArrayProxy:
+    X13 = property(_get_X13, _set_X13)
+
+    def _get_X23(self) -> BatchFloat64ArrayProxy:
         """
         Alternative to XLT for specifying the percent reactance from winding 2 to winding 3.Use for 3-winding transformers only. Percent on the kVA base of winding 1.  
 
@@ -1451,12 +1452,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 43)
 
-    @X23.setter
-    def X23(self, value: Union[float, Float64Array]):
+    def _set_X23(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(43, value)
 
-    @property
-    def LeadLag(self) -> BatchInt32ArrayProxy:
+    X23 = property(_get_X23, _set_X23)
+
+    def _get_LeadLag(self) -> BatchInt32ArrayProxy:
         """
         {Lead | Lag (default) | ANSI (default) | Euro } Designation in mixed Delta-wye connections the relationship between HV to LV winding. Default is ANSI 30 deg lag, e.g., Dy1 of Yd1 vector group. To get typical European Dy11 connection, specify either "lead" or "Euro"
 
@@ -1464,16 +1465,16 @@ class TransformerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 44)
 
-    @LeadLag.setter
-    def LeadLag(self, value: Union[AnyStr, int, enums.PhaseSequence, List[AnyStr], List[int], List[enums.PhaseSequence], Int32Array]):
+    def _set_LeadLag(self, value: Union[AnyStr, int, enums.PhaseSequence, List[AnyStr], List[int], List[enums.PhaseSequence], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(44, value)
             return
-    
+
         self._set_batch_int32_array(44, value)
 
-    @property
-    def LeadLag_str(self) -> str:
+    LeadLag = property(_get_LeadLag, _set_LeadLag)
+
+    def _get_LeadLag_str(self) -> str:
         """
         {Lead | Lag (default) | ANSI (default) | Euro } Designation in mixed Delta-wye connections the relationship between HV to LV winding. Default is ANSI 30 deg lag, e.g., Dy1 of Yd1 vector group. To get typical European Dy11 connection, specify either "lead" or "Euro"
 
@@ -1481,12 +1482,12 @@ class TransformerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(44)
 
-    @LeadLag_str.setter
-    def LeadLag_str(self, value: AnyStr):
+    def _set_LeadLag_str(self, value: AnyStr):
         self.LeadLag = value
 
-    @property
-    def Core(self) -> BatchInt32ArrayProxy:
+    LeadLag_str = property(_get_LeadLag_str, _set_LeadLag_str)
+
+    def _get_Core(self) -> BatchInt32ArrayProxy:
         """
         {Shell*|5-leg|3-Leg|1-phase|core-1-phase|4-leg} Core Type. Used for GIC analysis
 
@@ -1494,16 +1495,16 @@ class TransformerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 46)
 
-    @Core.setter
-    def Core(self, value: Union[AnyStr, int, enums.CoreType, List[AnyStr], List[int], List[enums.CoreType], Int32Array]):
+    def _set_Core(self, value: Union[AnyStr, int, enums.CoreType, List[AnyStr], List[int], List[enums.CoreType], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(46, value)
             return
-    
+
         self._set_batch_int32_array(46, value)
 
-    @property
-    def Core_str(self) -> str:
+    Core = property(_get_Core, _set_Core)
+
+    def _get_Core_str(self) -> str:
         """
         {Shell*|5-leg|3-Leg|1-phase|core-1-phase|4-leg} Core Type. Used for GIC analysis
 
@@ -1511,12 +1512,12 @@ class TransformerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(46)
 
-    @Core_str.setter
-    def Core_str(self, value: AnyStr):
+    def _set_Core_str(self, value: AnyStr):
         self.Core = value
 
-    @property
-    def RDCOhms(self) -> List[Float64Array]:
+    Core_str = property(_get_Core_str, _set_Core_str)
+
+    def _get_RDCOhms(self) -> List[Float64Array]:
         """
         Winding dc resistance in OHMS. Useful for GIC analysis. From transformer test report. Defaults to 85% of %R property
 
@@ -1527,12 +1528,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @RDCOhms.setter
-    def RDCOhms(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_RDCOhms(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(47, value)
 
-    @property
-    def Seasons(self) -> BatchInt32ArrayProxy:
+    RDCOhms = property(_get_RDCOhms, _set_RDCOhms)
+
+    def _get_Seasons(self) -> BatchInt32ArrayProxy:
         """
         Defines the number of ratings to be defined for the transfomer, to be used only when defining seasonal ratings using the "Ratings" property.
 
@@ -1540,12 +1541,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 48)
 
-    @Seasons.setter
-    def Seasons(self, value: Union[int, Int32Array]):
+    def _set_Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(48, value)
 
-    @property
-    def Ratings(self) -> List[Float64Array]:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_Ratings(self) -> List[Float64Array]:
         """
         An array of ratings to be used when the seasonal ratings flag is True. It can be used to insert
         multiple ratings to change during a QSTS simulation to evaluate different ratings in transformers. Is given in kVA
@@ -1557,12 +1558,12 @@ class TransformerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Ratings.setter
-    def Ratings(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(49, value)
 
-    @property
-    def NormAmps(self) -> BatchFloat64ArrayProxy:
+    Ratings = property(_get_Ratings, _set_Ratings)
+
+    def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
         Normal rated current.
 
@@ -1570,12 +1571,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 50)
 
-    @NormAmps.setter
-    def NormAmps(self, value: Union[float, Float64Array]):
+    def _set_NormAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(50, value)
 
-    @property
-    def EmergAmps(self) -> BatchFloat64ArrayProxy:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
         Maximum or emerg current.
 
@@ -1583,12 +1584,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 51)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: Union[float, Float64Array]):
+    def _set_EmergAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(51, value)
 
-    @property
-    def FaultRate(self) -> BatchFloat64ArrayProxy:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
         Failure rate per year.
 
@@ -1596,12 +1597,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 52)
 
-    @FaultRate.setter
-    def FaultRate(self, value: Union[float, Float64Array]):
+    def _set_FaultRate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(52, value)
 
-    @property
-    def pctPerm(self) -> BatchFloat64ArrayProxy:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> BatchFloat64ArrayProxy:
         """
         Percent of failures that become permanent.
 
@@ -1609,12 +1610,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 53)
 
-    @pctPerm.setter
-    def pctPerm(self, value: Union[float, Float64Array]):
+    def _set_pctPerm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(53, value)
 
-    @property
-    def Repair(self) -> BatchFloat64ArrayProxy:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
         Hours to repair.
 
@@ -1622,12 +1623,12 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 54)
 
-    @Repair.setter
-    def Repair(self, value: Union[float, Float64Array]):
+    def _set_Repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(54, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -1635,23 +1636,25 @@ class TransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 55)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(55, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 56.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(56)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(56, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1721,7 +1724,7 @@ class ITransformer(IDSSObj,TransformerBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Transformer, TransformerBatch)
         TransformerBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Transformer:

@@ -54,8 +54,7 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         'like': 27,
     }
 
-    @property
-    def Element_str(self) -> str:
+    def _get_Element_str(self) -> str:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -63,12 +62,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._get_prop_string(1)
 
-    @Element_str.setter
-    def Element_str(self, value: AnyStr):
+    def _set_Element_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Element(self) -> DSSObj:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> DSSObj:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -76,16 +75,16 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._get_obj(1, None)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def Terminal(self) -> int:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> int:
         """
         Number of the terminal of the circuit element to which the monitor is connected. 1 or 2, typically.
 
@@ -93,9 +92,10 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: int):
+    def _set_Terminal(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
+
+    Terminal = property(_get_Terminal, _set_Terminal)
 
     def Action(self, value: Union[AnyStr, int, enums.EnergyMeterAction]):
         """
@@ -115,7 +115,7 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         if isinstance(value, int):
             self._lib.Obj_SetInt32(self._ptr, 3, value)
             return
-    
+
         self._set_string_o(3, value)
 
     def Allocate(self):
@@ -142,8 +142,7 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         '''Shortcut to Action(EnergyMeterAction.ZoneDump)'''
         self._lib.Obj_SetInt32(self._ptr, 3, enums.EnergyMeterAction.ZoneDump)
 
-    @property
-    def Option(self) -> List[str]:
+    def _get_Option(self) -> List[str]:
         """
         Enter a string ARRAY of any combination of the following. Options processed left-to-right:
 
@@ -160,14 +159,14 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
 
-    @Option.setter
-    def Option(self, value: List[AnyStr]):
+    def _set_Option(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 4, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def kVANormal(self) -> float:
+    Option = property(_get_Option, _set_Option)
+
+    def _get_kVANormal(self) -> float:
         """
         Upper limit on kVA load in the zone, Normal configuration. Default is 0.0 (ignored). Overrides limits on individual lines for overload EEN. With "LocalOnly=Yes" option, uses only load in metered branch.
 
@@ -175,12 +174,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @kVANormal.setter
-    def kVANormal(self, value: float):
+    def _set_kVANormal(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def kVAEmerg(self) -> float:
+    kVANormal = property(_get_kVANormal, _set_kVANormal)
+
+    def _get_kVAEmerg(self) -> float:
         """
         Upper limit on kVA load in the zone, Emergency configuration. Default is 0.0 (ignored). Overrides limits on individual lines for overload UE. With "LocalOnly=Yes" option, uses only load in metered branch.
 
@@ -188,12 +187,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @kVAEmerg.setter
-    def kVAEmerg(self, value: float):
+    def _set_kVAEmerg(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def PeakCurrent(self) -> Float64Array:
+    kVAEmerg = property(_get_kVAEmerg, _set_kVAEmerg)
+
+    def _get_PeakCurrent(self) -> Float64Array:
         """
         ARRAY of current magnitudes representing the peak currents measured at this location for the load allocation function.  Default is (400, 400, 400). Enter one current for each phase
 
@@ -201,12 +200,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 7)
 
-    @PeakCurrent.setter
-    def PeakCurrent(self, value: Float64Array):
+    def _set_PeakCurrent(self, value: Float64Array):
         self._set_float64_array_o(7, value)
 
-    @property
-    def ZoneList(self) -> List[str]:
+    PeakCurrent = property(_get_PeakCurrent, _set_PeakCurrent)
+
+    def _get_ZoneList(self) -> List[str]:
         """
         ARRAY of full element names for this meter's zone.  Default is for meter to find it's own zone. If specified, DSS uses this list instead.  Can access the names in a single-column text file.  Examples: 
 
@@ -217,14 +216,14 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 8)
 
-    @ZoneList.setter
-    def ZoneList(self, value: List[AnyStr]):
+    def _set_ZoneList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 8, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def LocalOnly(self) -> bool:
+    ZoneList = property(_get_ZoneList, _set_ZoneList)
+
+    def _get_LocalOnly(self) -> bool:
         """
         {Yes | No}  Default is NO.  If Yes, meter considers only the monitored element for EEN and UE calcs.  Uses whole zone for losses.
 
@@ -232,12 +231,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 9) != 0
 
-    @LocalOnly.setter
-    def LocalOnly(self, value: bool):
+    def _set_LocalOnly(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 9, value)
 
-    @property
-    def Mask(self) -> Float64Array:
+    LocalOnly = property(_get_LocalOnly, _set_LocalOnly)
+
+    def _get_Mask(self) -> Float64Array:
         """
         Mask for adding registers whenever all meters are totalized.  Array of floating point numbers representing the multiplier to be used for summing each register from this meter. Default = (1, 1, 1, 1, ... ).  You only have to enter as many as are changed (positional). Useful when two meters monitor same energy, etc.
 
@@ -245,12 +244,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 10)
 
-    @Mask.setter
-    def Mask(self, value: Float64Array):
+    def _set_Mask(self, value: Float64Array):
         self._set_float64_array_o(10, value)
 
-    @property
-    def Losses(self) -> bool:
+    Mask = property(_get_Mask, _set_Mask)
+
+    def _get_Losses(self) -> bool:
         """
         {Yes | No}  Default is YES. Compute Zone losses. If NO, then no losses at all are computed.
 
@@ -258,12 +257,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 11) != 0
 
-    @Losses.setter
-    def Losses(self, value: bool):
+    def _set_Losses(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 11, value)
 
-    @property
-    def LineLosses(self) -> bool:
+    Losses = property(_get_Losses, _set_Losses)
+
+    def _get_LineLosses(self) -> bool:
         """
         {Yes | No}  Default is YES. Compute Line losses. If NO, then none of the losses are computed.
 
@@ -271,12 +270,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 12) != 0
 
-    @LineLosses.setter
-    def LineLosses(self, value: bool):
+    def _set_LineLosses(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 12, value)
 
-    @property
-    def XfmrLosses(self) -> bool:
+    LineLosses = property(_get_LineLosses, _set_LineLosses)
+
+    def _get_XfmrLosses(self) -> bool:
         """
         {Yes | No}  Default is YES. Compute Transformer losses. If NO, transformers are ignored in loss calculations.
 
@@ -284,12 +283,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 13) != 0
 
-    @XfmrLosses.setter
-    def XfmrLosses(self, value: bool):
+    def _set_XfmrLosses(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 13, value)
 
-    @property
-    def SeqLosses(self) -> bool:
+    XfmrLosses = property(_get_XfmrLosses, _set_XfmrLosses)
+
+    def _get_SeqLosses(self) -> bool:
         """
         {Yes | No}  Default is YES. Compute Sequence losses in lines and segregate by line mode losses and zero mode losses.
 
@@ -297,12 +296,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 14) != 0
 
-    @SeqLosses.setter
-    def SeqLosses(self, value: bool):
+    def _set_SeqLosses(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 14, value)
 
-    @property
-    def ThreePhaseLosses(self) -> bool:
+    SeqLosses = property(_get_SeqLosses, _set_SeqLosses)
+
+    def _get_ThreePhaseLosses(self) -> bool:
         """
         {Yes | No}  Default is YES. Compute Line losses and segregate by 3-phase and other (1- and 2-phase) line losses. 
 
@@ -310,12 +309,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 15) != 0
 
-    @ThreePhaseLosses.setter
-    def ThreePhaseLosses(self, value: bool):
+    def _set_ThreePhaseLosses(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
-    @property
-    def VBaseLosses(self) -> bool:
+    ThreePhaseLosses = property(_get_ThreePhaseLosses, _set_ThreePhaseLosses)
+
+    def _get_VBaseLosses(self) -> bool:
         """
         {Yes | No}  Default is YES. Compute losses and segregate by voltage base. If NO, then voltage-based tabulation is not reported.
 
@@ -323,12 +322,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 16) != 0
 
-    @VBaseLosses.setter
-    def VBaseLosses(self, value: bool):
+    def _set_VBaseLosses(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 16, value)
 
-    @property
-    def PhaseVoltageReport(self) -> bool:
+    VBaseLosses = property(_get_VBaseLosses, _set_VBaseLosses)
+
+    def _get_PhaseVoltageReport(self) -> bool:
         """
         {Yes | No}  Default is NO.  Report min, max, and average phase voltages for the zone and tabulate by voltage base. Demand Intervals must be turned on (Set Demand=true) and voltage bases must be defined for this property to take effect. Result is in a separate report file.
 
@@ -336,12 +335,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 17) != 0
 
-    @PhaseVoltageReport.setter
-    def PhaseVoltageReport(self, value: bool):
+    def _set_PhaseVoltageReport(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
-    @property
-    def Int_Rate(self) -> float:
+    PhaseVoltageReport = property(_get_PhaseVoltageReport, _set_PhaseVoltageReport)
+
+    def _get_Int_Rate(self) -> float:
         """
         Average number of annual interruptions for head of the meter zone (source side of zone or feeder).
 
@@ -349,12 +348,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    @Int_Rate.setter
-    def Int_Rate(self, value: float):
+    def _set_Int_Rate(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
-    @property
-    def Int_Duration(self) -> float:
+    Int_Rate = property(_get_Int_Rate, _set_Int_Rate)
+
+    def _get_Int_Duration(self) -> float:
         """
         Average annual duration, in hr, of interruptions for head of the meter zone (source side of zone or feeder).
 
@@ -362,12 +361,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @Int_Duration.setter
-    def Int_Duration(self, value: float):
+    def _set_Int_Duration(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def SAIFI(self) -> float:
+    Int_Duration = property(_get_Int_Duration, _set_Int_Duration)
+
+    def _get_SAIFI(self) -> float:
         """
         (Read only) Makes SAIFI result available via return on query (? energymeter.myMeter.SAIFI.
 
@@ -375,12 +374,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @SAIFI.setter
-    def SAIFI(self, value: float):
+    def _set_SAIFI(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def SAIFIkW(self) -> float:
+    SAIFI = property(_get_SAIFI, _set_SAIFI)
+
+    def _get_SAIFIkW(self) -> float:
         """
         (Read only) Makes SAIFIkW result available via return on query (? energymeter.myMeter.SAIFIkW.
 
@@ -388,12 +387,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @SAIFIkW.setter
-    def SAIFIkW(self, value: float):
+    def _set_SAIFIkW(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def SAIDI(self) -> float:
+    SAIFIkW = property(_get_SAIFIkW, _set_SAIFIkW)
+
+    def _get_SAIDI(self) -> float:
         """
         (Read only) Makes SAIDI result available via return on query (? energymeter.myMeter.SAIDI.
 
@@ -401,12 +400,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    @SAIDI.setter
-    def SAIDI(self, value: float):
+    def _set_SAIDI(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 22, value)
 
-    @property
-    def CAIDI(self) -> float:
+    SAIDI = property(_get_SAIDI, _set_SAIDI)
+
+    def _get_CAIDI(self) -> float:
         """
         (Read only) Makes CAIDI result available via return on query (? energymeter.myMeter.CAIDI.
 
@@ -414,12 +413,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @CAIDI.setter
-    def CAIDI(self, value: float):
+    def _set_CAIDI(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def CustInterrupts(self) -> float:
+    CAIDI = property(_get_CAIDI, _set_CAIDI)
+
+    def _get_CustInterrupts(self) -> float:
         """
         (Read only) Makes Total Customer Interrupts value result available via return on query (? energymeter.myMeter.CustInterrupts.
 
@@ -427,12 +426,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    @CustInterrupts.setter
-    def CustInterrupts(self, value: float):
+    def _set_CustInterrupts(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 24, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    CustInterrupts = property(_get_CustInterrupts, _set_CustInterrupts)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -440,12 +439,12 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetFloat64(self._ptr, 25)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 25, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -453,9 +452,10 @@ class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegist
         """
         return self._lib.Obj_GetInt32(self._ptr, 26) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 26, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -503,8 +503,7 @@ class EnergyMeterBatch(DSSBatch):
     _cls_idx = 48
 
 
-    @property
-    def Element_str(self) -> List[str]:
+    def _get_Element_str(self) -> List[str]:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -512,12 +511,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Element_str.setter
-    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Element(self) -> List[DSSObj]:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> List[DSSObj]:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -525,12 +524,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def Terminal(self) -> BatchInt32ArrayProxy:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the circuit element to which the monitor is connected. 1 or 2, typically.
 
@@ -538,9 +537,10 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: Union[int, Int32Array]):
+    def _set_Terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
+
+    Terminal = property(_get_Terminal, _set_Terminal)
 
     def Action(self, value: Union[AnyStr, int, enums.EnergyMeterAction]):
         """
@@ -586,8 +586,7 @@ class EnergyMeterBatch(DSSBatch):
         '''Shortcut to Action(EnergyMeterAction.ZoneDump)'''
         self._set_batch_int32_array(3, enums.EnergyMeterAction.ZoneDump)
 
-    @property
-    def Option(self) -> List[List[str]]:
+    def _get_Option(self) -> List[List[str]]:
         """
         Enter a string ARRAY of any combination of the following. Options processed left-to-right:
 
@@ -604,16 +603,16 @@ class EnergyMeterBatch(DSSBatch):
         """
         return self._get_string_ll(4)
 
-    @Option.setter
-    def Option(self, value: List[AnyStr]):
+    def _set_Option(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 4, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def kVANormal(self) -> BatchFloat64ArrayProxy:
+    Option = property(_get_Option, _set_Option)
+
+    def _get_kVANormal(self) -> BatchFloat64ArrayProxy:
         """
         Upper limit on kVA load in the zone, Normal configuration. Default is 0.0 (ignored). Overrides limits on individual lines for overload EEN. With "LocalOnly=Yes" option, uses only load in metered branch.
 
@@ -621,12 +620,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @kVANormal.setter
-    def kVANormal(self, value: Union[float, Float64Array]):
+    def _set_kVANormal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def kVAEmerg(self) -> BatchFloat64ArrayProxy:
+    kVANormal = property(_get_kVANormal, _set_kVANormal)
+
+    def _get_kVAEmerg(self) -> BatchFloat64ArrayProxy:
         """
         Upper limit on kVA load in the zone, Emergency configuration. Default is 0.0 (ignored). Overrides limits on individual lines for overload UE. With "LocalOnly=Yes" option, uses only load in metered branch.
 
@@ -634,12 +633,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @kVAEmerg.setter
-    def kVAEmerg(self, value: Union[float, Float64Array]):
+    def _set_kVAEmerg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def PeakCurrent(self) -> List[Float64Array]:
+    kVAEmerg = property(_get_kVAEmerg, _set_kVAEmerg)
+
+    def _get_PeakCurrent(self) -> List[Float64Array]:
         """
         ARRAY of current magnitudes representing the peak currents measured at this location for the load allocation function.  Default is (400, 400, 400). Enter one current for each phase
 
@@ -650,12 +649,12 @@ class EnergyMeterBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @PeakCurrent.setter
-    def PeakCurrent(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_PeakCurrent(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(7, value)
 
-    @property
-    def ZoneList(self) -> List[List[str]]:
+    PeakCurrent = property(_get_PeakCurrent, _set_PeakCurrent)
+
+    def _get_ZoneList(self) -> List[List[str]]:
         """
         ARRAY of full element names for this meter's zone.  Default is for meter to find it's own zone. If specified, DSS uses this list instead.  Can access the names in a single-column text file.  Examples: 
 
@@ -666,30 +665,31 @@ class EnergyMeterBatch(DSSBatch):
         """
         return self._get_string_ll(8)
 
-    @ZoneList.setter
-    def ZoneList(self, value: List[AnyStr]):
+    def _set_ZoneList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 8, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def LocalOnly(self) -> List[bool]:
+    ZoneList = property(_get_ZoneList, _set_ZoneList)
+
+    def _get_LocalOnly(self) -> List[bool]:
         """
         {Yes | No}  Default is NO.  If Yes, meter considers only the monitored element for EEN and UE calcs.  Uses whole zone for losses.
 
         DSS property name: `LocalOnly`, DSS property index: 9.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(9)
         ]
-    @LocalOnly.setter
-    def LocalOnly(self, value: bool):
+
+    def _set_LocalOnly(self, value: bool):
         self._set_batch_int32_array(9, value)
 
-    @property
-    def Mask(self) -> List[Float64Array]:
+    LocalOnly = property(_get_LocalOnly, _set_LocalOnly)
+
+    def _get_Mask(self) -> List[Float64Array]:
         """
         Mask for adding registers whenever all meters are totalized.  Array of floating point numbers representing the multiplier to be used for summing each register from this meter. Default = (1, 1, 1, 1, ... ).  You only have to enter as many as are changed (positional). Useful when two meters monitor same energy, etc.
 
@@ -700,110 +700,117 @@ class EnergyMeterBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Mask.setter
-    def Mask(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Mask(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(10, value)
 
-    @property
-    def Losses(self) -> List[bool]:
+    Mask = property(_get_Mask, _set_Mask)
+
+    def _get_Losses(self) -> List[bool]:
         """
         {Yes | No}  Default is YES. Compute Zone losses. If NO, then no losses at all are computed.
 
         DSS property name: `Losses`, DSS property index: 11.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(11)
         ]
-    @Losses.setter
-    def Losses(self, value: bool):
+
+    def _set_Losses(self, value: bool):
         self._set_batch_int32_array(11, value)
 
-    @property
-    def LineLosses(self) -> List[bool]:
+    Losses = property(_get_Losses, _set_Losses)
+
+    def _get_LineLosses(self) -> List[bool]:
         """
         {Yes | No}  Default is YES. Compute Line losses. If NO, then none of the losses are computed.
 
         DSS property name: `LineLosses`, DSS property index: 12.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(12)
         ]
-    @LineLosses.setter
-    def LineLosses(self, value: bool):
+
+    def _set_LineLosses(self, value: bool):
         self._set_batch_int32_array(12, value)
 
-    @property
-    def XfmrLosses(self) -> List[bool]:
+    LineLosses = property(_get_LineLosses, _set_LineLosses)
+
+    def _get_XfmrLosses(self) -> List[bool]:
         """
         {Yes | No}  Default is YES. Compute Transformer losses. If NO, transformers are ignored in loss calculations.
 
         DSS property name: `XfmrLosses`, DSS property index: 13.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(13)
         ]
-    @XfmrLosses.setter
-    def XfmrLosses(self, value: bool):
+
+    def _set_XfmrLosses(self, value: bool):
         self._set_batch_int32_array(13, value)
 
-    @property
-    def SeqLosses(self) -> List[bool]:
+    XfmrLosses = property(_get_XfmrLosses, _set_XfmrLosses)
+
+    def _get_SeqLosses(self) -> List[bool]:
         """
         {Yes | No}  Default is YES. Compute Sequence losses in lines and segregate by line mode losses and zero mode losses.
 
         DSS property name: `SeqLosses`, DSS property index: 14.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(14)
         ]
-    @SeqLosses.setter
-    def SeqLosses(self, value: bool):
+
+    def _set_SeqLosses(self, value: bool):
         self._set_batch_int32_array(14, value)
 
-    @property
-    def ThreePhaseLosses(self) -> List[bool]:
+    SeqLosses = property(_get_SeqLosses, _set_SeqLosses)
+
+    def _get_ThreePhaseLosses(self) -> List[bool]:
         """
         {Yes | No}  Default is YES. Compute Line losses and segregate by 3-phase and other (1- and 2-phase) line losses. 
 
         DSS property name: `3PhaseLosses`, DSS property index: 15.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(15)
         ]
-    @ThreePhaseLosses.setter
-    def ThreePhaseLosses(self, value: bool):
+
+    def _set_ThreePhaseLosses(self, value: bool):
         self._set_batch_int32_array(15, value)
 
-    @property
-    def VBaseLosses(self) -> List[bool]:
+    ThreePhaseLosses = property(_get_ThreePhaseLosses, _set_ThreePhaseLosses)
+
+    def _get_VBaseLosses(self) -> List[bool]:
         """
         {Yes | No}  Default is YES. Compute losses and segregate by voltage base. If NO, then voltage-based tabulation is not reported.
 
         DSS property name: `VBaseLosses`, DSS property index: 16.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(16)
         ]
-    @VBaseLosses.setter
-    def VBaseLosses(self, value: bool):
+
+    def _set_VBaseLosses(self, value: bool):
         self._set_batch_int32_array(16, value)
 
-    @property
-    def PhaseVoltageReport(self) -> List[bool]:
+    VBaseLosses = property(_get_VBaseLosses, _set_VBaseLosses)
+
+    def _get_PhaseVoltageReport(self) -> List[bool]:
         """
         {Yes | No}  Default is NO.  Report min, max, and average phase voltages for the zone and tabulate by voltage base. Demand Intervals must be turned on (Set Demand=true) and voltage bases must be defined for this property to take effect. Result is in a separate report file.
 
         DSS property name: `PhaseVoltageReport`, DSS property index: 17.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(17)
         ]
-    @PhaseVoltageReport.setter
-    def PhaseVoltageReport(self, value: bool):
+
+    def _set_PhaseVoltageReport(self, value: bool):
         self._set_batch_int32_array(17, value)
 
-    @property
-    def Int_Rate(self) -> BatchFloat64ArrayProxy:
+    PhaseVoltageReport = property(_get_PhaseVoltageReport, _set_PhaseVoltageReport)
+
+    def _get_Int_Rate(self) -> BatchFloat64ArrayProxy:
         """
         Average number of annual interruptions for head of the meter zone (source side of zone or feeder).
 
@@ -811,12 +818,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    @Int_Rate.setter
-    def Int_Rate(self, value: Union[float, Float64Array]):
+    def _set_Int_Rate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
-    @property
-    def Int_Duration(self) -> BatchFloat64ArrayProxy:
+    Int_Rate = property(_get_Int_Rate, _set_Int_Rate)
+
+    def _get_Int_Duration(self) -> BatchFloat64ArrayProxy:
         """
         Average annual duration, in hr, of interruptions for head of the meter zone (source side of zone or feeder).
 
@@ -824,12 +831,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @Int_Duration.setter
-    def Int_Duration(self, value: Union[float, Float64Array]):
+    def _set_Int_Duration(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def SAIFI(self) -> BatchFloat64ArrayProxy:
+    Int_Duration = property(_get_Int_Duration, _set_Int_Duration)
+
+    def _get_SAIFI(self) -> BatchFloat64ArrayProxy:
         """
         (Read only) Makes SAIFI result available via return on query (? energymeter.myMeter.SAIFI.
 
@@ -837,12 +844,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @SAIFI.setter
-    def SAIFI(self, value: Union[float, Float64Array]):
+    def _set_SAIFI(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def SAIFIkW(self) -> BatchFloat64ArrayProxy:
+    SAIFI = property(_get_SAIFI, _set_SAIFI)
+
+    def _get_SAIFIkW(self) -> BatchFloat64ArrayProxy:
         """
         (Read only) Makes SAIFIkW result available via return on query (? energymeter.myMeter.SAIFIkW.
 
@@ -850,12 +857,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @SAIFIkW.setter
-    def SAIFIkW(self, value: Union[float, Float64Array]):
+    def _set_SAIFIkW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def SAIDI(self) -> BatchFloat64ArrayProxy:
+    SAIFIkW = property(_get_SAIFIkW, _set_SAIFIkW)
+
+    def _get_SAIDI(self) -> BatchFloat64ArrayProxy:
         """
         (Read only) Makes SAIDI result available via return on query (? energymeter.myMeter.SAIDI.
 
@@ -863,12 +870,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    @SAIDI.setter
-    def SAIDI(self, value: Union[float, Float64Array]):
+    def _set_SAIDI(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
-    @property
-    def CAIDI(self) -> BatchFloat64ArrayProxy:
+    SAIDI = property(_get_SAIDI, _set_SAIDI)
+
+    def _get_CAIDI(self) -> BatchFloat64ArrayProxy:
         """
         (Read only) Makes CAIDI result available via return on query (? energymeter.myMeter.CAIDI.
 
@@ -876,12 +883,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @CAIDI.setter
-    def CAIDI(self, value: Union[float, Float64Array]):
+    def _set_CAIDI(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def CustInterrupts(self) -> BatchFloat64ArrayProxy:
+    CAIDI = property(_get_CAIDI, _set_CAIDI)
+
+    def _get_CustInterrupts(self) -> BatchFloat64ArrayProxy:
         """
         (Read only) Makes Total Customer Interrupts value result available via return on query (? energymeter.myMeter.CustInterrupts.
 
@@ -889,12 +896,12 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    @CustInterrupts.setter
-    def CustInterrupts(self, value: Union[float, Float64Array]):
+    def _set_CustInterrupts(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    CustInterrupts = property(_get_CustInterrupts, _set_CustInterrupts)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -902,23 +909,25 @@ class EnergyMeterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 25)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 26.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(26)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(26, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -965,7 +974,7 @@ class IEnergyMeter(IDSSObj,EnergyMeterBatch, IEnergyMeterMixin):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, EnergyMeter, EnergyMeterBatch)
         EnergyMeterBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> EnergyMeter:

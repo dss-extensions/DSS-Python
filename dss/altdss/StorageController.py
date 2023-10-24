@@ -69,8 +69,7 @@ class StorageController(DSSObj, CktElementMixin):
         'like': 40,
     }
 
-    @property
-    def Element_str(self) -> str:
+    def _get_Element_str(self) -> str:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
@@ -78,12 +77,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Element_str.setter
-    def Element_str(self, value: AnyStr):
+    def _set_Element_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Element(self) -> DSSObj:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> DSSObj:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
@@ -91,16 +90,16 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_obj(1, None)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def Terminal(self) -> int:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> int:
         """
         Number of the terminal of the circuit element to which the StorageController control is connected. 1 or 2, typically.  Default is 1. Make sure to select the proper direction on the power for the respective dispatch mode.
 
@@ -108,12 +107,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: int):
+    def _set_Terminal(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def MonPhase(self) -> Union[enums.MonitoredPhase, int]:
+    Terminal = property(_get_Terminal, _set_Terminal)
+
+    def _get_MonPhase(self) -> Union[enums.MonitoredPhase, int]:
         """
         Number of the phase being monitored or one of {AVG | MAX | MIN} for all phases. Default=MAX. Must be less than the number of phases. Used in PeakShave, Follow, Support and I-PeakShave discharging modes and in PeakShaveLow, I-PeakShaveLow charging modes. For modes based on active power measurements, the value used by the control is the monitored one multiplied by the number of phases of the monitored element.
 
@@ -122,18 +121,18 @@ class StorageController(DSSObj, CktElementMixin):
         value = self._lib.Obj_GetInt32(self._ptr, 3)
         if value > 0:
             return value
-    
+
         return enums.MonitoredPhase(value)
 
-    @MonPhase.setter
-    def MonPhase(self, value: Union[AnyStr, int, enums.MonitoredPhase]):
+    def _set_MonPhase(self, value: Union[AnyStr, int, enums.MonitoredPhase]):
         if not isinstance(value, int):
             self._set_string_o(3, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
-    @property
-    def MonPhase_str(self) -> str:
+    MonPhase = property(_get_MonPhase, _set_MonPhase)
+
+    def _get_MonPhase_str(self) -> str:
         """
         Number of the phase being monitored or one of {AVG | MAX | MIN} for all phases. Default=MAX. Must be less than the number of phases. Used in PeakShave, Follow, Support and I-PeakShave discharging modes and in PeakShaveLow, I-PeakShaveLow charging modes. For modes based on active power measurements, the value used by the control is the monitored one multiplied by the number of phases of the monitored element.
 
@@ -141,12 +140,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(3)
 
-    @MonPhase_str.setter
-    def MonPhase_str(self, value: AnyStr):
+    def _set_MonPhase_str(self, value: AnyStr):
         self.MonPhase = value
 
-    @property
-    def kWTarget(self) -> float:
+    MonPhase_str = property(_get_MonPhase_str, _set_MonPhase_str)
+
+    def _get_kWTarget(self) -> float:
         """
         kW/kamps target for Discharging. The Storage element fleet is dispatched to try to hold the power/current in band at least until the Storage is depleted. The selection of power or current depends on the Discharge mode (PeakShave->kW, I-PeakShave->kamps).
 
@@ -154,12 +153,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @kWTarget.setter
-    def kWTarget(self, value: float):
+    def _set_kWTarget(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def kWTargetLow(self) -> float:
+    kWTarget = property(_get_kWTarget, _set_kWTarget)
+
+    def _get_kWTargetLow(self) -> float:
         """
         kW/kamps target for Charging. The Storage element fleet is dispatched to try to hold the power/current in band at least until the Storage is fully charged. The selection of power or current depends on the charge mode (PeakShavelow->kW, I-PeakShavelow->kamps).
 
@@ -167,12 +166,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @kWTargetLow.setter
-    def kWTargetLow(self, value: float):
+    def _set_kWTargetLow(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def pctkWBand(self) -> float:
+    kWTargetLow = property(_get_kWTargetLow, _set_kWTargetLow)
+
+    def _get_pctkWBand(self) -> float:
         """
         Bandwidth (% of Target kW/kamps) of the dead band around the kW/kamps target value. Default is 2% (+/-1%).No dispatch changes are attempted if the power in the monitored terminal stays within this band.
 
@@ -180,12 +179,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @pctkWBand.setter
-    def pctkWBand(self, value: float):
+    def _set_pctkWBand(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def kWBand(self) -> float:
+    pctkWBand = property(_get_pctkWBand, _set_pctkWBand)
+
+    def _get_kWBand(self) -> float:
         """
         Alternative way of specifying the bandwidth. (kW/kamps) of the dead band around the kW/kamps target value. Default is 2% of kWTarget (+/-1%).No dispatch changes are attempted if the power in the monitored terminal stays within this band.
 
@@ -193,12 +192,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @kWBand.setter
-    def kWBand(self, value: float):
+    def _set_kWBand(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def pctkWBandLow(self) -> float:
+    kWBand = property(_get_kWBand, _set_kWBand)
+
+    def _get_pctkWBandLow(self) -> float:
         """
         Bandwidth (% of kWTargetLow) of the dead band around the kW/kamps low target value. Default is 2% (+/-1%).No charging is attempted if the power in the monitored terminal stays within this band.
 
@@ -206,12 +205,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @pctkWBandLow.setter
-    def pctkWBandLow(self, value: float):
+    def _set_pctkWBandLow(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def kWBandLow(self) -> float:
+    pctkWBandLow = property(_get_pctkWBandLow, _set_pctkWBandLow)
+
+    def _get_kWBandLow(self) -> float:
         """
         Alternative way of specifying the bandwidth. (kW/kamps) of the dead band around the kW/kamps low target value. Default is 2% of kWTargetLow (+/-1%).No charging is attempted if the power in the monitored terminal stays within this band.
 
@@ -219,12 +218,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @kWBandLow.setter
-    def kWBandLow(self, value: float):
+    def _set_kWBandLow(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def ElementList(self) -> List[str]:
+    kWBandLow = property(_get_kWBandLow, _set_kWBandLow)
+
+    def _get_ElementList(self) -> List[str]:
         """
         Array list of Storage elements to be controlled.  If not specified, all Storage elements in the circuit not presently dispatched by another controller are assumed dispatched by this controller.
 
@@ -232,14 +231,14 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 10)
 
-    @ElementList.setter
-    def ElementList(self, value: List[AnyStr]):
+    def _set_ElementList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 10, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def Weights(self) -> Float64Array:
+    ElementList = property(_get_ElementList, _set_ElementList)
+
+    def _get_Weights(self) -> Float64Array:
         """
         Array of proportional weights corresponding to each Storage element in the ElementList. The needed kW or kvar to get back to center band is dispatched to each Storage element according to these weights. Default is to set all weights to 1.0.
 
@@ -247,12 +246,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 11)
 
-    @Weights.setter
-    def Weights(self, value: Float64Array):
+    def _set_Weights(self, value: Float64Array):
         self._set_float64_array_o(11, value)
 
-    @property
-    def ModeDischarge(self) -> enums.StorageControllerDischargeMode:
+    Weights = property(_get_Weights, _set_Weights)
+
+    def _get_ModeDischarge(self) -> enums.StorageControllerDischargeMode:
         """
         {PeakShave* | Follow | Support | Loadshape | Time | Schedule | I-PeakShave} Mode of operation for the DISCHARGE FUNCTION of this controller. 
 
@@ -274,15 +273,15 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return enums.StorageControllerDischargeMode(self._lib.Obj_GetInt32(self._ptr, 12))
 
-    @ModeDischarge.setter
-    def ModeDischarge(self, value: Union[AnyStr, int, enums.StorageControllerDischargeMode]):
+    def _set_ModeDischarge(self, value: Union[AnyStr, int, enums.StorageControllerDischargeMode]):
         if not isinstance(value, int):
             self._set_string_o(12, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 12, value)
 
-    @property
-    def ModeDischarge_str(self) -> str:
+    ModeDischarge = property(_get_ModeDischarge, _set_ModeDischarge)
+
+    def _get_ModeDischarge_str(self) -> str:
         """
         {PeakShave* | Follow | Support | Loadshape | Time | Schedule | I-PeakShave} Mode of operation for the DISCHARGE FUNCTION of this controller. 
 
@@ -304,12 +303,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(12)
 
-    @ModeDischarge_str.setter
-    def ModeDischarge_str(self, value: AnyStr):
+    def _set_ModeDischarge_str(self, value: AnyStr):
         self.ModeDischarge = value
 
-    @property
-    def ModeCharge(self) -> enums.StorageControllerChargeMode:
+    ModeDischarge_str = property(_get_ModeDischarge_str, _set_ModeDischarge_str)
+
+    def _get_ModeCharge(self) -> enums.StorageControllerChargeMode:
         """
         {Loadshape | Time* | PeakShaveLow | I-PeakShaveLow} Mode of operation for the CHARGE FUNCTION of this controller. 
 
@@ -325,15 +324,15 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return enums.StorageControllerChargeMode(self._lib.Obj_GetInt32(self._ptr, 13))
 
-    @ModeCharge.setter
-    def ModeCharge(self, value: Union[AnyStr, int, enums.StorageControllerChargeMode]):
+    def _set_ModeCharge(self, value: Union[AnyStr, int, enums.StorageControllerChargeMode]):
         if not isinstance(value, int):
             self._set_string_o(13, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 13, value)
 
-    @property
-    def ModeCharge_str(self) -> str:
+    ModeCharge = property(_get_ModeCharge, _set_ModeCharge)
+
+    def _get_ModeCharge_str(self) -> str:
         """
         {Loadshape | Time* | PeakShaveLow | I-PeakShaveLow} Mode of operation for the CHARGE FUNCTION of this controller. 
 
@@ -349,12 +348,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(13)
 
-    @ModeCharge_str.setter
-    def ModeCharge_str(self, value: AnyStr):
+    def _set_ModeCharge_str(self, value: AnyStr):
         self.ModeCharge = value
 
-    @property
-    def TimeDischargeTrigger(self) -> float:
+    ModeCharge_str = property(_get_ModeCharge_str, _set_ModeCharge_str)
+
+    def _get_TimeDischargeTrigger(self) -> float:
         """
         Default time of day (hr) for initiating Discharging of the fleet. During Follow or Time mode discharging is triggered at a fixed time each day at this hour. If Follow mode, Storage will be discharged to attempt to hold the load at or below the power level at the time of triggering. In Time mode, the discharge is based on the %RatekW property value. Set this to a negative value to ignore. Default is 12.0 for Follow mode; otherwise it is -1 (ignored). 
 
@@ -362,12 +361,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @TimeDischargeTrigger.setter
-    def TimeDischargeTrigger(self, value: float):
+    def _set_TimeDischargeTrigger(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def TimeChargeTrigger(self) -> float:
+    TimeDischargeTrigger = property(_get_TimeDischargeTrigger, _set_TimeDischargeTrigger)
+
+    def _get_TimeChargeTrigger(self) -> float:
         """
         Default time of day (hr) for initiating charging in Time control mode. Set this to a negative value to ignore. Default is 2.0.  (0200).When this value is >0 the Storage fleet is set to charging at this time regardless of other control criteria to make sure Storage is topped off for the next discharge cycle.
 
@@ -375,12 +374,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @TimeChargeTrigger.setter
-    def TimeChargeTrigger(self, value: float):
+    def _set_TimeChargeTrigger(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def pctRatekW(self) -> float:
+    TimeChargeTrigger = property(_get_TimeChargeTrigger, _set_TimeChargeTrigger)
+
+    def _get_pctRatekW(self) -> float:
         """
         Sets the kW discharge rate in % of rated capacity for each element of the fleet. Applies to TIME control mode, SCHEDULE mode, or anytime discharging is triggered by time.
 
@@ -388,12 +387,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @pctRatekW.setter
-    def pctRatekW(self, value: float):
+    def _set_pctRatekW(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def pctRateCharge(self) -> float:
+    pctRatekW = property(_get_pctRatekW, _set_pctRatekW)
+
+    def _get_pctRateCharge(self) -> float:
         """
         Sets the kW charging rate in % of rated capacity for each element of the fleet. Applies to TIME control mode and anytime charging mode is entered due to a time trigger.
 
@@ -401,12 +400,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @pctRateCharge.setter
-    def pctRateCharge(self, value: float):
+    def _set_pctRateCharge(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def pctReserve(self) -> float:
+    pctRateCharge = property(_get_pctRateCharge, _set_pctRateCharge)
+
+    def _get_pctReserve(self) -> float:
         """
         Use this property to change the % reserve for each Storage element under control of this controller. This might be used, for example, to allow deeper discharges of Storage or in case of emergency operation to use the remainder of the Storage element.
 
@@ -414,12 +413,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    @pctReserve.setter
-    def pctReserve(self, value: float):
+    def _set_pctReserve(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
-    @property
-    def kWhTotal(self) -> float:
+    pctReserve = property(_get_pctReserve, _set_pctReserve)
+
+    def _get_kWhTotal(self) -> float:
         """
         (Read only). Total rated kWh energy Storage capacity of Storage elements controlled by this controller.
 
@@ -427,12 +426,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @kWhTotal.setter
-    def kWhTotal(self, value: float):
+    def _set_kWhTotal(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def kWTotal(self) -> float:
+    kWhTotal = property(_get_kWhTotal, _set_kWhTotal)
+
+    def _get_kWTotal(self) -> float:
         """
         (Read only). Total rated kW power capacity of Storage elements controlled by this controller.
 
@@ -440,12 +439,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @kWTotal.setter
-    def kWTotal(self, value: float):
+    def _set_kWTotal(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def kWhActual(self) -> float:
+    kWTotal = property(_get_kWTotal, _set_kWTotal)
+
+    def _get_kWhActual(self) -> float:
         """
         (Read only). Actual kWh stored of all controlled Storage elements. 
 
@@ -453,12 +452,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @kWhActual.setter
-    def kWhActual(self, value: float):
+    def _set_kWhActual(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def kWActual(self) -> float:
+    kWhActual = property(_get_kWhActual, _set_kWhActual)
+
+    def _get_kWActual(self) -> float:
         """
         (Read only). Actual kW output of all controlled Storage elements. 
 
@@ -466,12 +465,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    @kWActual.setter
-    def kWActual(self, value: float):
+    def _set_kWActual(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 22, value)
 
-    @property
-    def kWNeed(self) -> float:
+    kWActual = property(_get_kWActual, _set_kWActual)
+
+    def _get_kWNeed(self) -> float:
         """
         (Read only). KW needed to meet target.
 
@@ -479,12 +478,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @kWNeed.setter
-    def kWNeed(self, value: float):
+    def _set_kWNeed(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def Yearly_str(self) -> str:
+    kWNeed = property(_get_kWNeed, _set_kWNeed)
+
+    def _get_Yearly_str(self) -> str:
         """
         Dispatch loadshape object, If any, for Yearly solution Mode.
 
@@ -492,12 +491,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(24)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: AnyStr):
+    def _set_Yearly_str(self, value: AnyStr):
         self._set_string_o(24, value)
 
-    @property
-    def Yearly(self) -> LoadShape:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> LoadShape:
         """
         Dispatch loadshape object, If any, for Yearly solution Mode.
 
@@ -505,16 +504,16 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_obj(24, LoadShape)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(24, value)
             return
 
         self._set_string_o(24, value)
 
-    @property
-    def Daily_str(self) -> str:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> str:
         """
         Dispatch loadshape object, If any, for Daily solution mode.
 
@@ -522,12 +521,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(25)
 
-    @Daily_str.setter
-    def Daily_str(self, value: AnyStr):
+    def _set_Daily_str(self, value: AnyStr):
         self._set_string_o(25, value)
 
-    @property
-    def Daily(self) -> LoadShape:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> LoadShape:
         """
         Dispatch loadshape object, If any, for Daily solution mode.
 
@@ -535,16 +534,16 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_obj(25, LoadShape)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(25, value)
             return
 
         self._set_string_o(25, value)
 
-    @property
-    def Duty_str(self) -> str:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> str:
         """
         Dispatch loadshape object, If any, for Dutycycle solution mode.
 
@@ -552,12 +551,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(26)
 
-    @Duty_str.setter
-    def Duty_str(self, value: AnyStr):
+    def _set_Duty_str(self, value: AnyStr):
         self._set_string_o(26, value)
 
-    @property
-    def Duty(self) -> LoadShape:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> LoadShape:
         """
         Dispatch loadshape object, If any, for Dutycycle solution mode.
 
@@ -565,16 +564,16 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_obj(26, LoadShape)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(26, value)
             return
 
         self._set_string_o(26, value)
 
-    @property
-    def EventLog(self) -> bool:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_EventLog(self) -> bool:
         """
         {Yes/True | No/False} Default is No. Log control actions to Eventlog.
 
@@ -582,12 +581,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 27) != 0
 
-    @EventLog.setter
-    def EventLog(self, value: bool):
+    def _set_EventLog(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 27, value)
 
-    @property
-    def InhibitTime(self) -> int:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_InhibitTime(self) -> int:
         """
         Hours (integer) to inhibit Discharging after going into Charge mode. Default is 5.
 
@@ -595,12 +594,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 28)
 
-    @InhibitTime.setter
-    def InhibitTime(self, value: int):
+    def _set_InhibitTime(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 28, value)
 
-    @property
-    def TUp(self) -> float:
+    InhibitTime = property(_get_InhibitTime, _set_InhibitTime)
+
+    def _get_TUp(self) -> float:
         """
         Duration, hrs, of upramp part for SCHEDULE mode. Default is 0.25.
 
@@ -608,12 +607,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 29)
 
-    @TUp.setter
-    def TUp(self, value: float):
+    def _set_TUp(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 29, value)
 
-    @property
-    def TFlat(self) -> float:
+    TUp = property(_get_TUp, _set_TUp)
+
+    def _get_TFlat(self) -> float:
         """
         Duration, hrs, of flat part for SCHEDULE mode. Default is 2.0.
 
@@ -621,12 +620,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 30)
 
-    @TFlat.setter
-    def TFlat(self, value: float):
+    def _set_TFlat(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 30, value)
 
-    @property
-    def TDn(self) -> float:
+    TFlat = property(_get_TFlat, _set_TFlat)
+
+    def _get_TDn(self) -> float:
         """
         Duration, hrs, of downramp part for SCHEDULE mode. Default is 0.25.
 
@@ -634,12 +633,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 31)
 
-    @TDn.setter
-    def TDn(self, value: float):
+    def _set_TDn(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 31, value)
 
-    @property
-    def kWThreshold(self) -> float:
+    TDn = property(_get_TDn, _set_TDn)
+
+    def _get_kWThreshold(self) -> float:
         """
         Threshold, kW, for Follow mode. kW has to be above this value for the Storage element to be dispatched on. Defaults to 75% of the kWTarget value. Must reset this property after setting kWTarget if you want a different value.
 
@@ -647,12 +646,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 32)
 
-    @kWThreshold.setter
-    def kWThreshold(self, value: float):
+    def _set_kWThreshold(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 32, value)
 
-    @property
-    def DispFactor(self) -> float:
+    kWThreshold = property(_get_kWThreshold, _set_kWThreshold)
+
+    def _get_DispFactor(self) -> float:
         """
         Defaults to 1 (disabled). Set to any value between 0 and 1 to enable this parameter.
 
@@ -662,12 +661,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 33)
 
-    @DispFactor.setter
-    def DispFactor(self, value: float):
+    def _set_DispFactor(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 33, value)
 
-    @property
-    def ResetLevel(self) -> float:
+    DispFactor = property(_get_DispFactor, _set_DispFactor)
+
+    def _get_ResetLevel(self) -> float:
         """
         The level of charge required for allowing the storage to discharge again after reaching the reserve storage level. After reaching this level, the storage control  will not allow the storage device to discharge, forcing the storage to charge. Once the storage reaches this level, the storage will be able to discharge again. This value is a number between 0.2 and 1
 
@@ -675,12 +674,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 34)
 
-    @ResetLevel.setter
-    def ResetLevel(self, value: float):
+    def _set_ResetLevel(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 34, value)
 
-    @property
-    def Seasons(self) -> int:
+    ResetLevel = property(_get_ResetLevel, _set_ResetLevel)
+
+    def _get_Seasons(self) -> int:
         """
         With this property the user can specify the number of targets to be used by the controller using the list given at "SeasonTargets"/"SeasonTargetsLow", which can be used to dynamically adjust the storage controller during a QSTS simulation. The default value is 1. This property needs to be defined before defining SeasonTargets/SeasonTargetsLow.
 
@@ -688,12 +687,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 35)
 
-    @Seasons.setter
-    def Seasons(self, value: int):
+    def _set_Seasons(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 35, value)
 
-    @property
-    def SeasonTargets(self) -> Float64Array:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_SeasonTargets(self) -> Float64Array:
         """
         An array of doubles specifying the targets to be used during a QSTS simulation. These targets will take effect only if SeasonRating=true. The number of targets cannot exceed the number of seasons defined at the SeasonSignal.The difference between the targets defined at SeasonTargets and SeasonTargetsLow is that SeasonTargets applies to discharging modes, while SeasonTargetsLow applies to charging modes.
 
@@ -701,12 +700,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 36)
 
-    @SeasonTargets.setter
-    def SeasonTargets(self, value: Float64Array):
+    def _set_SeasonTargets(self, value: Float64Array):
         self._set_float64_array_o(36, value)
 
-    @property
-    def SeasonTargetsLow(self) -> Float64Array:
+    SeasonTargets = property(_get_SeasonTargets, _set_SeasonTargets)
+
+    def _get_SeasonTargetsLow(self) -> Float64Array:
         """
         An array of doubles specifying the targets to be used during a QSTS simulation. These targets will take effect only if SeasonRating=true. The number of targets cannot exceed the number of seasons defined at the SeasonSignal.The difference between the targets defined at SeasonTargets and SeasonTargetsLow is that SeasonTargets applies to discharging modes, while SeasonTargetsLow applies to charging modes.
 
@@ -714,12 +713,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 37)
 
-    @SeasonTargetsLow.setter
-    def SeasonTargetsLow(self, value: Float64Array):
+    def _set_SeasonTargetsLow(self, value: Float64Array):
         self._set_float64_array_o(37, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    SeasonTargetsLow = property(_get_SeasonTargetsLow, _set_SeasonTargetsLow)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -727,12 +726,12 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 38)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 38, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -740,9 +739,10 @@ class StorageController(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 39) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 39, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -803,8 +803,7 @@ class StorageControllerBatch(DSSBatch):
     _cls_idx = 30
 
 
-    @property
-    def Element_str(self) -> List[str]:
+    def _get_Element_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
@@ -812,12 +811,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Element_str.setter
-    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Element(self) -> List[DSSObj]:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
 
@@ -825,12 +824,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def Terminal(self) -> BatchInt32ArrayProxy:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the circuit element to which the StorageController control is connected. 1 or 2, typically.  Default is 1. Make sure to select the proper direction on the power for the respective dispatch mode.
 
@@ -838,12 +837,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: Union[int, Int32Array]):
+    def _set_Terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def MonPhase(self) -> BatchInt32ArrayProxy:
+    Terminal = property(_get_Terminal, _set_Terminal)
+
+    def _get_MonPhase(self) -> BatchInt32ArrayProxy:
         """
         Number of the phase being monitored or one of {AVG | MAX | MIN} for all phases. Default=MAX. Must be less than the number of phases. Used in PeakShave, Follow, Support and I-PeakShave discharging modes and in PeakShaveLow, I-PeakShaveLow charging modes. For modes based on active power measurements, the value used by the control is the monitored one multiplied by the number of phases of the monitored element.
 
@@ -851,16 +850,16 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    @MonPhase.setter
-    def MonPhase(self, value: Union[AnyStr, int, enums.MonitoredPhase, List[AnyStr], List[int], List[enums.MonitoredPhase], Int32Array]):
+    def _set_MonPhase(self, value: Union[AnyStr, int, enums.MonitoredPhase, List[AnyStr], List[int], List[enums.MonitoredPhase], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(3, value)
             return
-    
+
         self._set_batch_int32_array(3, value)
 
-    @property
-    def MonPhase_str(self) -> str:
+    MonPhase = property(_get_MonPhase, _set_MonPhase)
+
+    def _get_MonPhase_str(self) -> str:
         """
         Number of the phase being monitored or one of {AVG | MAX | MIN} for all phases. Default=MAX. Must be less than the number of phases. Used in PeakShave, Follow, Support and I-PeakShave discharging modes and in PeakShaveLow, I-PeakShaveLow charging modes. For modes based on active power measurements, the value used by the control is the monitored one multiplied by the number of phases of the monitored element.
 
@@ -868,12 +867,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @MonPhase_str.setter
-    def MonPhase_str(self, value: AnyStr):
+    def _set_MonPhase_str(self, value: AnyStr):
         self.MonPhase = value
 
-    @property
-    def kWTarget(self) -> BatchFloat64ArrayProxy:
+    MonPhase_str = property(_get_MonPhase_str, _set_MonPhase_str)
+
+    def _get_kWTarget(self) -> BatchFloat64ArrayProxy:
         """
         kW/kamps target for Discharging. The Storage element fleet is dispatched to try to hold the power/current in band at least until the Storage is depleted. The selection of power or current depends on the Discharge mode (PeakShave->kW, I-PeakShave->kamps).
 
@@ -881,12 +880,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @kWTarget.setter
-    def kWTarget(self, value: Union[float, Float64Array]):
+    def _set_kWTarget(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def kWTargetLow(self) -> BatchFloat64ArrayProxy:
+    kWTarget = property(_get_kWTarget, _set_kWTarget)
+
+    def _get_kWTargetLow(self) -> BatchFloat64ArrayProxy:
         """
         kW/kamps target for Charging. The Storage element fleet is dispatched to try to hold the power/current in band at least until the Storage is fully charged. The selection of power or current depends on the charge mode (PeakShavelow->kW, I-PeakShavelow->kamps).
 
@@ -894,12 +893,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @kWTargetLow.setter
-    def kWTargetLow(self, value: Union[float, Float64Array]):
+    def _set_kWTargetLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def pctkWBand(self) -> BatchFloat64ArrayProxy:
+    kWTargetLow = property(_get_kWTargetLow, _set_kWTargetLow)
+
+    def _get_pctkWBand(self) -> BatchFloat64ArrayProxy:
         """
         Bandwidth (% of Target kW/kamps) of the dead band around the kW/kamps target value. Default is 2% (+/-1%).No dispatch changes are attempted if the power in the monitored terminal stays within this band.
 
@@ -907,12 +906,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @pctkWBand.setter
-    def pctkWBand(self, value: Union[float, Float64Array]):
+    def _set_pctkWBand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def kWBand(self) -> BatchFloat64ArrayProxy:
+    pctkWBand = property(_get_pctkWBand, _set_pctkWBand)
+
+    def _get_kWBand(self) -> BatchFloat64ArrayProxy:
         """
         Alternative way of specifying the bandwidth. (kW/kamps) of the dead band around the kW/kamps target value. Default is 2% of kWTarget (+/-1%).No dispatch changes are attempted if the power in the monitored terminal stays within this band.
 
@@ -920,12 +919,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @kWBand.setter
-    def kWBand(self, value: Union[float, Float64Array]):
+    def _set_kWBand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def pctkWBandLow(self) -> BatchFloat64ArrayProxy:
+    kWBand = property(_get_kWBand, _set_kWBand)
+
+    def _get_pctkWBandLow(self) -> BatchFloat64ArrayProxy:
         """
         Bandwidth (% of kWTargetLow) of the dead band around the kW/kamps low target value. Default is 2% (+/-1%).No charging is attempted if the power in the monitored terminal stays within this band.
 
@@ -933,12 +932,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @pctkWBandLow.setter
-    def pctkWBandLow(self, value: Union[float, Float64Array]):
+    def _set_pctkWBandLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def kWBandLow(self) -> BatchFloat64ArrayProxy:
+    pctkWBandLow = property(_get_pctkWBandLow, _set_pctkWBandLow)
+
+    def _get_kWBandLow(self) -> BatchFloat64ArrayProxy:
         """
         Alternative way of specifying the bandwidth. (kW/kamps) of the dead band around the kW/kamps low target value. Default is 2% of kWTargetLow (+/-1%).No charging is attempted if the power in the monitored terminal stays within this band.
 
@@ -946,12 +945,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @kWBandLow.setter
-    def kWBandLow(self, value: Union[float, Float64Array]):
+    def _set_kWBandLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def ElementList(self) -> List[List[str]]:
+    kWBandLow = property(_get_kWBandLow, _set_kWBandLow)
+
+    def _get_ElementList(self) -> List[List[str]]:
         """
         Array list of Storage elements to be controlled.  If not specified, all Storage elements in the circuit not presently dispatched by another controller are assumed dispatched by this controller.
 
@@ -959,16 +958,16 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_string_ll(10)
 
-    @ElementList.setter
-    def ElementList(self, value: List[AnyStr]):
+    def _set_ElementList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 10, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def Weights(self) -> List[Float64Array]:
+    ElementList = property(_get_ElementList, _set_ElementList)
+
+    def _get_Weights(self) -> List[Float64Array]:
         """
         Array of proportional weights corresponding to each Storage element in the ElementList. The needed kW or kvar to get back to center band is dispatched to each Storage element according to these weights. Default is to set all weights to 1.0.
 
@@ -979,12 +978,12 @@ class StorageControllerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Weights.setter
-    def Weights(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Weights(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(11, value)
 
-    @property
-    def ModeDischarge(self) -> BatchInt32ArrayProxy:
+    Weights = property(_get_Weights, _set_Weights)
+
+    def _get_ModeDischarge(self) -> BatchInt32ArrayProxy:
         """
         {PeakShave* | Follow | Support | Loadshape | Time | Schedule | I-PeakShave} Mode of operation for the DISCHARGE FUNCTION of this controller. 
 
@@ -1006,16 +1005,16 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 12)
 
-    @ModeDischarge.setter
-    def ModeDischarge(self, value: Union[AnyStr, int, enums.StorageControllerDischargeMode, List[AnyStr], List[int], List[enums.StorageControllerDischargeMode], Int32Array]):
+    def _set_ModeDischarge(self, value: Union[AnyStr, int, enums.StorageControllerDischargeMode, List[AnyStr], List[int], List[enums.StorageControllerDischargeMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(12, value)
             return
-    
+
         self._set_batch_int32_array(12, value)
 
-    @property
-    def ModeDischarge_str(self) -> str:
+    ModeDischarge = property(_get_ModeDischarge, _set_ModeDischarge)
+
+    def _get_ModeDischarge_str(self) -> str:
         """
         {PeakShave* | Follow | Support | Loadshape | Time | Schedule | I-PeakShave} Mode of operation for the DISCHARGE FUNCTION of this controller. 
 
@@ -1037,12 +1036,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(12)
 
-    @ModeDischarge_str.setter
-    def ModeDischarge_str(self, value: AnyStr):
+    def _set_ModeDischarge_str(self, value: AnyStr):
         self.ModeDischarge = value
 
-    @property
-    def ModeCharge(self) -> BatchInt32ArrayProxy:
+    ModeDischarge_str = property(_get_ModeDischarge_str, _set_ModeDischarge_str)
+
+    def _get_ModeCharge(self) -> BatchInt32ArrayProxy:
         """
         {Loadshape | Time* | PeakShaveLow | I-PeakShaveLow} Mode of operation for the CHARGE FUNCTION of this controller. 
 
@@ -1058,16 +1057,16 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 13)
 
-    @ModeCharge.setter
-    def ModeCharge(self, value: Union[AnyStr, int, enums.StorageControllerChargeMode, List[AnyStr], List[int], List[enums.StorageControllerChargeMode], Int32Array]):
+    def _set_ModeCharge(self, value: Union[AnyStr, int, enums.StorageControllerChargeMode, List[AnyStr], List[int], List[enums.StorageControllerChargeMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(13, value)
             return
-    
+
         self._set_batch_int32_array(13, value)
 
-    @property
-    def ModeCharge_str(self) -> str:
+    ModeCharge = property(_get_ModeCharge, _set_ModeCharge)
+
+    def _get_ModeCharge_str(self) -> str:
         """
         {Loadshape | Time* | PeakShaveLow | I-PeakShaveLow} Mode of operation for the CHARGE FUNCTION of this controller. 
 
@@ -1083,12 +1082,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(13)
 
-    @ModeCharge_str.setter
-    def ModeCharge_str(self, value: AnyStr):
+    def _set_ModeCharge_str(self, value: AnyStr):
         self.ModeCharge = value
 
-    @property
-    def TimeDischargeTrigger(self) -> BatchFloat64ArrayProxy:
+    ModeCharge_str = property(_get_ModeCharge_str, _set_ModeCharge_str)
+
+    def _get_TimeDischargeTrigger(self) -> BatchFloat64ArrayProxy:
         """
         Default time of day (hr) for initiating Discharging of the fleet. During Follow or Time mode discharging is triggered at a fixed time each day at this hour. If Follow mode, Storage will be discharged to attempt to hold the load at or below the power level at the time of triggering. In Time mode, the discharge is based on the %RatekW property value. Set this to a negative value to ignore. Default is 12.0 for Follow mode; otherwise it is -1 (ignored). 
 
@@ -1096,12 +1095,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @TimeDischargeTrigger.setter
-    def TimeDischargeTrigger(self, value: Union[float, Float64Array]):
+    def _set_TimeDischargeTrigger(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def TimeChargeTrigger(self) -> BatchFloat64ArrayProxy:
+    TimeDischargeTrigger = property(_get_TimeDischargeTrigger, _set_TimeDischargeTrigger)
+
+    def _get_TimeChargeTrigger(self) -> BatchFloat64ArrayProxy:
         """
         Default time of day (hr) for initiating charging in Time control mode. Set this to a negative value to ignore. Default is 2.0.  (0200).When this value is >0 the Storage fleet is set to charging at this time regardless of other control criteria to make sure Storage is topped off for the next discharge cycle.
 
@@ -1109,12 +1108,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @TimeChargeTrigger.setter
-    def TimeChargeTrigger(self, value: Union[float, Float64Array]):
+    def _set_TimeChargeTrigger(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def pctRatekW(self) -> BatchFloat64ArrayProxy:
+    TimeChargeTrigger = property(_get_TimeChargeTrigger, _set_TimeChargeTrigger)
+
+    def _get_pctRatekW(self) -> BatchFloat64ArrayProxy:
         """
         Sets the kW discharge rate in % of rated capacity for each element of the fleet. Applies to TIME control mode, SCHEDULE mode, or anytime discharging is triggered by time.
 
@@ -1122,12 +1121,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @pctRatekW.setter
-    def pctRatekW(self, value: Union[float, Float64Array]):
+    def _set_pctRatekW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def pctRateCharge(self) -> BatchFloat64ArrayProxy:
+    pctRatekW = property(_get_pctRatekW, _set_pctRatekW)
+
+    def _get_pctRateCharge(self) -> BatchFloat64ArrayProxy:
         """
         Sets the kW charging rate in % of rated capacity for each element of the fleet. Applies to TIME control mode and anytime charging mode is entered due to a time trigger.
 
@@ -1135,12 +1134,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @pctRateCharge.setter
-    def pctRateCharge(self, value: Union[float, Float64Array]):
+    def _set_pctRateCharge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def pctReserve(self) -> BatchFloat64ArrayProxy:
+    pctRateCharge = property(_get_pctRateCharge, _set_pctRateCharge)
+
+    def _get_pctReserve(self) -> BatchFloat64ArrayProxy:
         """
         Use this property to change the % reserve for each Storage element under control of this controller. This might be used, for example, to allow deeper discharges of Storage or in case of emergency operation to use the remainder of the Storage element.
 
@@ -1148,12 +1147,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    @pctReserve.setter
-    def pctReserve(self, value: Union[float, Float64Array]):
+    def _set_pctReserve(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
-    @property
-    def kWhTotal(self) -> BatchFloat64ArrayProxy:
+    pctReserve = property(_get_pctReserve, _set_pctReserve)
+
+    def _get_kWhTotal(self) -> BatchFloat64ArrayProxy:
         """
         (Read only). Total rated kWh energy Storage capacity of Storage elements controlled by this controller.
 
@@ -1161,12 +1160,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @kWhTotal.setter
-    def kWhTotal(self, value: Union[float, Float64Array]):
+    def _set_kWhTotal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def kWTotal(self) -> BatchFloat64ArrayProxy:
+    kWhTotal = property(_get_kWhTotal, _set_kWhTotal)
+
+    def _get_kWTotal(self) -> BatchFloat64ArrayProxy:
         """
         (Read only). Total rated kW power capacity of Storage elements controlled by this controller.
 
@@ -1174,12 +1173,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @kWTotal.setter
-    def kWTotal(self, value: Union[float, Float64Array]):
+    def _set_kWTotal(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def kWhActual(self) -> BatchFloat64ArrayProxy:
+    kWTotal = property(_get_kWTotal, _set_kWTotal)
+
+    def _get_kWhActual(self) -> BatchFloat64ArrayProxy:
         """
         (Read only). Actual kWh stored of all controlled Storage elements. 
 
@@ -1187,12 +1186,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @kWhActual.setter
-    def kWhActual(self, value: Union[float, Float64Array]):
+    def _set_kWhActual(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def kWActual(self) -> BatchFloat64ArrayProxy:
+    kWhActual = property(_get_kWhActual, _set_kWhActual)
+
+    def _get_kWActual(self) -> BatchFloat64ArrayProxy:
         """
         (Read only). Actual kW output of all controlled Storage elements. 
 
@@ -1200,12 +1199,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    @kWActual.setter
-    def kWActual(self, value: Union[float, Float64Array]):
+    def _set_kWActual(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
-    @property
-    def kWNeed(self) -> BatchFloat64ArrayProxy:
+    kWActual = property(_get_kWActual, _set_kWActual)
+
+    def _get_kWNeed(self) -> BatchFloat64ArrayProxy:
         """
         (Read only). KW needed to meet target.
 
@@ -1213,12 +1212,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @kWNeed.setter
-    def kWNeed(self, value: Union[float, Float64Array]):
+    def _set_kWNeed(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def Yearly_str(self) -> List[str]:
+    kWNeed = property(_get_kWNeed, _set_kWNeed)
+
+    def _get_Yearly_str(self) -> List[str]:
         """
         Dispatch loadshape object, If any, for Yearly solution Mode.
 
@@ -1226,12 +1225,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(24)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(24, value)
 
-    @property
-    def Yearly(self) -> List[LoadShape]:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> List[LoadShape]:
         """
         Dispatch loadshape object, If any, for Yearly solution Mode.
 
@@ -1239,12 +1238,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(24)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(24, value)
 
-    @property
-    def Daily_str(self) -> List[str]:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> List[str]:
         """
         Dispatch loadshape object, If any, for Daily solution mode.
 
@@ -1252,12 +1251,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(25)
 
-    @Daily_str.setter
-    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(25, value)
 
-    @property
-    def Daily(self) -> List[LoadShape]:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> List[LoadShape]:
         """
         Dispatch loadshape object, If any, for Daily solution mode.
 
@@ -1265,12 +1264,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(25)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(25, value)
 
-    @property
-    def Duty_str(self) -> List[str]:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> List[str]:
         """
         Dispatch loadshape object, If any, for Dutycycle solution mode.
 
@@ -1278,12 +1277,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(26)
 
-    @Duty_str.setter
-    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(26, value)
 
-    @property
-    def Duty(self) -> List[LoadShape]:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> List[LoadShape]:
         """
         Dispatch loadshape object, If any, for Dutycycle solution mode.
 
@@ -1291,26 +1290,27 @@ class StorageControllerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(26)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(26, value)
 
-    @property
-    def EventLog(self) -> List[bool]:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_EventLog(self) -> List[bool]:
         """
         {Yes/True | No/False} Default is No. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 27.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(27)
         ]
-    @EventLog.setter
-    def EventLog(self, value: bool):
+
+    def _set_EventLog(self, value: bool):
         self._set_batch_int32_array(27, value)
 
-    @property
-    def InhibitTime(self) -> BatchInt32ArrayProxy:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_InhibitTime(self) -> BatchInt32ArrayProxy:
         """
         Hours (integer) to inhibit Discharging after going into Charge mode. Default is 5.
 
@@ -1318,12 +1318,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 28)
 
-    @InhibitTime.setter
-    def InhibitTime(self, value: Union[int, Int32Array]):
+    def _set_InhibitTime(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(28, value)
 
-    @property
-    def TUp(self) -> BatchFloat64ArrayProxy:
+    InhibitTime = property(_get_InhibitTime, _set_InhibitTime)
+
+    def _get_TUp(self) -> BatchFloat64ArrayProxy:
         """
         Duration, hrs, of upramp part for SCHEDULE mode. Default is 0.25.
 
@@ -1331,12 +1331,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 29)
 
-    @TUp.setter
-    def TUp(self, value: Union[float, Float64Array]):
+    def _set_TUp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
-    @property
-    def TFlat(self) -> BatchFloat64ArrayProxy:
+    TUp = property(_get_TUp, _set_TUp)
+
+    def _get_TFlat(self) -> BatchFloat64ArrayProxy:
         """
         Duration, hrs, of flat part for SCHEDULE mode. Default is 2.0.
 
@@ -1344,12 +1344,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 30)
 
-    @TFlat.setter
-    def TFlat(self, value: Union[float, Float64Array]):
+    def _set_TFlat(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
-    @property
-    def TDn(self) -> BatchFloat64ArrayProxy:
+    TFlat = property(_get_TFlat, _set_TFlat)
+
+    def _get_TDn(self) -> BatchFloat64ArrayProxy:
         """
         Duration, hrs, of downramp part for SCHEDULE mode. Default is 0.25.
 
@@ -1357,12 +1357,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 31)
 
-    @TDn.setter
-    def TDn(self, value: Union[float, Float64Array]):
+    def _set_TDn(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(31, value)
 
-    @property
-    def kWThreshold(self) -> BatchFloat64ArrayProxy:
+    TDn = property(_get_TDn, _set_TDn)
+
+    def _get_kWThreshold(self) -> BatchFloat64ArrayProxy:
         """
         Threshold, kW, for Follow mode. kW has to be above this value for the Storage element to be dispatched on. Defaults to 75% of the kWTarget value. Must reset this property after setting kWTarget if you want a different value.
 
@@ -1370,12 +1370,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 32)
 
-    @kWThreshold.setter
-    def kWThreshold(self, value: Union[float, Float64Array]):
+    def _set_kWThreshold(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(32, value)
 
-    @property
-    def DispFactor(self) -> BatchFloat64ArrayProxy:
+    kWThreshold = property(_get_kWThreshold, _set_kWThreshold)
+
+    def _get_DispFactor(self) -> BatchFloat64ArrayProxy:
         """
         Defaults to 1 (disabled). Set to any value between 0 and 1 to enable this parameter.
 
@@ -1385,12 +1385,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 33)
 
-    @DispFactor.setter
-    def DispFactor(self, value: Union[float, Float64Array]):
+    def _set_DispFactor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
-    @property
-    def ResetLevel(self) -> BatchFloat64ArrayProxy:
+    DispFactor = property(_get_DispFactor, _set_DispFactor)
+
+    def _get_ResetLevel(self) -> BatchFloat64ArrayProxy:
         """
         The level of charge required for allowing the storage to discharge again after reaching the reserve storage level. After reaching this level, the storage control  will not allow the storage device to discharge, forcing the storage to charge. Once the storage reaches this level, the storage will be able to discharge again. This value is a number between 0.2 and 1
 
@@ -1398,12 +1398,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 34)
 
-    @ResetLevel.setter
-    def ResetLevel(self, value: Union[float, Float64Array]):
+    def _set_ResetLevel(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
-    @property
-    def Seasons(self) -> BatchInt32ArrayProxy:
+    ResetLevel = property(_get_ResetLevel, _set_ResetLevel)
+
+    def _get_Seasons(self) -> BatchInt32ArrayProxy:
         """
         With this property the user can specify the number of targets to be used by the controller using the list given at "SeasonTargets"/"SeasonTargetsLow", which can be used to dynamically adjust the storage controller during a QSTS simulation. The default value is 1. This property needs to be defined before defining SeasonTargets/SeasonTargetsLow.
 
@@ -1411,12 +1411,12 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 35)
 
-    @Seasons.setter
-    def Seasons(self, value: Union[int, Int32Array]):
+    def _set_Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(35, value)
 
-    @property
-    def SeasonTargets(self) -> List[Float64Array]:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_SeasonTargets(self) -> List[Float64Array]:
         """
         An array of doubles specifying the targets to be used during a QSTS simulation. These targets will take effect only if SeasonRating=true. The number of targets cannot exceed the number of seasons defined at the SeasonSignal.The difference between the targets defined at SeasonTargets and SeasonTargetsLow is that SeasonTargets applies to discharging modes, while SeasonTargetsLow applies to charging modes.
 
@@ -1427,12 +1427,12 @@ class StorageControllerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @SeasonTargets.setter
-    def SeasonTargets(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_SeasonTargets(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(36, value)
 
-    @property
-    def SeasonTargetsLow(self) -> List[Float64Array]:
+    SeasonTargets = property(_get_SeasonTargets, _set_SeasonTargets)
+
+    def _get_SeasonTargetsLow(self) -> List[Float64Array]:
         """
         An array of doubles specifying the targets to be used during a QSTS simulation. These targets will take effect only if SeasonRating=true. The number of targets cannot exceed the number of seasons defined at the SeasonSignal.The difference between the targets defined at SeasonTargets and SeasonTargetsLow is that SeasonTargets applies to discharging modes, while SeasonTargetsLow applies to charging modes.
 
@@ -1443,12 +1443,12 @@ class StorageControllerBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @SeasonTargetsLow.setter
-    def SeasonTargetsLow(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_SeasonTargetsLow(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(37, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    SeasonTargetsLow = property(_get_SeasonTargetsLow, _set_SeasonTargetsLow)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -1456,23 +1456,25 @@ class StorageControllerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 38)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(38, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 39.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(39)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(39, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1532,7 +1534,7 @@ class IStorageController(IDSSObj,StorageControllerBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, StorageController, StorageControllerBatch)
         StorageControllerBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> StorageController:

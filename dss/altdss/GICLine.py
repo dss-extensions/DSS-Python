@@ -44,8 +44,7 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         'like': 19,
     }
 
-    @property
-    def Bus1(self) -> str:
+    def _get_Bus1(self) -> str:
         """
         Name of bus to which the main terminal (1) is connected.
         bus1=busname
@@ -55,12 +54,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Bus2(self) -> str:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> str:
         """
         Name of bus to which 2nd terminal is connected.
         bus2=busname
@@ -72,12 +71,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(2)
 
-    @Bus2.setter
-    def Bus2(self, value: AnyStr):
+    def _set_Bus2(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def Volts(self) -> float:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Volts(self) -> float:
         """
         Voltage magnitude, in volts, of the GIC voltage induced across this line. When specified, voltage source is assumed defined by Voltage and Angle properties. 
 
@@ -93,12 +92,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @Volts.setter
-    def Volts(self, value: float):
+    def _set_Volts(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def Angle(self) -> float:
+    Volts = property(_get_Volts, _set_Volts)
+
+    def _get_Angle(self) -> float:
         """
         Phase angle in degrees of first phase. Default=0.0.  See Voltage property
 
@@ -106,12 +105,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @Angle.setter
-    def Angle(self, value: float):
+    def _set_Angle(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def Frequency(self) -> float:
+    Angle = property(_get_Angle, _set_Angle)
+
+    def _get_Frequency(self) -> float:
         """
         Source frequency.  Defaults to 0.1 Hz.
 
@@ -119,12 +118,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @Frequency.setter
-    def Frequency(self, value: float):
+    def _set_Frequency(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def Phases(self) -> int:
+    Frequency = property(_get_Frequency, _set_Frequency)
+
+    def _get_Phases(self) -> int:
         """
         Number of phases.  Defaults to 3.
 
@@ -132,12 +131,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 6)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def R(self) -> float:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_R(self) -> float:
         """
         Resistance of line, ohms of impedance in series with GIC voltage source. 
 
@@ -145,12 +144,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @R.setter
-    def R(self, value: float):
+    def _set_R(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def X(self) -> float:
+    R = property(_get_R, _set_R)
+
+    def _get_X(self) -> float:
         """
         Reactance at base frequency, ohms. Default = 0.0. This value is generally not important for GIC studies but may be used if desired.
 
@@ -158,12 +157,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @X.setter
-    def X(self, value: float):
+    def _set_X(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def C(self) -> float:
+    X = property(_get_X, _set_X)
+
+    def _get_C(self) -> float:
         """
         Value of line blocking capacitance in microfarads. Default = 0.0, implying that there is no line blocking capacitor.
 
@@ -171,12 +170,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @C.setter
-    def C(self, value: float):
+    def _set_C(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def EN(self) -> float:
+    C = property(_get_C, _set_C)
+
+    def _get_EN(self) -> float:
         """
         Northward Electric field (V/km). If specified, Voltage and Angle are computed from EN, EE, lat and lon values.
 
@@ -184,12 +183,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @EN.setter
-    def EN(self, value: float):
+    def _set_EN(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def EE(self) -> float:
+    EN = property(_get_EN, _set_EN)
+
+    def _get_EE(self) -> float:
         """
         Eastward Electric field (V/km).  If specified, Voltage and Angle are computed from EN, EE, lat and lon values.
 
@@ -197,12 +196,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @EE.setter
-    def EE(self, value: float):
+    def _set_EE(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def Lat1(self) -> float:
+    EE = property(_get_EE, _set_EE)
+
+    def _get_Lat1(self) -> float:
         """
         Latitude of Bus1 (degrees)
 
@@ -210,12 +209,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @Lat1.setter
-    def Lat1(self, value: float):
+    def _set_Lat1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def Lon1(self) -> float:
+    Lat1 = property(_get_Lat1, _set_Lat1)
+
+    def _get_Lon1(self) -> float:
         """
         Longitude of Bus1 (degrees)
 
@@ -223,12 +222,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @Lon1.setter
-    def Lon1(self, value: float):
+    def _set_Lon1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def Lat2(self) -> float:
+    Lon1 = property(_get_Lon1, _set_Lon1)
+
+    def _get_Lat2(self) -> float:
         """
         Latitude of Bus2 (degrees)
 
@@ -236,12 +235,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @Lat2.setter
-    def Lat2(self, value: float):
+    def _set_Lat2(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def Lon2(self) -> float:
+    Lat2 = property(_get_Lat2, _set_Lat2)
+
+    def _get_Lon2(self) -> float:
         """
         Longitude of Bus2 (degrees)
 
@@ -249,12 +248,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @Lon2.setter
-    def Lon2(self, value: float):
+    def _set_Lon2(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def Spectrum_str(self) -> str:
+    Lon2 = property(_get_Lon2, _set_Lon2)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -262,12 +261,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(16)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(16, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -275,16 +274,16 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(16, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(16, value)
             return
 
         self._set_string_o(16, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Inherited Property for all PCElements. Base frequency for specification of reactance value.
 
@@ -292,12 +291,12 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -305,9 +304,10 @@ class GICLine(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 18) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 18, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -347,8 +347,7 @@ class GICLineBatch(DSSBatch):
     _cls_idx = 44
 
 
-    @property
-    def Bus1(self) -> List[str]:
+    def _get_Bus1(self) -> List[str]:
         """
         Name of bus to which the main terminal (1) is connected.
         bus1=busname
@@ -356,14 +355,14 @@ class GICLineBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-        return self._get_batch_str_prop(1) 
+        return self._get_batch_str_prop(1)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Bus2(self) -> List[str]:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> List[str]:
         """
         Name of bus to which 2nd terminal is connected.
         bus2=busname
@@ -373,14 +372,14 @@ class GICLineBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus2.setter
-    def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def Volts(self) -> BatchFloat64ArrayProxy:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Volts(self) -> BatchFloat64ArrayProxy:
         """
         Voltage magnitude, in volts, of the GIC voltage induced across this line. When specified, voltage source is assumed defined by Voltage and Angle properties. 
 
@@ -396,12 +395,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @Volts.setter
-    def Volts(self, value: Union[float, Float64Array]):
+    def _set_Volts(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def Angle(self) -> BatchFloat64ArrayProxy:
+    Volts = property(_get_Volts, _set_Volts)
+
+    def _get_Angle(self) -> BatchFloat64ArrayProxy:
         """
         Phase angle in degrees of first phase. Default=0.0.  See Voltage property
 
@@ -409,12 +408,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @Angle.setter
-    def Angle(self, value: Union[float, Float64Array]):
+    def _set_Angle(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def Frequency(self) -> BatchFloat64ArrayProxy:
+    Angle = property(_get_Angle, _set_Angle)
+
+    def _get_Frequency(self) -> BatchFloat64ArrayProxy:
         """
         Source frequency.  Defaults to 0.1 Hz.
 
@@ -422,12 +421,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @Frequency.setter
-    def Frequency(self, value: Union[float, Float64Array]):
+    def _set_Frequency(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    Frequency = property(_get_Frequency, _set_Frequency)
+
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of phases.  Defaults to 3.
 
@@ -435,12 +434,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(6, value)
 
-    @property
-    def R(self) -> BatchFloat64ArrayProxy:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_R(self) -> BatchFloat64ArrayProxy:
         """
         Resistance of line, ohms of impedance in series with GIC voltage source. 
 
@@ -448,12 +447,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @R.setter
-    def R(self, value: Union[float, Float64Array]):
+    def _set_R(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def X(self) -> BatchFloat64ArrayProxy:
+    R = property(_get_R, _set_R)
+
+    def _get_X(self) -> BatchFloat64ArrayProxy:
         """
         Reactance at base frequency, ohms. Default = 0.0. This value is generally not important for GIC studies but may be used if desired.
 
@@ -461,12 +460,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @X.setter
-    def X(self, value: Union[float, Float64Array]):
+    def _set_X(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def C(self) -> BatchFloat64ArrayProxy:
+    X = property(_get_X, _set_X)
+
+    def _get_C(self) -> BatchFloat64ArrayProxy:
         """
         Value of line blocking capacitance in microfarads. Default = 0.0, implying that there is no line blocking capacitor.
 
@@ -474,12 +473,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @C.setter
-    def C(self, value: Union[float, Float64Array]):
+    def _set_C(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def EN(self) -> BatchFloat64ArrayProxy:
+    C = property(_get_C, _set_C)
+
+    def _get_EN(self) -> BatchFloat64ArrayProxy:
         """
         Northward Electric field (V/km). If specified, Voltage and Angle are computed from EN, EE, lat and lon values.
 
@@ -487,12 +486,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @EN.setter
-    def EN(self, value: Union[float, Float64Array]):
+    def _set_EN(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def EE(self) -> BatchFloat64ArrayProxy:
+    EN = property(_get_EN, _set_EN)
+
+    def _get_EE(self) -> BatchFloat64ArrayProxy:
         """
         Eastward Electric field (V/km).  If specified, Voltage and Angle are computed from EN, EE, lat and lon values.
 
@@ -500,12 +499,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @EE.setter
-    def EE(self, value: Union[float, Float64Array]):
+    def _set_EE(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def Lat1(self) -> BatchFloat64ArrayProxy:
+    EE = property(_get_EE, _set_EE)
+
+    def _get_Lat1(self) -> BatchFloat64ArrayProxy:
         """
         Latitude of Bus1 (degrees)
 
@@ -513,12 +512,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @Lat1.setter
-    def Lat1(self, value: Union[float, Float64Array]):
+    def _set_Lat1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def Lon1(self) -> BatchFloat64ArrayProxy:
+    Lat1 = property(_get_Lat1, _set_Lat1)
+
+    def _get_Lon1(self) -> BatchFloat64ArrayProxy:
         """
         Longitude of Bus1 (degrees)
 
@@ -526,12 +525,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @Lon1.setter
-    def Lon1(self, value: Union[float, Float64Array]):
+    def _set_Lon1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def Lat2(self) -> BatchFloat64ArrayProxy:
+    Lon1 = property(_get_Lon1, _set_Lon1)
+
+    def _get_Lat2(self) -> BatchFloat64ArrayProxy:
         """
         Latitude of Bus2 (degrees)
 
@@ -539,12 +538,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @Lat2.setter
-    def Lat2(self, value: Union[float, Float64Array]):
+    def _set_Lat2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def Lon2(self) -> BatchFloat64ArrayProxy:
+    Lat2 = property(_get_Lat2, _set_Lat2)
+
+    def _get_Lon2(self) -> BatchFloat64ArrayProxy:
         """
         Longitude of Bus2 (degrees)
 
@@ -552,12 +551,12 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @Lon2.setter
-    def Lon2(self, value: Union[float, Float64Array]):
+    def _set_Lon2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    Lon2 = property(_get_Lon2, _set_Lon2)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -565,12 +564,12 @@ class GICLineBatch(DSSBatch):
         """
         return self._get_batch_str_prop(16)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(16, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Inherited Property for all PCElements. Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -578,12 +577,12 @@ class GICLineBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(16)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(16, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Inherited Property for all PCElements. Base frequency for specification of reactance value.
 
@@ -591,23 +590,25 @@ class GICLineBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 18.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(18)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(18, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -646,7 +647,7 @@ class IGICLine(IDSSObj,GICLineBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, GICLine, GICLineBatch)
         GICLineBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> GICLine:

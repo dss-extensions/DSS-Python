@@ -42,8 +42,7 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         'like': 17,
     }
 
-    @property
-    def Bus1(self) -> str:
+    def _get_Bus1(self) -> str:
         """
         Name of first bus. Examples:
 
@@ -56,12 +55,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Bus2(self) -> str:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> str:
         """
         Name of 2nd bus of the 2-terminal Fault object. Defaults to all phases connected to first bus, node 0, if not specified. (Shunt Wye Connection to ground reference)
 
@@ -71,12 +70,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(2)
 
-    @Bus2.setter
-    def Bus2(self, value: AnyStr):
+    def _set_Bus2(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def Phases(self) -> int:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Phases(self) -> int:
         """
         Number of Phases. Default is 1.
 
@@ -84,12 +83,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 3)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
-    @property
-    def R(self) -> float:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_R(self) -> float:
         """
         Resistance, each phase, ohms. Default is 0.0001. Assumed to be Mean value if gaussian random mode.Max value if uniform mode.  A Fault is actually a series resistance that defaults to a wye connection to ground on the second terminal.  You may reconnect the 2nd terminal to achieve whatever connection.  Use the Gmatrix property to specify an arbitrary conductance matrix.
 
@@ -97,12 +96,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @R.setter
-    def R(self, value: float):
+    def _set_R(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def pctStdDev(self) -> float:
+    R = property(_get_R, _set_R)
+
+    def _get_pctStdDev(self) -> float:
         """
         Percent standard deviation in resistance to assume for Monte Carlo fault (MF) solution mode for GAUSSIAN distribution. Default is 0 (no variation from mean).
 
@@ -110,12 +109,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @pctStdDev.setter
-    def pctStdDev(self, value: float):
+    def _set_pctStdDev(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def GMatrix(self) -> Float64Array:
+    pctStdDev = property(_get_pctStdDev, _set_pctStdDev)
+
+    def _get_GMatrix(self) -> Float64Array:
         """
         Use this to specify a nodal conductance (G) matrix to represent some arbitrary resistance network. Specify in lower triangle form as usual for DSS matrices.
 
@@ -123,12 +122,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 6)
 
-    @GMatrix.setter
-    def GMatrix(self, value: Float64Array):
+    def _set_GMatrix(self, value: Float64Array):
         self._set_float64_array_o(6, value)
 
-    @property
-    def OnTime(self) -> float:
+    GMatrix = property(_get_GMatrix, _set_GMatrix)
+
+    def _get_OnTime(self) -> float:
         """
         Time (sec) at which the fault is established for time varying simulations. Default is 0.0 (on at the beginning of the simulation)
 
@@ -136,12 +135,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @OnTime.setter
-    def OnTime(self, value: float):
+    def _set_OnTime(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def Temporary(self) -> bool:
+    OnTime = property(_get_OnTime, _set_OnTime)
+
+    def _get_Temporary(self) -> bool:
         """
         {Yes | No} Default is No.  Designate whether the fault is temporary.  For Time-varying simulations, the fault will be removed if the current through the fault drops below the MINAMPS criteria.
 
@@ -149,12 +148,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 8) != 0
 
-    @Temporary.setter
-    def Temporary(self, value: bool):
+    def _set_Temporary(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 8, value)
 
-    @property
-    def MinAmps(self) -> float:
+    Temporary = property(_get_Temporary, _set_Temporary)
+
+    def _get_MinAmps(self) -> float:
         """
         Minimum amps that can sustain a temporary fault. Default is 5.
 
@@ -162,12 +161,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @MinAmps.setter
-    def MinAmps(self, value: float):
+    def _set_MinAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def NormAmps(self) -> float:
+    MinAmps = property(_get_MinAmps, _set_MinAmps)
+
+    def _get_NormAmps(self) -> float:
         """
         Normal rated current.
 
@@ -175,12 +174,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @NormAmps.setter
-    def NormAmps(self, value: float):
+    def _set_NormAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def EmergAmps(self) -> float:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> float:
         """
         Maximum or emerg current.
 
@@ -188,12 +187,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: float):
+    def _set_EmergAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def FaultRate(self) -> float:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> float:
         """
         Failure rate per year.
 
@@ -201,12 +200,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @FaultRate.setter
-    def FaultRate(self, value: float):
+    def _set_FaultRate(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def pctPerm(self) -> float:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> float:
         """
         Percent of failures that become permanent.
 
@@ -214,12 +213,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @pctPerm.setter
-    def pctPerm(self, value: float):
+    def _set_pctPerm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def Repair(self) -> float:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> float:
         """
         Hours to repair.
 
@@ -227,12 +226,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @Repair.setter
-    def Repair(self, value: float):
+    def _set_Repair(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -240,12 +239,12 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -253,9 +252,10 @@ class Fault(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 16) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 16, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -293,8 +293,7 @@ class FaultBatch(DSSBatch):
     _cls_idx = 25
 
 
-    @property
-    def Bus1(self) -> List[str]:
+    def _get_Bus1(self) -> List[str]:
         """
         Name of first bus. Examples:
 
@@ -305,14 +304,14 @@ class FaultBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-        return self._get_batch_str_prop(1) 
+        return self._get_batch_str_prop(1)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Bus2(self) -> List[str]:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> List[str]:
         """
         Name of 2nd bus of the 2-terminal Fault object. Defaults to all phases connected to first bus, node 0, if not specified. (Shunt Wye Connection to ground reference)
 
@@ -320,14 +319,14 @@ class FaultBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus2.setter
-    def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of Phases. Default is 1.
 
@@ -335,12 +334,12 @@ class FaultBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(3, value)
 
-    @property
-    def R(self) -> BatchFloat64ArrayProxy:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_R(self) -> BatchFloat64ArrayProxy:
         """
         Resistance, each phase, ohms. Default is 0.0001. Assumed to be Mean value if gaussian random mode.Max value if uniform mode.  A Fault is actually a series resistance that defaults to a wye connection to ground on the second terminal.  You may reconnect the 2nd terminal to achieve whatever connection.  Use the Gmatrix property to specify an arbitrary conductance matrix.
 
@@ -348,12 +347,12 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @R.setter
-    def R(self, value: Union[float, Float64Array]):
+    def _set_R(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def pctStdDev(self) -> BatchFloat64ArrayProxy:
+    R = property(_get_R, _set_R)
+
+    def _get_pctStdDev(self) -> BatchFloat64ArrayProxy:
         """
         Percent standard deviation in resistance to assume for Monte Carlo fault (MF) solution mode for GAUSSIAN distribution. Default is 0 (no variation from mean).
 
@@ -361,12 +360,12 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @pctStdDev.setter
-    def pctStdDev(self, value: Union[float, Float64Array]):
+    def _set_pctStdDev(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def GMatrix(self) -> List[Float64Array]:
+    pctStdDev = property(_get_pctStdDev, _set_pctStdDev)
+
+    def _get_GMatrix(self) -> List[Float64Array]:
         """
         Use this to specify a nodal conductance (G) matrix to represent some arbitrary resistance network. Specify in lower triangle form as usual for DSS matrices.
 
@@ -377,12 +376,12 @@ class FaultBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @GMatrix.setter
-    def GMatrix(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_GMatrix(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(6, value)
 
-    @property
-    def OnTime(self) -> BatchFloat64ArrayProxy:
+    GMatrix = property(_get_GMatrix, _set_GMatrix)
+
+    def _get_OnTime(self) -> BatchFloat64ArrayProxy:
         """
         Time (sec) at which the fault is established for time varying simulations. Default is 0.0 (on at the beginning of the simulation)
 
@@ -390,26 +389,27 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @OnTime.setter
-    def OnTime(self, value: Union[float, Float64Array]):
+    def _set_OnTime(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def Temporary(self) -> List[bool]:
+    OnTime = property(_get_OnTime, _set_OnTime)
+
+    def _get_Temporary(self) -> List[bool]:
         """
         {Yes | No} Default is No.  Designate whether the fault is temporary.  For Time-varying simulations, the fault will be removed if the current through the fault drops below the MINAMPS criteria.
 
         DSS property name: `Temporary`, DSS property index: 8.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(8)
         ]
-    @Temporary.setter
-    def Temporary(self, value: bool):
+
+    def _set_Temporary(self, value: bool):
         self._set_batch_int32_array(8, value)
 
-    @property
-    def MinAmps(self) -> BatchFloat64ArrayProxy:
+    Temporary = property(_get_Temporary, _set_Temporary)
+
+    def _get_MinAmps(self) -> BatchFloat64ArrayProxy:
         """
         Minimum amps that can sustain a temporary fault. Default is 5.
 
@@ -417,12 +417,12 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @MinAmps.setter
-    def MinAmps(self, value: Union[float, Float64Array]):
+    def _set_MinAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def NormAmps(self) -> BatchFloat64ArrayProxy:
+    MinAmps = property(_get_MinAmps, _set_MinAmps)
+
+    def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
         Normal rated current.
 
@@ -430,12 +430,12 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @NormAmps.setter
-    def NormAmps(self, value: Union[float, Float64Array]):
+    def _set_NormAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def EmergAmps(self) -> BatchFloat64ArrayProxy:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
         Maximum or emerg current.
 
@@ -443,12 +443,12 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: Union[float, Float64Array]):
+    def _set_EmergAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def FaultRate(self) -> BatchFloat64ArrayProxy:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
         Failure rate per year.
 
@@ -456,12 +456,12 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @FaultRate.setter
-    def FaultRate(self, value: Union[float, Float64Array]):
+    def _set_FaultRate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def pctPerm(self) -> BatchFloat64ArrayProxy:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> BatchFloat64ArrayProxy:
         """
         Percent of failures that become permanent.
 
@@ -469,12 +469,12 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @pctPerm.setter
-    def pctPerm(self, value: Union[float, Float64Array]):
+    def _set_pctPerm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def Repair(self) -> BatchFloat64ArrayProxy:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
         Hours to repair.
 
@@ -482,12 +482,12 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @Repair.setter
-    def Repair(self, value: Union[float, Float64Array]):
+    def _set_Repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -495,23 +495,25 @@ class FaultBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 16.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(16)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(16, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -548,7 +550,7 @@ class IFault(IDSSObj,FaultBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Fault, FaultBatch)
         FaultBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Fault:

@@ -51,8 +51,7 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         'like': 25,
     }
 
-    @property
-    def Phases(self) -> int:
+    def _get_Phases(self) -> int:
         """
         Number of Phases, this Induction Machine.  
 
@@ -60,12 +59,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def Bus1(self) -> str:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> str:
         """
         Bus to which the Induction Machine is connected.  May include specific node specification.
 
@@ -73,12 +72,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(2)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def kV(self) -> float:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> float:
         """
         Nominal rated (1.0 per unit) voltage, kV. For 2- and 3-phase machines, specify phase-phase kV. Otherwise, specify actual kV across each branch of the machine. If wye (star), specify phase-neutral kV. If delta or phase-phase connected, specify phase-phase kV.
 
@@ -86,12 +85,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @kV.setter
-    def kV(self, value: float):
+    def _set_kV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def kW(self) -> float:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_kW(self) -> float:
         """
         Shaft Power, kW, for the Induction Machine.  A positive value denotes power for a load. 
         Negative value denotes an induction generator. 
@@ -100,12 +99,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @kW.setter
-    def kW(self, value: float):
+    def _set_kW(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def PF(self) -> float:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_PF(self) -> float:
         """
         [Read Only] Present power factor for the machine. 
 
@@ -113,12 +112,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @PF.setter
-    def PF(self, value: float):
+    def _set_PF(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def Conn(self) -> enums.Connection:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_Conn(self) -> enums.Connection:
         """
         Connection of stator: Delta or Wye. Default is Delta.
 
@@ -126,15 +125,15 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
         if not isinstance(value, int):
             self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         Connection of stator: Delta or Wye. Default is Delta.
 
@@ -142,12 +141,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(6)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def kVA(self) -> float:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_kVA(self) -> float:
         """
         Rated kVA for the machine.
 
@@ -155,12 +154,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @kVA.setter
-    def kVA(self, value: float):
+    def _set_kVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def H(self) -> float:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_H(self) -> float:
         """
         Per unit mass constant of the machine.  MW-sec/MVA.  Default is 1.0.
 
@@ -168,12 +167,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @H.setter
-    def H(self, value: float):
+    def _set_H(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def D(self) -> float:
+    H = property(_get_H, _set_H)
+
+    def _get_D(self) -> float:
         """
         Damping constant.  Usual range is 0 to 4. Default is 1.0.  Adjust to get damping in Dynamics mode,
 
@@ -181,12 +180,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @D.setter
-    def D(self, value: float):
+    def _set_D(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def puRs(self) -> float:
+    D = property(_get_D, _set_D)
+
+    def _get_puRs(self) -> float:
         """
         Per unit stator resistance. Default is 0.0053.
 
@@ -194,12 +193,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @puRs.setter
-    def puRs(self, value: float):
+    def _set_puRs(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def puXs(self) -> float:
+    puRs = property(_get_puRs, _set_puRs)
+
+    def _get_puXs(self) -> float:
         """
         Per unit stator leakage reactance. Default is 0.106.
 
@@ -207,12 +206,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @puXs.setter
-    def puXs(self, value: float):
+    def _set_puXs(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def puRr(self) -> float:
+    puXs = property(_get_puXs, _set_puXs)
+
+    def _get_puRr(self) -> float:
         """
         Per unit rotor  resistance. Default is 0.007.
 
@@ -220,12 +219,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @puRr.setter
-    def puRr(self, value: float):
+    def _set_puRr(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def puXr(self) -> float:
+    puRr = property(_get_puRr, _set_puRr)
+
+    def _get_puXr(self) -> float:
         """
         Per unit rotor leakage reactance. Default is 0.12.
 
@@ -233,12 +232,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @puXr.setter
-    def puXr(self, value: float):
+    def _set_puXr(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def puXm(self) -> float:
+    puXr = property(_get_puXr, _set_puXr)
+
+    def _get_puXm(self) -> float:
         """
         Per unit magnetizing reactance.Default is 4.0.
 
@@ -246,12 +245,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @puXm.setter
-    def puXm(self, value: float):
+    def _set_puXm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def Slip(self) -> float:
+    puXm = property(_get_puXm, _set_puXm)
+
+    def _get_Slip(self) -> float:
         """
         Initial slip value. Default is 0.007
 
@@ -259,12 +258,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @Slip.setter
-    def Slip(self, value: float):
+    def _set_Slip(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def MaxSlip(self) -> float:
+    Slip = property(_get_Slip, _set_Slip)
+
+    def _get_MaxSlip(self) -> float:
         """
         Max slip value to allow. Default is 0.1. Set this before setting slip.
 
@@ -272,12 +271,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @MaxSlip.setter
-    def MaxSlip(self, value: float):
+    def _set_MaxSlip(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def SlipOption(self) -> enums.IndMach012SlipOption:
+    MaxSlip = property(_get_MaxSlip, _set_MaxSlip)
+
+    def _get_SlipOption(self) -> enums.IndMach012SlipOption:
         """
         Option for slip model. One of {fixedslip | variableslip*  }
 
@@ -285,15 +284,15 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.IndMach012SlipOption(self._lib.Obj_GetInt32(self._ptr, 17))
 
-    @SlipOption.setter
-    def SlipOption(self, value: Union[AnyStr, int, enums.IndMach012SlipOption]):
+    def _set_SlipOption(self, value: Union[AnyStr, int, enums.IndMach012SlipOption]):
         if not isinstance(value, int):
             self._set_string_o(17, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
-    @property
-    def SlipOption_str(self) -> str:
+    SlipOption = property(_get_SlipOption, _set_SlipOption)
+
+    def _get_SlipOption_str(self) -> str:
         """
         Option for slip model. One of {fixedslip | variableslip*  }
 
@@ -301,12 +300,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(17)
 
-    @SlipOption_str.setter
-    def SlipOption_str(self, value: AnyStr):
+    def _set_SlipOption_str(self, value: AnyStr):
         self.SlipOption = value
 
-    @property
-    def Yearly_str(self) -> str:
+    SlipOption_str = property(_get_SlipOption_str, _set_SlipOption_str)
+
+    def _get_Yearly_str(self) -> str:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -314,12 +313,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(18)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: AnyStr):
+    def _set_Yearly_str(self, value: AnyStr):
         self._set_string_o(18, value)
 
-    @property
-    def Yearly(self) -> LoadShape:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> LoadShape:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -327,16 +326,16 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(18, LoadShape)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(18, value)
             return
 
         self._set_string_o(18, value)
 
-    @property
-    def Daily_str(self) -> str:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> str:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -344,12 +343,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(19)
 
-    @Daily_str.setter
-    def Daily_str(self, value: AnyStr):
+    def _set_Daily_str(self, value: AnyStr):
         self._set_string_o(19, value)
 
-    @property
-    def Daily(self) -> LoadShape:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> LoadShape:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -357,16 +356,16 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(19, LoadShape)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(19, value)
             return
 
         self._set_string_o(19, value)
 
-    @property
-    def Duty_str(self) -> str:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> str:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -374,12 +373,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(20)
 
-    @Duty_str.setter
-    def Duty_str(self, value: AnyStr):
+    def _set_Duty_str(self, value: AnyStr):
         self._set_string_o(20, value)
 
-    @property
-    def Duty(self) -> LoadShape:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> LoadShape:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -387,16 +386,16 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(20, LoadShape)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(20, value)
             return
 
         self._set_string_o(20, value)
 
-    @property
-    def DebugTrace(self) -> bool:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_DebugTrace(self) -> bool:
         """
         [Yes | No*] Write DebugTrace file.
 
@@ -404,12 +403,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 21) != 0
 
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+    def _set_DebugTrace(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 21, value)
 
-    @property
-    def Spectrum_str(self) -> str:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this IndMach012. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -417,12 +416,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(22)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(22, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Name of harmonic voltage or current spectrum for this IndMach012. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -430,16 +429,16 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(22, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(22, value)
             return
 
         self._set_string_o(22, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -447,12 +446,12 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -460,9 +459,10 @@ class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 24) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 24, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -508,8 +508,7 @@ class IndMach012Batch(DSSBatch):
     _cls_idx = 39
 
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of Phases, this Induction Machine.  
 
@@ -517,25 +516,25 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def Bus1(self) -> List[str]:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> List[str]:
         """
         Bus to which the Induction Machine is connected.  May include specific node specification.
 
         DSS property name: `Bus1`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def kV(self) -> BatchFloat64ArrayProxy:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
         Nominal rated (1.0 per unit) voltage, kV. For 2- and 3-phase machines, specify phase-phase kV. Otherwise, specify actual kV across each branch of the machine. If wye (star), specify phase-neutral kV. If delta or phase-phase connected, specify phase-phase kV.
 
@@ -543,12 +542,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @kV.setter
-    def kV(self, value: Union[float, Float64Array]):
+    def _set_kV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def kW(self) -> BatchFloat64ArrayProxy:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_kW(self) -> BatchFloat64ArrayProxy:
         """
         Shaft Power, kW, for the Induction Machine.  A positive value denotes power for a load. 
         Negative value denotes an induction generator. 
@@ -557,12 +556,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @kW.setter
-    def kW(self, value: Union[float, Float64Array]):
+    def _set_kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def PF(self) -> BatchFloat64ArrayProxy:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_PF(self) -> BatchFloat64ArrayProxy:
         """
         [Read Only] Present power factor for the machine. 
 
@@ -570,12 +569,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @PF.setter
-    def PF(self, value: Union[float, Float64Array]):
+    def _set_PF(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def Conn(self) -> BatchInt32ArrayProxy:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
         Connection of stator: Delta or Wye. Default is Delta.
 
@@ -583,16 +582,16 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
-    
+
         self._set_batch_int32_array(6, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         Connection of stator: Delta or Wye. Default is Delta.
 
@@ -600,12 +599,12 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def kVA(self) -> BatchFloat64ArrayProxy:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_kVA(self) -> BatchFloat64ArrayProxy:
         """
         Rated kVA for the machine.
 
@@ -613,12 +612,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @kVA.setter
-    def kVA(self, value: Union[float, Float64Array]):
+    def _set_kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def H(self) -> BatchFloat64ArrayProxy:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_H(self) -> BatchFloat64ArrayProxy:
         """
         Per unit mass constant of the machine.  MW-sec/MVA.  Default is 1.0.
 
@@ -626,12 +625,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @H.setter
-    def H(self, value: Union[float, Float64Array]):
+    def _set_H(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def D(self) -> BatchFloat64ArrayProxy:
+    H = property(_get_H, _set_H)
+
+    def _get_D(self) -> BatchFloat64ArrayProxy:
         """
         Damping constant.  Usual range is 0 to 4. Default is 1.0.  Adjust to get damping in Dynamics mode,
 
@@ -639,12 +638,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @D.setter
-    def D(self, value: Union[float, Float64Array]):
+    def _set_D(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def puRs(self) -> BatchFloat64ArrayProxy:
+    D = property(_get_D, _set_D)
+
+    def _get_puRs(self) -> BatchFloat64ArrayProxy:
         """
         Per unit stator resistance. Default is 0.0053.
 
@@ -652,12 +651,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @puRs.setter
-    def puRs(self, value: Union[float, Float64Array]):
+    def _set_puRs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def puXs(self) -> BatchFloat64ArrayProxy:
+    puRs = property(_get_puRs, _set_puRs)
+
+    def _get_puXs(self) -> BatchFloat64ArrayProxy:
         """
         Per unit stator leakage reactance. Default is 0.106.
 
@@ -665,12 +664,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @puXs.setter
-    def puXs(self, value: Union[float, Float64Array]):
+    def _set_puXs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def puRr(self) -> BatchFloat64ArrayProxy:
+    puXs = property(_get_puXs, _set_puXs)
+
+    def _get_puRr(self) -> BatchFloat64ArrayProxy:
         """
         Per unit rotor  resistance. Default is 0.007.
 
@@ -678,12 +677,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @puRr.setter
-    def puRr(self, value: Union[float, Float64Array]):
+    def _set_puRr(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def puXr(self) -> BatchFloat64ArrayProxy:
+    puRr = property(_get_puRr, _set_puRr)
+
+    def _get_puXr(self) -> BatchFloat64ArrayProxy:
         """
         Per unit rotor leakage reactance. Default is 0.12.
 
@@ -691,12 +690,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @puXr.setter
-    def puXr(self, value: Union[float, Float64Array]):
+    def _set_puXr(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def puXm(self) -> BatchFloat64ArrayProxy:
+    puXr = property(_get_puXr, _set_puXr)
+
+    def _get_puXm(self) -> BatchFloat64ArrayProxy:
         """
         Per unit magnetizing reactance.Default is 4.0.
 
@@ -704,12 +703,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @puXm.setter
-    def puXm(self, value: Union[float, Float64Array]):
+    def _set_puXm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def Slip(self) -> BatchFloat64ArrayProxy:
+    puXm = property(_get_puXm, _set_puXm)
+
+    def _get_Slip(self) -> BatchFloat64ArrayProxy:
         """
         Initial slip value. Default is 0.007
 
@@ -717,12 +716,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @Slip.setter
-    def Slip(self, value: Union[float, Float64Array]):
+    def _set_Slip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def MaxSlip(self) -> BatchFloat64ArrayProxy:
+    Slip = property(_get_Slip, _set_Slip)
+
+    def _get_MaxSlip(self) -> BatchFloat64ArrayProxy:
         """
         Max slip value to allow. Default is 0.1. Set this before setting slip.
 
@@ -730,12 +729,12 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @MaxSlip.setter
-    def MaxSlip(self, value: Union[float, Float64Array]):
+    def _set_MaxSlip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def SlipOption(self) -> BatchInt32ArrayProxy:
+    MaxSlip = property(_get_MaxSlip, _set_MaxSlip)
+
+    def _get_SlipOption(self) -> BatchInt32ArrayProxy:
         """
         Option for slip model. One of {fixedslip | variableslip*  }
 
@@ -743,16 +742,16 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 17)
 
-    @SlipOption.setter
-    def SlipOption(self, value: Union[AnyStr, int, enums.IndMach012SlipOption, List[AnyStr], List[int], List[enums.IndMach012SlipOption], Int32Array]):
+    def _set_SlipOption(self, value: Union[AnyStr, int, enums.IndMach012SlipOption, List[AnyStr], List[int], List[enums.IndMach012SlipOption], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(17, value)
             return
-    
+
         self._set_batch_int32_array(17, value)
 
-    @property
-    def SlipOption_str(self) -> str:
+    SlipOption = property(_get_SlipOption, _set_SlipOption)
+
+    def _get_SlipOption_str(self) -> str:
         """
         Option for slip model. One of {fixedslip | variableslip*  }
 
@@ -760,12 +759,12 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_str_prop(17)
 
-    @SlipOption_str.setter
-    def SlipOption_str(self, value: AnyStr):
+    def _set_SlipOption_str(self, value: AnyStr):
         self.SlipOption = value
 
-    @property
-    def Yearly_str(self) -> List[str]:
+    SlipOption_str = property(_get_SlipOption_str, _set_SlipOption_str)
+
+    def _get_Yearly_str(self) -> List[str]:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -773,12 +772,12 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_str_prop(18)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(18, value)
 
-    @property
-    def Yearly(self) -> List[LoadShape]:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -786,12 +785,12 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_obj_prop(18)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(18, value)
 
-    @property
-    def Daily_str(self) -> List[str]:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> List[str]:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -799,12 +798,12 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_str_prop(19)
 
-    @Daily_str.setter
-    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(19, value)
 
-    @property
-    def Daily(self) -> List[LoadShape]:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -812,12 +811,12 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_obj_prop(19)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(19, value)
 
-    @property
-    def Duty_str(self) -> List[str]:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> List[str]:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -825,12 +824,12 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_str_prop(20)
 
-    @Duty_str.setter
-    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(20, value)
 
-    @property
-    def Duty(self) -> List[LoadShape]:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -838,26 +837,27 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_obj_prop(20)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(20, value)
 
-    @property
-    def DebugTrace(self) -> List[bool]:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_DebugTrace(self) -> List[bool]:
         """
         [Yes | No*] Write DebugTrace file.
 
         DSS property name: `DebugTrace`, DSS property index: 21.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(21)
         ]
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+
+    def _set_DebugTrace(self, value: bool):
         self._set_batch_int32_array(21, value)
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this IndMach012. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -865,12 +865,12 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_str_prop(22)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(22, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic voltage or current spectrum for this IndMach012. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -878,12 +878,12 @@ class IndMach012Batch(DSSBatch):
         """
         return self._get_batch_obj_prop(22)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(22, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -891,23 +891,25 @@ class IndMach012Batch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 24.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(24)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(24, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -952,7 +954,7 @@ class IIndMach012(IDSSObj,IndMach012Batch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, IndMach012, IndMach012Batch)
         IndMach012Batch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> IndMach012:

@@ -40,8 +40,7 @@ class ExpControl(DSSObj, CktElementMixin):
         'like': 17,
     }
 
-    @property
-    def PVSystemList(self) -> List[str]:
+    def _get_PVSystemList(self) -> List[str]:
         """
         Array list of PVSystems to be controlled.
 
@@ -51,14 +50,14 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 1)
 
-    @PVSystemList.setter
-    def PVSystemList(self, value: List[AnyStr]):
+    def _set_PVSystemList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def VReg(self) -> float:
+    PVSystemList = property(_get_PVSystemList, _set_PVSystemList)
+
+    def _get_VReg(self) -> float:
         """
         Per-unit voltage at which reactive power is zero; defaults to 1.0.
 
@@ -68,12 +67,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 2)
 
-    @VReg.setter
-    def VReg(self, value: float):
+    def _set_VReg(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 2, value)
 
-    @property
-    def Slope(self) -> float:
+    VReg = property(_get_VReg, _set_VReg)
+
+    def _get_Slope(self) -> float:
         """
         Per-unit reactive power injection / per-unit voltage deviation from Vreg; defaults to 50.
 
@@ -83,12 +82,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @Slope.setter
-    def Slope(self, value: float):
+    def _set_Slope(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def VRegTau(self) -> float:
+    Slope = property(_get_Slope, _set_Slope)
+
+    def _get_VRegTau(self) -> float:
         """
         Time constant for adaptive Vreg. Defaults to 1200 seconds.
 
@@ -98,12 +97,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @VRegTau.setter
-    def VRegTau(self, value: float):
+    def _set_VRegTau(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def QBias(self) -> float:
+    VRegTau = property(_get_VRegTau, _set_VRegTau)
+
+    def _get_QBias(self) -> float:
         """
         Equilibrium per-unit reactive power when V=Vreg; defaults to 0.
 
@@ -113,12 +112,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @QBias.setter
-    def QBias(self, value: float):
+    def _set_QBias(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def VRegMin(self) -> float:
+    QBias = property(_get_QBias, _set_QBias)
+
+    def _get_VRegMin(self) -> float:
         """
         Lower limit on adaptive Vreg; defaults to 0.95 per-unit
 
@@ -126,12 +125,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @VRegMin.setter
-    def VRegMin(self, value: float):
+    def _set_VRegMin(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def VRegMax(self) -> float:
+    VRegMin = property(_get_VRegMin, _set_VRegMin)
+
+    def _get_VRegMax(self) -> float:
         """
         Upper limit on adaptive Vreg; defaults to 1.05 per-unit
 
@@ -139,12 +138,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @VRegMax.setter
-    def VRegMax(self, value: float):
+    def _set_VRegMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def QMaxLead(self) -> float:
+    VRegMax = property(_get_VRegMax, _set_VRegMax)
+
+    def _get_QMaxLead(self) -> float:
         """
         Limit on leading (inductive) reactive power injection, in per-unit of base kva; defaults to 0.44.For Category A inverters per P1547/D7, set this value to 0.25.
 
@@ -154,12 +153,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @QMaxLead.setter
-    def QMaxLead(self, value: float):
+    def _set_QMaxLead(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def QMaxLag(self) -> float:
+    QMaxLead = property(_get_QMaxLead, _set_QMaxLead)
+
+    def _get_QMaxLag(self) -> float:
         """
         Limit on lagging (capacitive) reactive power injection, in per-unit of base kva; defaults to 0.44.
 
@@ -169,12 +168,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @QMaxLag.setter
-    def QMaxLag(self, value: float):
+    def _set_QMaxLag(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def EventLog(self) -> bool:
+    QMaxLag = property(_get_QMaxLag, _set_QMaxLag)
+
+    def _get_EventLog(self) -> bool:
         """
         {Yes/True* | No/False} Default is No for ExpControl. Log control actions to Eventlog.
 
@@ -182,12 +181,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10) != 0
 
-    @EventLog.setter
-    def EventLog(self, value: bool):
+    def _set_EventLog(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 10, value)
 
-    @property
-    def DeltaQ_Factor(self) -> float:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_DeltaQ_Factor(self) -> float:
         """
         Convergence parameter; Defaults to 0.7. 
 
@@ -197,12 +196,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @DeltaQ_Factor.setter
-    def DeltaQ_Factor(self, value: float):
+    def _set_DeltaQ_Factor(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def PreferQ(self) -> bool:
+    DeltaQ_Factor = property(_get_DeltaQ_Factor, _set_DeltaQ_Factor)
+
+    def _get_PreferQ(self) -> bool:
         """
         {Yes/True* | No/False} Default is No for ExpControl.
 
@@ -212,12 +211,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 12) != 0
 
-    @PreferQ.setter
-    def PreferQ(self, value: bool):
+    def _set_PreferQ(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 12, value)
 
-    @property
-    def TResponse(self) -> float:
+    PreferQ = property(_get_PreferQ, _set_PreferQ)
+
+    def _get_TResponse(self) -> float:
         """
         Open-loop response time for changes in Q.
 
@@ -227,12 +226,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @TResponse.setter
-    def TResponse(self, value: float):
+    def _set_TResponse(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def DERList(self) -> List[str]:
+    TResponse = property(_get_TResponse, _set_TResponse)
+
+    def _get_DERList(self) -> List[str]:
         """
         Alternative to PVSystemList for CIM export and import.
 
@@ -242,14 +241,14 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 14)
 
-    @DERList.setter
-    def DERList(self, value: List[AnyStr]):
+    def _set_DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 14, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def BaseFreq(self) -> float:
+    DERList = property(_get_DERList, _set_DERList)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -257,12 +256,12 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -270,9 +269,10 @@ class ExpControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 16) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 16, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -310,8 +310,7 @@ class ExpControlBatch(DSSBatch):
     _cls_idx = 43
 
 
-    @property
-    def PVSystemList(self) -> List[List[str]]:
+    def _get_PVSystemList(self) -> List[List[str]]:
         """
         Array list of PVSystems to be controlled.
 
@@ -321,16 +320,16 @@ class ExpControlBatch(DSSBatch):
         """
         return self._get_string_ll(1)
 
-    @PVSystemList.setter
-    def PVSystemList(self, value: List[AnyStr]):
+    def _set_PVSystemList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def VReg(self) -> BatchFloat64ArrayProxy:
+    PVSystemList = property(_get_PVSystemList, _set_PVSystemList)
+
+    def _get_VReg(self) -> BatchFloat64ArrayProxy:
         """
         Per-unit voltage at which reactive power is zero; defaults to 1.0.
 
@@ -340,12 +339,12 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 2)
 
-    @VReg.setter
-    def VReg(self, value: Union[float, Float64Array]):
+    def _set_VReg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
-    @property
-    def Slope(self) -> BatchFloat64ArrayProxy:
+    VReg = property(_get_VReg, _set_VReg)
+
+    def _get_Slope(self) -> BatchFloat64ArrayProxy:
         """
         Per-unit reactive power injection / per-unit voltage deviation from Vreg; defaults to 50.
 
@@ -355,12 +354,12 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @Slope.setter
-    def Slope(self, value: Union[float, Float64Array]):
+    def _set_Slope(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def VRegTau(self) -> BatchFloat64ArrayProxy:
+    Slope = property(_get_Slope, _set_Slope)
+
+    def _get_VRegTau(self) -> BatchFloat64ArrayProxy:
         """
         Time constant for adaptive Vreg. Defaults to 1200 seconds.
 
@@ -370,12 +369,12 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @VRegTau.setter
-    def VRegTau(self, value: Union[float, Float64Array]):
+    def _set_VRegTau(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def QBias(self) -> BatchFloat64ArrayProxy:
+    VRegTau = property(_get_VRegTau, _set_VRegTau)
+
+    def _get_QBias(self) -> BatchFloat64ArrayProxy:
         """
         Equilibrium per-unit reactive power when V=Vreg; defaults to 0.
 
@@ -385,12 +384,12 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @QBias.setter
-    def QBias(self, value: Union[float, Float64Array]):
+    def _set_QBias(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def VRegMin(self) -> BatchFloat64ArrayProxy:
+    QBias = property(_get_QBias, _set_QBias)
+
+    def _get_VRegMin(self) -> BatchFloat64ArrayProxy:
         """
         Lower limit on adaptive Vreg; defaults to 0.95 per-unit
 
@@ -398,12 +397,12 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @VRegMin.setter
-    def VRegMin(self, value: Union[float, Float64Array]):
+    def _set_VRegMin(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def VRegMax(self) -> BatchFloat64ArrayProxy:
+    VRegMin = property(_get_VRegMin, _set_VRegMin)
+
+    def _get_VRegMax(self) -> BatchFloat64ArrayProxy:
         """
         Upper limit on adaptive Vreg; defaults to 1.05 per-unit
 
@@ -411,12 +410,12 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @VRegMax.setter
-    def VRegMax(self, value: Union[float, Float64Array]):
+    def _set_VRegMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def QMaxLead(self) -> BatchFloat64ArrayProxy:
+    VRegMax = property(_get_VRegMax, _set_VRegMax)
+
+    def _get_QMaxLead(self) -> BatchFloat64ArrayProxy:
         """
         Limit on leading (inductive) reactive power injection, in per-unit of base kva; defaults to 0.44.For Category A inverters per P1547/D7, set this value to 0.25.
 
@@ -426,12 +425,12 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @QMaxLead.setter
-    def QMaxLead(self, value: Union[float, Float64Array]):
+    def _set_QMaxLead(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def QMaxLag(self) -> BatchFloat64ArrayProxy:
+    QMaxLead = property(_get_QMaxLead, _set_QMaxLead)
+
+    def _get_QMaxLag(self) -> BatchFloat64ArrayProxy:
         """
         Limit on lagging (capacitive) reactive power injection, in per-unit of base kva; defaults to 0.44.
 
@@ -441,26 +440,27 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @QMaxLag.setter
-    def QMaxLag(self, value: Union[float, Float64Array]):
+    def _set_QMaxLag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def EventLog(self) -> List[bool]:
+    QMaxLag = property(_get_QMaxLag, _set_QMaxLag)
+
+    def _get_EventLog(self) -> List[bool]:
         """
         {Yes/True* | No/False} Default is No for ExpControl. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 10.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(10)
         ]
-    @EventLog.setter
-    def EventLog(self, value: bool):
+
+    def _set_EventLog(self, value: bool):
         self._set_batch_int32_array(10, value)
 
-    @property
-    def DeltaQ_Factor(self) -> BatchFloat64ArrayProxy:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_DeltaQ_Factor(self) -> BatchFloat64ArrayProxy:
         """
         Convergence parameter; Defaults to 0.7. 
 
@@ -470,12 +470,12 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @DeltaQ_Factor.setter
-    def DeltaQ_Factor(self, value: Union[float, Float64Array]):
+    def _set_DeltaQ_Factor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def PreferQ(self) -> List[bool]:
+    DeltaQ_Factor = property(_get_DeltaQ_Factor, _set_DeltaQ_Factor)
+
+    def _get_PreferQ(self) -> List[bool]:
         """
         {Yes/True* | No/False} Default is No for ExpControl.
 
@@ -483,15 +483,16 @@ class ExpControlBatch(DSSBatch):
 
         DSS property name: `PreferQ`, DSS property index: 12.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(12)
         ]
-    @PreferQ.setter
-    def PreferQ(self, value: bool):
+
+    def _set_PreferQ(self, value: bool):
         self._set_batch_int32_array(12, value)
 
-    @property
-    def TResponse(self) -> BatchFloat64ArrayProxy:
+    PreferQ = property(_get_PreferQ, _set_PreferQ)
+
+    def _get_TResponse(self) -> BatchFloat64ArrayProxy:
         """
         Open-loop response time for changes in Q.
 
@@ -501,12 +502,12 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @TResponse.setter
-    def TResponse(self, value: Union[float, Float64Array]):
+    def _set_TResponse(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def DERList(self) -> List[List[str]]:
+    TResponse = property(_get_TResponse, _set_TResponse)
+
+    def _get_DERList(self) -> List[List[str]]:
         """
         Alternative to PVSystemList for CIM export and import.
 
@@ -516,16 +517,16 @@ class ExpControlBatch(DSSBatch):
         """
         return self._get_string_ll(14)
 
-    @DERList.setter
-    def DERList(self, value: List[AnyStr]):
+    def _set_DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 14, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    DERList = property(_get_DERList, _set_DERList)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -533,23 +534,25 @@ class ExpControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 16.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(16)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(16, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -586,7 +589,7 @@ class IExpControl(IDSSObj,ExpControlBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, ExpControl, ExpControlBatch)
         ExpControlBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> ExpControl:

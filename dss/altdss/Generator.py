@@ -79,8 +79,7 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         'like': 48,
     }
 
-    @property
-    def Phases(self) -> int:
+    def _get_Phases(self) -> int:
         """
         Number of Phases, this Generator.  Power is evenly divided among phases.
 
@@ -88,12 +87,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def Bus1(self) -> str:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> str:
         """
         Bus to which the Generator is connected.  May include specific node specification.
 
@@ -101,12 +100,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(2)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def kV(self) -> float:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> float:
         """
         Nominal rated (1.0 per unit) voltage, kV, for Generator. For 2- and 3-phase Generators, specify phase-phase kV. Otherwise, for phases=1 or phases>3, specify actual kV across each branch of the Generator. If wye (star), specify phase-neutral kV. If delta or phase-phase connected, specify phase-phase kV.
 
@@ -114,12 +113,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @kV.setter
-    def kV(self, value: float):
+    def _set_kV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def kW(self) -> float:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_kW(self) -> float:
         """
         Total base kW for the Generator.  A positive value denotes power coming OUT of the element, 
         which is the opposite of a load. This value is modified depending on the dispatch mode. Unaffected by the global load multiplier and growth curves. If you want there to be more generation, you must add more generators or change this value.
@@ -128,12 +127,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @kW.setter
-    def kW(self, value: float):
+    def _set_kW(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def PF(self) -> float:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_PF(self) -> float:
         """
         Generator power factor. Default is 0.80. Enter negative for leading powerfactor (when kW and kvar have opposite signs.)
         A positive power factor for a generator signifies that the generator produces vars 
@@ -144,12 +143,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @PF.setter
-    def PF(self, value: float):
+    def _set_PF(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def kvar(self) -> float:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_kvar(self) -> float:
         """
         Specify the base kvar.  Alternative to specifying the power factor.  Side effect:  the power factor value is altered to agree based on present value of kW.
 
@@ -157,12 +156,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @kvar.setter
-    def kvar(self, value: float):
+    def _set_kvar(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def Model(self) -> enums.GeneratorModel:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_Model(self) -> enums.GeneratorModel:
         """
         Integer code for the model to use for generation variation with voltage. Valid values are:
 
@@ -178,12 +177,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return enums.GeneratorModel(self._lib.Obj_GetInt32(self._ptr, 7))
 
-    @Model.setter
-    def Model(self, value: Union[int, enums.GeneratorModel]):
+    def _set_Model(self, value: Union[int, enums.GeneratorModel]):
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
-    @property
-    def VMinpu(self) -> float:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_VMinpu(self) -> float:
         """
         Default = 0.90.  Minimum per unit voltage for which the Model is assumed to apply. Below this value, the load model reverts to a constant impedance model. For model 7, the current is limited to the value computed for constant power at Vminpu.
 
@@ -191,12 +190,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @VMinpu.setter
-    def VMinpu(self, value: float):
+    def _set_VMinpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def VMaxpu(self) -> float:
+    VMinpu = property(_get_VMinpu, _set_VMinpu)
+
+    def _get_VMaxpu(self) -> float:
         """
         Default = 1.10.  Maximum per unit voltage for which the Model is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
@@ -204,12 +203,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @VMaxpu.setter
-    def VMaxpu(self, value: float):
+    def _set_VMaxpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def Yearly_str(self) -> str:
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+
+    def _get_Yearly_str(self) -> str:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
@@ -217,12 +216,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(10)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: AnyStr):
+    def _set_Yearly_str(self, value: AnyStr):
         self._set_string_o(10, value)
 
-    @property
-    def Yearly(self) -> LoadShape:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> LoadShape:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
@@ -230,16 +229,16 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_obj(10, LoadShape)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(10, value)
             return
 
         self._set_string_o(10, value)
 
-    @property
-    def Daily_str(self) -> str:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> str:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
@@ -247,12 +246,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(11)
 
-    @Daily_str.setter
-    def Daily_str(self, value: AnyStr):
+    def _set_Daily_str(self, value: AnyStr):
         self._set_string_o(11, value)
 
-    @property
-    def Daily(self) -> LoadShape:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> LoadShape:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
@@ -260,16 +259,16 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_obj(11, LoadShape)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(11, value)
             return
 
         self._set_string_o(11, value)
 
-    @property
-    def Duty_str(self) -> str:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> str:
         """
         Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -277,12 +276,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(12)
 
-    @Duty_str.setter
-    def Duty_str(self, value: AnyStr):
+    def _set_Duty_str(self, value: AnyStr):
         self._set_string_o(12, value)
 
-    @property
-    def Duty(self) -> LoadShape:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> LoadShape:
         """
         Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -290,16 +289,16 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_obj(12, LoadShape)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(12, value)
             return
 
         self._set_string_o(12, value)
 
-    @property
-    def DispMode(self) -> enums.GeneratorDispatchMode:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_DispMode(self) -> enums.GeneratorDispatchMode:
         """
         {Default* | Loadlevel | Price } Default = Default. Dispatch mode. In default mode, gen is either always on or follows dispatch curve as specified. Otherwise, the gen comes on when either the global default load level (Loadshape "default") or the price level exceeds the dispatch value.
 
@@ -307,15 +306,15 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return enums.GeneratorDispatchMode(self._lib.Obj_GetInt32(self._ptr, 13))
 
-    @DispMode.setter
-    def DispMode(self, value: Union[AnyStr, int, enums.GeneratorDispatchMode]):
+    def _set_DispMode(self, value: Union[AnyStr, int, enums.GeneratorDispatchMode]):
         if not isinstance(value, int):
             self._set_string_o(13, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 13, value)
 
-    @property
-    def DispMode_str(self) -> str:
+    DispMode = property(_get_DispMode, _set_DispMode)
+
+    def _get_DispMode_str(self) -> str:
         """
         {Default* | Loadlevel | Price } Default = Default. Dispatch mode. In default mode, gen is either always on or follows dispatch curve as specified. Otherwise, the gen comes on when either the global default load level (Loadshape "default") or the price level exceeds the dispatch value.
 
@@ -323,12 +322,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(13)
 
-    @DispMode_str.setter
-    def DispMode_str(self, value: AnyStr):
+    def _set_DispMode_str(self, value: AnyStr):
         self.DispMode = value
 
-    @property
-    def DispValue(self) -> float:
+    DispMode_str = property(_get_DispMode_str, _set_DispMode_str)
+
+    def _get_DispValue(self) -> float:
         """
         Dispatch value. 
         If = 0.0 (default) then Generator follow dispatch curves, if any. 
@@ -338,12 +337,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @DispValue.setter
-    def DispValue(self, value: float):
+    def _set_DispValue(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def Conn(self) -> enums.Connection:
+    DispValue = property(_get_DispValue, _set_DispValue)
+
+    def _get_Conn(self) -> enums.Connection:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -351,15 +350,15 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 15))
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
         if not isinstance(value, int):
             self._set_string_o(15, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -367,12 +366,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(15)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def Status(self) -> enums.GeneratorStatus:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_Status(self) -> enums.GeneratorStatus:
         """
         ={Fixed | Variable*}.  If Fixed, then dispatch multipliers do not apply. The generator is alway at full power when it is ON.  Default is Variable  (follows curves).
 
@@ -380,15 +379,15 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return enums.GeneratorStatus(self._lib.Obj_GetInt32(self._ptr, 16))
 
-    @Status.setter
-    def Status(self, value: Union[AnyStr, int, enums.GeneratorStatus]):
+    def _set_Status(self, value: Union[AnyStr, int, enums.GeneratorStatus]):
         if not isinstance(value, int):
             self._set_string_o(16, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 16, value)
 
-    @property
-    def Status_str(self) -> str:
+    Status = property(_get_Status, _set_Status)
+
+    def _get_Status_str(self) -> str:
         """
         ={Fixed | Variable*}.  If Fixed, then dispatch multipliers do not apply. The generator is alway at full power when it is ON.  Default is Variable  (follows curves).
 
@@ -396,12 +395,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(16)
 
-    @Status_str.setter
-    def Status_str(self, value: AnyStr):
+    def _set_Status_str(self, value: AnyStr):
         self.Status = value
 
-    @property
-    def Class(self) -> int:
+    Status_str = property(_get_Status_str, _set_Status_str)
+
+    def _get_Class(self) -> int:
         """
         An arbitrary integer number representing the class of Generator so that Generator values may be segregated by class.
 
@@ -409,12 +408,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetInt32(self._ptr, 17)
 
-    @Class.setter
-    def Class(self, value: int):
+    def _set_Class(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
-    @property
-    def Vpu(self) -> float:
+    Class = property(_get_Class, _set_Class)
+
+    def _get_Vpu(self) -> float:
         """
         Per Unit voltage set point for Model = 3  (typical power flow model).  Default is 1.0. 
 
@@ -422,12 +421,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    @Vpu.setter
-    def Vpu(self, value: float):
+    def _set_Vpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
-    @property
-    def Maxkvar(self) -> float:
+    Vpu = property(_get_Vpu, _set_Vpu)
+
+    def _get_Maxkvar(self) -> float:
         """
         Maximum kvar limit for Model = 3.  Defaults to twice the specified load kvar.  Always reset this if you change PF or kvar properties.
 
@@ -435,12 +434,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @Maxkvar.setter
-    def Maxkvar(self, value: float):
+    def _set_Maxkvar(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def Minkvar(self) -> float:
+    Maxkvar = property(_get_Maxkvar, _set_Maxkvar)
+
+    def _get_Minkvar(self) -> float:
         """
         Minimum kvar limit for Model = 3. Enter a negative number if generator can absorb vars. Defaults to negative of Maxkvar.  Always reset this if you change PF or kvar properties.
 
@@ -448,12 +447,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @Minkvar.setter
-    def Minkvar(self, value: float):
+    def _set_Minkvar(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def PVFactor(self) -> float:
+    Minkvar = property(_get_Minkvar, _set_Minkvar)
+
+    def _get_PVFactor(self) -> float:
         """
         Deceleration factor for P-V generator model (Model=3).  Default is 0.1. If the circuit converges easily, you may want to use a higher number such as 1.0. Use a lower number if solution diverges. Use Debugtrace=yes to create a file that will trace the convergence of a generator model.
 
@@ -461,12 +460,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @PVFactor.setter
-    def PVFactor(self, value: float):
+    def _set_PVFactor(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def ForceOn(self) -> bool:
+    PVFactor = property(_get_PVFactor, _set_PVFactor)
+
+    def _get_ForceOn(self) -> bool:
         """
         {Yes | No}  Forces generator ON despite requirements of other dispatch modes. Stays ON until this property is set to NO, or an internal algorithm cancels the forced ON state.
 
@@ -474,12 +473,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetInt32(self._ptr, 22) != 0
 
-    @ForceOn.setter
-    def ForceOn(self, value: bool):
+    def _set_ForceOn(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 22, value)
 
-    @property
-    def kVA(self) -> float:
+    ForceOn = property(_get_ForceOn, _set_ForceOn)
+
+    def _get_kVA(self) -> float:
         """
         kVA rating of electrical machine. Defaults to 1.2* kW if not specified. Applied to machine or inverter definition for Dynamics mode solutions. 
 
@@ -487,12 +486,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @kVA.setter
-    def kVA(self, value: float):
+    def _set_kVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def Xd(self) -> float:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_Xd(self) -> float:
         """
         Per unit synchronous reactance of machine. Presently used only for Thevenin impedance for power flow calcs of user models (model=6). Typically use a value 0.4 to 1.0. Default is 1.0
 
@@ -500,12 +499,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 25)
 
-    @Xd.setter
-    def Xd(self, value: float):
+    def _set_Xd(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 25, value)
 
-    @property
-    def Xdp(self) -> float:
+    Xd = property(_get_Xd, _set_Xd)
+
+    def _get_Xdp(self) -> float:
         """
         Per unit transient reactance of the machine.  Used for Dynamics mode and Fault studies.  Default is 0.27.For user models, this value is used for the Thevenin/Norton impedance for Dynamics Mode.
 
@@ -513,12 +512,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 26)
 
-    @Xdp.setter
-    def Xdp(self, value: float):
+    def _set_Xdp(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 26, value)
 
-    @property
-    def Xdpp(self) -> float:
+    Xdp = property(_get_Xdp, _set_Xdp)
+
+    def _get_Xdpp(self) -> float:
         """
         Per unit subtransient reactance of the machine.  Used for Harmonics. Default is 0.20.
 
@@ -526,12 +525,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    @Xdpp.setter
-    def Xdpp(self, value: float):
+    def _set_Xdpp(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 27, value)
 
-    @property
-    def H(self) -> float:
+    Xdpp = property(_get_Xdpp, _set_Xdpp)
+
+    def _get_H(self) -> float:
         """
         Per unit mass constant of the machine.  MW-sec/MVA.  Default is 1.0.
 
@@ -539,12 +538,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 28)
 
-    @H.setter
-    def H(self, value: float):
+    def _set_H(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 28, value)
 
-    @property
-    def D(self) -> float:
+    H = property(_get_H, _set_H)
+
+    def _get_D(self) -> float:
         """
         Damping constant.  Usual range is 0 to 4. Default is 1.0.  Adjust to get damping
 
@@ -552,12 +551,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 29)
 
-    @D.setter
-    def D(self, value: float):
+    def _set_D(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 29, value)
 
-    @property
-    def UserModel(self) -> str:
+    D = property(_get_D, _set_D)
+
+    def _get_UserModel(self) -> str:
         """
         Name of DLL containing user-written model, which computes the terminal currents for Dynamics studies, overriding the default model.  Set to "none" to negate previous setting.
 
@@ -565,12 +564,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(30)
 
-    @UserModel.setter
-    def UserModel(self, value: AnyStr):
+    def _set_UserModel(self, value: AnyStr):
         self._set_string_o(30, value)
 
-    @property
-    def UserData(self) -> str:
+    UserModel = property(_get_UserModel, _set_UserModel)
+
+    def _get_UserData(self) -> str:
         """
         String (in quotes or parentheses) that gets passed to user-written model for defining the data required for that model.
 
@@ -578,12 +577,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(31)
 
-    @UserData.setter
-    def UserData(self, value: AnyStr):
+    def _set_UserData(self, value: AnyStr):
         self._set_string_o(31, value)
 
-    @property
-    def ShaftModel(self) -> str:
+    UserData = property(_get_UserData, _set_UserData)
+
+    def _get_ShaftModel(self) -> str:
         """
         Name of user-written DLL containing a Shaft model, which models the prime mover and determines the power on the shaft for Dynamics studies. Models additional mass elements other than the single-mass model in the DSS default model. Set to "none" to negate previous setting.
 
@@ -591,12 +590,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(32)
 
-    @ShaftModel.setter
-    def ShaftModel(self, value: AnyStr):
+    def _set_ShaftModel(self, value: AnyStr):
         self._set_string_o(32, value)
 
-    @property
-    def ShaftData(self) -> str:
+    ShaftModel = property(_get_ShaftModel, _set_ShaftModel)
+
+    def _get_ShaftData(self) -> str:
         """
         String (in quotes or parentheses) that gets passed to user-written shaft dynamic model for defining the data for that model.
 
@@ -604,12 +603,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(33)
 
-    @ShaftData.setter
-    def ShaftData(self, value: AnyStr):
+    def _set_ShaftData(self, value: AnyStr):
         self._set_string_o(33, value)
 
-    @property
-    def DutyStart(self) -> float:
+    ShaftData = property(_get_ShaftData, _set_ShaftData)
+
+    def _get_DutyStart(self) -> float:
         """
         Starting time offset [hours] into the duty cycle shape for this generator, defaults to 0
 
@@ -617,12 +616,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 34)
 
-    @DutyStart.setter
-    def DutyStart(self, value: float):
+    def _set_DutyStart(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 34, value)
 
-    @property
-    def DebugTrace(self) -> bool:
+    DutyStart = property(_get_DutyStart, _set_DutyStart)
+
+    def _get_DebugTrace(self) -> bool:
         """
         {Yes | No }  Default is no.  Turn this on to capture the progress of the generator model for each iteration.  Creates a separate file for each generator named "GEN_name.csv".
 
@@ -630,12 +629,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetInt32(self._ptr, 35) != 0
 
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+    def _set_DebugTrace(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 35, value)
 
-    @property
-    def Balanced(self) -> bool:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_Balanced(self) -> bool:
         """
         {Yes | No*} Default is No.  For Model=7, force balanced current only for 3-phase generators. Force zero- and negative-sequence to zero.
 
@@ -643,12 +642,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetInt32(self._ptr, 36) != 0
 
-    @Balanced.setter
-    def Balanced(self, value: bool):
+    def _set_Balanced(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 36, value)
 
-    @property
-    def XRdp(self) -> float:
+    Balanced = property(_get_Balanced, _set_Balanced)
+
+    def _get_XRdp(self) -> float:
         """
         Default is 20. X/R ratio for Xdp property for FaultStudy and Dynamic modes.
 
@@ -656,12 +655,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 37)
 
-    @XRdp.setter
-    def XRdp(self, value: float):
+    def _set_XRdp(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 37, value)
 
-    @property
-    def UseFuel(self) -> bool:
+    XRdp = property(_get_XRdp, _set_XRdp)
+
+    def _get_UseFuel(self) -> bool:
         """
         {Yes | *No}. Activates the use of fuel for the operation of the generator. When the fuel level reaches the reserve level, the generator stops until it gets refueled. By default, the generator is connected to a continuous fuel supply, Use this mode to mimic dependency on fuel level for different generation technologies.
 
@@ -669,12 +668,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetInt32(self._ptr, 38) != 0
 
-    @UseFuel.setter
-    def UseFuel(self, value: bool):
+    def _set_UseFuel(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 38, value)
 
-    @property
-    def FuelkWh(self) -> float:
+    UseFuel = property(_get_UseFuel, _set_UseFuel)
+
+    def _get_FuelkWh(self) -> float:
         """
         {*0}Is the nominal level of fuel for the generator (kWh). It only applies if UseFuel = Yes/True
 
@@ -682,12 +681,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 39)
 
-    @FuelkWh.setter
-    def FuelkWh(self, value: float):
+    def _set_FuelkWh(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 39, value)
 
-    @property
-    def pctFuel(self) -> float:
+    FuelkWh = property(_get_FuelkWh, _set_FuelkWh)
+
+    def _get_pctFuel(self) -> float:
         """
         It is a number between 0 and 100 representing the current amount of fuel available in percentage of FuelkWh. It only applies if UseFuel = Yes/True
 
@@ -695,12 +694,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 40)
 
-    @pctFuel.setter
-    def pctFuel(self, value: float):
+    def _set_pctFuel(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 40, value)
 
-    @property
-    def pctReserve(self) -> float:
+    pctFuel = property(_get_pctFuel, _set_pctFuel)
+
+    def _get_pctReserve(self) -> float:
         """
         It is a number between 0 and 100 representing the reserve level in percentage of FuelkWh. It only applies if UseFuel = Yes/True
 
@@ -708,9 +707,10 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 41)
 
-    @pctReserve.setter
-    def pctReserve(self, value: float):
+    def _set_pctReserve(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 41, value)
+
+    pctReserve = property(_get_pctReserve, _set_pctReserve)
 
     def Refuel(self, value: bool = True):
         """
@@ -720,8 +720,7 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         self._lib.Obj_SetInt32(self._ptr, 42, value)
 
-    @property
-    def DynamicEq_str(self) -> str:
+    def _get_DynamicEq_str(self) -> str:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -729,12 +728,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(43)
 
-    @DynamicEq_str.setter
-    def DynamicEq_str(self, value: AnyStr):
+    def _set_DynamicEq_str(self, value: AnyStr):
         self._set_string_o(43, value)
 
-    @property
-    def DynamicEq(self) -> DynamicExp:
+    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
+
+    def _get_DynamicEq(self) -> DynamicExp:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -742,16 +741,16 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_obj(43, DynamicExp)
 
-    @DynamicEq.setter
-    def DynamicEq(self, value: Union[AnyStr, DynamicExp]):
+    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp]):
         if isinstance(value, DSSObj):
             self._set_obj(43, value)
             return
 
         self._set_string_o(43, value)
 
-    @property
-    def DynOut(self) -> str:
+    DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
+
+    def _get_DynOut(self) -> str:
         """
         The name of the variables within the Dynamic equation that will be used to govern the generator dynamics.This generator model requires 2 outputs from the dynamic equation: 
 
@@ -764,12 +763,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(44)
 
-    @DynOut.setter
-    def DynOut(self, value: AnyStr):
+    def _set_DynOut(self, value: AnyStr):
         self._set_string_o(44, value)
 
-    @property
-    def Spectrum_str(self) -> str:
+    DynOut = property(_get_DynOut, _set_DynOut)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -777,12 +776,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_prop_string(45)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(45, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -790,16 +789,16 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._get_obj(45, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(45, value)
             return
 
         self._set_string_o(45, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -807,12 +806,12 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetFloat64(self._ptr, 46)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 46, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -820,9 +819,10 @@ class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixi
         """
         return self._lib.Obj_GetInt32(self._ptr, 47) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 47, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -890,8 +890,7 @@ class GeneratorBatch(DSSBatch):
     _cls_idx = 27
 
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of Phases, this Generator.  Power is evenly divided among phases.
 
@@ -899,25 +898,25 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def Bus1(self) -> List[str]:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> List[str]:
         """
         Bus to which the Generator is connected.  May include specific node specification.
 
         DSS property name: `Bus1`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def kV(self) -> BatchFloat64ArrayProxy:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
         Nominal rated (1.0 per unit) voltage, kV, for Generator. For 2- and 3-phase Generators, specify phase-phase kV. Otherwise, for phases=1 or phases>3, specify actual kV across each branch of the Generator. If wye (star), specify phase-neutral kV. If delta or phase-phase connected, specify phase-phase kV.
 
@@ -925,12 +924,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @kV.setter
-    def kV(self, value: Union[float, Float64Array]):
+    def _set_kV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def kW(self) -> BatchFloat64ArrayProxy:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_kW(self) -> BatchFloat64ArrayProxy:
         """
         Total base kW for the Generator.  A positive value denotes power coming OUT of the element, 
         which is the opposite of a load. This value is modified depending on the dispatch mode. Unaffected by the global load multiplier and growth curves. If you want there to be more generation, you must add more generators or change this value.
@@ -939,12 +938,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @kW.setter
-    def kW(self, value: Union[float, Float64Array]):
+    def _set_kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def PF(self) -> BatchFloat64ArrayProxy:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_PF(self) -> BatchFloat64ArrayProxy:
         """
         Generator power factor. Default is 0.80. Enter negative for leading powerfactor (when kW and kvar have opposite signs.)
         A positive power factor for a generator signifies that the generator produces vars 
@@ -955,12 +954,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @PF.setter
-    def PF(self, value: Union[float, Float64Array]):
+    def _set_PF(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def kvar(self) -> BatchFloat64ArrayProxy:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_kvar(self) -> BatchFloat64ArrayProxy:
         """
         Specify the base kvar.  Alternative to specifying the power factor.  Side effect:  the power factor value is altered to agree based on present value of kW.
 
@@ -968,12 +967,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @kvar.setter
-    def kvar(self, value: Union[float, Float64Array]):
+    def _set_kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def Model(self) -> BatchInt32ArrayProxy:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_Model(self) -> BatchInt32ArrayProxy:
         """
         Integer code for the model to use for generation variation with voltage. Valid values are:
 
@@ -989,12 +988,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 7)
 
-    @Model.setter
-    def Model(self, value: Union[int, enums.GeneratorModel, Int32Array]):
+    def _set_Model(self, value: Union[int, enums.GeneratorModel, Int32Array]):
         self._set_batch_int32_array(7, value)
 
-    @property
-    def VMinpu(self) -> BatchFloat64ArrayProxy:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_VMinpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 0.90.  Minimum per unit voltage for which the Model is assumed to apply. Below this value, the load model reverts to a constant impedance model. For model 7, the current is limited to the value computed for constant power at Vminpu.
 
@@ -1002,12 +1001,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @VMinpu.setter
-    def VMinpu(self, value: Union[float, Float64Array]):
+    def _set_VMinpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def VMaxpu(self) -> BatchFloat64ArrayProxy:
+    VMinpu = property(_get_VMinpu, _set_VMinpu)
+
+    def _get_VMaxpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 1.10.  Maximum per unit voltage for which the Model is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
@@ -1015,12 +1014,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @VMaxpu.setter
-    def VMaxpu(self, value: Union[float, Float64Array]):
+    def _set_VMaxpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def Yearly_str(self) -> List[str]:
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+
+    def _get_Yearly_str(self) -> List[str]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
@@ -1028,12 +1027,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(10)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(10, value)
 
-    @property
-    def Yearly(self) -> List[LoadShape]:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> List[LoadShape]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, a constant value is assumed (no variation). If the generator is assumed to be ON continuously, specify Status=FIXED, or designate a curve that is 1.0 per unit at all times. Set to NONE to reset to no loadshape. Nominally for 8760 simulations.  If there are fewer points in the designated shape than the number of points in the solution, the curve is repeated.
 
@@ -1041,12 +1040,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(10)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(10, value)
 
-    @property
-    def Daily_str(self) -> List[str]:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> List[str]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
@@ -1054,12 +1053,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @Daily_str.setter
-    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(11, value)
 
-    @property
-    def Daily(self) -> List[LoadShape]:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> List[LoadShape]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  If generator is assumed to be ON continuously, specify Status=FIXED, or designate a Loadshape object that is 1.0 per unit for all hours. Set to NONE to reset to no loadshape. 
 
@@ -1067,12 +1066,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(11, value)
 
-    @property
-    def Duty_str(self) -> List[str]:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> List[str]:
         """
         Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -1080,12 +1079,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(12)
 
-    @Duty_str.setter
-    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(12, value)
 
-    @property
-    def Duty(self) -> List[LoadShape]:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> List[LoadShape]:
         """
         Load shape to use for duty cycle dispatch simulations such as for wind generation. Must be previously defined as a Loadshape object. Typically would have time intervals less than 1 hr -- perhaps, in seconds. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -1093,12 +1092,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(12)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(12, value)
 
-    @property
-    def DispMode(self) -> BatchInt32ArrayProxy:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_DispMode(self) -> BatchInt32ArrayProxy:
         """
         {Default* | Loadlevel | Price } Default = Default. Dispatch mode. In default mode, gen is either always on or follows dispatch curve as specified. Otherwise, the gen comes on when either the global default load level (Loadshape "default") or the price level exceeds the dispatch value.
 
@@ -1106,16 +1105,16 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 13)
 
-    @DispMode.setter
-    def DispMode(self, value: Union[AnyStr, int, enums.GeneratorDispatchMode, List[AnyStr], List[int], List[enums.GeneratorDispatchMode], Int32Array]):
+    def _set_DispMode(self, value: Union[AnyStr, int, enums.GeneratorDispatchMode, List[AnyStr], List[int], List[enums.GeneratorDispatchMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(13, value)
             return
-    
+
         self._set_batch_int32_array(13, value)
 
-    @property
-    def DispMode_str(self) -> str:
+    DispMode = property(_get_DispMode, _set_DispMode)
+
+    def _get_DispMode_str(self) -> str:
         """
         {Default* | Loadlevel | Price } Default = Default. Dispatch mode. In default mode, gen is either always on or follows dispatch curve as specified. Otherwise, the gen comes on when either the global default load level (Loadshape "default") or the price level exceeds the dispatch value.
 
@@ -1123,12 +1122,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(13)
 
-    @DispMode_str.setter
-    def DispMode_str(self, value: AnyStr):
+    def _set_DispMode_str(self, value: AnyStr):
         self.DispMode = value
 
-    @property
-    def DispValue(self) -> BatchFloat64ArrayProxy:
+    DispMode_str = property(_get_DispMode_str, _set_DispMode_str)
+
+    def _get_DispValue(self) -> BatchFloat64ArrayProxy:
         """
         Dispatch value. 
         If = 0.0 (default) then Generator follow dispatch curves, if any. 
@@ -1138,12 +1137,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @DispValue.setter
-    def DispValue(self, value: Union[float, Float64Array]):
+    def _set_DispValue(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def Conn(self) -> BatchInt32ArrayProxy:
+    DispValue = property(_get_DispValue, _set_DispValue)
+
+    def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -1151,16 +1150,16 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 15)
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(15, value)
             return
-    
+
         self._set_batch_int32_array(15, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -1168,12 +1167,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(15)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def Status(self) -> BatchInt32ArrayProxy:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_Status(self) -> BatchInt32ArrayProxy:
         """
         ={Fixed | Variable*}.  If Fixed, then dispatch multipliers do not apply. The generator is alway at full power when it is ON.  Default is Variable  (follows curves).
 
@@ -1181,16 +1180,16 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 16)
 
-    @Status.setter
-    def Status(self, value: Union[AnyStr, int, enums.GeneratorStatus, List[AnyStr], List[int], List[enums.GeneratorStatus], Int32Array]):
+    def _set_Status(self, value: Union[AnyStr, int, enums.GeneratorStatus, List[AnyStr], List[int], List[enums.GeneratorStatus], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(16, value)
             return
-    
+
         self._set_batch_int32_array(16, value)
 
-    @property
-    def Status_str(self) -> str:
+    Status = property(_get_Status, _set_Status)
+
+    def _get_Status_str(self) -> str:
         """
         ={Fixed | Variable*}.  If Fixed, then dispatch multipliers do not apply. The generator is alway at full power when it is ON.  Default is Variable  (follows curves).
 
@@ -1198,12 +1197,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(16)
 
-    @Status_str.setter
-    def Status_str(self, value: AnyStr):
+    def _set_Status_str(self, value: AnyStr):
         self.Status = value
 
-    @property
-    def Class(self) -> BatchInt32ArrayProxy:
+    Status_str = property(_get_Status_str, _set_Status_str)
+
+    def _get_Class(self) -> BatchInt32ArrayProxy:
         """
         An arbitrary integer number representing the class of Generator so that Generator values may be segregated by class.
 
@@ -1211,12 +1210,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 17)
 
-    @Class.setter
-    def Class(self, value: Union[int, Int32Array]):
+    def _set_Class(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(17, value)
 
-    @property
-    def Vpu(self) -> BatchFloat64ArrayProxy:
+    Class = property(_get_Class, _set_Class)
+
+    def _get_Vpu(self) -> BatchFloat64ArrayProxy:
         """
         Per Unit voltage set point for Model = 3  (typical power flow model).  Default is 1.0. 
 
@@ -1224,12 +1223,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    @Vpu.setter
-    def Vpu(self, value: Union[float, Float64Array]):
+    def _set_Vpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
-    @property
-    def Maxkvar(self) -> BatchFloat64ArrayProxy:
+    Vpu = property(_get_Vpu, _set_Vpu)
+
+    def _get_Maxkvar(self) -> BatchFloat64ArrayProxy:
         """
         Maximum kvar limit for Model = 3.  Defaults to twice the specified load kvar.  Always reset this if you change PF or kvar properties.
 
@@ -1237,12 +1236,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @Maxkvar.setter
-    def Maxkvar(self, value: Union[float, Float64Array]):
+    def _set_Maxkvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def Minkvar(self) -> BatchFloat64ArrayProxy:
+    Maxkvar = property(_get_Maxkvar, _set_Maxkvar)
+
+    def _get_Minkvar(self) -> BatchFloat64ArrayProxy:
         """
         Minimum kvar limit for Model = 3. Enter a negative number if generator can absorb vars. Defaults to negative of Maxkvar.  Always reset this if you change PF or kvar properties.
 
@@ -1250,12 +1249,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @Minkvar.setter
-    def Minkvar(self, value: Union[float, Float64Array]):
+    def _set_Minkvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def PVFactor(self) -> BatchFloat64ArrayProxy:
+    Minkvar = property(_get_Minkvar, _set_Minkvar)
+
+    def _get_PVFactor(self) -> BatchFloat64ArrayProxy:
         """
         Deceleration factor for P-V generator model (Model=3).  Default is 0.1. If the circuit converges easily, you may want to use a higher number such as 1.0. Use a lower number if solution diverges. Use Debugtrace=yes to create a file that will trace the convergence of a generator model.
 
@@ -1263,26 +1262,27 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @PVFactor.setter
-    def PVFactor(self, value: Union[float, Float64Array]):
+    def _set_PVFactor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def ForceOn(self) -> List[bool]:
+    PVFactor = property(_get_PVFactor, _set_PVFactor)
+
+    def _get_ForceOn(self) -> List[bool]:
         """
         {Yes | No}  Forces generator ON despite requirements of other dispatch modes. Stays ON until this property is set to NO, or an internal algorithm cancels the forced ON state.
 
         DSS property name: `ForceOn`, DSS property index: 22.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(22)
         ]
-    @ForceOn.setter
-    def ForceOn(self, value: bool):
+
+    def _set_ForceOn(self, value: bool):
         self._set_batch_int32_array(22, value)
 
-    @property
-    def kVA(self) -> BatchFloat64ArrayProxy:
+    ForceOn = property(_get_ForceOn, _set_ForceOn)
+
+    def _get_kVA(self) -> BatchFloat64ArrayProxy:
         """
         kVA rating of electrical machine. Defaults to 1.2* kW if not specified. Applied to machine or inverter definition for Dynamics mode solutions. 
 
@@ -1290,12 +1290,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @kVA.setter
-    def kVA(self, value: Union[float, Float64Array]):
+    def _set_kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def Xd(self) -> BatchFloat64ArrayProxy:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_Xd(self) -> BatchFloat64ArrayProxy:
         """
         Per unit synchronous reactance of machine. Presently used only for Thevenin impedance for power flow calcs of user models (model=6). Typically use a value 0.4 to 1.0. Default is 1.0
 
@@ -1303,12 +1303,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 25)
 
-    @Xd.setter
-    def Xd(self, value: Union[float, Float64Array]):
+    def _set_Xd(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
-    @property
-    def Xdp(self) -> BatchFloat64ArrayProxy:
+    Xd = property(_get_Xd, _set_Xd)
+
+    def _get_Xdp(self) -> BatchFloat64ArrayProxy:
         """
         Per unit transient reactance of the machine.  Used for Dynamics mode and Fault studies.  Default is 0.27.For user models, this value is used for the Thevenin/Norton impedance for Dynamics Mode.
 
@@ -1316,12 +1316,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 26)
 
-    @Xdp.setter
-    def Xdp(self, value: Union[float, Float64Array]):
+    def _set_Xdp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
-    @property
-    def Xdpp(self) -> BatchFloat64ArrayProxy:
+    Xdp = property(_get_Xdp, _set_Xdp)
+
+    def _get_Xdpp(self) -> BatchFloat64ArrayProxy:
         """
         Per unit subtransient reactance of the machine.  Used for Harmonics. Default is 0.20.
 
@@ -1329,12 +1329,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    @Xdpp.setter
-    def Xdpp(self, value: Union[float, Float64Array]):
+    def _set_Xdpp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
-    @property
-    def H(self) -> BatchFloat64ArrayProxy:
+    Xdpp = property(_get_Xdpp, _set_Xdpp)
+
+    def _get_H(self) -> BatchFloat64ArrayProxy:
         """
         Per unit mass constant of the machine.  MW-sec/MVA.  Default is 1.0.
 
@@ -1342,12 +1342,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 28)
 
-    @H.setter
-    def H(self, value: Union[float, Float64Array]):
+    def _set_H(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
-    @property
-    def D(self) -> BatchFloat64ArrayProxy:
+    H = property(_get_H, _set_H)
+
+    def _get_D(self) -> BatchFloat64ArrayProxy:
         """
         Damping constant.  Usual range is 0 to 4. Default is 1.0.  Adjust to get damping
 
@@ -1355,64 +1355,64 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 29)
 
-    @D.setter
-    def D(self, value: Union[float, Float64Array]):
+    def _set_D(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
-    @property
-    def UserModel(self) -> List[str]:
+    D = property(_get_D, _set_D)
+
+    def _get_UserModel(self) -> List[str]:
         """
         Name of DLL containing user-written model, which computes the terminal currents for Dynamics studies, overriding the default model.  Set to "none" to negate previous setting.
 
         DSS property name: `UserModel`, DSS property index: 30.
         """
-        return self._get_batch_str_prop(30) 
+        return self._get_batch_str_prop(30)
 
-    @UserModel.setter
-    def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_UserModel(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(30, value)
 
-    @property
-    def UserData(self) -> List[str]:
+    UserModel = property(_get_UserModel, _set_UserModel)
+
+    def _get_UserData(self) -> List[str]:
         """
         String (in quotes or parentheses) that gets passed to user-written model for defining the data required for that model.
 
         DSS property name: `UserData`, DSS property index: 31.
         """
-        return self._get_batch_str_prop(31) 
+        return self._get_batch_str_prop(31)
 
-    @UserData.setter
-    def UserData(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_UserData(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(31, value)
 
-    @property
-    def ShaftModel(self) -> List[str]:
+    UserData = property(_get_UserData, _set_UserData)
+
+    def _get_ShaftModel(self) -> List[str]:
         """
         Name of user-written DLL containing a Shaft model, which models the prime mover and determines the power on the shaft for Dynamics studies. Models additional mass elements other than the single-mass model in the DSS default model. Set to "none" to negate previous setting.
 
         DSS property name: `ShaftModel`, DSS property index: 32.
         """
-        return self._get_batch_str_prop(32) 
+        return self._get_batch_str_prop(32)
 
-    @ShaftModel.setter
-    def ShaftModel(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_ShaftModel(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(32, value)
 
-    @property
-    def ShaftData(self) -> List[str]:
+    ShaftModel = property(_get_ShaftModel, _set_ShaftModel)
+
+    def _get_ShaftData(self) -> List[str]:
         """
         String (in quotes or parentheses) that gets passed to user-written shaft dynamic model for defining the data for that model.
 
         DSS property name: `ShaftData`, DSS property index: 33.
         """
-        return self._get_batch_str_prop(33) 
+        return self._get_batch_str_prop(33)
 
-    @ShaftData.setter
-    def ShaftData(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_ShaftData(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(33, value)
 
-    @property
-    def DutyStart(self) -> BatchFloat64ArrayProxy:
+    ShaftData = property(_get_ShaftData, _set_ShaftData)
+
+    def _get_DutyStart(self) -> BatchFloat64ArrayProxy:
         """
         Starting time offset [hours] into the duty cycle shape for this generator, defaults to 0
 
@@ -1420,40 +1420,42 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 34)
 
-    @DutyStart.setter
-    def DutyStart(self, value: Union[float, Float64Array]):
+    def _set_DutyStart(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
-    @property
-    def DebugTrace(self) -> List[bool]:
+    DutyStart = property(_get_DutyStart, _set_DutyStart)
+
+    def _get_DebugTrace(self) -> List[bool]:
         """
         {Yes | No }  Default is no.  Turn this on to capture the progress of the generator model for each iteration.  Creates a separate file for each generator named "GEN_name.csv".
 
         DSS property name: `DebugTrace`, DSS property index: 35.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(35)
         ]
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+
+    def _set_DebugTrace(self, value: bool):
         self._set_batch_int32_array(35, value)
 
-    @property
-    def Balanced(self) -> List[bool]:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_Balanced(self) -> List[bool]:
         """
         {Yes | No*} Default is No.  For Model=7, force balanced current only for 3-phase generators. Force zero- and negative-sequence to zero.
 
         DSS property name: `Balanced`, DSS property index: 36.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(36)
         ]
-    @Balanced.setter
-    def Balanced(self, value: bool):
+
+    def _set_Balanced(self, value: bool):
         self._set_batch_int32_array(36, value)
 
-    @property
-    def XRdp(self) -> BatchFloat64ArrayProxy:
+    Balanced = property(_get_Balanced, _set_Balanced)
+
+    def _get_XRdp(self) -> BatchFloat64ArrayProxy:
         """
         Default is 20. X/R ratio for Xdp property for FaultStudy and Dynamic modes.
 
@@ -1461,26 +1463,27 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 37)
 
-    @XRdp.setter
-    def XRdp(self, value: Union[float, Float64Array]):
+    def _set_XRdp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(37, value)
 
-    @property
-    def UseFuel(self) -> List[bool]:
+    XRdp = property(_get_XRdp, _set_XRdp)
+
+    def _get_UseFuel(self) -> List[bool]:
         """
         {Yes | *No}. Activates the use of fuel for the operation of the generator. When the fuel level reaches the reserve level, the generator stops until it gets refueled. By default, the generator is connected to a continuous fuel supply, Use this mode to mimic dependency on fuel level for different generation technologies.
 
         DSS property name: `UseFuel`, DSS property index: 38.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(38)
         ]
-    @UseFuel.setter
-    def UseFuel(self, value: bool):
+
+    def _set_UseFuel(self, value: bool):
         self._set_batch_int32_array(38, value)
 
-    @property
-    def FuelkWh(self) -> BatchFloat64ArrayProxy:
+    UseFuel = property(_get_UseFuel, _set_UseFuel)
+
+    def _get_FuelkWh(self) -> BatchFloat64ArrayProxy:
         """
         {*0}Is the nominal level of fuel for the generator (kWh). It only applies if UseFuel = Yes/True
 
@@ -1488,12 +1491,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 39)
 
-    @FuelkWh.setter
-    def FuelkWh(self, value: Union[float, Float64Array]):
+    def _set_FuelkWh(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(39, value)
 
-    @property
-    def pctFuel(self) -> BatchFloat64ArrayProxy:
+    FuelkWh = property(_get_FuelkWh, _set_FuelkWh)
+
+    def _get_pctFuel(self) -> BatchFloat64ArrayProxy:
         """
         It is a number between 0 and 100 representing the current amount of fuel available in percentage of FuelkWh. It only applies if UseFuel = Yes/True
 
@@ -1501,12 +1504,12 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 40)
 
-    @pctFuel.setter
-    def pctFuel(self, value: Union[float, Float64Array]):
+    def _set_pctFuel(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(40, value)
 
-    @property
-    def pctReserve(self) -> BatchFloat64ArrayProxy:
+    pctFuel = property(_get_pctFuel, _set_pctFuel)
+
+    def _get_pctReserve(self) -> BatchFloat64ArrayProxy:
         """
         It is a number between 0 and 100 representing the reserve level in percentage of FuelkWh. It only applies if UseFuel = Yes/True
 
@@ -1514,9 +1517,10 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 41)
 
-    @pctReserve.setter
-    def pctReserve(self, value: Union[float, Float64Array]):
+    def _set_pctReserve(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(41, value)
+
+    pctReserve = property(_get_pctReserve, _set_pctReserve)
 
     def Refuel(self, value: Union[bool, List[bool]] = True):
         """
@@ -1526,8 +1530,7 @@ class GeneratorBatch(DSSBatch):
         """
         self._set_batch_int32_array(42, value)
 
-    @property
-    def DynamicEq_str(self) -> List[str]:
+    def _get_DynamicEq_str(self) -> List[str]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -1535,12 +1538,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(43)
 
-    @DynamicEq_str.setter
-    def DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(43, value)
 
-    @property
-    def DynamicEq(self) -> List[DynamicExp]:
+    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
+
+    def _get_DynamicEq(self) -> List[DynamicExp]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. if not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -1548,12 +1551,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(43)
 
-    @DynamicEq.setter
-    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
+    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
         self._set_batch_obj_prop(43, value)
 
-    @property
-    def DynOut(self) -> List[str]:
+    DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
+
+    def _get_DynOut(self) -> List[str]:
         """
         The name of the variables within the Dynamic equation that will be used to govern the generator dynamics.This generator model requires 2 outputs from the dynamic equation: 
 
@@ -1564,14 +1567,14 @@ class GeneratorBatch(DSSBatch):
 
         DSS property name: `DynOut`, DSS property index: 44.
         """
-        return self._get_batch_str_prop(44) 
+        return self._get_batch_str_prop(44)
 
-    @DynOut.setter
-    def DynOut(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DynOut(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(44, value)
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    DynOut = property(_get_DynOut, _set_DynOut)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1579,12 +1582,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(45)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(45, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic voltage or current spectrum for this generator. Voltage behind Xd" for machine - default. Current injection for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1592,12 +1595,12 @@ class GeneratorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(45)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(45, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -1605,23 +1608,25 @@ class GeneratorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 46)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(46, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 47.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(47)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(47, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1688,7 +1693,7 @@ class IGenerator(IDSSObj,GeneratorBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Generator, GeneratorBatch)
         GeneratorBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Generator:

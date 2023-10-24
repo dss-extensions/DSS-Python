@@ -85,8 +85,7 @@ class Relay(DSSObj, CktElementMixin):
         'like': 53,
     }
 
-    @property
-    def MonitoredObj_str(self) -> str:
+    def _get_MonitoredObj_str(self) -> str:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -94,12 +93,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(1)
 
-    @MonitoredObj_str.setter
-    def MonitoredObj_str(self, value: AnyStr):
+    def _set_MonitoredObj_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def MonitoredObj(self) -> DSSObj:
+    MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
+
+    def _get_MonitoredObj(self) -> DSSObj:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -107,16 +106,16 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_obj(1, None)
 
-    @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def MonitoredTerm(self) -> int:
+    MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
+
+    def _get_MonitoredTerm(self) -> int:
         """
         Number of the terminal of the circuit element to which the Relay is connected. 1 or 2, typically.  Default is 1.
 
@@ -124,12 +123,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @MonitoredTerm.setter
-    def MonitoredTerm(self, value: int):
+    def _set_MonitoredTerm(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def SwitchedObj_str(self) -> str:
+    MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
+
+    def _get_SwitchedObj_str(self) -> str:
         """
         Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -137,12 +136,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(3)
 
-    @SwitchedObj_str.setter
-    def SwitchedObj_str(self, value: AnyStr):
+    def _set_SwitchedObj_str(self, value: AnyStr):
         self._set_string_o(3, value)
 
-    @property
-    def SwitchedObj(self) -> DSSObj:
+    SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
+
+    def _get_SwitchedObj(self) -> DSSObj:
         """
         Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -150,16 +149,16 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_obj(3, None)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(3, value)
             return
 
         self._set_string_o(3, value)
 
-    @property
-    def SwitchedTerm(self) -> int:
+    SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
+
+    def _get_SwitchedTerm(self) -> int:
         """
         Number of the terminal of the controlled element in which the switch is controlled by the Relay. 1 or 2, typically.  Default is 1.
 
@@ -167,12 +166,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 4)
 
-    @SwitchedTerm.setter
-    def SwitchedTerm(self, value: int):
+    def _set_SwitchedTerm(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
-    @property
-    def Type(self) -> enums.RelayType:
+    SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
+
+    def _get_Type(self) -> enums.RelayType:
         """
         One of a legal relay type:
           Current
@@ -191,15 +190,15 @@ class Relay(DSSObj, CktElementMixin):
         """
         return enums.RelayType(self._lib.Obj_GetInt32(self._ptr, 5))
 
-    @Type.setter
-    def Type(self, value: Union[AnyStr, int, enums.RelayType]):
+    def _set_Type(self, value: Union[AnyStr, int, enums.RelayType]):
         if not isinstance(value, int):
             self._set_string_o(5, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
-    @property
-    def Type_str(self) -> str:
+    Type = property(_get_Type, _set_Type)
+
+    def _get_Type_str(self) -> str:
         """
         One of a legal relay type:
           Current
@@ -218,12 +217,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(5)
 
-    @Type_str.setter
-    def Type_str(self, value: AnyStr):
+    def _set_Type_str(self, value: AnyStr):
         self.Type = value
 
-    @property
-    def PhaseCurve_str(self) -> str:
+    Type_str = property(_get_Type_str, _set_Type_str)
+
+    def _get_PhaseCurve_str(self) -> str:
         """
         Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -231,12 +230,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(6)
 
-    @PhaseCurve_str.setter
-    def PhaseCurve_str(self, value: AnyStr):
+    def _set_PhaseCurve_str(self, value: AnyStr):
         self._set_string_o(6, value)
 
-    @property
-    def PhaseCurve(self) -> TCC_Curve:
+    PhaseCurve_str = property(_get_PhaseCurve_str, _set_PhaseCurve_str)
+
+    def _get_PhaseCurve(self) -> TCC_Curve:
         """
         Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -244,16 +243,16 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_obj(6, TCC_Curve)
 
-    @PhaseCurve.setter
-    def PhaseCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_PhaseCurve(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(6, value)
             return
 
         self._set_string_o(6, value)
 
-    @property
-    def GroundCurve_str(self) -> str:
+    PhaseCurve = property(_get_PhaseCurve, _set_PhaseCurve)
+
+    def _get_GroundCurve_str(self) -> str:
         """
         Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
 
@@ -261,12 +260,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(7)
 
-    @GroundCurve_str.setter
-    def GroundCurve_str(self, value: AnyStr):
+    def _set_GroundCurve_str(self, value: AnyStr):
         self._set_string_o(7, value)
 
-    @property
-    def GroundCurve(self) -> TCC_Curve:
+    GroundCurve_str = property(_get_GroundCurve_str, _set_GroundCurve_str)
+
+    def _get_GroundCurve(self) -> TCC_Curve:
         """
         Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
 
@@ -274,16 +273,16 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_obj(7, TCC_Curve)
 
-    @GroundCurve.setter
-    def GroundCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_GroundCurve(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(7, value)
             return
 
         self._set_string_o(7, value)
 
-    @property
-    def PhaseTrip(self) -> float:
+    GroundCurve = property(_get_GroundCurve, _set_GroundCurve)
+
+    def _get_PhaseTrip(self) -> float:
         """
         Multiplier or actual phase amps for the phase TCC curve.  Defaults to 1.0.
 
@@ -291,12 +290,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @PhaseTrip.setter
-    def PhaseTrip(self, value: float):
+    def _set_PhaseTrip(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def GroundTrip(self) -> float:
+    PhaseTrip = property(_get_PhaseTrip, _set_PhaseTrip)
+
+    def _get_GroundTrip(self) -> float:
         """
         Multiplier or actual ground amps (3I0) for the ground TCC curve.  Defaults to 1.0.
 
@@ -304,12 +303,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @GroundTrip.setter
-    def GroundTrip(self, value: float):
+    def _set_GroundTrip(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def TDPhase(self) -> float:
+    GroundTrip = property(_get_GroundTrip, _set_GroundTrip)
+
+    def _get_TDPhase(self) -> float:
         """
         Time dial for Phase trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -317,12 +316,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @TDPhase.setter
-    def TDPhase(self, value: float):
+    def _set_TDPhase(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def TDGround(self) -> float:
+    TDPhase = property(_get_TDPhase, _set_TDPhase)
+
+    def _get_TDGround(self) -> float:
         """
         Time dial for Ground trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -330,12 +329,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @TDGround.setter
-    def TDGround(self, value: float):
+    def _set_TDGround(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def PhaseInst(self) -> float:
+    TDGround = property(_get_TDGround, _set_TDGround)
+
+    def _get_PhaseInst(self) -> float:
         """
         Actual  amps (Current relay) or kW (reverse power relay) for instantaneous phase trip which is assumed to happen in 0.01 sec + Delay Time. Default is 0.0, which signifies no inst trip. Use this value for specifying the Reverse Power threshold (kW) for reverse power relays.
 
@@ -343,12 +342,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @PhaseInst.setter
-    def PhaseInst(self, value: float):
+    def _set_PhaseInst(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def GroundInst(self) -> float:
+    PhaseInst = property(_get_PhaseInst, _set_PhaseInst)
+
+    def _get_GroundInst(self) -> float:
         """
         Actual  amps for instantaneous ground trip which is assumed to happen in 0.01 sec + Delay Time.Default is 0.0, which signifies no inst trip.
 
@@ -356,12 +355,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @GroundInst.setter
-    def GroundInst(self, value: float):
+    def _set_GroundInst(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def Reset(self) -> float:
+    GroundInst = property(_get_GroundInst, _set_GroundInst)
+
+    def _get_Reset(self) -> float:
         """
         Reset time in sec for relay.  Default is 15. If this much time passes between the last pickup event, and the relay has not locked out, the operation counter resets.
 
@@ -369,12 +368,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @Reset.setter
-    def Reset(self, value: float):
+    def _set_Reset(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def Shots(self) -> int:
+    Reset = property(_get_Reset, _set_Reset)
+
+    def _get_Shots(self) -> int:
         """
         Number of shots to lockout.  Default is 4. This is one more than the number of reclose intervals.
 
@@ -382,12 +381,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 15)
 
-    @Shots.setter
-    def Shots(self, value: int):
+    def _set_Shots(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
-    @property
-    def RecloseIntervals(self) -> Float64Array:
+    Shots = property(_get_Shots, _set_Shots)
+
+    def _get_RecloseIntervals(self) -> Float64Array:
         """
         Array of reclose intervals. If none, specify "NONE". Default for overcurrent relay is (0.5, 2.0, 2.0) seconds. Default for a voltage relay is (5.0). In a voltage relay, this is  seconds after restoration of voltage that the reclose occurs. Reverse power relay is one shot to lockout, so this is ignored.  A locked out relay must be closed manually (set action=close).
 
@@ -395,12 +394,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 16)
 
-    @RecloseIntervals.setter
-    def RecloseIntervals(self, value: Float64Array):
+    def _set_RecloseIntervals(self, value: Float64Array):
         self._set_float64_array_o(16, value)
 
-    @property
-    def Delay(self) -> float:
+    RecloseIntervals = property(_get_RecloseIntervals, _set_RecloseIntervals)
+
+    def _get_Delay(self) -> float:
         """
         Trip time delay (sec) for DEFINITE TIME relays. Default is 0.0 for current, voltage and DOC relays. If >0 then this value is used instead of curves. Used by Generic, RevPower, 46 and 47 relays. Defaults to 0.1 s for these relays.
 
@@ -408,12 +407,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @Delay.setter
-    def Delay(self, value: float):
+    def _set_Delay(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def OvervoltCurve_str(self) -> str:
+    Delay = property(_get_Delay, _set_Delay)
+
+    def _get_OvervoltCurve_str(self) -> str:
         """
         TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -421,12 +420,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(18)
 
-    @OvervoltCurve_str.setter
-    def OvervoltCurve_str(self, value: AnyStr):
+    def _set_OvervoltCurve_str(self, value: AnyStr):
         self._set_string_o(18, value)
 
-    @property
-    def OvervoltCurve(self) -> TCC_Curve:
+    OvervoltCurve_str = property(_get_OvervoltCurve_str, _set_OvervoltCurve_str)
+
+    def _get_OvervoltCurve(self) -> TCC_Curve:
         """
         TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -434,16 +433,16 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_obj(18, TCC_Curve)
 
-    @OvervoltCurve.setter
-    def OvervoltCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_OvervoltCurve(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(18, value)
             return
 
         self._set_string_o(18, value)
 
-    @property
-    def UndervoltCurve_str(self) -> str:
+    OvervoltCurve = property(_get_OvervoltCurve, _set_OvervoltCurve)
+
+    def _get_UndervoltCurve_str(self) -> str:
         """
         TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -451,12 +450,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(19)
 
-    @UndervoltCurve_str.setter
-    def UndervoltCurve_str(self, value: AnyStr):
+    def _set_UndervoltCurve_str(self, value: AnyStr):
         self._set_string_o(19, value)
 
-    @property
-    def UndervoltCurve(self) -> TCC_Curve:
+    UndervoltCurve_str = property(_get_UndervoltCurve_str, _set_UndervoltCurve_str)
+
+    def _get_UndervoltCurve(self) -> TCC_Curve:
         """
         TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -464,16 +463,16 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_obj(19, TCC_Curve)
 
-    @UndervoltCurve.setter
-    def UndervoltCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_UndervoltCurve(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(19, value)
             return
 
         self._set_string_o(19, value)
 
-    @property
-    def kVBase(self) -> float:
+    UndervoltCurve = property(_get_UndervoltCurve, _set_UndervoltCurve)
+
+    def _get_kVBase(self) -> float:
         """
         Voltage base (kV) for the relay. Specify line-line for 3 phase devices); line-neutral for 1-phase devices.  Relay assumes the number of phases of the monitored element.  Default is 0.0, which results in assuming the voltage values in the "TCC" curve are specified in actual line-to-neutral volts.
 
@@ -481,12 +480,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @kVBase.setter
-    def kVBase(self, value: float):
+    def _set_kVBase(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def F47pctPickup(self) -> float:
+    kVBase = property(_get_kVBase, _set_kVBase)
+
+    def _get_F47pctPickup(self) -> float:
         """
         Percent voltage pickup for 47 relay (Neg seq voltage). Default is 2. Specify also base voltage (kvbase) and delay time value.   
 
@@ -494,12 +493,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @F47pctPickup.setter
-    def F47pctPickup(self, value: float):
+    def _set_F47pctPickup(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def F46BaseAmps(self) -> float:
+    F47pctPickup = property(_get_F47pctPickup, _set_F47pctPickup)
+
+    def _get_F46BaseAmps(self) -> float:
         """
         Base current, Amps, for 46 relay (neg seq current).  Used for establishing pickup and per unit I-squared-t.
 
@@ -507,12 +506,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    @F46BaseAmps.setter
-    def F46BaseAmps(self, value: float):
+    def _set_F46BaseAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 22, value)
 
-    @property
-    def F46pctPickup(self) -> float:
+    F46BaseAmps = property(_get_F46BaseAmps, _set_F46BaseAmps)
+
+    def _get_F46pctPickup(self) -> float:
         """
         Percent pickup current for 46 relay (neg seq current).  Default is 20.0.   When current exceeds this value * BaseAmps, I-squared-t calc starts.
 
@@ -520,12 +519,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @F46pctPickup.setter
-    def F46pctPickup(self, value: float):
+    def _set_F46pctPickup(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def F46isqt(self) -> float:
+    F46pctPickup = property(_get_F46pctPickup, _set_F46pctPickup)
+
+    def _get_F46isqt(self) -> float:
         """
         Negative Sequence I-squared-t trip value for 46 relay (neg seq current).  Default is 1 (trips in 1 sec for 1 per unit neg seq current).  Should be 1 to 99.
 
@@ -533,12 +532,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    @F46isqt.setter
-    def F46isqt(self, value: float):
+    def _set_F46isqt(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 24, value)
 
-    @property
-    def Variable(self) -> str:
+    F46isqt = property(_get_F46isqt, _set_F46isqt)
+
+    def _get_Variable(self) -> str:
         """
         Name of variable in PC Elements being monitored.  Only applies to Generic relay.
 
@@ -546,12 +545,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(25)
 
-    @Variable.setter
-    def Variable(self, value: AnyStr):
+    def _set_Variable(self, value: AnyStr):
         self._set_string_o(25, value)
 
-    @property
-    def Overtrip(self) -> float:
+    Variable = property(_get_Variable, _set_Variable)
+
+    def _get_Overtrip(self) -> float:
         """
         Trip setting (high value) for Generic relay variable.  Relay trips in definite time if value of variable exceeds this value.
 
@@ -559,12 +558,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 26)
 
-    @Overtrip.setter
-    def Overtrip(self, value: float):
+    def _set_Overtrip(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 26, value)
 
-    @property
-    def Undertrip(self) -> float:
+    Overtrip = property(_get_Overtrip, _set_Overtrip)
+
+    def _get_Undertrip(self) -> float:
         """
         Trip setting (low value) for Generic relay variable.  Relay trips in definite time if value of variable is less than this value.
 
@@ -572,12 +571,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    @Undertrip.setter
-    def Undertrip(self, value: float):
+    def _set_Undertrip(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 27, value)
 
-    @property
-    def BreakerTime(self) -> float:
+    Undertrip = property(_get_Undertrip, _set_Undertrip)
+
+    def _get_BreakerTime(self) -> float:
         """
         Fixed delay time (sec) added to relay time. Default is 0.0. Designed to represent breaker time or some other delay after a trip decision is made.Use Delay property for setting a fixed trip time delay.Added to trip time of current and voltage relays. Could use in combination with inst trip value to obtain a definite time overcurrent relay.
 
@@ -585,12 +584,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 28)
 
-    @BreakerTime.setter
-    def BreakerTime(self, value: float):
+    def _set_BreakerTime(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 28, value)
 
-    @property
-    def Action(self) -> enums.RelayAction:
+    BreakerTime = property(_get_BreakerTime, _set_BreakerTime)
+
+    def _get_Action(self) -> enums.RelayAction:
         """
         DEPRECATED. See "State" property
 
@@ -598,15 +597,15 @@ class Relay(DSSObj, CktElementMixin):
         """
         return enums.RelayAction(self._lib.Obj_GetInt32(self._ptr, 29))
 
-    @Action.setter
-    def Action(self, value: Union[AnyStr, int, enums.RelayAction]):
+    def _set_Action(self, value: Union[AnyStr, int, enums.RelayAction]):
         if not isinstance(value, int):
             self._set_string_o(29, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 29, value)
 
-    @property
-    def Action_str(self) -> str:
+    Action = property(_get_Action, _set_Action)
+
+    def _get_Action_str(self) -> str:
         """
         DEPRECATED. See "State" property
 
@@ -614,12 +613,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(29)
 
-    @Action_str.setter
-    def Action_str(self, value: AnyStr):
+    def _set_Action_str(self, value: AnyStr):
         self.Action = value
 
-    @property
-    def Z1Mag(self) -> float:
+    Action_str = property(_get_Action_str, _set_Action_str)
+
+    def _get_Z1Mag(self) -> float:
         """
         Positive sequence reach impedance in primary ohms for Distance and TD21 functions. Default=0.7
 
@@ -627,12 +626,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 30)
 
-    @Z1Mag.setter
-    def Z1Mag(self, value: float):
+    def _set_Z1Mag(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 30, value)
 
-    @property
-    def Z1Ang(self) -> float:
+    Z1Mag = property(_get_Z1Mag, _set_Z1Mag)
+
+    def _get_Z1Ang(self) -> float:
         """
         Positive sequence reach impedance angle in degrees for Distance and TD21 functions. Default=64.0
 
@@ -640,12 +639,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 31)
 
-    @Z1Ang.setter
-    def Z1Ang(self, value: float):
+    def _set_Z1Ang(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 31, value)
 
-    @property
-    def Z0Mag(self) -> float:
+    Z1Ang = property(_get_Z1Ang, _set_Z1Ang)
+
+    def _get_Z0Mag(self) -> float:
         """
         Zero sequence reach impedance in primary ohms for Distance and TD21 functions. Default=2.1
 
@@ -653,12 +652,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 32)
 
-    @Z0Mag.setter
-    def Z0Mag(self, value: float):
+    def _set_Z0Mag(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 32, value)
 
-    @property
-    def Z0Ang(self) -> float:
+    Z0Mag = property(_get_Z0Mag, _set_Z0Mag)
+
+    def _get_Z0Ang(self) -> float:
         """
         Zero sequence reach impedance angle in degrees for Distance and TD21 functions. Default=68.0
 
@@ -666,12 +665,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 33)
 
-    @Z0Ang.setter
-    def Z0Ang(self, value: float):
+    def _set_Z0Ang(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 33, value)
 
-    @property
-    def MPhase(self) -> float:
+    Z0Ang = property(_get_Z0Ang, _set_Z0Ang)
+
+    def _get_MPhase(self) -> float:
         """
         Phase reach multiplier in per-unit for Distance and TD21 functions. Default=0.7
 
@@ -679,12 +678,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 34)
 
-    @MPhase.setter
-    def MPhase(self, value: float):
+    def _set_MPhase(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 34, value)
 
-    @property
-    def MGround(self) -> float:
+    MPhase = property(_get_MPhase, _set_MPhase)
+
+    def _get_MGround(self) -> float:
         """
         Ground reach multiplier in per-unit for Distance and TD21 functions. Default=0.7
 
@@ -692,12 +691,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 35)
 
-    @MGround.setter
-    def MGround(self, value: float):
+    def _set_MGround(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 35, value)
 
-    @property
-    def EventLog(self) -> bool:
+    MGround = property(_get_MGround, _set_MGround)
+
+    def _get_EventLog(self) -> bool:
         """
         {Yes/True | No/False* } Default is No for Relay. Write trips, reclose and reset events to EventLog.
 
@@ -705,12 +704,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 36) != 0
 
-    @EventLog.setter
-    def EventLog(self, value: bool):
+    def _set_EventLog(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 36, value)
 
-    @property
-    def DebugTrace(self) -> bool:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_DebugTrace(self) -> bool:
         """
         {Yes/True* | No/False* } Default is No for Relay. Write extra details to Eventlog.
 
@@ -718,12 +717,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 37) != 0
 
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+    def _set_DebugTrace(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 37, value)
 
-    @property
-    def DistReverse(self) -> bool:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_DistReverse(self) -> bool:
         """
         {Yes/True* | No/False} Default is No; reverse direction for distance and td21 types.
 
@@ -731,12 +730,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 38) != 0
 
-    @DistReverse.setter
-    def DistReverse(self, value: bool):
+    def _set_DistReverse(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 38, value)
 
-    @property
-    def Normal(self) -> enums.RelayState:
+    DistReverse = property(_get_DistReverse, _set_DistReverse)
+
+    def _get_Normal(self) -> enums.RelayState:
         """
         {Open | Closed} Normal state of the relay. The relay reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -744,15 +743,15 @@ class Relay(DSSObj, CktElementMixin):
         """
         return enums.RelayState(self._lib.Obj_GetInt32(self._ptr, 39))
 
-    @Normal.setter
-    def Normal(self, value: Union[AnyStr, int, enums.RelayState]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.RelayState]):
         if not isinstance(value, int):
             self._set_string_o(39, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 39, value)
 
-    @property
-    def Normal_str(self) -> str:
+    Normal = property(_get_Normal, _set_Normal)
+
+    def _get_Normal_str(self) -> str:
         """
         {Open | Closed} Normal state of the relay. The relay reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -760,12 +759,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(39)
 
-    @Normal_str.setter
-    def Normal_str(self, value: AnyStr):
+    def _set_Normal_str(self, value: AnyStr):
         self.Normal = value
 
-    @property
-    def State(self) -> enums.RelayState:
+    Normal_str = property(_get_Normal_str, _set_Normal_str)
+
+    def _get_State(self) -> enums.RelayState:
         """
         {Open | Closed} Actual state of the relay. Upon setting, immediately forces state of the relay, overriding the Relay control. Simulates manual control on relay. Defaults to Closed. "Open" causes the controlled element to open and lock out. "Closed" causes the controlled element to close and the relay to reset to its first operation.
 
@@ -773,15 +772,15 @@ class Relay(DSSObj, CktElementMixin):
         """
         return enums.RelayState(self._lib.Obj_GetInt32(self._ptr, 40))
 
-    @State.setter
-    def State(self, value: Union[AnyStr, int, enums.RelayState]):
+    def _set_State(self, value: Union[AnyStr, int, enums.RelayState]):
         if not isinstance(value, int):
             self._set_string_o(40, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 40, value)
 
-    @property
-    def State_str(self) -> str:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> str:
         """
         {Open | Closed} Actual state of the relay. Upon setting, immediately forces state of the relay, overriding the Relay control. Simulates manual control on relay. Defaults to Closed. "Open" causes the controlled element to open and lock out. "Closed" causes the controlled element to close and the relay to reset to its first operation.
 
@@ -789,12 +788,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(40)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
 
-    @property
-    def DOC_TiltAngleLow(self) -> float:
+    State_str = property(_get_State_str, _set_State_str)
+
+    def _get_DOC_TiltAngleLow(self) -> float:
         """
         Tilt angle for low-current trip line. Default is 90.
 
@@ -802,12 +801,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 41)
 
-    @DOC_TiltAngleLow.setter
-    def DOC_TiltAngleLow(self, value: float):
+    def _set_DOC_TiltAngleLow(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 41, value)
 
-    @property
-    def DOC_TiltAngleHigh(self) -> float:
+    DOC_TiltAngleLow = property(_get_DOC_TiltAngleLow, _set_DOC_TiltAngleLow)
+
+    def _get_DOC_TiltAngleHigh(self) -> float:
         """
         Tilt angle for high-current trip line. Default is 90.
 
@@ -815,12 +814,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 42)
 
-    @DOC_TiltAngleHigh.setter
-    def DOC_TiltAngleHigh(self, value: float):
+    def _set_DOC_TiltAngleHigh(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 42, value)
 
-    @property
-    def DOC_TripSettingLow(self) -> float:
+    DOC_TiltAngleHigh = property(_get_DOC_TiltAngleHigh, _set_DOC_TiltAngleHigh)
+
+    def _get_DOC_TripSettingLow(self) -> float:
         """
         Resistive trip setting for low-current line. Default is 0.
 
@@ -828,12 +827,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 43)
 
-    @DOC_TripSettingLow.setter
-    def DOC_TripSettingLow(self, value: float):
+    def _set_DOC_TripSettingLow(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 43, value)
 
-    @property
-    def DOC_TripSettingHigh(self) -> float:
+    DOC_TripSettingLow = property(_get_DOC_TripSettingLow, _set_DOC_TripSettingLow)
+
+    def _get_DOC_TripSettingHigh(self) -> float:
         """
         Resistive trip setting for high-current line.  Default is -1 (deactivated). To activate, set a positive value. Must be greater than "DOC_TripSettingLow".
 
@@ -841,12 +840,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 44)
 
-    @DOC_TripSettingHigh.setter
-    def DOC_TripSettingHigh(self, value: float):
+    def _set_DOC_TripSettingHigh(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 44, value)
 
-    @property
-    def DOC_TripSettingMag(self) -> float:
+    DOC_TripSettingHigh = property(_get_DOC_TripSettingHigh, _set_DOC_TripSettingHigh)
+
+    def _get_DOC_TripSettingMag(self) -> float:
         """
         Trip setting for current magnitude (defines a circle in the relay characteristics). Default is -1 (deactivated). To activate, set a positive value.
 
@@ -854,12 +853,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 45)
 
-    @DOC_TripSettingMag.setter
-    def DOC_TripSettingMag(self, value: float):
+    def _set_DOC_TripSettingMag(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 45, value)
 
-    @property
-    def DOC_DelayInner(self) -> float:
+    DOC_TripSettingMag = property(_get_DOC_TripSettingMag, _set_DOC_TripSettingMag)
+
+    def _get_DOC_DelayInner(self) -> float:
         """
         Trip time delay (sec) for operation in inner region for DOC relay, defined when "DOC_TripSettingMag" or "DOC_TripSettingHigh" are activate. Default is -1.0 (deactivated), meaning that the relay characteristic is insensitive in the inner region (no trip). Set to 0 for instantaneous trip and >0 for a definite time delay. If "DOC_PhaseCurveInner" is specified, time delay from curve is utilized instead.
 
@@ -867,12 +866,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 46)
 
-    @DOC_DelayInner.setter
-    def DOC_DelayInner(self, value: float):
+    def _set_DOC_DelayInner(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 46, value)
 
-    @property
-    def DOC_PhaseCurveInner_str(self) -> str:
+    DOC_DelayInner = property(_get_DOC_DelayInner, _set_DOC_DelayInner)
+
+    def _get_DOC_PhaseCurveInner_str(self) -> str:
         """
         Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
@@ -880,12 +879,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(47)
 
-    @DOC_PhaseCurveInner_str.setter
-    def DOC_PhaseCurveInner_str(self, value: AnyStr):
+    def _set_DOC_PhaseCurveInner_str(self, value: AnyStr):
         self._set_string_o(47, value)
 
-    @property
-    def DOC_PhaseCurveInner(self) -> TCC_Curve:
+    DOC_PhaseCurveInner_str = property(_get_DOC_PhaseCurveInner_str, _set_DOC_PhaseCurveInner_str)
+
+    def _get_DOC_PhaseCurveInner(self) -> TCC_Curve:
         """
         Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
@@ -893,16 +892,16 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._get_obj(47, TCC_Curve)
 
-    @DOC_PhaseCurveInner.setter
-    def DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(47, value)
             return
 
         self._set_string_o(47, value)
 
-    @property
-    def DOC_PhaseTripInner(self) -> float:
+    DOC_PhaseCurveInner = property(_get_DOC_PhaseCurveInner, _set_DOC_PhaseCurveInner)
+
+    def _get_DOC_PhaseTripInner(self) -> float:
         """
         Multiplier for the "DOC_PhaseCurveInner" TCC curve.  Defaults to 1.0.
 
@@ -910,12 +909,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 48)
 
-    @DOC_PhaseTripInner.setter
-    def DOC_PhaseTripInner(self, value: float):
+    def _set_DOC_PhaseTripInner(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 48, value)
 
-    @property
-    def DOC_TDPhaseInner(self) -> float:
+    DOC_PhaseTripInner = property(_get_DOC_PhaseTripInner, _set_DOC_PhaseTripInner)
+
+    def _get_DOC_TDPhaseInner(self) -> float:
         """
         Time dial for "DOC_PhaseCurveInner" TCC curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -923,12 +922,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 49)
 
-    @DOC_TDPhaseInner.setter
-    def DOC_TDPhaseInner(self, value: float):
+    def _set_DOC_TDPhaseInner(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 49, value)
 
-    @property
-    def DOC_P1Blocking(self) -> bool:
+    DOC_TDPhaseInner = property(_get_DOC_TDPhaseInner, _set_DOC_TDPhaseInner)
+
+    def _get_DOC_P1Blocking(self) -> bool:
         """
         {Yes/True* | No/False} Blocking element that impedes relay from tripping if balanced net three-phase active power is in the forward direction (i.e., flowing into the monitored terminal). For a delayed trip, if at any given time the reverse power flow condition stops, the tripping is reset. Default=True.
 
@@ -936,12 +935,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 50) != 0
 
-    @DOC_P1Blocking.setter
-    def DOC_P1Blocking(self, value: bool):
+    def _set_DOC_P1Blocking(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 50, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    DOC_P1Blocking = property(_get_DOC_P1Blocking, _set_DOC_P1Blocking)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -949,12 +948,12 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 51)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 51, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -962,9 +961,10 @@ class Relay(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 52) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 52, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1038,8 +1038,7 @@ class RelayBatch(DSSBatch):
     _cls_idx = 31
 
 
-    @property
-    def MonitoredObj_str(self) -> List[str]:
+    def _get_MonitoredObj_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -1047,12 +1046,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @MonitoredObj_str.setter
-    def MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def MonitoredObj(self) -> List[DSSObj]:
+    MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
+
+    def _get_MonitoredObj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -1060,12 +1059,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def MonitoredTerm(self) -> BatchInt32ArrayProxy:
+    MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
+
+    def _get_MonitoredTerm(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the circuit element to which the Relay is connected. 1 or 2, typically.  Default is 1.
 
@@ -1073,12 +1072,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @MonitoredTerm.setter
-    def MonitoredTerm(self, value: Union[int, Int32Array]):
+    def _set_MonitoredTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def SwitchedObj_str(self) -> List[str]:
+    MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
+
+    def _get_SwitchedObj_str(self) -> List[str]:
         """
         Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -1086,12 +1085,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @SwitchedObj_str.setter
-    def SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(3, value)
 
-    @property
-    def SwitchedObj(self) -> List[DSSObj]:
+    SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
+
+    def _get_SwitchedObj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the Relay controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -1099,12 +1098,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(3)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(3, value)
 
-    @property
-    def SwitchedTerm(self) -> BatchInt32ArrayProxy:
+    SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
+
+    def _get_SwitchedTerm(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the controlled element in which the switch is controlled by the Relay. 1 or 2, typically.  Default is 1.
 
@@ -1112,12 +1111,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 4)
 
-    @SwitchedTerm.setter
-    def SwitchedTerm(self, value: Union[int, Int32Array]):
+    def _set_SwitchedTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(4, value)
 
-    @property
-    def Type(self) -> BatchInt32ArrayProxy:
+    SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
+
+    def _get_Type(self) -> BatchInt32ArrayProxy:
         """
         One of a legal relay type:
           Current
@@ -1136,16 +1135,16 @@ class RelayBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 5)
 
-    @Type.setter
-    def Type(self, value: Union[AnyStr, int, enums.RelayType, List[AnyStr], List[int], List[enums.RelayType], Int32Array]):
+    def _set_Type(self, value: Union[AnyStr, int, enums.RelayType, List[AnyStr], List[int], List[enums.RelayType], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(5, value)
             return
-    
+
         self._set_batch_int32_array(5, value)
 
-    @property
-    def Type_str(self) -> str:
+    Type = property(_get_Type, _set_Type)
+
+    def _get_Type_str(self) -> str:
         """
         One of a legal relay type:
           Current
@@ -1164,12 +1163,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(5)
 
-    @Type_str.setter
-    def Type_str(self, value: AnyStr):
+    def _set_Type_str(self, value: AnyStr):
         self.Type = value
 
-    @property
-    def PhaseCurve_str(self) -> List[str]:
+    Type_str = property(_get_Type_str, _set_Type_str)
+
+    def _get_PhaseCurve_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -1177,12 +1176,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @PhaseCurve_str.setter
-    def PhaseCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_PhaseCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(6, value)
 
-    @property
-    def PhaseCurve(self) -> List[TCC_Curve]:
+    PhaseCurve_str = property(_get_PhaseCurve_str, _set_PhaseCurve_str)
+
+    def _get_PhaseCurve(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the phase trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). For overcurrent relay, multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -1190,12 +1189,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(6)
 
-    @PhaseCurve.setter
-    def PhaseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_PhaseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(6, value)
 
-    @property
-    def GroundCurve_str(self) -> List[str]:
+    PhaseCurve = property(_get_PhaseCurve, _set_PhaseCurve)
+
+    def _get_GroundCurve_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
 
@@ -1203,12 +1202,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @GroundCurve_str.setter
-    def GroundCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_GroundCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(7, value)
 
-    @property
-    def GroundCurve(self) -> List[TCC_Curve]:
+    GroundCurve_str = property(_get_GroundCurve_str, _set_GroundCurve_str)
+
+    def _get_GroundCurve(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the ground trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).For overcurrent relay, multiplying the current values in the curve by the "groundtrip" valuw gives the actual current.
 
@@ -1216,12 +1215,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(7)
 
-    @GroundCurve.setter
-    def GroundCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_GroundCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(7, value)
 
-    @property
-    def PhaseTrip(self) -> BatchFloat64ArrayProxy:
+    GroundCurve = property(_get_GroundCurve, _set_GroundCurve)
+
+    def _get_PhaseTrip(self) -> BatchFloat64ArrayProxy:
         """
         Multiplier or actual phase amps for the phase TCC curve.  Defaults to 1.0.
 
@@ -1229,12 +1228,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @PhaseTrip.setter
-    def PhaseTrip(self, value: Union[float, Float64Array]):
+    def _set_PhaseTrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def GroundTrip(self) -> BatchFloat64ArrayProxy:
+    PhaseTrip = property(_get_PhaseTrip, _set_PhaseTrip)
+
+    def _get_GroundTrip(self) -> BatchFloat64ArrayProxy:
         """
         Multiplier or actual ground amps (3I0) for the ground TCC curve.  Defaults to 1.0.
 
@@ -1242,12 +1241,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @GroundTrip.setter
-    def GroundTrip(self, value: Union[float, Float64Array]):
+    def _set_GroundTrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def TDPhase(self) -> BatchFloat64ArrayProxy:
+    GroundTrip = property(_get_GroundTrip, _set_GroundTrip)
+
+    def _get_TDPhase(self) -> BatchFloat64ArrayProxy:
         """
         Time dial for Phase trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -1255,12 +1254,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @TDPhase.setter
-    def TDPhase(self, value: Union[float, Float64Array]):
+    def _set_TDPhase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def TDGround(self) -> BatchFloat64ArrayProxy:
+    TDPhase = property(_get_TDPhase, _set_TDPhase)
+
+    def _get_TDGround(self) -> BatchFloat64ArrayProxy:
         """
         Time dial for Ground trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -1268,12 +1267,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @TDGround.setter
-    def TDGround(self, value: Union[float, Float64Array]):
+    def _set_TDGround(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def PhaseInst(self) -> BatchFloat64ArrayProxy:
+    TDGround = property(_get_TDGround, _set_TDGround)
+
+    def _get_PhaseInst(self) -> BatchFloat64ArrayProxy:
         """
         Actual  amps (Current relay) or kW (reverse power relay) for instantaneous phase trip which is assumed to happen in 0.01 sec + Delay Time. Default is 0.0, which signifies no inst trip. Use this value for specifying the Reverse Power threshold (kW) for reverse power relays.
 
@@ -1281,12 +1280,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @PhaseInst.setter
-    def PhaseInst(self, value: Union[float, Float64Array]):
+    def _set_PhaseInst(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def GroundInst(self) -> BatchFloat64ArrayProxy:
+    PhaseInst = property(_get_PhaseInst, _set_PhaseInst)
+
+    def _get_GroundInst(self) -> BatchFloat64ArrayProxy:
         """
         Actual  amps for instantaneous ground trip which is assumed to happen in 0.01 sec + Delay Time.Default is 0.0, which signifies no inst trip.
 
@@ -1294,12 +1293,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @GroundInst.setter
-    def GroundInst(self, value: Union[float, Float64Array]):
+    def _set_GroundInst(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def Reset(self) -> BatchFloat64ArrayProxy:
+    GroundInst = property(_get_GroundInst, _set_GroundInst)
+
+    def _get_Reset(self) -> BatchFloat64ArrayProxy:
         """
         Reset time in sec for relay.  Default is 15. If this much time passes between the last pickup event, and the relay has not locked out, the operation counter resets.
 
@@ -1307,12 +1306,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @Reset.setter
-    def Reset(self, value: Union[float, Float64Array]):
+    def _set_Reset(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def Shots(self) -> BatchInt32ArrayProxy:
+    Reset = property(_get_Reset, _set_Reset)
+
+    def _get_Shots(self) -> BatchInt32ArrayProxy:
         """
         Number of shots to lockout.  Default is 4. This is one more than the number of reclose intervals.
 
@@ -1320,12 +1319,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 15)
 
-    @Shots.setter
-    def Shots(self, value: Union[int, Int32Array]):
+    def _set_Shots(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(15, value)
 
-    @property
-    def RecloseIntervals(self) -> List[Float64Array]:
+    Shots = property(_get_Shots, _set_Shots)
+
+    def _get_RecloseIntervals(self) -> List[Float64Array]:
         """
         Array of reclose intervals. If none, specify "NONE". Default for overcurrent relay is (0.5, 2.0, 2.0) seconds. Default for a voltage relay is (5.0). In a voltage relay, this is  seconds after restoration of voltage that the reclose occurs. Reverse power relay is one shot to lockout, so this is ignored.  A locked out relay must be closed manually (set action=close).
 
@@ -1336,12 +1335,12 @@ class RelayBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @RecloseIntervals.setter
-    def RecloseIntervals(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_RecloseIntervals(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(16, value)
 
-    @property
-    def Delay(self) -> BatchFloat64ArrayProxy:
+    RecloseIntervals = property(_get_RecloseIntervals, _set_RecloseIntervals)
+
+    def _get_Delay(self) -> BatchFloat64ArrayProxy:
         """
         Trip time delay (sec) for DEFINITE TIME relays. Default is 0.0 for current, voltage and DOC relays. If >0 then this value is used instead of curves. Used by Generic, RevPower, 46 and 47 relays. Defaults to 0.1 s for these relays.
 
@@ -1349,12 +1348,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @Delay.setter
-    def Delay(self, value: Union[float, Float64Array]):
+    def _set_Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def OvervoltCurve_str(self) -> List[str]:
+    Delay = property(_get_Delay, _set_Delay)
+
+    def _get_OvervoltCurve_str(self) -> List[str]:
         """
         TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -1362,12 +1361,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(18)
 
-    @OvervoltCurve_str.setter
-    def OvervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_OvervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(18, value)
 
-    @property
-    def OvervoltCurve(self) -> List[TCC_Curve]:
+    OvervoltCurve_str = property(_get_OvervoltCurve_str, _set_OvervoltCurve_str)
+
+    def _get_OvervoltCurve(self) -> List[TCC_Curve]:
         """
         TCC Curve object to use for overvoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -1375,12 +1374,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(18)
 
-    @OvervoltCurve.setter
-    def OvervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_OvervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(18, value)
 
-    @property
-    def UndervoltCurve_str(self) -> List[str]:
+    OvervoltCurve = property(_get_OvervoltCurve, _set_OvervoltCurve)
+
+    def _get_UndervoltCurve_str(self) -> List[str]:
         """
         TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -1388,12 +1387,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(19)
 
-    @UndervoltCurve_str.setter
-    def UndervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_UndervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(19, value)
 
-    @property
-    def UndervoltCurve(self) -> List[TCC_Curve]:
+    UndervoltCurve_str = property(_get_UndervoltCurve_str, _set_UndervoltCurve_str)
+
+    def _get_UndervoltCurve(self) -> List[TCC_Curve]:
         """
         TCC Curve object to use for undervoltage relay.  Curve is assumed to be defined with per unit voltage values. Voltage base should be defined for the relay. Default is none (ignored).
 
@@ -1401,12 +1400,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(19)
 
-    @UndervoltCurve.setter
-    def UndervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_UndervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(19, value)
 
-    @property
-    def kVBase(self) -> BatchFloat64ArrayProxy:
+    UndervoltCurve = property(_get_UndervoltCurve, _set_UndervoltCurve)
+
+    def _get_kVBase(self) -> BatchFloat64ArrayProxy:
         """
         Voltage base (kV) for the relay. Specify line-line for 3 phase devices); line-neutral for 1-phase devices.  Relay assumes the number of phases of the monitored element.  Default is 0.0, which results in assuming the voltage values in the "TCC" curve are specified in actual line-to-neutral volts.
 
@@ -1414,12 +1413,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @kVBase.setter
-    def kVBase(self, value: Union[float, Float64Array]):
+    def _set_kVBase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def F47pctPickup(self) -> BatchFloat64ArrayProxy:
+    kVBase = property(_get_kVBase, _set_kVBase)
+
+    def _get_F47pctPickup(self) -> BatchFloat64ArrayProxy:
         """
         Percent voltage pickup for 47 relay (Neg seq voltage). Default is 2. Specify also base voltage (kvbase) and delay time value.   
 
@@ -1427,12 +1426,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @F47pctPickup.setter
-    def F47pctPickup(self, value: Union[float, Float64Array]):
+    def _set_F47pctPickup(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def F46BaseAmps(self) -> BatchFloat64ArrayProxy:
+    F47pctPickup = property(_get_F47pctPickup, _set_F47pctPickup)
+
+    def _get_F46BaseAmps(self) -> BatchFloat64ArrayProxy:
         """
         Base current, Amps, for 46 relay (neg seq current).  Used for establishing pickup and per unit I-squared-t.
 
@@ -1440,12 +1439,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    @F46BaseAmps.setter
-    def F46BaseAmps(self, value: Union[float, Float64Array]):
+    def _set_F46BaseAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
-    @property
-    def F46pctPickup(self) -> BatchFloat64ArrayProxy:
+    F46BaseAmps = property(_get_F46BaseAmps, _set_F46BaseAmps)
+
+    def _get_F46pctPickup(self) -> BatchFloat64ArrayProxy:
         """
         Percent pickup current for 46 relay (neg seq current).  Default is 20.0.   When current exceeds this value * BaseAmps, I-squared-t calc starts.
 
@@ -1453,12 +1452,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @F46pctPickup.setter
-    def F46pctPickup(self, value: Union[float, Float64Array]):
+    def _set_F46pctPickup(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def F46isqt(self) -> BatchFloat64ArrayProxy:
+    F46pctPickup = property(_get_F46pctPickup, _set_F46pctPickup)
+
+    def _get_F46isqt(self) -> BatchFloat64ArrayProxy:
         """
         Negative Sequence I-squared-t trip value for 46 relay (neg seq current).  Default is 1 (trips in 1 sec for 1 per unit neg seq current).  Should be 1 to 99.
 
@@ -1466,25 +1465,25 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    @F46isqt.setter
-    def F46isqt(self, value: Union[float, Float64Array]):
+    def _set_F46isqt(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
-    @property
-    def Variable(self) -> List[str]:
+    F46isqt = property(_get_F46isqt, _set_F46isqt)
+
+    def _get_Variable(self) -> List[str]:
         """
         Name of variable in PC Elements being monitored.  Only applies to Generic relay.
 
         DSS property name: `Variable`, DSS property index: 25.
         """
-        return self._get_batch_str_prop(25) 
+        return self._get_batch_str_prop(25)
 
-    @Variable.setter
-    def Variable(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Variable(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(25, value)
 
-    @property
-    def Overtrip(self) -> BatchFloat64ArrayProxy:
+    Variable = property(_get_Variable, _set_Variable)
+
+    def _get_Overtrip(self) -> BatchFloat64ArrayProxy:
         """
         Trip setting (high value) for Generic relay variable.  Relay trips in definite time if value of variable exceeds this value.
 
@@ -1492,12 +1491,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 26)
 
-    @Overtrip.setter
-    def Overtrip(self, value: Union[float, Float64Array]):
+    def _set_Overtrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
-    @property
-    def Undertrip(self) -> BatchFloat64ArrayProxy:
+    Overtrip = property(_get_Overtrip, _set_Overtrip)
+
+    def _get_Undertrip(self) -> BatchFloat64ArrayProxy:
         """
         Trip setting (low value) for Generic relay variable.  Relay trips in definite time if value of variable is less than this value.
 
@@ -1505,12 +1504,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    @Undertrip.setter
-    def Undertrip(self, value: Union[float, Float64Array]):
+    def _set_Undertrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
-    @property
-    def BreakerTime(self) -> BatchFloat64ArrayProxy:
+    Undertrip = property(_get_Undertrip, _set_Undertrip)
+
+    def _get_BreakerTime(self) -> BatchFloat64ArrayProxy:
         """
         Fixed delay time (sec) added to relay time. Default is 0.0. Designed to represent breaker time or some other delay after a trip decision is made.Use Delay property for setting a fixed trip time delay.Added to trip time of current and voltage relays. Could use in combination with inst trip value to obtain a definite time overcurrent relay.
 
@@ -1518,12 +1517,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 28)
 
-    @BreakerTime.setter
-    def BreakerTime(self, value: Union[float, Float64Array]):
+    def _set_BreakerTime(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
-    @property
-    def Action(self) -> BatchInt32ArrayProxy:
+    BreakerTime = property(_get_BreakerTime, _set_BreakerTime)
+
+    def _get_Action(self) -> BatchInt32ArrayProxy:
         """
         DEPRECATED. See "State" property
 
@@ -1531,16 +1530,16 @@ class RelayBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 29)
 
-    @Action.setter
-    def Action(self, value: Union[AnyStr, int, enums.RelayAction, List[AnyStr], List[int], List[enums.RelayAction], Int32Array]):
+    def _set_Action(self, value: Union[AnyStr, int, enums.RelayAction, List[AnyStr], List[int], List[enums.RelayAction], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(29, value)
             return
-    
+
         self._set_batch_int32_array(29, value)
 
-    @property
-    def Action_str(self) -> str:
+    Action = property(_get_Action, _set_Action)
+
+    def _get_Action_str(self) -> str:
         """
         DEPRECATED. See "State" property
 
@@ -1548,12 +1547,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(29)
 
-    @Action_str.setter
-    def Action_str(self, value: AnyStr):
+    def _set_Action_str(self, value: AnyStr):
         self.Action = value
 
-    @property
-    def Z1Mag(self) -> BatchFloat64ArrayProxy:
+    Action_str = property(_get_Action_str, _set_Action_str)
+
+    def _get_Z1Mag(self) -> BatchFloat64ArrayProxy:
         """
         Positive sequence reach impedance in primary ohms for Distance and TD21 functions. Default=0.7
 
@@ -1561,12 +1560,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 30)
 
-    @Z1Mag.setter
-    def Z1Mag(self, value: Union[float, Float64Array]):
+    def _set_Z1Mag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
-    @property
-    def Z1Ang(self) -> BatchFloat64ArrayProxy:
+    Z1Mag = property(_get_Z1Mag, _set_Z1Mag)
+
+    def _get_Z1Ang(self) -> BatchFloat64ArrayProxy:
         """
         Positive sequence reach impedance angle in degrees for Distance and TD21 functions. Default=64.0
 
@@ -1574,12 +1573,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 31)
 
-    @Z1Ang.setter
-    def Z1Ang(self, value: Union[float, Float64Array]):
+    def _set_Z1Ang(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(31, value)
 
-    @property
-    def Z0Mag(self) -> BatchFloat64ArrayProxy:
+    Z1Ang = property(_get_Z1Ang, _set_Z1Ang)
+
+    def _get_Z0Mag(self) -> BatchFloat64ArrayProxy:
         """
         Zero sequence reach impedance in primary ohms for Distance and TD21 functions. Default=2.1
 
@@ -1587,12 +1586,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 32)
 
-    @Z0Mag.setter
-    def Z0Mag(self, value: Union[float, Float64Array]):
+    def _set_Z0Mag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(32, value)
 
-    @property
-    def Z0Ang(self) -> BatchFloat64ArrayProxy:
+    Z0Mag = property(_get_Z0Mag, _set_Z0Mag)
+
+    def _get_Z0Ang(self) -> BatchFloat64ArrayProxy:
         """
         Zero sequence reach impedance angle in degrees for Distance and TD21 functions. Default=68.0
 
@@ -1600,12 +1599,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 33)
 
-    @Z0Ang.setter
-    def Z0Ang(self, value: Union[float, Float64Array]):
+    def _set_Z0Ang(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
-    @property
-    def MPhase(self) -> BatchFloat64ArrayProxy:
+    Z0Ang = property(_get_Z0Ang, _set_Z0Ang)
+
+    def _get_MPhase(self) -> BatchFloat64ArrayProxy:
         """
         Phase reach multiplier in per-unit for Distance and TD21 functions. Default=0.7
 
@@ -1613,12 +1612,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 34)
 
-    @MPhase.setter
-    def MPhase(self, value: Union[float, Float64Array]):
+    def _set_MPhase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
-    @property
-    def MGround(self) -> BatchFloat64ArrayProxy:
+    MPhase = property(_get_MPhase, _set_MPhase)
+
+    def _get_MGround(self) -> BatchFloat64ArrayProxy:
         """
         Ground reach multiplier in per-unit for Distance and TD21 functions. Default=0.7
 
@@ -1626,54 +1625,57 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 35)
 
-    @MGround.setter
-    def MGround(self, value: Union[float, Float64Array]):
+    def _set_MGround(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
-    @property
-    def EventLog(self) -> List[bool]:
+    MGround = property(_get_MGround, _set_MGround)
+
+    def _get_EventLog(self) -> List[bool]:
         """
         {Yes/True | No/False* } Default is No for Relay. Write trips, reclose and reset events to EventLog.
 
         DSS property name: `EventLog`, DSS property index: 36.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(36)
         ]
-    @EventLog.setter
-    def EventLog(self, value: bool):
+
+    def _set_EventLog(self, value: bool):
         self._set_batch_int32_array(36, value)
 
-    @property
-    def DebugTrace(self) -> List[bool]:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_DebugTrace(self) -> List[bool]:
         """
         {Yes/True* | No/False* } Default is No for Relay. Write extra details to Eventlog.
 
         DSS property name: `DebugTrace`, DSS property index: 37.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(37)
         ]
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+
+    def _set_DebugTrace(self, value: bool):
         self._set_batch_int32_array(37, value)
 
-    @property
-    def DistReverse(self) -> List[bool]:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_DistReverse(self) -> List[bool]:
         """
         {Yes/True* | No/False} Default is No; reverse direction for distance and td21 types.
 
         DSS property name: `DistReverse`, DSS property index: 38.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(38)
         ]
-    @DistReverse.setter
-    def DistReverse(self, value: bool):
+
+    def _set_DistReverse(self, value: bool):
         self._set_batch_int32_array(38, value)
 
-    @property
-    def Normal(self) -> BatchInt32ArrayProxy:
+    DistReverse = property(_get_DistReverse, _set_DistReverse)
+
+    def _get_Normal(self) -> BatchInt32ArrayProxy:
         """
         {Open | Closed} Normal state of the relay. The relay reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -1681,16 +1683,16 @@ class RelayBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 39)
 
-    @Normal.setter
-    def Normal(self, value: Union[AnyStr, int, enums.RelayState, List[AnyStr], List[int], List[enums.RelayState], Int32Array]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.RelayState, List[AnyStr], List[int], List[enums.RelayState], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(39, value)
             return
-    
+
         self._set_batch_int32_array(39, value)
 
-    @property
-    def Normal_str(self) -> str:
+    Normal = property(_get_Normal, _set_Normal)
+
+    def _get_Normal_str(self) -> str:
         """
         {Open | Closed} Normal state of the relay. The relay reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -1698,12 +1700,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(39)
 
-    @Normal_str.setter
-    def Normal_str(self, value: AnyStr):
+    def _set_Normal_str(self, value: AnyStr):
         self.Normal = value
 
-    @property
-    def State(self) -> BatchInt32ArrayProxy:
+    Normal_str = property(_get_Normal_str, _set_Normal_str)
+
+    def _get_State(self) -> BatchInt32ArrayProxy:
         """
         {Open | Closed} Actual state of the relay. Upon setting, immediately forces state of the relay, overriding the Relay control. Simulates manual control on relay. Defaults to Closed. "Open" causes the controlled element to open and lock out. "Closed" causes the controlled element to close and the relay to reset to its first operation.
 
@@ -1711,16 +1713,16 @@ class RelayBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 40)
 
-    @State.setter
-    def State(self, value: Union[AnyStr, int, enums.RelayState, List[AnyStr], List[int], List[enums.RelayState], Int32Array]):
+    def _set_State(self, value: Union[AnyStr, int, enums.RelayState, List[AnyStr], List[int], List[enums.RelayState], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(40, value)
             return
-    
+
         self._set_batch_int32_array(40, value)
 
-    @property
-    def State_str(self) -> str:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> str:
         """
         {Open | Closed} Actual state of the relay. Upon setting, immediately forces state of the relay, overriding the Relay control. Simulates manual control on relay. Defaults to Closed. "Open" causes the controlled element to open and lock out. "Closed" causes the controlled element to close and the relay to reset to its first operation.
 
@@ -1728,12 +1730,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(40)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
 
-    @property
-    def DOC_TiltAngleLow(self) -> BatchFloat64ArrayProxy:
+    State_str = property(_get_State_str, _set_State_str)
+
+    def _get_DOC_TiltAngleLow(self) -> BatchFloat64ArrayProxy:
         """
         Tilt angle for low-current trip line. Default is 90.
 
@@ -1741,12 +1743,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 41)
 
-    @DOC_TiltAngleLow.setter
-    def DOC_TiltAngleLow(self, value: Union[float, Float64Array]):
+    def _set_DOC_TiltAngleLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(41, value)
 
-    @property
-    def DOC_TiltAngleHigh(self) -> BatchFloat64ArrayProxy:
+    DOC_TiltAngleLow = property(_get_DOC_TiltAngleLow, _set_DOC_TiltAngleLow)
+
+    def _get_DOC_TiltAngleHigh(self) -> BatchFloat64ArrayProxy:
         """
         Tilt angle for high-current trip line. Default is 90.
 
@@ -1754,12 +1756,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 42)
 
-    @DOC_TiltAngleHigh.setter
-    def DOC_TiltAngleHigh(self, value: Union[float, Float64Array]):
+    def _set_DOC_TiltAngleHigh(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(42, value)
 
-    @property
-    def DOC_TripSettingLow(self) -> BatchFloat64ArrayProxy:
+    DOC_TiltAngleHigh = property(_get_DOC_TiltAngleHigh, _set_DOC_TiltAngleHigh)
+
+    def _get_DOC_TripSettingLow(self) -> BatchFloat64ArrayProxy:
         """
         Resistive trip setting for low-current line. Default is 0.
 
@@ -1767,12 +1769,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 43)
 
-    @DOC_TripSettingLow.setter
-    def DOC_TripSettingLow(self, value: Union[float, Float64Array]):
+    def _set_DOC_TripSettingLow(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(43, value)
 
-    @property
-    def DOC_TripSettingHigh(self) -> BatchFloat64ArrayProxy:
+    DOC_TripSettingLow = property(_get_DOC_TripSettingLow, _set_DOC_TripSettingLow)
+
+    def _get_DOC_TripSettingHigh(self) -> BatchFloat64ArrayProxy:
         """
         Resistive trip setting for high-current line.  Default is -1 (deactivated). To activate, set a positive value. Must be greater than "DOC_TripSettingLow".
 
@@ -1780,12 +1782,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 44)
 
-    @DOC_TripSettingHigh.setter
-    def DOC_TripSettingHigh(self, value: Union[float, Float64Array]):
+    def _set_DOC_TripSettingHigh(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(44, value)
 
-    @property
-    def DOC_TripSettingMag(self) -> BatchFloat64ArrayProxy:
+    DOC_TripSettingHigh = property(_get_DOC_TripSettingHigh, _set_DOC_TripSettingHigh)
+
+    def _get_DOC_TripSettingMag(self) -> BatchFloat64ArrayProxy:
         """
         Trip setting for current magnitude (defines a circle in the relay characteristics). Default is -1 (deactivated). To activate, set a positive value.
 
@@ -1793,12 +1795,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 45)
 
-    @DOC_TripSettingMag.setter
-    def DOC_TripSettingMag(self, value: Union[float, Float64Array]):
+    def _set_DOC_TripSettingMag(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(45, value)
 
-    @property
-    def DOC_DelayInner(self) -> BatchFloat64ArrayProxy:
+    DOC_TripSettingMag = property(_get_DOC_TripSettingMag, _set_DOC_TripSettingMag)
+
+    def _get_DOC_DelayInner(self) -> BatchFloat64ArrayProxy:
         """
         Trip time delay (sec) for operation in inner region for DOC relay, defined when "DOC_TripSettingMag" or "DOC_TripSettingHigh" are activate. Default is -1.0 (deactivated), meaning that the relay characteristic is insensitive in the inner region (no trip). Set to 0 for instantaneous trip and >0 for a definite time delay. If "DOC_PhaseCurveInner" is specified, time delay from curve is utilized instead.
 
@@ -1806,12 +1808,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 46)
 
-    @DOC_DelayInner.setter
-    def DOC_DelayInner(self, value: Union[float, Float64Array]):
+    def _set_DOC_DelayInner(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(46, value)
 
-    @property
-    def DOC_PhaseCurveInner_str(self) -> List[str]:
+    DOC_DelayInner = property(_get_DOC_DelayInner, _set_DOC_DelayInner)
+
+    def _get_DOC_PhaseCurveInner_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
@@ -1819,12 +1821,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_str_prop(47)
 
-    @DOC_PhaseCurveInner_str.setter
-    def DOC_PhaseCurveInner_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DOC_PhaseCurveInner_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(47, value)
 
-    @property
-    def DOC_PhaseCurveInner(self) -> List[TCC_Curve]:
+    DOC_PhaseCurveInner_str = property(_get_DOC_PhaseCurveInner_str, _set_DOC_PhaseCurveInner_str)
+
+    def _get_DOC_PhaseCurveInner(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the phase trip for operation in inner region for DOC relay. Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "DOC_PhaseTripInner" value gives the actual current.
 
@@ -1832,12 +1834,12 @@ class RelayBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(47)
 
-    @DOC_PhaseCurveInner.setter
-    def DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(47, value)
 
-    @property
-    def DOC_PhaseTripInner(self) -> BatchFloat64ArrayProxy:
+    DOC_PhaseCurveInner = property(_get_DOC_PhaseCurveInner, _set_DOC_PhaseCurveInner)
+
+    def _get_DOC_PhaseTripInner(self) -> BatchFloat64ArrayProxy:
         """
         Multiplier for the "DOC_PhaseCurveInner" TCC curve.  Defaults to 1.0.
 
@@ -1845,12 +1847,12 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 48)
 
-    @DOC_PhaseTripInner.setter
-    def DOC_PhaseTripInner(self, value: Union[float, Float64Array]):
+    def _set_DOC_PhaseTripInner(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(48, value)
 
-    @property
-    def DOC_TDPhaseInner(self) -> BatchFloat64ArrayProxy:
+    DOC_PhaseTripInner = property(_get_DOC_PhaseTripInner, _set_DOC_PhaseTripInner)
+
+    def _get_DOC_TDPhaseInner(self) -> BatchFloat64ArrayProxy:
         """
         Time dial for "DOC_PhaseCurveInner" TCC curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -1858,26 +1860,27 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 49)
 
-    @DOC_TDPhaseInner.setter
-    def DOC_TDPhaseInner(self, value: Union[float, Float64Array]):
+    def _set_DOC_TDPhaseInner(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(49, value)
 
-    @property
-    def DOC_P1Blocking(self) -> List[bool]:
+    DOC_TDPhaseInner = property(_get_DOC_TDPhaseInner, _set_DOC_TDPhaseInner)
+
+    def _get_DOC_P1Blocking(self) -> List[bool]:
         """
         {Yes/True* | No/False} Blocking element that impedes relay from tripping if balanced net three-phase active power is in the forward direction (i.e., flowing into the monitored terminal). For a delayed trip, if at any given time the reverse power flow condition stops, the tripping is reset. Default=True.
 
         DSS property name: `DOC_P1Blocking`, DSS property index: 50.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(50)
         ]
-    @DOC_P1Blocking.setter
-    def DOC_P1Blocking(self, value: bool):
+
+    def _set_DOC_P1Blocking(self, value: bool):
         self._set_batch_int32_array(50, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    DOC_P1Blocking = property(_get_DOC_P1Blocking, _set_DOC_P1Blocking)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -1885,23 +1888,25 @@ class RelayBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 51)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(51, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 52.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(52)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(52, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1974,7 +1979,7 @@ class IRelay(IDSSObj,RelayBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Relay, RelayBatch)
         RelayBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Relay:

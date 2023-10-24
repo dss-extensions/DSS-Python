@@ -45,8 +45,7 @@ class LineGeometry(DSSObj):
         'like': 20,
     }
 
-    @property
-    def NConds(self) -> int:
+    def _get_NConds(self) -> int:
         """
         Number of conductors in this geometry. Default is 3. Triggers memory allocations. Define first!
 
@@ -54,12 +53,12 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @NConds.setter
-    def NConds(self, value: int):
+    def _set_NConds(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def NPhases(self) -> int:
+    NConds = property(_get_NConds, _set_NConds)
+
+    def _get_NPhases(self) -> int:
         """
         Number of phases. Default =3; All other conductors are considered neutrals and might be reduced out.
 
@@ -67,12 +66,12 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @NPhases.setter
-    def NPhases(self, value: int):
+    def _set_NPhases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def Wire_str(self) -> List[str]:
+    NPhases = property(_get_NPhases, _set_NPhases)
+
+    def _get_Wire_str(self) -> List[str]:
         """
         Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
         Specifies use of Overhead Line parameter calculation,
@@ -82,12 +81,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
 
-    @Wire_str.setter
-    def Wire_str(self, value: List[AnyStr]):
+    def _set_Wire_str(self, value: List[AnyStr]):
         self._set_string_array_o(4, value)
-    
-    @property
-    def Wire(self) -> List[WireData]:
+
+    Wire_str = property(_get_Wire_str, _set_Wire_str)
+
+    def _get_Wire(self) -> List[WireData]:
         """
         Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
         Specifies use of Overhead Line parameter calculation,
@@ -97,16 +96,16 @@ class LineGeometry(DSSObj):
         """
         return self._get_obj_array(4, WireData)
 
-    @Wire.setter
-    def Wire(self, value: List[Union[AnyStr, WireData]]):
+    def _set_Wire(self, value: List[Union[AnyStr, WireData]]):
         if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
             self._set_string_array_o(4, value)
             return
 
         self._set_obj_array(4, value)
 
-    @property
-    def X(self) -> Float64Array:
+    Wire = property(_get_Wire, _set_Wire)
+
+    def _get_X(self) -> Float64Array:
         """
         x coordinate.
 
@@ -114,12 +113,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 5)
 
-    @X.setter
-    def X(self, value: Float64Array):
+    def _set_X(self, value: Float64Array):
         self._set_float64_array_o(5, value)
 
-    @property
-    def H(self) -> Float64Array:
+    X = property(_get_X, _set_X)
+
+    def _get_H(self) -> Float64Array:
         """
         Height of conductor.
 
@@ -127,12 +126,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 6)
 
-    @H.setter
-    def H(self, value: Float64Array):
+    def _set_H(self, value: Float64Array):
         self._set_float64_array_o(6, value)
 
-    @property
-    def Units(self) -> enums.LengthUnit:
+    H = property(_get_H, _set_H)
+
+    def _get_Units(self) -> enums.LengthUnit:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
@@ -140,15 +139,15 @@ class LineGeometry(DSSObj):
         """
         return enums.LengthUnit(self._lib.Obj_GetInt32(self._ptr, 7))
 
-    @Units.setter
-    def Units(self, value: Union[AnyStr, int, enums.LengthUnit]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(7, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
-    @property
-    def Units_str(self) -> str:
+    Units = property(_get_Units, _set_Units)
+
+    def _get_Units_str(self) -> str:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
@@ -156,12 +155,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_prop_string(7)
 
-    @Units_str.setter
-    def Units_str(self, value: AnyStr):
+    def _set_Units_str(self, value: AnyStr):
         self.Units = value
 
-    @property
-    def NormAmps(self) -> float:
+    Units_str = property(_get_Units_str, _set_Units_str)
+
+    def _get_NormAmps(self) -> float:
         """
         Normal ampacity, amperes for the line. Defaults to first conductor if not specified.
 
@@ -169,12 +168,12 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @NormAmps.setter
-    def NormAmps(self, value: float):
+    def _set_NormAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def EmergAmps(self) -> float:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> float:
         """
         Emergency ampacity, amperes. Defaults to first conductor if not specified.
 
@@ -182,12 +181,12 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: float):
+    def _set_EmergAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def Reduce(self) -> bool:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_Reduce(self) -> bool:
         """
         {Yes | No} Default = no. Reduce to Nphases (Kron Reduction). Reduce out neutrals.
 
@@ -195,12 +194,12 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10) != 0
 
-    @Reduce.setter
-    def Reduce(self, value: bool):
+    def _set_Reduce(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 10, value)
 
-    @property
-    def Spacing_str(self) -> str:
+    Reduce = property(_get_Reduce, _set_Reduce)
+
+    def _get_Spacing_str(self) -> str:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Alternative to x, h, and units. MUST BE PREVIOUSLY DEFINED.
@@ -211,12 +210,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_prop_string(11)
 
-    @Spacing_str.setter
-    def Spacing_str(self, value: AnyStr):
+    def _set_Spacing_str(self, value: AnyStr):
         self._set_string_o(11, value)
 
-    @property
-    def Spacing(self) -> LineSpacing:
+    Spacing_str = property(_get_Spacing_str, _set_Spacing_str)
+
+    def _get_Spacing(self) -> LineSpacing:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Alternative to x, h, and units. MUST BE PREVIOUSLY DEFINED.
@@ -227,16 +226,16 @@ class LineGeometry(DSSObj):
         """
         return self._get_obj(11, LineSpacing)
 
-    @Spacing.setter
-    def Spacing(self, value: Union[AnyStr, LineSpacing]):
+    def _set_Spacing(self, value: Union[AnyStr, LineSpacing]):
         if isinstance(value, DSSObj):
             self._set_obj(11, value)
             return
 
         self._set_string_o(11, value)
 
-    @property
-    def Seasons(self) -> int:
+    Spacing = property(_get_Spacing, _set_Spacing)
+
+    def _get_Seasons(self) -> int:
         """
         Defines the number of ratings to be defined for the wire, to be used only when defining seasonal ratings using the "Ratings" property. Defaults to first conductor if not specified.
 
@@ -244,12 +243,12 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 17)
 
-    @Seasons.setter
-    def Seasons(self, value: int):
+    def _set_Seasons(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
-    @property
-    def Ratings(self) -> Float64Array:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_Ratings(self) -> Float64Array:
         """
         An array of ratings to be used when the seasonal ratings flag is True. It can be used to insert
         multiple ratings to change during a QSTS simulation to evaluate different ratings in lines.Defaults to first conductor if not specified.
@@ -258,12 +257,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 18)
 
-    @Ratings.setter
-    def Ratings(self, value: Float64Array):
+    def _set_Ratings(self, value: Float64Array):
         self._set_float64_array_o(18, value)
 
-    @property
-    def LineType(self) -> enums.LineType:
+    Ratings = property(_get_Ratings, _set_Ratings)
+
+    def _get_LineType(self) -> enums.LineType:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -274,15 +273,15 @@ class LineGeometry(DSSObj):
         """
         return enums.LineType(self._lib.Obj_GetInt32(self._ptr, 19))
 
-    @LineType.setter
-    def LineType(self, value: Union[AnyStr, int, enums.LineType]):
+    def _set_LineType(self, value: Union[AnyStr, int, enums.LineType]):
         if not isinstance(value, int):
             self._set_string_o(19, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 19, value)
 
-    @property
-    def LineType_str(self) -> str:
+    LineType = property(_get_LineType, _set_LineType)
+
+    def _get_LineType_str(self) -> str:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -293,9 +292,10 @@ class LineGeometry(DSSObj):
         """
         return self._get_prop_string(19)
 
-    @LineType_str.setter
-    def LineType_str(self, value: AnyStr):
+    def _set_LineType_str(self, value: AnyStr):
         self.LineType = value
+
+    LineType_str = property(_get_LineType_str, _set_LineType_str)
 
     def Like(self, value: AnyStr):
         """
@@ -330,8 +330,7 @@ class LineGeometryBatch(DSSBatch):
     _cls_idx = 13
 
 
-    @property
-    def NConds(self) -> BatchInt32ArrayProxy:
+    def _get_NConds(self) -> BatchInt32ArrayProxy:
         """
         Number of conductors in this geometry. Default is 3. Triggers memory allocations. Define first!
 
@@ -339,12 +338,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @NConds.setter
-    def NConds(self, value: Union[int, Int32Array]):
+    def _set_NConds(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def NPhases(self) -> BatchInt32ArrayProxy:
+    NConds = property(_get_NConds, _set_NConds)
+
+    def _get_NPhases(self) -> BatchInt32ArrayProxy:
         """
         Number of phases. Default =3; All other conductors are considered neutrals and might be reduced out.
 
@@ -352,12 +351,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @NPhases.setter
-    def NPhases(self, value: Union[int, Int32Array]):
+    def _set_NPhases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def Wire_str(self) -> List[List[str]]:
+    NPhases = property(_get_NPhases, _set_NPhases)
+
+    def _get_Wire_str(self) -> List[List[str]]:
         """
         Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
         Specifies use of Overhead Line parameter calculation,
@@ -367,12 +366,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_string_ll(4)
 
-    @Wire_str.setter
-    def Wire_str(self, value: List[AnyStr]):
+    def _set_Wire_str(self, value: List[AnyStr]):
         self._set_batch_stringlist_prop(4, value)
 
-    @property
-    def Wire(self) -> List[List[WireData]]:
+    Wire_str = property(_get_Wire_str, _set_Wire_str)
+
+    def _get_Wire(self) -> List[List[WireData]]:
         """
         Code from WireData. MUST BE PREVIOUSLY DEFINED. no default.
         Specifies use of Overhead Line parameter calculation,
@@ -382,16 +381,16 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_obj_ll(4, WireData)
 
-    @Wire.setter
-    def Wire(self, value: Union[List[AnyStr], List[WireData]]):
+    def _set_Wire(self, value: Union[List[AnyStr], List[WireData]]):
         if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
             self._set_batch_stringlist_prop(4, value)
             return
 
         self._set_batch_objlist_prop(4, value)
 
-    @property
-    def X(self) -> List[Float64Array]:
+    Wire = property(_get_Wire, _set_Wire)
+
+    def _get_X(self) -> List[Float64Array]:
         """
         x coordinate.
 
@@ -402,12 +401,12 @@ class LineGeometryBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @X.setter
-    def X(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_X(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(5, value)
 
-    @property
-    def H(self) -> List[Float64Array]:
+    X = property(_get_X, _set_X)
+
+    def _get_H(self) -> List[Float64Array]:
         """
         Height of conductor.
 
@@ -418,12 +417,12 @@ class LineGeometryBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @H.setter
-    def H(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_H(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(6, value)
 
-    @property
-    def Units(self) -> BatchInt32ArrayProxy:
+    H = property(_get_H, _set_H)
+
+    def _get_Units(self) -> BatchInt32ArrayProxy:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
@@ -431,16 +430,16 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 7)
 
-    @Units.setter
-    def Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(7, value)
             return
-    
+
         self._set_batch_int32_array(7, value)
 
-    @property
-    def Units_str(self) -> str:
+    Units = property(_get_Units, _set_Units)
+
+    def _get_Units_str(self) -> str:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
@@ -448,12 +447,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @Units_str.setter
-    def Units_str(self, value: AnyStr):
+    def _set_Units_str(self, value: AnyStr):
         self.Units = value
 
-    @property
-    def NormAmps(self) -> BatchFloat64ArrayProxy:
+    Units_str = property(_get_Units_str, _set_Units_str)
+
+    def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
         Normal ampacity, amperes for the line. Defaults to first conductor if not specified.
 
@@ -461,12 +460,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @NormAmps.setter
-    def NormAmps(self, value: Union[float, Float64Array]):
+    def _set_NormAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def EmergAmps(self) -> BatchFloat64ArrayProxy:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
         Emergency ampacity, amperes. Defaults to first conductor if not specified.
 
@@ -474,26 +473,27 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: Union[float, Float64Array]):
+    def _set_EmergAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def Reduce(self) -> List[bool]:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_Reduce(self) -> List[bool]:
         """
         {Yes | No} Default = no. Reduce to Nphases (Kron Reduction). Reduce out neutrals.
 
         DSS property name: `Reduce`, DSS property index: 10.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(10)
         ]
-    @Reduce.setter
-    def Reduce(self, value: bool):
+
+    def _set_Reduce(self, value: bool):
         self._set_batch_int32_array(10, value)
 
-    @property
-    def Spacing_str(self) -> List[str]:
+    Reduce = property(_get_Reduce, _set_Reduce)
+
+    def _get_Spacing_str(self) -> List[str]:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Alternative to x, h, and units. MUST BE PREVIOUSLY DEFINED.
@@ -504,12 +504,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @Spacing_str.setter
-    def Spacing_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spacing_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(11, value)
 
-    @property
-    def Spacing(self) -> List[LineSpacing]:
+    Spacing_str = property(_get_Spacing_str, _set_Spacing_str)
+
+    def _get_Spacing(self) -> List[LineSpacing]:
         """
         Reference to a LineSpacing for use in a line constants calculation.
         Alternative to x, h, and units. MUST BE PREVIOUSLY DEFINED.
@@ -520,12 +520,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    @Spacing.setter
-    def Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
+    def _set_Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
         self._set_batch_obj_prop(11, value)
 
-    @property
-    def Seasons(self) -> BatchInt32ArrayProxy:
+    Spacing = property(_get_Spacing, _set_Spacing)
+
+    def _get_Seasons(self) -> BatchInt32ArrayProxy:
         """
         Defines the number of ratings to be defined for the wire, to be used only when defining seasonal ratings using the "Ratings" property. Defaults to first conductor if not specified.
 
@@ -533,12 +533,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 17)
 
-    @Seasons.setter
-    def Seasons(self, value: Union[int, Int32Array]):
+    def _set_Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(17, value)
 
-    @property
-    def Ratings(self) -> List[Float64Array]:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_Ratings(self) -> List[Float64Array]:
         """
         An array of ratings to be used when the seasonal ratings flag is True. It can be used to insert
         multiple ratings to change during a QSTS simulation to evaluate different ratings in lines.Defaults to first conductor if not specified.
@@ -550,12 +550,12 @@ class LineGeometryBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Ratings.setter
-    def Ratings(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(18, value)
 
-    @property
-    def LineType(self) -> BatchInt32ArrayProxy:
+    Ratings = property(_get_Ratings, _set_Ratings)
+
+    def _get_LineType(self) -> BatchInt32ArrayProxy:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -566,16 +566,16 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 19)
 
-    @LineType.setter
-    def LineType(self, value: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array]):
+    def _set_LineType(self, value: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(19, value)
             return
-    
+
         self._set_batch_int32_array(19, value)
 
-    @property
-    def LineType_str(self) -> str:
+    LineType = property(_get_LineType, _set_LineType)
+
+    def _get_LineType_str(self) -> str:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -586,9 +586,10 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_str_prop(19)
 
-    @LineType_str.setter
-    def LineType_str(self, value: AnyStr):
+    def _set_LineType_str(self, value: AnyStr):
         self.LineType = value
+
+    LineType_str = property(_get_LineType_str, _set_LineType_str)
 
     def Like(self, value: AnyStr):
         """
@@ -622,7 +623,7 @@ class ILineGeometry(IDSSObj,LineGeometryBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, LineGeometry, LineGeometryBatch)
         LineGeometryBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> LineGeometry:

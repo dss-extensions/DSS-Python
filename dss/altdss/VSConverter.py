@@ -48,8 +48,7 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         'like': 23,
     }
 
-    @property
-    def Phases(self) -> int:
+    def _get_Phases(self) -> int:
         """
         Number of AC plus DC conductors. Default is 4. AC phases numbered before DC conductors.
 
@@ -57,12 +56,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def Bus1(self) -> str:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> str:
         """
         Name of converter bus, containing both AC and DC conductors. Bus2 is always ground.
 
@@ -70,12 +69,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(2)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def kVAC(self) -> float:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kVAC(self) -> float:
         """
         Nominal AC line-neutral voltage in kV. Must be specified > 0.
 
@@ -83,12 +82,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @kVAC.setter
-    def kVAC(self, value: float):
+    def _set_kVAC(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def kVDC(self) -> float:
+    kVAC = property(_get_kVAC, _set_kVAC)
+
+    def _get_kVDC(self) -> float:
         """
         Nominal DC voltage in kV. Must be specified > 0.
 
@@ -96,12 +95,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @kVDC.setter
-    def kVDC(self, value: float):
+    def _set_kVDC(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def kW(self) -> float:
+    kVDC = property(_get_kVDC, _set_kVDC)
+
+    def _get_kW(self) -> float:
         """
         Nominal converter power in kW. Must be specified > 0.
 
@@ -109,12 +108,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @kW.setter
-    def kW(self, value: float):
+    def _set_kW(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def NDC(self) -> int:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_NDC(self) -> int:
         """
         Number of DC conductors. Default is 1. DC conductors numbered after AC phases.
 
@@ -122,12 +121,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 6)
 
-    @NDC.setter
-    def NDC(self, value: int):
+    def _set_NDC(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def RAC(self) -> float:
+    NDC = property(_get_NDC, _set_NDC)
+
+    def _get_RAC(self) -> float:
         """
         AC resistance (ohms) for the converter transformer, plus any series reactors. Default is 0.
         Must be 0 for Vac control mode.
@@ -136,12 +135,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @RAC.setter
-    def RAC(self, value: float):
+    def _set_RAC(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def XAC(self) -> float:
+    RAC = property(_get_RAC, _set_RAC)
+
+    def _get_XAC(self) -> float:
         """
         AC reactance (ohms) for the converter transformer, plus any series reactors. Default is 0.
         Must be 0 for Vac control mode. Must be >0 for PacVac, PacQac or VacVdc control mode.
@@ -150,12 +149,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @XAC.setter
-    def XAC(self, value: float):
+    def _set_XAC(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def M0(self) -> float:
+    XAC = property(_get_XAC, _set_XAC)
+
+    def _get_M0(self) -> float:
         """
         Fixed or initial value of the modulation index. Default is 0.5.
 
@@ -163,12 +162,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @M0.setter
-    def M0(self, value: float):
+    def _set_M0(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def d0(self) -> float:
+    M0 = property(_get_M0, _set_M0)
+
+    def _get_d0(self) -> float:
         """
         Fixed or initial value of the power angle in degrees. Default is 0.
 
@@ -176,12 +175,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @d0.setter
-    def d0(self, value: float):
+    def _set_d0(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def MMin(self) -> float:
+    d0 = property(_get_d0, _set_d0)
+
+    def _get_MMin(self) -> float:
         """
         Minimum value of modulation index. Default is 0.1.
 
@@ -189,12 +188,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @MMin.setter
-    def MMin(self, value: float):
+    def _set_MMin(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def MMax(self) -> float:
+    MMin = property(_get_MMin, _set_MMin)
+
+    def _get_MMax(self) -> float:
         """
         Maximum value of modulation index. Default is 0.9.
 
@@ -202,12 +201,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @MMax.setter
-    def MMax(self, value: float):
+    def _set_MMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def IACMax(self) -> float:
+    MMax = property(_get_MMax, _set_MMax)
+
+    def _get_IACMax(self) -> float:
         """
         Maximum value of AC line current, per-unit of nominal. Default is 2.
 
@@ -215,12 +214,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @IACMax.setter
-    def IACMax(self, value: float):
+    def _set_IACMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def IDCMax(self) -> float:
+    IACMax = property(_get_IACMax, _set_IACMax)
+
+    def _get_IDCMax(self) -> float:
         """
         Maximum value of DC current, per-unit of nominal. Default is 2.
 
@@ -228,12 +227,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @IDCMax.setter
-    def IDCMax(self, value: float):
+    def _set_IDCMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def VACRef(self) -> float:
+    IDCMax = property(_get_IDCMax, _set_IDCMax)
+
+    def _get_VACRef(self) -> float:
         """
         Reference AC line-to-neutral voltage, RMS Volts. Default is 0.
         Applies to PacVac and VdcVac control modes, influencing m.
@@ -242,12 +241,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @VACRef.setter
-    def VACRef(self, value: float):
+    def _set_VACRef(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def PACRef(self) -> float:
+    VACRef = property(_get_VACRef, _set_VACRef)
+
+    def _get_PACRef(self) -> float:
         """
         Reference total AC real power, Watts. Default is 0.
         Applies to PacVac and PacQac control modes, influencing d.
@@ -256,12 +255,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @PACRef.setter
-    def PACRef(self, value: float):
+    def _set_PACRef(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def QACRef(self) -> float:
+    PACRef = property(_get_PACRef, _set_PACRef)
+
+    def _get_QACRef(self) -> float:
         """
         Reference total AC reactive power, Vars. Default is 0.
         Applies to PacQac and VdcQac control modes, influencing m.
@@ -270,12 +269,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @QACRef.setter
-    def QACRef(self, value: float):
+    def _set_QACRef(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def VDCRef(self) -> float:
+    QACRef = property(_get_QACRef, _set_QACRef)
+
+    def _get_VDCRef(self) -> float:
         """
         Reference DC voltage, Volts. Default is 0.
         Applies to VdcVac control mode, influencing d.
@@ -284,12 +283,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    @VDCRef.setter
-    def VDCRef(self, value: float):
+    def _set_VDCRef(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
-    @property
-    def VSCMode(self) -> enums.VSConverterControlMode:
+    VDCRef = property(_get_VDCRef, _set_VDCRef)
+
+    def _get_VSCMode(self) -> enums.VSConverterControlMode:
         """
         Control Mode (Fixed|PacVac|PacQac|VdcVac|VdcQac). Default is Fixed.
 
@@ -297,15 +296,15 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.VSConverterControlMode(self._lib.Obj_GetInt32(self._ptr, 19))
 
-    @VSCMode.setter
-    def VSCMode(self, value: Union[AnyStr, int, enums.VSConverterControlMode]):
+    def _set_VSCMode(self, value: Union[AnyStr, int, enums.VSConverterControlMode]):
         if not isinstance(value, int):
             self._set_string_o(19, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 19, value)
 
-    @property
-    def VSCMode_str(self) -> str:
+    VSCMode = property(_get_VSCMode, _set_VSCMode)
+
+    def _get_VSCMode_str(self) -> str:
         """
         Control Mode (Fixed|PacVac|PacQac|VdcVac|VdcQac). Default is Fixed.
 
@@ -313,12 +312,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(19)
 
-    @VSCMode_str.setter
-    def VSCMode_str(self, value: AnyStr):
+    def _set_VSCMode_str(self, value: AnyStr):
         self.VSCMode = value
 
-    @property
-    def Spectrum_str(self) -> str:
+    VSCMode_str = property(_get_VSCMode_str, _set_VSCMode_str)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Name of harmonic spectrum for this device.
 
@@ -326,12 +325,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(20)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(20, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Name of harmonic spectrum for this device.
 
@@ -339,16 +338,16 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(20, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(20, value)
             return
 
         self._set_string_o(20, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -356,12 +355,12 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -369,9 +368,10 @@ class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 22) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 22, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -415,8 +415,7 @@ class VSConverterBatch(DSSBatch):
     _cls_idx = 46
 
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of AC plus DC conductors. Default is 4. AC phases numbered before DC conductors.
 
@@ -424,25 +423,25 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def Bus1(self) -> List[str]:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> List[str]:
         """
         Name of converter bus, containing both AC and DC conductors. Bus2 is always ground.
 
         DSS property name: `Bus1`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def kVAC(self) -> BatchFloat64ArrayProxy:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kVAC(self) -> BatchFloat64ArrayProxy:
         """
         Nominal AC line-neutral voltage in kV. Must be specified > 0.
 
@@ -450,12 +449,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @kVAC.setter
-    def kVAC(self, value: Union[float, Float64Array]):
+    def _set_kVAC(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def kVDC(self) -> BatchFloat64ArrayProxy:
+    kVAC = property(_get_kVAC, _set_kVAC)
+
+    def _get_kVDC(self) -> BatchFloat64ArrayProxy:
         """
         Nominal DC voltage in kV. Must be specified > 0.
 
@@ -463,12 +462,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @kVDC.setter
-    def kVDC(self, value: Union[float, Float64Array]):
+    def _set_kVDC(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def kW(self) -> BatchFloat64ArrayProxy:
+    kVDC = property(_get_kVDC, _set_kVDC)
+
+    def _get_kW(self) -> BatchFloat64ArrayProxy:
         """
         Nominal converter power in kW. Must be specified > 0.
 
@@ -476,12 +475,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @kW.setter
-    def kW(self, value: Union[float, Float64Array]):
+    def _set_kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def NDC(self) -> BatchInt32ArrayProxy:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_NDC(self) -> BatchInt32ArrayProxy:
         """
         Number of DC conductors. Default is 1. DC conductors numbered after AC phases.
 
@@ -489,12 +488,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @NDC.setter
-    def NDC(self, value: Union[int, Int32Array]):
+    def _set_NDC(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(6, value)
 
-    @property
-    def RAC(self) -> BatchFloat64ArrayProxy:
+    NDC = property(_get_NDC, _set_NDC)
+
+    def _get_RAC(self) -> BatchFloat64ArrayProxy:
         """
         AC resistance (ohms) for the converter transformer, plus any series reactors. Default is 0.
         Must be 0 for Vac control mode.
@@ -503,12 +502,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @RAC.setter
-    def RAC(self, value: Union[float, Float64Array]):
+    def _set_RAC(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def XAC(self) -> BatchFloat64ArrayProxy:
+    RAC = property(_get_RAC, _set_RAC)
+
+    def _get_XAC(self) -> BatchFloat64ArrayProxy:
         """
         AC reactance (ohms) for the converter transformer, plus any series reactors. Default is 0.
         Must be 0 for Vac control mode. Must be >0 for PacVac, PacQac or VacVdc control mode.
@@ -517,12 +516,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @XAC.setter
-    def XAC(self, value: Union[float, Float64Array]):
+    def _set_XAC(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def M0(self) -> BatchFloat64ArrayProxy:
+    XAC = property(_get_XAC, _set_XAC)
+
+    def _get_M0(self) -> BatchFloat64ArrayProxy:
         """
         Fixed or initial value of the modulation index. Default is 0.5.
 
@@ -530,12 +529,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @M0.setter
-    def M0(self, value: Union[float, Float64Array]):
+    def _set_M0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def d0(self) -> BatchFloat64ArrayProxy:
+    M0 = property(_get_M0, _set_M0)
+
+    def _get_d0(self) -> BatchFloat64ArrayProxy:
         """
         Fixed or initial value of the power angle in degrees. Default is 0.
 
@@ -543,12 +542,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @d0.setter
-    def d0(self, value: Union[float, Float64Array]):
+    def _set_d0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def MMin(self) -> BatchFloat64ArrayProxy:
+    d0 = property(_get_d0, _set_d0)
+
+    def _get_MMin(self) -> BatchFloat64ArrayProxy:
         """
         Minimum value of modulation index. Default is 0.1.
 
@@ -556,12 +555,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @MMin.setter
-    def MMin(self, value: Union[float, Float64Array]):
+    def _set_MMin(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def MMax(self) -> BatchFloat64ArrayProxy:
+    MMin = property(_get_MMin, _set_MMin)
+
+    def _get_MMax(self) -> BatchFloat64ArrayProxy:
         """
         Maximum value of modulation index. Default is 0.9.
 
@@ -569,12 +568,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @MMax.setter
-    def MMax(self, value: Union[float, Float64Array]):
+    def _set_MMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def IACMax(self) -> BatchFloat64ArrayProxy:
+    MMax = property(_get_MMax, _set_MMax)
+
+    def _get_IACMax(self) -> BatchFloat64ArrayProxy:
         """
         Maximum value of AC line current, per-unit of nominal. Default is 2.
 
@@ -582,12 +581,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @IACMax.setter
-    def IACMax(self, value: Union[float, Float64Array]):
+    def _set_IACMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def IDCMax(self) -> BatchFloat64ArrayProxy:
+    IACMax = property(_get_IACMax, _set_IACMax)
+
+    def _get_IDCMax(self) -> BatchFloat64ArrayProxy:
         """
         Maximum value of DC current, per-unit of nominal. Default is 2.
 
@@ -595,12 +594,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @IDCMax.setter
-    def IDCMax(self, value: Union[float, Float64Array]):
+    def _set_IDCMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def VACRef(self) -> BatchFloat64ArrayProxy:
+    IDCMax = property(_get_IDCMax, _set_IDCMax)
+
+    def _get_VACRef(self) -> BatchFloat64ArrayProxy:
         """
         Reference AC line-to-neutral voltage, RMS Volts. Default is 0.
         Applies to PacVac and VdcVac control modes, influencing m.
@@ -609,12 +608,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @VACRef.setter
-    def VACRef(self, value: Union[float, Float64Array]):
+    def _set_VACRef(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def PACRef(self) -> BatchFloat64ArrayProxy:
+    VACRef = property(_get_VACRef, _set_VACRef)
+
+    def _get_PACRef(self) -> BatchFloat64ArrayProxy:
         """
         Reference total AC real power, Watts. Default is 0.
         Applies to PacVac and PacQac control modes, influencing d.
@@ -623,12 +622,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @PACRef.setter
-    def PACRef(self, value: Union[float, Float64Array]):
+    def _set_PACRef(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def QACRef(self) -> BatchFloat64ArrayProxy:
+    PACRef = property(_get_PACRef, _set_PACRef)
+
+    def _get_QACRef(self) -> BatchFloat64ArrayProxy:
         """
         Reference total AC reactive power, Vars. Default is 0.
         Applies to PacQac and VdcQac control modes, influencing m.
@@ -637,12 +636,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @QACRef.setter
-    def QACRef(self, value: Union[float, Float64Array]):
+    def _set_QACRef(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def VDCRef(self) -> BatchFloat64ArrayProxy:
+    QACRef = property(_get_QACRef, _set_QACRef)
+
+    def _get_VDCRef(self) -> BatchFloat64ArrayProxy:
         """
         Reference DC voltage, Volts. Default is 0.
         Applies to VdcVac control mode, influencing d.
@@ -651,12 +650,12 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    @VDCRef.setter
-    def VDCRef(self, value: Union[float, Float64Array]):
+    def _set_VDCRef(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
-    @property
-    def VSCMode(self) -> BatchInt32ArrayProxy:
+    VDCRef = property(_get_VDCRef, _set_VDCRef)
+
+    def _get_VSCMode(self) -> BatchInt32ArrayProxy:
         """
         Control Mode (Fixed|PacVac|PacQac|VdcVac|VdcQac). Default is Fixed.
 
@@ -664,16 +663,16 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 19)
 
-    @VSCMode.setter
-    def VSCMode(self, value: Union[AnyStr, int, enums.VSConverterControlMode, List[AnyStr], List[int], List[enums.VSConverterControlMode], Int32Array]):
+    def _set_VSCMode(self, value: Union[AnyStr, int, enums.VSConverterControlMode, List[AnyStr], List[int], List[enums.VSConverterControlMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(19, value)
             return
-    
+
         self._set_batch_int32_array(19, value)
 
-    @property
-    def VSCMode_str(self) -> str:
+    VSCMode = property(_get_VSCMode, _set_VSCMode)
+
+    def _get_VSCMode_str(self) -> str:
         """
         Control Mode (Fixed|PacVac|PacQac|VdcVac|VdcQac). Default is Fixed.
 
@@ -681,12 +680,12 @@ class VSConverterBatch(DSSBatch):
         """
         return self._get_batch_str_prop(19)
 
-    @VSCMode_str.setter
-    def VSCMode_str(self, value: AnyStr):
+    def _set_VSCMode_str(self, value: AnyStr):
         self.VSCMode = value
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    VSCMode_str = property(_get_VSCMode_str, _set_VSCMode_str)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Name of harmonic spectrum for this device.
 
@@ -694,12 +693,12 @@ class VSConverterBatch(DSSBatch):
         """
         return self._get_batch_str_prop(20)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(20, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic spectrum for this device.
 
@@ -707,12 +706,12 @@ class VSConverterBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(20)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(20, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -720,23 +719,25 @@ class VSConverterBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 22.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(22)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(22, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -779,7 +780,7 @@ class IVSConverter(IDSSObj,VSConverterBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, VSConverter, VSConverterBatch)
         VSConverterBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> VSConverter:

@@ -110,8 +110,7 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         'like': 65,
     }
 
-    @property
-    def Phases(self) -> int:
+    def _get_Phases(self) -> int:
         """
         Number of Phases, this Storage element.  Power is evenly divided among phases.
 
@@ -119,12 +118,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def Bus1(self) -> str:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> str:
         """
         Bus to which the Storage element is connected.  May include specific node specification.
 
@@ -132,12 +131,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(2)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def kV(self) -> float:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> float:
         """
         Nominal rated (1.0 per unit) voltage, kV, for Storage element. For 2- and 3-phase Storage elements, specify phase-phase kV. Otherwise, specify actual kV across each branch of the Storage element. 
 
@@ -149,12 +148,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @kV.setter
-    def kV(self, value: float):
+    def _set_kV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def Conn(self) -> enums.Connection:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_Conn(self) -> enums.Connection:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -162,15 +161,15 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 4))
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
         if not isinstance(value, int):
             self._set_string_o(4, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -178,12 +177,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(4)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def kW(self) -> float:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_kW(self) -> float:
         """
         Get/set the requested kW value. Final kW is subjected to the inverter ratings. A positive value denotes power coming OUT of the element, which is the opposite of a Load element. A negative value indicates the Storage element is in Charging state. This value is modified internally depending on the dispatch mode.
 
@@ -191,12 +190,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @kW.setter
-    def kW(self, value: float):
+    def _set_kW(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def kvar(self) -> float:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_kvar(self) -> float:
         """
         Get/set the requested kvar value. Final kvar is subjected to the inverter ratings. Sets inverter to operate in constant kvar mode.
 
@@ -204,12 +203,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @kvar.setter
-    def kvar(self, value: float):
+    def _set_kvar(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def PF(self) -> float:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_PF(self) -> float:
         """
         Get/set the requested PF value. Final PF is subjected to the inverter ratings. Sets inverter to operate in constant PF mode. Nominally, the power factor for discharging (acting as a generator). Default is 1.0. 
 
@@ -221,12 +220,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @PF.setter
-    def PF(self, value: float):
+    def _set_PF(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def kVA(self) -> float:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_kVA(self) -> float:
         """
         Indicates the inverter nameplate capability (in kVA). Used as the base for Dynamics mode and Harmonics mode values.
 
@@ -234,12 +233,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @kVA.setter
-    def kVA(self, value: float):
+    def _set_kVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def pctCutIn(self) -> float:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_pctCutIn(self) -> float:
         """
         Cut-in power as a percentage of inverter kVA rating. It is the minimum DC power necessary to turn the inverter ON when it is OFF. Must be greater than or equal to %CutOut. Defaults to 2 for PVSystems and 0 for Storage elements which means that the inverter state will be always ON for this element.
 
@@ -247,12 +246,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @pctCutIn.setter
-    def pctCutIn(self, value: float):
+    def _set_pctCutIn(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def pctCutOut(self) -> float:
+    pctCutIn = property(_get_pctCutIn, _set_pctCutIn)
+
+    def _get_pctCutOut(self) -> float:
         """
         Cut-out power as a percentage of inverter kVA rating. It is the minimum DC power necessary to keep the inverter ON. Must be less than or equal to %CutIn. Defaults to 0, which means that, once ON, the inverter state will be always ON for this element.
 
@@ -260,12 +259,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @pctCutOut.setter
-    def pctCutOut(self, value: float):
+    def _set_pctCutOut(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def EffCurve_str(self) -> str:
+    pctCutOut = property(_get_pctCutOut, _set_pctCutOut)
+
+    def _get_EffCurve_str(self) -> str:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
 
@@ -273,12 +272,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(11)
 
-    @EffCurve_str.setter
-    def EffCurve_str(self, value: AnyStr):
+    def _set_EffCurve_str(self, value: AnyStr):
         self._set_string_o(11, value)
 
-    @property
-    def EffCurve(self) -> XYcurve:
+    EffCurve_str = property(_get_EffCurve_str, _set_EffCurve_str)
+
+    def _get_EffCurve(self) -> XYcurve:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
 
@@ -286,16 +285,16 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_obj(11, XYcurve)
 
-    @EffCurve.setter
-    def EffCurve(self, value: Union[AnyStr, XYcurve]):
+    def _set_EffCurve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(11, value)
             return
 
         self._set_string_o(11, value)
 
-    @property
-    def VarFollowInverter(self) -> bool:
+    EffCurve = property(_get_EffCurve, _set_EffCurve)
+
+    def _get_VarFollowInverter(self) -> bool:
         """
         Boolean variable (Yes|No) or (True|False). Defaults to False, which indicates that the reactive power generation/absorption does not respect the inverter status.When set to True, the reactive power generation/absorption will cease when the inverter status is off, due to DC kW dropping below %CutOut.  The reactive power generation/absorption will begin again when the DC kW is above %CutIn.  When set to False, the Storage will generate/absorb reactive power regardless of the status of the inverter.
 
@@ -303,12 +302,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 12) != 0
 
-    @VarFollowInverter.setter
-    def VarFollowInverter(self, value: bool):
+    def _set_VarFollowInverter(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 12, value)
 
-    @property
-    def kvarMax(self) -> float:
+    VarFollowInverter = property(_get_VarFollowInverter, _set_VarFollowInverter)
+
+    def _get_kvarMax(self) -> float:
         """
         Indicates the maximum reactive power GENERATION (un-signed numerical variable in kvar) for the inverter. Defaults to kVA rating of the inverter.
 
@@ -316,12 +315,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @kvarMax.setter
-    def kvarMax(self, value: float):
+    def _set_kvarMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def kvarMaxAbs(self) -> float:
+    kvarMax = property(_get_kvarMax, _set_kvarMax)
+
+    def _get_kvarMaxAbs(self) -> float:
         """
         Indicates the maximum reactive power ABSORPTION (un-signed numerical variable in kvar) for the inverter. Defaults to kvarMax.
 
@@ -329,12 +328,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @kvarMaxAbs.setter
-    def kvarMaxAbs(self, value: float):
+    def _set_kvarMaxAbs(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def WattPriority(self) -> bool:
+    kvarMaxAbs = property(_get_kvarMaxAbs, _set_kvarMaxAbs)
+
+    def _get_WattPriority(self) -> bool:
         """
         {Yes/No*/True/False} Set inverter to watt priority instead of the default var priority.
 
@@ -342,12 +341,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 15) != 0
 
-    @WattPriority.setter
-    def WattPriority(self, value: bool):
+    def _set_WattPriority(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
-    @property
-    def PFPriority(self) -> bool:
+    WattPriority = property(_get_WattPriority, _set_WattPriority)
+
+    def _get_PFPriority(self) -> bool:
         """
         If set to true, priority is given to power factor and WattPriority is neglected. It works only if operating in either constant PF or constant kvar modes. Defaults to False.
 
@@ -355,12 +354,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 16) != 0
 
-    @PFPriority.setter
-    def PFPriority(self, value: bool):
+    def _set_PFPriority(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 16, value)
 
-    @property
-    def pctPMinNoVars(self) -> float:
+    PFPriority = property(_get_PFPriority, _set_PFPriority)
+
+    def _get_pctPMinNoVars(self) -> float:
         """
         Minimum active power as percentage of kWrated under which there is no vars production/absorption. Defaults to 0 (disabled).
 
@@ -368,12 +367,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @pctPMinNoVars.setter
-    def pctPMinNoVars(self, value: float):
+    def _set_pctPMinNoVars(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def pctPMinkvarMax(self) -> float:
+    pctPMinNoVars = property(_get_pctPMinNoVars, _set_pctPMinNoVars)
+
+    def _get_pctPMinkvarMax(self) -> float:
         """
         Minimum active power as percentage of kWrated that allows the inverter to produce/absorb reactive power up to its maximum reactive power, which can be either kvarMax or kvarMaxAbs, depending on the current operation quadrant. Defaults to 0 (disabled).
 
@@ -381,12 +380,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    @pctPMinkvarMax.setter
-    def pctPMinkvarMax(self, value: float):
+    def _set_pctPMinkvarMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
-    @property
-    def kWRated(self) -> float:
+    pctPMinkvarMax = property(_get_pctPMinkvarMax, _set_pctPMinkvarMax)
+
+    def _get_kWRated(self) -> float:
         """
         kW rating of power output. Base for Loadshapes when DispMode=Follow. Sets kVA property if it has not been specified yet. Defaults to 25.
 
@@ -394,12 +393,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @kWRated.setter
-    def kWRated(self, value: float):
+    def _set_kWRated(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def pctkWRated(self) -> float:
+    kWRated = property(_get_kWRated, _set_kWRated)
+
+    def _get_pctkWRated(self) -> float:
         """
         Upper limit on active power as a percentage of kWrated. Defaults to 100 (disabled).
 
@@ -407,12 +406,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @pctkWRated.setter
-    def pctkWRated(self, value: float):
+    def _set_pctkWRated(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def kWhRated(self) -> float:
+    pctkWRated = property(_get_pctkWRated, _set_pctkWRated)
+
+    def _get_kWhRated(self) -> float:
         """
         Rated Storage capacity in kWh. Default is 50.
 
@@ -420,12 +419,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @kWhRated.setter
-    def kWhRated(self, value: float):
+    def _set_kWhRated(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def kWhStored(self) -> float:
+    kWhRated = property(_get_kWhRated, _set_kWhRated)
+
+    def _get_kWhStored(self) -> float:
         """
         Present amount of energy stored, kWh. Default is same as kWhrated.
 
@@ -433,12 +432,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    @kWhStored.setter
-    def kWhStored(self, value: float):
+    def _set_kWhStored(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 22, value)
 
-    @property
-    def pctStored(self) -> float:
+    kWhStored = property(_get_kWhStored, _set_kWhStored)
+
+    def _get_pctStored(self) -> float:
         """
         Present amount of energy stored, % of rated kWh. Default is 100.
 
@@ -446,12 +445,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @pctStored.setter
-    def pctStored(self, value: float):
+    def _set_pctStored(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def pctReserve(self) -> float:
+    pctStored = property(_get_pctStored, _set_pctStored)
+
+    def _get_pctReserve(self) -> float:
         """
         Percentage of rated kWh Storage capacity to be held in reserve for normal operation. Default = 20. 
         This is treated as the minimum energy discharge level unless there is an emergency. For emergency operation set this property lower. Cannot be less than zero.
@@ -460,12 +459,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    @pctReserve.setter
-    def pctReserve(self, value: float):
+    def _set_pctReserve(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 24, value)
 
-    @property
-    def State(self) -> enums.StorageState:
+    pctReserve = property(_get_pctReserve, _set_pctReserve)
+
+    def _get_State(self) -> enums.StorageState:
         """
         {IDLING | CHARGING | DISCHARGING}  Get/Set present operational state. In DISCHARGING mode, the Storage element acts as a generator and the kW property is positive. The element continues discharging at the scheduled output power level until the Storage reaches the reserve value. Then the state reverts to IDLING. In the CHARGING state, the Storage element behaves like a Load and the kW property is negative. The element continues to charge until the max Storage kWh is reached and then switches to IDLING state. In IDLING state, the element draws the idling losses plus the associated inverter losses.
 
@@ -473,15 +472,15 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return enums.StorageState(self._lib.Obj_GetInt32(self._ptr, 25))
 
-    @State.setter
-    def State(self, value: Union[AnyStr, int, enums.StorageState]):
+    def _set_State(self, value: Union[AnyStr, int, enums.StorageState]):
         if not isinstance(value, int):
             self._set_string_o(25, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 25, value)
 
-    @property
-    def State_str(self) -> str:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> str:
         """
         {IDLING | CHARGING | DISCHARGING}  Get/Set present operational state. In DISCHARGING mode, the Storage element acts as a generator and the kW property is positive. The element continues discharging at the scheduled output power level until the Storage reaches the reserve value. Then the state reverts to IDLING. In the CHARGING state, the Storage element behaves like a Load and the kW property is negative. The element continues to charge until the max Storage kWh is reached and then switches to IDLING state. In IDLING state, the element draws the idling losses plus the associated inverter losses.
 
@@ -489,12 +488,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(25)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
 
-    @property
-    def pctDischarge(self) -> float:
+    State_str = property(_get_State_str, _set_State_str)
+
+    def _get_pctDischarge(self) -> float:
         """
         Discharge rate (output power) in percentage of rated kW. Default = 100.
 
@@ -502,12 +501,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 26)
 
-    @pctDischarge.setter
-    def pctDischarge(self, value: float):
+    def _set_pctDischarge(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 26, value)
 
-    @property
-    def pctCharge(self) -> float:
+    pctDischarge = property(_get_pctDischarge, _set_pctDischarge)
+
+    def _get_pctCharge(self) -> float:
         """
         Charging rate (input power) in percentage of rated kW. Default = 100.
 
@@ -515,12 +514,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    @pctCharge.setter
-    def pctCharge(self, value: float):
+    def _set_pctCharge(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 27, value)
 
-    @property
-    def pctEffCharge(self) -> float:
+    pctCharge = property(_get_pctCharge, _set_pctCharge)
+
+    def _get_pctEffCharge(self) -> float:
         """
         Percentage efficiency for CHARGING the Storage element. Default = 90.
 
@@ -528,12 +527,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 28)
 
-    @pctEffCharge.setter
-    def pctEffCharge(self, value: float):
+    def _set_pctEffCharge(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 28, value)
 
-    @property
-    def pctEffDischarge(self) -> float:
+    pctEffCharge = property(_get_pctEffCharge, _set_pctEffCharge)
+
+    def _get_pctEffDischarge(self) -> float:
         """
         Percentage efficiency for DISCHARGING the Storage element. Default = 90.
 
@@ -541,12 +540,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 29)
 
-    @pctEffDischarge.setter
-    def pctEffDischarge(self, value: float):
+    def _set_pctEffDischarge(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 29, value)
 
-    @property
-    def pctIdlingkW(self) -> float:
+    pctEffDischarge = property(_get_pctEffDischarge, _set_pctEffDischarge)
+
+    def _get_pctIdlingkW(self) -> float:
         """
         Percentage of rated kW consumed by idling losses. Default = 1.
 
@@ -554,12 +553,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 30)
 
-    @pctIdlingkW.setter
-    def pctIdlingkW(self, value: float):
+    def _set_pctIdlingkW(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 30, value)
 
-    @property
-    def pctR(self) -> float:
+    pctIdlingkW = property(_get_pctIdlingkW, _set_pctIdlingkW)
+
+    def _get_pctR(self) -> float:
         """
         Equivalent percentage internal resistance, ohms. Default is 0. Placed in series with internal voltage source for harmonics and dynamics modes. Use a combination of %IdlingkW, %EffCharge and %EffDischarge to account for losses in power flow modes.
 
@@ -567,12 +566,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 32)
 
-    @pctR.setter
-    def pctR(self, value: float):
+    def _set_pctR(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 32, value)
 
-    @property
-    def pctX(self) -> float:
+    pctR = property(_get_pctR, _set_pctR)
+
+    def _get_pctX(self) -> float:
         """
         Equivalent percentage internal reactance, ohms. Default is 50%. Placed in series with internal voltage source for harmonics and dynamics modes. (Limits fault current to 2 pu.
 
@@ -580,12 +579,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 33)
 
-    @pctX.setter
-    def pctX(self, value: float):
+    def _set_pctX(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 33, value)
 
-    @property
-    def Model(self) -> int:
+    pctX = property(_get_pctX, _set_pctX)
+
+    def _get_Model(self) -> int:
         """
         Integer code (default=1) for the model to be used for power output variation with voltage. Valid values are:
 
@@ -597,12 +596,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 34)
 
-    @Model.setter
-    def Model(self, value: int):
+    def _set_Model(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 34, value)
 
-    @property
-    def VMinpu(self) -> float:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_VMinpu(self) -> float:
         """
         Default = 0.90.  Minimum per unit voltage for which the Model is assumed to apply. Below this value, the load model reverts to a constant impedance model.
 
@@ -610,12 +609,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 35)
 
-    @VMinpu.setter
-    def VMinpu(self, value: float):
+    def _set_VMinpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 35, value)
 
-    @property
-    def VMaxpu(self) -> float:
+    VMinpu = property(_get_VMinpu, _set_VMinpu)
+
+    def _get_VMaxpu(self) -> float:
         """
         Default = 1.10.  Maximum per unit voltage for which the Model is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
@@ -623,12 +622,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 36)
 
-    @VMaxpu.setter
-    def VMaxpu(self, value: float):
+    def _set_VMaxpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 36, value)
 
-    @property
-    def Balanced(self) -> bool:
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+
+    def _get_Balanced(self) -> bool:
         """
         {Yes | No*} Default is No. Force balanced current only for 3-phase Storage. Forces zero- and negative-sequence to zero. 
 
@@ -636,12 +635,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 37) != 0
 
-    @Balanced.setter
-    def Balanced(self, value: bool):
+    def _set_Balanced(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 37, value)
 
-    @property
-    def LimitCurrent(self) -> bool:
+    Balanced = property(_get_Balanced, _set_Balanced)
+
+    def _get_LimitCurrent(self) -> bool:
         """
         Limits current magnitude to Vminpu value for both 1-phase and 3-phase Storage similar to Generator Model 7. For 3-phase, limits the positive-sequence current but not the negative-sequence.
 
@@ -649,12 +648,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 38) != 0
 
-    @LimitCurrent.setter
-    def LimitCurrent(self, value: bool):
+    def _set_LimitCurrent(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 38, value)
 
-    @property
-    def Yearly_str(self) -> str:
+    LimitCurrent = property(_get_LimitCurrent, _set_LimitCurrent)
+
+    def _get_Yearly_str(self) -> str:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -662,12 +661,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(39)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: AnyStr):
+    def _set_Yearly_str(self, value: AnyStr):
         self._set_string_o(39, value)
 
-    @property
-    def Yearly(self) -> LoadShape:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> LoadShape:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -675,16 +674,16 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_obj(39, LoadShape)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(39, value)
             return
 
         self._set_string_o(39, value)
 
-    @property
-    def Daily_str(self) -> str:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> str:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -692,12 +691,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(40)
 
-    @Daily_str.setter
-    def Daily_str(self, value: AnyStr):
+    def _set_Daily_str(self, value: AnyStr):
         self._set_string_o(40, value)
 
-    @property
-    def Daily(self) -> LoadShape:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> LoadShape:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -705,16 +704,16 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_obj(40, LoadShape)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(40, value)
             return
 
         self._set_string_o(40, value)
 
-    @property
-    def Duty_str(self) -> str:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> str:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. 
 
@@ -726,12 +725,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(41)
 
-    @Duty_str.setter
-    def Duty_str(self, value: AnyStr):
+    def _set_Duty_str(self, value: AnyStr):
         self._set_string_o(41, value)
 
-    @property
-    def Duty(self) -> LoadShape:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> LoadShape:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. 
 
@@ -743,16 +742,16 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_obj(41, LoadShape)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(41, value)
             return
 
         self._set_string_o(41, value)
 
-    @property
-    def DispMode(self) -> enums.StorageDispatchMode:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_DispMode(self) -> enums.StorageDispatchMode:
         """
         {DEFAULT | FOLLOW | EXTERNAL | LOADLEVEL | PRICE } Default = "DEFAULT". Dispatch mode. 
 
@@ -768,15 +767,15 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return enums.StorageDispatchMode(self._lib.Obj_GetInt32(self._ptr, 42))
 
-    @DispMode.setter
-    def DispMode(self, value: Union[AnyStr, int, enums.StorageDispatchMode]):
+    def _set_DispMode(self, value: Union[AnyStr, int, enums.StorageDispatchMode]):
         if not isinstance(value, int):
             self._set_string_o(42, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 42, value)
 
-    @property
-    def DispMode_str(self) -> str:
+    DispMode = property(_get_DispMode, _set_DispMode)
+
+    def _get_DispMode_str(self) -> str:
         """
         {DEFAULT | FOLLOW | EXTERNAL | LOADLEVEL | PRICE } Default = "DEFAULT". Dispatch mode. 
 
@@ -792,12 +791,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(42)
 
-    @DispMode_str.setter
-    def DispMode_str(self, value: AnyStr):
+    def _set_DispMode_str(self, value: AnyStr):
         self.DispMode = value
 
-    @property
-    def DischargeTrigger(self) -> float:
+    DispMode_str = property(_get_DispMode_str, _set_DispMode_str)
+
+    def _get_DischargeTrigger(self) -> float:
         """
         Dispatch trigger value for discharging the Storage. 
         If = 0.0 the Storage element state is changed by the State command or by a StorageController object. 
@@ -807,12 +806,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 43)
 
-    @DischargeTrigger.setter
-    def DischargeTrigger(self, value: float):
+    def _set_DischargeTrigger(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 43, value)
 
-    @property
-    def ChargeTrigger(self) -> float:
+    DischargeTrigger = property(_get_DischargeTrigger, _set_DischargeTrigger)
+
+    def _get_ChargeTrigger(self) -> float:
         """
         Dispatch trigger value for charging the Storage. 
 
@@ -824,12 +823,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 44)
 
-    @ChargeTrigger.setter
-    def ChargeTrigger(self, value: float):
+    def _set_ChargeTrigger(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 44, value)
 
-    @property
-    def TimeChargeTrig(self) -> float:
+    ChargeTrigger = property(_get_ChargeTrigger, _set_ChargeTrigger)
+
+    def _get_TimeChargeTrig(self) -> float:
         """
         Time of day in fractional hours (0230 = 2.5) at which Storage element will automatically go into charge state. Default is 2.0.  Enter a negative time value to disable this feature.
 
@@ -837,12 +836,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 45)
 
-    @TimeChargeTrig.setter
-    def TimeChargeTrig(self, value: float):
+    def _set_TimeChargeTrig(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 45, value)
 
-    @property
-    def Class(self) -> int:
+    TimeChargeTrig = property(_get_TimeChargeTrig, _set_TimeChargeTrig)
+
+    def _get_Class(self) -> int:
         """
         An arbitrary integer number representing the class of Storage element so that Storage values may be segregated by class.
 
@@ -850,12 +849,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 46)
 
-    @Class.setter
-    def Class(self, value: int):
+    def _set_Class(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 46, value)
 
-    @property
-    def DynaDLL(self) -> str:
+    Class = property(_get_Class, _set_Class)
+
+    def _get_DynaDLL(self) -> str:
         """
         Name of DLL containing user-written dynamics model, which computes the terminal currents for Dynamics-mode simulations, overriding the default model.  Set to "none" to negate previous setting. This DLL has a simpler interface than the UserModel DLL and is only used for Dynamics mode.
 
@@ -863,12 +862,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(47)
 
-    @DynaDLL.setter
-    def DynaDLL(self, value: AnyStr):
+    def _set_DynaDLL(self, value: AnyStr):
         self._set_string_o(47, value)
 
-    @property
-    def DynaData(self) -> str:
+    DynaDLL = property(_get_DynaDLL, _set_DynaDLL)
+
+    def _get_DynaData(self) -> str:
         """
         String (in quotes or parentheses if necessary) that gets passed to the user-written dynamics model Edit function for defining the data required for that model.
 
@@ -876,12 +875,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(48)
 
-    @DynaData.setter
-    def DynaData(self, value: AnyStr):
+    def _set_DynaData(self, value: AnyStr):
         self._set_string_o(48, value)
 
-    @property
-    def UserModel(self) -> str:
+    DynaData = property(_get_DynaData, _set_DynaData)
+
+    def _get_UserModel(self) -> str:
         """
         Name of DLL containing user-written model, which computes the terminal currents for both power flow and dynamics, overriding the default model.  Set to "none" to negate previous setting.
 
@@ -889,12 +888,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(49)
 
-    @UserModel.setter
-    def UserModel(self, value: AnyStr):
+    def _set_UserModel(self, value: AnyStr):
         self._set_string_o(49, value)
 
-    @property
-    def UserData(self) -> str:
+    UserModel = property(_get_UserModel, _set_UserModel)
+
+    def _get_UserData(self) -> str:
         """
         String (in quotes or parentheses) that gets passed to user-written model for defining the data required for that model.
 
@@ -902,12 +901,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(50)
 
-    @UserData.setter
-    def UserData(self, value: AnyStr):
+    def _set_UserData(self, value: AnyStr):
         self._set_string_o(50, value)
 
-    @property
-    def DebugTrace(self) -> bool:
+    UserData = property(_get_UserData, _set_UserData)
+
+    def _get_DebugTrace(self) -> bool:
         """
         {Yes | No }  Default is no.  Turn this on to capture the progress of the Storage model for each iteration.  Creates a separate file for each Storage element named "Storage_name.csv".
 
@@ -915,12 +914,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 51) != 0
 
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+    def _set_DebugTrace(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 51, value)
 
-    @property
-    def kVDC(self) -> float:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_kVDC(self) -> float:
         """
         Indicates the rated voltage (kV) at the input of the inverter while the storage is discharging. The value is normally greater or equal to the kV base of the Storage device. It is used for dynamics simulation ONLY.
 
@@ -928,12 +927,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 52)
 
-    @kVDC.setter
-    def kVDC(self, value: float):
+    def _set_kVDC(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 52, value)
 
-    @property
-    def Kp(self) -> float:
+    kVDC = property(_get_kVDC, _set_kVDC)
+
+    def _get_Kp(self) -> float:
         """
         It is the proportional gain for the PI controller within the inverter. Use it to modify the controller response in dynamics simulation mode.
 
@@ -941,12 +940,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 53)
 
-    @Kp.setter
-    def Kp(self, value: float):
+    def _set_Kp(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 53, value)
 
-    @property
-    def PITol(self) -> float:
+    Kp = property(_get_Kp, _set_Kp)
+
+    def _get_PITol(self) -> float:
         """
         It is the tolerance (%) for the closed loop controller of the inverter. For dynamics simulation mode.
 
@@ -954,12 +953,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 54)
 
-    @PITol.setter
-    def PITol(self, value: float):
+    def _set_PITol(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 54, value)
 
-    @property
-    def SafeVoltage(self) -> float:
+    PITol = property(_get_PITol, _set_PITol)
+
+    def _get_SafeVoltage(self) -> float:
         """
         Indicates the voltage level (%) respect to the base voltage level for which the Inverter will operate. If this threshold is violated, the Inverter will enter safe mode (OFF). For dynamic simulation. By default is 80%.
 
@@ -967,12 +966,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 55)
 
-    @SafeVoltage.setter
-    def SafeVoltage(self, value: float):
+    def _set_SafeVoltage(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 55, value)
 
-    @property
-    def SafeMode(self) -> bool:
+    SafeVoltage = property(_get_SafeVoltage, _set_SafeVoltage)
+
+    def _get_SafeMode(self) -> bool:
         """
         (Read only) Indicates whether the inverter entered (Yes) or not (No) into Safe Mode.
 
@@ -980,12 +979,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 56) != 0
 
-    @SafeMode.setter
-    def SafeMode(self, value: bool):
+    def _set_SafeMode(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 56, value)
 
-    @property
-    def DynamicEq_str(self) -> str:
+    SafeMode = property(_get_SafeMode, _set_SafeMode)
+
+    def _get_DynamicEq_str(self) -> str:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -993,12 +992,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(57)
 
-    @DynamicEq_str.setter
-    def DynamicEq_str(self, value: AnyStr):
+    def _set_DynamicEq_str(self, value: AnyStr):
         self._set_string_o(57, value)
 
-    @property
-    def DynamicEq(self) -> DynamicExp:
+    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
+
+    def _get_DynamicEq(self) -> DynamicExp:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -1006,16 +1005,16 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_obj(57, DynamicExp)
 
-    @DynamicEq.setter
-    def DynamicEq(self, value: Union[AnyStr, DynamicExp]):
+    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp]):
         if isinstance(value, DSSObj):
             self._set_obj(57, value)
             return
 
         self._set_string_o(57, value)
 
-    @property
-    def DynOut(self) -> str:
+    DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
+
+    def _get_DynOut(self) -> str:
         """
         The name of the variables within the Dynamic equation that will be used to govern the Storage dynamics. This Storage model requires 1 output from the dynamic equation:
 
@@ -1027,12 +1026,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(58)
 
-    @DynOut.setter
-    def DynOut(self, value: AnyStr):
+    def _set_DynOut(self, value: AnyStr):
         self._set_string_o(58, value)
 
-    @property
-    def ControlMode(self) -> enums.InverterControlMode:
+    DynOut = property(_get_DynOut, _set_DynOut)
+
+    def _get_ControlMode(self) -> enums.InverterControlMode:
         """
         Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
@@ -1042,15 +1041,15 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return enums.InverterControlMode(self._lib.Obj_GetInt32(self._ptr, 59))
 
-    @ControlMode.setter
-    def ControlMode(self, value: Union[AnyStr, int, enums.InverterControlMode]):
+    def _set_ControlMode(self, value: Union[AnyStr, int, enums.InverterControlMode]):
         if not isinstance(value, int):
             self._set_string_o(59, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 59, value)
 
-    @property
-    def ControlMode_str(self) -> str:
+    ControlMode = property(_get_ControlMode, _set_ControlMode)
+
+    def _get_ControlMode_str(self) -> str:
         """
         Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
@@ -1060,12 +1059,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(59)
 
-    @ControlMode_str.setter
-    def ControlMode_str(self, value: AnyStr):
+    def _set_ControlMode_str(self, value: AnyStr):
         self.ControlMode = value
 
-    @property
-    def AmpLimit(self) -> float:
+    ControlMode_str = property(_get_ControlMode_str, _set_ControlMode_str)
+
+    def _get_AmpLimit(self) -> float:
         """
         The current limiter per phase for the IBR when operating in GFM mode. This limit is imposed to prevent the IBR to enter into Safe Mode when reaching the IBR power ratings.
         Once the IBR reaches this value, it remains there without moving into Safe Mode. This value needs to be set lower than the IBR Amps rating.
@@ -1074,12 +1073,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 60)
 
-    @AmpLimit.setter
-    def AmpLimit(self, value: float):
+    def _set_AmpLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 60, value)
 
-    @property
-    def AmpLimitGain(self) -> float:
+    AmpLimit = property(_get_AmpLimit, _set_AmpLimit)
+
+    def _get_AmpLimitGain(self) -> float:
         """
         Use it for fine tunning the current limiter when active, by default is 0.8, it has to be a value between 0.1 and 1. This value allows users to fine tune the IBRs current limiter to match with the user requirements.
 
@@ -1087,12 +1086,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 61)
 
-    @AmpLimitGain.setter
-    def AmpLimitGain(self, value: float):
+    def _set_AmpLimitGain(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 61, value)
 
-    @property
-    def Spectrum_str(self) -> str:
+    AmpLimitGain = property(_get_AmpLimitGain, _set_AmpLimitGain)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1100,12 +1099,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_prop_string(62)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(62, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1113,16 +1112,16 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._get_obj(62, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(62, value)
             return
 
         self._set_string_o(62, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -1130,12 +1129,12 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetFloat64(self._ptr, 63)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 63, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -1143,9 +1142,10 @@ class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin)
         """
         return self._lib.Obj_GetInt32(self._ptr, 64) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 64, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1230,8 +1230,7 @@ class StorageBatch(DSSBatch):
     _cls_idx = 29
 
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of Phases, this Storage element.  Power is evenly divided among phases.
 
@@ -1239,25 +1238,25 @@ class StorageBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def Bus1(self) -> List[str]:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> List[str]:
         """
         Bus to which the Storage element is connected.  May include specific node specification.
 
         DSS property name: `Bus1`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def kV(self) -> BatchFloat64ArrayProxy:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
         Nominal rated (1.0 per unit) voltage, kV, for Storage element. For 2- and 3-phase Storage elements, specify phase-phase kV. Otherwise, specify actual kV across each branch of the Storage element. 
 
@@ -1269,12 +1268,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @kV.setter
-    def kV(self, value: Union[float, Float64Array]):
+    def _set_kV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def Conn(self) -> BatchInt32ArrayProxy:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -1282,16 +1281,16 @@ class StorageBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 4)
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(4, value)
             return
-    
+
         self._set_batch_int32_array(4, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -1299,12 +1298,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(4)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def kW(self) -> BatchFloat64ArrayProxy:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_kW(self) -> BatchFloat64ArrayProxy:
         """
         Get/set the requested kW value. Final kW is subjected to the inverter ratings. A positive value denotes power coming OUT of the element, which is the opposite of a Load element. A negative value indicates the Storage element is in Charging state. This value is modified internally depending on the dispatch mode.
 
@@ -1312,12 +1311,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @kW.setter
-    def kW(self, value: Union[float, Float64Array]):
+    def _set_kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def kvar(self) -> BatchFloat64ArrayProxy:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_kvar(self) -> BatchFloat64ArrayProxy:
         """
         Get/set the requested kvar value. Final kvar is subjected to the inverter ratings. Sets inverter to operate in constant kvar mode.
 
@@ -1325,12 +1324,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @kvar.setter
-    def kvar(self, value: Union[float, Float64Array]):
+    def _set_kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def PF(self) -> BatchFloat64ArrayProxy:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_PF(self) -> BatchFloat64ArrayProxy:
         """
         Get/set the requested PF value. Final PF is subjected to the inverter ratings. Sets inverter to operate in constant PF mode. Nominally, the power factor for discharging (acting as a generator). Default is 1.0. 
 
@@ -1342,12 +1341,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @PF.setter
-    def PF(self, value: Union[float, Float64Array]):
+    def _set_PF(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def kVA(self) -> BatchFloat64ArrayProxy:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_kVA(self) -> BatchFloat64ArrayProxy:
         """
         Indicates the inverter nameplate capability (in kVA). Used as the base for Dynamics mode and Harmonics mode values.
 
@@ -1355,12 +1354,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @kVA.setter
-    def kVA(self, value: Union[float, Float64Array]):
+    def _set_kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def pctCutIn(self) -> BatchFloat64ArrayProxy:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_pctCutIn(self) -> BatchFloat64ArrayProxy:
         """
         Cut-in power as a percentage of inverter kVA rating. It is the minimum DC power necessary to turn the inverter ON when it is OFF. Must be greater than or equal to %CutOut. Defaults to 2 for PVSystems and 0 for Storage elements which means that the inverter state will be always ON for this element.
 
@@ -1368,12 +1367,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @pctCutIn.setter
-    def pctCutIn(self, value: Union[float, Float64Array]):
+    def _set_pctCutIn(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def pctCutOut(self) -> BatchFloat64ArrayProxy:
+    pctCutIn = property(_get_pctCutIn, _set_pctCutIn)
+
+    def _get_pctCutOut(self) -> BatchFloat64ArrayProxy:
         """
         Cut-out power as a percentage of inverter kVA rating. It is the minimum DC power necessary to keep the inverter ON. Must be less than or equal to %CutIn. Defaults to 0, which means that, once ON, the inverter state will be always ON for this element.
 
@@ -1381,12 +1380,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @pctCutOut.setter
-    def pctCutOut(self, value: Union[float, Float64Array]):
+    def _set_pctCutOut(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def EffCurve_str(self) -> List[str]:
+    pctCutOut = property(_get_pctCutOut, _set_pctCutOut)
+
+    def _get_EffCurve_str(self) -> List[str]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
 
@@ -1394,12 +1393,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @EffCurve_str.setter
-    def EffCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_EffCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(11, value)
 
-    @property
-    def EffCurve(self) -> List[XYcurve]:
+    EffCurve_str = property(_get_EffCurve_str, _set_EffCurve_str)
+
+    def _get_EffCurve(self) -> List[XYcurve]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Power at the AC side of the inverter is discounted by the multiplier obtained from this curve.
 
@@ -1407,26 +1406,27 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    @EffCurve.setter
-    def EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(11, value)
 
-    @property
-    def VarFollowInverter(self) -> List[bool]:
+    EffCurve = property(_get_EffCurve, _set_EffCurve)
+
+    def _get_VarFollowInverter(self) -> List[bool]:
         """
         Boolean variable (Yes|No) or (True|False). Defaults to False, which indicates that the reactive power generation/absorption does not respect the inverter status.When set to True, the reactive power generation/absorption will cease when the inverter status is off, due to DC kW dropping below %CutOut.  The reactive power generation/absorption will begin again when the DC kW is above %CutIn.  When set to False, the Storage will generate/absorb reactive power regardless of the status of the inverter.
 
         DSS property name: `VarFollowInverter`, DSS property index: 12.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(12)
         ]
-    @VarFollowInverter.setter
-    def VarFollowInverter(self, value: bool):
+
+    def _set_VarFollowInverter(self, value: bool):
         self._set_batch_int32_array(12, value)
 
-    @property
-    def kvarMax(self) -> BatchFloat64ArrayProxy:
+    VarFollowInverter = property(_get_VarFollowInverter, _set_VarFollowInverter)
+
+    def _get_kvarMax(self) -> BatchFloat64ArrayProxy:
         """
         Indicates the maximum reactive power GENERATION (un-signed numerical variable in kvar) for the inverter. Defaults to kVA rating of the inverter.
 
@@ -1434,12 +1434,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @kvarMax.setter
-    def kvarMax(self, value: Union[float, Float64Array]):
+    def _set_kvarMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def kvarMaxAbs(self) -> BatchFloat64ArrayProxy:
+    kvarMax = property(_get_kvarMax, _set_kvarMax)
+
+    def _get_kvarMaxAbs(self) -> BatchFloat64ArrayProxy:
         """
         Indicates the maximum reactive power ABSORPTION (un-signed numerical variable in kvar) for the inverter. Defaults to kvarMax.
 
@@ -1447,40 +1447,42 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @kvarMaxAbs.setter
-    def kvarMaxAbs(self, value: Union[float, Float64Array]):
+    def _set_kvarMaxAbs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def WattPriority(self) -> List[bool]:
+    kvarMaxAbs = property(_get_kvarMaxAbs, _set_kvarMaxAbs)
+
+    def _get_WattPriority(self) -> List[bool]:
         """
         {Yes/No*/True/False} Set inverter to watt priority instead of the default var priority.
 
         DSS property name: `WattPriority`, DSS property index: 15.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(15)
         ]
-    @WattPriority.setter
-    def WattPriority(self, value: bool):
+
+    def _set_WattPriority(self, value: bool):
         self._set_batch_int32_array(15, value)
 
-    @property
-    def PFPriority(self) -> List[bool]:
+    WattPriority = property(_get_WattPriority, _set_WattPriority)
+
+    def _get_PFPriority(self) -> List[bool]:
         """
         If set to true, priority is given to power factor and WattPriority is neglected. It works only if operating in either constant PF or constant kvar modes. Defaults to False.
 
         DSS property name: `PFPriority`, DSS property index: 16.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(16)
         ]
-    @PFPriority.setter
-    def PFPriority(self, value: bool):
+
+    def _set_PFPriority(self, value: bool):
         self._set_batch_int32_array(16, value)
 
-    @property
-    def pctPMinNoVars(self) -> BatchFloat64ArrayProxy:
+    PFPriority = property(_get_PFPriority, _set_PFPriority)
+
+    def _get_pctPMinNoVars(self) -> BatchFloat64ArrayProxy:
         """
         Minimum active power as percentage of kWrated under which there is no vars production/absorption. Defaults to 0 (disabled).
 
@@ -1488,12 +1490,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @pctPMinNoVars.setter
-    def pctPMinNoVars(self, value: Union[float, Float64Array]):
+    def _set_pctPMinNoVars(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def pctPMinkvarMax(self) -> BatchFloat64ArrayProxy:
+    pctPMinNoVars = property(_get_pctPMinNoVars, _set_pctPMinNoVars)
+
+    def _get_pctPMinkvarMax(self) -> BatchFloat64ArrayProxy:
         """
         Minimum active power as percentage of kWrated that allows the inverter to produce/absorb reactive power up to its maximum reactive power, which can be either kvarMax or kvarMaxAbs, depending on the current operation quadrant. Defaults to 0 (disabled).
 
@@ -1501,12 +1503,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    @pctPMinkvarMax.setter
-    def pctPMinkvarMax(self, value: Union[float, Float64Array]):
+    def _set_pctPMinkvarMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
-    @property
-    def kWRated(self) -> BatchFloat64ArrayProxy:
+    pctPMinkvarMax = property(_get_pctPMinkvarMax, _set_pctPMinkvarMax)
+
+    def _get_kWRated(self) -> BatchFloat64ArrayProxy:
         """
         kW rating of power output. Base for Loadshapes when DispMode=Follow. Sets kVA property if it has not been specified yet. Defaults to 25.
 
@@ -1514,12 +1516,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @kWRated.setter
-    def kWRated(self, value: Union[float, Float64Array]):
+    def _set_kWRated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def pctkWRated(self) -> BatchFloat64ArrayProxy:
+    kWRated = property(_get_kWRated, _set_kWRated)
+
+    def _get_pctkWRated(self) -> BatchFloat64ArrayProxy:
         """
         Upper limit on active power as a percentage of kWrated. Defaults to 100 (disabled).
 
@@ -1527,12 +1529,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @pctkWRated.setter
-    def pctkWRated(self, value: Union[float, Float64Array]):
+    def _set_pctkWRated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def kWhRated(self) -> BatchFloat64ArrayProxy:
+    pctkWRated = property(_get_pctkWRated, _set_pctkWRated)
+
+    def _get_kWhRated(self) -> BatchFloat64ArrayProxy:
         """
         Rated Storage capacity in kWh. Default is 50.
 
@@ -1540,12 +1542,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @kWhRated.setter
-    def kWhRated(self, value: Union[float, Float64Array]):
+    def _set_kWhRated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def kWhStored(self) -> BatchFloat64ArrayProxy:
+    kWhRated = property(_get_kWhRated, _set_kWhRated)
+
+    def _get_kWhStored(self) -> BatchFloat64ArrayProxy:
         """
         Present amount of energy stored, kWh. Default is same as kWhrated.
 
@@ -1553,12 +1555,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    @kWhStored.setter
-    def kWhStored(self, value: Union[float, Float64Array]):
+    def _set_kWhStored(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
-    @property
-    def pctStored(self) -> BatchFloat64ArrayProxy:
+    kWhStored = property(_get_kWhStored, _set_kWhStored)
+
+    def _get_pctStored(self) -> BatchFloat64ArrayProxy:
         """
         Present amount of energy stored, % of rated kWh. Default is 100.
 
@@ -1566,12 +1568,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @pctStored.setter
-    def pctStored(self, value: Union[float, Float64Array]):
+    def _set_pctStored(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def pctReserve(self) -> BatchFloat64ArrayProxy:
+    pctStored = property(_get_pctStored, _set_pctStored)
+
+    def _get_pctReserve(self) -> BatchFloat64ArrayProxy:
         """
         Percentage of rated kWh Storage capacity to be held in reserve for normal operation. Default = 20. 
         This is treated as the minimum energy discharge level unless there is an emergency. For emergency operation set this property lower. Cannot be less than zero.
@@ -1580,12 +1582,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    @pctReserve.setter
-    def pctReserve(self, value: Union[float, Float64Array]):
+    def _set_pctReserve(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
-    @property
-    def State(self) -> BatchInt32ArrayProxy:
+    pctReserve = property(_get_pctReserve, _set_pctReserve)
+
+    def _get_State(self) -> BatchInt32ArrayProxy:
         """
         {IDLING | CHARGING | DISCHARGING}  Get/Set present operational state. In DISCHARGING mode, the Storage element acts as a generator and the kW property is positive. The element continues discharging at the scheduled output power level until the Storage reaches the reserve value. Then the state reverts to IDLING. In the CHARGING state, the Storage element behaves like a Load and the kW property is negative. The element continues to charge until the max Storage kWh is reached and then switches to IDLING state. In IDLING state, the element draws the idling losses plus the associated inverter losses.
 
@@ -1593,16 +1595,16 @@ class StorageBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 25)
 
-    @State.setter
-    def State(self, value: Union[AnyStr, int, enums.StorageState, List[AnyStr], List[int], List[enums.StorageState], Int32Array]):
+    def _set_State(self, value: Union[AnyStr, int, enums.StorageState, List[AnyStr], List[int], List[enums.StorageState], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(25, value)
             return
-    
+
         self._set_batch_int32_array(25, value)
 
-    @property
-    def State_str(self) -> str:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> str:
         """
         {IDLING | CHARGING | DISCHARGING}  Get/Set present operational state. In DISCHARGING mode, the Storage element acts as a generator and the kW property is positive. The element continues discharging at the scheduled output power level until the Storage reaches the reserve value. Then the state reverts to IDLING. In the CHARGING state, the Storage element behaves like a Load and the kW property is negative. The element continues to charge until the max Storage kWh is reached and then switches to IDLING state. In IDLING state, the element draws the idling losses plus the associated inverter losses.
 
@@ -1610,12 +1612,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(25)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
 
-    @property
-    def pctDischarge(self) -> BatchFloat64ArrayProxy:
+    State_str = property(_get_State_str, _set_State_str)
+
+    def _get_pctDischarge(self) -> BatchFloat64ArrayProxy:
         """
         Discharge rate (output power) in percentage of rated kW. Default = 100.
 
@@ -1623,12 +1625,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 26)
 
-    @pctDischarge.setter
-    def pctDischarge(self, value: Union[float, Float64Array]):
+    def _set_pctDischarge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
-    @property
-    def pctCharge(self) -> BatchFloat64ArrayProxy:
+    pctDischarge = property(_get_pctDischarge, _set_pctDischarge)
+
+    def _get_pctCharge(self) -> BatchFloat64ArrayProxy:
         """
         Charging rate (input power) in percentage of rated kW. Default = 100.
 
@@ -1636,12 +1638,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    @pctCharge.setter
-    def pctCharge(self, value: Union[float, Float64Array]):
+    def _set_pctCharge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
-    @property
-    def pctEffCharge(self) -> BatchFloat64ArrayProxy:
+    pctCharge = property(_get_pctCharge, _set_pctCharge)
+
+    def _get_pctEffCharge(self) -> BatchFloat64ArrayProxy:
         """
         Percentage efficiency for CHARGING the Storage element. Default = 90.
 
@@ -1649,12 +1651,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 28)
 
-    @pctEffCharge.setter
-    def pctEffCharge(self, value: Union[float, Float64Array]):
+    def _set_pctEffCharge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
-    @property
-    def pctEffDischarge(self) -> BatchFloat64ArrayProxy:
+    pctEffCharge = property(_get_pctEffCharge, _set_pctEffCharge)
+
+    def _get_pctEffDischarge(self) -> BatchFloat64ArrayProxy:
         """
         Percentage efficiency for DISCHARGING the Storage element. Default = 90.
 
@@ -1662,12 +1664,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 29)
 
-    @pctEffDischarge.setter
-    def pctEffDischarge(self, value: Union[float, Float64Array]):
+    def _set_pctEffDischarge(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
-    @property
-    def pctIdlingkW(self) -> BatchFloat64ArrayProxy:
+    pctEffDischarge = property(_get_pctEffDischarge, _set_pctEffDischarge)
+
+    def _get_pctIdlingkW(self) -> BatchFloat64ArrayProxy:
         """
         Percentage of rated kW consumed by idling losses. Default = 1.
 
@@ -1675,12 +1677,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 30)
 
-    @pctIdlingkW.setter
-    def pctIdlingkW(self, value: Union[float, Float64Array]):
+    def _set_pctIdlingkW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
-    @property
-    def pctR(self) -> BatchFloat64ArrayProxy:
+    pctIdlingkW = property(_get_pctIdlingkW, _set_pctIdlingkW)
+
+    def _get_pctR(self) -> BatchFloat64ArrayProxy:
         """
         Equivalent percentage internal resistance, ohms. Default is 0. Placed in series with internal voltage source for harmonics and dynamics modes. Use a combination of %IdlingkW, %EffCharge and %EffDischarge to account for losses in power flow modes.
 
@@ -1688,12 +1690,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 32)
 
-    @pctR.setter
-    def pctR(self, value: Union[float, Float64Array]):
+    def _set_pctR(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(32, value)
 
-    @property
-    def pctX(self) -> BatchFloat64ArrayProxy:
+    pctR = property(_get_pctR, _set_pctR)
+
+    def _get_pctX(self) -> BatchFloat64ArrayProxy:
         """
         Equivalent percentage internal reactance, ohms. Default is 50%. Placed in series with internal voltage source for harmonics and dynamics modes. (Limits fault current to 2 pu.
 
@@ -1701,12 +1703,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 33)
 
-    @pctX.setter
-    def pctX(self, value: Union[float, Float64Array]):
+    def _set_pctX(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
-    @property
-    def Model(self) -> BatchInt32ArrayProxy:
+    pctX = property(_get_pctX, _set_pctX)
+
+    def _get_Model(self) -> BatchInt32ArrayProxy:
         """
         Integer code (default=1) for the model to be used for power output variation with voltage. Valid values are:
 
@@ -1718,12 +1720,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 34)
 
-    @Model.setter
-    def Model(self, value: Union[int, Int32Array]):
+    def _set_Model(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(34, value)
 
-    @property
-    def VMinpu(self) -> BatchFloat64ArrayProxy:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_VMinpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 0.90.  Minimum per unit voltage for which the Model is assumed to apply. Below this value, the load model reverts to a constant impedance model.
 
@@ -1731,12 +1733,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 35)
 
-    @VMinpu.setter
-    def VMinpu(self, value: Union[float, Float64Array]):
+    def _set_VMinpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
-    @property
-    def VMaxpu(self) -> BatchFloat64ArrayProxy:
+    VMinpu = property(_get_VMinpu, _set_VMinpu)
+
+    def _get_VMaxpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 1.10.  Maximum per unit voltage for which the Model is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
@@ -1744,40 +1746,42 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 36)
 
-    @VMaxpu.setter
-    def VMaxpu(self, value: Union[float, Float64Array]):
+    def _set_VMaxpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(36, value)
 
-    @property
-    def Balanced(self) -> List[bool]:
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+
+    def _get_Balanced(self) -> List[bool]:
         """
         {Yes | No*} Default is No. Force balanced current only for 3-phase Storage. Forces zero- and negative-sequence to zero. 
 
         DSS property name: `Balanced`, DSS property index: 37.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(37)
         ]
-    @Balanced.setter
-    def Balanced(self, value: bool):
+
+    def _set_Balanced(self, value: bool):
         self._set_batch_int32_array(37, value)
 
-    @property
-    def LimitCurrent(self) -> List[bool]:
+    Balanced = property(_get_Balanced, _set_Balanced)
+
+    def _get_LimitCurrent(self) -> List[bool]:
         """
         Limits current magnitude to Vminpu value for both 1-phase and 3-phase Storage similar to Generator Model 7. For 3-phase, limits the positive-sequence current but not the negative-sequence.
 
         DSS property name: `LimitCurrent`, DSS property index: 38.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(38)
         ]
-    @LimitCurrent.setter
-    def LimitCurrent(self, value: bool):
+
+    def _set_LimitCurrent(self, value: bool):
         self._set_batch_int32_array(38, value)
 
-    @property
-    def Yearly_str(self) -> List[str]:
+    LimitCurrent = property(_get_LimitCurrent, _set_LimitCurrent)
+
+    def _get_Yearly_str(self) -> List[str]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -1785,12 +1789,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(39)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(39, value)
 
-    @property
-    def Yearly(self) -> List[LoadShape]:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> List[LoadShape]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -1798,12 +1802,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(39)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(39, value)
 
-    @property
-    def Daily_str(self) -> List[str]:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> List[str]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -1811,12 +1815,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(40)
 
-    @Daily_str.setter
-    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(40, value)
 
-    @property
-    def Daily(self) -> List[LoadShape]:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> List[LoadShape]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the Storage element uses this loadshape to trigger State changes.
 
@@ -1824,12 +1828,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(40)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(40, value)
 
-    @property
-    def Duty_str(self) -> List[str]:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> List[str]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. 
 
@@ -1841,12 +1845,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(41)
 
-    @Duty_str.setter
-    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(41, value)
 
-    @property
-    def Duty(self) -> List[LoadShape]:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> List[LoadShape]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. 
 
@@ -1858,12 +1862,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(41)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(41, value)
 
-    @property
-    def DispMode(self) -> BatchInt32ArrayProxy:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_DispMode(self) -> BatchInt32ArrayProxy:
         """
         {DEFAULT | FOLLOW | EXTERNAL | LOADLEVEL | PRICE } Default = "DEFAULT". Dispatch mode. 
 
@@ -1879,16 +1883,16 @@ class StorageBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 42)
 
-    @DispMode.setter
-    def DispMode(self, value: Union[AnyStr, int, enums.StorageDispatchMode, List[AnyStr], List[int], List[enums.StorageDispatchMode], Int32Array]):
+    def _set_DispMode(self, value: Union[AnyStr, int, enums.StorageDispatchMode, List[AnyStr], List[int], List[enums.StorageDispatchMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(42, value)
             return
-    
+
         self._set_batch_int32_array(42, value)
 
-    @property
-    def DispMode_str(self) -> str:
+    DispMode = property(_get_DispMode, _set_DispMode)
+
+    def _get_DispMode_str(self) -> str:
         """
         {DEFAULT | FOLLOW | EXTERNAL | LOADLEVEL | PRICE } Default = "DEFAULT". Dispatch mode. 
 
@@ -1904,12 +1908,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(42)
 
-    @DispMode_str.setter
-    def DispMode_str(self, value: AnyStr):
+    def _set_DispMode_str(self, value: AnyStr):
         self.DispMode = value
 
-    @property
-    def DischargeTrigger(self) -> BatchFloat64ArrayProxy:
+    DispMode_str = property(_get_DispMode_str, _set_DispMode_str)
+
+    def _get_DischargeTrigger(self) -> BatchFloat64ArrayProxy:
         """
         Dispatch trigger value for discharging the Storage. 
         If = 0.0 the Storage element state is changed by the State command or by a StorageController object. 
@@ -1919,12 +1923,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 43)
 
-    @DischargeTrigger.setter
-    def DischargeTrigger(self, value: Union[float, Float64Array]):
+    def _set_DischargeTrigger(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(43, value)
 
-    @property
-    def ChargeTrigger(self) -> BatchFloat64ArrayProxy:
+    DischargeTrigger = property(_get_DischargeTrigger, _set_DischargeTrigger)
+
+    def _get_ChargeTrigger(self) -> BatchFloat64ArrayProxy:
         """
         Dispatch trigger value for charging the Storage. 
 
@@ -1936,12 +1940,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 44)
 
-    @ChargeTrigger.setter
-    def ChargeTrigger(self, value: Union[float, Float64Array]):
+    def _set_ChargeTrigger(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(44, value)
 
-    @property
-    def TimeChargeTrig(self) -> BatchFloat64ArrayProxy:
+    ChargeTrigger = property(_get_ChargeTrigger, _set_ChargeTrigger)
+
+    def _get_TimeChargeTrig(self) -> BatchFloat64ArrayProxy:
         """
         Time of day in fractional hours (0230 = 2.5) at which Storage element will automatically go into charge state. Default is 2.0.  Enter a negative time value to disable this feature.
 
@@ -1949,12 +1953,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 45)
 
-    @TimeChargeTrig.setter
-    def TimeChargeTrig(self, value: Union[float, Float64Array]):
+    def _set_TimeChargeTrig(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(45, value)
 
-    @property
-    def Class(self) -> BatchInt32ArrayProxy:
+    TimeChargeTrig = property(_get_TimeChargeTrig, _set_TimeChargeTrig)
+
+    def _get_Class(self) -> BatchInt32ArrayProxy:
         """
         An arbitrary integer number representing the class of Storage element so that Storage values may be segregated by class.
 
@@ -1962,78 +1966,79 @@ class StorageBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 46)
 
-    @Class.setter
-    def Class(self, value: Union[int, Int32Array]):
+    def _set_Class(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(46, value)
 
-    @property
-    def DynaDLL(self) -> List[str]:
+    Class = property(_get_Class, _set_Class)
+
+    def _get_DynaDLL(self) -> List[str]:
         """
         Name of DLL containing user-written dynamics model, which computes the terminal currents for Dynamics-mode simulations, overriding the default model.  Set to "none" to negate previous setting. This DLL has a simpler interface than the UserModel DLL and is only used for Dynamics mode.
 
         DSS property name: `DynaDLL`, DSS property index: 47.
         """
-        return self._get_batch_str_prop(47) 
+        return self._get_batch_str_prop(47)
 
-    @DynaDLL.setter
-    def DynaDLL(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DynaDLL(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(47, value)
 
-    @property
-    def DynaData(self) -> List[str]:
+    DynaDLL = property(_get_DynaDLL, _set_DynaDLL)
+
+    def _get_DynaData(self) -> List[str]:
         """
         String (in quotes or parentheses if necessary) that gets passed to the user-written dynamics model Edit function for defining the data required for that model.
 
         DSS property name: `DynaData`, DSS property index: 48.
         """
-        return self._get_batch_str_prop(48) 
+        return self._get_batch_str_prop(48)
 
-    @DynaData.setter
-    def DynaData(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DynaData(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(48, value)
 
-    @property
-    def UserModel(self) -> List[str]:
+    DynaData = property(_get_DynaData, _set_DynaData)
+
+    def _get_UserModel(self) -> List[str]:
         """
         Name of DLL containing user-written model, which computes the terminal currents for both power flow and dynamics, overriding the default model.  Set to "none" to negate previous setting.
 
         DSS property name: `UserModel`, DSS property index: 49.
         """
-        return self._get_batch_str_prop(49) 
+        return self._get_batch_str_prop(49)
 
-    @UserModel.setter
-    def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_UserModel(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(49, value)
 
-    @property
-    def UserData(self) -> List[str]:
+    UserModel = property(_get_UserModel, _set_UserModel)
+
+    def _get_UserData(self) -> List[str]:
         """
         String (in quotes or parentheses) that gets passed to user-written model for defining the data required for that model.
 
         DSS property name: `UserData`, DSS property index: 50.
         """
-        return self._get_batch_str_prop(50) 
+        return self._get_batch_str_prop(50)
 
-    @UserData.setter
-    def UserData(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_UserData(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(50, value)
 
-    @property
-    def DebugTrace(self) -> List[bool]:
+    UserData = property(_get_UserData, _set_UserData)
+
+    def _get_DebugTrace(self) -> List[bool]:
         """
         {Yes | No }  Default is no.  Turn this on to capture the progress of the Storage model for each iteration.  Creates a separate file for each Storage element named "Storage_name.csv".
 
         DSS property name: `DebugTrace`, DSS property index: 51.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(51)
         ]
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+
+    def _set_DebugTrace(self, value: bool):
         self._set_batch_int32_array(51, value)
 
-    @property
-    def kVDC(self) -> BatchFloat64ArrayProxy:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_kVDC(self) -> BatchFloat64ArrayProxy:
         """
         Indicates the rated voltage (kV) at the input of the inverter while the storage is discharging. The value is normally greater or equal to the kV base of the Storage device. It is used for dynamics simulation ONLY.
 
@@ -2041,12 +2046,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 52)
 
-    @kVDC.setter
-    def kVDC(self, value: Union[float, Float64Array]):
+    def _set_kVDC(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(52, value)
 
-    @property
-    def Kp(self) -> BatchFloat64ArrayProxy:
+    kVDC = property(_get_kVDC, _set_kVDC)
+
+    def _get_Kp(self) -> BatchFloat64ArrayProxy:
         """
         It is the proportional gain for the PI controller within the inverter. Use it to modify the controller response in dynamics simulation mode.
 
@@ -2054,12 +2059,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 53)
 
-    @Kp.setter
-    def Kp(self, value: Union[float, Float64Array]):
+    def _set_Kp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(53, value)
 
-    @property
-    def PITol(self) -> BatchFloat64ArrayProxy:
+    Kp = property(_get_Kp, _set_Kp)
+
+    def _get_PITol(self) -> BatchFloat64ArrayProxy:
         """
         It is the tolerance (%) for the closed loop controller of the inverter. For dynamics simulation mode.
 
@@ -2067,12 +2072,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 54)
 
-    @PITol.setter
-    def PITol(self, value: Union[float, Float64Array]):
+    def _set_PITol(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(54, value)
 
-    @property
-    def SafeVoltage(self) -> BatchFloat64ArrayProxy:
+    PITol = property(_get_PITol, _set_PITol)
+
+    def _get_SafeVoltage(self) -> BatchFloat64ArrayProxy:
         """
         Indicates the voltage level (%) respect to the base voltage level for which the Inverter will operate. If this threshold is violated, the Inverter will enter safe mode (OFF). For dynamic simulation. By default is 80%.
 
@@ -2080,26 +2085,27 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 55)
 
-    @SafeVoltage.setter
-    def SafeVoltage(self, value: Union[float, Float64Array]):
+    def _set_SafeVoltage(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(55, value)
 
-    @property
-    def SafeMode(self) -> List[bool]:
+    SafeVoltage = property(_get_SafeVoltage, _set_SafeVoltage)
+
+    def _get_SafeMode(self) -> List[bool]:
         """
         (Read only) Indicates whether the inverter entered (Yes) or not (No) into Safe Mode.
 
         DSS property name: `SafeMode`, DSS property index: 56.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(56)
         ]
-    @SafeMode.setter
-    def SafeMode(self, value: bool):
+
+    def _set_SafeMode(self, value: bool):
         self._set_batch_int32_array(56, value)
 
-    @property
-    def DynamicEq_str(self) -> List[str]:
+    SafeMode = property(_get_SafeMode, _set_SafeMode)
+
+    def _get_DynamicEq_str(self) -> List[str]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -2107,12 +2113,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(57)
 
-    @DynamicEq_str.setter
-    def DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(57, value)
 
-    @property
-    def DynamicEq(self) -> List[DynamicExp]:
+    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
+
+    def _get_DynamicEq(self) -> List[DynamicExp]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -2120,12 +2126,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(57)
 
-    @DynamicEq.setter
-    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
+    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
         self._set_batch_obj_prop(57, value)
 
-    @property
-    def DynOut(self) -> List[str]:
+    DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
+
+    def _get_DynOut(self) -> List[str]:
         """
         The name of the variables within the Dynamic equation that will be used to govern the Storage dynamics. This Storage model requires 1 output from the dynamic equation:
 
@@ -2135,14 +2141,14 @@ class StorageBatch(DSSBatch):
 
         DSS property name: `DynOut`, DSS property index: 58.
         """
-        return self._get_batch_str_prop(58) 
+        return self._get_batch_str_prop(58)
 
-    @DynOut.setter
-    def DynOut(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DynOut(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(58, value)
 
-    @property
-    def ControlMode(self) -> BatchInt32ArrayProxy:
+    DynOut = property(_get_DynOut, _set_DynOut)
+
+    def _get_ControlMode(self) -> BatchInt32ArrayProxy:
         """
         Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
@@ -2152,16 +2158,16 @@ class StorageBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 59)
 
-    @ControlMode.setter
-    def ControlMode(self, value: Union[AnyStr, int, enums.InverterControlMode, List[AnyStr], List[int], List[enums.InverterControlMode], Int32Array]):
+    def _set_ControlMode(self, value: Union[AnyStr, int, enums.InverterControlMode, List[AnyStr], List[int], List[enums.InverterControlMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(59, value)
             return
-    
+
         self._set_batch_int32_array(59, value)
 
-    @property
-    def ControlMode_str(self) -> str:
+    ControlMode = property(_get_ControlMode, _set_ControlMode)
+
+    def _get_ControlMode_str(self) -> str:
         """
         Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
@@ -2171,12 +2177,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(59)
 
-    @ControlMode_str.setter
-    def ControlMode_str(self, value: AnyStr):
+    def _set_ControlMode_str(self, value: AnyStr):
         self.ControlMode = value
 
-    @property
-    def AmpLimit(self) -> BatchFloat64ArrayProxy:
+    ControlMode_str = property(_get_ControlMode_str, _set_ControlMode_str)
+
+    def _get_AmpLimit(self) -> BatchFloat64ArrayProxy:
         """
         The current limiter per phase for the IBR when operating in GFM mode. This limit is imposed to prevent the IBR to enter into Safe Mode when reaching the IBR power ratings.
         Once the IBR reaches this value, it remains there without moving into Safe Mode. This value needs to be set lower than the IBR Amps rating.
@@ -2185,12 +2191,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 60)
 
-    @AmpLimit.setter
-    def AmpLimit(self, value: Union[float, Float64Array]):
+    def _set_AmpLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(60, value)
 
-    @property
-    def AmpLimitGain(self) -> BatchFloat64ArrayProxy:
+    AmpLimit = property(_get_AmpLimit, _set_AmpLimit)
+
+    def _get_AmpLimitGain(self) -> BatchFloat64ArrayProxy:
         """
         Use it for fine tunning the current limiter when active, by default is 0.8, it has to be a value between 0.1 and 1. This value allows users to fine tune the IBRs current limiter to match with the user requirements.
 
@@ -2198,12 +2204,12 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 61)
 
-    @AmpLimitGain.setter
-    def AmpLimitGain(self, value: Union[float, Float64Array]):
+    def _set_AmpLimitGain(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(61, value)
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    AmpLimitGain = property(_get_AmpLimitGain, _set_AmpLimitGain)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -2211,12 +2217,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_str_prop(62)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(62, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic voltage or current spectrum for this Storage element. Current injection is assumed for inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -2224,12 +2230,12 @@ class StorageBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(62)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(62, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -2237,23 +2243,25 @@ class StorageBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 63)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(63, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 64.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(64)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(64, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -2337,7 +2345,7 @@ class IStorage(IDSSObj,StorageBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Storage, StorageBatch)
         StorageBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Storage:

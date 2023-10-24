@@ -60,8 +60,7 @@ class RegControl(DSSObj, CktElementMixin):
         'like': 35,
     }
 
-    @property
-    def Transformer_str(self) -> str:
+    def _get_Transformer_str(self) -> str:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -71,12 +70,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Transformer_str.setter
-    def Transformer_str(self, value: AnyStr):
+    def _set_Transformer_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Transformer(self) -> Union[TransformerObj, AutoTrans]:
+    Transformer_str = property(_get_Transformer_str, _set_Transformer_str)
+
+    def _get_Transformer(self) -> Union[TransformerObj, AutoTrans]:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -86,16 +85,16 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(1, None)
 
-    @Transformer.setter
-    def Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans]):
+    def _set_Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def Winding(self) -> int:
+    Transformer = property(_get_Transformer, _set_Transformer)
+
+    def _get_Winding(self) -> int:
         """
         Number of the winding of the transformer element that the RegControl is monitoring. 1 or 2, typically.  Side Effect: Sets TAPWINDING property to the same winding.
 
@@ -103,12 +102,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @Winding.setter
-    def Winding(self, value: int):
+    def _set_Winding(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def VReg(self) -> float:
+    Winding = property(_get_Winding, _set_Winding)
+
+    def _get_VReg(self) -> float:
         """
         Voltage regulator setting, in VOLTS, for the winding being controlled.  Multiplying this value times the ptratio should yield the voltage across the WINDING of the controlled transformer. Default is 120.0
 
@@ -116,12 +115,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @VReg.setter
-    def VReg(self, value: float):
+    def _set_VReg(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def Band(self) -> float:
+    VReg = property(_get_VReg, _set_VReg)
+
+    def _get_Band(self) -> float:
         """
         Bandwidth in VOLTS for the controlled bus (see help for ptratio property).  Default is 3.0
 
@@ -129,12 +128,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @Band.setter
-    def Band(self, value: float):
+    def _set_Band(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def PTRatio(self) -> float:
+    Band = property(_get_Band, _set_Band)
+
+    def _get_PTRatio(self) -> float:
         """
         Ratio of the PT that converts the controlled winding voltage to the regulator control voltage. Default is 60.  If the winding is Wye, the line-to-neutral voltage is used.  Else, the line-to-line voltage is used. SIDE EFFECT: Also sets RemotePTRatio property.
 
@@ -142,12 +141,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @PTRatio.setter
-    def PTRatio(self, value: float):
+    def _set_PTRatio(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def CTPrim(self) -> float:
+    PTRatio = property(_get_PTRatio, _set_PTRatio)
+
+    def _get_CTPrim(self) -> float:
         """
         Rating, in Amperes, of the primary CT rating for which the line amps convert to control rated amps.The typical default secondary ampere rating is 0.2 Amps (check with manufacturer specs). Current at which the LDC voltages match the R and X settings.
 
@@ -155,12 +154,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @CTPrim.setter
-    def CTPrim(self, value: float):
+    def _set_CTPrim(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def R(self) -> float:
+    CTPrim = property(_get_CTPrim, _set_CTPrim)
+
+    def _get_R(self) -> float:
         """
         R setting on the line drop compensator in the regulator, expressed in VOLTS.
 
@@ -168,12 +167,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @R.setter
-    def R(self, value: float):
+    def _set_R(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def X(self) -> float:
+    R = property(_get_R, _set_R)
+
+    def _get_X(self) -> float:
         """
         X setting on the line drop compensator in the regulator, expressed in VOLTS.
 
@@ -181,12 +180,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @X.setter
-    def X(self, value: float):
+    def _set_X(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def Bus(self) -> str:
+    X = property(_get_X, _set_X)
+
+    def _get_Bus(self) -> str:
         """
         Name of a bus (busname.nodename) in the system to use as the controlled bus instead of the bus to which the transformer winding is connected or the R and X line drop compensator settings.  Do not specify this value if you wish to use the line drop compensator settings.  Default is null string. Assumes the base voltage for this bus is the same as the transformer winding base specified above. Note: This bus (1-phase) WILL BE CREATED by the regulator control upon SOLVE if not defined by some other device. You can specify the node of the bus you wish to sample (defaults to 1). If specified, the RegControl is redefined as a 1-phase device since only one voltage is used.
 
@@ -194,12 +193,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(9)
 
-    @Bus.setter
-    def Bus(self, value: AnyStr):
+    def _set_Bus(self, value: AnyStr):
         self._set_string_o(9, value)
 
-    @property
-    def Delay(self) -> float:
+    Bus = property(_get_Bus, _set_Bus)
+
+    def _get_Delay(self) -> float:
         """
         Time delay, in seconds, from when the voltage goes out of band to when the tap changing begins. This is used to determine which regulator control will act first. Default is 15.  You may specify any floating point number to achieve a model of whatever condition is necessary.
 
@@ -207,12 +206,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @Delay.setter
-    def Delay(self, value: float):
+    def _set_Delay(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def Reversible(self) -> bool:
+    Delay = property(_get_Delay, _set_Delay)
+
+    def _get_Reversible(self) -> bool:
         """
         {Yes |No*} Indicates whether or not the regulator can be switched to regulate in the reverse direction. Default is No.Typically applies only to line regulators and not to LTC on a substation transformer.
 
@@ -220,12 +219,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 11) != 0
 
-    @Reversible.setter
-    def Reversible(self, value: bool):
+    def _set_Reversible(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 11, value)
 
-    @property
-    def RevVReg(self) -> float:
+    Reversible = property(_get_Reversible, _set_Reversible)
+
+    def _get_RevVReg(self) -> float:
         """
         Voltage setting in volts for operation in the reverse direction.
 
@@ -233,12 +232,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @RevVReg.setter
-    def RevVReg(self, value: float):
+    def _set_RevVReg(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def RevBand(self) -> float:
+    RevVReg = property(_get_RevVReg, _set_RevVReg)
+
+    def _get_RevBand(self) -> float:
         """
         Bandwidth for operating in the reverse direction.
 
@@ -246,12 +245,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @RevBand.setter
-    def RevBand(self, value: float):
+    def _set_RevBand(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def RevR(self) -> float:
+    RevBand = property(_get_RevBand, _set_RevBand)
+
+    def _get_RevR(self) -> float:
         """
         R line drop compensator setting for reverse direction.
 
@@ -259,12 +258,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @RevR.setter
-    def RevR(self, value: float):
+    def _set_RevR(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def RevX(self) -> float:
+    RevR = property(_get_RevR, _set_RevR)
+
+    def _get_RevX(self) -> float:
         """
         X line drop compensator setting for reverse direction.
 
@@ -272,12 +271,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @RevX.setter
-    def RevX(self, value: float):
+    def _set_RevX(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def TapDelay(self) -> float:
+    RevX = property(_get_RevX, _set_RevX)
+
+    def _get_TapDelay(self) -> float:
         """
         Delay in sec between tap changes. Default is 2. This is how long it takes between changes after the first change.
 
@@ -285,12 +284,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @TapDelay.setter
-    def TapDelay(self, value: float):
+    def _set_TapDelay(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def DebugTrace(self) -> bool:
+    TapDelay = property(_get_TapDelay, _set_TapDelay)
+
+    def _get_DebugTrace(self) -> bool:
         """
         {Yes | No* }  Default is no.  Turn this on to capture the progress of the regulator model for each control iteration.  Creates a separate file for each RegControl named "REG_name.csv".
 
@@ -298,12 +297,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 17) != 0
 
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+    def _set_DebugTrace(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
-    @property
-    def MaxTapChange(self) -> int:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_MaxTapChange(self) -> int:
         """
         Maximum allowable tap change per control iteration in STATIC control mode.  Default is 16. 
 
@@ -315,12 +314,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 18)
 
-    @MaxTapChange.setter
-    def MaxTapChange(self, value: int):
+    def _set_MaxTapChange(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 18, value)
 
-    @property
-    def InverseTime(self) -> bool:
+    MaxTapChange = property(_get_MaxTapChange, _set_MaxTapChange)
+
+    def _get_InverseTime(self) -> bool:
         """
         {Yes | No* } Default is no.  The time delay is adjusted inversely proportional to the amount the voltage is outside the band down to 10%.
 
@@ -328,12 +327,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 19) != 0
 
-    @InverseTime.setter
-    def InverseTime(self, value: bool):
+    def _set_InverseTime(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 19, value)
 
-    @property
-    def TapWinding(self) -> int:
+    InverseTime = property(_get_InverseTime, _set_InverseTime)
+
+    def _get_TapWinding(self) -> int:
         """
         Winding containing the actual taps, if different than the WINDING property. Defaults to the same winding as specified by the WINDING property.
 
@@ -341,12 +340,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 20)
 
-    @TapWinding.setter
-    def TapWinding(self, value: int):
+    def _set_TapWinding(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 20, value)
 
-    @property
-    def VLimit(self) -> float:
+    TapWinding = property(_get_TapWinding, _set_TapWinding)
+
+    def _get_VLimit(self) -> float:
         """
         Voltage Limit for bus to which regulated winding is connected (e.g. first customer). Default is 0.0. Set to a value greater then zero to activate this function.
 
@@ -354,12 +353,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @VLimit.setter
-    def VLimit(self, value: float):
+    def _set_VLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def PTPhase(self) -> Union[enums.RegControlPhaseSelection, int]:
+    VLimit = property(_get_VLimit, _set_VLimit)
+
+    def _get_PTPhase(self) -> Union[enums.RegControlPhaseSelection, int]:
         """
         For multi-phase transformers, the number of the phase being monitored or one of { MAX | MIN} for all phases. Default=1. Must be less than or equal to the number of phases. Ignored for regulated bus.
 
@@ -368,18 +367,18 @@ class RegControl(DSSObj, CktElementMixin):
         value = self._lib.Obj_GetInt32(self._ptr, 22)
         if value > 0:
             return value
-    
+
         return enums.RegControlPhaseSelection(value)
 
-    @PTPhase.setter
-    def PTPhase(self, value: Union[AnyStr, int, enums.RegControlPhaseSelection]):
+    def _set_PTPhase(self, value: Union[AnyStr, int, enums.RegControlPhaseSelection]):
         if not isinstance(value, int):
             self._set_string_o(22, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 22, value)
 
-    @property
-    def PTPhase_str(self) -> str:
+    PTPhase = property(_get_PTPhase, _set_PTPhase)
+
+    def _get_PTPhase_str(self) -> str:
         """
         For multi-phase transformers, the number of the phase being monitored or one of { MAX | MIN} for all phases. Default=1. Must be less than or equal to the number of phases. Ignored for regulated bus.
 
@@ -387,12 +386,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(22)
 
-    @PTPhase_str.setter
-    def PTPhase_str(self, value: AnyStr):
+    def _set_PTPhase_str(self, value: AnyStr):
         self.PTPhase = value
 
-    @property
-    def RevThreshold(self) -> float:
+    PTPhase_str = property(_get_PTPhase_str, _set_PTPhase_str)
+
+    def _get_RevThreshold(self) -> float:
         """
         kW reverse power threshold for reversing the direction of the regulator. Default is 100.0 kw.
 
@@ -400,12 +399,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @RevThreshold.setter
-    def RevThreshold(self, value: float):
+    def _set_RevThreshold(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def RevDelay(self) -> float:
+    RevThreshold = property(_get_RevThreshold, _set_RevThreshold)
+
+    def _get_RevDelay(self) -> float:
         """
         Time Delay in seconds (s) for executing the reversing action once the threshold for reversing has been exceeded. Default is 60 s.
 
@@ -413,12 +412,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    @RevDelay.setter
-    def RevDelay(self, value: float):
+    def _set_RevDelay(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 24, value)
 
-    @property
-    def RevNeutral(self) -> bool:
+    RevDelay = property(_get_RevDelay, _set_RevDelay)
+
+    def _get_RevNeutral(self) -> bool:
         """
         {Yes | No*} Default is no. Set this to Yes if you want the regulator to go to neutral in the reverse direction or in cogen operation.
 
@@ -426,12 +425,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 25) != 0
 
-    @RevNeutral.setter
-    def RevNeutral(self, value: bool):
+    def _set_RevNeutral(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 25, value)
 
-    @property
-    def EventLog(self) -> bool:
+    RevNeutral = property(_get_RevNeutral, _set_RevNeutral)
+
+    def _get_EventLog(self) -> bool:
         """
         {Yes/True | No/False*} Default is NO for regulator control. Log control actions to Eventlog.
 
@@ -439,12 +438,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 26) != 0
 
-    @EventLog.setter
-    def EventLog(self, value: bool):
+    def _set_EventLog(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 26, value)
 
-    @property
-    def RemotePTRatio(self) -> float:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_RemotePTRatio(self) -> float:
         """
         When regulating a bus (the Bus= property is set), the PT ratio required to convert actual voltage at the remote bus to control voltage. Is initialized to PTratio property. Set this property after setting PTratio.
 
@@ -452,12 +451,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    @RemotePTRatio.setter
-    def RemotePTRatio(self, value: float):
+    def _set_RemotePTRatio(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 27, value)
 
-    @property
-    def TapNum(self) -> int:
+    RemotePTRatio = property(_get_RemotePTRatio, _set_RemotePTRatio)
+
+    def _get_TapNum(self) -> int:
         """
         An integer number indicating the tap position that the controlled transformer winding tap position is currently at, or is being set to.  If being set, and the value is outside the range of the transformer min or max tap, then set to the min or max tap position as appropriate. Default is 0
 
@@ -465,9 +464,10 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 28)
 
-    @TapNum.setter
-    def TapNum(self, value: int):
+    def _set_TapNum(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 28, value)
+
+    TapNum = property(_get_TapNum, _set_TapNum)
 
     def Reset(self, value: bool = True):
         """
@@ -477,8 +477,7 @@ class RegControl(DSSObj, CktElementMixin):
         """
         self._lib.Obj_SetInt32(self._ptr, 29, value)
 
-    @property
-    def LDC_Z(self) -> float:
+    def _get_LDC_Z(self) -> float:
         """
         Z value for Beckwith LDC_Z control option. Volts adjustment at rated control current.
 
@@ -486,12 +485,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 30)
 
-    @LDC_Z.setter
-    def LDC_Z(self, value: float):
+    def _set_LDC_Z(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 30, value)
 
-    @property
-    def Rev_Z(self) -> float:
+    LDC_Z = property(_get_LDC_Z, _set_LDC_Z)
+
+    def _get_Rev_Z(self) -> float:
         """
         Reverse Z value for Beckwith LDC_Z control option.
 
@@ -499,12 +498,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 31)
 
-    @Rev_Z.setter
-    def Rev_Z(self, value: float):
+    def _set_Rev_Z(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 31, value)
 
-    @property
-    def Cogen(self) -> bool:
+    Rev_Z = property(_get_Rev_Z, _set_Rev_Z)
+
+    def _get_Cogen(self) -> bool:
         """
         {Yes|No*} Default is No. The Cogen feature is activated. Continues looking forward if power reverses, but switches to reverse-mode LDC, vreg and band values.
 
@@ -512,12 +511,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 32) != 0
 
-    @Cogen.setter
-    def Cogen(self, value: bool):
+    def _set_Cogen(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 32, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Cogen = property(_get_Cogen, _set_Cogen)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -525,12 +524,12 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 33)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 33, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -538,9 +537,10 @@ class RegControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 34) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 34, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -596,8 +596,7 @@ class RegControlBatch(DSSBatch):
     _cls_idx = 21
 
 
-    @property
-    def Transformer_str(self) -> List[str]:
+    def _get_Transformer_str(self) -> List[str]:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -607,12 +606,12 @@ class RegControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Transformer_str.setter
-    def Transformer_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Transformer_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Transformer(self) -> List[Union[TransformerObj, AutoTrans]]:
+    Transformer_str = property(_get_Transformer_str, _set_Transformer_str)
+
+    def _get_Transformer(self) -> List[Union[TransformerObj, AutoTrans]]:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
 
@@ -622,12 +621,12 @@ class RegControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Transformer.setter
-    def Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans, List[AnyStr], List[Union[TransformerObj, AutoTrans]]]):
+    def _set_Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans, List[AnyStr], List[Union[TransformerObj, AutoTrans]]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def Winding(self) -> BatchInt32ArrayProxy:
+    Transformer = property(_get_Transformer, _set_Transformer)
+
+    def _get_Winding(self) -> BatchInt32ArrayProxy:
         """
         Number of the winding of the transformer element that the RegControl is monitoring. 1 or 2, typically.  Side Effect: Sets TAPWINDING property to the same winding.
 
@@ -635,12 +634,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @Winding.setter
-    def Winding(self, value: Union[int, Int32Array]):
+    def _set_Winding(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def VReg(self) -> BatchFloat64ArrayProxy:
+    Winding = property(_get_Winding, _set_Winding)
+
+    def _get_VReg(self) -> BatchFloat64ArrayProxy:
         """
         Voltage regulator setting, in VOLTS, for the winding being controlled.  Multiplying this value times the ptratio should yield the voltage across the WINDING of the controlled transformer. Default is 120.0
 
@@ -648,12 +647,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @VReg.setter
-    def VReg(self, value: Union[float, Float64Array]):
+    def _set_VReg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def Band(self) -> BatchFloat64ArrayProxy:
+    VReg = property(_get_VReg, _set_VReg)
+
+    def _get_Band(self) -> BatchFloat64ArrayProxy:
         """
         Bandwidth in VOLTS for the controlled bus (see help for ptratio property).  Default is 3.0
 
@@ -661,12 +660,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @Band.setter
-    def Band(self, value: Union[float, Float64Array]):
+    def _set_Band(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def PTRatio(self) -> BatchFloat64ArrayProxy:
+    Band = property(_get_Band, _set_Band)
+
+    def _get_PTRatio(self) -> BatchFloat64ArrayProxy:
         """
         Ratio of the PT that converts the controlled winding voltage to the regulator control voltage. Default is 60.  If the winding is Wye, the line-to-neutral voltage is used.  Else, the line-to-line voltage is used. SIDE EFFECT: Also sets RemotePTRatio property.
 
@@ -674,12 +673,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @PTRatio.setter
-    def PTRatio(self, value: Union[float, Float64Array]):
+    def _set_PTRatio(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def CTPrim(self) -> BatchFloat64ArrayProxy:
+    PTRatio = property(_get_PTRatio, _set_PTRatio)
+
+    def _get_CTPrim(self) -> BatchFloat64ArrayProxy:
         """
         Rating, in Amperes, of the primary CT rating for which the line amps convert to control rated amps.The typical default secondary ampere rating is 0.2 Amps (check with manufacturer specs). Current at which the LDC voltages match the R and X settings.
 
@@ -687,12 +686,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @CTPrim.setter
-    def CTPrim(self, value: Union[float, Float64Array]):
+    def _set_CTPrim(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def R(self) -> BatchFloat64ArrayProxy:
+    CTPrim = property(_get_CTPrim, _set_CTPrim)
+
+    def _get_R(self) -> BatchFloat64ArrayProxy:
         """
         R setting on the line drop compensator in the regulator, expressed in VOLTS.
 
@@ -700,12 +699,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @R.setter
-    def R(self, value: Union[float, Float64Array]):
+    def _set_R(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def X(self) -> BatchFloat64ArrayProxy:
+    R = property(_get_R, _set_R)
+
+    def _get_X(self) -> BatchFloat64ArrayProxy:
         """
         X setting on the line drop compensator in the regulator, expressed in VOLTS.
 
@@ -713,25 +712,25 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @X.setter
-    def X(self, value: Union[float, Float64Array]):
+    def _set_X(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def Bus(self) -> List[str]:
+    X = property(_get_X, _set_X)
+
+    def _get_Bus(self) -> List[str]:
         """
         Name of a bus (busname.nodename) in the system to use as the controlled bus instead of the bus to which the transformer winding is connected or the R and X line drop compensator settings.  Do not specify this value if you wish to use the line drop compensator settings.  Default is null string. Assumes the base voltage for this bus is the same as the transformer winding base specified above. Note: This bus (1-phase) WILL BE CREATED by the regulator control upon SOLVE if not defined by some other device. You can specify the node of the bus you wish to sample (defaults to 1). If specified, the RegControl is redefined as a 1-phase device since only one voltage is used.
 
         DSS property name: `Bus`, DSS property index: 9.
         """
-        return self._get_batch_str_prop(9) 
+        return self._get_batch_str_prop(9)
 
-    @Bus.setter
-    def Bus(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(9, value)
 
-    @property
-    def Delay(self) -> BatchFloat64ArrayProxy:
+    Bus = property(_get_Bus, _set_Bus)
+
+    def _get_Delay(self) -> BatchFloat64ArrayProxy:
         """
         Time delay, in seconds, from when the voltage goes out of band to when the tap changing begins. This is used to determine which regulator control will act first. Default is 15.  You may specify any floating point number to achieve a model of whatever condition is necessary.
 
@@ -739,26 +738,27 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @Delay.setter
-    def Delay(self, value: Union[float, Float64Array]):
+    def _set_Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def Reversible(self) -> List[bool]:
+    Delay = property(_get_Delay, _set_Delay)
+
+    def _get_Reversible(self) -> List[bool]:
         """
         {Yes |No*} Indicates whether or not the regulator can be switched to regulate in the reverse direction. Default is No.Typically applies only to line regulators and not to LTC on a substation transformer.
 
         DSS property name: `Reversible`, DSS property index: 11.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(11)
         ]
-    @Reversible.setter
-    def Reversible(self, value: bool):
+
+    def _set_Reversible(self, value: bool):
         self._set_batch_int32_array(11, value)
 
-    @property
-    def RevVReg(self) -> BatchFloat64ArrayProxy:
+    Reversible = property(_get_Reversible, _set_Reversible)
+
+    def _get_RevVReg(self) -> BatchFloat64ArrayProxy:
         """
         Voltage setting in volts for operation in the reverse direction.
 
@@ -766,12 +766,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @RevVReg.setter
-    def RevVReg(self, value: Union[float, Float64Array]):
+    def _set_RevVReg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def RevBand(self) -> BatchFloat64ArrayProxy:
+    RevVReg = property(_get_RevVReg, _set_RevVReg)
+
+    def _get_RevBand(self) -> BatchFloat64ArrayProxy:
         """
         Bandwidth for operating in the reverse direction.
 
@@ -779,12 +779,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @RevBand.setter
-    def RevBand(self, value: Union[float, Float64Array]):
+    def _set_RevBand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def RevR(self) -> BatchFloat64ArrayProxy:
+    RevBand = property(_get_RevBand, _set_RevBand)
+
+    def _get_RevR(self) -> BatchFloat64ArrayProxy:
         """
         R line drop compensator setting for reverse direction.
 
@@ -792,12 +792,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @RevR.setter
-    def RevR(self, value: Union[float, Float64Array]):
+    def _set_RevR(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def RevX(self) -> BatchFloat64ArrayProxy:
+    RevR = property(_get_RevR, _set_RevR)
+
+    def _get_RevX(self) -> BatchFloat64ArrayProxy:
         """
         X line drop compensator setting for reverse direction.
 
@@ -805,12 +805,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @RevX.setter
-    def RevX(self, value: Union[float, Float64Array]):
+    def _set_RevX(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def TapDelay(self) -> BatchFloat64ArrayProxy:
+    RevX = property(_get_RevX, _set_RevX)
+
+    def _get_TapDelay(self) -> BatchFloat64ArrayProxy:
         """
         Delay in sec between tap changes. Default is 2. This is how long it takes between changes after the first change.
 
@@ -818,26 +818,27 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @TapDelay.setter
-    def TapDelay(self, value: Union[float, Float64Array]):
+    def _set_TapDelay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def DebugTrace(self) -> List[bool]:
+    TapDelay = property(_get_TapDelay, _set_TapDelay)
+
+    def _get_DebugTrace(self) -> List[bool]:
         """
         {Yes | No* }  Default is no.  Turn this on to capture the progress of the regulator model for each control iteration.  Creates a separate file for each RegControl named "REG_name.csv".
 
         DSS property name: `DebugTrace`, DSS property index: 17.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(17)
         ]
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+
+    def _set_DebugTrace(self, value: bool):
         self._set_batch_int32_array(17, value)
 
-    @property
-    def MaxTapChange(self) -> BatchInt32ArrayProxy:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_MaxTapChange(self) -> BatchInt32ArrayProxy:
         """
         Maximum allowable tap change per control iteration in STATIC control mode.  Default is 16. 
 
@@ -849,26 +850,27 @@ class RegControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 18)
 
-    @MaxTapChange.setter
-    def MaxTapChange(self, value: Union[int, Int32Array]):
+    def _set_MaxTapChange(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(18, value)
 
-    @property
-    def InverseTime(self) -> List[bool]:
+    MaxTapChange = property(_get_MaxTapChange, _set_MaxTapChange)
+
+    def _get_InverseTime(self) -> List[bool]:
         """
         {Yes | No* } Default is no.  The time delay is adjusted inversely proportional to the amount the voltage is outside the band down to 10%.
 
         DSS property name: `InverseTime`, DSS property index: 19.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(19)
         ]
-    @InverseTime.setter
-    def InverseTime(self, value: bool):
+
+    def _set_InverseTime(self, value: bool):
         self._set_batch_int32_array(19, value)
 
-    @property
-    def TapWinding(self) -> BatchInt32ArrayProxy:
+    InverseTime = property(_get_InverseTime, _set_InverseTime)
+
+    def _get_TapWinding(self) -> BatchInt32ArrayProxy:
         """
         Winding containing the actual taps, if different than the WINDING property. Defaults to the same winding as specified by the WINDING property.
 
@@ -876,12 +878,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 20)
 
-    @TapWinding.setter
-    def TapWinding(self, value: Union[int, Int32Array]):
+    def _set_TapWinding(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(20, value)
 
-    @property
-    def VLimit(self) -> BatchFloat64ArrayProxy:
+    TapWinding = property(_get_TapWinding, _set_TapWinding)
+
+    def _get_VLimit(self) -> BatchFloat64ArrayProxy:
         """
         Voltage Limit for bus to which regulated winding is connected (e.g. first customer). Default is 0.0. Set to a value greater then zero to activate this function.
 
@@ -889,12 +891,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @VLimit.setter
-    def VLimit(self, value: Union[float, Float64Array]):
+    def _set_VLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def PTPhase(self) -> BatchInt32ArrayProxy:
+    VLimit = property(_get_VLimit, _set_VLimit)
+
+    def _get_PTPhase(self) -> BatchInt32ArrayProxy:
         """
         For multi-phase transformers, the number of the phase being monitored or one of { MAX | MIN} for all phases. Default=1. Must be less than or equal to the number of phases. Ignored for regulated bus.
 
@@ -902,16 +904,16 @@ class RegControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 22)
 
-    @PTPhase.setter
-    def PTPhase(self, value: Union[AnyStr, int, enums.RegControlPhaseSelection, List[AnyStr], List[int], List[enums.RegControlPhaseSelection], Int32Array]):
+    def _set_PTPhase(self, value: Union[AnyStr, int, enums.RegControlPhaseSelection, List[AnyStr], List[int], List[enums.RegControlPhaseSelection], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(22, value)
             return
-    
+
         self._set_batch_int32_array(22, value)
 
-    @property
-    def PTPhase_str(self) -> str:
+    PTPhase = property(_get_PTPhase, _set_PTPhase)
+
+    def _get_PTPhase_str(self) -> str:
         """
         For multi-phase transformers, the number of the phase being monitored or one of { MAX | MIN} for all phases. Default=1. Must be less than or equal to the number of phases. Ignored for regulated bus.
 
@@ -919,12 +921,12 @@ class RegControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(22)
 
-    @PTPhase_str.setter
-    def PTPhase_str(self, value: AnyStr):
+    def _set_PTPhase_str(self, value: AnyStr):
         self.PTPhase = value
 
-    @property
-    def RevThreshold(self) -> BatchFloat64ArrayProxy:
+    PTPhase_str = property(_get_PTPhase_str, _set_PTPhase_str)
+
+    def _get_RevThreshold(self) -> BatchFloat64ArrayProxy:
         """
         kW reverse power threshold for reversing the direction of the regulator. Default is 100.0 kw.
 
@@ -932,12 +934,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @RevThreshold.setter
-    def RevThreshold(self, value: Union[float, Float64Array]):
+    def _set_RevThreshold(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def RevDelay(self) -> BatchFloat64ArrayProxy:
+    RevThreshold = property(_get_RevThreshold, _set_RevThreshold)
+
+    def _get_RevDelay(self) -> BatchFloat64ArrayProxy:
         """
         Time Delay in seconds (s) for executing the reversing action once the threshold for reversing has been exceeded. Default is 60 s.
 
@@ -945,40 +947,42 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    @RevDelay.setter
-    def RevDelay(self, value: Union[float, Float64Array]):
+    def _set_RevDelay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
-    @property
-    def RevNeutral(self) -> List[bool]:
+    RevDelay = property(_get_RevDelay, _set_RevDelay)
+
+    def _get_RevNeutral(self) -> List[bool]:
         """
         {Yes | No*} Default is no. Set this to Yes if you want the regulator to go to neutral in the reverse direction or in cogen operation.
 
         DSS property name: `RevNeutral`, DSS property index: 25.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(25)
         ]
-    @RevNeutral.setter
-    def RevNeutral(self, value: bool):
+
+    def _set_RevNeutral(self, value: bool):
         self._set_batch_int32_array(25, value)
 
-    @property
-    def EventLog(self) -> List[bool]:
+    RevNeutral = property(_get_RevNeutral, _set_RevNeutral)
+
+    def _get_EventLog(self) -> List[bool]:
         """
         {Yes/True | No/False*} Default is NO for regulator control. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 26.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(26)
         ]
-    @EventLog.setter
-    def EventLog(self, value: bool):
+
+    def _set_EventLog(self, value: bool):
         self._set_batch_int32_array(26, value)
 
-    @property
-    def RemotePTRatio(self) -> BatchFloat64ArrayProxy:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_RemotePTRatio(self) -> BatchFloat64ArrayProxy:
         """
         When regulating a bus (the Bus= property is set), the PT ratio required to convert actual voltage at the remote bus to control voltage. Is initialized to PTratio property. Set this property after setting PTratio.
 
@@ -986,12 +990,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    @RemotePTRatio.setter
-    def RemotePTRatio(self, value: Union[float, Float64Array]):
+    def _set_RemotePTRatio(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
-    @property
-    def TapNum(self) -> BatchInt32ArrayProxy:
+    RemotePTRatio = property(_get_RemotePTRatio, _set_RemotePTRatio)
+
+    def _get_TapNum(self) -> BatchInt32ArrayProxy:
         """
         An integer number indicating the tap position that the controlled transformer winding tap position is currently at, or is being set to.  If being set, and the value is outside the range of the transformer min or max tap, then set to the min or max tap position as appropriate. Default is 0
 
@@ -999,9 +1003,10 @@ class RegControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 28)
 
-    @TapNum.setter
-    def TapNum(self, value: Union[int, Int32Array]):
+    def _set_TapNum(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(28, value)
+
+    TapNum = property(_get_TapNum, _set_TapNum)
 
     def Reset(self, value: Union[bool, List[bool]] = True):
         """
@@ -1011,8 +1016,7 @@ class RegControlBatch(DSSBatch):
         """
         self._set_batch_int32_array(29, value)
 
-    @property
-    def LDC_Z(self) -> BatchFloat64ArrayProxy:
+    def _get_LDC_Z(self) -> BatchFloat64ArrayProxy:
         """
         Z value for Beckwith LDC_Z control option. Volts adjustment at rated control current.
 
@@ -1020,12 +1024,12 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 30)
 
-    @LDC_Z.setter
-    def LDC_Z(self, value: Union[float, Float64Array]):
+    def _set_LDC_Z(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
-    @property
-    def Rev_Z(self) -> BatchFloat64ArrayProxy:
+    LDC_Z = property(_get_LDC_Z, _set_LDC_Z)
+
+    def _get_Rev_Z(self) -> BatchFloat64ArrayProxy:
         """
         Reverse Z value for Beckwith LDC_Z control option.
 
@@ -1033,26 +1037,27 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 31)
 
-    @Rev_Z.setter
-    def Rev_Z(self, value: Union[float, Float64Array]):
+    def _set_Rev_Z(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(31, value)
 
-    @property
-    def Cogen(self) -> List[bool]:
+    Rev_Z = property(_get_Rev_Z, _set_Rev_Z)
+
+    def _get_Cogen(self) -> List[bool]:
         """
         {Yes|No*} Default is No. The Cogen feature is activated. Continues looking forward if power reverses, but switches to reverse-mode LDC, vreg and band values.
 
         DSS property name: `Cogen`, DSS property index: 32.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(32)
         ]
-    @Cogen.setter
-    def Cogen(self, value: bool):
+
+    def _set_Cogen(self, value: bool):
         self._set_batch_int32_array(32, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Cogen = property(_get_Cogen, _set_Cogen)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -1060,23 +1065,25 @@ class RegControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 33)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 34.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(34)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(34, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1131,7 +1138,7 @@ class IRegControl(IDSSObj,RegControlBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, RegControl, RegControlBatch)
         RegControlBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> RegControl:

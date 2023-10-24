@@ -52,8 +52,7 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         'like': 27,
     }
 
-    @property
-    def Bus1(self) -> str:
+    def _get_Bus1(self) -> str:
         """
         Name of first bus. Examples:
         bus1=busname
@@ -65,12 +64,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Bus2(self) -> str:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> str:
         """
         Name of 2nd bus. Defaults to all phases connected to first bus, node 0, (Shunt Wye Connection) except when Bus2 is specifically defined.
 
@@ -80,12 +79,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(2)
 
-    @Bus2.setter
-    def Bus2(self, value: AnyStr):
+    def _set_Bus2(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def Phases(self) -> int:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Phases(self) -> int:
         """
         Number of phases.
 
@@ -93,12 +92,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 3)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
-    @property
-    def kvar(self) -> float:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_kvar(self) -> float:
         """
         Total kvar, all phases.  Evenly divided among phases. Only determines X. Specify R separately
 
@@ -106,12 +105,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @kvar.setter
-    def kvar(self, value: float):
+    def _set_kvar(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def kV(self) -> float:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_kV(self) -> float:
         """
         For 2, 3-phase, kV phase-phase. Otherwise specify actual coil rating.
 
@@ -119,12 +118,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @kV.setter
-    def kV(self, value: float):
+    def _set_kV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def Conn(self) -> enums.Connection:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_Conn(self) -> enums.Connection:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN. If Delta, then only one terminal.
 
@@ -132,15 +131,15 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
         if not isinstance(value, int):
             self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN. If Delta, then only one terminal.
 
@@ -148,12 +147,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(6)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def RMatrix(self) -> Float64Array:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_RMatrix(self) -> Float64Array:
         """
         Resistance matrix, lower triangle, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.
 
@@ -161,12 +160,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 7)
 
-    @RMatrix.setter
-    def RMatrix(self, value: Float64Array):
+    def _set_RMatrix(self, value: Float64Array):
         self._set_float64_array_o(7, value)
 
-    @property
-    def XMatrix(self) -> Float64Array:
+    RMatrix = property(_get_RMatrix, _set_RMatrix)
+
+    def _get_XMatrix(self) -> Float64Array:
         """
         Reactance matrix, lower triangle, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.
 
@@ -174,12 +173,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 8)
 
-    @XMatrix.setter
-    def XMatrix(self, value: Float64Array):
+    def _set_XMatrix(self, value: Float64Array):
         self._set_float64_array_o(8, value)
 
-    @property
-    def Parallel(self) -> bool:
+    XMatrix = property(_get_XMatrix, _set_XMatrix)
+
+    def _get_Parallel(self) -> bool:
         """
         {Yes | No}  Default=No. Indicates whether Rmatrix and Xmatrix are to be considered in parallel. Default is series. For other models, specify R and Rp.
 
@@ -187,12 +186,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 9) != 0
 
-    @Parallel.setter
-    def Parallel(self, value: bool):
+    def _set_Parallel(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 9, value)
 
-    @property
-    def R(self) -> float:
+    Parallel = property(_get_Parallel, _set_Parallel)
+
+    def _get_R(self) -> float:
         """
         Resistance (in series with reactance), each phase, ohms. This property applies to REACTOR specified by either kvar or X. See also help on Z.
 
@@ -200,12 +199,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @R.setter
-    def R(self, value: float):
+    def _set_R(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def X(self) -> float:
+    R = property(_get_R, _set_R)
+
+    def _get_X(self) -> float:
         """
         Reactance, each phase, ohms at base frequency. See also help on Z and LmH properties.
 
@@ -213,12 +212,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @X.setter
-    def X(self, value: float):
+    def _set_X(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def Rp(self) -> float:
+    X = property(_get_X, _set_X)
+
+    def _get_Rp(self) -> float:
         """
         Resistance in parallel with R and X (the entire branch). Assumed infinite if not specified.
 
@@ -226,12 +225,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @Rp.setter
-    def Rp(self, value: float):
+    def _set_Rp(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def Z1(self) -> complex:
+    Rp = property(_get_Rp, _set_Rp)
+
+    def _get_Z1(self) -> complex:
         """
         Positive-sequence impedance, ohms, as a 2-element array representing a complex number. Example: 
 
@@ -245,12 +244,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_complex(13)
 
-    @Z1.setter
-    def Z1(self, value: complex):
+    def _set_Z1(self, value: complex):
         self._set_complex(13, value)
 
-    @property
-    def Z2(self) -> complex:
+    Z1 = property(_get_Z1, _set_Z1)
+
+    def _get_Z2(self) -> complex:
         """
         Negative-sequence impedance, ohms, as a 2-element array representing a complex number. Example: 
 
@@ -264,12 +263,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_complex(14)
 
-    @Z2.setter
-    def Z2(self, value: complex):
+    def _set_Z2(self, value: complex):
         self._set_complex(14, value)
 
-    @property
-    def Z0(self) -> complex:
+    Z2 = property(_get_Z2, _set_Z2)
+
+    def _get_Z0(self) -> complex:
         """
         Zer0-sequence impedance, ohms, as a 2-element array representing a complex number. Example: 
 
@@ -283,12 +282,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_complex(15)
 
-    @Z0.setter
-    def Z0(self, value: complex):
+    def _set_Z0(self, value: complex):
         self._set_complex(15, value)
 
-    @property
-    def RCurve_str(self) -> str:
+    Z0 = property(_get_Z0, _set_Z0)
+
+    def _get_RCurve_str(self) -> str:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
 
@@ -296,12 +295,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(17)
 
-    @RCurve_str.setter
-    def RCurve_str(self, value: AnyStr):
+    def _set_RCurve_str(self, value: AnyStr):
         self._set_string_o(17, value)
 
-    @property
-    def RCurve(self) -> XYcurve:
+    RCurve_str = property(_get_RCurve_str, _set_RCurve_str)
+
+    def _get_RCurve(self) -> XYcurve:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
 
@@ -309,16 +308,16 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_obj(17, XYcurve)
 
-    @RCurve.setter
-    def RCurve(self, value: Union[AnyStr, XYcurve]):
+    def _set_RCurve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(17, value)
             return
 
         self._set_string_o(17, value)
 
-    @property
-    def LCurve_str(self) -> str:
+    RCurve = property(_get_RCurve, _set_RCurve)
+
+    def _get_LCurve_str(self) -> str:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
 
@@ -326,12 +325,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(18)
 
-    @LCurve_str.setter
-    def LCurve_str(self, value: AnyStr):
+    def _set_LCurve_str(self, value: AnyStr):
         self._set_string_o(18, value)
 
-    @property
-    def LCurve(self) -> XYcurve:
+    LCurve_str = property(_get_LCurve_str, _set_LCurve_str)
+
+    def _get_LCurve(self) -> XYcurve:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
 
@@ -339,16 +338,16 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_obj(18, XYcurve)
 
-    @LCurve.setter
-    def LCurve(self, value: Union[AnyStr, XYcurve]):
+    def _set_LCurve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(18, value)
             return
 
         self._set_string_o(18, value)
 
-    @property
-    def LmH(self) -> float:
+    LCurve = property(_get_LCurve, _set_LCurve)
+
+    def _get_LmH(self) -> float:
         """
         Inductance, mH. Alternate way to define the reactance, X, property.
 
@@ -356,12 +355,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @LmH.setter
-    def LmH(self, value: float):
+    def _set_LmH(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def NormAmps(self) -> float:
+    LmH = property(_get_LmH, _set_LmH)
+
+    def _get_NormAmps(self) -> float:
         """
         Normal rated current. Defaults to per-phase rated current when reactor is specified with rated power and voltage.
 
@@ -369,12 +368,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @NormAmps.setter
-    def NormAmps(self, value: float):
+    def _set_NormAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def EmergAmps(self) -> float:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> float:
         """
         Maximum or emerg current. Defaults to 135% of per-phase rated current when reactor is specified with rated power and voltage.
 
@@ -382,12 +381,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: float):
+    def _set_EmergAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def FaultRate(self) -> float:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> float:
         """
         Failure rate per year.
 
@@ -395,12 +394,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    @FaultRate.setter
-    def FaultRate(self, value: float):
+    def _set_FaultRate(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 22, value)
 
-    @property
-    def pctPerm(self) -> float:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> float:
         """
         Percent of failures that become permanent.
 
@@ -408,12 +407,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @pctPerm.setter
-    def pctPerm(self, value: float):
+    def _set_pctPerm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def Repair(self) -> float:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> float:
         """
         Hours to repair.
 
@@ -421,12 +420,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    @Repair.setter
-    def Repair(self, value: float):
+    def _set_Repair(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 24, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -434,12 +433,12 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 25)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 25, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -447,9 +446,10 @@ class Reactor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 26) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 26, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -496,8 +496,7 @@ class ReactorBatch(DSSBatch):
     _cls_idx = 23
 
 
-    @property
-    def Bus1(self) -> List[str]:
+    def _get_Bus1(self) -> List[str]:
         """
         Name of first bus. Examples:
         bus1=busname
@@ -507,14 +506,14 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-        return self._get_batch_str_prop(1) 
+        return self._get_batch_str_prop(1)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Bus2(self) -> List[str]:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> List[str]:
         """
         Name of 2nd bus. Defaults to all phases connected to first bus, node 0, (Shunt Wye Connection) except when Bus2 is specifically defined.
 
@@ -522,14 +521,14 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus2.setter
-    def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of phases.
 
@@ -537,12 +536,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(3, value)
 
-    @property
-    def kvar(self) -> BatchFloat64ArrayProxy:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_kvar(self) -> BatchFloat64ArrayProxy:
         """
         Total kvar, all phases.  Evenly divided among phases. Only determines X. Specify R separately
 
@@ -550,12 +549,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @kvar.setter
-    def kvar(self, value: Union[float, Float64Array]):
+    def _set_kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def kV(self) -> BatchFloat64ArrayProxy:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
         For 2, 3-phase, kV phase-phase. Otherwise specify actual coil rating.
 
@@ -563,12 +562,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @kV.setter
-    def kV(self, value: Union[float, Float64Array]):
+    def _set_kV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def Conn(self) -> BatchInt32ArrayProxy:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN. If Delta, then only one terminal.
 
@@ -576,16 +575,16 @@ class ReactorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
-    
+
         self._set_batch_int32_array(6, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN. If Delta, then only one terminal.
 
@@ -593,12 +592,12 @@ class ReactorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def RMatrix(self) -> List[Float64Array]:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_RMatrix(self) -> List[Float64Array]:
         """
         Resistance matrix, lower triangle, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.
 
@@ -609,12 +608,12 @@ class ReactorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @RMatrix.setter
-    def RMatrix(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_RMatrix(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(7, value)
 
-    @property
-    def XMatrix(self) -> List[Float64Array]:
+    RMatrix = property(_get_RMatrix, _set_RMatrix)
+
+    def _get_XMatrix(self) -> List[Float64Array]:
         """
         Reactance matrix, lower triangle, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.
 
@@ -625,26 +624,27 @@ class ReactorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @XMatrix.setter
-    def XMatrix(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_XMatrix(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(8, value)
 
-    @property
-    def Parallel(self) -> List[bool]:
+    XMatrix = property(_get_XMatrix, _set_XMatrix)
+
+    def _get_Parallel(self) -> List[bool]:
         """
         {Yes | No}  Default=No. Indicates whether Rmatrix and Xmatrix are to be considered in parallel. Default is series. For other models, specify R and Rp.
 
         DSS property name: `Parallel`, DSS property index: 9.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(9)
         ]
-    @Parallel.setter
-    def Parallel(self, value: bool):
+
+    def _set_Parallel(self, value: bool):
         self._set_batch_int32_array(9, value)
 
-    @property
-    def R(self) -> BatchFloat64ArrayProxy:
+    Parallel = property(_get_Parallel, _set_Parallel)
+
+    def _get_R(self) -> BatchFloat64ArrayProxy:
         """
         Resistance (in series with reactance), each phase, ohms. This property applies to REACTOR specified by either kvar or X. See also help on Z.
 
@@ -652,12 +652,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @R.setter
-    def R(self, value: Union[float, Float64Array]):
+    def _set_R(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def X(self) -> BatchFloat64ArrayProxy:
+    R = property(_get_R, _set_R)
+
+    def _get_X(self) -> BatchFloat64ArrayProxy:
         """
         Reactance, each phase, ohms at base frequency. See also help on Z and LmH properties.
 
@@ -665,12 +665,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @X.setter
-    def X(self, value: Union[float, Float64Array]):
+    def _set_X(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def Rp(self) -> BatchFloat64ArrayProxy:
+    X = property(_get_X, _set_X)
+
+    def _get_Rp(self) -> BatchFloat64ArrayProxy:
         """
         Resistance in parallel with R and X (the entire branch). Assumed infinite if not specified.
 
@@ -678,12 +678,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @Rp.setter
-    def Rp(self, value: Union[float, Float64Array]):
+    def _set_Rp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def Z1(self) -> List[complex]:
+    Rp = property(_get_Rp, _set_Rp)
+
+    def _get_Z1(self) -> List[complex]:
         """
         Positive-sequence impedance, ohms, as a 2-element array representing a complex number. Example: 
 
@@ -695,17 +695,16 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `Z1`, DSS property index: 13.
         """
-        return [   
+        return [
             self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
+                self._lib.Obj_GetFloat64Array,
                 x,
                 13,
             ).view(dtype=complex)[0]
             for x in self._unpack()
         ]
 
-    @Z1.setter
-    def Z1(self, value: Union[complex, List[complex]]):
+    def _set_Z1(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
             for x in self._unpack():
@@ -722,8 +721,9 @@ class ReactorBatch(DSSBatch):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 13, value_ptr, value_count)
 
-    @property
-    def Z2(self) -> List[complex]:
+    Z1 = property(_get_Z1, _set_Z1)
+
+    def _get_Z2(self) -> List[complex]:
         """
         Negative-sequence impedance, ohms, as a 2-element array representing a complex number. Example: 
 
@@ -735,17 +735,16 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `Z2`, DSS property index: 14.
         """
-        return [   
+        return [
             self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
+                self._lib.Obj_GetFloat64Array,
                 x,
                 14,
             ).view(dtype=complex)[0]
             for x in self._unpack()
         ]
 
-    @Z2.setter
-    def Z2(self, value: Union[complex, List[complex]]):
+    def _set_Z2(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
             for x in self._unpack():
@@ -762,8 +761,9 @@ class ReactorBatch(DSSBatch):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 14, value_ptr, value_count)
 
-    @property
-    def Z0(self) -> List[complex]:
+    Z2 = property(_get_Z2, _set_Z2)
+
+    def _get_Z0(self) -> List[complex]:
         """
         Zer0-sequence impedance, ohms, as a 2-element array representing a complex number. Example: 
 
@@ -775,17 +775,16 @@ class ReactorBatch(DSSBatch):
 
         DSS property name: `Z0`, DSS property index: 15.
         """
-        return [   
+        return [
             self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
+                self._lib.Obj_GetFloat64Array,
                 x,
                 15,
             ).view(dtype=complex)[0]
             for x in self._unpack()
         ]
 
-    @Z0.setter
-    def Z0(self, value: Union[complex, List[complex]]):
+    def _set_Z0(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
             for x in self._unpack():
@@ -802,8 +801,9 @@ class ReactorBatch(DSSBatch):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 15, value_ptr, value_count)
 
-    @property
-    def RCurve_str(self) -> List[str]:
+    Z0 = property(_get_Z0, _set_Z0)
+
+    def _get_RCurve_str(self) -> List[str]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
 
@@ -811,12 +811,12 @@ class ReactorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(17)
 
-    @RCurve_str.setter
-    def RCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_RCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(17, value)
 
-    @property
-    def RCurve(self) -> List[XYcurve]:
+    RCurve_str = property(_get_RCurve_str, _set_RCurve_str)
+
+    def _get_RCurve(self) -> List[XYcurve]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase resistance, R, vs. frequency. Applies to resistance specified by R or Z property. If actual values are not known, R often increases by approximately the square root of frequency.
 
@@ -824,12 +824,12 @@ class ReactorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(17)
 
-    @RCurve.setter
-    def RCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_RCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(17, value)
 
-    @property
-    def LCurve_str(self) -> List[str]:
+    RCurve = property(_get_RCurve, _set_RCurve)
+
+    def _get_LCurve_str(self) -> List[str]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
 
@@ -837,12 +837,12 @@ class ReactorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(18)
 
-    @LCurve_str.setter
-    def LCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_LCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(18, value)
 
-    @property
-    def LCurve(self) -> List[XYcurve]:
+    LCurve_str = property(_get_LCurve_str, _set_LCurve_str)
+
+    def _get_LCurve(self) -> List[XYcurve]:
         """
         Name of XYCurve object, previously defined, describing per-unit variation of phase inductance, L=X/w, vs. frequency. Applies to reactance specified by X, LmH, Z, or kvar property.L generally decreases somewhat with frequency above the base frequency, approaching a limit at a few kHz.
 
@@ -850,12 +850,12 @@ class ReactorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(18)
 
-    @LCurve.setter
-    def LCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_LCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(18, value)
 
-    @property
-    def LmH(self) -> BatchFloat64ArrayProxy:
+    LCurve = property(_get_LCurve, _set_LCurve)
+
+    def _get_LmH(self) -> BatchFloat64ArrayProxy:
         """
         Inductance, mH. Alternate way to define the reactance, X, property.
 
@@ -863,12 +863,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @LmH.setter
-    def LmH(self, value: Union[float, Float64Array]):
+    def _set_LmH(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def NormAmps(self) -> BatchFloat64ArrayProxy:
+    LmH = property(_get_LmH, _set_LmH)
+
+    def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
         Normal rated current. Defaults to per-phase rated current when reactor is specified with rated power and voltage.
 
@@ -876,12 +876,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @NormAmps.setter
-    def NormAmps(self, value: Union[float, Float64Array]):
+    def _set_NormAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def EmergAmps(self) -> BatchFloat64ArrayProxy:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
         Maximum or emerg current. Defaults to 135% of per-phase rated current when reactor is specified with rated power and voltage.
 
@@ -889,12 +889,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: Union[float, Float64Array]):
+    def _set_EmergAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def FaultRate(self) -> BatchFloat64ArrayProxy:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
         Failure rate per year.
 
@@ -902,12 +902,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    @FaultRate.setter
-    def FaultRate(self, value: Union[float, Float64Array]):
+    def _set_FaultRate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
-    @property
-    def pctPerm(self) -> BatchFloat64ArrayProxy:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> BatchFloat64ArrayProxy:
         """
         Percent of failures that become permanent.
 
@@ -915,12 +915,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @pctPerm.setter
-    def pctPerm(self, value: Union[float, Float64Array]):
+    def _set_pctPerm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def Repair(self) -> BatchFloat64ArrayProxy:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
         Hours to repair.
 
@@ -928,12 +928,12 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    @Repair.setter
-    def Repair(self, value: Union[float, Float64Array]):
+    def _set_Repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -941,23 +941,25 @@ class ReactorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 25)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 26.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(26)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(26, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1003,7 +1005,7 @@ class IReactor(IDSSObj,ReactorBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Reactor, ReactorBatch)
         ReactorBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Reactor:

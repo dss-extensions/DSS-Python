@@ -33,8 +33,7 @@ class GenDispatcher(DSSObj, CktElementMixin):
         'like': 10,
     }
 
-    @property
-    def Element_str(self) -> str:
+    def _get_Element_str(self) -> str:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
 
@@ -42,12 +41,12 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Element_str.setter
-    def Element_str(self, value: AnyStr):
+    def _set_Element_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Element(self) -> DSSObj:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> DSSObj:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
 
@@ -55,16 +54,16 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._get_obj(1, None)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def Terminal(self) -> int:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> int:
         """
         Number of the terminal of the circuit element to which the GenDispatcher control is connected. 1 or 2, typically.  Default is 1. Make sure you have the direction on the power matching the sign of kWLimit.
 
@@ -72,12 +71,12 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: int):
+    def _set_Terminal(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def kWLimit(self) -> float:
+    Terminal = property(_get_Terminal, _set_Terminal)
+
+    def _get_kWLimit(self) -> float:
         """
         kW Limit for the monitored element. The generators are dispatched to hold the power in band.
 
@@ -85,12 +84,12 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @kWLimit.setter
-    def kWLimit(self, value: float):
+    def _set_kWLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def kWBand(self) -> float:
+    kWLimit = property(_get_kWLimit, _set_kWLimit)
+
+    def _get_kWBand(self) -> float:
         """
         Bandwidth (kW) of the dead band around the target limit.No dispatch changes are attempted if the power in the monitored terminal stays within this band.
 
@@ -98,12 +97,12 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @kWBand.setter
-    def kWBand(self, value: float):
+    def _set_kWBand(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def kvarLimit(self) -> float:
+    kWBand = property(_get_kWBand, _set_kWBand)
+
+    def _get_kvarLimit(self) -> float:
         """
         Max kvar to be delivered through the element.  Uses same dead band as kW.
 
@@ -111,12 +110,12 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @kvarLimit.setter
-    def kvarLimit(self, value: float):
+    def _set_kvarLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def GenList(self) -> List[str]:
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+
+    def _get_GenList(self) -> List[str]:
         """
         Array list of generators to be dispatched.  If not specified, all generators in the circuit are assumed dispatchable.
 
@@ -124,14 +123,14 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 6)
 
-    @GenList.setter
-    def GenList(self, value: List[AnyStr]):
+    def _set_GenList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 6, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def Weights(self) -> Float64Array:
+    GenList = property(_get_GenList, _set_GenList)
+
+    def _get_Weights(self) -> Float64Array:
         """
         Array of proportional weights corresponding to each generator in the GenList. The needed kW to get back to center band is dispatched to each generator according to these weights. Default is to set all weights to 1.0.
 
@@ -139,12 +138,12 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 7)
 
-    @Weights.setter
-    def Weights(self, value: Float64Array):
+    def _set_Weights(self, value: Float64Array):
         self._set_float64_array_o(7, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Weights = property(_get_Weights, _set_Weights)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -152,12 +151,12 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -165,9 +164,10 @@ class GenDispatcher(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 9) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 9, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -198,8 +198,7 @@ class GenDispatcherBatch(DSSBatch):
     _cls_idx = 28
 
 
-    @property
-    def Element_str(self) -> List[str]:
+    def _get_Element_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
 
@@ -207,12 +206,12 @@ class GenDispatcherBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Element_str.setter
-    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Element(self) -> List[DSSObj]:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
 
@@ -220,12 +219,12 @@ class GenDispatcherBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def Terminal(self) -> BatchInt32ArrayProxy:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the circuit element to which the GenDispatcher control is connected. 1 or 2, typically.  Default is 1. Make sure you have the direction on the power matching the sign of kWLimit.
 
@@ -233,12 +232,12 @@ class GenDispatcherBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: Union[int, Int32Array]):
+    def _set_Terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def kWLimit(self) -> BatchFloat64ArrayProxy:
+    Terminal = property(_get_Terminal, _set_Terminal)
+
+    def _get_kWLimit(self) -> BatchFloat64ArrayProxy:
         """
         kW Limit for the monitored element. The generators are dispatched to hold the power in band.
 
@@ -246,12 +245,12 @@ class GenDispatcherBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @kWLimit.setter
-    def kWLimit(self, value: Union[float, Float64Array]):
+    def _set_kWLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def kWBand(self) -> BatchFloat64ArrayProxy:
+    kWLimit = property(_get_kWLimit, _set_kWLimit)
+
+    def _get_kWBand(self) -> BatchFloat64ArrayProxy:
         """
         Bandwidth (kW) of the dead band around the target limit.No dispatch changes are attempted if the power in the monitored terminal stays within this band.
 
@@ -259,12 +258,12 @@ class GenDispatcherBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @kWBand.setter
-    def kWBand(self, value: Union[float, Float64Array]):
+    def _set_kWBand(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def kvarLimit(self) -> BatchFloat64ArrayProxy:
+    kWBand = property(_get_kWBand, _set_kWBand)
+
+    def _get_kvarLimit(self) -> BatchFloat64ArrayProxy:
         """
         Max kvar to be delivered through the element.  Uses same dead band as kW.
 
@@ -272,12 +271,12 @@ class GenDispatcherBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @kvarLimit.setter
-    def kvarLimit(self, value: Union[float, Float64Array]):
+    def _set_kvarLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def GenList(self) -> List[List[str]]:
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+
+    def _get_GenList(self) -> List[List[str]]:
         """
         Array list of generators to be dispatched.  If not specified, all generators in the circuit are assumed dispatchable.
 
@@ -285,16 +284,16 @@ class GenDispatcherBatch(DSSBatch):
         """
         return self._get_string_ll(6)
 
-    @GenList.setter
-    def GenList(self, value: List[AnyStr]):
+    def _set_GenList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 6, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def Weights(self) -> List[Float64Array]:
+    GenList = property(_get_GenList, _set_GenList)
+
+    def _get_Weights(self) -> List[Float64Array]:
         """
         Array of proportional weights corresponding to each generator in the GenList. The needed kW to get back to center band is dispatched to each generator according to these weights. Default is to set all weights to 1.0.
 
@@ -305,12 +304,12 @@ class GenDispatcherBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Weights.setter
-    def Weights(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Weights(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(7, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Weights = property(_get_Weights, _set_Weights)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -318,23 +317,25 @@ class GenDispatcherBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 9.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(9)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(9, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -364,7 +365,7 @@ class IGenDispatcher(IDSSObj,GenDispatcherBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, GenDispatcher, GenDispatcherBatch)
         GenDispatcherBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> GenDispatcher:

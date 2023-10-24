@@ -51,8 +51,7 @@ class Recloser(DSSObj, CktElementMixin):
         'like': 27,
     }
 
-    @property
-    def MonitoredObj_str(self) -> str:
+    def _get_MonitoredObj_str(self) -> str:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -60,12 +59,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(1)
 
-    @MonitoredObj_str.setter
-    def MonitoredObj_str(self, value: AnyStr):
+    def _set_MonitoredObj_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def MonitoredObj(self) -> DSSObj:
+    MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
+
+    def _get_MonitoredObj(self) -> DSSObj:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -73,16 +72,16 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_obj(1, None)
 
-    @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def MonitoredTerm(self) -> int:
+    MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
+
+    def _get_MonitoredTerm(self) -> int:
         """
         Number of the terminal of the circuit element to which the Recloser is connected. 1 or 2, typically.  Default is 1.
 
@@ -90,12 +89,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @MonitoredTerm.setter
-    def MonitoredTerm(self, value: int):
+    def _set_MonitoredTerm(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def SwitchedObj_str(self) -> str:
+    MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
+
+    def _get_SwitchedObj_str(self) -> str:
         """
         Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -103,12 +102,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(3)
 
-    @SwitchedObj_str.setter
-    def SwitchedObj_str(self, value: AnyStr):
+    def _set_SwitchedObj_str(self, value: AnyStr):
         self._set_string_o(3, value)
 
-    @property
-    def SwitchedObj(self) -> DSSObj:
+    SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
+
+    def _get_SwitchedObj(self) -> DSSObj:
         """
         Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -116,16 +115,16 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_obj(3, None)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(3, value)
             return
 
         self._set_string_o(3, value)
 
-    @property
-    def SwitchedTerm(self) -> int:
+    SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
+
+    def _get_SwitchedTerm(self) -> int:
         """
         Number of the terminal of the controlled element in which the switch is controlled by the Recloser. 1 or 2, typically.  Default is 1.
 
@@ -133,12 +132,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 4)
 
-    @SwitchedTerm.setter
-    def SwitchedTerm(self, value: int):
+    def _set_SwitchedTerm(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
-    @property
-    def NumFast(self) -> int:
+    SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
+
+    def _get_NumFast(self) -> int:
         """
         Number of Fast (fuse saving) operations.  Default is 1. (See "Shots")
 
@@ -146,12 +145,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 5)
 
-    @NumFast.setter
-    def NumFast(self, value: int):
+    def _set_NumFast(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
-    @property
-    def PhaseFast_str(self) -> str:
+    NumFast = property(_get_NumFast, _set_NumFast)
+
+    def _get_PhaseFast_str(self) -> str:
         """
         Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -159,12 +158,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(6)
 
-    @PhaseFast_str.setter
-    def PhaseFast_str(self, value: AnyStr):
+    def _set_PhaseFast_str(self, value: AnyStr):
         self._set_string_o(6, value)
 
-    @property
-    def PhaseFast(self) -> TCC_Curve:
+    PhaseFast_str = property(_get_PhaseFast_str, _set_PhaseFast_str)
+
+    def _get_PhaseFast(self) -> TCC_Curve:
         """
         Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -172,16 +171,16 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_obj(6, TCC_Curve)
 
-    @PhaseFast.setter
-    def PhaseFast(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_PhaseFast(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(6, value)
             return
 
         self._set_string_o(6, value)
 
-    @property
-    def PhaseDelayed_str(self) -> str:
+    PhaseFast = property(_get_PhaseFast, _set_PhaseFast)
+
+    def _get_PhaseDelayed_str(self) -> str:
         """
         Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -189,12 +188,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(7)
 
-    @PhaseDelayed_str.setter
-    def PhaseDelayed_str(self, value: AnyStr):
+    def _set_PhaseDelayed_str(self, value: AnyStr):
         self._set_string_o(7, value)
 
-    @property
-    def PhaseDelayed(self) -> TCC_Curve:
+    PhaseDelayed_str = property(_get_PhaseDelayed_str, _set_PhaseDelayed_str)
+
+    def _get_PhaseDelayed(self) -> TCC_Curve:
         """
         Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -202,16 +201,16 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_obj(7, TCC_Curve)
 
-    @PhaseDelayed.setter
-    def PhaseDelayed(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_PhaseDelayed(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(7, value)
             return
 
         self._set_string_o(7, value)
 
-    @property
-    def GroundFast_str(self) -> str:
+    PhaseDelayed = property(_get_PhaseDelayed, _set_PhaseDelayed)
+
+    def _get_GroundFast_str(self) -> str:
         """
         Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -219,12 +218,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(8)
 
-    @GroundFast_str.setter
-    def GroundFast_str(self, value: AnyStr):
+    def _set_GroundFast_str(self, value: AnyStr):
         self._set_string_o(8, value)
 
-    @property
-    def GroundFast(self) -> TCC_Curve:
+    GroundFast_str = property(_get_GroundFast_str, _set_GroundFast_str)
+
+    def _get_GroundFast(self) -> TCC_Curve:
         """
         Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -232,16 +231,16 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_obj(8, TCC_Curve)
 
-    @GroundFast.setter
-    def GroundFast(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_GroundFast(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(8, value)
             return
 
         self._set_string_o(8, value)
 
-    @property
-    def GroundDelayed_str(self) -> str:
+    GroundFast = property(_get_GroundFast, _set_GroundFast)
+
+    def _get_GroundDelayed_str(self) -> str:
         """
         Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -249,12 +248,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(9)
 
-    @GroundDelayed_str.setter
-    def GroundDelayed_str(self, value: AnyStr):
+    def _set_GroundDelayed_str(self, value: AnyStr):
         self._set_string_o(9, value)
 
-    @property
-    def GroundDelayed(self) -> TCC_Curve:
+    GroundDelayed_str = property(_get_GroundDelayed_str, _set_GroundDelayed_str)
+
+    def _get_GroundDelayed(self) -> TCC_Curve:
         """
         Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -262,16 +261,16 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_obj(9, TCC_Curve)
 
-    @GroundDelayed.setter
-    def GroundDelayed(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_GroundDelayed(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(9, value)
             return
 
         self._set_string_o(9, value)
 
-    @property
-    def PhaseTrip(self) -> float:
+    GroundDelayed = property(_get_GroundDelayed, _set_GroundDelayed)
+
+    def _get_PhaseTrip(self) -> float:
         """
         Multiplier or actual phase amps for the phase TCC curve.  Defaults to 1.0.
 
@@ -279,12 +278,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @PhaseTrip.setter
-    def PhaseTrip(self, value: float):
+    def _set_PhaseTrip(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def GroundTrip(self) -> float:
+    PhaseTrip = property(_get_PhaseTrip, _set_PhaseTrip)
+
+    def _get_GroundTrip(self) -> float:
         """
         Multiplier or actual ground amps (3I0) for the ground TCC curve.  Defaults to 1.0.
 
@@ -292,12 +291,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @GroundTrip.setter
-    def GroundTrip(self, value: float):
+    def _set_GroundTrip(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def PhaseInst(self) -> float:
+    GroundTrip = property(_get_GroundTrip, _set_GroundTrip)
+
+    def _get_PhaseInst(self) -> float:
         """
         Actual amps for instantaneous phase trip which is assumed to happen in 0.01 sec + Delay Time. Default is 0.0, which signifies no inst trip. 
 
@@ -305,12 +304,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @PhaseInst.setter
-    def PhaseInst(self, value: float):
+    def _set_PhaseInst(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def GroundInst(self) -> float:
+    PhaseInst = property(_get_PhaseInst, _set_PhaseInst)
+
+    def _get_GroundInst(self) -> float:
         """
         Actual amps for instantaneous ground trip which is assumed to happen in 0.01 sec + Delay Time.Default is 0.0, which signifies no inst trip.
 
@@ -318,12 +317,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @GroundInst.setter
-    def GroundInst(self, value: float):
+    def _set_GroundInst(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def Reset(self) -> float:
+    GroundInst = property(_get_GroundInst, _set_GroundInst)
+
+    def _get_Reset(self) -> float:
         """
         Reset time in sec for Recloser.  Default is 15. 
 
@@ -331,12 +330,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @Reset.setter
-    def Reset(self, value: float):
+    def _set_Reset(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def Shots(self) -> int:
+    Reset = property(_get_Reset, _set_Reset)
+
+    def _get_Shots(self) -> int:
         """
         Total Number of fast and delayed shots to lockout.  Default is 4. This is one more than the number of reclose intervals.
 
@@ -344,12 +343,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 15)
 
-    @Shots.setter
-    def Shots(self, value: int):
+    def _set_Shots(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
-    @property
-    def RecloseIntervals(self) -> Float64Array:
+    Shots = property(_get_Shots, _set_Shots)
+
+    def _get_RecloseIntervals(self) -> Float64Array:
         """
         Array of reclose intervals.  Default for Recloser is (0.5, 2.0, 2.0) seconds. A locked out Recloser must be closed manually (action=close).
 
@@ -357,12 +356,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 16)
 
-    @RecloseIntervals.setter
-    def RecloseIntervals(self, value: Float64Array):
+    def _set_RecloseIntervals(self, value: Float64Array):
         self._set_float64_array_o(16, value)
 
-    @property
-    def Delay(self) -> float:
+    RecloseIntervals = property(_get_RecloseIntervals, _set_RecloseIntervals)
+
+    def _get_Delay(self) -> float:
         """
         Fixed delay time (sec) added to Recloser trip time. Default is 0.0. Used to represent breaker time or any other delay.
 
@@ -370,12 +369,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @Delay.setter
-    def Delay(self, value: float):
+    def _set_Delay(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def TDPhFast(self) -> float:
+    Delay = property(_get_Delay, _set_Delay)
+
+    def _get_TDPhFast(self) -> float:
         """
         Time dial for Phase Fast trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -383,12 +382,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @TDPhFast.setter
-    def TDPhFast(self, value: float):
+    def _set_TDPhFast(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def TDGrFast(self) -> float:
+    TDPhFast = property(_get_TDPhFast, _set_TDPhFast)
+
+    def _get_TDGrFast(self) -> float:
         """
         Time dial for Ground Fast trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -396,12 +395,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @TDGrFast.setter
-    def TDGrFast(self, value: float):
+    def _set_TDGrFast(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def TDPhDelayed(self) -> float:
+    TDGrFast = property(_get_TDGrFast, _set_TDGrFast)
+
+    def _get_TDPhDelayed(self) -> float:
         """
         Time dial for Phase Delayed trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -409,12 +408,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @TDPhDelayed.setter
-    def TDPhDelayed(self, value: float):
+    def _set_TDPhDelayed(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def TDGrDelayed(self) -> float:
+    TDPhDelayed = property(_get_TDPhDelayed, _set_TDPhDelayed)
+
+    def _get_TDGrDelayed(self) -> float:
         """
         Time dial for Ground Delayed trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -422,12 +421,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    @TDGrDelayed.setter
-    def TDGrDelayed(self, value: float):
+    def _set_TDGrDelayed(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 22, value)
 
-    @property
-    def Normal(self) -> enums.RecloserState:
+    TDGrDelayed = property(_get_TDGrDelayed, _set_TDGrDelayed)
+
+    def _get_Normal(self) -> enums.RecloserState:
         """
         {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -435,15 +434,15 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return enums.RecloserState(self._lib.Obj_GetInt32(self._ptr, 23))
 
-    @Normal.setter
-    def Normal(self, value: Union[AnyStr, int, enums.RecloserState]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.RecloserState]):
         if not isinstance(value, int):
             self._set_string_o(23, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 23, value)
 
-    @property
-    def Normal_str(self) -> str:
+    Normal = property(_get_Normal, _set_Normal)
+
+    def _get_Normal_str(self) -> str:
         """
         {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -451,12 +450,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(23)
 
-    @Normal_str.setter
-    def Normal_str(self, value: AnyStr):
+    def _set_Normal_str(self, value: AnyStr):
         self.Normal = value
 
-    @property
-    def State(self) -> enums.RecloserState:
+    Normal_str = property(_get_Normal_str, _set_Normal_str)
+
+    def _get_State(self) -> enums.RecloserState:
         """
         {Open | Closed} Actual state of the recloser. Upon setting, immediately forces state of the recloser, overriding the Recloser control. Simulates manual control on recloser. Defaults to Closed. "Open" causes the controlled element to open and lock out. "Closed" causes the controlled element to close and the recloser to reset to its first operation.
 
@@ -464,15 +463,15 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return enums.RecloserState(self._lib.Obj_GetInt32(self._ptr, 24))
 
-    @State.setter
-    def State(self, value: Union[AnyStr, int, enums.RecloserState]):
+    def _set_State(self, value: Union[AnyStr, int, enums.RecloserState]):
         if not isinstance(value, int):
             self._set_string_o(24, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 24, value)
 
-    @property
-    def State_str(self) -> str:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> str:
         """
         {Open | Closed} Actual state of the recloser. Upon setting, immediately forces state of the recloser, overriding the Recloser control. Simulates manual control on recloser. Defaults to Closed. "Open" causes the controlled element to open and lock out. "Closed" causes the controlled element to close and the recloser to reset to its first operation.
 
@@ -480,12 +479,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(24)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
 
-    @property
-    def BaseFreq(self) -> float:
+    State_str = property(_get_State_str, _set_State_str)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -493,12 +492,12 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 25)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 25, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -506,9 +505,10 @@ class Recloser(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 26) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 26, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -555,8 +555,7 @@ class RecloserBatch(DSSBatch):
     _cls_idx = 32
 
 
-    @property
-    def MonitoredObj_str(self) -> List[str]:
+    def _get_MonitoredObj_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -564,12 +563,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @MonitoredObj_str.setter
-    def MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def MonitoredObj(self) -> List[DSSObj]:
+    MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
+
+    def _get_MonitoredObj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -577,12 +576,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def MonitoredTerm(self) -> BatchInt32ArrayProxy:
+    MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
+
+    def _get_MonitoredTerm(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the circuit element to which the Recloser is connected. 1 or 2, typically.  Default is 1.
 
@@ -590,12 +589,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @MonitoredTerm.setter
-    def MonitoredTerm(self, value: Union[int, Int32Array]):
+    def _set_MonitoredTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def SwitchedObj_str(self) -> List[str]:
+    MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
+
+    def _get_SwitchedObj_str(self) -> List[str]:
         """
         Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -603,12 +602,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @SwitchedObj_str.setter
-    def SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(3, value)
 
-    @property
-    def SwitchedObj(self) -> List[DSSObj]:
+    SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
+
+    def _get_SwitchedObj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the Recloser controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -616,12 +615,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(3)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(3, value)
 
-    @property
-    def SwitchedTerm(self) -> BatchInt32ArrayProxy:
+    SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
+
+    def _get_SwitchedTerm(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the controlled element in which the switch is controlled by the Recloser. 1 or 2, typically.  Default is 1.
 
@@ -629,12 +628,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 4)
 
-    @SwitchedTerm.setter
-    def SwitchedTerm(self, value: Union[int, Int32Array]):
+    def _set_SwitchedTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(4, value)
 
-    @property
-    def NumFast(self) -> BatchInt32ArrayProxy:
+    SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
+
+    def _get_NumFast(self) -> BatchInt32ArrayProxy:
         """
         Number of Fast (fuse saving) operations.  Default is 1. (See "Shots")
 
@@ -642,12 +641,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 5)
 
-    @NumFast.setter
-    def NumFast(self, value: Union[int, Int32Array]):
+    def _set_NumFast(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(5, value)
 
-    @property
-    def PhaseFast_str(self) -> List[str]:
+    NumFast = property(_get_NumFast, _set_NumFast)
+
+    def _get_PhaseFast_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -655,12 +654,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @PhaseFast_str.setter
-    def PhaseFast_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_PhaseFast_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(6, value)
 
-    @property
-    def PhaseFast(self) -> List[TCC_Curve]:
+    PhaseFast_str = property(_get_PhaseFast_str, _set_PhaseFast_str)
+
+    def _get_PhaseFast(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Phase Fast trip.  Must have been previously defined as a TCC_Curve object. Default is "A". Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -668,12 +667,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(6)
 
-    @PhaseFast.setter
-    def PhaseFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_PhaseFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(6, value)
 
-    @property
-    def PhaseDelayed_str(self) -> List[str]:
+    PhaseFast = property(_get_PhaseFast, _set_PhaseFast)
+
+    def _get_PhaseDelayed_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -681,12 +680,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @PhaseDelayed_str.setter
-    def PhaseDelayed_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_PhaseDelayed_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(7, value)
 
-    @property
-    def PhaseDelayed(self) -> List[TCC_Curve]:
+    PhaseDelayed_str = property(_get_PhaseDelayed_str, _set_PhaseDelayed_str)
+
+    def _get_PhaseDelayed(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Phase Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is "D".Multiplying the current values in the curve by the "phasetrip" value gives the actual current.
 
@@ -694,12 +693,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(7)
 
-    @PhaseDelayed.setter
-    def PhaseDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_PhaseDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(7, value)
 
-    @property
-    def GroundFast_str(self) -> List[str]:
+    PhaseDelayed = property(_get_PhaseDelayed, _set_PhaseDelayed)
+
+    def _get_GroundFast_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -707,12 +706,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    @GroundFast_str.setter
-    def GroundFast_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_GroundFast_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(8, value)
 
-    @property
-    def GroundFast(self) -> List[TCC_Curve]:
+    GroundFast_str = property(_get_GroundFast_str, _set_GroundFast_str)
+
+    def _get_GroundFast(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Ground Fast trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored). Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -720,12 +719,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(8)
 
-    @GroundFast.setter
-    def GroundFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_GroundFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(8, value)
 
-    @property
-    def GroundDelayed_str(self) -> List[str]:
+    GroundFast = property(_get_GroundFast, _set_GroundFast)
+
+    def _get_GroundDelayed_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -733,12 +732,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(9)
 
-    @GroundDelayed_str.setter
-    def GroundDelayed_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_GroundDelayed_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(9, value)
 
-    @property
-    def GroundDelayed(self) -> List[TCC_Curve]:
+    GroundDelayed_str = property(_get_GroundDelayed_str, _set_GroundDelayed_str)
+
+    def _get_GroundDelayed(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the Ground Delayed trip.  Must have been previously defined as a TCC_Curve object. Default is none (ignored).Multiplying the current values in the curve by the "groundtrip" value gives the actual current.
 
@@ -746,12 +745,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(9)
 
-    @GroundDelayed.setter
-    def GroundDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_GroundDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(9, value)
 
-    @property
-    def PhaseTrip(self) -> BatchFloat64ArrayProxy:
+    GroundDelayed = property(_get_GroundDelayed, _set_GroundDelayed)
+
+    def _get_PhaseTrip(self) -> BatchFloat64ArrayProxy:
         """
         Multiplier or actual phase amps for the phase TCC curve.  Defaults to 1.0.
 
@@ -759,12 +758,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @PhaseTrip.setter
-    def PhaseTrip(self, value: Union[float, Float64Array]):
+    def _set_PhaseTrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def GroundTrip(self) -> BatchFloat64ArrayProxy:
+    PhaseTrip = property(_get_PhaseTrip, _set_PhaseTrip)
+
+    def _get_GroundTrip(self) -> BatchFloat64ArrayProxy:
         """
         Multiplier or actual ground amps (3I0) for the ground TCC curve.  Defaults to 1.0.
 
@@ -772,12 +771,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @GroundTrip.setter
-    def GroundTrip(self, value: Union[float, Float64Array]):
+    def _set_GroundTrip(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def PhaseInst(self) -> BatchFloat64ArrayProxy:
+    GroundTrip = property(_get_GroundTrip, _set_GroundTrip)
+
+    def _get_PhaseInst(self) -> BatchFloat64ArrayProxy:
         """
         Actual amps for instantaneous phase trip which is assumed to happen in 0.01 sec + Delay Time. Default is 0.0, which signifies no inst trip. 
 
@@ -785,12 +784,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @PhaseInst.setter
-    def PhaseInst(self, value: Union[float, Float64Array]):
+    def _set_PhaseInst(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def GroundInst(self) -> BatchFloat64ArrayProxy:
+    PhaseInst = property(_get_PhaseInst, _set_PhaseInst)
+
+    def _get_GroundInst(self) -> BatchFloat64ArrayProxy:
         """
         Actual amps for instantaneous ground trip which is assumed to happen in 0.01 sec + Delay Time.Default is 0.0, which signifies no inst trip.
 
@@ -798,12 +797,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @GroundInst.setter
-    def GroundInst(self, value: Union[float, Float64Array]):
+    def _set_GroundInst(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def Reset(self) -> BatchFloat64ArrayProxy:
+    GroundInst = property(_get_GroundInst, _set_GroundInst)
+
+    def _get_Reset(self) -> BatchFloat64ArrayProxy:
         """
         Reset time in sec for Recloser.  Default is 15. 
 
@@ -811,12 +810,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @Reset.setter
-    def Reset(self, value: Union[float, Float64Array]):
+    def _set_Reset(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def Shots(self) -> BatchInt32ArrayProxy:
+    Reset = property(_get_Reset, _set_Reset)
+
+    def _get_Shots(self) -> BatchInt32ArrayProxy:
         """
         Total Number of fast and delayed shots to lockout.  Default is 4. This is one more than the number of reclose intervals.
 
@@ -824,12 +823,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 15)
 
-    @Shots.setter
-    def Shots(self, value: Union[int, Int32Array]):
+    def _set_Shots(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(15, value)
 
-    @property
-    def RecloseIntervals(self) -> List[Float64Array]:
+    Shots = property(_get_Shots, _set_Shots)
+
+    def _get_RecloseIntervals(self) -> List[Float64Array]:
         """
         Array of reclose intervals.  Default for Recloser is (0.5, 2.0, 2.0) seconds. A locked out Recloser must be closed manually (action=close).
 
@@ -840,12 +839,12 @@ class RecloserBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @RecloseIntervals.setter
-    def RecloseIntervals(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_RecloseIntervals(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(16, value)
 
-    @property
-    def Delay(self) -> BatchFloat64ArrayProxy:
+    RecloseIntervals = property(_get_RecloseIntervals, _set_RecloseIntervals)
+
+    def _get_Delay(self) -> BatchFloat64ArrayProxy:
         """
         Fixed delay time (sec) added to Recloser trip time. Default is 0.0. Used to represent breaker time or any other delay.
 
@@ -853,12 +852,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @Delay.setter
-    def Delay(self, value: Union[float, Float64Array]):
+    def _set_Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def TDPhFast(self) -> BatchFloat64ArrayProxy:
+    Delay = property(_get_Delay, _set_Delay)
+
+    def _get_TDPhFast(self) -> BatchFloat64ArrayProxy:
         """
         Time dial for Phase Fast trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -866,12 +865,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @TDPhFast.setter
-    def TDPhFast(self, value: Union[float, Float64Array]):
+    def _set_TDPhFast(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def TDGrFast(self) -> BatchFloat64ArrayProxy:
+    TDPhFast = property(_get_TDPhFast, _set_TDPhFast)
+
+    def _get_TDGrFast(self) -> BatchFloat64ArrayProxy:
         """
         Time dial for Ground Fast trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -879,12 +878,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @TDGrFast.setter
-    def TDGrFast(self, value: Union[float, Float64Array]):
+    def _set_TDGrFast(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def TDPhDelayed(self) -> BatchFloat64ArrayProxy:
+    TDGrFast = property(_get_TDGrFast, _set_TDGrFast)
+
+    def _get_TDPhDelayed(self) -> BatchFloat64ArrayProxy:
         """
         Time dial for Phase Delayed trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -892,12 +891,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @TDPhDelayed.setter
-    def TDPhDelayed(self, value: Union[float, Float64Array]):
+    def _set_TDPhDelayed(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def TDGrDelayed(self) -> BatchFloat64ArrayProxy:
+    TDPhDelayed = property(_get_TDPhDelayed, _set_TDPhDelayed)
+
+    def _get_TDGrDelayed(self) -> BatchFloat64ArrayProxy:
         """
         Time dial for Ground Delayed trip curve. Multiplier on time axis of specified curve. Default=1.0.
 
@@ -905,12 +904,12 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    @TDGrDelayed.setter
-    def TDGrDelayed(self, value: Union[float, Float64Array]):
+    def _set_TDGrDelayed(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
-    @property
-    def Normal(self) -> BatchInt32ArrayProxy:
+    TDGrDelayed = property(_get_TDGrDelayed, _set_TDGrDelayed)
+
+    def _get_Normal(self) -> BatchInt32ArrayProxy:
         """
         {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -918,16 +917,16 @@ class RecloserBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 23)
 
-    @Normal.setter
-    def Normal(self, value: Union[AnyStr, int, enums.RecloserState, List[AnyStr], List[int], List[enums.RecloserState], Int32Array]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.RecloserState, List[AnyStr], List[int], List[enums.RecloserState], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(23, value)
             return
-    
+
         self._set_batch_int32_array(23, value)
 
-    @property
-    def Normal_str(self) -> str:
+    Normal = property(_get_Normal, _set_Normal)
+
+    def _get_Normal_str(self) -> str:
         """
         {Open | Closed} Normal state of the recloser. The recloser reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -935,12 +934,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(23)
 
-    @Normal_str.setter
-    def Normal_str(self, value: AnyStr):
+    def _set_Normal_str(self, value: AnyStr):
         self.Normal = value
 
-    @property
-    def State(self) -> BatchInt32ArrayProxy:
+    Normal_str = property(_get_Normal_str, _set_Normal_str)
+
+    def _get_State(self) -> BatchInt32ArrayProxy:
         """
         {Open | Closed} Actual state of the recloser. Upon setting, immediately forces state of the recloser, overriding the Recloser control. Simulates manual control on recloser. Defaults to Closed. "Open" causes the controlled element to open and lock out. "Closed" causes the controlled element to close and the recloser to reset to its first operation.
 
@@ -948,16 +947,16 @@ class RecloserBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 24)
 
-    @State.setter
-    def State(self, value: Union[AnyStr, int, enums.RecloserState, List[AnyStr], List[int], List[enums.RecloserState], Int32Array]):
+    def _set_State(self, value: Union[AnyStr, int, enums.RecloserState, List[AnyStr], List[int], List[enums.RecloserState], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(24, value)
             return
-    
+
         self._set_batch_int32_array(24, value)
 
-    @property
-    def State_str(self) -> str:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> str:
         """
         {Open | Closed} Actual state of the recloser. Upon setting, immediately forces state of the recloser, overriding the Recloser control. Simulates manual control on recloser. Defaults to Closed. "Open" causes the controlled element to open and lock out. "Closed" causes the controlled element to close and the recloser to reset to its first operation.
 
@@ -965,12 +964,12 @@ class RecloserBatch(DSSBatch):
         """
         return self._get_batch_str_prop(24)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    State_str = property(_get_State_str, _set_State_str)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -978,23 +977,25 @@ class RecloserBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 25)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 26.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(26)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(26, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1040,7 +1041,7 @@ class IRecloser(IDSSObj,RecloserBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Recloser, RecloserBatch)
         RecloserBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Recloser:

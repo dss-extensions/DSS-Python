@@ -34,8 +34,7 @@ class SwtControl(DSSObj, CktElementMixin):
         'like': 11,
     }
 
-    @property
-    def SwitchedObj_str(self) -> str:
+    def _get_SwitchedObj_str(self) -> str:
         """
         Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
 
@@ -43,12 +42,12 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(1)
 
-    @SwitchedObj_str.setter
-    def SwitchedObj_str(self, value: AnyStr):
+    def _set_SwitchedObj_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def SwitchedObj(self) -> DSSObj:
+    SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
+
+    def _get_SwitchedObj(self) -> DSSObj:
         """
         Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
 
@@ -56,16 +55,16 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(1, None)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def SwitchedTerm(self) -> int:
+    SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
+
+    def _get_SwitchedTerm(self) -> int:
         """
         Terminal number of the controlled element switch. 1 or 2, typically.  Default is 1.
 
@@ -73,12 +72,12 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @SwitchedTerm.setter
-    def SwitchedTerm(self, value: int):
+    def _set_SwitchedTerm(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def Lock(self) -> bool:
+    SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
+
+    def _get_Lock(self) -> bool:
         """
         {Yes | No} Delayed action. Sends CTRL_LOCK or CTRL_UNLOCK message to control queue. After delay time, controlled switch is locked in its present open / close state or unlocked. Switch will not respond to either manual (Action) or automatic (APIs) control or internal OpenDSS Reset when locked.
 
@@ -86,12 +85,12 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 4) != 0
 
-    @Lock.setter
-    def Lock(self, value: bool):
+    def _set_Lock(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
-    @property
-    def Delay(self) -> float:
+    Lock = property(_get_Lock, _set_Lock)
+
+    def _get_Delay(self) -> float:
         """
         Operating time delay (sec) of the switch. Defaults to 120.
 
@@ -99,12 +98,12 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @Delay.setter
-    def Delay(self, value: float):
+    def _set_Delay(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def Normal(self) -> enums.SwtControlState:
+    Delay = property(_get_Delay, _set_Delay)
+
+    def _get_Normal(self) -> enums.SwtControlState:
         """
         {Open | Closed] Normal state of the switch. If not Locked, the switch reverts to this state for reset, change of mode, etc. Defaults to first Action or State specified if not specifically declared.
 
@@ -112,15 +111,15 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return enums.SwtControlState(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    @Normal.setter
-    def Normal(self, value: Union[AnyStr, int, enums.SwtControlState]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.SwtControlState]):
         if not isinstance(value, int):
             self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def Normal_str(self) -> str:
+    Normal = property(_get_Normal, _set_Normal)
+
+    def _get_Normal_str(self) -> str:
         """
         {Open | Closed] Normal state of the switch. If not Locked, the switch reverts to this state for reset, change of mode, etc. Defaults to first Action or State specified if not specifically declared.
 
@@ -128,12 +127,12 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(6)
 
-    @Normal_str.setter
-    def Normal_str(self, value: AnyStr):
+    def _set_Normal_str(self, value: AnyStr):
         self.Normal = value
 
-    @property
-    def State(self) -> enums.SwtControlState:
+    Normal_str = property(_get_Normal_str, _set_Normal_str)
+
+    def _get_State(self) -> enums.SwtControlState:
         """
         {Open | Closed] Present state of the switch. Upon setting, immediately forces state of switch.
 
@@ -141,15 +140,15 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return enums.SwtControlState(self._lib.Obj_GetInt32(self._ptr, 7))
 
-    @State.setter
-    def State(self, value: Union[AnyStr, int, enums.SwtControlState]):
+    def _set_State(self, value: Union[AnyStr, int, enums.SwtControlState]):
         if not isinstance(value, int):
             self._set_string_o(7, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
-    @property
-    def State_str(self) -> str:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> str:
         """
         {Open | Closed] Present state of the switch. Upon setting, immediately forces state of switch.
 
@@ -157,9 +156,10 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(7)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
+
+    State_str = property(_get_State_str, _set_State_str)
 
     def Reset(self, value: bool = True):
         """
@@ -169,8 +169,7 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         self._lib.Obj_SetInt32(self._ptr, 8, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -178,12 +177,12 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -191,9 +190,10 @@ class SwtControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 10, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -224,8 +224,7 @@ class SwtControlBatch(DSSBatch):
     _cls_idx = 34
 
 
-    @property
-    def SwitchedObj_str(self) -> List[str]:
+    def _get_SwitchedObj_str(self) -> List[str]:
         """
         Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
 
@@ -233,12 +232,12 @@ class SwtControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @SwitchedObj_str.setter
-    def SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def SwitchedObj(self) -> List[DSSObj]:
+    SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
+
+    def _get_SwitchedObj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
 
@@ -246,12 +245,12 @@ class SwtControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def SwitchedTerm(self) -> BatchInt32ArrayProxy:
+    SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
+
+    def _get_SwitchedTerm(self) -> BatchInt32ArrayProxy:
         """
         Terminal number of the controlled element switch. 1 or 2, typically.  Default is 1.
 
@@ -259,26 +258,27 @@ class SwtControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @SwitchedTerm.setter
-    def SwitchedTerm(self, value: Union[int, Int32Array]):
+    def _set_SwitchedTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def Lock(self) -> List[bool]:
+    SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
+
+    def _get_Lock(self) -> List[bool]:
         """
         {Yes | No} Delayed action. Sends CTRL_LOCK or CTRL_UNLOCK message to control queue. After delay time, controlled switch is locked in its present open / close state or unlocked. Switch will not respond to either manual (Action) or automatic (APIs) control or internal OpenDSS Reset when locked.
 
         DSS property name: `Lock`, DSS property index: 4.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(4)
         ]
-    @Lock.setter
-    def Lock(self, value: bool):
+
+    def _set_Lock(self, value: bool):
         self._set_batch_int32_array(4, value)
 
-    @property
-    def Delay(self) -> BatchFloat64ArrayProxy:
+    Lock = property(_get_Lock, _set_Lock)
+
+    def _get_Delay(self) -> BatchFloat64ArrayProxy:
         """
         Operating time delay (sec) of the switch. Defaults to 120.
 
@@ -286,12 +286,12 @@ class SwtControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @Delay.setter
-    def Delay(self, value: Union[float, Float64Array]):
+    def _set_Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def Normal(self) -> BatchInt32ArrayProxy:
+    Delay = property(_get_Delay, _set_Delay)
+
+    def _get_Normal(self) -> BatchInt32ArrayProxy:
         """
         {Open | Closed] Normal state of the switch. If not Locked, the switch reverts to this state for reset, change of mode, etc. Defaults to first Action or State specified if not specifically declared.
 
@@ -299,16 +299,16 @@ class SwtControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Normal.setter
-    def Normal(self, value: Union[AnyStr, int, enums.SwtControlState, List[AnyStr], List[int], List[enums.SwtControlState], Int32Array]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.SwtControlState, List[AnyStr], List[int], List[enums.SwtControlState], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
-    
+
         self._set_batch_int32_array(6, value)
 
-    @property
-    def Normal_str(self) -> str:
+    Normal = property(_get_Normal, _set_Normal)
+
+    def _get_Normal_str(self) -> str:
         """
         {Open | Closed] Normal state of the switch. If not Locked, the switch reverts to this state for reset, change of mode, etc. Defaults to first Action or State specified if not specifically declared.
 
@@ -316,12 +316,12 @@ class SwtControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @Normal_str.setter
-    def Normal_str(self, value: AnyStr):
+    def _set_Normal_str(self, value: AnyStr):
         self.Normal = value
 
-    @property
-    def State(self) -> BatchInt32ArrayProxy:
+    Normal_str = property(_get_Normal_str, _set_Normal_str)
+
+    def _get_State(self) -> BatchInt32ArrayProxy:
         """
         {Open | Closed] Present state of the switch. Upon setting, immediately forces state of switch.
 
@@ -329,16 +329,16 @@ class SwtControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 7)
 
-    @State.setter
-    def State(self, value: Union[AnyStr, int, enums.SwtControlState, List[AnyStr], List[int], List[enums.SwtControlState], Int32Array]):
+    def _set_State(self, value: Union[AnyStr, int, enums.SwtControlState, List[AnyStr], List[int], List[enums.SwtControlState], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(7, value)
             return
-    
+
         self._set_batch_int32_array(7, value)
 
-    @property
-    def State_str(self) -> str:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> str:
         """
         {Open | Closed] Present state of the switch. Upon setting, immediately forces state of switch.
 
@@ -346,9 +346,10 @@ class SwtControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
+
+    State_str = property(_get_State_str, _set_State_str)
 
     def Reset(self, value: Union[bool, List[bool]] = True):
         """
@@ -358,8 +359,7 @@ class SwtControlBatch(DSSBatch):
         """
         self._set_batch_int32_array(8, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -367,23 +367,25 @@ class SwtControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 10.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(10)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(10, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -413,7 +415,7 @@ class ISwtControl(IDSSObj,SwtControlBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, SwtControl, SwtControlBatch)
         SwtControlBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> SwtControl:

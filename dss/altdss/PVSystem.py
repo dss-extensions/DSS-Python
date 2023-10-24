@@ -93,8 +93,7 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         'like': 54,
     }
 
-    @property
-    def Phases(self) -> int:
+    def _get_Phases(self) -> int:
         """
         Number of Phases, this PVSystem element.  Power is evenly divided among phases.
 
@@ -102,12 +101,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def Bus1(self) -> str:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> str:
         """
         Bus to which the PVSystem element is connected.  May include specific node specification.
 
@@ -115,12 +114,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(2)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def kV(self) -> float:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> float:
         """
         Nominal rated (1.0 per unit) voltage, kV, for PVSystem element. For 2- and 3-phase PVSystem elements, specify phase-phase kV. Otherwise, specify actual kV across each branch of the PVSystem element. If 1-phase wye (star or LN), specify phase-neutral kV. If 1-phase delta or phase-phase connected, specify phase-phase kV.
 
@@ -128,12 +127,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @kV.setter
-    def kV(self, value: float):
+    def _set_kV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def Irradiance(self) -> float:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_Irradiance(self) -> float:
         """
         Get/set the present irradiance value in kW/sq-m. Used as base value for shape multipliers. Generally entered as peak value for the time period of interest and the yearly, daily, and duty load shape objects are defined as per unit multipliers (just like Loads/Generators).
 
@@ -141,12 +140,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @Irradiance.setter
-    def Irradiance(self, value: float):
+    def _set_Irradiance(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def Pmpp(self) -> float:
+    Irradiance = property(_get_Irradiance, _set_Irradiance)
+
+    def _get_Pmpp(self) -> float:
         """
         Get/set the rated max power of the PV array for 1.0 kW/sq-m irradiance and a user-selected array temperature. The P-TCurve should be defined relative to the selected array temperature.
 
@@ -154,12 +153,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @Pmpp.setter
-    def Pmpp(self, value: float):
+    def _set_Pmpp(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def pctPmpp(self) -> float:
+    Pmpp = property(_get_Pmpp, _set_Pmpp)
+
+    def _get_pctPmpp(self) -> float:
         """
         Upper limit on active power as a percentage of Pmpp.
 
@@ -167,12 +166,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @pctPmpp.setter
-    def pctPmpp(self, value: float):
+    def _set_pctPmpp(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def Temperature(self) -> float:
+    pctPmpp = property(_get_pctPmpp, _set_pctPmpp)
+
+    def _get_Temperature(self) -> float:
         """
         Get/set the present Temperature. Used as fixed value corresponding to PTCurve property. A multiplier is obtained from the Pmpp-Temp curve and applied to the nominal Pmpp from the irradiance to determine the net array output.
 
@@ -180,12 +179,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @Temperature.setter
-    def Temperature(self, value: float):
+    def _set_Temperature(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def PF(self) -> float:
+    Temperature = property(_get_Temperature, _set_Temperature)
+
+    def _get_PF(self) -> float:
         """
         Nominally, the power factor for the output power. Default is 1.0. Setting this property will cause the inverter to operate in constant power factor mode.Enter negative when kW and kvar have opposite signs.
         A positive power factor signifies that the PVSystem element produces vars 
@@ -195,12 +194,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @PF.setter
-    def PF(self, value: float):
+    def _set_PF(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def Conn(self) -> enums.Connection:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_Conn(self) -> enums.Connection:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -208,15 +207,15 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 9))
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
         if not isinstance(value, int):
             self._set_string_o(9, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 9, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -224,12 +223,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(9)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def kvar(self) -> float:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_kvar(self) -> float:
         """
         Get/set the present kvar value.  Setting this property forces the inverter to operate in constant kvar mode.
 
@@ -237,12 +236,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @kvar.setter
-    def kvar(self, value: float):
+    def _set_kvar(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def kVA(self) -> float:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_kVA(self) -> float:
         """
         kVA rating of inverter. Used as the base for Dynamics mode and Harmonics mode values.
 
@@ -250,12 +249,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @kVA.setter
-    def kVA(self, value: float):
+    def _set_kVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def pctCutIn(self) -> float:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_pctCutIn(self) -> float:
         """
         % cut-in power -- % of kVA rating of inverter. When the inverter is OFF, the power from the array must be greater than this for the inverter to turn on.
 
@@ -263,12 +262,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @pctCutIn.setter
-    def pctCutIn(self, value: float):
+    def _set_pctCutIn(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def pctCutOut(self) -> float:
+    pctCutIn = property(_get_pctCutIn, _set_pctCutIn)
+
+    def _get_pctCutOut(self) -> float:
         """
         % cut-out power -- % of kVA rating of inverter. When the inverter is ON, the inverter turns OFF when the power from the array drops below this value.
 
@@ -276,12 +275,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @pctCutOut.setter
-    def pctCutOut(self, value: float):
+    def _set_pctCutOut(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def EffCurve_str(self) -> str:
+    pctCutOut = property(_get_pctCutOut, _set_pctCutOut)
+
+    def _get_EffCurve_str(self) -> str:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
 
@@ -289,12 +288,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(14)
 
-    @EffCurve_str.setter
-    def EffCurve_str(self, value: AnyStr):
+    def _set_EffCurve_str(self, value: AnyStr):
         self._set_string_o(14, value)
 
-    @property
-    def EffCurve(self) -> XYcurve:
+    EffCurve_str = property(_get_EffCurve_str, _set_EffCurve_str)
+
+    def _get_EffCurve(self) -> XYcurve:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
 
@@ -302,16 +301,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(14, XYcurve)
 
-    @EffCurve.setter
-    def EffCurve(self, value: Union[AnyStr, XYcurve]):
+    def _set_EffCurve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(14, value)
             return
 
         self._set_string_o(14, value)
 
-    @property
-    def PTCurve_str(self) -> str:
+    EffCurve = property(_get_EffCurve, _set_EffCurve)
+
+    def _get_PTCurve_str(self) -> str:
         """
         An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
 
@@ -319,12 +318,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(15)
 
-    @PTCurve_str.setter
-    def PTCurve_str(self, value: AnyStr):
+    def _set_PTCurve_str(self, value: AnyStr):
         self._set_string_o(15, value)
 
-    @property
-    def PTCurve(self) -> XYcurve:
+    PTCurve_str = property(_get_PTCurve_str, _set_PTCurve_str)
+
+    def _get_PTCurve(self) -> XYcurve:
         """
         An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
 
@@ -332,16 +331,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(15, XYcurve)
 
-    @PTCurve.setter
-    def PTCurve(self, value: Union[AnyStr, XYcurve]):
+    def _set_PTCurve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(15, value)
             return
 
         self._set_string_o(15, value)
 
-    @property
-    def pctR(self) -> float:
+    PTCurve = property(_get_PTCurve, _set_PTCurve)
+
+    def _get_pctR(self) -> float:
         """
         Equivalent percent internal resistance, ohms. Default is 50%. Placed in series with internal voltage source for harmonics and dynamics modes. (Limits fault current to about 2 pu if not current limited -- see LimitCurrent) 
 
@@ -349,12 +348,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @pctR.setter
-    def pctR(self, value: float):
+    def _set_pctR(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def pctX(self) -> float:
+    pctR = property(_get_pctR, _set_pctR)
+
+    def _get_pctX(self) -> float:
         """
         Equivalent percent internal reactance, ohms. Default is 0%. Placed in series with internal voltage source for harmonics and dynamics modes. 
 
@@ -362,12 +361,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @pctX.setter
-    def pctX(self, value: float):
+    def _set_pctX(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def Model(self) -> enums.PVSystemModel:
+    pctX = property(_get_pctX, _set_pctX)
+
+    def _get_Model(self) -> enums.PVSystemModel:
         """
         Integer code (default=1) for the model to use for power output variation with voltage. Valid values are:
 
@@ -379,12 +378,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return enums.PVSystemModel(self._lib.Obj_GetInt32(self._ptr, 18))
 
-    @Model.setter
-    def Model(self, value: Union[int, enums.PVSystemModel]):
+    def _set_Model(self, value: Union[int, enums.PVSystemModel]):
         self._lib.Obj_SetInt32(self._ptr, 18, value)
 
-    @property
-    def VMinpu(self) -> float:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_VMinpu(self) -> float:
         """
         Default = 0.90.  Minimum per unit voltage for which the Model is assumed to apply. Below this value, the load model reverts to a constant impedance model except for Dynamics model. In Dynamics mode, the current magnitude is limited to the value the power flow would compute for this voltage.
 
@@ -392,12 +391,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @VMinpu.setter
-    def VMinpu(self, value: float):
+    def _set_VMinpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def VMaxpu(self) -> float:
+    VMinpu = property(_get_VMinpu, _set_VMinpu)
+
+    def _get_VMaxpu(self) -> float:
         """
         Default = 1.10.  Maximum per unit voltage for which the Model is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
@@ -405,12 +404,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @VMaxpu.setter
-    def VMaxpu(self, value: float):
+    def _set_VMaxpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def Balanced(self) -> bool:
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+
+    def _get_Balanced(self) -> bool:
         """
         {Yes | No*} Default is No.  Force balanced current only for 3-phase PVSystems. Forces zero- and negative-sequence to zero. 
 
@@ -418,12 +417,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 21) != 0
 
-    @Balanced.setter
-    def Balanced(self, value: bool):
+    def _set_Balanced(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 21, value)
 
-    @property
-    def LimitCurrent(self) -> bool:
+    Balanced = property(_get_Balanced, _set_Balanced)
+
+    def _get_LimitCurrent(self) -> bool:
         """
         Limits current magnitude to Vminpu value for both 1-phase and 3-phase PVSystems similar to Generator Model 7. For 3-phase, limits the positive-sequence current but not the negative-sequence.
 
@@ -431,12 +430,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 22) != 0
 
-    @LimitCurrent.setter
-    def LimitCurrent(self, value: bool):
+    def _set_LimitCurrent(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 22, value)
 
-    @property
-    def Yearly_str(self) -> str:
+    LimitCurrent = property(_get_LimitCurrent, _set_LimitCurrent)
+
+    def _get_Yearly_str(self) -> str:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -444,12 +443,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(23)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: AnyStr):
+    def _set_Yearly_str(self, value: AnyStr):
         self._set_string_o(23, value)
 
-    @property
-    def Yearly(self) -> LoadShape:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> LoadShape:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -457,16 +456,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(23, LoadShape)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(23, value)
             return
 
         self._set_string_o(23, value)
 
-    @property
-    def Daily_str(self) -> str:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> str:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -474,12 +473,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(24)
 
-    @Daily_str.setter
-    def Daily_str(self, value: AnyStr):
+    def _set_Daily_str(self, value: AnyStr):
         self._set_string_o(24, value)
 
-    @property
-    def Daily(self) -> LoadShape:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> LoadShape:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -487,16 +486,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(24, LoadShape)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(24, value)
             return
 
         self._set_string_o(24, value)
 
-    @property
-    def Duty_str(self) -> str:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> str:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -504,12 +503,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(25)
 
-    @Duty_str.setter
-    def Duty_str(self, value: AnyStr):
+    def _set_Duty_str(self, value: AnyStr):
         self._set_string_o(25, value)
 
-    @property
-    def Duty(self) -> LoadShape:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> LoadShape:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -517,16 +516,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(25, LoadShape)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(25, value)
             return
 
         self._set_string_o(25, value)
 
-    @property
-    def TYearly_str(self) -> str:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_TYearly_str(self) -> str:
         """
         Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -534,12 +533,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(26)
 
-    @TYearly_str.setter
-    def TYearly_str(self, value: AnyStr):
+    def _set_TYearly_str(self, value: AnyStr):
         self._set_string_o(26, value)
 
-    @property
-    def TYearly(self) -> TShape:
+    TYearly_str = property(_get_TYearly_str, _set_TYearly_str)
+
+    def _get_TYearly(self) -> TShape:
         """
         Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -547,16 +546,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(26, TShape)
 
-    @TYearly.setter
-    def TYearly(self, value: Union[AnyStr, TShape]):
+    def _set_TYearly(self, value: Union[AnyStr, TShape]):
         if isinstance(value, DSSObj):
             self._set_obj(26, value)
             return
 
         self._set_string_o(26, value)
 
-    @property
-    def TDaily_str(self) -> str:
+    TYearly = property(_get_TYearly, _set_TYearly)
+
+    def _get_TDaily_str(self) -> str:
         """
         Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -564,12 +563,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(27)
 
-    @TDaily_str.setter
-    def TDaily_str(self, value: AnyStr):
+    def _set_TDaily_str(self, value: AnyStr):
         self._set_string_o(27, value)
 
-    @property
-    def TDaily(self) -> TShape:
+    TDaily_str = property(_get_TDaily_str, _set_TDaily_str)
+
+    def _get_TDaily(self) -> TShape:
         """
         Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -577,16 +576,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(27, TShape)
 
-    @TDaily.setter
-    def TDaily(self, value: Union[AnyStr, TShape]):
+    def _set_TDaily(self, value: Union[AnyStr, TShape]):
         if isinstance(value, DSSObj):
             self._set_obj(27, value)
             return
 
         self._set_string_o(27, value)
 
-    @property
-    def TDuty_str(self) -> str:
+    TDaily = property(_get_TDaily, _set_TDaily)
+
+    def _get_TDuty_str(self) -> str:
         """
         Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -594,12 +593,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(28)
 
-    @TDuty_str.setter
-    def TDuty_str(self, value: AnyStr):
+    def _set_TDuty_str(self, value: AnyStr):
         self._set_string_o(28, value)
 
-    @property
-    def TDuty(self) -> TShape:
+    TDuty_str = property(_get_TDuty_str, _set_TDuty_str)
+
+    def _get_TDuty(self) -> TShape:
         """
         Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -607,16 +606,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(28, TShape)
 
-    @TDuty.setter
-    def TDuty(self, value: Union[AnyStr, TShape]):
+    def _set_TDuty(self, value: Union[AnyStr, TShape]):
         if isinstance(value, DSSObj):
             self._set_obj(28, value)
             return
 
         self._set_string_o(28, value)
 
-    @property
-    def Class(self) -> int:
+    TDuty = property(_get_TDuty, _set_TDuty)
+
+    def _get_Class(self) -> int:
         """
         An arbitrary integer number representing the class of PVSystem element so that PVSystem values may be segregated by class.
 
@@ -624,12 +623,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 29)
 
-    @Class.setter
-    def Class(self, value: int):
+    def _set_Class(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 29, value)
 
-    @property
-    def UserModel(self) -> str:
+    Class = property(_get_Class, _set_Class)
+
+    def _get_UserModel(self) -> str:
         """
         Name of DLL containing user-written model, which computes the terminal currents for Dynamics studies, overriding the default model.  Set to "none" to negate previous setting.
 
@@ -637,12 +636,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(30)
 
-    @UserModel.setter
-    def UserModel(self, value: AnyStr):
+    def _set_UserModel(self, value: AnyStr):
         self._set_string_o(30, value)
 
-    @property
-    def UserData(self) -> str:
+    UserModel = property(_get_UserModel, _set_UserModel)
+
+    def _get_UserData(self) -> str:
         """
         String (in quotes or parentheses) that gets passed to user-written model for defining the data required for that model.
 
@@ -650,12 +649,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(31)
 
-    @UserData.setter
-    def UserData(self, value: AnyStr):
+    def _set_UserData(self, value: AnyStr):
         self._set_string_o(31, value)
 
-    @property
-    def DebugTrace(self) -> bool:
+    UserData = property(_get_UserData, _set_UserData)
+
+    def _get_DebugTrace(self) -> bool:
         """
         {Yes | No }  Default is no.  Turn this on to capture the progress of the PVSystem model for each iteration.  Creates a separate file for each PVSystem element named "PVSystem_name.csv".
 
@@ -663,12 +662,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 32) != 0
 
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+    def _set_DebugTrace(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 32, value)
 
-    @property
-    def VarFollowInverter(self) -> bool:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_VarFollowInverter(self) -> bool:
         """
         Boolean variable (Yes|No) or (True|False). Defaults to False which indicates that the reactive power generation/absorption does not respect the inverter status.When set to True, the PVSystem reactive power generation/absorption will cease when the inverter status is off, due to panel kW dropping below %Cutout.  The reactive power generation/absorption will begin again when the panel kW is above %Cutin.  When set to False, the PVSystem will generate/absorb reactive power regardless of the status of the inverter.
 
@@ -676,12 +675,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 33) != 0
 
-    @VarFollowInverter.setter
-    def VarFollowInverter(self, value: bool):
+    def _set_VarFollowInverter(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 33, value)
 
-    @property
-    def DutyStart(self) -> float:
+    VarFollowInverter = property(_get_VarFollowInverter, _set_VarFollowInverter)
+
+    def _get_DutyStart(self) -> float:
         """
         Starting time offset [hours] into the duty cycle shape for this PVSystem, defaults to 0
 
@@ -689,12 +688,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 34)
 
-    @DutyStart.setter
-    def DutyStart(self, value: float):
+    def _set_DutyStart(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 34, value)
 
-    @property
-    def WattPriority(self) -> bool:
+    DutyStart = property(_get_DutyStart, _set_DutyStart)
+
+    def _get_WattPriority(self) -> bool:
         """
         {Yes/No*/True/False} Set inverter to watt priority instead of the default var priority
 
@@ -702,12 +701,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 35) != 0
 
-    @WattPriority.setter
-    def WattPriority(self, value: bool):
+    def _set_WattPriority(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 35, value)
 
-    @property
-    def PFPriority(self) -> bool:
+    WattPriority = property(_get_WattPriority, _set_WattPriority)
+
+    def _get_PFPriority(self) -> bool:
         """
         {Yes/No*/True/False} Set inverter to operate with PF priority when in constant PF mode. If "Yes", value assigned to "WattPriority" is neglected. If controlled by an InvControl with either Volt-Var or DRC or both functions activated, PF priority is neglected and "WattPriority" is considered. Default = No.
 
@@ -715,12 +714,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 36) != 0
 
-    @PFPriority.setter
-    def PFPriority(self, value: bool):
+    def _set_PFPriority(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 36, value)
 
-    @property
-    def pctPMinNoVars(self) -> float:
+    PFPriority = property(_get_PFPriority, _set_PFPriority)
+
+    def _get_pctPMinNoVars(self) -> float:
         """
         Minimum active power as percentage of Pmpp under which there is no vars production/absorption.
 
@@ -728,12 +727,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 37)
 
-    @pctPMinNoVars.setter
-    def pctPMinNoVars(self, value: float):
+    def _set_pctPMinNoVars(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 37, value)
 
-    @property
-    def pctPMinkvarMax(self) -> float:
+    pctPMinNoVars = property(_get_pctPMinNoVars, _set_pctPMinNoVars)
+
+    def _get_pctPMinkvarMax(self) -> float:
         """
         Minimum active power as percentage of Pmpp that allows the inverter to produce/absorb reactive power up to its kvarMax or kvarMaxAbs.
 
@@ -741,12 +740,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 38)
 
-    @pctPMinkvarMax.setter
-    def pctPMinkvarMax(self, value: float):
+    def _set_pctPMinkvarMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 38, value)
 
-    @property
-    def kvarMax(self) -> float:
+    pctPMinkvarMax = property(_get_pctPMinkvarMax, _set_pctPMinkvarMax)
+
+    def _get_kvarMax(self) -> float:
         """
         Indicates the maximum reactive power GENERATION (un-signed numerical variable in kvar) for the inverter (as an un-signed value). Defaults to kVA rating of the inverter.
 
@@ -754,12 +753,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 39)
 
-    @kvarMax.setter
-    def kvarMax(self, value: float):
+    def _set_kvarMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 39, value)
 
-    @property
-    def kvarMaxAbs(self) -> float:
+    kvarMax = property(_get_kvarMax, _set_kvarMax)
+
+    def _get_kvarMaxAbs(self) -> float:
         """
         Indicates the maximum reactive power ABSORPTION (un-signed numerical variable in kvar) for the inverter (as an un-signed value). Defaults to kVA rating of the inverter.
 
@@ -767,12 +766,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 40)
 
-    @kvarMaxAbs.setter
-    def kvarMaxAbs(self, value: float):
+    def _set_kvarMaxAbs(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 40, value)
 
-    @property
-    def kVDC(self) -> float:
+    kvarMaxAbs = property(_get_kvarMaxAbs, _set_kvarMaxAbs)
+
+    def _get_kVDC(self) -> float:
         """
         Indicates the rated voltage (kV) at the input of the inverter at the peak of PV energy production. The value is normally greater or equal to the kV base of the PV system. It is used for dynamics simulation ONLY.
 
@@ -780,12 +779,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 41)
 
-    @kVDC.setter
-    def kVDC(self, value: float):
+    def _set_kVDC(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 41, value)
 
-    @property
-    def Kp(self) -> float:
+    kVDC = property(_get_kVDC, _set_kVDC)
+
+    def _get_Kp(self) -> float:
         """
         It is the proportional gain for the PI controller within the inverter. Use it to modify the controller response in dynamics simulation mode.
 
@@ -793,12 +792,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 42)
 
-    @Kp.setter
-    def Kp(self, value: float):
+    def _set_Kp(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 42, value)
 
-    @property
-    def PITol(self) -> float:
+    Kp = property(_get_Kp, _set_Kp)
+
+    def _get_PITol(self) -> float:
         """
         It is the tolerance (%) for the closed loop controller of the inverter. For dynamics simulation mode.
 
@@ -806,12 +805,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 43)
 
-    @PITol.setter
-    def PITol(self, value: float):
+    def _set_PITol(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 43, value)
 
-    @property
-    def SafeVoltage(self) -> float:
+    PITol = property(_get_PITol, _set_PITol)
+
+    def _get_SafeVoltage(self) -> float:
         """
         Indicates the voltage level (%) respect to the base voltage level for which the Inverter will operate. If this threshold is violated, the Inverter will enter safe mode (OFF). For dynamic simulation. By default is 80%
 
@@ -819,12 +818,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 44)
 
-    @SafeVoltage.setter
-    def SafeVoltage(self, value: float):
+    def _set_SafeVoltage(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 44, value)
 
-    @property
-    def SafeMode(self) -> bool:
+    SafeVoltage = property(_get_SafeVoltage, _set_SafeVoltage)
+
+    def _get_SafeMode(self) -> bool:
         """
         (Read only) Indicates whether the inverter entered (Yes) or not (No) into Safe Mode.
 
@@ -832,12 +831,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 45) != 0
 
-    @SafeMode.setter
-    def SafeMode(self, value: bool):
+    def _set_SafeMode(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 45, value)
 
-    @property
-    def DynamicEq_str(self) -> str:
+    SafeMode = property(_get_SafeMode, _set_SafeMode)
+
+    def _get_DynamicEq_str(self) -> str:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -845,12 +844,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(46)
 
-    @DynamicEq_str.setter
-    def DynamicEq_str(self, value: AnyStr):
+    def _set_DynamicEq_str(self, value: AnyStr):
         self._set_string_o(46, value)
 
-    @property
-    def DynamicEq(self) -> DynamicExp:
+    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
+
+    def _get_DynamicEq(self) -> DynamicExp:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -858,16 +857,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(46, DynamicExp)
 
-    @DynamicEq.setter
-    def DynamicEq(self, value: Union[AnyStr, DynamicExp]):
+    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp]):
         if isinstance(value, DSSObj):
             self._set_obj(46, value)
             return
 
         self._set_string_o(46, value)
 
-    @property
-    def DynOut(self) -> str:
+    DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
+
+    def _get_DynOut(self) -> str:
         """
         The name of the variables within the Dynamic equation that will be used to govern the PVSystem dynamics. This PVsystem model requires 1 output from the dynamic equation:
 
@@ -879,12 +878,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(47)
 
-    @DynOut.setter
-    def DynOut(self, value: AnyStr):
+    def _set_DynOut(self, value: AnyStr):
         self._set_string_o(47, value)
 
-    @property
-    def ControlMode(self) -> enums.InverterControlMode:
+    DynOut = property(_get_DynOut, _set_DynOut)
+
+    def _get_ControlMode(self) -> enums.InverterControlMode:
         """
         Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
@@ -894,15 +893,15 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return enums.InverterControlMode(self._lib.Obj_GetInt32(self._ptr, 48))
 
-    @ControlMode.setter
-    def ControlMode(self, value: Union[AnyStr, int, enums.InverterControlMode]):
+    def _set_ControlMode(self, value: Union[AnyStr, int, enums.InverterControlMode]):
         if not isinstance(value, int):
             self._set_string_o(48, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 48, value)
 
-    @property
-    def ControlMode_str(self) -> str:
+    ControlMode = property(_get_ControlMode, _set_ControlMode)
+
+    def _get_ControlMode_str(self) -> str:
         """
         Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
@@ -912,12 +911,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(48)
 
-    @ControlMode_str.setter
-    def ControlMode_str(self, value: AnyStr):
+    def _set_ControlMode_str(self, value: AnyStr):
         self.ControlMode = value
 
-    @property
-    def AmpLimit(self) -> float:
+    ControlMode_str = property(_get_ControlMode_str, _set_ControlMode_str)
+
+    def _get_AmpLimit(self) -> float:
         """
         The current limiter per phase for the IBR when operating in GFM mode. This limit is imposed to prevent the IBR to enter into Safe Mode when reaching the IBR power ratings.
         Once the IBR reaches this value, it remains there without moving into Safe Mode. This value needs to be set lower than the IBR Amps rating.
@@ -926,12 +925,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 49)
 
-    @AmpLimit.setter
-    def AmpLimit(self, value: float):
+    def _set_AmpLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 49, value)
 
-    @property
-    def AmpLimitGain(self) -> float:
+    AmpLimit = property(_get_AmpLimit, _set_AmpLimit)
+
+    def _get_AmpLimitGain(self) -> float:
         """
         Use it for fine tunning the current limiter when active, by default is 0.8, it has to be a value between 0.1 and 1. This value allows users to fine tune the IBRs current limiter to match with the user requirements.
 
@@ -939,12 +938,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 50)
 
-    @AmpLimitGain.setter
-    def AmpLimitGain(self, value: float):
+    def _set_AmpLimitGain(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 50, value)
 
-    @property
-    def Spectrum_str(self) -> str:
+    AmpLimitGain = property(_get_AmpLimitGain, _set_AmpLimitGain)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -952,12 +951,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_prop_string(51)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(51, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -965,16 +964,16 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._get_obj(51, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(51, value)
             return
 
         self._set_string_o(51, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -982,12 +981,12 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetFloat64(self._ptr, 52)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 52, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -995,9 +994,10 @@ class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin
         """
         return self._lib.Obj_GetInt32(self._ptr, 53) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 53, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1072,8 +1072,7 @@ class PVSystemBatch(DSSBatch):
     _cls_idx = 35
 
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of Phases, this PVSystem element.  Power is evenly divided among phases.
 
@@ -1081,25 +1080,25 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def Bus1(self) -> List[str]:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> List[str]:
         """
         Bus to which the PVSystem element is connected.  May include specific node specification.
 
         DSS property name: `Bus1`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def kV(self) -> BatchFloat64ArrayProxy:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
         Nominal rated (1.0 per unit) voltage, kV, for PVSystem element. For 2- and 3-phase PVSystem elements, specify phase-phase kV. Otherwise, specify actual kV across each branch of the PVSystem element. If 1-phase wye (star or LN), specify phase-neutral kV. If 1-phase delta or phase-phase connected, specify phase-phase kV.
 
@@ -1107,12 +1106,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @kV.setter
-    def kV(self, value: Union[float, Float64Array]):
+    def _set_kV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def Irradiance(self) -> BatchFloat64ArrayProxy:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_Irradiance(self) -> BatchFloat64ArrayProxy:
         """
         Get/set the present irradiance value in kW/sq-m. Used as base value for shape multipliers. Generally entered as peak value for the time period of interest and the yearly, daily, and duty load shape objects are defined as per unit multipliers (just like Loads/Generators).
 
@@ -1120,12 +1119,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @Irradiance.setter
-    def Irradiance(self, value: Union[float, Float64Array]):
+    def _set_Irradiance(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def Pmpp(self) -> BatchFloat64ArrayProxy:
+    Irradiance = property(_get_Irradiance, _set_Irradiance)
+
+    def _get_Pmpp(self) -> BatchFloat64ArrayProxy:
         """
         Get/set the rated max power of the PV array for 1.0 kW/sq-m irradiance and a user-selected array temperature. The P-TCurve should be defined relative to the selected array temperature.
 
@@ -1133,12 +1132,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @Pmpp.setter
-    def Pmpp(self, value: Union[float, Float64Array]):
+    def _set_Pmpp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def pctPmpp(self) -> BatchFloat64ArrayProxy:
+    Pmpp = property(_get_Pmpp, _set_Pmpp)
+
+    def _get_pctPmpp(self) -> BatchFloat64ArrayProxy:
         """
         Upper limit on active power as a percentage of Pmpp.
 
@@ -1146,12 +1145,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @pctPmpp.setter
-    def pctPmpp(self, value: Union[float, Float64Array]):
+    def _set_pctPmpp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def Temperature(self) -> BatchFloat64ArrayProxy:
+    pctPmpp = property(_get_pctPmpp, _set_pctPmpp)
+
+    def _get_Temperature(self) -> BatchFloat64ArrayProxy:
         """
         Get/set the present Temperature. Used as fixed value corresponding to PTCurve property. A multiplier is obtained from the Pmpp-Temp curve and applied to the nominal Pmpp from the irradiance to determine the net array output.
 
@@ -1159,12 +1158,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @Temperature.setter
-    def Temperature(self, value: Union[float, Float64Array]):
+    def _set_Temperature(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def PF(self) -> BatchFloat64ArrayProxy:
+    Temperature = property(_get_Temperature, _set_Temperature)
+
+    def _get_PF(self) -> BatchFloat64ArrayProxy:
         """
         Nominally, the power factor for the output power. Default is 1.0. Setting this property will cause the inverter to operate in constant power factor mode.Enter negative when kW and kvar have opposite signs.
         A positive power factor signifies that the PVSystem element produces vars 
@@ -1174,12 +1173,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @PF.setter
-    def PF(self, value: Union[float, Float64Array]):
+    def _set_PF(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def Conn(self) -> BatchInt32ArrayProxy:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -1187,16 +1186,16 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 9)
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(9, value)
             return
-    
+
         self._set_batch_int32_array(9, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -1204,12 +1203,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(9)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def kvar(self) -> BatchFloat64ArrayProxy:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_kvar(self) -> BatchFloat64ArrayProxy:
         """
         Get/set the present kvar value.  Setting this property forces the inverter to operate in constant kvar mode.
 
@@ -1217,12 +1216,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @kvar.setter
-    def kvar(self, value: Union[float, Float64Array]):
+    def _set_kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def kVA(self) -> BatchFloat64ArrayProxy:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_kVA(self) -> BatchFloat64ArrayProxy:
         """
         kVA rating of inverter. Used as the base for Dynamics mode and Harmonics mode values.
 
@@ -1230,12 +1229,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @kVA.setter
-    def kVA(self, value: Union[float, Float64Array]):
+    def _set_kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def pctCutIn(self) -> BatchFloat64ArrayProxy:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_pctCutIn(self) -> BatchFloat64ArrayProxy:
         """
         % cut-in power -- % of kVA rating of inverter. When the inverter is OFF, the power from the array must be greater than this for the inverter to turn on.
 
@@ -1243,12 +1242,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @pctCutIn.setter
-    def pctCutIn(self, value: Union[float, Float64Array]):
+    def _set_pctCutIn(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def pctCutOut(self) -> BatchFloat64ArrayProxy:
+    pctCutIn = property(_get_pctCutIn, _set_pctCutIn)
+
+    def _get_pctCutOut(self) -> BatchFloat64ArrayProxy:
         """
         % cut-out power -- % of kVA rating of inverter. When the inverter is ON, the inverter turns OFF when the power from the array drops below this value.
 
@@ -1256,12 +1255,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @pctCutOut.setter
-    def pctCutOut(self, value: Union[float, Float64Array]):
+    def _set_pctCutOut(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def EffCurve_str(self) -> List[str]:
+    pctCutOut = property(_get_pctCutOut, _set_pctCutOut)
+
+    def _get_EffCurve_str(self) -> List[str]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
 
@@ -1269,12 +1268,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(14)
 
-    @EffCurve_str.setter
-    def EffCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_EffCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(14, value)
 
-    @property
-    def EffCurve(self) -> List[XYcurve]:
+    EffCurve_str = property(_get_EffCurve_str, _set_EffCurve_str)
+
+    def _get_EffCurve(self) -> List[XYcurve]:
         """
         An XYCurve object, previously defined, that describes the PER UNIT efficiency vs PER UNIT of rated kVA for the inverter. Inverter output power is discounted by the multiplier obtained from this curve.
 
@@ -1282,12 +1281,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(14)
 
-    @EffCurve.setter
-    def EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(14, value)
 
-    @property
-    def PTCurve_str(self) -> List[str]:
+    EffCurve = property(_get_EffCurve, _set_EffCurve)
+
+    def _get_PTCurve_str(self) -> List[str]:
         """
         An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
 
@@ -1295,12 +1294,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(15)
 
-    @PTCurve_str.setter
-    def PTCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_PTCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(15, value)
 
-    @property
-    def PTCurve(self) -> List[XYcurve]:
+    PTCurve_str = property(_get_PTCurve_str, _set_PTCurve_str)
+
+    def _get_PTCurve(self) -> List[XYcurve]:
         """
         An XYCurve object, previously defined, that describes the PV array PER UNIT Pmpp vs Temperature curve. Temperature units must agree with the Temperature property and the Temperature shapes used for simulations. The Pmpp values are specified in per unit of the Pmpp value for 1 kW/sq-m irradiance. The value for the temperature at which Pmpp is defined should be 1.0. The net array power is determined by the irradiance * Pmpp * f(Temperature)
 
@@ -1308,12 +1307,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(15)
 
-    @PTCurve.setter
-    def PTCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_PTCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(15, value)
 
-    @property
-    def pctR(self) -> BatchFloat64ArrayProxy:
+    PTCurve = property(_get_PTCurve, _set_PTCurve)
+
+    def _get_pctR(self) -> BatchFloat64ArrayProxy:
         """
         Equivalent percent internal resistance, ohms. Default is 50%. Placed in series with internal voltage source for harmonics and dynamics modes. (Limits fault current to about 2 pu if not current limited -- see LimitCurrent) 
 
@@ -1321,12 +1320,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @pctR.setter
-    def pctR(self, value: Union[float, Float64Array]):
+    def _set_pctR(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def pctX(self) -> BatchFloat64ArrayProxy:
+    pctR = property(_get_pctR, _set_pctR)
+
+    def _get_pctX(self) -> BatchFloat64ArrayProxy:
         """
         Equivalent percent internal reactance, ohms. Default is 0%. Placed in series with internal voltage source for harmonics and dynamics modes. 
 
@@ -1334,12 +1333,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @pctX.setter
-    def pctX(self, value: Union[float, Float64Array]):
+    def _set_pctX(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def Model(self) -> BatchInt32ArrayProxy:
+    pctX = property(_get_pctX, _set_pctX)
+
+    def _get_Model(self) -> BatchInt32ArrayProxy:
         """
         Integer code (default=1) for the model to use for power output variation with voltage. Valid values are:
 
@@ -1351,12 +1350,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 18)
 
-    @Model.setter
-    def Model(self, value: Union[int, enums.PVSystemModel, Int32Array]):
+    def _set_Model(self, value: Union[int, enums.PVSystemModel, Int32Array]):
         self._set_batch_int32_array(18, value)
 
-    @property
-    def VMinpu(self) -> BatchFloat64ArrayProxy:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_VMinpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 0.90.  Minimum per unit voltage for which the Model is assumed to apply. Below this value, the load model reverts to a constant impedance model except for Dynamics model. In Dynamics mode, the current magnitude is limited to the value the power flow would compute for this voltage.
 
@@ -1364,12 +1363,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @VMinpu.setter
-    def VMinpu(self, value: Union[float, Float64Array]):
+    def _set_VMinpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def VMaxpu(self) -> BatchFloat64ArrayProxy:
+    VMinpu = property(_get_VMinpu, _set_VMinpu)
+
+    def _get_VMaxpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 1.10.  Maximum per unit voltage for which the Model is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
@@ -1377,40 +1376,42 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @VMaxpu.setter
-    def VMaxpu(self, value: Union[float, Float64Array]):
+    def _set_VMaxpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def Balanced(self) -> List[bool]:
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+
+    def _get_Balanced(self) -> List[bool]:
         """
         {Yes | No*} Default is No.  Force balanced current only for 3-phase PVSystems. Forces zero- and negative-sequence to zero. 
 
         DSS property name: `Balanced`, DSS property index: 21.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(21)
         ]
-    @Balanced.setter
-    def Balanced(self, value: bool):
+
+    def _set_Balanced(self, value: bool):
         self._set_batch_int32_array(21, value)
 
-    @property
-    def LimitCurrent(self) -> List[bool]:
+    Balanced = property(_get_Balanced, _set_Balanced)
+
+    def _get_LimitCurrent(self) -> List[bool]:
         """
         Limits current magnitude to Vminpu value for both 1-phase and 3-phase PVSystems similar to Generator Model 7. For 3-phase, limits the positive-sequence current but not the negative-sequence.
 
         DSS property name: `LimitCurrent`, DSS property index: 22.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(22)
         ]
-    @LimitCurrent.setter
-    def LimitCurrent(self, value: bool):
+
+    def _set_LimitCurrent(self, value: bool):
         self._set_batch_int32_array(22, value)
 
-    @property
-    def Yearly_str(self) -> List[str]:
+    LimitCurrent = property(_get_LimitCurrent, _set_LimitCurrent)
+
+    def _get_Yearly_str(self) -> List[str]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -1418,12 +1419,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(23)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(23, value)
 
-    @property
-    def Yearly(self) -> List[LoadShape]:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> List[LoadShape]:
         """
         Dispatch shape to use for yearly simulations.  Must be previously defined as a Loadshape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -1431,12 +1432,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(23)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(23, value)
 
-    @property
-    def Daily_str(self) -> List[str]:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> List[str]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -1444,12 +1445,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(24)
 
-    @Daily_str.setter
-    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(24, value)
 
-    @property
-    def Daily(self) -> List[LoadShape]:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> List[LoadShape]:
         """
         Dispatch shape to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically.  In the default dispatch mode, the PVSystem element uses this loadshape to trigger State changes.
 
@@ -1457,12 +1458,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(24)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(24, value)
 
-    @property
-    def Duty_str(self) -> List[str]:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> List[str]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -1470,12 +1471,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(25)
 
-    @Duty_str.setter
-    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(25, value)
 
-    @property
-    def Duty(self) -> List[LoadShape]:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> List[LoadShape]:
         """
         Load shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a Loadshape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.
 
@@ -1483,12 +1484,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(25)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(25, value)
 
-    @property
-    def TYearly_str(self) -> List[str]:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_TYearly_str(self) -> List[str]:
         """
         Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1496,12 +1497,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(26)
 
-    @TYearly_str.setter
-    def TYearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_TYearly_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(26, value)
 
-    @property
-    def TYearly(self) -> List[TShape]:
+    TYearly_str = property(_get_TYearly_str, _set_TYearly_str)
+
+    def _get_TYearly(self) -> List[TShape]:
         """
         Temperature shape to use for yearly simulations.  Must be previously defined as a TShape object. If this is not specified, the Daily dispatch shape, if any, is repeated during Yearly solution modes. The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1509,12 +1510,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(26)
 
-    @TYearly.setter
-    def TYearly(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
+    def _set_TYearly(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
         self._set_batch_obj_prop(26, value)
 
-    @property
-    def TDaily_str(self) -> List[str]:
+    TYearly = property(_get_TYearly, _set_TYearly)
+
+    def _get_TDaily_str(self) -> List[str]:
         """
         Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1522,12 +1523,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(27)
 
-    @TDaily_str.setter
-    def TDaily_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_TDaily_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(27, value)
 
-    @property
-    def TDaily(self) -> List[TShape]:
+    TDaily_str = property(_get_TDaily_str, _set_TDaily_str)
+
+    def _get_TDaily(self) -> List[TShape]:
         """
         Temperature shape to use for daily simulations.  Must be previously defined as a TShape object of 24 hrs, typically.  The PVSystem element uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1535,12 +1536,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(27)
 
-    @TDaily.setter
-    def TDaily(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
+    def _set_TDaily(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
         self._set_batch_obj_prop(27, value)
 
-    @property
-    def TDuty_str(self) -> List[str]:
+    TDaily = property(_get_TDaily, _set_TDaily)
+
+    def _get_TDuty_str(self) -> List[str]:
         """
         Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1548,12 +1549,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(28)
 
-    @TDuty_str.setter
-    def TDuty_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_TDuty_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(28, value)
 
-    @property
-    def TDuty(self) -> List[TShape]:
+    TDuty_str = property(_get_TDuty_str, _set_TDuty_str)
+
+    def _get_TDuty(self) -> List[TShape]:
         """
         Temperature shape to use for duty cycle dispatch simulations such as for solar ramp rate studies. Must be previously defined as a TShape object. Typically would have time intervals of 1-5 seconds. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat. The PVSystem model uses this TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree with the Pmpp vs T curve.
 
@@ -1561,12 +1562,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(28)
 
-    @TDuty.setter
-    def TDuty(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
+    def _set_TDuty(self, value: Union[AnyStr, TShape, List[AnyStr], List[TShape]]):
         self._set_batch_obj_prop(28, value)
 
-    @property
-    def Class(self) -> BatchInt32ArrayProxy:
+    TDuty = property(_get_TDuty, _set_TDuty)
+
+    def _get_Class(self) -> BatchInt32ArrayProxy:
         """
         An arbitrary integer number representing the class of PVSystem element so that PVSystem values may be segregated by class.
 
@@ -1574,66 +1575,68 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 29)
 
-    @Class.setter
-    def Class(self, value: Union[int, Int32Array]):
+    def _set_Class(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(29, value)
 
-    @property
-    def UserModel(self) -> List[str]:
+    Class = property(_get_Class, _set_Class)
+
+    def _get_UserModel(self) -> List[str]:
         """
         Name of DLL containing user-written model, which computes the terminal currents for Dynamics studies, overriding the default model.  Set to "none" to negate previous setting.
 
         DSS property name: `UserModel`, DSS property index: 30.
         """
-        return self._get_batch_str_prop(30) 
+        return self._get_batch_str_prop(30)
 
-    @UserModel.setter
-    def UserModel(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_UserModel(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(30, value)
 
-    @property
-    def UserData(self) -> List[str]:
+    UserModel = property(_get_UserModel, _set_UserModel)
+
+    def _get_UserData(self) -> List[str]:
         """
         String (in quotes or parentheses) that gets passed to user-written model for defining the data required for that model.
 
         DSS property name: `UserData`, DSS property index: 31.
         """
-        return self._get_batch_str_prop(31) 
+        return self._get_batch_str_prop(31)
 
-    @UserData.setter
-    def UserData(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_UserData(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(31, value)
 
-    @property
-    def DebugTrace(self) -> List[bool]:
+    UserData = property(_get_UserData, _set_UserData)
+
+    def _get_DebugTrace(self) -> List[bool]:
         """
         {Yes | No }  Default is no.  Turn this on to capture the progress of the PVSystem model for each iteration.  Creates a separate file for each PVSystem element named "PVSystem_name.csv".
 
         DSS property name: `DebugTrace`, DSS property index: 32.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(32)
         ]
-    @DebugTrace.setter
-    def DebugTrace(self, value: bool):
+
+    def _set_DebugTrace(self, value: bool):
         self._set_batch_int32_array(32, value)
 
-    @property
-    def VarFollowInverter(self) -> List[bool]:
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+
+    def _get_VarFollowInverter(self) -> List[bool]:
         """
         Boolean variable (Yes|No) or (True|False). Defaults to False which indicates that the reactive power generation/absorption does not respect the inverter status.When set to True, the PVSystem reactive power generation/absorption will cease when the inverter status is off, due to panel kW dropping below %Cutout.  The reactive power generation/absorption will begin again when the panel kW is above %Cutin.  When set to False, the PVSystem will generate/absorb reactive power regardless of the status of the inverter.
 
         DSS property name: `VarFollowInverter`, DSS property index: 33.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(33)
         ]
-    @VarFollowInverter.setter
-    def VarFollowInverter(self, value: bool):
+
+    def _set_VarFollowInverter(self, value: bool):
         self._set_batch_int32_array(33, value)
 
-    @property
-    def DutyStart(self) -> BatchFloat64ArrayProxy:
+    VarFollowInverter = property(_get_VarFollowInverter, _set_VarFollowInverter)
+
+    def _get_DutyStart(self) -> BatchFloat64ArrayProxy:
         """
         Starting time offset [hours] into the duty cycle shape for this PVSystem, defaults to 0
 
@@ -1641,40 +1644,42 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 34)
 
-    @DutyStart.setter
-    def DutyStart(self, value: Union[float, Float64Array]):
+    def _set_DutyStart(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
-    @property
-    def WattPriority(self) -> List[bool]:
+    DutyStart = property(_get_DutyStart, _set_DutyStart)
+
+    def _get_WattPriority(self) -> List[bool]:
         """
         {Yes/No*/True/False} Set inverter to watt priority instead of the default var priority
 
         DSS property name: `WattPriority`, DSS property index: 35.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(35)
         ]
-    @WattPriority.setter
-    def WattPriority(self, value: bool):
+
+    def _set_WattPriority(self, value: bool):
         self._set_batch_int32_array(35, value)
 
-    @property
-    def PFPriority(self) -> List[bool]:
+    WattPriority = property(_get_WattPriority, _set_WattPriority)
+
+    def _get_PFPriority(self) -> List[bool]:
         """
         {Yes/No*/True/False} Set inverter to operate with PF priority when in constant PF mode. If "Yes", value assigned to "WattPriority" is neglected. If controlled by an InvControl with either Volt-Var or DRC or both functions activated, PF priority is neglected and "WattPriority" is considered. Default = No.
 
         DSS property name: `PFPriority`, DSS property index: 36.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(36)
         ]
-    @PFPriority.setter
-    def PFPriority(self, value: bool):
+
+    def _set_PFPriority(self, value: bool):
         self._set_batch_int32_array(36, value)
 
-    @property
-    def pctPMinNoVars(self) -> BatchFloat64ArrayProxy:
+    PFPriority = property(_get_PFPriority, _set_PFPriority)
+
+    def _get_pctPMinNoVars(self) -> BatchFloat64ArrayProxy:
         """
         Minimum active power as percentage of Pmpp under which there is no vars production/absorption.
 
@@ -1682,12 +1687,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 37)
 
-    @pctPMinNoVars.setter
-    def pctPMinNoVars(self, value: Union[float, Float64Array]):
+    def _set_pctPMinNoVars(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(37, value)
 
-    @property
-    def pctPMinkvarMax(self) -> BatchFloat64ArrayProxy:
+    pctPMinNoVars = property(_get_pctPMinNoVars, _set_pctPMinNoVars)
+
+    def _get_pctPMinkvarMax(self) -> BatchFloat64ArrayProxy:
         """
         Minimum active power as percentage of Pmpp that allows the inverter to produce/absorb reactive power up to its kvarMax or kvarMaxAbs.
 
@@ -1695,12 +1700,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 38)
 
-    @pctPMinkvarMax.setter
-    def pctPMinkvarMax(self, value: Union[float, Float64Array]):
+    def _set_pctPMinkvarMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(38, value)
 
-    @property
-    def kvarMax(self) -> BatchFloat64ArrayProxy:
+    pctPMinkvarMax = property(_get_pctPMinkvarMax, _set_pctPMinkvarMax)
+
+    def _get_kvarMax(self) -> BatchFloat64ArrayProxy:
         """
         Indicates the maximum reactive power GENERATION (un-signed numerical variable in kvar) for the inverter (as an un-signed value). Defaults to kVA rating of the inverter.
 
@@ -1708,12 +1713,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 39)
 
-    @kvarMax.setter
-    def kvarMax(self, value: Union[float, Float64Array]):
+    def _set_kvarMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(39, value)
 
-    @property
-    def kvarMaxAbs(self) -> BatchFloat64ArrayProxy:
+    kvarMax = property(_get_kvarMax, _set_kvarMax)
+
+    def _get_kvarMaxAbs(self) -> BatchFloat64ArrayProxy:
         """
         Indicates the maximum reactive power ABSORPTION (un-signed numerical variable in kvar) for the inverter (as an un-signed value). Defaults to kVA rating of the inverter.
 
@@ -1721,12 +1726,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 40)
 
-    @kvarMaxAbs.setter
-    def kvarMaxAbs(self, value: Union[float, Float64Array]):
+    def _set_kvarMaxAbs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(40, value)
 
-    @property
-    def kVDC(self) -> BatchFloat64ArrayProxy:
+    kvarMaxAbs = property(_get_kvarMaxAbs, _set_kvarMaxAbs)
+
+    def _get_kVDC(self) -> BatchFloat64ArrayProxy:
         """
         Indicates the rated voltage (kV) at the input of the inverter at the peak of PV energy production. The value is normally greater or equal to the kV base of the PV system. It is used for dynamics simulation ONLY.
 
@@ -1734,12 +1739,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 41)
 
-    @kVDC.setter
-    def kVDC(self, value: Union[float, Float64Array]):
+    def _set_kVDC(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(41, value)
 
-    @property
-    def Kp(self) -> BatchFloat64ArrayProxy:
+    kVDC = property(_get_kVDC, _set_kVDC)
+
+    def _get_Kp(self) -> BatchFloat64ArrayProxy:
         """
         It is the proportional gain for the PI controller within the inverter. Use it to modify the controller response in dynamics simulation mode.
 
@@ -1747,12 +1752,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 42)
 
-    @Kp.setter
-    def Kp(self, value: Union[float, Float64Array]):
+    def _set_Kp(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(42, value)
 
-    @property
-    def PITol(self) -> BatchFloat64ArrayProxy:
+    Kp = property(_get_Kp, _set_Kp)
+
+    def _get_PITol(self) -> BatchFloat64ArrayProxy:
         """
         It is the tolerance (%) for the closed loop controller of the inverter. For dynamics simulation mode.
 
@@ -1760,12 +1765,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 43)
 
-    @PITol.setter
-    def PITol(self, value: Union[float, Float64Array]):
+    def _set_PITol(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(43, value)
 
-    @property
-    def SafeVoltage(self) -> BatchFloat64ArrayProxy:
+    PITol = property(_get_PITol, _set_PITol)
+
+    def _get_SafeVoltage(self) -> BatchFloat64ArrayProxy:
         """
         Indicates the voltage level (%) respect to the base voltage level for which the Inverter will operate. If this threshold is violated, the Inverter will enter safe mode (OFF). For dynamic simulation. By default is 80%
 
@@ -1773,26 +1778,27 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 44)
 
-    @SafeVoltage.setter
-    def SafeVoltage(self, value: Union[float, Float64Array]):
+    def _set_SafeVoltage(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(44, value)
 
-    @property
-    def SafeMode(self) -> List[bool]:
+    SafeVoltage = property(_get_SafeVoltage, _set_SafeVoltage)
+
+    def _get_SafeMode(self) -> List[bool]:
         """
         (Read only) Indicates whether the inverter entered (Yes) or not (No) into Safe Mode.
 
         DSS property name: `SafeMode`, DSS property index: 45.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(45)
         ]
-    @SafeMode.setter
-    def SafeMode(self, value: bool):
+
+    def _set_SafeMode(self, value: bool):
         self._set_batch_int32_array(45, value)
 
-    @property
-    def DynamicEq_str(self) -> List[str]:
+    SafeMode = property(_get_SafeMode, _set_SafeMode)
+
+    def _get_DynamicEq_str(self) -> List[str]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -1800,12 +1806,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(46)
 
-    @DynamicEq_str.setter
-    def DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(46, value)
 
-    @property
-    def DynamicEq(self) -> List[DynamicExp]:
+    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
+
+    def _get_DynamicEq(self) -> List[DynamicExp]:
         """
         The name of the dynamic equation (DynamicExp) that will be used for defining the dynamic behavior of the generator. If not defined, the generator dynamics will follow the built-in dynamic equation.
 
@@ -1813,12 +1819,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(46)
 
-    @DynamicEq.setter
-    def DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
+    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
         self._set_batch_obj_prop(46, value)
 
-    @property
-    def DynOut(self) -> List[str]:
+    DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
+
+    def _get_DynOut(self) -> List[str]:
         """
         The name of the variables within the Dynamic equation that will be used to govern the PVSystem dynamics. This PVsystem model requires 1 output from the dynamic equation:
 
@@ -1828,14 +1834,14 @@ class PVSystemBatch(DSSBatch):
 
         DSS property name: `DynOut`, DSS property index: 47.
         """
-        return self._get_batch_str_prop(47) 
+        return self._get_batch_str_prop(47)
 
-    @DynOut.setter
-    def DynOut(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DynOut(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(47, value)
 
-    @property
-    def ControlMode(self) -> BatchInt32ArrayProxy:
+    DynOut = property(_get_DynOut, _set_DynOut)
+
+    def _get_ControlMode(self) -> BatchInt32ArrayProxy:
         """
         Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
@@ -1845,16 +1851,16 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 48)
 
-    @ControlMode.setter
-    def ControlMode(self, value: Union[AnyStr, int, enums.InverterControlMode, List[AnyStr], List[int], List[enums.InverterControlMode], Int32Array]):
+    def _set_ControlMode(self, value: Union[AnyStr, int, enums.InverterControlMode, List[AnyStr], List[int], List[enums.InverterControlMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(48, value)
             return
-    
+
         self._set_batch_int32_array(48, value)
 
-    @property
-    def ControlMode_str(self) -> str:
+    ControlMode = property(_get_ControlMode, _set_ControlMode)
+
+    def _get_ControlMode_str(self) -> str:
         """
         Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
@@ -1864,12 +1870,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(48)
 
-    @ControlMode_str.setter
-    def ControlMode_str(self, value: AnyStr):
+    def _set_ControlMode_str(self, value: AnyStr):
         self.ControlMode = value
 
-    @property
-    def AmpLimit(self) -> BatchFloat64ArrayProxy:
+    ControlMode_str = property(_get_ControlMode_str, _set_ControlMode_str)
+
+    def _get_AmpLimit(self) -> BatchFloat64ArrayProxy:
         """
         The current limiter per phase for the IBR when operating in GFM mode. This limit is imposed to prevent the IBR to enter into Safe Mode when reaching the IBR power ratings.
         Once the IBR reaches this value, it remains there without moving into Safe Mode. This value needs to be set lower than the IBR Amps rating.
@@ -1878,12 +1884,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 49)
 
-    @AmpLimit.setter
-    def AmpLimit(self, value: Union[float, Float64Array]):
+    def _set_AmpLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(49, value)
 
-    @property
-    def AmpLimitGain(self) -> BatchFloat64ArrayProxy:
+    AmpLimit = property(_get_AmpLimit, _set_AmpLimit)
+
+    def _get_AmpLimitGain(self) -> BatchFloat64ArrayProxy:
         """
         Use it for fine tunning the current limiter when active, by default is 0.8, it has to be a value between 0.1 and 1. This value allows users to fine tune the IBRs current limiter to match with the user requirements.
 
@@ -1891,12 +1897,12 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 50)
 
-    @AmpLimitGain.setter
-    def AmpLimitGain(self, value: Union[float, Float64Array]):
+    def _set_AmpLimitGain(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(50, value)
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    AmpLimitGain = property(_get_AmpLimitGain, _set_AmpLimitGain)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1904,12 +1910,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_str_prop(51)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(51, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic voltage or current spectrum for this PVSystem element. A harmonic voltage source is assumed for the inverter. Default value is "default", which is defined when the DSS starts.
 
@@ -1917,12 +1923,12 @@ class PVSystemBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(51)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(51, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -1930,23 +1936,25 @@ class PVSystemBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 52)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(52, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 53.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(53)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(53, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -2020,7 +2028,7 @@ class IPVSystem(IDSSObj,PVSystemBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, PVSystem, PVSystemBatch)
         PVSystemBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> PVSystem:

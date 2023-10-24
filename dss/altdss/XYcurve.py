@@ -36,8 +36,7 @@ class XYcurve(DSSObj):
         'like': 14,
     }
 
-    @property
-    def NPts(self) -> int:
+    def _get_NPts(self) -> int:
         """
         Max number of points to expect in curve. This could get reset to the actual number of points defined if less than specified.
 
@@ -45,12 +44,12 @@ class XYcurve(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @NPts.setter
-    def NPts(self, value: int):
+    def _set_NPts(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def YArray(self) -> Float64Array:
+    NPts = property(_get_NPts, _set_NPts)
+
+    def _get_YArray(self) -> Float64Array:
         """
         Alternate way to enter Y values. Enter an array of Y values corresponding to the X values.  You can also use the syntax: 
         Yarray = (file=filename)     !for text file one value per line
@@ -63,12 +62,12 @@ class XYcurve(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    @YArray.setter
-    def YArray(self, value: Float64Array):
+    def _set_YArray(self, value: Float64Array):
         self._set_float64_array_o(3, value)
 
-    @property
-    def XArray(self) -> Float64Array:
+    YArray = property(_get_YArray, _set_YArray)
+
+    def _get_XArray(self) -> Float64Array:
         """
         Alternate way to enter X values. Enter an array of X values corresponding to the Y values.  You can also use the syntax: 
         Xarray = (file=filename)     !for text file one value per line
@@ -81,12 +80,12 @@ class XYcurve(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 4)
 
-    @XArray.setter
-    def XArray(self, value: Float64Array):
+    def _set_XArray(self, value: Float64Array):
         self._set_float64_array_o(4, value)
 
-    @property
-    def CSVFile(self) -> str:
+    XArray = property(_get_XArray, _set_XArray)
+
+    def _get_CSVFile(self) -> str:
         """
         Switch input of  X-Y curve data to a CSV file containing X, Y points one per line. NOTE: This action may reset the number of points to a lower value.
 
@@ -94,12 +93,12 @@ class XYcurve(DSSObj):
         """
         return self._get_prop_string(5)
 
-    @CSVFile.setter
-    def CSVFile(self, value: AnyStr):
+    def _set_CSVFile(self, value: AnyStr):
         self._set_string_o(5, value)
 
-    @property
-    def SngFile(self) -> str:
+    CSVFile = property(_get_CSVFile, _set_CSVFile)
+
+    def _get_SngFile(self) -> str:
         """
         Switch input of  X-Y curve data to a binary file of SINGLES containing X, Y points packed one after another. NOTE: This action may reset the number of points to a lower value.
 
@@ -107,12 +106,12 @@ class XYcurve(DSSObj):
         """
         return self._get_prop_string(6)
 
-    @SngFile.setter
-    def SngFile(self, value: AnyStr):
+    def _set_SngFile(self, value: AnyStr):
         self._set_string_o(6, value)
 
-    @property
-    def DblFile(self) -> str:
+    SngFile = property(_get_SngFile, _set_SngFile)
+
+    def _get_DblFile(self) -> str:
         """
         Switch input of  X-Y  curve data to a binary file of DOUBLES containing X, Y points packed one after another. NOTE: This action may reset the number of points to a lower value.
 
@@ -120,12 +119,12 @@ class XYcurve(DSSObj):
         """
         return self._get_prop_string(7)
 
-    @DblFile.setter
-    def DblFile(self, value: AnyStr):
+    def _set_DblFile(self, value: AnyStr):
         self._set_string_o(7, value)
 
-    @property
-    def X(self) -> float:
+    DblFile = property(_get_DblFile, _set_DblFile)
+
+    def _get_X(self) -> float:
         """
         Enter a value and then retrieve the interpolated Y value from the Y property. On input shifted then scaled to original curve. Scaled then shifted on output.
 
@@ -133,12 +132,12 @@ class XYcurve(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @X.setter
-    def X(self, value: float):
+    def _set_X(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def Y(self) -> float:
+    X = property(_get_X, _set_X)
+
+    def _get_Y(self) -> float:
         """
         Enter a value and then retrieve the interpolated X value from the X property. On input shifted then scaled to original curve. Scaled then shifted on output.
 
@@ -146,12 +145,12 @@ class XYcurve(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @Y.setter
-    def Y(self, value: float):
+    def _set_Y(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def XShift(self) -> float:
+    Y = property(_get_Y, _set_Y)
+
+    def _get_XShift(self) -> float:
         """
         Shift X property values (in/out) by this amount of offset. Default = 0. Does not change original definition of arrays.
 
@@ -159,12 +158,12 @@ class XYcurve(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @XShift.setter
-    def XShift(self, value: float):
+    def _set_XShift(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def YShift(self) -> float:
+    XShift = property(_get_XShift, _set_XShift)
+
+    def _get_YShift(self) -> float:
         """
         Shift Y property values (in/out) by this amount of offset. Default = 0. Does not change original definition of arrays.
 
@@ -172,12 +171,12 @@ class XYcurve(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @YShift.setter
-    def YShift(self, value: float):
+    def _set_YShift(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def XScale(self) -> float:
+    YShift = property(_get_YShift, _set_YShift)
+
+    def _get_XScale(self) -> float:
         """
         Scale X property values (in/out) by this factor. Default = 1.0. Does not change original definition of arrays.
 
@@ -185,12 +184,12 @@ class XYcurve(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @XScale.setter
-    def XScale(self, value: float):
+    def _set_XScale(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def YScale(self) -> float:
+    XScale = property(_get_XScale, _set_XScale)
+
+    def _get_YScale(self) -> float:
         """
         Scale Y property values (in/out) by this factor. Default = 1.0. Does not change original definition of arrays.
 
@@ -198,9 +197,10 @@ class XYcurve(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @YScale.setter
-    def YScale(self, value: float):
+    def _set_YScale(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
+
+    YScale = property(_get_YScale, _set_YScale)
 
     def Like(self, value: AnyStr):
         """
@@ -234,8 +234,7 @@ class XYcurveBatch(DSSBatch):
     _cls_idx = 5
 
 
-    @property
-    def NPts(self) -> BatchInt32ArrayProxy:
+    def _get_NPts(self) -> BatchInt32ArrayProxy:
         """
         Max number of points to expect in curve. This could get reset to the actual number of points defined if less than specified.
 
@@ -243,12 +242,12 @@ class XYcurveBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @NPts.setter
-    def NPts(self, value: Union[int, Int32Array]):
+    def _set_NPts(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def YArray(self) -> List[Float64Array]:
+    NPts = property(_get_NPts, _set_NPts)
+
+    def _get_YArray(self) -> List[Float64Array]:
         """
         Alternate way to enter Y values. Enter an array of Y values corresponding to the X values.  You can also use the syntax: 
         Yarray = (file=filename)     !for text file one value per line
@@ -264,12 +263,12 @@ class XYcurveBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @YArray.setter
-    def YArray(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_YArray(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(3, value)
 
-    @property
-    def XArray(self) -> List[Float64Array]:
+    YArray = property(_get_YArray, _set_YArray)
+
+    def _get_XArray(self) -> List[Float64Array]:
         """
         Alternate way to enter X values. Enter an array of X values corresponding to the Y values.  You can also use the syntax: 
         Xarray = (file=filename)     !for text file one value per line
@@ -285,51 +284,51 @@ class XYcurveBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @XArray.setter
-    def XArray(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_XArray(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(4, value)
 
-    @property
-    def CSVFile(self) -> List[str]:
+    XArray = property(_get_XArray, _set_XArray)
+
+    def _get_CSVFile(self) -> List[str]:
         """
         Switch input of  X-Y curve data to a CSV file containing X, Y points one per line. NOTE: This action may reset the number of points to a lower value.
 
         DSS property name: `CSVFile`, DSS property index: 5.
         """
-        return self._get_batch_str_prop(5) 
+        return self._get_batch_str_prop(5)
 
-    @CSVFile.setter
-    def CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(5, value)
 
-    @property
-    def SngFile(self) -> List[str]:
+    CSVFile = property(_get_CSVFile, _set_CSVFile)
+
+    def _get_SngFile(self) -> List[str]:
         """
         Switch input of  X-Y curve data to a binary file of SINGLES containing X, Y points packed one after another. NOTE: This action may reset the number of points to a lower value.
 
         DSS property name: `SngFile`, DSS property index: 6.
         """
-        return self._get_batch_str_prop(6) 
+        return self._get_batch_str_prop(6)
 
-    @SngFile.setter
-    def SngFile(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(6, value)
 
-    @property
-    def DblFile(self) -> List[str]:
+    SngFile = property(_get_SngFile, _set_SngFile)
+
+    def _get_DblFile(self) -> List[str]:
         """
         Switch input of  X-Y  curve data to a binary file of DOUBLES containing X, Y points packed one after another. NOTE: This action may reset the number of points to a lower value.
 
         DSS property name: `DblFile`, DSS property index: 7.
         """
-        return self._get_batch_str_prop(7) 
+        return self._get_batch_str_prop(7)
 
-    @DblFile.setter
-    def DblFile(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(7, value)
 
-    @property
-    def X(self) -> BatchFloat64ArrayProxy:
+    DblFile = property(_get_DblFile, _set_DblFile)
+
+    def _get_X(self) -> BatchFloat64ArrayProxy:
         """
         Enter a value and then retrieve the interpolated Y value from the Y property. On input shifted then scaled to original curve. Scaled then shifted on output.
 
@@ -337,12 +336,12 @@ class XYcurveBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @X.setter
-    def X(self, value: Union[float, Float64Array]):
+    def _set_X(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def Y(self) -> BatchFloat64ArrayProxy:
+    X = property(_get_X, _set_X)
+
+    def _get_Y(self) -> BatchFloat64ArrayProxy:
         """
         Enter a value and then retrieve the interpolated X value from the X property. On input shifted then scaled to original curve. Scaled then shifted on output.
 
@@ -350,12 +349,12 @@ class XYcurveBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @Y.setter
-    def Y(self, value: Union[float, Float64Array]):
+    def _set_Y(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def XShift(self) -> BatchFloat64ArrayProxy:
+    Y = property(_get_Y, _set_Y)
+
+    def _get_XShift(self) -> BatchFloat64ArrayProxy:
         """
         Shift X property values (in/out) by this amount of offset. Default = 0. Does not change original definition of arrays.
 
@@ -363,12 +362,12 @@ class XYcurveBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @XShift.setter
-    def XShift(self, value: Union[float, Float64Array]):
+    def _set_XShift(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def YShift(self) -> BatchFloat64ArrayProxy:
+    XShift = property(_get_XShift, _set_XShift)
+
+    def _get_YShift(self) -> BatchFloat64ArrayProxy:
         """
         Shift Y property values (in/out) by this amount of offset. Default = 0. Does not change original definition of arrays.
 
@@ -376,12 +375,12 @@ class XYcurveBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @YShift.setter
-    def YShift(self, value: Union[float, Float64Array]):
+    def _set_YShift(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def XScale(self) -> BatchFloat64ArrayProxy:
+    YShift = property(_get_YShift, _set_YShift)
+
+    def _get_XScale(self) -> BatchFloat64ArrayProxy:
         """
         Scale X property values (in/out) by this factor. Default = 1.0. Does not change original definition of arrays.
 
@@ -389,12 +388,12 @@ class XYcurveBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @XScale.setter
-    def XScale(self, value: Union[float, Float64Array]):
+    def _set_XScale(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def YScale(self) -> BatchFloat64ArrayProxy:
+    XScale = property(_get_XScale, _set_XScale)
+
+    def _get_YScale(self) -> BatchFloat64ArrayProxy:
         """
         Scale Y property values (in/out) by this factor. Default = 1.0. Does not change original definition of arrays.
 
@@ -402,9 +401,10 @@ class XYcurveBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @YScale.setter
-    def YScale(self, value: Union[float, Float64Array]):
+    def _set_YScale(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
+
+    YScale = property(_get_YScale, _set_YScale)
 
     def Like(self, value: AnyStr):
         """
@@ -437,7 +437,7 @@ class IXYcurve(IDSSObj,XYcurveBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, XYcurve, XYcurveBatch)
         XYcurveBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> XYcurve:

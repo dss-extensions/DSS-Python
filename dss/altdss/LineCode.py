@@ -50,8 +50,7 @@ class LineCode(DSSObj):
         'like': 28,
     }
 
-    @property
-    def NPhases(self) -> int:
+    def _get_NPhases(self) -> int:
         """
         Number of phases in the line this line code data represents.  Setting this property reinitializes the line code.  Impedance matrix is reset for default symmetrical component.
 
@@ -59,12 +58,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @NPhases.setter
-    def NPhases(self, value: int):
+    def _set_NPhases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def R1(self) -> float:
+    NPhases = property(_get_NPhases, _set_NPhases)
+
+    def _get_R1(self) -> float:
         """
         Positive-sequence Resistance, ohms per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition. See also Rmatrix.
 
@@ -72,12 +71,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 2)
 
-    @R1.setter
-    def R1(self, value: float):
+    def _set_R1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 2, value)
 
-    @property
-    def X1(self) -> float:
+    R1 = property(_get_R1, _set_R1)
+
+    def _get_X1(self) -> float:
         """
         Positive-sequence Reactance, ohms per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition. See also Xmatrix
 
@@ -85,12 +84,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @X1.setter
-    def X1(self, value: float):
+    def _set_X1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def R0(self) -> float:
+    X1 = property(_get_X1, _set_X1)
+
+    def _get_R0(self) -> float:
         """
         Zero-sequence Resistance, ohms per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition.
 
@@ -98,12 +97,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @R0.setter
-    def R0(self, value: float):
+    def _set_R0(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def X0(self) -> float:
+    R0 = property(_get_R0, _set_R0)
+
+    def _get_X0(self) -> float:
         """
         Zero-sequence Reactance, ohms per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition.
 
@@ -111,12 +110,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @X0.setter
-    def X0(self, value: float):
+    def _set_X0(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def C1(self) -> float:
+    X0 = property(_get_X0, _set_X0)
+
+    def _get_C1(self) -> float:
         """
         Positive-sequence capacitance, nf per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition. See also Cmatrix and B1.
 
@@ -124,12 +123,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @C1.setter
-    def C1(self, value: float):
+    def _set_C1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def C0(self) -> float:
+    C1 = property(_get_C1, _set_C1)
+
+    def _get_C0(self) -> float:
         """
         Zero-sequence capacitance, nf per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition. See also B0.
 
@@ -137,12 +136,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @C0.setter
-    def C0(self, value: float):
+    def _set_C0(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def Units(self) -> enums.LengthUnit:
+    C0 = property(_get_C0, _set_C0)
+
+    def _get_Units(self) -> enums.LengthUnit:
         """
         One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length units given in Line object
 
@@ -150,15 +149,15 @@ class LineCode(DSSObj):
         """
         return enums.LengthUnit(self._lib.Obj_GetInt32(self._ptr, 8))
 
-    @Units.setter
-    def Units(self, value: Union[AnyStr, int, enums.LengthUnit]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(8, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 8, value)
 
-    @property
-    def Units_str(self) -> str:
+    Units = property(_get_Units, _set_Units)
+
+    def _get_Units_str(self) -> str:
         """
         One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length units given in Line object
 
@@ -166,12 +165,12 @@ class LineCode(DSSObj):
         """
         return self._get_prop_string(8)
 
-    @Units_str.setter
-    def Units_str(self, value: AnyStr):
+    def _set_Units_str(self, value: AnyStr):
         self.Units = value
 
-    @property
-    def RMatrix(self) -> Float64Array:
+    Units_str = property(_get_Units_str, _set_Units_str)
+
+    def _get_RMatrix(self) -> Float64Array:
         """
         Resistance matrix, lower triangle, ohms per unit length. Order of the matrix is the number of phases. May be used to specify the impedance of any line configuration.  For balanced line models, you may use the standard symmetrical component data definition instead.
 
@@ -179,12 +178,12 @@ class LineCode(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 9)
 
-    @RMatrix.setter
-    def RMatrix(self, value: Float64Array):
+    def _set_RMatrix(self, value: Float64Array):
         self._set_float64_array_o(9, value)
 
-    @property
-    def XMatrix(self) -> Float64Array:
+    RMatrix = property(_get_RMatrix, _set_RMatrix)
+
+    def _get_XMatrix(self) -> Float64Array:
         """
         Reactance matrix, lower triangle, ohms per unit length. Order of the matrix is the number of phases. May be used to specify the impedance of any line configuration.  For balanced line models, you may use the standard symmetrical component data definition instead.
 
@@ -192,12 +191,12 @@ class LineCode(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 10)
 
-    @XMatrix.setter
-    def XMatrix(self, value: Float64Array):
+    def _set_XMatrix(self, value: Float64Array):
         self._set_float64_array_o(10, value)
 
-    @property
-    def CMatrix(self) -> Float64Array:
+    XMatrix = property(_get_XMatrix, _set_XMatrix)
+
+    def _get_CMatrix(self) -> Float64Array:
         """
         Nodal Capacitance matrix, lower triangle, nf per unit length.Order of the matrix is the number of phases. May be used to specify the shunt capacitance of any line configuration.  For balanced line models, you may use the standard symmetrical component data definition instead.
 
@@ -205,12 +204,12 @@ class LineCode(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 11)
 
-    @CMatrix.setter
-    def CMatrix(self, value: Float64Array):
+    def _set_CMatrix(self, value: Float64Array):
         self._set_float64_array_o(11, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    CMatrix = property(_get_CMatrix, _set_CMatrix)
+
+    def _get_BaseFreq(self) -> float:
         """
         Frequency at which impedances are specified.
 
@@ -218,12 +217,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def NormAmps(self) -> float:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_NormAmps(self) -> float:
         """
         Normal ampere limit on line.  This is the so-called Planning Limit. It may also be the value above which load will have to be dropped in a contingency.  Usually about 75% - 80% of the emergency (one-hour) rating.
 
@@ -231,12 +230,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @NormAmps.setter
-    def NormAmps(self, value: float):
+    def _set_NormAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def EmergAmps(self) -> float:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> float:
         """
         Emergency ampere limit on line (usually one-hour rating).
 
@@ -244,12 +243,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: float):
+    def _set_EmergAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def FaultRate(self) -> float:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> float:
         """
         Number of faults per unit length per year.
 
@@ -257,12 +256,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @FaultRate.setter
-    def FaultRate(self, value: float):
+    def _set_FaultRate(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def PctPerm(self) -> float:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_PctPerm(self) -> float:
         """
         Percentage of the faults that become permanent.
 
@@ -270,12 +269,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @PctPerm.setter
-    def PctPerm(self, value: float):
+    def _set_PctPerm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def Repair(self) -> float:
+    PctPerm = property(_get_PctPerm, _set_PctPerm)
+
+    def _get_Repair(self) -> float:
         """
         Hours to repair.
 
@@ -283,9 +282,10 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @Repair.setter
-    def Repair(self, value: float):
+    def _set_Repair(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
+
+    Repair = property(_get_Repair, _set_Repair)
 
     def Kron(self, value: bool = True):
         """
@@ -295,8 +295,7 @@ class LineCode(DSSObj):
         """
         self._lib.Obj_SetInt32(self._ptr, 18, value)
 
-    @property
-    def Rg(self) -> float:
+    def _get_Rg(self) -> float:
         """
         Carson earth return resistance per unit length used to compute impedance values at base frequency.  For making better frequency adjustments. Default is 0.01805 = 60 Hz value in ohms per kft (matches default line impedances). This value is required for harmonic solutions if you wish to adjust the earth return impedances for frequency. If not, set both Rg and Xg = 0.
 
@@ -304,12 +303,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @Rg.setter
-    def Rg(self, value: float):
+    def _set_Rg(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def Xg(self) -> float:
+    Rg = property(_get_Rg, _set_Rg)
+
+    def _get_Xg(self) -> float:
         """
         Carson earth return reactance per unit length used to compute impedance values at base frequency.  For making better frequency adjustments. Default value is 0.155081 = 60 Hz value in ohms per kft (matches default line impedances). This value is required for harmonic solutions if you wish to adjust the earth return impedances for frequency. If not, set both Rg and Xg = 0.
 
@@ -317,12 +316,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @Xg.setter
-    def Xg(self, value: float):
+    def _set_Xg(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def rho(self) -> float:
+    Xg = property(_get_Xg, _set_Xg)
+
+    def _get_rho(self) -> float:
         """
         Default=100 meter ohms.  Earth resitivity used to compute earth correction factor.
 
@@ -330,12 +329,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @rho.setter
-    def rho(self, value: float):
+    def _set_rho(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def Neutral(self) -> int:
+    rho = property(_get_rho, _set_rho)
+
+    def _get_Neutral(self) -> int:
         """
         Designates which conductor is the "neutral" conductor that will be eliminated by Kron reduction. Default is the last conductor (nphases value). After Kron reduction is set to 0. Subsequent issuing of Kron=Yes will not do anything until this property is set to a legal value. Applies only to LineCodes defined by R, X, and C matrix.
 
@@ -343,12 +342,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 22)
 
-    @Neutral.setter
-    def Neutral(self, value: int):
+    def _set_Neutral(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 22, value)
 
-    @property
-    def B1(self) -> float:
+    Neutral = property(_get_Neutral, _set_Neutral)
+
+    def _get_B1(self) -> float:
         """
         Alternate way to specify C1. MicroS per unit length
 
@@ -356,12 +355,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @B1.setter
-    def B1(self, value: float):
+    def _set_B1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def B0(self) -> float:
+    B1 = property(_get_B1, _set_B1)
+
+    def _get_B0(self) -> float:
         """
         Alternate way to specify C0. MicroS per unit length
 
@@ -369,12 +368,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    @B0.setter
-    def B0(self, value: float):
+    def _set_B0(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 24, value)
 
-    @property
-    def Seasons(self) -> int:
+    B0 = property(_get_B0, _set_B0)
+
+    def _get_Seasons(self) -> int:
         """
         Defines the number of ratings to be defined for the wire, to be used only when defining seasonal ratings using the "Ratings" property.
 
@@ -382,12 +381,12 @@ class LineCode(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 25)
 
-    @Seasons.setter
-    def Seasons(self, value: int):
+    def _set_Seasons(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 25, value)
 
-    @property
-    def Ratings(self) -> Float64Array:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_Ratings(self) -> Float64Array:
         """
         An array of ratings to be used when the seasonal ratings flag is True. It can be used to insert
         multiple ratings to change during a QSTS simulation to evaluate different ratings in lines.
@@ -396,12 +395,12 @@ class LineCode(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 26)
 
-    @Ratings.setter
-    def Ratings(self, value: Float64Array):
+    def _set_Ratings(self, value: Float64Array):
         self._set_float64_array_o(26, value)
 
-    @property
-    def LineType(self) -> enums.LineType:
+    Ratings = property(_get_Ratings, _set_Ratings)
+
+    def _get_LineType(self) -> enums.LineType:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -412,15 +411,15 @@ class LineCode(DSSObj):
         """
         return enums.LineType(self._lib.Obj_GetInt32(self._ptr, 27))
 
-    @LineType.setter
-    def LineType(self, value: Union[AnyStr, int, enums.LineType]):
+    def _set_LineType(self, value: Union[AnyStr, int, enums.LineType]):
         if not isinstance(value, int):
             self._set_string_o(27, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 27, value)
 
-    @property
-    def LineType_str(self) -> str:
+    LineType = property(_get_LineType, _set_LineType)
+
+    def _get_LineType_str(self) -> str:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -431,9 +430,10 @@ class LineCode(DSSObj):
         """
         return self._get_prop_string(27)
 
-    @LineType_str.setter
-    def LineType_str(self, value: AnyStr):
+    def _set_LineType_str(self, value: AnyStr):
         self.LineType = value
+
+    LineType_str = property(_get_LineType_str, _set_LineType_str)
 
     def Like(self, value: AnyStr):
         """
@@ -482,8 +482,7 @@ class LineCodeBatch(DSSBatch):
     _cls_idx = 1
 
 
-    @property
-    def NPhases(self) -> BatchInt32ArrayProxy:
+    def _get_NPhases(self) -> BatchInt32ArrayProxy:
         """
         Number of phases in the line this line code data represents.  Setting this property reinitializes the line code.  Impedance matrix is reset for default symmetrical component.
 
@@ -491,12 +490,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @NPhases.setter
-    def NPhases(self, value: Union[int, Int32Array]):
+    def _set_NPhases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def R1(self) -> BatchFloat64ArrayProxy:
+    NPhases = property(_get_NPhases, _set_NPhases)
+
+    def _get_R1(self) -> BatchFloat64ArrayProxy:
         """
         Positive-sequence Resistance, ohms per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition. See also Rmatrix.
 
@@ -504,12 +503,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 2)
 
-    @R1.setter
-    def R1(self, value: Union[float, Float64Array]):
+    def _set_R1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
-    @property
-    def X1(self) -> BatchFloat64ArrayProxy:
+    R1 = property(_get_R1, _set_R1)
+
+    def _get_X1(self) -> BatchFloat64ArrayProxy:
         """
         Positive-sequence Reactance, ohms per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition. See also Xmatrix
 
@@ -517,12 +516,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @X1.setter
-    def X1(self, value: Union[float, Float64Array]):
+    def _set_X1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def R0(self) -> BatchFloat64ArrayProxy:
+    X1 = property(_get_X1, _set_X1)
+
+    def _get_R0(self) -> BatchFloat64ArrayProxy:
         """
         Zero-sequence Resistance, ohms per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition.
 
@@ -530,12 +529,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @R0.setter
-    def R0(self, value: Union[float, Float64Array]):
+    def _set_R0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def X0(self) -> BatchFloat64ArrayProxy:
+    R0 = property(_get_R0, _set_R0)
+
+    def _get_X0(self) -> BatchFloat64ArrayProxy:
         """
         Zero-sequence Reactance, ohms per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition.
 
@@ -543,12 +542,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @X0.setter
-    def X0(self, value: Union[float, Float64Array]):
+    def _set_X0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def C1(self) -> BatchFloat64ArrayProxy:
+    X0 = property(_get_X0, _set_X0)
+
+    def _get_C1(self) -> BatchFloat64ArrayProxy:
         """
         Positive-sequence capacitance, nf per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition. See also Cmatrix and B1.
 
@@ -556,12 +555,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @C1.setter
-    def C1(self, value: Union[float, Float64Array]):
+    def _set_C1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def C0(self) -> BatchFloat64ArrayProxy:
+    C1 = property(_get_C1, _set_C1)
+
+    def _get_C0(self) -> BatchFloat64ArrayProxy:
         """
         Zero-sequence capacitance, nf per unit length. Setting any of R1, R0, X1, X0, C1, C0 forces the program to use the symmetrical component line definition. See also B0.
 
@@ -569,12 +568,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @C0.setter
-    def C0(self, value: Union[float, Float64Array]):
+    def _set_C0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def Units(self) -> BatchInt32ArrayProxy:
+    C0 = property(_get_C0, _set_C0)
+
+    def _get_Units(self) -> BatchInt32ArrayProxy:
         """
         One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length units given in Line object
 
@@ -582,16 +581,16 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 8)
 
-    @Units.setter
-    def Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(8, value)
             return
-    
+
         self._set_batch_int32_array(8, value)
 
-    @property
-    def Units_str(self) -> str:
+    Units = property(_get_Units, _set_Units)
+
+    def _get_Units_str(self) -> str:
         """
         One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length units given in Line object
 
@@ -599,12 +598,12 @@ class LineCodeBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    @Units_str.setter
-    def Units_str(self, value: AnyStr):
+    def _set_Units_str(self, value: AnyStr):
         self.Units = value
 
-    @property
-    def RMatrix(self) -> List[Float64Array]:
+    Units_str = property(_get_Units_str, _set_Units_str)
+
+    def _get_RMatrix(self) -> List[Float64Array]:
         """
         Resistance matrix, lower triangle, ohms per unit length. Order of the matrix is the number of phases. May be used to specify the impedance of any line configuration.  For balanced line models, you may use the standard symmetrical component data definition instead.
 
@@ -615,12 +614,12 @@ class LineCodeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @RMatrix.setter
-    def RMatrix(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_RMatrix(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(9, value)
 
-    @property
-    def XMatrix(self) -> List[Float64Array]:
+    RMatrix = property(_get_RMatrix, _set_RMatrix)
+
+    def _get_XMatrix(self) -> List[Float64Array]:
         """
         Reactance matrix, lower triangle, ohms per unit length. Order of the matrix is the number of phases. May be used to specify the impedance of any line configuration.  For balanced line models, you may use the standard symmetrical component data definition instead.
 
@@ -631,12 +630,12 @@ class LineCodeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @XMatrix.setter
-    def XMatrix(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_XMatrix(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(10, value)
 
-    @property
-    def CMatrix(self) -> List[Float64Array]:
+    XMatrix = property(_get_XMatrix, _set_XMatrix)
+
+    def _get_CMatrix(self) -> List[Float64Array]:
         """
         Nodal Capacitance matrix, lower triangle, nf per unit length.Order of the matrix is the number of phases. May be used to specify the shunt capacitance of any line configuration.  For balanced line models, you may use the standard symmetrical component data definition instead.
 
@@ -647,12 +646,12 @@ class LineCodeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @CMatrix.setter
-    def CMatrix(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_CMatrix(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(11, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    CMatrix = property(_get_CMatrix, _set_CMatrix)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Frequency at which impedances are specified.
 
@@ -660,12 +659,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def NormAmps(self) -> BatchFloat64ArrayProxy:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
         Normal ampere limit on line.  This is the so-called Planning Limit. It may also be the value above which load will have to be dropped in a contingency.  Usually about 75% - 80% of the emergency (one-hour) rating.
 
@@ -673,12 +672,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @NormAmps.setter
-    def NormAmps(self, value: Union[float, Float64Array]):
+    def _set_NormAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def EmergAmps(self) -> BatchFloat64ArrayProxy:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
         Emergency ampere limit on line (usually one-hour rating).
 
@@ -686,12 +685,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: Union[float, Float64Array]):
+    def _set_EmergAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def FaultRate(self) -> BatchFloat64ArrayProxy:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
         Number of faults per unit length per year.
 
@@ -699,12 +698,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @FaultRate.setter
-    def FaultRate(self, value: Union[float, Float64Array]):
+    def _set_FaultRate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def PctPerm(self) -> BatchFloat64ArrayProxy:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_PctPerm(self) -> BatchFloat64ArrayProxy:
         """
         Percentage of the faults that become permanent.
 
@@ -712,12 +711,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @PctPerm.setter
-    def PctPerm(self, value: Union[float, Float64Array]):
+    def _set_PctPerm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def Repair(self) -> BatchFloat64ArrayProxy:
+    PctPerm = property(_get_PctPerm, _set_PctPerm)
+
+    def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
         Hours to repair.
 
@@ -725,9 +724,10 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @Repair.setter
-    def Repair(self, value: Union[float, Float64Array]):
+    def _set_Repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
+
+    Repair = property(_get_Repair, _set_Repair)
 
     def Kron(self, value: Union[bool, List[bool]] = True):
         """
@@ -737,8 +737,7 @@ class LineCodeBatch(DSSBatch):
         """
         self._set_batch_int32_array(18, value)
 
-    @property
-    def Rg(self) -> BatchFloat64ArrayProxy:
+    def _get_Rg(self) -> BatchFloat64ArrayProxy:
         """
         Carson earth return resistance per unit length used to compute impedance values at base frequency.  For making better frequency adjustments. Default is 0.01805 = 60 Hz value in ohms per kft (matches default line impedances). This value is required for harmonic solutions if you wish to adjust the earth return impedances for frequency. If not, set both Rg and Xg = 0.
 
@@ -746,12 +745,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @Rg.setter
-    def Rg(self, value: Union[float, Float64Array]):
+    def _set_Rg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def Xg(self) -> BatchFloat64ArrayProxy:
+    Rg = property(_get_Rg, _set_Rg)
+
+    def _get_Xg(self) -> BatchFloat64ArrayProxy:
         """
         Carson earth return reactance per unit length used to compute impedance values at base frequency.  For making better frequency adjustments. Default value is 0.155081 = 60 Hz value in ohms per kft (matches default line impedances). This value is required for harmonic solutions if you wish to adjust the earth return impedances for frequency. If not, set both Rg and Xg = 0.
 
@@ -759,12 +758,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @Xg.setter
-    def Xg(self, value: Union[float, Float64Array]):
+    def _set_Xg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def rho(self) -> BatchFloat64ArrayProxy:
+    Xg = property(_get_Xg, _set_Xg)
+
+    def _get_rho(self) -> BatchFloat64ArrayProxy:
         """
         Default=100 meter ohms.  Earth resitivity used to compute earth correction factor.
 
@@ -772,12 +771,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @rho.setter
-    def rho(self, value: Union[float, Float64Array]):
+    def _set_rho(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def Neutral(self) -> BatchInt32ArrayProxy:
+    rho = property(_get_rho, _set_rho)
+
+    def _get_Neutral(self) -> BatchInt32ArrayProxy:
         """
         Designates which conductor is the "neutral" conductor that will be eliminated by Kron reduction. Default is the last conductor (nphases value). After Kron reduction is set to 0. Subsequent issuing of Kron=Yes will not do anything until this property is set to a legal value. Applies only to LineCodes defined by R, X, and C matrix.
 
@@ -785,12 +784,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 22)
 
-    @Neutral.setter
-    def Neutral(self, value: Union[int, Int32Array]):
+    def _set_Neutral(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(22, value)
 
-    @property
-    def B1(self) -> BatchFloat64ArrayProxy:
+    Neutral = property(_get_Neutral, _set_Neutral)
+
+    def _get_B1(self) -> BatchFloat64ArrayProxy:
         """
         Alternate way to specify C1. MicroS per unit length
 
@@ -798,12 +797,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @B1.setter
-    def B1(self, value: Union[float, Float64Array]):
+    def _set_B1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def B0(self) -> BatchFloat64ArrayProxy:
+    B1 = property(_get_B1, _set_B1)
+
+    def _get_B0(self) -> BatchFloat64ArrayProxy:
         """
         Alternate way to specify C0. MicroS per unit length
 
@@ -811,12 +810,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    @B0.setter
-    def B0(self, value: Union[float, Float64Array]):
+    def _set_B0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
-    @property
-    def Seasons(self) -> BatchInt32ArrayProxy:
+    B0 = property(_get_B0, _set_B0)
+
+    def _get_Seasons(self) -> BatchInt32ArrayProxy:
         """
         Defines the number of ratings to be defined for the wire, to be used only when defining seasonal ratings using the "Ratings" property.
 
@@ -824,12 +823,12 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 25)
 
-    @Seasons.setter
-    def Seasons(self, value: Union[int, Int32Array]):
+    def _set_Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(25, value)
 
-    @property
-    def Ratings(self) -> List[Float64Array]:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_Ratings(self) -> List[Float64Array]:
         """
         An array of ratings to be used when the seasonal ratings flag is True. It can be used to insert
         multiple ratings to change during a QSTS simulation to evaluate different ratings in lines.
@@ -841,12 +840,12 @@ class LineCodeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Ratings.setter
-    def Ratings(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(26, value)
 
-    @property
-    def LineType(self) -> BatchInt32ArrayProxy:
+    Ratings = property(_get_Ratings, _set_Ratings)
+
+    def _get_LineType(self) -> BatchInt32ArrayProxy:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -857,16 +856,16 @@ class LineCodeBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 27)
 
-    @LineType.setter
-    def LineType(self, value: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array]):
+    def _set_LineType(self, value: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(27, value)
             return
-    
+
         self._set_batch_int32_array(27, value)
 
-    @property
-    def LineType_str(self) -> str:
+    LineType = property(_get_LineType, _set_LineType)
+
+    def _get_LineType_str(self) -> str:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -877,9 +876,10 @@ class LineCodeBatch(DSSBatch):
         """
         return self._get_batch_str_prop(27)
 
-    @LineType_str.setter
-    def LineType_str(self, value: AnyStr):
+    def _set_LineType_str(self, value: AnyStr):
         self.LineType = value
+
+    LineType_str = property(_get_LineType_str, _set_LineType_str)
 
     def Like(self, value: AnyStr):
         """
@@ -927,7 +927,7 @@ class ILineCode(IDSSObj,LineCodeBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, LineCode, LineCodeBatch)
         LineCodeBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> LineCode:

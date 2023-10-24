@@ -45,8 +45,7 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         'like': 21,
     }
 
-    @property
-    def Bus1(self) -> str:
+    def _get_Bus1(self) -> str:
         """
         Name of first bus of 2-terminal capacitor. Examples:
         bus1=busname
@@ -58,12 +57,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Bus2(self) -> str:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> str:
         """
         Name of 2nd bus. Defaults to all phases connected to first bus, node 0, (Shunt Wye Connection) except when Bus2 explicitly specified. 
 
@@ -73,12 +72,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(2)
 
-    @Bus2.setter
-    def Bus2(self, value: AnyStr):
+    def _set_Bus2(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def Phases(self) -> int:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Phases(self) -> int:
         """
         Number of phases.
 
@@ -86,12 +85,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 3)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
-    @property
-    def kvar(self) -> Float64Array:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_kvar(self) -> Float64Array:
         """
         Total kvar, if one step, or ARRAY of kvar ratings for each step.  Evenly divided among phases. See rules for NUMSTEPS.
 
@@ -99,12 +98,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 4)
 
-    @kvar.setter
-    def kvar(self, value: Float64Array):
+    def _set_kvar(self, value: Float64Array):
         self._set_float64_array_o(4, value)
 
-    @property
-    def kV(self) -> float:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_kV(self) -> float:
         """
         For 2, 3-phase, kV phase-phase. Otherwise specify actual can rating.
 
@@ -112,12 +111,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @kV.setter
-    def kV(self, value: float):
+    def _set_kV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def Conn(self) -> enums.Connection:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_Conn(self) -> enums.Connection:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN
 
@@ -125,15 +124,15 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
         if not isinstance(value, int):
             self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN
 
@@ -141,12 +140,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(6)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def CMatrix(self) -> Float64Array:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_CMatrix(self) -> Float64Array:
         """
         Nodal cap. matrix, lower triangle, microfarads, of the following form:
 
@@ -158,12 +157,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 7)
 
-    @CMatrix.setter
-    def CMatrix(self, value: Float64Array):
+    def _set_CMatrix(self, value: Float64Array):
         self._set_float64_array_o(7, value)
 
-    @property
-    def Cuf(self) -> Float64Array:
+    CMatrix = property(_get_CMatrix, _set_CMatrix)
+
+    def _get_Cuf(self) -> Float64Array:
         """
         ARRAY of Capacitance, each phase, for each step, microfarads.
         See Rules for NumSteps.
@@ -172,12 +171,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 8)
 
-    @Cuf.setter
-    def Cuf(self, value: Float64Array):
+    def _set_Cuf(self, value: Float64Array):
         self._set_float64_array_o(8, value)
 
-    @property
-    def R(self) -> Float64Array:
+    Cuf = property(_get_Cuf, _set_Cuf)
+
+    def _get_R(self) -> Float64Array:
         """
         ARRAY of series resistance in each phase (line), ohms. Default is 0.0
 
@@ -185,12 +184,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 9)
 
-    @R.setter
-    def R(self, value: Float64Array):
+    def _set_R(self, value: Float64Array):
         self._set_float64_array_o(9, value)
 
-    @property
-    def XL(self) -> Float64Array:
+    R = property(_get_R, _set_R)
+
+    def _get_XL(self) -> Float64Array:
         """
         ARRAY of series inductive reactance(s) in each phase (line) for filter, ohms at base frequency. Use this OR "h" property to define filter. Default is 0.0.
 
@@ -198,12 +197,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 10)
 
-    @XL.setter
-    def XL(self, value: Float64Array):
+    def _set_XL(self, value: Float64Array):
         self._set_float64_array_o(10, value)
 
-    @property
-    def Harm(self) -> Float64Array:
+    XL = property(_get_XL, _set_XL)
+
+    def _get_Harm(self) -> Float64Array:
         """
         ARRAY of harmonics to which each step is tuned. Zero is interpreted as meaning zero reactance (no filter). Default is zero.
 
@@ -211,12 +210,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 11)
 
-    @Harm.setter
-    def Harm(self, value: Float64Array):
+    def _set_Harm(self, value: Float64Array):
         self._set_float64_array_o(11, value)
 
-    @property
-    def NumSteps(self) -> int:
+    Harm = property(_get_Harm, _set_Harm)
+
+    def _get_NumSteps(self) -> int:
         """
         Number of steps in this capacitor bank. Default = 1. Forces reallocation of the capacitance, reactor, and states array.  Rules: If this property was previously =1, the value in the kvar property is divided equally among the steps. The kvar property does not need to be reset if that is accurate.  If the Cuf or Cmatrix property was used previously, all steps are set to the value of the first step. The states property is set to all steps on. All filter steps are set to the same harmonic. If this property was previously >1, the arrays are reallocated, but no values are altered. You must SUBSEQUENTLY assign all array properties.
 
@@ -224,12 +223,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 12)
 
-    @NumSteps.setter
-    def NumSteps(self, value: int):
+    def _set_NumSteps(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 12, value)
 
-    @property
-    def States(self) -> Int32Array:
+    NumSteps = property(_get_NumSteps, _set_NumSteps)
+
+    def _get_States(self) -> Int32Array:
         """
         ARRAY of integers {1|0} states representing the state of each step (on|off). Defaults to 1 when reallocated (on). Capcontrol will modify this array as it turns steps on or off.
 
@@ -237,12 +236,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_int32_array(self._lib.Obj_GetInt32Array, self._ptr, 13)
 
-    @States.setter
-    def States(self, value: Int32Array):
+    def _set_States(self, value: Int32Array):
         self._set_int32_array_o(13, value)
 
-    @property
-    def NormAmps(self) -> float:
+    States = property(_get_States, _set_States)
+
+    def _get_NormAmps(self) -> float:
         """
         Normal rated current. Defaults to 180% of per-phase rated current.
 
@@ -250,12 +249,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @NormAmps.setter
-    def NormAmps(self, value: float):
+    def _set_NormAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def EmergAmps(self) -> float:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> float:
         """
         Maximum or emerg current. Defaults to 180% of per-phase rated current.
 
@@ -263,12 +262,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: float):
+    def _set_EmergAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def FaultRate(self) -> float:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> float:
         """
         Failure rate per year.
 
@@ -276,12 +275,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @FaultRate.setter
-    def FaultRate(self, value: float):
+    def _set_FaultRate(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def pctPerm(self) -> float:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> float:
         """
         Percent of failures that become permanent.
 
@@ -289,12 +288,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @pctPerm.setter
-    def pctPerm(self, value: float):
+    def _set_pctPerm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def Repair(self) -> float:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> float:
         """
         Hours to repair.
 
@@ -302,12 +301,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    @Repair.setter
-    def Repair(self, value: float):
+    def _set_Repair(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -315,12 +314,12 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -328,9 +327,10 @@ class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 20) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 20, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -372,8 +372,7 @@ class CapacitorBatch(DSSBatch):
     _cls_idx = 22
 
 
-    @property
-    def Bus1(self) -> List[str]:
+    def _get_Bus1(self) -> List[str]:
         """
         Name of first bus of 2-terminal capacitor. Examples:
         bus1=busname
@@ -383,14 +382,14 @@ class CapacitorBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-        return self._get_batch_str_prop(1) 
+        return self._get_batch_str_prop(1)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Bus2(self) -> List[str]:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> List[str]:
         """
         Name of 2nd bus. Defaults to all phases connected to first bus, node 0, (Shunt Wye Connection) except when Bus2 explicitly specified. 
 
@@ -398,14 +397,14 @@ class CapacitorBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus2.setter
-    def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of phases.
 
@@ -413,12 +412,12 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(3, value)
 
-    @property
-    def kvar(self) -> List[Float64Array]:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_kvar(self) -> List[Float64Array]:
         """
         Total kvar, if one step, or ARRAY of kvar ratings for each step.  Evenly divided among phases. See rules for NUMSTEPS.
 
@@ -429,12 +428,12 @@ class CapacitorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @kvar.setter
-    def kvar(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_kvar(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(4, value)
 
-    @property
-    def kV(self) -> BatchFloat64ArrayProxy:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
         For 2, 3-phase, kV phase-phase. Otherwise specify actual can rating.
 
@@ -442,12 +441,12 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @kV.setter
-    def kV(self, value: Union[float, Float64Array]):
+    def _set_kV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def Conn(self) -> BatchInt32ArrayProxy:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN
 
@@ -455,16 +454,16 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
-    
+
         self._set_batch_int32_array(6, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN
 
@@ -472,12 +471,12 @@ class CapacitorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def CMatrix(self) -> List[Float64Array]:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_CMatrix(self) -> List[Float64Array]:
         """
         Nodal cap. matrix, lower triangle, microfarads, of the following form:
 
@@ -492,12 +491,12 @@ class CapacitorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @CMatrix.setter
-    def CMatrix(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_CMatrix(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(7, value)
 
-    @property
-    def Cuf(self) -> List[Float64Array]:
+    CMatrix = property(_get_CMatrix, _set_CMatrix)
+
+    def _get_Cuf(self) -> List[Float64Array]:
         """
         ARRAY of Capacitance, each phase, for each step, microfarads.
         See Rules for NumSteps.
@@ -509,12 +508,12 @@ class CapacitorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Cuf.setter
-    def Cuf(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Cuf(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(8, value)
 
-    @property
-    def R(self) -> List[Float64Array]:
+    Cuf = property(_get_Cuf, _set_Cuf)
+
+    def _get_R(self) -> List[Float64Array]:
         """
         ARRAY of series resistance in each phase (line), ohms. Default is 0.0
 
@@ -525,12 +524,12 @@ class CapacitorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @R.setter
-    def R(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_R(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(9, value)
 
-    @property
-    def XL(self) -> List[Float64Array]:
+    R = property(_get_R, _set_R)
+
+    def _get_XL(self) -> List[Float64Array]:
         """
         ARRAY of series inductive reactance(s) in each phase (line) for filter, ohms at base frequency. Use this OR "h" property to define filter. Default is 0.0.
 
@@ -541,12 +540,12 @@ class CapacitorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @XL.setter
-    def XL(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_XL(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(10, value)
 
-    @property
-    def Harm(self) -> List[Float64Array]:
+    XL = property(_get_XL, _set_XL)
+
+    def _get_Harm(self) -> List[Float64Array]:
         """
         ARRAY of harmonics to which each step is tuned. Zero is interpreted as meaning zero reactance (no filter). Default is zero.
 
@@ -557,12 +556,12 @@ class CapacitorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Harm.setter
-    def Harm(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Harm(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(11, value)
 
-    @property
-    def NumSteps(self) -> BatchInt32ArrayProxy:
+    Harm = property(_get_Harm, _set_Harm)
+
+    def _get_NumSteps(self) -> BatchInt32ArrayProxy:
         """
         Number of steps in this capacitor bank. Default = 1. Forces reallocation of the capacitance, reactor, and states array.  Rules: If this property was previously =1, the value in the kvar property is divided equally among the steps. The kvar property does not need to be reset if that is accurate.  If the Cuf or Cmatrix property was used previously, all steps are set to the value of the first step. The states property is set to all steps on. All filter steps are set to the same harmonic. If this property was previously >1, the arrays are reallocated, but no values are altered. You must SUBSEQUENTLY assign all array properties.
 
@@ -570,12 +569,12 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 12)
 
-    @NumSteps.setter
-    def NumSteps(self, value: Union[int, Int32Array]):
+    def _set_NumSteps(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(12, value)
 
-    @property
-    def States(self) -> List[Int32Array]:
+    NumSteps = property(_get_NumSteps, _set_NumSteps)
+
+    def _get_States(self) -> List[Int32Array]:
         """
         ARRAY of integers {1|0} states representing the state of each step (on|off). Defaults to 1 when reallocated (on). Capcontrol will modify this array as it turns steps on or off.
 
@@ -586,12 +585,12 @@ class CapacitorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @States.setter
-    def States(self, value: Union[Int32Array, List[Int32Array]]):
+    def _set_States(self, value: Union[Int32Array, List[Int32Array]]):
         self._set_batch_int32_array_prop(13, value)
 
-    @property
-    def NormAmps(self) -> BatchFloat64ArrayProxy:
+    States = property(_get_States, _set_States)
+
+    def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
         Normal rated current. Defaults to 180% of per-phase rated current.
 
@@ -599,12 +598,12 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @NormAmps.setter
-    def NormAmps(self, value: Union[float, Float64Array]):
+    def _set_NormAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def EmergAmps(self) -> BatchFloat64ArrayProxy:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
         Maximum or emerg current. Defaults to 180% of per-phase rated current.
 
@@ -612,12 +611,12 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: Union[float, Float64Array]):
+    def _set_EmergAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def FaultRate(self) -> BatchFloat64ArrayProxy:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
         Failure rate per year.
 
@@ -625,12 +624,12 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @FaultRate.setter
-    def FaultRate(self, value: Union[float, Float64Array]):
+    def _set_FaultRate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def pctPerm(self) -> BatchFloat64ArrayProxy:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> BatchFloat64ArrayProxy:
         """
         Percent of failures that become permanent.
 
@@ -638,12 +637,12 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @pctPerm.setter
-    def pctPerm(self, value: Union[float, Float64Array]):
+    def _set_pctPerm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def Repair(self) -> BatchFloat64ArrayProxy:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
         Hours to repair.
 
@@ -651,12 +650,12 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    @Repair.setter
-    def Repair(self, value: Union[float, Float64Array]):
+    def _set_Repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -664,23 +663,25 @@ class CapacitorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 20.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(20)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(20, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -721,7 +722,7 @@ class ICapacitor(IDSSObj,CapacitorBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Capacitor, CapacitorBatch)
         CapacitorBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Capacitor:

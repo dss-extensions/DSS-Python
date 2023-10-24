@@ -26,8 +26,7 @@ class TCC_Curve(DSSObj):
         'like': 4,
     }
 
-    @property
-    def NPts(self) -> int:
+    def _get_NPts(self) -> int:
         """
         Number of points to expect in time-current arrays.
 
@@ -35,12 +34,12 @@ class TCC_Curve(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @NPts.setter
-    def NPts(self, value: int):
+    def _set_NPts(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def C_Array(self) -> Float64Array:
+    NPts = property(_get_NPts, _set_NPts)
+
+    def _get_C_Array(self) -> Float64Array:
         """
         Array of current (or voltage) values corresponding to time values (see help on T_Array).
 
@@ -48,12 +47,12 @@ class TCC_Curve(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 2)
 
-    @C_Array.setter
-    def C_Array(self, value: Float64Array):
+    def _set_C_Array(self, value: Float64Array):
         self._set_float64_array_o(2, value)
 
-    @property
-    def T_Array(self) -> Float64Array:
+    C_Array = property(_get_C_Array, _set_C_Array)
+
+    def _get_T_Array(self) -> Float64Array:
         """
         Array of time values in sec. Typical array syntax: 
         t_array = (1, 2, 3, 4, ...)
@@ -67,9 +66,10 @@ class TCC_Curve(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    @T_Array.setter
-    def T_Array(self, value: Float64Array):
+    def _set_T_Array(self, value: Float64Array):
         self._set_float64_array_o(3, value)
+
+    T_Array = property(_get_T_Array, _set_T_Array)
 
     def Like(self, value: AnyStr):
         """
@@ -94,8 +94,7 @@ class TCC_CurveBatch(DSSBatch):
     _cls_idx = 7
 
 
-    @property
-    def NPts(self) -> BatchInt32ArrayProxy:
+    def _get_NPts(self) -> BatchInt32ArrayProxy:
         """
         Number of points to expect in time-current arrays.
 
@@ -103,12 +102,12 @@ class TCC_CurveBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @NPts.setter
-    def NPts(self, value: Union[int, Int32Array]):
+    def _set_NPts(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def C_Array(self) -> List[Float64Array]:
+    NPts = property(_get_NPts, _set_NPts)
+
+    def _get_C_Array(self) -> List[Float64Array]:
         """
         Array of current (or voltage) values corresponding to time values (see help on T_Array).
 
@@ -119,12 +118,12 @@ class TCC_CurveBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @C_Array.setter
-    def C_Array(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_C_Array(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(2, value)
 
-    @property
-    def T_Array(self) -> List[Float64Array]:
+    C_Array = property(_get_C_Array, _set_C_Array)
+
+    def _get_T_Array(self) -> List[Float64Array]:
         """
         Array of time values in sec. Typical array syntax: 
         t_array = (1, 2, 3, 4, ...)
@@ -141,9 +140,10 @@ class TCC_CurveBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @T_Array.setter
-    def T_Array(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_T_Array(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(3, value)
+
+    T_Array = property(_get_T_Array, _set_T_Array)
 
     def Like(self, value: AnyStr):
         """
@@ -167,7 +167,7 @@ class ITCC_Curve(IDSSObj,TCC_CurveBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, TCC_Curve, TCC_CurveBatch)
         TCC_CurveBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> TCC_Curve:

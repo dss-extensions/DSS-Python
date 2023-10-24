@@ -28,8 +28,7 @@ class LineSpacing(DSSObj):
         'like': 6,
     }
 
-    @property
-    def NConds(self) -> int:
+    def _get_NConds(self) -> int:
         """
         Number of wires in this geometry. Default is 3. Triggers memory allocations. Define first!
 
@@ -37,12 +36,12 @@ class LineSpacing(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @NConds.setter
-    def NConds(self, value: int):
+    def _set_NConds(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def NPhases(self) -> int:
+    NConds = property(_get_NConds, _set_NConds)
+
+    def _get_NPhases(self) -> int:
         """
         Number of retained phase conductors. If less than the number of wires, list the retained phase coordinates first.
 
@@ -50,12 +49,12 @@ class LineSpacing(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @NPhases.setter
-    def NPhases(self, value: int):
+    def _set_NPhases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def X(self) -> Float64Array:
+    NPhases = property(_get_NPhases, _set_NPhases)
+
+    def _get_X(self) -> Float64Array:
         """
         Array of wire X coordinates.
 
@@ -63,12 +62,12 @@ class LineSpacing(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    @X.setter
-    def X(self, value: Float64Array):
+    def _set_X(self, value: Float64Array):
         self._set_float64_array_o(3, value)
 
-    @property
-    def H(self) -> Float64Array:
+    X = property(_get_X, _set_X)
+
+    def _get_H(self) -> Float64Array:
         """
         Array of wire Heights.
 
@@ -76,12 +75,12 @@ class LineSpacing(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 4)
 
-    @H.setter
-    def H(self, value: Float64Array):
+    def _set_H(self, value: Float64Array):
         self._set_float64_array_o(4, value)
 
-    @property
-    def Units(self) -> enums.LengthUnit:
+    H = property(_get_H, _set_H)
+
+    def _get_Units(self) -> enums.LengthUnit:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
@@ -89,15 +88,15 @@ class LineSpacing(DSSObj):
         """
         return enums.LengthUnit(self._lib.Obj_GetInt32(self._ptr, 5))
 
-    @Units.setter
-    def Units(self, value: Union[AnyStr, int, enums.LengthUnit]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(5, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
-    @property
-    def Units_str(self) -> str:
+    Units = property(_get_Units, _set_Units)
+
+    def _get_Units_str(self) -> str:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
@@ -105,9 +104,10 @@ class LineSpacing(DSSObj):
         """
         return self._get_prop_string(5)
 
-    @Units_str.setter
-    def Units_str(self, value: AnyStr):
+    def _set_Units_str(self, value: AnyStr):
         self.Units = value
+
+    Units_str = property(_get_Units_str, _set_Units_str)
 
     def Like(self, value: AnyStr):
         """
@@ -134,8 +134,7 @@ class LineSpacingBatch(DSSBatch):
     _cls_idx = 12
 
 
-    @property
-    def NConds(self) -> BatchInt32ArrayProxy:
+    def _get_NConds(self) -> BatchInt32ArrayProxy:
         """
         Number of wires in this geometry. Default is 3. Triggers memory allocations. Define first!
 
@@ -143,12 +142,12 @@ class LineSpacingBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @NConds.setter
-    def NConds(self, value: Union[int, Int32Array]):
+    def _set_NConds(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def NPhases(self) -> BatchInt32ArrayProxy:
+    NConds = property(_get_NConds, _set_NConds)
+
+    def _get_NPhases(self) -> BatchInt32ArrayProxy:
         """
         Number of retained phase conductors. If less than the number of wires, list the retained phase coordinates first.
 
@@ -156,12 +155,12 @@ class LineSpacingBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @NPhases.setter
-    def NPhases(self, value: Union[int, Int32Array]):
+    def _set_NPhases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def X(self) -> List[Float64Array]:
+    NPhases = property(_get_NPhases, _set_NPhases)
+
+    def _get_X(self) -> List[Float64Array]:
         """
         Array of wire X coordinates.
 
@@ -172,12 +171,12 @@ class LineSpacingBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @X.setter
-    def X(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_X(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(3, value)
 
-    @property
-    def H(self) -> List[Float64Array]:
+    X = property(_get_X, _set_X)
+
+    def _get_H(self) -> List[Float64Array]:
         """
         Array of wire Heights.
 
@@ -188,12 +187,12 @@ class LineSpacingBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @H.setter
-    def H(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_H(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(4, value)
 
-    @property
-    def Units(self) -> BatchInt32ArrayProxy:
+    H = property(_get_H, _set_H)
+
+    def _get_Units(self) -> BatchInt32ArrayProxy:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
@@ -201,16 +200,16 @@ class LineSpacingBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 5)
 
-    @Units.setter
-    def Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(5, value)
             return
-    
+
         self._set_batch_int32_array(5, value)
 
-    @property
-    def Units_str(self) -> str:
+    Units = property(_get_Units, _set_Units)
+
+    def _get_Units_str(self) -> str:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
@@ -218,9 +217,10 @@ class LineSpacingBatch(DSSBatch):
         """
         return self._get_batch_str_prop(5)
 
-    @Units_str.setter
-    def Units_str(self, value: AnyStr):
+    def _set_Units_str(self, value: AnyStr):
         self.Units = value
+
+    Units_str = property(_get_Units_str, _set_Units_str)
 
     def Like(self, value: AnyStr):
         """
@@ -246,7 +246,7 @@ class ILineSpacing(IDSSObj,LineSpacingBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, LineSpacing, LineSpacingBatch)
         LineSpacingBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> LineSpacing:

@@ -61,8 +61,7 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         'like': 35,
     }
 
-    @property
-    def Bus1(self) -> str:
+    def _get_Bus1(self) -> str:
         """
         Name of bus to which the main terminal (1) is connected.
         bus1=busname
@@ -74,12 +73,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def BasekV(self) -> float:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_BasekV(self) -> float:
         """
         Base Source kV, usually phase-phase (L-L) unless you are making a positive-sequence model or 1-phase modelin which case, it will be phase-neutral (L-N) kV.
 
@@ -87,12 +86,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 2)
 
-    @BasekV.setter
-    def BasekV(self, value: float):
+    def _set_BasekV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 2, value)
 
-    @property
-    def pu(self) -> float:
+    BasekV = property(_get_BasekV, _set_BasekV)
+
+    def _get_pu(self) -> float:
         """
         Per unit of the base voltage that the source is actually operating at.
         "pu=1.05"
@@ -101,12 +100,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @pu.setter
-    def pu(self, value: float):
+    def _set_pu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def Angle(self) -> float:
+    pu = property(_get_pu, _set_pu)
+
+    def _get_Angle(self) -> float:
         """
         Phase angle in degrees of first phase: e.g.,Angle=10.3
 
@@ -114,12 +113,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @Angle.setter
-    def Angle(self, value: float):
+    def _set_Angle(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def Frequency(self) -> float:
+    Angle = property(_get_Angle, _set_Angle)
+
+    def _get_Frequency(self) -> float:
         """
         Source frequency.  Defaults to system default base frequency.
 
@@ -127,12 +126,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @Frequency.setter
-    def Frequency(self, value: float):
+    def _set_Frequency(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def Phases(self) -> int:
+    Frequency = property(_get_Frequency, _set_Frequency)
+
+    def _get_Phases(self) -> int:
         """
         Number of phases.  Defaults to 3.
 
@@ -140,12 +139,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 6)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def MVASC3(self) -> float:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_MVASC3(self) -> float:
         """
         MVA Short circuit, 3-phase fault. Default = 2000. Z1 is determined by squaring the base kv and dividing by this value. For single-phase source, this value is not used.
 
@@ -153,12 +152,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @MVASC3.setter
-    def MVASC3(self, value: float):
+    def _set_MVASC3(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def MVASC1(self) -> float:
+    MVASC3 = property(_get_MVASC3, _set_MVASC3)
+
+    def _get_MVASC1(self) -> float:
         """
         MVA Short Circuit, 1-phase fault. Default = 2100. The "single-phase impedance", Zs, is determined by squaring the base kV and dividing by this value. Then Z0 is determined by Z0 = 3Zs - 2Z1.  For 1-phase sources, Zs is used directly. Use X0R0 to define X/R ratio for 1-phase source.
 
@@ -166,12 +165,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @MVASC1.setter
-    def MVASC1(self, value: float):
+    def _set_MVASC1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def X1R1(self) -> float:
+    MVASC1 = property(_get_MVASC1, _set_MVASC1)
+
+    def _get_X1R1(self) -> float:
         """
         Positive-sequence  X/R ratio. Default = 4.
 
@@ -179,12 +178,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @X1R1.setter
-    def X1R1(self, value: float):
+    def _set_X1R1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def X0R0(self) -> float:
+    X1R1 = property(_get_X1R1, _set_X1R1)
+
+    def _get_X0R0(self) -> float:
         """
         Zero-sequence X/R ratio.Default = 3.
 
@@ -192,12 +191,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @X0R0.setter
-    def X0R0(self, value: float):
+    def _set_X0R0(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def Isc3(self) -> float:
+    X0R0 = property(_get_X0R0, _set_X0R0)
+
+    def _get_Isc3(self) -> float:
         """
         Alternate method of defining the source impedance. 
         3-phase short circuit current, amps.  Default is 10000.
@@ -206,12 +205,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @Isc3.setter
-    def Isc3(self, value: float):
+    def _set_Isc3(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def Isc1(self) -> float:
+    Isc3 = property(_get_Isc3, _set_Isc3)
+
+    def _get_Isc1(self) -> float:
         """
         Alternate method of defining the source impedance. 
         single-phase short circuit current, amps.  Default is 10500.
@@ -220,12 +219,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @Isc1.setter
-    def Isc1(self, value: float):
+    def _set_Isc1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def R1(self) -> float:
+    Isc1 = property(_get_Isc1, _set_Isc1)
+
+    def _get_R1(self) -> float:
         """
         Alternate method of defining the source impedance. 
         Positive-sequence resistance, ohms.  Default is 1.65.
@@ -234,12 +233,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @R1.setter
-    def R1(self, value: float):
+    def _set_R1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def X1(self) -> float:
+    R1 = property(_get_R1, _set_R1)
+
+    def _get_X1(self) -> float:
         """
         Alternate method of defining the source impedance. 
         Positive-sequence reactance, ohms.  Default is 6.6.
@@ -248,12 +247,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @X1.setter
-    def X1(self, value: float):
+    def _set_X1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def R0(self) -> float:
+    X1 = property(_get_X1, _set_X1)
+
+    def _get_R0(self) -> float:
         """
         Alternate method of defining the source impedance. 
         Zero-sequence resistance, ohms.  Default is 1.9.
@@ -262,12 +261,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @R0.setter
-    def R0(self, value: float):
+    def _set_R0(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def X0(self) -> float:
+    R0 = property(_get_R0, _set_R0)
+
+    def _get_X0(self) -> float:
         """
         Alternate method of defining the source impedance. 
         Zero-sequence reactance, ohms.  Default is 5.7.
@@ -276,12 +275,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @X0.setter
-    def X0(self, value: float):
+    def _set_X0(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def ScanType(self) -> enums.ScanType:
+    X0 = property(_get_X0, _set_X0)
+
+    def _get_ScanType(self) -> enums.ScanType:
         """
         {pos*| zero | none} Maintain specified sequence for harmonic solution. Default is positive sequence. Otherwise, angle between phases rotates with harmonic.
 
@@ -289,15 +288,15 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.ScanType(self._lib.Obj_GetInt32(self._ptr, 17))
 
-    @ScanType.setter
-    def ScanType(self, value: Union[AnyStr, int, enums.ScanType]):
+    def _set_ScanType(self, value: Union[AnyStr, int, enums.ScanType]):
         if not isinstance(value, int):
             self._set_string_o(17, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
-    @property
-    def ScanType_str(self) -> str:
+    ScanType = property(_get_ScanType, _set_ScanType)
+
+    def _get_ScanType_str(self) -> str:
         """
         {pos*| zero | none} Maintain specified sequence for harmonic solution. Default is positive sequence. Otherwise, angle between phases rotates with harmonic.
 
@@ -305,12 +304,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(17)
 
-    @ScanType_str.setter
-    def ScanType_str(self, value: AnyStr):
+    def _set_ScanType_str(self, value: AnyStr):
         self.ScanType = value
 
-    @property
-    def Sequence(self) -> enums.SequenceType:
+    ScanType_str = property(_get_ScanType_str, _set_ScanType_str)
+
+    def _get_Sequence(self) -> enums.SequenceType:
         """
         {pos*| neg | zero} Set the phase angles for the specified symmetrical component sequence for non-harmonic solution modes. Default is positive sequence. 
 
@@ -318,15 +317,15 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.SequenceType(self._lib.Obj_GetInt32(self._ptr, 18))
 
-    @Sequence.setter
-    def Sequence(self, value: Union[AnyStr, int, enums.SequenceType]):
+    def _set_Sequence(self, value: Union[AnyStr, int, enums.SequenceType]):
         if not isinstance(value, int):
             self._set_string_o(18, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 18, value)
 
-    @property
-    def Sequence_str(self) -> str:
+    Sequence = property(_get_Sequence, _set_Sequence)
+
+    def _get_Sequence_str(self) -> str:
         """
         {pos*| neg | zero} Set the phase angles for the specified symmetrical component sequence for non-harmonic solution modes. Default is positive sequence. 
 
@@ -334,12 +333,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(18)
 
-    @Sequence_str.setter
-    def Sequence_str(self, value: AnyStr):
+    def _set_Sequence_str(self, value: AnyStr):
         self.Sequence = value
 
-    @property
-    def Bus2(self) -> str:
+    Sequence_str = property(_get_Sequence_str, _set_Sequence_str)
+
+    def _get_Bus2(self) -> str:
         """
         Name of bus to which 2nd terminal is connected.
         bus2=busname
@@ -351,12 +350,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(19)
 
-    @Bus2.setter
-    def Bus2(self, value: AnyStr):
+    def _set_Bus2(self, value: AnyStr):
         self._set_string_o(19, value)
 
-    @property
-    def Z2(self) -> complex:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Z2(self) -> complex:
         """
         Negative-sequence equivalent source impedance, ohms, as a 2-element array representing a complex number. Example: 
 
@@ -370,12 +369,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_complex(22)
 
-    @Z2.setter
-    def Z2(self, value: complex):
+    def _set_Z2(self, value: complex):
         self._set_complex(22, value)
 
-    @property
-    def puZ1(self) -> complex:
+    Z2 = property(_get_Z2, _set_Z2)
+
+    def _get_puZ1(self) -> complex:
         """
         2-element array: e.g., [1  2]. An alternate way to specify Z1. See Z1 property. Per-unit positive-sequence impedance on base of Vsource BasekV and BaseMVA.
 
@@ -383,12 +382,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_complex(23)
 
-    @puZ1.setter
-    def puZ1(self, value: complex):
+    def _set_puZ1(self, value: complex):
         self._set_complex(23, value)
 
-    @property
-    def puZ0(self) -> complex:
+    puZ1 = property(_get_puZ1, _set_puZ1)
+
+    def _get_puZ0(self) -> complex:
         """
         2-element array: e.g., [1  2]. An alternate way to specify Z0. See Z0 property. Per-unit zero-sequence impedance on base of Vsource BasekV and BaseMVA.
 
@@ -396,12 +395,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_complex(24)
 
-    @puZ0.setter
-    def puZ0(self, value: complex):
+    def _set_puZ0(self, value: complex):
         self._set_complex(24, value)
 
-    @property
-    def puZ2(self) -> complex:
+    puZ0 = property(_get_puZ0, _set_puZ0)
+
+    def _get_puZ2(self) -> complex:
         """
         2-element array: e.g., [1  2]. An alternate way to specify Z2. See Z2 property. Per-unit negative-sequence impedance on base of Vsource BasekV and BaseMVA.
 
@@ -409,12 +408,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_complex(25)
 
-    @puZ2.setter
-    def puZ2(self, value: complex):
+    def _set_puZ2(self, value: complex):
         self._set_complex(25, value)
 
-    @property
-    def BaseMVA(self) -> float:
+    puZ2 = property(_get_puZ2, _set_puZ2)
+
+    def _get_BaseMVA(self) -> float:
         """
         Default value is 100. Base used to convert values specified with puZ1, puZ0, and puZ2 properties to ohms on kV base specified by BasekV property.
 
@@ -422,12 +421,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 26)
 
-    @BaseMVA.setter
-    def BaseMVA(self, value: float):
+    def _set_BaseMVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 26, value)
 
-    @property
-    def Yearly_str(self) -> str:
+    BaseMVA = property(_get_BaseMVA, _set_BaseMVA)
+
+    def _get_Yearly_str(self) -> str:
         """
         LOADSHAPE object to use for the per-unit voltage for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -439,12 +438,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(27)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: AnyStr):
+    def _set_Yearly_str(self, value: AnyStr):
         self._set_string_o(27, value)
 
-    @property
-    def Yearly(self) -> LoadShape:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> LoadShape:
         """
         LOADSHAPE object to use for the per-unit voltage for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -456,16 +455,16 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(27, LoadShape)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(27, value)
             return
 
         self._set_string_o(27, value)
 
-    @property
-    def Daily_str(self) -> str:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> str:
         """
         LOADSHAPE object to use for the per-unit voltage for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -477,12 +476,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(28)
 
-    @Daily_str.setter
-    def Daily_str(self, value: AnyStr):
+    def _set_Daily_str(self, value: AnyStr):
         self._set_string_o(28, value)
 
-    @property
-    def Daily(self) -> LoadShape:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> LoadShape:
         """
         LOADSHAPE object to use for the per-unit voltage for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -494,16 +493,16 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(28, LoadShape)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(28, value)
             return
 
         self._set_string_o(28, value)
 
-    @property
-    def Duty_str(self) -> str:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> str:
         """
         LOADSHAPE object to use for the per-unit voltage for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -515,12 +514,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(29)
 
-    @Duty_str.setter
-    def Duty_str(self, value: AnyStr):
+    def _set_Duty_str(self, value: AnyStr):
         self._set_string_o(29, value)
 
-    @property
-    def Duty(self) -> LoadShape:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> LoadShape:
         """
         LOADSHAPE object to use for the per-unit voltage for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -532,16 +531,16 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(29, LoadShape)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(29, value)
             return
 
         self._set_string_o(29, value)
 
-    @property
-    def Model(self) -> enums.VSourceModel:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_Model(self) -> enums.VSourceModel:
         """
         {Thevenin* | Ideal}  Specifies whether the Vsource is to be considered a Thevenin short circuit model or a quasi-ideal voltage source. If Thevenin, the Vsource uses the impedances defined for all calculations. If "Ideal", the model uses a small impedance on the diagonal of the impedance matrix for the fundamental base frequency power flow only. Then switches to actual Thevenin model for other frequencies. 
 
@@ -549,15 +548,15 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.VSourceModel(self._lib.Obj_GetInt32(self._ptr, 30))
 
-    @Model.setter
-    def Model(self, value: Union[AnyStr, int, enums.VSourceModel]):
+    def _set_Model(self, value: Union[AnyStr, int, enums.VSourceModel]):
         if not isinstance(value, int):
             self._set_string_o(30, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 30, value)
 
-    @property
-    def Model_str(self) -> str:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_Model_str(self) -> str:
         """
         {Thevenin* | Ideal}  Specifies whether the Vsource is to be considered a Thevenin short circuit model or a quasi-ideal voltage source. If Thevenin, the Vsource uses the impedances defined for all calculations. If "Ideal", the model uses a small impedance on the diagonal of the impedance matrix for the fundamental base frequency power flow only. Then switches to actual Thevenin model for other frequencies. 
 
@@ -565,12 +564,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(30)
 
-    @Model_str.setter
-    def Model_str(self, value: AnyStr):
+    def _set_Model_str(self, value: AnyStr):
         self.Model = value
 
-    @property
-    def puZIdeal(self) -> complex:
+    Model_str = property(_get_Model_str, _set_Model_str)
+
+    def _get_puZIdeal(self) -> complex:
         """
         2-element array: e.g., [1  2]. The pu impedance to use for the quasi-ideal voltage source model. Should be a very small impedances. Default is [1e-6, 0.001]. Per-unit impedance on base of Vsource BasekV and BaseMVA. If too small, solution may not work. Be sure to check the voltage values and powers.
 
@@ -578,12 +577,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_complex(31)
 
-    @puZIdeal.setter
-    def puZIdeal(self, value: complex):
+    def _set_puZIdeal(self, value: complex):
         self._set_complex(31, value)
 
-    @property
-    def Spectrum_str(self) -> str:
+    puZIdeal = property(_get_puZIdeal, _set_puZIdeal)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -591,12 +590,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(32)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(32, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -604,16 +603,16 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(32, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(32, value)
             return
 
         self._set_string_o(32, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -621,12 +620,12 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 33)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 33, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -634,9 +633,10 @@ class Vsource(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 34) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 34, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -690,8 +690,7 @@ class VsourceBatch(DSSBatch):
     _cls_idx = 16
 
 
-    @property
-    def Bus1(self) -> List[str]:
+    def _get_Bus1(self) -> List[str]:
         """
         Name of bus to which the main terminal (1) is connected.
         bus1=busname
@@ -701,14 +700,14 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-        return self._get_batch_str_prop(1) 
+        return self._get_batch_str_prop(1)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def BasekV(self) -> BatchFloat64ArrayProxy:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_BasekV(self) -> BatchFloat64ArrayProxy:
         """
         Base Source kV, usually phase-phase (L-L) unless you are making a positive-sequence model or 1-phase modelin which case, it will be phase-neutral (L-N) kV.
 
@@ -716,12 +715,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 2)
 
-    @BasekV.setter
-    def BasekV(self, value: Union[float, Float64Array]):
+    def _set_BasekV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
-    @property
-    def pu(self) -> BatchFloat64ArrayProxy:
+    BasekV = property(_get_BasekV, _set_BasekV)
+
+    def _get_pu(self) -> BatchFloat64ArrayProxy:
         """
         Per unit of the base voltage that the source is actually operating at.
         "pu=1.05"
@@ -730,12 +729,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @pu.setter
-    def pu(self, value: Union[float, Float64Array]):
+    def _set_pu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def Angle(self) -> BatchFloat64ArrayProxy:
+    pu = property(_get_pu, _set_pu)
+
+    def _get_Angle(self) -> BatchFloat64ArrayProxy:
         """
         Phase angle in degrees of first phase: e.g.,Angle=10.3
 
@@ -743,12 +742,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @Angle.setter
-    def Angle(self, value: Union[float, Float64Array]):
+    def _set_Angle(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def Frequency(self) -> BatchFloat64ArrayProxy:
+    Angle = property(_get_Angle, _set_Angle)
+
+    def _get_Frequency(self) -> BatchFloat64ArrayProxy:
         """
         Source frequency.  Defaults to system default base frequency.
 
@@ -756,12 +755,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @Frequency.setter
-    def Frequency(self, value: Union[float, Float64Array]):
+    def _set_Frequency(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    Frequency = property(_get_Frequency, _set_Frequency)
+
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of phases.  Defaults to 3.
 
@@ -769,12 +768,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(6, value)
 
-    @property
-    def MVASC3(self) -> BatchFloat64ArrayProxy:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_MVASC3(self) -> BatchFloat64ArrayProxy:
         """
         MVA Short circuit, 3-phase fault. Default = 2000. Z1 is determined by squaring the base kv and dividing by this value. For single-phase source, this value is not used.
 
@@ -782,12 +781,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @MVASC3.setter
-    def MVASC3(self, value: Union[float, Float64Array]):
+    def _set_MVASC3(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def MVASC1(self) -> BatchFloat64ArrayProxy:
+    MVASC3 = property(_get_MVASC3, _set_MVASC3)
+
+    def _get_MVASC1(self) -> BatchFloat64ArrayProxy:
         """
         MVA Short Circuit, 1-phase fault. Default = 2100. The "single-phase impedance", Zs, is determined by squaring the base kV and dividing by this value. Then Z0 is determined by Z0 = 3Zs - 2Z1.  For 1-phase sources, Zs is used directly. Use X0R0 to define X/R ratio for 1-phase source.
 
@@ -795,12 +794,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @MVASC1.setter
-    def MVASC1(self, value: Union[float, Float64Array]):
+    def _set_MVASC1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def X1R1(self) -> BatchFloat64ArrayProxy:
+    MVASC1 = property(_get_MVASC1, _set_MVASC1)
+
+    def _get_X1R1(self) -> BatchFloat64ArrayProxy:
         """
         Positive-sequence  X/R ratio. Default = 4.
 
@@ -808,12 +807,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @X1R1.setter
-    def X1R1(self, value: Union[float, Float64Array]):
+    def _set_X1R1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def X0R0(self) -> BatchFloat64ArrayProxy:
+    X1R1 = property(_get_X1R1, _set_X1R1)
+
+    def _get_X0R0(self) -> BatchFloat64ArrayProxy:
         """
         Zero-sequence X/R ratio.Default = 3.
 
@@ -821,12 +820,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @X0R0.setter
-    def X0R0(self, value: Union[float, Float64Array]):
+    def _set_X0R0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def Isc3(self) -> BatchFloat64ArrayProxy:
+    X0R0 = property(_get_X0R0, _set_X0R0)
+
+    def _get_Isc3(self) -> BatchFloat64ArrayProxy:
         """
         Alternate method of defining the source impedance. 
         3-phase short circuit current, amps.  Default is 10000.
@@ -835,12 +834,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @Isc3.setter
-    def Isc3(self, value: Union[float, Float64Array]):
+    def _set_Isc3(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def Isc1(self) -> BatchFloat64ArrayProxy:
+    Isc3 = property(_get_Isc3, _set_Isc3)
+
+    def _get_Isc1(self) -> BatchFloat64ArrayProxy:
         """
         Alternate method of defining the source impedance. 
         single-phase short circuit current, amps.  Default is 10500.
@@ -849,12 +848,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @Isc1.setter
-    def Isc1(self, value: Union[float, Float64Array]):
+    def _set_Isc1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def R1(self) -> BatchFloat64ArrayProxy:
+    Isc1 = property(_get_Isc1, _set_Isc1)
+
+    def _get_R1(self) -> BatchFloat64ArrayProxy:
         """
         Alternate method of defining the source impedance. 
         Positive-sequence resistance, ohms.  Default is 1.65.
@@ -863,12 +862,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @R1.setter
-    def R1(self, value: Union[float, Float64Array]):
+    def _set_R1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def X1(self) -> BatchFloat64ArrayProxy:
+    R1 = property(_get_R1, _set_R1)
+
+    def _get_X1(self) -> BatchFloat64ArrayProxy:
         """
         Alternate method of defining the source impedance. 
         Positive-sequence reactance, ohms.  Default is 6.6.
@@ -877,12 +876,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @X1.setter
-    def X1(self, value: Union[float, Float64Array]):
+    def _set_X1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def R0(self) -> BatchFloat64ArrayProxy:
+    X1 = property(_get_X1, _set_X1)
+
+    def _get_R0(self) -> BatchFloat64ArrayProxy:
         """
         Alternate method of defining the source impedance. 
         Zero-sequence resistance, ohms.  Default is 1.9.
@@ -891,12 +890,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @R0.setter
-    def R0(self, value: Union[float, Float64Array]):
+    def _set_R0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def X0(self) -> BatchFloat64ArrayProxy:
+    R0 = property(_get_R0, _set_R0)
+
+    def _get_X0(self) -> BatchFloat64ArrayProxy:
         """
         Alternate method of defining the source impedance. 
         Zero-sequence reactance, ohms.  Default is 5.7.
@@ -905,12 +904,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @X0.setter
-    def X0(self, value: Union[float, Float64Array]):
+    def _set_X0(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def ScanType(self) -> BatchInt32ArrayProxy:
+    X0 = property(_get_X0, _set_X0)
+
+    def _get_ScanType(self) -> BatchInt32ArrayProxy:
         """
         {pos*| zero | none} Maintain specified sequence for harmonic solution. Default is positive sequence. Otherwise, angle between phases rotates with harmonic.
 
@@ -918,16 +917,16 @@ class VsourceBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 17)
 
-    @ScanType.setter
-    def ScanType(self, value: Union[AnyStr, int, enums.ScanType, List[AnyStr], List[int], List[enums.ScanType], Int32Array]):
+    def _set_ScanType(self, value: Union[AnyStr, int, enums.ScanType, List[AnyStr], List[int], List[enums.ScanType], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(17, value)
             return
-    
+
         self._set_batch_int32_array(17, value)
 
-    @property
-    def ScanType_str(self) -> str:
+    ScanType = property(_get_ScanType, _set_ScanType)
+
+    def _get_ScanType_str(self) -> str:
         """
         {pos*| zero | none} Maintain specified sequence for harmonic solution. Default is positive sequence. Otherwise, angle between phases rotates with harmonic.
 
@@ -935,12 +934,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(17)
 
-    @ScanType_str.setter
-    def ScanType_str(self, value: AnyStr):
+    def _set_ScanType_str(self, value: AnyStr):
         self.ScanType = value
 
-    @property
-    def Sequence(self) -> BatchInt32ArrayProxy:
+    ScanType_str = property(_get_ScanType_str, _set_ScanType_str)
+
+    def _get_Sequence(self) -> BatchInt32ArrayProxy:
         """
         {pos*| neg | zero} Set the phase angles for the specified symmetrical component sequence for non-harmonic solution modes. Default is positive sequence. 
 
@@ -948,16 +947,16 @@ class VsourceBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 18)
 
-    @Sequence.setter
-    def Sequence(self, value: Union[AnyStr, int, enums.SequenceType, List[AnyStr], List[int], List[enums.SequenceType], Int32Array]):
+    def _set_Sequence(self, value: Union[AnyStr, int, enums.SequenceType, List[AnyStr], List[int], List[enums.SequenceType], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(18, value)
             return
-    
+
         self._set_batch_int32_array(18, value)
 
-    @property
-    def Sequence_str(self) -> str:
+    Sequence = property(_get_Sequence, _set_Sequence)
+
+    def _get_Sequence_str(self) -> str:
         """
         {pos*| neg | zero} Set the phase angles for the specified symmetrical component sequence for non-harmonic solution modes. Default is positive sequence. 
 
@@ -965,12 +964,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(18)
 
-    @Sequence_str.setter
-    def Sequence_str(self, value: AnyStr):
+    def _set_Sequence_str(self, value: AnyStr):
         self.Sequence = value
 
-    @property
-    def Bus2(self) -> List[str]:
+    Sequence_str = property(_get_Sequence_str, _set_Sequence_str)
+
+    def _get_Bus2(self) -> List[str]:
         """
         Name of bus to which 2nd terminal is connected.
         bus2=busname
@@ -980,14 +979,14 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 19.
         """
-        return self._get_batch_str_prop(19) 
+        return self._get_batch_str_prop(19)
 
-    @Bus2.setter
-    def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(19, value)
 
-    @property
-    def Z2(self) -> List[complex]:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_Z2(self) -> List[complex]:
         """
         Negative-sequence equivalent source impedance, ohms, as a 2-element array representing a complex number. Example: 
 
@@ -999,17 +998,16 @@ class VsourceBatch(DSSBatch):
 
         DSS property name: `Z2`, DSS property index: 22.
         """
-        return [   
+        return [
             self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
+                self._lib.Obj_GetFloat64Array,
                 x,
                 22,
             ).view(dtype=complex)[0]
             for x in self._unpack()
         ]
 
-    @Z2.setter
-    def Z2(self, value: Union[complex, List[complex]]):
+    def _set_Z2(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
             for x in self._unpack():
@@ -1026,24 +1024,24 @@ class VsourceBatch(DSSBatch):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 22, value_ptr, value_count)
 
-    @property
-    def puZ1(self) -> List[complex]:
+    Z2 = property(_get_Z2, _set_Z2)
+
+    def _get_puZ1(self) -> List[complex]:
         """
         2-element array: e.g., [1  2]. An alternate way to specify Z1. See Z1 property. Per-unit positive-sequence impedance on base of Vsource BasekV and BaseMVA.
 
         DSS property name: `puZ1`, DSS property index: 23.
         """
-        return [   
+        return [
             self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
+                self._lib.Obj_GetFloat64Array,
                 x,
                 23,
             ).view(dtype=complex)[0]
             for x in self._unpack()
         ]
 
-    @puZ1.setter
-    def puZ1(self, value: Union[complex, List[complex]]):
+    def _set_puZ1(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
             for x in self._unpack():
@@ -1060,24 +1058,24 @@ class VsourceBatch(DSSBatch):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 23, value_ptr, value_count)
 
-    @property
-    def puZ0(self) -> List[complex]:
+    puZ1 = property(_get_puZ1, _set_puZ1)
+
+    def _get_puZ0(self) -> List[complex]:
         """
         2-element array: e.g., [1  2]. An alternate way to specify Z0. See Z0 property. Per-unit zero-sequence impedance on base of Vsource BasekV and BaseMVA.
 
         DSS property name: `puZ0`, DSS property index: 24.
         """
-        return [   
+        return [
             self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
+                self._lib.Obj_GetFloat64Array,
                 x,
                 24,
             ).view(dtype=complex)[0]
             for x in self._unpack()
         ]
 
-    @puZ0.setter
-    def puZ0(self, value: Union[complex, List[complex]]):
+    def _set_puZ0(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
             for x in self._unpack():
@@ -1094,24 +1092,24 @@ class VsourceBatch(DSSBatch):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 24, value_ptr, value_count)
 
-    @property
-    def puZ2(self) -> List[complex]:
+    puZ0 = property(_get_puZ0, _set_puZ0)
+
+    def _get_puZ2(self) -> List[complex]:
         """
         2-element array: e.g., [1  2]. An alternate way to specify Z2. See Z2 property. Per-unit negative-sequence impedance on base of Vsource BasekV and BaseMVA.
 
         DSS property name: `puZ2`, DSS property index: 25.
         """
-        return [   
+        return [
             self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
+                self._lib.Obj_GetFloat64Array,
                 x,
                 25,
             ).view(dtype=complex)[0]
             for x in self._unpack()
         ]
 
-    @puZ2.setter
-    def puZ2(self, value: Union[complex, List[complex]]):
+    def _set_puZ2(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
             for x in self._unpack():
@@ -1128,8 +1126,9 @@ class VsourceBatch(DSSBatch):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 25, value_ptr, value_count)
 
-    @property
-    def BaseMVA(self) -> BatchFloat64ArrayProxy:
+    puZ2 = property(_get_puZ2, _set_puZ2)
+
+    def _get_BaseMVA(self) -> BatchFloat64ArrayProxy:
         """
         Default value is 100. Base used to convert values specified with puZ1, puZ0, and puZ2 properties to ohms on kV base specified by BasekV property.
 
@@ -1137,12 +1136,12 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 26)
 
-    @BaseMVA.setter
-    def BaseMVA(self, value: Union[float, Float64Array]):
+    def _set_BaseMVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
-    @property
-    def Yearly_str(self) -> List[str]:
+    BaseMVA = property(_get_BaseMVA, _set_BaseMVA)
+
+    def _get_Yearly_str(self) -> List[str]:
         """
         LOADSHAPE object to use for the per-unit voltage for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1154,12 +1153,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(27)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(27, value)
 
-    @property
-    def Yearly(self) -> List[LoadShape]:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit voltage for YEARLY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1171,12 +1170,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(27)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(27, value)
 
-    @property
-    def Daily_str(self) -> List[str]:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> List[str]:
         """
         LOADSHAPE object to use for the per-unit voltage for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1188,12 +1187,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(28)
 
-    @Daily_str.setter
-    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(28, value)
 
-    @property
-    def Daily(self) -> List[LoadShape]:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit voltage for DAILY-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1205,12 +1204,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(28)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(28, value)
 
-    @property
-    def Duty_str(self) -> List[str]:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> List[str]:
         """
         LOADSHAPE object to use for the per-unit voltage for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1222,12 +1221,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(29)
 
-    @Duty_str.setter
-    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(29, value)
 
-    @property
-    def Duty(self) -> List[LoadShape]:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for the per-unit voltage for DUTYCYCLE-mode simulations. Set the Mult property of the LOADSHAPE to the pu curve. Qmult is not used. If UseActual=Yes then the Mult curve should be actual L-N kV.
 
@@ -1239,12 +1238,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(29)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(29, value)
 
-    @property
-    def Model(self) -> BatchInt32ArrayProxy:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_Model(self) -> BatchInt32ArrayProxy:
         """
         {Thevenin* | Ideal}  Specifies whether the Vsource is to be considered a Thevenin short circuit model or a quasi-ideal voltage source. If Thevenin, the Vsource uses the impedances defined for all calculations. If "Ideal", the model uses a small impedance on the diagonal of the impedance matrix for the fundamental base frequency power flow only. Then switches to actual Thevenin model for other frequencies. 
 
@@ -1252,16 +1251,16 @@ class VsourceBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 30)
 
-    @Model.setter
-    def Model(self, value: Union[AnyStr, int, enums.VSourceModel, List[AnyStr], List[int], List[enums.VSourceModel], Int32Array]):
+    def _set_Model(self, value: Union[AnyStr, int, enums.VSourceModel, List[AnyStr], List[int], List[enums.VSourceModel], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(30, value)
             return
-    
+
         self._set_batch_int32_array(30, value)
 
-    @property
-    def Model_str(self) -> str:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_Model_str(self) -> str:
         """
         {Thevenin* | Ideal}  Specifies whether the Vsource is to be considered a Thevenin short circuit model or a quasi-ideal voltage source. If Thevenin, the Vsource uses the impedances defined for all calculations. If "Ideal", the model uses a small impedance on the diagonal of the impedance matrix for the fundamental base frequency power flow only. Then switches to actual Thevenin model for other frequencies. 
 
@@ -1269,28 +1268,27 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(30)
 
-    @Model_str.setter
-    def Model_str(self, value: AnyStr):
+    def _set_Model_str(self, value: AnyStr):
         self.Model = value
 
-    @property
-    def puZIdeal(self) -> List[complex]:
+    Model_str = property(_get_Model_str, _set_Model_str)
+
+    def _get_puZIdeal(self) -> List[complex]:
         """
         2-element array: e.g., [1  2]. The pu impedance to use for the quasi-ideal voltage source model. Should be a very small impedances. Default is [1e-6, 0.001]. Per-unit impedance on base of Vsource BasekV and BaseMVA. If too small, solution may not work. Be sure to check the voltage values and powers.
 
         DSS property name: `puZIdeal`, DSS property index: 31.
         """
-        return [   
+        return [
             self._get_float64_array(
-                self._lib.Obj_GetFloat64Array, 
+                self._lib.Obj_GetFloat64Array,
                 x,
                 31,
             ).view(dtype=complex)[0]
             for x in self._unpack()
         ]
 
-    @puZIdeal.setter
-    def puZIdeal(self, value: Union[complex, List[complex]]):
+    def _set_puZIdeal(self, value: Union[complex, List[complex]]):
         if isinstance(value, complex):
             value, value_ptr, value_count = self._prepare_float64_array([value.real, value.imag])
             for x in self._unpack():
@@ -1307,8 +1305,9 @@ class VsourceBatch(DSSBatch):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 31, value_ptr, value_count)
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    puZIdeal = property(_get_puZIdeal, _set_puZIdeal)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -1316,12 +1315,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_str_prop(32)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(32, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultvsource", which is defined when the DSS starts.
 
@@ -1329,12 +1328,12 @@ class VsourceBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(32)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(32, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -1342,23 +1341,25 @@ class VsourceBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 33)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 34.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(34)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(34, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1411,7 +1412,7 @@ class IVsource(IDSSObj,VsourceBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Vsource, VsourceBatch)
         VsourceBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Vsource:

@@ -29,8 +29,7 @@ class DynamicExp(DSSObj):
         'like': 7,
     }
 
-    @property
-    def NVariables(self) -> int:
+    def _get_NVariables(self) -> int:
         """
         (Int) Number of state variables to be considered in the differential equation.
 
@@ -38,12 +37,12 @@ class DynamicExp(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @NVariables.setter
-    def NVariables(self, value: int):
+    def _set_NVariables(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def VarNames(self) -> List[str]:
+    NVariables = property(_get_NVariables, _set_NVariables)
+
+    def _get_VarNames(self) -> List[str]:
         """
         ([String]) Array of strings with the names of the state variables.
 
@@ -51,14 +50,14 @@ class DynamicExp(DSSObj):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 2)
 
-    @VarNames.setter
-    def VarNames(self, value: List[AnyStr]):
+    def _set_VarNames(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 2, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def Var(self) -> str:
+    VarNames = property(_get_VarNames, _set_VarNames)
+
+    def _get_Var(self) -> str:
         """
         (String) Activates the state variable using the given name.
 
@@ -66,12 +65,12 @@ class DynamicExp(DSSObj):
         """
         return self._get_prop_string(3)
 
-    @Var.setter
-    def Var(self, value: AnyStr):
+    def _set_Var(self, value: AnyStr):
         self._set_string_o(3, value)
 
-    @property
-    def VarIdx(self) -> int:
+    Var = property(_get_Var, _set_Var)
+
+    def _get_VarIdx(self) -> int:
         """
         (Int) read-only, returns the index of the active state variable.
 
@@ -79,12 +78,12 @@ class DynamicExp(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 4)
 
-    @VarIdx.setter
-    def VarIdx(self, value: int):
+    def _set_VarIdx(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
-    @property
-    def Expression(self) -> str:
+    VarIdx = property(_get_VarIdx, _set_VarIdx)
+
+    def _get_Expression(self) -> str:
         """
         It is the differential expression using OpenDSS RPN syntax. The expression must be contained within brackets in case of having multiple equations, for example:
 
@@ -94,12 +93,12 @@ class DynamicExp(DSSObj):
         """
         return self._get_prop_string(5)
 
-    @Expression.setter
-    def Expression(self, value: AnyStr):
+    def _set_Expression(self, value: AnyStr):
         self._set_string_o(5, value)
 
-    @property
-    def Domain(self) -> enums.DynamicExpDomain:
+    Expression = property(_get_Expression, _set_Expression)
+
+    def _get_Domain(self) -> enums.DynamicExpDomain:
         """
         It is the domain for which the equation is defined, it can be one of [time*, dq]. By deafult, dynamic epxressions are defined in the time domain.
 
@@ -107,15 +106,15 @@ class DynamicExp(DSSObj):
         """
         return enums.DynamicExpDomain(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    @Domain.setter
-    def Domain(self, value: Union[AnyStr, int, enums.DynamicExpDomain]):
+    def _set_Domain(self, value: Union[AnyStr, int, enums.DynamicExpDomain]):
         if not isinstance(value, int):
             self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def Domain_str(self) -> str:
+    Domain = property(_get_Domain, _set_Domain)
+
+    def _get_Domain_str(self) -> str:
         """
         It is the domain for which the equation is defined, it can be one of [time*, dq]. By deafult, dynamic epxressions are defined in the time domain.
 
@@ -123,9 +122,10 @@ class DynamicExp(DSSObj):
         """
         return self._get_prop_string(6)
 
-    @Domain_str.setter
-    def Domain_str(self, value: AnyStr):
+    def _set_Domain_str(self, value: AnyStr):
         self.Domain = value
+
+    Domain_str = property(_get_Domain_str, _set_Domain_str)
 
     def Like(self, value: AnyStr):
         """
@@ -151,8 +151,7 @@ class DynamicExpBatch(DSSBatch):
     _cls_idx = 26
 
 
-    @property
-    def NVariables(self) -> BatchInt32ArrayProxy:
+    def _get_NVariables(self) -> BatchInt32ArrayProxy:
         """
         (Int) Number of state variables to be considered in the differential equation.
 
@@ -160,12 +159,12 @@ class DynamicExpBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @NVariables.setter
-    def NVariables(self, value: Union[int, Int32Array]):
+    def _set_NVariables(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def VarNames(self) -> List[List[str]]:
+    NVariables = property(_get_NVariables, _set_NVariables)
+
+    def _get_VarNames(self) -> List[List[str]]:
         """
         ([String]) Array of strings with the names of the state variables.
 
@@ -173,29 +172,29 @@ class DynamicExpBatch(DSSBatch):
         """
         return self._get_string_ll(2)
 
-    @VarNames.setter
-    def VarNames(self, value: List[AnyStr]):
+    def _set_VarNames(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 2, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def Var(self) -> List[str]:
+    VarNames = property(_get_VarNames, _set_VarNames)
+
+    def _get_Var(self) -> List[str]:
         """
         (String) Activates the state variable using the given name.
 
         DSS property name: `Var`, DSS property index: 3.
         """
-        return self._get_batch_str_prop(3) 
+        return self._get_batch_str_prop(3)
 
-    @Var.setter
-    def Var(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Var(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(3, value)
 
-    @property
-    def VarIdx(self) -> BatchInt32ArrayProxy:
+    Var = property(_get_Var, _set_Var)
+
+    def _get_VarIdx(self) -> BatchInt32ArrayProxy:
         """
         (Int) read-only, returns the index of the active state variable.
 
@@ -203,12 +202,12 @@ class DynamicExpBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 4)
 
-    @VarIdx.setter
-    def VarIdx(self, value: Union[int, Int32Array]):
+    def _set_VarIdx(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(4, value)
 
-    @property
-    def Expression(self) -> List[str]:
+    VarIdx = property(_get_VarIdx, _set_VarIdx)
+
+    def _get_Expression(self) -> List[str]:
         """
         It is the differential expression using OpenDSS RPN syntax. The expression must be contained within brackets in case of having multiple equations, for example:
 
@@ -216,14 +215,14 @@ class DynamicExpBatch(DSSBatch):
 
         DSS property name: `Expression`, DSS property index: 5.
         """
-        return self._get_batch_str_prop(5) 
+        return self._get_batch_str_prop(5)
 
-    @Expression.setter
-    def Expression(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Expression(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(5, value)
 
-    @property
-    def Domain(self) -> BatchInt32ArrayProxy:
+    Expression = property(_get_Expression, _set_Expression)
+
+    def _get_Domain(self) -> BatchInt32ArrayProxy:
         """
         It is the domain for which the equation is defined, it can be one of [time*, dq]. By deafult, dynamic epxressions are defined in the time domain.
 
@@ -231,16 +230,16 @@ class DynamicExpBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Domain.setter
-    def Domain(self, value: Union[AnyStr, int, enums.DynamicExpDomain, List[AnyStr], List[int], List[enums.DynamicExpDomain], Int32Array]):
+    def _set_Domain(self, value: Union[AnyStr, int, enums.DynamicExpDomain, List[AnyStr], List[int], List[enums.DynamicExpDomain], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
-    
+
         self._set_batch_int32_array(6, value)
 
-    @property
-    def Domain_str(self) -> str:
+    Domain = property(_get_Domain, _set_Domain)
+
+    def _get_Domain_str(self) -> str:
         """
         It is the domain for which the equation is defined, it can be one of [time*, dq]. By deafult, dynamic epxressions are defined in the time domain.
 
@@ -248,9 +247,10 @@ class DynamicExpBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @Domain_str.setter
-    def Domain_str(self, value: AnyStr):
+    def _set_Domain_str(self, value: AnyStr):
         self.Domain = value
+
+    Domain_str = property(_get_Domain_str, _set_Domain_str)
 
     def Like(self, value: AnyStr):
         """
@@ -275,7 +275,7 @@ class IDynamicExp(IDSSObj,DynamicExpBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, DynamicExp, DynamicExpBatch)
         DynamicExpBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> DynamicExp:

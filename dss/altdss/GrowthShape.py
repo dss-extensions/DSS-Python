@@ -29,8 +29,7 @@ class GrowthShape(DSSObj):
         'like': 7,
     }
 
-    @property
-    def NPts(self) -> int:
+    def _get_NPts(self) -> int:
         """
         Number of points to expect in subsequent vector.
 
@@ -38,12 +37,12 @@ class GrowthShape(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @NPts.setter
-    def NPts(self, value: int):
+    def _set_NPts(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def Year(self) -> Float64Array:
+    NPts = property(_get_NPts, _set_NPts)
+
+    def _get_Year(self) -> Float64Array:
         """
         Array of year values, or a text file spec, corresponding to the multipliers. Enter only those years where the growth changes. May be any integer sequence -- just so it is consistent. See help on Mult.
 
@@ -51,12 +50,12 @@ class GrowthShape(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 2)
 
-    @Year.setter
-    def Year(self, value: Float64Array):
+    def _set_Year(self, value: Float64Array):
         self._set_float64_array_o(2, value)
 
-    @property
-    def Mult(self) -> Float64Array:
+    Year = property(_get_Year, _set_Year)
+
+    def _get_Mult(self) -> Float64Array:
         """
         Array of growth multiplier values, or a text file spec, corresponding to the year values. Enter the multiplier by which you would multiply the previous year's load to get the present year's.
 
@@ -71,12 +70,12 @@ class GrowthShape(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    @Mult.setter
-    def Mult(self, value: Float64Array):
+    def _set_Mult(self, value: Float64Array):
         self._set_float64_array_o(3, value)
 
-    @property
-    def CSVFile(self) -> str:
+    Mult = property(_get_Mult, _set_Mult)
+
+    def _get_CSVFile(self) -> str:
         """
         Switch input of growth curve data to a csv file containing (year, mult) points, one per line.
 
@@ -84,12 +83,12 @@ class GrowthShape(DSSObj):
         """
         return self._get_prop_string(4)
 
-    @CSVFile.setter
-    def CSVFile(self, value: AnyStr):
+    def _set_CSVFile(self, value: AnyStr):
         self._set_string_o(4, value)
 
-    @property
-    def SngFile(self) -> str:
+    CSVFile = property(_get_CSVFile, _set_CSVFile)
+
+    def _get_SngFile(self) -> str:
         """
         Switch input of growth curve data to a binary file of singles containing (year, mult) points, packed one after another.
 
@@ -97,12 +96,12 @@ class GrowthShape(DSSObj):
         """
         return self._get_prop_string(5)
 
-    @SngFile.setter
-    def SngFile(self, value: AnyStr):
+    def _set_SngFile(self, value: AnyStr):
         self._set_string_o(5, value)
 
-    @property
-    def DblFile(self) -> str:
+    SngFile = property(_get_SngFile, _set_SngFile)
+
+    def _get_DblFile(self) -> str:
         """
         Switch input of growth curve data to a binary file of doubles containing (year, mult) points, packed one after another.
 
@@ -110,9 +109,10 @@ class GrowthShape(DSSObj):
         """
         return self._get_prop_string(6)
 
-    @DblFile.setter
-    def DblFile(self, value: AnyStr):
+    def _set_DblFile(self, value: AnyStr):
         self._set_string_o(6, value)
+
+    DblFile = property(_get_DblFile, _set_DblFile)
 
     def Like(self, value: AnyStr):
         """
@@ -140,8 +140,7 @@ class GrowthShapeBatch(DSSBatch):
     _cls_idx = 6
 
 
-    @property
-    def NPts(self) -> BatchInt32ArrayProxy:
+    def _get_NPts(self) -> BatchInt32ArrayProxy:
         """
         Number of points to expect in subsequent vector.
 
@@ -149,12 +148,12 @@ class GrowthShapeBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @NPts.setter
-    def NPts(self, value: Union[int, Int32Array]):
+    def _set_NPts(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def Year(self) -> List[Float64Array]:
+    NPts = property(_get_NPts, _set_NPts)
+
+    def _get_Year(self) -> List[Float64Array]:
         """
         Array of year values, or a text file spec, corresponding to the multipliers. Enter only those years where the growth changes. May be any integer sequence -- just so it is consistent. See help on Mult.
 
@@ -165,12 +164,12 @@ class GrowthShapeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Year.setter
-    def Year(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Year(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(2, value)
 
-    @property
-    def Mult(self) -> List[Float64Array]:
+    Year = property(_get_Year, _set_Year)
+
+    def _get_Mult(self) -> List[Float64Array]:
         """
         Array of growth multiplier values, or a text file spec, corresponding to the year values. Enter the multiplier by which you would multiply the previous year's load to get the present year's.
 
@@ -188,48 +187,49 @@ class GrowthShapeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Mult.setter
-    def Mult(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Mult(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(3, value)
 
-    @property
-    def CSVFile(self) -> List[str]:
+    Mult = property(_get_Mult, _set_Mult)
+
+    def _get_CSVFile(self) -> List[str]:
         """
         Switch input of growth curve data to a csv file containing (year, mult) points, one per line.
 
         DSS property name: `CSVFile`, DSS property index: 4.
         """
-        return self._get_batch_str_prop(4) 
+        return self._get_batch_str_prop(4)
 
-    @CSVFile.setter
-    def CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(4, value)
 
-    @property
-    def SngFile(self) -> List[str]:
+    CSVFile = property(_get_CSVFile, _set_CSVFile)
+
+    def _get_SngFile(self) -> List[str]:
         """
         Switch input of growth curve data to a binary file of singles containing (year, mult) points, packed one after another.
 
         DSS property name: `SngFile`, DSS property index: 5.
         """
-        return self._get_batch_str_prop(5) 
+        return self._get_batch_str_prop(5)
 
-    @SngFile.setter
-    def SngFile(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(5, value)
 
-    @property
-    def DblFile(self) -> List[str]:
+    SngFile = property(_get_SngFile, _set_SngFile)
+
+    def _get_DblFile(self) -> List[str]:
         """
         Switch input of growth curve data to a binary file of doubles containing (year, mult) points, packed one after another.
 
         DSS property name: `DblFile`, DSS property index: 6.
         """
-        return self._get_batch_str_prop(6) 
+        return self._get_batch_str_prop(6)
 
-    @DblFile.setter
-    def DblFile(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(6, value)
+
+    DblFile = property(_get_DblFile, _set_DblFile)
 
     def Like(self, value: AnyStr):
         """
@@ -256,7 +256,7 @@ class IGrowthShape(IDSSObj,GrowthShapeBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, GrowthShape, GrowthShapeBatch)
         GrowthShapeBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> GrowthShape:

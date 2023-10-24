@@ -61,8 +61,7 @@ class InvControl(DSSObj, CktElementMixin):
         'like': 37,
     }
 
-    @property
-    def DERList(self) -> List[str]:
+    def _get_DERList(self) -> List[str]:
         """
         Array list of PVSystem and/or Storage elements to be controlled. If not specified, all PVSystem and Storage in the circuit are assumed to be controlled by this control. 
 
@@ -72,14 +71,14 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 1)
 
-    @DERList.setter
-    def DERList(self, value: List[AnyStr]):
+    def _set_DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def Mode(self) -> enums.InvControlControlMode:
+    DERList = property(_get_DERList, _set_DERList)
+
+    def _get_Mode(self) -> enums.InvControlControlMode:
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
@@ -105,15 +104,15 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return enums.InvControlControlMode(self._lib.Obj_GetInt32(self._ptr, 2))
 
-    @Mode.setter
-    def Mode(self, value: Union[AnyStr, int, enums.InvControlControlMode]):
+    def _set_Mode(self, value: Union[AnyStr, int, enums.InvControlControlMode]):
         if not isinstance(value, int):
             self._set_string_o(2, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def Mode_str(self) -> str:
+    Mode = property(_get_Mode, _set_Mode)
+
+    def _get_Mode_str(self) -> str:
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
@@ -139,12 +138,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(2)
 
-    @Mode_str.setter
-    def Mode_str(self, value: AnyStr):
+    def _set_Mode_str(self, value: AnyStr):
         self.Mode = value
 
-    @property
-    def CombiMode(self) -> enums.InvControlCombiMode:
+    Mode_str = property(_get_Mode_str, _set_Mode_str)
+
+    def _get_CombiMode(self) -> enums.InvControlCombiMode:
         """
         Combination of smart inverter functions in which the InvControl will control the PC elements in DERList, according to the options below: 
 
@@ -159,15 +158,15 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return enums.InvControlCombiMode(self._lib.Obj_GetInt32(self._ptr, 3))
 
-    @CombiMode.setter
-    def CombiMode(self, value: Union[AnyStr, int, enums.InvControlCombiMode]):
+    def _set_CombiMode(self, value: Union[AnyStr, int, enums.InvControlCombiMode]):
         if not isinstance(value, int):
             self._set_string_o(3, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
-    @property
-    def CombiMode_str(self) -> str:
+    CombiMode = property(_get_CombiMode, _set_CombiMode)
+
+    def _get_CombiMode_str(self) -> str:
         """
         Combination of smart inverter functions in which the InvControl will control the PC elements in DERList, according to the options below: 
 
@@ -182,12 +181,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(3)
 
-    @CombiMode_str.setter
-    def CombiMode_str(self, value: AnyStr):
+    def _set_CombiMode_str(self, value: AnyStr):
         self.CombiMode = value
 
-    @property
-    def VVC_Curve1_str(self) -> str:
+    CombiMode_str = property(_get_CombiMode_str, _set_CombiMode_str)
+
+    def _get_VVC_Curve1_str(self) -> str:
         """
         Required for VOLTVAR mode. 
 
@@ -200,12 +199,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(4)
 
-    @VVC_Curve1_str.setter
-    def VVC_Curve1_str(self, value: AnyStr):
+    def _set_VVC_Curve1_str(self, value: AnyStr):
         self._set_string_o(4, value)
 
-    @property
-    def VVC_Curve1(self) -> XYcurve:
+    VVC_Curve1_str = property(_get_VVC_Curve1_str, _set_VVC_Curve1_str)
+
+    def _get_VVC_Curve1(self) -> XYcurve:
         """
         Required for VOLTVAR mode. 
 
@@ -218,16 +217,16 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(4, XYcurve)
 
-    @VVC_Curve1.setter
-    def VVC_Curve1(self, value: Union[AnyStr, XYcurve]):
+    def _set_VVC_Curve1(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(4, value)
             return
 
         self._set_string_o(4, value)
 
-    @property
-    def Hysteresis_Offset(self) -> float:
+    VVC_Curve1 = property(_get_VVC_Curve1, _set_VVC_Curve1)
+
+    def _get_Hysteresis_Offset(self) -> float:
         """
         Required for VOLTVAR mode, and defaults to 0. 
 
@@ -245,12 +244,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @Hysteresis_Offset.setter
-    def Hysteresis_Offset(self, value: float):
+    def _set_Hysteresis_Offset(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def Voltage_CurveX_Ref(self) -> enums.InvControlVoltageCurveXRef:
+    Hysteresis_Offset = property(_get_Hysteresis_Offset, _set_Hysteresis_Offset)
+
+    def _get_Voltage_CurveX_Ref(self) -> enums.InvControlVoltageCurveXRef:
         """
         Required for VOLTVAR and VOLTWATT modes, and defaults to rated.  Possible values are: {rated|avg|ravg}.  
 
@@ -268,15 +267,15 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return enums.InvControlVoltageCurveXRef(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    @Voltage_CurveX_Ref.setter
-    def Voltage_CurveX_Ref(self, value: Union[AnyStr, int, enums.InvControlVoltageCurveXRef]):
+    def _set_Voltage_CurveX_Ref(self, value: Union[AnyStr, int, enums.InvControlVoltageCurveXRef]):
         if not isinstance(value, int):
             self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def Voltage_CurveX_Ref_str(self) -> str:
+    Voltage_CurveX_Ref = property(_get_Voltage_CurveX_Ref, _set_Voltage_CurveX_Ref)
+
+    def _get_Voltage_CurveX_Ref_str(self) -> str:
         """
         Required for VOLTVAR and VOLTWATT modes, and defaults to rated.  Possible values are: {rated|avg|ravg}.  
 
@@ -294,12 +293,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(6)
 
-    @Voltage_CurveX_Ref_str.setter
-    def Voltage_CurveX_Ref_str(self, value: AnyStr):
+    def _set_Voltage_CurveX_Ref_str(self, value: AnyStr):
         self.Voltage_CurveX_Ref = value
 
-    @property
-    def AvgWindowLen(self) -> int:
+    Voltage_CurveX_Ref_str = property(_get_Voltage_CurveX_Ref_str, _set_Voltage_CurveX_Ref_str)
+
+    def _get_AvgWindowLen(self) -> int:
         """
         Required for VOLTVAR mode and VOLTWATT mode, and defaults to 0 seconds (0s). 
 
@@ -315,12 +314,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 7)
 
-    @AvgWindowLen.setter
-    def AvgWindowLen(self, value: int):
+    def _set_AvgWindowLen(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
-    @property
-    def VoltWatt_Curve_str(self) -> str:
+    AvgWindowLen = property(_get_AvgWindowLen, _set_AvgWindowLen)
+
+    def _get_VoltWatt_Curve_str(self) -> str:
         """
         Required for VOLTWATT mode. 
 
@@ -334,12 +333,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(8)
 
-    @VoltWatt_Curve_str.setter
-    def VoltWatt_Curve_str(self, value: AnyStr):
+    def _set_VoltWatt_Curve_str(self, value: AnyStr):
         self._set_string_o(8, value)
 
-    @property
-    def VoltWatt_Curve(self) -> XYcurve:
+    VoltWatt_Curve_str = property(_get_VoltWatt_Curve_str, _set_VoltWatt_Curve_str)
+
+    def _get_VoltWatt_Curve(self) -> XYcurve:
         """
         Required for VOLTWATT mode. 
 
@@ -353,16 +352,16 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(8, XYcurve)
 
-    @VoltWatt_Curve.setter
-    def VoltWatt_Curve(self, value: Union[AnyStr, XYcurve]):
+    def _set_VoltWatt_Curve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(8, value)
             return
 
         self._set_string_o(8, value)
 
-    @property
-    def DbVMin(self) -> float:
+    VoltWatt_Curve = property(_get_VoltWatt_Curve, _set_VoltWatt_Curve)
+
+    def _get_DbVMin(self) -> float:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 0.95 per-unit voltage (referenced to the PVSystem/Storage object rated voltage or a windowed average value). 
 
@@ -372,12 +371,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @DbVMin.setter
-    def DbVMin(self, value: float):
+    def _set_DbVMin(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def DbVMax(self) -> float:
+    DbVMin = property(_get_DbVMin, _set_DbVMin)
+
+    def _get_DbVMax(self) -> float:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 1.05 per-unit voltage (referenced to the PVSystem object rated voltage or a windowed average value). 
 
@@ -387,12 +386,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @DbVMax.setter
-    def DbVMax(self, value: float):
+    def _set_DbVMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def ArGraLowV(self) -> float:
+    DbVMax = property(_get_DbVMax, _set_DbVMax)
+
+    def _get_ArGraLowV(self) -> float:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 0.1  
 
@@ -406,12 +405,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @ArGraLowV.setter
-    def ArGraLowV(self, value: float):
+    def _set_ArGraLowV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def ArGraHiV(self) -> float:
+    ArGraLowV = property(_get_ArGraLowV, _set_ArGraLowV)
+
+    def _get_ArGraHiV(self) -> float:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 0.1  
 
@@ -425,12 +424,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @ArGraHiV.setter
-    def ArGraHiV(self, value: float):
+    def _set_ArGraHiV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def DynReacAvgWindowLen(self) -> int:
+    ArGraHiV = property(_get_ArGraHiV, _set_ArGraHiV)
+
+    def _get_DynReacAvgWindowLen(self) -> int:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 1 seconds (1s). do not use a value smaller than 1.0 
 
@@ -446,12 +445,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 13)
 
-    @DynReacAvgWindowLen.setter
-    def DynReacAvgWindowLen(self, value: int):
+    def _set_DynReacAvgWindowLen(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 13, value)
 
-    @property
-    def DeltaQ_Factor(self) -> float:
+    DynReacAvgWindowLen = property(_get_DynReacAvgWindowLen, _set_DynReacAvgWindowLen)
+
+    def _get_DeltaQ_Factor(self) -> float:
         """
         Required for the VOLTVAR and DYNAMICREACCURR modes.  Defaults to -1.0. 
 
@@ -470,12 +469,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @DeltaQ_Factor.setter
-    def DeltaQ_Factor(self, value: float):
+    def _set_DeltaQ_Factor(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def VoltageChangeTolerance(self) -> float:
+    DeltaQ_Factor = property(_get_DeltaQ_Factor, _set_DeltaQ_Factor)
+
+    def _get_VoltageChangeTolerance(self) -> float:
         """
         Defaults to 0.0001 per-unit voltage.  This parameter should only be modified by advanced users of the InvControl.  
 
@@ -489,12 +488,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @VoltageChangeTolerance.setter
-    def VoltageChangeTolerance(self, value: float):
+    def _set_VoltageChangeTolerance(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def VarChangeTolerance(self) -> float:
+    VoltageChangeTolerance = property(_get_VoltageChangeTolerance, _set_VoltageChangeTolerance)
+
+    def _get_VarChangeTolerance(self) -> float:
         """
         Required for VOLTVAR and DYNAMICREACCURR modes.  Defaults to 0.025 per unit of the base provided or absorbed reactive power described in the RefReactivePower property This parameter should only be modified by advanced users of the InvControl. 
 
@@ -508,12 +507,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @VarChangeTolerance.setter
-    def VarChangeTolerance(self, value: float):
+    def _set_VarChangeTolerance(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def VoltWattYAxis(self) -> enums.InvControlVoltWattYAxis:
+    VarChangeTolerance = property(_get_VarChangeTolerance, _set_VarChangeTolerance)
+
+    def _get_VoltWattYAxis(self) -> enums.InvControlVoltWattYAxis:
         """
         Required for VOLTWATT mode.  Must be one of: {PMPPPU* | PAVAILABLEPU| PCTPMPPPU | KVARATINGPU}.  The default is PMPPPU.  
 
@@ -531,15 +530,15 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return enums.InvControlVoltWattYAxis(self._lib.Obj_GetInt32(self._ptr, 17))
 
-    @VoltWattYAxis.setter
-    def VoltWattYAxis(self, value: Union[AnyStr, int, enums.InvControlVoltWattYAxis]):
+    def _set_VoltWattYAxis(self, value: Union[AnyStr, int, enums.InvControlVoltWattYAxis]):
         if not isinstance(value, int):
             self._set_string_o(17, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 17, value)
 
-    @property
-    def VoltWattYAxis_str(self) -> str:
+    VoltWattYAxis = property(_get_VoltWattYAxis, _set_VoltWattYAxis)
+
+    def _get_VoltWattYAxis_str(self) -> str:
         """
         Required for VOLTWATT mode.  Must be one of: {PMPPPU* | PAVAILABLEPU| PCTPMPPPU | KVARATINGPU}.  The default is PMPPPU.  
 
@@ -557,12 +556,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(17)
 
-    @VoltWattYAxis_str.setter
-    def VoltWattYAxis_str(self, value: AnyStr):
+    def _set_VoltWattYAxis_str(self, value: AnyStr):
         self.VoltWattYAxis = value
 
-    @property
-    def RateOfChangeMode(self) -> enums.InvControlRateOfChangeMode:
+    VoltWattYAxis_str = property(_get_VoltWattYAxis_str, _set_VoltWattYAxis_str)
+
+    def _get_RateOfChangeMode(self) -> enums.InvControlRateOfChangeMode:
         """
         Required for VOLTWATT and VOLTVAR mode.  Must be one of: {INACTIVE* | LPF | RISEFALL }.  The default is INACTIVE.  
 
@@ -578,15 +577,15 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return enums.InvControlRateOfChangeMode(self._lib.Obj_GetInt32(self._ptr, 18))
 
-    @RateOfChangeMode.setter
-    def RateOfChangeMode(self, value: Union[AnyStr, int, enums.InvControlRateOfChangeMode]):
+    def _set_RateOfChangeMode(self, value: Union[AnyStr, int, enums.InvControlRateOfChangeMode]):
         if not isinstance(value, int):
             self._set_string_o(18, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 18, value)
 
-    @property
-    def RateOfChangeMode_str(self) -> str:
+    RateOfChangeMode = property(_get_RateOfChangeMode, _set_RateOfChangeMode)
+
+    def _get_RateOfChangeMode_str(self) -> str:
         """
         Required for VOLTWATT and VOLTVAR mode.  Must be one of: {INACTIVE* | LPF | RISEFALL }.  The default is INACTIVE.  
 
@@ -602,12 +601,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(18)
 
-    @RateOfChangeMode_str.setter
-    def RateOfChangeMode_str(self, value: AnyStr):
+    def _set_RateOfChangeMode_str(self, value: AnyStr):
         self.RateOfChangeMode = value
 
-    @property
-    def LPFTau(self) -> float:
+    RateOfChangeMode_str = property(_get_RateOfChangeMode_str, _set_RateOfChangeMode_str)
+
+    def _get_LPFTau(self) -> float:
         """
         Not required. Defaults to 0 seconds. 
 
@@ -617,12 +616,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @LPFTau.setter
-    def LPFTau(self, value: float):
+    def _set_LPFTau(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def RiseFallLimit(self) -> float:
+    LPFTau = property(_get_LPFTau, _set_LPFTau)
+
+    def _get_RiseFallLimit(self) -> float:
         """
         Not required.  Defaults to no limit (-1). Must be -1 (no limit) or a positive value.  
 
@@ -632,12 +631,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @RiseFallLimit.setter
-    def RiseFallLimit(self, value: float):
+    def _set_RiseFallLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def DeltaP_Factor(self) -> float:
+    RiseFallLimit = property(_get_RiseFallLimit, _set_RiseFallLimit)
+
+    def _get_DeltaP_Factor(self) -> float:
         """
         Required for the VOLTWATT modes.  Defaults to -1.0. 
 
@@ -654,12 +653,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @DeltaP_Factor.setter
-    def DeltaP_Factor(self, value: float):
+    def _set_DeltaP_Factor(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def EventLog(self) -> bool:
+    DeltaP_Factor = property(_get_DeltaP_Factor, _set_DeltaP_Factor)
+
+    def _get_EventLog(self) -> bool:
         """
         {Yes/True | No/False*} Default is NO for InvControl. Log control actions to Eventlog.
 
@@ -667,12 +666,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 22) != 0
 
-    @EventLog.setter
-    def EventLog(self, value: bool):
+    def _set_EventLog(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 22, value)
 
-    @property
-    def RefReactivePower(self) -> enums.InvControlReactivePowerReference:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_RefReactivePower(self) -> enums.InvControlReactivePowerReference:
         """
         Required for any mode that has VOLTVAR, DYNAMICREACCURR and WATTVAR. Defaults to VARAVAL.
 
@@ -686,15 +685,15 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return enums.InvControlReactivePowerReference(self._lib.Obj_GetInt32(self._ptr, 23))
 
-    @RefReactivePower.setter
-    def RefReactivePower(self, value: Union[AnyStr, int, enums.InvControlReactivePowerReference]):
+    def _set_RefReactivePower(self, value: Union[AnyStr, int, enums.InvControlReactivePowerReference]):
         if not isinstance(value, int):
             self._set_string_o(23, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 23, value)
 
-    @property
-    def RefReactivePower_str(self) -> str:
+    RefReactivePower = property(_get_RefReactivePower, _set_RefReactivePower)
+
+    def _get_RefReactivePower_str(self) -> str:
         """
         Required for any mode that has VOLTVAR, DYNAMICREACCURR and WATTVAR. Defaults to VARAVAL.
 
@@ -708,12 +707,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(23)
 
-    @RefReactivePower_str.setter
-    def RefReactivePower_str(self, value: AnyStr):
+    def _set_RefReactivePower_str(self, value: AnyStr):
         self.RefReactivePower = value
 
-    @property
-    def ActivePChangeTolerance(self) -> float:
+    RefReactivePower_str = property(_get_RefReactivePower_str, _set_RefReactivePower_str)
+
+    def _get_ActivePChangeTolerance(self) -> float:
         """
         Required for VOLTWATT. Default is 0.01
 
@@ -727,12 +726,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    @ActivePChangeTolerance.setter
-    def ActivePChangeTolerance(self, value: float):
+    def _set_ActivePChangeTolerance(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 24, value)
 
-    @property
-    def MonVoltageCalc(self) -> Union[enums.MonitoredPhase, int]:
+    ActivePChangeTolerance = property(_get_ActivePChangeTolerance, _set_ActivePChangeTolerance)
+
+    def _get_MonVoltageCalc(self) -> Union[enums.MonitoredPhase, int]:
         """
         Number of the phase being monitored or one of {AVG | MAX | MIN} for all phases. Default=AVG. 
 
@@ -741,18 +740,18 @@ class InvControl(DSSObj, CktElementMixin):
         value = self._lib.Obj_GetInt32(self._ptr, 25)
         if value > 0:
             return value
-    
+
         return enums.MonitoredPhase(value)
 
-    @MonVoltageCalc.setter
-    def MonVoltageCalc(self, value: Union[AnyStr, int, enums.MonitoredPhase]):
+    def _set_MonVoltageCalc(self, value: Union[AnyStr, int, enums.MonitoredPhase]):
         if not isinstance(value, int):
             self._set_string_o(25, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 25, value)
 
-    @property
-    def MonVoltageCalc_str(self) -> str:
+    MonVoltageCalc = property(_get_MonVoltageCalc, _set_MonVoltageCalc)
+
+    def _get_MonVoltageCalc_str(self) -> str:
         """
         Number of the phase being monitored or one of {AVG | MAX | MIN} for all phases. Default=AVG. 
 
@@ -760,12 +759,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(25)
 
-    @MonVoltageCalc_str.setter
-    def MonVoltageCalc_str(self, value: AnyStr):
+    def _set_MonVoltageCalc_str(self, value: AnyStr):
         self.MonVoltageCalc = value
 
-    @property
-    def MonBus(self) -> List[str]:
+    MonVoltageCalc_str = property(_get_MonVoltageCalc_str, _set_MonVoltageCalc_str)
+
+    def _get_MonBus(self) -> List[str]:
         """
         Name of monitored bus used by the voltage-dependent control modes. Default is bus of the controlled PVSystem/Storage or Storage.
 
@@ -773,14 +772,14 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 26)
 
-    @MonBus.setter
-    def MonBus(self, value: List[AnyStr]):
+    def _set_MonBus(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         self._lib.Obj_SetStringArray(self._ptr, 26, value_ptr, value_count)
         self._check_for_error()
 
-    @property
-    def MonBusesVBase(self) -> Float64Array:
+    MonBus = property(_get_MonBus, _set_MonBus)
+
+    def _get_MonBusesVBase(self) -> Float64Array:
         """
         Array list of rated voltages of the buses and their nodes presented in the monBus property. This list may have different line-to-line and/or line-to-ground voltages.
 
@@ -788,12 +787,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 27)
 
-    @MonBusesVBase.setter
-    def MonBusesVBase(self, value: Float64Array):
+    def _set_MonBusesVBase(self, value: Float64Array):
         self._set_float64_array_o(27, value)
 
-    @property
-    def VoltWattCH_Curve_str(self) -> str:
+    MonBusesVBase = property(_get_MonBusesVBase, _set_MonBusesVBase)
+
+    def _get_VoltWattCH_Curve_str(self) -> str:
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
@@ -809,12 +808,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(28)
 
-    @VoltWattCH_Curve_str.setter
-    def VoltWattCH_Curve_str(self, value: AnyStr):
+    def _set_VoltWattCH_Curve_str(self, value: AnyStr):
         self._set_string_o(28, value)
 
-    @property
-    def VoltWattCH_Curve(self) -> XYcurve:
+    VoltWattCH_Curve_str = property(_get_VoltWattCH_Curve_str, _set_VoltWattCH_Curve_str)
+
+    def _get_VoltWattCH_Curve(self) -> XYcurve:
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
@@ -830,16 +829,16 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(28, XYcurve)
 
-    @VoltWattCH_Curve.setter
-    def VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve]):
+    def _set_VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(28, value)
             return
 
         self._set_string_o(28, value)
 
-    @property
-    def WattPF_Curve_str(self) -> str:
+    VoltWattCH_Curve = property(_get_VoltWattCH_Curve, _set_VoltWattCH_Curve)
+
+    def _get_WattPF_Curve_str(self) -> str:
         """
         Required for WATTPF mode.
 
@@ -860,12 +859,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(29)
 
-    @WattPF_Curve_str.setter
-    def WattPF_Curve_str(self, value: AnyStr):
+    def _set_WattPF_Curve_str(self, value: AnyStr):
         self._set_string_o(29, value)
 
-    @property
-    def WattPF_Curve(self) -> XYcurve:
+    WattPF_Curve_str = property(_get_WattPF_Curve_str, _set_WattPF_Curve_str)
+
+    def _get_WattPF_Curve(self) -> XYcurve:
         """
         Required for WATTPF mode.
 
@@ -886,16 +885,16 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(29, XYcurve)
 
-    @WattPF_Curve.setter
-    def WattPF_Curve(self, value: Union[AnyStr, XYcurve]):
+    def _set_WattPF_Curve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(29, value)
             return
 
         self._set_string_o(29, value)
 
-    @property
-    def WattVar_Curve_str(self) -> str:
+    WattPF_Curve = property(_get_WattPF_Curve, _set_WattPF_Curve)
+
+    def _get_WattVar_Curve_str(self) -> str:
         """
         Required for WATTVAR mode. 
 
@@ -908,12 +907,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(30)
 
-    @WattVar_Curve_str.setter
-    def WattVar_Curve_str(self, value: AnyStr):
+    def _set_WattVar_Curve_str(self, value: AnyStr):
         self._set_string_o(30, value)
 
-    @property
-    def WattVar_Curve(self) -> XYcurve:
+    WattVar_Curve_str = property(_get_WattVar_Curve_str, _set_WattVar_Curve_str)
+
+    def _get_WattVar_Curve(self) -> XYcurve:
         """
         Required for WATTVAR mode. 
 
@@ -926,16 +925,16 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._get_obj(30, XYcurve)
 
-    @WattVar_Curve.setter
-    def WattVar_Curve(self, value: Union[AnyStr, XYcurve]):
+    def _set_WattVar_Curve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(30, value)
             return
 
         self._set_string_o(30, value)
 
-    @property
-    def VSetPoint(self) -> float:
+    WattVar_Curve = property(_get_WattVar_Curve, _set_WattVar_Curve)
+
+    def _get_VSetPoint(self) -> float:
         """
         Required for Active Voltage Regulation (AVR).
 
@@ -943,12 +942,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 33)
 
-    @VSetPoint.setter
-    def VSetPoint(self, value: float):
+    def _set_VSetPoint(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 33, value)
 
-    @property
-    def ControlModel(self) -> enums.InvControlControlModel:
+    VSetPoint = property(_get_VSetPoint, _set_VSetPoint)
+
+    def _get_ControlModel(self) -> enums.InvControlControlModel:
         """
         Integer defining the method for moving across the control curve. It can be one of the following:
 
@@ -962,12 +961,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return enums.InvControlControlModel(self._lib.Obj_GetInt32(self._ptr, 34))
 
-    @ControlModel.setter
-    def ControlModel(self, value: Union[int, enums.InvControlControlModel]):
+    def _set_ControlModel(self, value: Union[int, enums.InvControlControlModel]):
         self._lib.Obj_SetInt32(self._ptr, 34, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    ControlModel = property(_get_ControlModel, _set_ControlModel)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -975,12 +974,12 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 35)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 35, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -988,9 +987,10 @@ class InvControl(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 36) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 36, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1046,8 +1046,7 @@ class InvControlBatch(DSSBatch):
     _cls_idx = 42
 
 
-    @property
-    def DERList(self) -> List[List[str]]:
+    def _get_DERList(self) -> List[List[str]]:
         """
         Array list of PVSystem and/or Storage elements to be controlled. If not specified, all PVSystem and Storage in the circuit are assumed to be controlled by this control. 
 
@@ -1057,16 +1056,16 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_string_ll(1)
 
-    @DERList.setter
-    def DERList(self, value: List[AnyStr]):
+    def _set_DERList(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def Mode(self) -> BatchInt32ArrayProxy:
+    DERList = property(_get_DERList, _set_DERList)
+
+    def _get_Mode(self) -> BatchInt32ArrayProxy:
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
@@ -1092,16 +1091,16 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @Mode.setter
-    def Mode(self, value: Union[AnyStr, int, enums.InvControlControlMode, List[AnyStr], List[int], List[enums.InvControlControlMode], Int32Array]):
+    def _set_Mode(self, value: Union[AnyStr, int, enums.InvControlControlMode, List[AnyStr], List[int], List[enums.InvControlControlMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(2, value)
             return
-    
+
         self._set_batch_int32_array(2, value)
 
-    @property
-    def Mode_str(self) -> str:
+    Mode = property(_get_Mode, _set_Mode)
+
+    def _get_Mode_str(self) -> str:
         """
         Smart inverter function in which the InvControl will control the PC elements specified in DERList, according to the options below:
 
@@ -1127,12 +1126,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(2)
 
-    @Mode_str.setter
-    def Mode_str(self, value: AnyStr):
+    def _set_Mode_str(self, value: AnyStr):
         self.Mode = value
 
-    @property
-    def CombiMode(self) -> BatchInt32ArrayProxy:
+    Mode_str = property(_get_Mode_str, _set_Mode_str)
+
+    def _get_CombiMode(self) -> BatchInt32ArrayProxy:
         """
         Combination of smart inverter functions in which the InvControl will control the PC elements in DERList, according to the options below: 
 
@@ -1147,16 +1146,16 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    @CombiMode.setter
-    def CombiMode(self, value: Union[AnyStr, int, enums.InvControlCombiMode, List[AnyStr], List[int], List[enums.InvControlCombiMode], Int32Array]):
+    def _set_CombiMode(self, value: Union[AnyStr, int, enums.InvControlCombiMode, List[AnyStr], List[int], List[enums.InvControlCombiMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(3, value)
             return
-    
+
         self._set_batch_int32_array(3, value)
 
-    @property
-    def CombiMode_str(self) -> str:
+    CombiMode = property(_get_CombiMode, _set_CombiMode)
+
+    def _get_CombiMode_str(self) -> str:
         """
         Combination of smart inverter functions in which the InvControl will control the PC elements in DERList, according to the options below: 
 
@@ -1171,12 +1170,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @CombiMode_str.setter
-    def CombiMode_str(self, value: AnyStr):
+    def _set_CombiMode_str(self, value: AnyStr):
         self.CombiMode = value
 
-    @property
-    def VVC_Curve1_str(self) -> List[str]:
+    CombiMode_str = property(_get_CombiMode_str, _set_CombiMode_str)
+
+    def _get_VVC_Curve1_str(self) -> List[str]:
         """
         Required for VOLTVAR mode. 
 
@@ -1189,12 +1188,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(4)
 
-    @VVC_Curve1_str.setter
-    def VVC_Curve1_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_VVC_Curve1_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(4, value)
 
-    @property
-    def VVC_Curve1(self) -> List[XYcurve]:
+    VVC_Curve1_str = property(_get_VVC_Curve1_str, _set_VVC_Curve1_str)
+
+    def _get_VVC_Curve1(self) -> List[XYcurve]:
         """
         Required for VOLTVAR mode. 
 
@@ -1207,12 +1206,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(4)
 
-    @VVC_Curve1.setter
-    def VVC_Curve1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_VVC_Curve1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(4, value)
 
-    @property
-    def Hysteresis_Offset(self) -> BatchFloat64ArrayProxy:
+    VVC_Curve1 = property(_get_VVC_Curve1, _set_VVC_Curve1)
+
+    def _get_Hysteresis_Offset(self) -> BatchFloat64ArrayProxy:
         """
         Required for VOLTVAR mode, and defaults to 0. 
 
@@ -1230,12 +1229,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @Hysteresis_Offset.setter
-    def Hysteresis_Offset(self, value: Union[float, Float64Array]):
+    def _set_Hysteresis_Offset(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def Voltage_CurveX_Ref(self) -> BatchInt32ArrayProxy:
+    Hysteresis_Offset = property(_get_Hysteresis_Offset, _set_Hysteresis_Offset)
+
+    def _get_Voltage_CurveX_Ref(self) -> BatchInt32ArrayProxy:
         """
         Required for VOLTVAR and VOLTWATT modes, and defaults to rated.  Possible values are: {rated|avg|ravg}.  
 
@@ -1253,16 +1252,16 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Voltage_CurveX_Ref.setter
-    def Voltage_CurveX_Ref(self, value: Union[AnyStr, int, enums.InvControlVoltageCurveXRef, List[AnyStr], List[int], List[enums.InvControlVoltageCurveXRef], Int32Array]):
+    def _set_Voltage_CurveX_Ref(self, value: Union[AnyStr, int, enums.InvControlVoltageCurveXRef, List[AnyStr], List[int], List[enums.InvControlVoltageCurveXRef], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
-    
+
         self._set_batch_int32_array(6, value)
 
-    @property
-    def Voltage_CurveX_Ref_str(self) -> str:
+    Voltage_CurveX_Ref = property(_get_Voltage_CurveX_Ref, _set_Voltage_CurveX_Ref)
+
+    def _get_Voltage_CurveX_Ref_str(self) -> str:
         """
         Required for VOLTVAR and VOLTWATT modes, and defaults to rated.  Possible values are: {rated|avg|ravg}.  
 
@@ -1280,12 +1279,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @Voltage_CurveX_Ref_str.setter
-    def Voltage_CurveX_Ref_str(self, value: AnyStr):
+    def _set_Voltage_CurveX_Ref_str(self, value: AnyStr):
         self.Voltage_CurveX_Ref = value
 
-    @property
-    def AvgWindowLen(self) -> BatchInt32ArrayProxy:
+    Voltage_CurveX_Ref_str = property(_get_Voltage_CurveX_Ref_str, _set_Voltage_CurveX_Ref_str)
+
+    def _get_AvgWindowLen(self) -> BatchInt32ArrayProxy:
         """
         Required for VOLTVAR mode and VOLTWATT mode, and defaults to 0 seconds (0s). 
 
@@ -1301,12 +1300,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 7)
 
-    @AvgWindowLen.setter
-    def AvgWindowLen(self, value: Union[int, Int32Array]):
+    def _set_AvgWindowLen(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(7, value)
 
-    @property
-    def VoltWatt_Curve_str(self) -> List[str]:
+    AvgWindowLen = property(_get_AvgWindowLen, _set_AvgWindowLen)
+
+    def _get_VoltWatt_Curve_str(self) -> List[str]:
         """
         Required for VOLTWATT mode. 
 
@@ -1320,12 +1319,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    @VoltWatt_Curve_str.setter
-    def VoltWatt_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_VoltWatt_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(8, value)
 
-    @property
-    def VoltWatt_Curve(self) -> List[XYcurve]:
+    VoltWatt_Curve_str = property(_get_VoltWatt_Curve_str, _set_VoltWatt_Curve_str)
+
+    def _get_VoltWatt_Curve(self) -> List[XYcurve]:
         """
         Required for VOLTWATT mode. 
 
@@ -1339,12 +1338,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(8)
 
-    @VoltWatt_Curve.setter
-    def VoltWatt_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_VoltWatt_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(8, value)
 
-    @property
-    def DbVMin(self) -> BatchFloat64ArrayProxy:
+    VoltWatt_Curve = property(_get_VoltWatt_Curve, _set_VoltWatt_Curve)
+
+    def _get_DbVMin(self) -> BatchFloat64ArrayProxy:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 0.95 per-unit voltage (referenced to the PVSystem/Storage object rated voltage or a windowed average value). 
 
@@ -1354,12 +1353,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @DbVMin.setter
-    def DbVMin(self, value: Union[float, Float64Array]):
+    def _set_DbVMin(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def DbVMax(self) -> BatchFloat64ArrayProxy:
+    DbVMin = property(_get_DbVMin, _set_DbVMin)
+
+    def _get_DbVMax(self) -> BatchFloat64ArrayProxy:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 1.05 per-unit voltage (referenced to the PVSystem object rated voltage or a windowed average value). 
 
@@ -1369,12 +1368,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @DbVMax.setter
-    def DbVMax(self, value: Union[float, Float64Array]):
+    def _set_DbVMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def ArGraLowV(self) -> BatchFloat64ArrayProxy:
+    DbVMax = property(_get_DbVMax, _set_DbVMax)
+
+    def _get_ArGraLowV(self) -> BatchFloat64ArrayProxy:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 0.1  
 
@@ -1388,12 +1387,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @ArGraLowV.setter
-    def ArGraLowV(self, value: Union[float, Float64Array]):
+    def _set_ArGraLowV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def ArGraHiV(self) -> BatchFloat64ArrayProxy:
+    ArGraLowV = property(_get_ArGraLowV, _set_ArGraLowV)
+
+    def _get_ArGraHiV(self) -> BatchFloat64ArrayProxy:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 0.1  
 
@@ -1407,12 +1406,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @ArGraHiV.setter
-    def ArGraHiV(self, value: Union[float, Float64Array]):
+    def _set_ArGraHiV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def DynReacAvgWindowLen(self) -> BatchInt32ArrayProxy:
+    ArGraHiV = property(_get_ArGraHiV, _set_ArGraHiV)
+
+    def _get_DynReacAvgWindowLen(self) -> BatchInt32ArrayProxy:
         """
         Required for the dynamic reactive current mode (DYNAMICREACCURR), and defaults to 1 seconds (1s). do not use a value smaller than 1.0 
 
@@ -1428,12 +1427,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 13)
 
-    @DynReacAvgWindowLen.setter
-    def DynReacAvgWindowLen(self, value: Union[int, Int32Array]):
+    def _set_DynReacAvgWindowLen(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(13, value)
 
-    @property
-    def DeltaQ_Factor(self) -> BatchFloat64ArrayProxy:
+    DynReacAvgWindowLen = property(_get_DynReacAvgWindowLen, _set_DynReacAvgWindowLen)
+
+    def _get_DeltaQ_Factor(self) -> BatchFloat64ArrayProxy:
         """
         Required for the VOLTVAR and DYNAMICREACCURR modes.  Defaults to -1.0. 
 
@@ -1452,12 +1451,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @DeltaQ_Factor.setter
-    def DeltaQ_Factor(self, value: Union[float, Float64Array]):
+    def _set_DeltaQ_Factor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def VoltageChangeTolerance(self) -> BatchFloat64ArrayProxy:
+    DeltaQ_Factor = property(_get_DeltaQ_Factor, _set_DeltaQ_Factor)
+
+    def _get_VoltageChangeTolerance(self) -> BatchFloat64ArrayProxy:
         """
         Defaults to 0.0001 per-unit voltage.  This parameter should only be modified by advanced users of the InvControl.  
 
@@ -1471,12 +1470,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @VoltageChangeTolerance.setter
-    def VoltageChangeTolerance(self, value: Union[float, Float64Array]):
+    def _set_VoltageChangeTolerance(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def VarChangeTolerance(self) -> BatchFloat64ArrayProxy:
+    VoltageChangeTolerance = property(_get_VoltageChangeTolerance, _set_VoltageChangeTolerance)
+
+    def _get_VarChangeTolerance(self) -> BatchFloat64ArrayProxy:
         """
         Required for VOLTVAR and DYNAMICREACCURR modes.  Defaults to 0.025 per unit of the base provided or absorbed reactive power described in the RefReactivePower property This parameter should only be modified by advanced users of the InvControl. 
 
@@ -1490,12 +1489,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @VarChangeTolerance.setter
-    def VarChangeTolerance(self, value: Union[float, Float64Array]):
+    def _set_VarChangeTolerance(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def VoltWattYAxis(self) -> BatchInt32ArrayProxy:
+    VarChangeTolerance = property(_get_VarChangeTolerance, _set_VarChangeTolerance)
+
+    def _get_VoltWattYAxis(self) -> BatchInt32ArrayProxy:
         """
         Required for VOLTWATT mode.  Must be one of: {PMPPPU* | PAVAILABLEPU| PCTPMPPPU | KVARATINGPU}.  The default is PMPPPU.  
 
@@ -1513,16 +1512,16 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 17)
 
-    @VoltWattYAxis.setter
-    def VoltWattYAxis(self, value: Union[AnyStr, int, enums.InvControlVoltWattYAxis, List[AnyStr], List[int], List[enums.InvControlVoltWattYAxis], Int32Array]):
+    def _set_VoltWattYAxis(self, value: Union[AnyStr, int, enums.InvControlVoltWattYAxis, List[AnyStr], List[int], List[enums.InvControlVoltWattYAxis], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(17, value)
             return
-    
+
         self._set_batch_int32_array(17, value)
 
-    @property
-    def VoltWattYAxis_str(self) -> str:
+    VoltWattYAxis = property(_get_VoltWattYAxis, _set_VoltWattYAxis)
+
+    def _get_VoltWattYAxis_str(self) -> str:
         """
         Required for VOLTWATT mode.  Must be one of: {PMPPPU* | PAVAILABLEPU| PCTPMPPPU | KVARATINGPU}.  The default is PMPPPU.  
 
@@ -1540,12 +1539,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(17)
 
-    @VoltWattYAxis_str.setter
-    def VoltWattYAxis_str(self, value: AnyStr):
+    def _set_VoltWattYAxis_str(self, value: AnyStr):
         self.VoltWattYAxis = value
 
-    @property
-    def RateOfChangeMode(self) -> BatchInt32ArrayProxy:
+    VoltWattYAxis_str = property(_get_VoltWattYAxis_str, _set_VoltWattYAxis_str)
+
+    def _get_RateOfChangeMode(self) -> BatchInt32ArrayProxy:
         """
         Required for VOLTWATT and VOLTVAR mode.  Must be one of: {INACTIVE* | LPF | RISEFALL }.  The default is INACTIVE.  
 
@@ -1561,16 +1560,16 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 18)
 
-    @RateOfChangeMode.setter
-    def RateOfChangeMode(self, value: Union[AnyStr, int, enums.InvControlRateOfChangeMode, List[AnyStr], List[int], List[enums.InvControlRateOfChangeMode], Int32Array]):
+    def _set_RateOfChangeMode(self, value: Union[AnyStr, int, enums.InvControlRateOfChangeMode, List[AnyStr], List[int], List[enums.InvControlRateOfChangeMode], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(18, value)
             return
-    
+
         self._set_batch_int32_array(18, value)
 
-    @property
-    def RateOfChangeMode_str(self) -> str:
+    RateOfChangeMode = property(_get_RateOfChangeMode, _set_RateOfChangeMode)
+
+    def _get_RateOfChangeMode_str(self) -> str:
         """
         Required for VOLTWATT and VOLTVAR mode.  Must be one of: {INACTIVE* | LPF | RISEFALL }.  The default is INACTIVE.  
 
@@ -1586,12 +1585,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(18)
 
-    @RateOfChangeMode_str.setter
-    def RateOfChangeMode_str(self, value: AnyStr):
+    def _set_RateOfChangeMode_str(self, value: AnyStr):
         self.RateOfChangeMode = value
 
-    @property
-    def LPFTau(self) -> BatchFloat64ArrayProxy:
+    RateOfChangeMode_str = property(_get_RateOfChangeMode_str, _set_RateOfChangeMode_str)
+
+    def _get_LPFTau(self) -> BatchFloat64ArrayProxy:
         """
         Not required. Defaults to 0 seconds. 
 
@@ -1601,12 +1600,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @LPFTau.setter
-    def LPFTau(self, value: Union[float, Float64Array]):
+    def _set_LPFTau(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def RiseFallLimit(self) -> BatchFloat64ArrayProxy:
+    LPFTau = property(_get_LPFTau, _set_LPFTau)
+
+    def _get_RiseFallLimit(self) -> BatchFloat64ArrayProxy:
         """
         Not required.  Defaults to no limit (-1). Must be -1 (no limit) or a positive value.  
 
@@ -1616,12 +1615,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @RiseFallLimit.setter
-    def RiseFallLimit(self, value: Union[float, Float64Array]):
+    def _set_RiseFallLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def DeltaP_Factor(self) -> BatchFloat64ArrayProxy:
+    RiseFallLimit = property(_get_RiseFallLimit, _set_RiseFallLimit)
+
+    def _get_DeltaP_Factor(self) -> BatchFloat64ArrayProxy:
         """
         Required for the VOLTWATT modes.  Defaults to -1.0. 
 
@@ -1638,26 +1637,27 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @DeltaP_Factor.setter
-    def DeltaP_Factor(self, value: Union[float, Float64Array]):
+    def _set_DeltaP_Factor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def EventLog(self) -> List[bool]:
+    DeltaP_Factor = property(_get_DeltaP_Factor, _set_DeltaP_Factor)
+
+    def _get_EventLog(self) -> List[bool]:
         """
         {Yes/True | No/False*} Default is NO for InvControl. Log control actions to Eventlog.
 
         DSS property name: `EventLog`, DSS property index: 22.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(22)
         ]
-    @EventLog.setter
-    def EventLog(self, value: bool):
+
+    def _set_EventLog(self, value: bool):
         self._set_batch_int32_array(22, value)
 
-    @property
-    def RefReactivePower(self) -> BatchInt32ArrayProxy:
+    EventLog = property(_get_EventLog, _set_EventLog)
+
+    def _get_RefReactivePower(self) -> BatchInt32ArrayProxy:
         """
         Required for any mode that has VOLTVAR, DYNAMICREACCURR and WATTVAR. Defaults to VARAVAL.
 
@@ -1671,16 +1671,16 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 23)
 
-    @RefReactivePower.setter
-    def RefReactivePower(self, value: Union[AnyStr, int, enums.InvControlReactivePowerReference, List[AnyStr], List[int], List[enums.InvControlReactivePowerReference], Int32Array]):
+    def _set_RefReactivePower(self, value: Union[AnyStr, int, enums.InvControlReactivePowerReference, List[AnyStr], List[int], List[enums.InvControlReactivePowerReference], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(23, value)
             return
-    
+
         self._set_batch_int32_array(23, value)
 
-    @property
-    def RefReactivePower_str(self) -> str:
+    RefReactivePower = property(_get_RefReactivePower, _set_RefReactivePower)
+
+    def _get_RefReactivePower_str(self) -> str:
         """
         Required for any mode that has VOLTVAR, DYNAMICREACCURR and WATTVAR. Defaults to VARAVAL.
 
@@ -1694,12 +1694,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(23)
 
-    @RefReactivePower_str.setter
-    def RefReactivePower_str(self, value: AnyStr):
+    def _set_RefReactivePower_str(self, value: AnyStr):
         self.RefReactivePower = value
 
-    @property
-    def ActivePChangeTolerance(self) -> BatchFloat64ArrayProxy:
+    RefReactivePower_str = property(_get_RefReactivePower_str, _set_RefReactivePower_str)
+
+    def _get_ActivePChangeTolerance(self) -> BatchFloat64ArrayProxy:
         """
         Required for VOLTWATT. Default is 0.01
 
@@ -1713,12 +1713,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    @ActivePChangeTolerance.setter
-    def ActivePChangeTolerance(self, value: Union[float, Float64Array]):
+    def _set_ActivePChangeTolerance(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
-    @property
-    def MonVoltageCalc(self) -> BatchInt32ArrayProxy:
+    ActivePChangeTolerance = property(_get_ActivePChangeTolerance, _set_ActivePChangeTolerance)
+
+    def _get_MonVoltageCalc(self) -> BatchInt32ArrayProxy:
         """
         Number of the phase being monitored or one of {AVG | MAX | MIN} for all phases. Default=AVG. 
 
@@ -1726,16 +1726,16 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 25)
 
-    @MonVoltageCalc.setter
-    def MonVoltageCalc(self, value: Union[AnyStr, int, enums.MonitoredPhase, List[AnyStr], List[int], List[enums.MonitoredPhase], Int32Array]):
+    def _set_MonVoltageCalc(self, value: Union[AnyStr, int, enums.MonitoredPhase, List[AnyStr], List[int], List[enums.MonitoredPhase], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(25, value)
             return
-    
+
         self._set_batch_int32_array(25, value)
 
-    @property
-    def MonVoltageCalc_str(self) -> str:
+    MonVoltageCalc = property(_get_MonVoltageCalc, _set_MonVoltageCalc)
+
+    def _get_MonVoltageCalc_str(self) -> str:
         """
         Number of the phase being monitored or one of {AVG | MAX | MIN} for all phases. Default=AVG. 
 
@@ -1743,12 +1743,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(25)
 
-    @MonVoltageCalc_str.setter
-    def MonVoltageCalc_str(self, value: AnyStr):
+    def _set_MonVoltageCalc_str(self, value: AnyStr):
         self.MonVoltageCalc = value
 
-    @property
-    def MonBus(self) -> List[List[str]]:
+    MonVoltageCalc_str = property(_get_MonVoltageCalc_str, _set_MonVoltageCalc_str)
+
+    def _get_MonBus(self) -> List[List[str]]:
         """
         Name of monitored bus used by the voltage-dependent control modes. Default is bus of the controlled PVSystem/Storage or Storage.
 
@@ -1756,16 +1756,16 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_string_ll(26)
 
-    @MonBus.setter
-    def MonBus(self, value: List[AnyStr]):
+    def _set_MonBus(self, value: List[AnyStr]):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
             self._lib.Obj_SetStringArray(x, 26, value_ptr, value_count)
-    
+
         self._check_for_error()
 
-    @property
-    def MonBusesVBase(self) -> List[Float64Array]:
+    MonBus = property(_get_MonBus, _set_MonBus)
+
+    def _get_MonBusesVBase(self) -> List[Float64Array]:
         """
         Array list of rated voltages of the buses and their nodes presented in the monBus property. This list may have different line-to-line and/or line-to-ground voltages.
 
@@ -1776,12 +1776,12 @@ class InvControlBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @MonBusesVBase.setter
-    def MonBusesVBase(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_MonBusesVBase(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(27, value)
 
-    @property
-    def VoltWattCH_Curve_str(self) -> List[str]:
+    MonBusesVBase = property(_get_MonBusesVBase, _set_MonBusesVBase)
+
+    def _get_VoltWattCH_Curve_str(self) -> List[str]:
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
@@ -1797,12 +1797,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(28)
 
-    @VoltWattCH_Curve_str.setter
-    def VoltWattCH_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_VoltWattCH_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(28, value)
 
-    @property
-    def VoltWattCH_Curve(self) -> List[XYcurve]:
+    VoltWattCH_Curve_str = property(_get_VoltWattCH_Curve_str, _set_VoltWattCH_Curve_str)
+
+    def _get_VoltWattCH_Curve(self) -> List[XYcurve]:
         """
         Required for VOLTWATT mode for Storage element in CHARGING state. 
 
@@ -1818,12 +1818,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(28)
 
-    @VoltWattCH_Curve.setter
-    def VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(28, value)
 
-    @property
-    def WattPF_Curve_str(self) -> List[str]:
+    VoltWattCH_Curve = property(_get_VoltWattCH_Curve, _set_VoltWattCH_Curve)
+
+    def _get_WattPF_Curve_str(self) -> List[str]:
         """
         Required for WATTPF mode.
 
@@ -1844,12 +1844,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(29)
 
-    @WattPF_Curve_str.setter
-    def WattPF_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_WattPF_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(29, value)
 
-    @property
-    def WattPF_Curve(self) -> List[XYcurve]:
+    WattPF_Curve_str = property(_get_WattPF_Curve_str, _set_WattPF_Curve_str)
+
+    def _get_WattPF_Curve(self) -> List[XYcurve]:
         """
         Required for WATTPF mode.
 
@@ -1870,12 +1870,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(29)
 
-    @WattPF_Curve.setter
-    def WattPF_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_WattPF_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(29, value)
 
-    @property
-    def WattVar_Curve_str(self) -> List[str]:
+    WattPF_Curve = property(_get_WattPF_Curve, _set_WattPF_Curve)
+
+    def _get_WattVar_Curve_str(self) -> List[str]:
         """
         Required for WATTVAR mode. 
 
@@ -1888,12 +1888,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_str_prop(30)
 
-    @WattVar_Curve_str.setter
-    def WattVar_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_WattVar_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(30, value)
 
-    @property
-    def WattVar_Curve(self) -> List[XYcurve]:
+    WattVar_Curve_str = property(_get_WattVar_Curve_str, _set_WattVar_Curve_str)
+
+    def _get_WattVar_Curve(self) -> List[XYcurve]:
         """
         Required for WATTVAR mode. 
 
@@ -1906,12 +1906,12 @@ class InvControlBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(30)
 
-    @WattVar_Curve.setter
-    def WattVar_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_WattVar_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(30, value)
 
-    @property
-    def VSetPoint(self) -> BatchFloat64ArrayProxy:
+    WattVar_Curve = property(_get_WattVar_Curve, _set_WattVar_Curve)
+
+    def _get_VSetPoint(self) -> BatchFloat64ArrayProxy:
         """
         Required for Active Voltage Regulation (AVR).
 
@@ -1919,12 +1919,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 33)
 
-    @VSetPoint.setter
-    def VSetPoint(self, value: Union[float, Float64Array]):
+    def _set_VSetPoint(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(33, value)
 
-    @property
-    def ControlModel(self) -> BatchInt32ArrayProxy:
+    VSetPoint = property(_get_VSetPoint, _set_VSetPoint)
+
+    def _get_ControlModel(self) -> BatchInt32ArrayProxy:
         """
         Integer defining the method for moving across the control curve. It can be one of the following:
 
@@ -1938,12 +1938,12 @@ class InvControlBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 34)
 
-    @ControlModel.setter
-    def ControlModel(self, value: Union[int, enums.InvControlControlModel, Int32Array]):
+    def _set_ControlModel(self, value: Union[int, enums.InvControlControlModel, Int32Array]):
         self._set_batch_int32_array(34, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    ControlModel = property(_get_ControlModel, _set_ControlModel)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -1951,23 +1951,25 @@ class InvControlBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 35)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 36.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(36)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(36, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -2022,7 +2024,7 @@ class IInvControl(IDSSObj,InvControlBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, InvControl, InvControlBatch)
         InvControlBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> InvControl:

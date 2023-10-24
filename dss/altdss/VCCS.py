@@ -43,8 +43,7 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         'like': 17,
     }
 
-    @property
-    def Bus1(self) -> str:
+    def _get_Bus1(self) -> str:
         """
         Name of bus to which source is connected.
         bus1=busname
@@ -54,12 +53,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Phases(self) -> int:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Phases(self) -> int:
         """
         Number of phases.  Defaults to 1.
 
@@ -67,12 +66,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def PRated(self) -> float:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_PRated(self) -> float:
         """
         Total rated power, in Watts.
 
@@ -80,12 +79,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @PRated.setter
-    def PRated(self, value: float):
+    def _set_PRated(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def VRated(self) -> float:
+    PRated = property(_get_PRated, _set_PRated)
+
+    def _get_VRated(self) -> float:
         """
         Rated line-to-line voltage, in Volts
 
@@ -93,12 +92,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @VRated.setter
-    def VRated(self, value: float):
+    def _set_VRated(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def Ppct(self) -> float:
+    VRated = property(_get_VRated, _set_VRated)
+
+    def _get_Ppct(self) -> float:
         """
         Steady-state operating output, in percent of rated.
 
@@ -106,12 +105,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @Ppct.setter
-    def Ppct(self, value: float):
+    def _set_Ppct(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def BP1_str(self) -> str:
+    Ppct = property(_get_Ppct, _set_Ppct)
+
+    def _get_BP1_str(self) -> str:
         """
         XYCurve defining the input piece-wise linear block.
 
@@ -119,12 +118,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(6)
 
-    @BP1_str.setter
-    def BP1_str(self, value: AnyStr):
+    def _set_BP1_str(self, value: AnyStr):
         self._set_string_o(6, value)
 
-    @property
-    def BP1(self) -> XYcurve:
+    BP1_str = property(_get_BP1_str, _set_BP1_str)
+
+    def _get_BP1(self) -> XYcurve:
         """
         XYCurve defining the input piece-wise linear block.
 
@@ -132,16 +131,16 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(6, XYcurve)
 
-    @BP1.setter
-    def BP1(self, value: Union[AnyStr, XYcurve]):
+    def _set_BP1(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(6, value)
             return
 
         self._set_string_o(6, value)
 
-    @property
-    def BP2_str(self) -> str:
+    BP1 = property(_get_BP1, _set_BP1)
+
+    def _get_BP2_str(self) -> str:
         """
         XYCurve defining the output piece-wise linear block.
 
@@ -149,12 +148,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(7)
 
-    @BP2_str.setter
-    def BP2_str(self, value: AnyStr):
+    def _set_BP2_str(self, value: AnyStr):
         self._set_string_o(7, value)
 
-    @property
-    def BP2(self) -> XYcurve:
+    BP2_str = property(_get_BP2_str, _set_BP2_str)
+
+    def _get_BP2(self) -> XYcurve:
         """
         XYCurve defining the output piece-wise linear block.
 
@@ -162,16 +161,16 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(7, XYcurve)
 
-    @BP2.setter
-    def BP2(self, value: Union[AnyStr, XYcurve]):
+    def _set_BP2(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(7, value)
             return
 
         self._set_string_o(7, value)
 
-    @property
-    def Filter_str(self) -> str:
+    BP2 = property(_get_BP2, _set_BP2)
+
+    def _get_Filter_str(self) -> str:
         """
         XYCurve defining the digital filter coefficients (x numerator, y denominator).
 
@@ -179,12 +178,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(8)
 
-    @Filter_str.setter
-    def Filter_str(self, value: AnyStr):
+    def _set_Filter_str(self, value: AnyStr):
         self._set_string_o(8, value)
 
-    @property
-    def Filter(self) -> XYcurve:
+    Filter_str = property(_get_Filter_str, _set_Filter_str)
+
+    def _get_Filter(self) -> XYcurve:
         """
         XYCurve defining the digital filter coefficients (x numerator, y denominator).
 
@@ -192,16 +191,16 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(8, XYcurve)
 
-    @Filter.setter
-    def Filter(self, value: Union[AnyStr, XYcurve]):
+    def _set_Filter(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(8, value)
             return
 
         self._set_string_o(8, value)
 
-    @property
-    def FSample(self) -> float:
+    Filter = property(_get_Filter, _set_Filter)
+
+    def _get_FSample(self) -> float:
         """
         Sample frequency [Hz} for the digital filter.
 
@@ -209,12 +208,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @FSample.setter
-    def FSample(self, value: float):
+    def _set_FSample(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def RMSMode(self) -> bool:
+    FSample = property(_get_FSample, _set_FSample)
+
+    def _get_RMSMode(self) -> bool:
         """
         True if only Hz is used to represent a phase-locked loop (PLL), ignoring the BP1, BP2 and time-domain transformations. Default is no.
 
@@ -222,12 +221,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10) != 0
 
-    @RMSMode.setter
-    def RMSMode(self, value: bool):
+    def _set_RMSMode(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 10, value)
 
-    @property
-    def IMaxpu(self) -> float:
+    RMSMode = property(_get_RMSMode, _set_RMSMode)
+
+    def _get_IMaxpu(self) -> float:
         """
         Maximum output current in per-unit of rated; defaults to 1.1
 
@@ -235,12 +234,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @IMaxpu.setter
-    def IMaxpu(self, value: float):
+    def _set_IMaxpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def VRMSTau(self) -> float:
+    IMaxpu = property(_get_IMaxpu, _set_IMaxpu)
+
+    def _get_VRMSTau(self) -> float:
         """
         Time constant in sensing Vrms for the PLL; defaults to 0.0015
 
@@ -248,12 +247,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @VRMSTau.setter
-    def VRMSTau(self, value: float):
+    def _set_VRMSTau(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def IRMSTau(self) -> float:
+    VRMSTau = property(_get_VRMSTau, _set_VRMSTau)
+
+    def _get_IRMSTau(self) -> float:
         """
         Time constant in producing Irms from the PLL; defaults to 0.0015
 
@@ -261,12 +260,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @IRMSTau.setter
-    def IRMSTau(self, value: float):
+    def _set_IRMSTau(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def Spectrum_str(self) -> str:
+    IRMSTau = property(_get_IRMSTau, _set_IRMSTau)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Harmonic spectrum assumed for this source.  Default is "default".
 
@@ -274,12 +273,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(14)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(14, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Harmonic spectrum assumed for this source.  Default is "default".
 
@@ -287,16 +286,16 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(14, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(14, value)
             return
 
         self._set_string_o(14, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -304,12 +303,12 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -317,9 +316,10 @@ class VCCS(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 16) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 16, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -357,8 +357,7 @@ class VCCSBatch(DSSBatch):
     _cls_idx = 18
 
 
-    @property
-    def Bus1(self) -> List[str]:
+    def _get_Bus1(self) -> List[str]:
         """
         Name of bus to which source is connected.
         bus1=busname
@@ -366,14 +365,14 @@ class VCCSBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-        return self._get_batch_str_prop(1) 
+        return self._get_batch_str_prop(1)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of phases.  Defaults to 1.
 
@@ -381,12 +380,12 @@ class VCCSBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def PRated(self) -> BatchFloat64ArrayProxy:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_PRated(self) -> BatchFloat64ArrayProxy:
         """
         Total rated power, in Watts.
 
@@ -394,12 +393,12 @@ class VCCSBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @PRated.setter
-    def PRated(self, value: Union[float, Float64Array]):
+    def _set_PRated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def VRated(self) -> BatchFloat64ArrayProxy:
+    PRated = property(_get_PRated, _set_PRated)
+
+    def _get_VRated(self) -> BatchFloat64ArrayProxy:
         """
         Rated line-to-line voltage, in Volts
 
@@ -407,12 +406,12 @@ class VCCSBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @VRated.setter
-    def VRated(self, value: Union[float, Float64Array]):
+    def _set_VRated(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def Ppct(self) -> BatchFloat64ArrayProxy:
+    VRated = property(_get_VRated, _set_VRated)
+
+    def _get_Ppct(self) -> BatchFloat64ArrayProxy:
         """
         Steady-state operating output, in percent of rated.
 
@@ -420,12 +419,12 @@ class VCCSBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @Ppct.setter
-    def Ppct(self, value: Union[float, Float64Array]):
+    def _set_Ppct(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def BP1_str(self) -> List[str]:
+    Ppct = property(_get_Ppct, _set_Ppct)
+
+    def _get_BP1_str(self) -> List[str]:
         """
         XYCurve defining the input piece-wise linear block.
 
@@ -433,12 +432,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @BP1_str.setter
-    def BP1_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_BP1_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(6, value)
 
-    @property
-    def BP1(self) -> List[XYcurve]:
+    BP1_str = property(_get_BP1_str, _set_BP1_str)
+
+    def _get_BP1(self) -> List[XYcurve]:
         """
         XYCurve defining the input piece-wise linear block.
 
@@ -446,12 +445,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(6)
 
-    @BP1.setter
-    def BP1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_BP1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(6, value)
 
-    @property
-    def BP2_str(self) -> List[str]:
+    BP1 = property(_get_BP1, _set_BP1)
+
+    def _get_BP2_str(self) -> List[str]:
         """
         XYCurve defining the output piece-wise linear block.
 
@@ -459,12 +458,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @BP2_str.setter
-    def BP2_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_BP2_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(7, value)
 
-    @property
-    def BP2(self) -> List[XYcurve]:
+    BP2_str = property(_get_BP2_str, _set_BP2_str)
+
+    def _get_BP2(self) -> List[XYcurve]:
         """
         XYCurve defining the output piece-wise linear block.
 
@@ -472,12 +471,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(7)
 
-    @BP2.setter
-    def BP2(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_BP2(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(7, value)
 
-    @property
-    def Filter_str(self) -> List[str]:
+    BP2 = property(_get_BP2, _set_BP2)
+
+    def _get_Filter_str(self) -> List[str]:
         """
         XYCurve defining the digital filter coefficients (x numerator, y denominator).
 
@@ -485,12 +484,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    @Filter_str.setter
-    def Filter_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Filter_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(8, value)
 
-    @property
-    def Filter(self) -> List[XYcurve]:
+    Filter_str = property(_get_Filter_str, _set_Filter_str)
+
+    def _get_Filter(self) -> List[XYcurve]:
         """
         XYCurve defining the digital filter coefficients (x numerator, y denominator).
 
@@ -498,12 +497,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(8)
 
-    @Filter.setter
-    def Filter(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_Filter(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(8, value)
 
-    @property
-    def FSample(self) -> BatchFloat64ArrayProxy:
+    Filter = property(_get_Filter, _set_Filter)
+
+    def _get_FSample(self) -> BatchFloat64ArrayProxy:
         """
         Sample frequency [Hz} for the digital filter.
 
@@ -511,26 +510,27 @@ class VCCSBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @FSample.setter
-    def FSample(self, value: Union[float, Float64Array]):
+    def _set_FSample(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def RMSMode(self) -> List[bool]:
+    FSample = property(_get_FSample, _set_FSample)
+
+    def _get_RMSMode(self) -> List[bool]:
         """
         True if only Hz is used to represent a phase-locked loop (PLL), ignoring the BP1, BP2 and time-domain transformations. Default is no.
 
         DSS property name: `RMSMode`, DSS property index: 10.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(10)
         ]
-    @RMSMode.setter
-    def RMSMode(self, value: bool):
+
+    def _set_RMSMode(self, value: bool):
         self._set_batch_int32_array(10, value)
 
-    @property
-    def IMaxpu(self) -> BatchFloat64ArrayProxy:
+    RMSMode = property(_get_RMSMode, _set_RMSMode)
+
+    def _get_IMaxpu(self) -> BatchFloat64ArrayProxy:
         """
         Maximum output current in per-unit of rated; defaults to 1.1
 
@@ -538,12 +538,12 @@ class VCCSBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @IMaxpu.setter
-    def IMaxpu(self, value: Union[float, Float64Array]):
+    def _set_IMaxpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def VRMSTau(self) -> BatchFloat64ArrayProxy:
+    IMaxpu = property(_get_IMaxpu, _set_IMaxpu)
+
+    def _get_VRMSTau(self) -> BatchFloat64ArrayProxy:
         """
         Time constant in sensing Vrms for the PLL; defaults to 0.0015
 
@@ -551,12 +551,12 @@ class VCCSBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @VRMSTau.setter
-    def VRMSTau(self, value: Union[float, Float64Array]):
+    def _set_VRMSTau(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def IRMSTau(self) -> BatchFloat64ArrayProxy:
+    VRMSTau = property(_get_VRMSTau, _set_VRMSTau)
+
+    def _get_IRMSTau(self) -> BatchFloat64ArrayProxy:
         """
         Time constant in producing Irms from the PLL; defaults to 0.0015
 
@@ -564,12 +564,12 @@ class VCCSBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @IRMSTau.setter
-    def IRMSTau(self, value: Union[float, Float64Array]):
+    def _set_IRMSTau(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    IRMSTau = property(_get_IRMSTau, _set_IRMSTau)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Harmonic spectrum assumed for this source.  Default is "default".
 
@@ -577,12 +577,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_str_prop(14)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(14, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Harmonic spectrum assumed for this source.  Default is "default".
 
@@ -590,12 +590,12 @@ class VCCSBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(14)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(14, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -603,23 +603,25 @@ class VCCSBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 16.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(16)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(16, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -656,7 +658,7 @@ class IVCCS(IDSSObj,VCCSBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, VCCS, VCCSBatch)
         VCCSBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> VCCS:

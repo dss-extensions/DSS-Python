@@ -37,8 +37,7 @@ class Fuse(DSSObj, CktElementMixin):
         'like': 13,
     }
 
-    @property
-    def MonitoredObj_str(self) -> str:
+    def _get_MonitoredObj_str(self) -> str:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -46,12 +45,12 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(1)
 
-    @MonitoredObj_str.setter
-    def MonitoredObj_str(self, value: AnyStr):
+    def _set_MonitoredObj_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def MonitoredObj(self) -> DSSObj:
+    MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
+
+    def _get_MonitoredObj(self) -> DSSObj:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -59,16 +58,16 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._get_obj(1, None)
 
-    @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def MonitoredTerm(self) -> int:
+    MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
+
+    def _get_MonitoredTerm(self) -> int:
         """
         Number of the terminal of the circuit element to which the Fuse is connected. 1 or 2, typically.  Default is 1.
 
@@ -76,12 +75,12 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @MonitoredTerm.setter
-    def MonitoredTerm(self, value: int):
+    def _set_MonitoredTerm(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def SwitchedObj_str(self) -> str:
+    MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
+
+    def _get_SwitchedObj_str(self) -> str:
         """
         Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -89,12 +88,12 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(3)
 
-    @SwitchedObj_str.setter
-    def SwitchedObj_str(self, value: AnyStr):
+    def _set_SwitchedObj_str(self, value: AnyStr):
         self._set_string_o(3, value)
 
-    @property
-    def SwitchedObj(self) -> DSSObj:
+    SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
+
+    def _get_SwitchedObj(self) -> DSSObj:
         """
         Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -102,16 +101,16 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._get_obj(3, None)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(3, value)
             return
 
         self._set_string_o(3, value)
 
-    @property
-    def SwitchedTerm(self) -> int:
+    SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
+
+    def _get_SwitchedTerm(self) -> int:
         """
         Number of the terminal of the controlled element in which the switch is controlled by the Fuse. 1 or 2, typically.  Default is 1.  Assumes all phases of the element have a fuse of this type.
 
@@ -119,12 +118,12 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 4)
 
-    @SwitchedTerm.setter
-    def SwitchedTerm(self, value: int):
+    def _set_SwitchedTerm(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
-    @property
-    def FuseCurve_str(self) -> str:
+    SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
+
+    def _get_FuseCurve_str(self) -> str:
         """
         Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
 
@@ -132,12 +131,12 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(5)
 
-    @FuseCurve_str.setter
-    def FuseCurve_str(self, value: AnyStr):
+    def _set_FuseCurve_str(self, value: AnyStr):
         self._set_string_o(5, value)
 
-    @property
-    def FuseCurve(self) -> TCC_Curve:
+    FuseCurve_str = property(_get_FuseCurve_str, _set_FuseCurve_str)
+
+    def _get_FuseCurve(self) -> TCC_Curve:
         """
         Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
 
@@ -145,16 +144,16 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._get_obj(5, TCC_Curve)
 
-    @FuseCurve.setter
-    def FuseCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_FuseCurve(self, value: Union[AnyStr, TCC_Curve]):
         if isinstance(value, DSSObj):
             self._set_obj(5, value)
             return
 
         self._set_string_o(5, value)
 
-    @property
-    def RatedCurrent(self) -> float:
+    FuseCurve = property(_get_FuseCurve, _set_FuseCurve)
+
+    def _get_RatedCurrent(self) -> float:
         """
         Multiplier or actual phase amps for the phase TCC curve.  Defaults to 1.0.
 
@@ -162,12 +161,12 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @RatedCurrent.setter
-    def RatedCurrent(self, value: float):
+    def _set_RatedCurrent(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def Delay(self) -> float:
+    RatedCurrent = property(_get_RatedCurrent, _set_RatedCurrent)
+
+    def _get_Delay(self) -> float:
         """
         Fixed delay time (sec) added to Fuse blowing time determined from the TCC curve. Default is 0.0. Used to represent fuse clearing time or any other delay.
 
@@ -175,9 +174,10 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @Delay.setter
-    def Delay(self, value: float):
+    def _set_Delay(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
+
+    Delay = property(_get_Delay, _set_Delay)
 
     def Action(self, value: Union[AnyStr, int, enums.FuseAction]):
         """
@@ -188,7 +188,7 @@ class Fuse(DSSObj, CktElementMixin):
         if isinstance(value, int):
             self._lib.Obj_SetInt32(self._ptr, 8, value)
             return
-    
+
         self._set_string_o(8, value)
 
     def close(self):
@@ -199,8 +199,7 @@ class Fuse(DSSObj, CktElementMixin):
         '''Shortcut to Action(FuseAction.open)'''
         self._lib.Obj_SetInt32(self._ptr, 8, enums.FuseAction.open)
 
-    @property
-    def Normal(self) -> List[enums.FuseState]:
+    def _get_Normal(self) -> List[enums.FuseState]:
         """
         ARRAY of strings {Open | Closed} representing the Normal state of the fuse in each phase of the controlled element. The fuse reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -208,15 +207,15 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return [enums.FuseState(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 9)]
 
-    @Normal.setter
-    def Normal(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]):
+    def _set_Normal(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]):
         if len(value) and not isinstance(value[0], int):
             self._set_string_array_o(9, value)
-            return    
+            return
         self._set_int32_array_o(9, value)
 
-    @property
-    def Normal_str(self) -> List[str]:
+    Normal = property(_get_Normal, _set_Normal)
+
+    def _get_Normal_str(self) -> List[str]:
         """
         ARRAY of strings {Open | Closed} representing the Normal state of the fuse in each phase of the controlled element. The fuse reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -224,12 +223,12 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 9)
 
-    @Normal_str.setter
-    def Normal_str(self, value: AnyStr):
+    def _set_Normal_str(self, value: AnyStr):
         self.Normal = value
 
-    @property
-    def State(self) -> List[enums.FuseState]:
+    Normal_str = property(_get_Normal_str, _set_Normal_str)
+
+    def _get_State(self) -> List[enums.FuseState]:
         """
         ARRAY of strings {Open | Closed} representing the Actual state of the fuse in each phase of the controlled element. Upon setting, immediately forces state of fuse(s). Simulates manual control on Fuse. Defaults to Closed for all phases.
 
@@ -237,15 +236,15 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return [enums.FuseState(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 10)]
 
-    @State.setter
-    def State(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]):
+    def _set_State(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]):
         if len(value) and not isinstance(value[0], int):
             self._set_string_array_o(10, value)
-            return    
+            return
         self._set_int32_array_o(10, value)
 
-    @property
-    def State_str(self) -> List[str]:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> List[str]:
         """
         ARRAY of strings {Open | Closed} representing the Actual state of the fuse in each phase of the controlled element. Upon setting, immediately forces state of fuse(s). Simulates manual control on Fuse. Defaults to Closed for all phases.
 
@@ -253,12 +252,12 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 10)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
 
-    @property
-    def BaseFreq(self) -> float:
+    State_str = property(_get_State_str, _set_State_str)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -266,12 +265,12 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -279,9 +278,10 @@ class Fuse(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 12) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 12, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -315,8 +315,7 @@ class FuseBatch(DSSBatch):
     _cls_idx = 33
 
 
-    @property
-    def MonitoredObj_str(self) -> List[str]:
+    def _get_MonitoredObj_str(self) -> List[str]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -324,12 +323,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @MonitoredObj_str.setter
-    def MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def MonitoredObj(self) -> List[DSSObj]:
+    MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
+
+    def _get_MonitoredObj(self) -> List[DSSObj]:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Fuse is connected. This is the "monitored" element. There is no default; must be specified.
 
@@ -337,12 +336,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @MonitoredObj.setter
-    def MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def MonitoredTerm(self) -> BatchInt32ArrayProxy:
+    MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
+
+    def _get_MonitoredTerm(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the circuit element to which the Fuse is connected. 1 or 2, typically.  Default is 1.
 
@@ -350,12 +349,12 @@ class FuseBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @MonitoredTerm.setter
-    def MonitoredTerm(self, value: Union[int, Int32Array]):
+    def _set_MonitoredTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def SwitchedObj_str(self) -> List[str]:
+    MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
+
+    def _get_SwitchedObj_str(self) -> List[str]:
         """
         Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -363,12 +362,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @SwitchedObj_str.setter
-    def SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(3, value)
 
-    @property
-    def SwitchedObj(self) -> List[DSSObj]:
+    SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
+
+    def _get_SwitchedObj(self) -> List[DSSObj]:
         """
         Name of circuit element switch that the Fuse controls. Specify the full object name.Defaults to the same as the Monitored element. This is the "controlled" element.
 
@@ -376,12 +375,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(3)
 
-    @SwitchedObj.setter
-    def SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(3, value)
 
-    @property
-    def SwitchedTerm(self) -> BatchInt32ArrayProxy:
+    SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
+
+    def _get_SwitchedTerm(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the controlled element in which the switch is controlled by the Fuse. 1 or 2, typically.  Default is 1.  Assumes all phases of the element have a fuse of this type.
 
@@ -389,12 +388,12 @@ class FuseBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 4)
 
-    @SwitchedTerm.setter
-    def SwitchedTerm(self, value: Union[int, Int32Array]):
+    def _set_SwitchedTerm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(4, value)
 
-    @property
-    def FuseCurve_str(self) -> List[str]:
+    SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
+
+    def _get_FuseCurve_str(self) -> List[str]:
         """
         Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
 
@@ -402,12 +401,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_str_prop(5)
 
-    @FuseCurve_str.setter
-    def FuseCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_FuseCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(5, value)
 
-    @property
-    def FuseCurve(self) -> List[TCC_Curve]:
+    FuseCurve_str = property(_get_FuseCurve_str, _set_FuseCurve_str)
+
+    def _get_FuseCurve(self) -> List[TCC_Curve]:
         """
         Name of the TCC Curve object that determines the fuse blowing.  Must have been previously defined as a TCC_Curve object. Default is "Tlink". Multiplying the current values in the curve by the "RatedCurrent" value gives the actual current.
 
@@ -415,12 +414,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(5)
 
-    @FuseCurve.setter
-    def FuseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
+    def _set_FuseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
         self._set_batch_obj_prop(5, value)
 
-    @property
-    def RatedCurrent(self) -> BatchFloat64ArrayProxy:
+    FuseCurve = property(_get_FuseCurve, _set_FuseCurve)
+
+    def _get_RatedCurrent(self) -> BatchFloat64ArrayProxy:
         """
         Multiplier or actual phase amps for the phase TCC curve.  Defaults to 1.0.
 
@@ -428,12 +427,12 @@ class FuseBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @RatedCurrent.setter
-    def RatedCurrent(self, value: Union[float, Float64Array]):
+    def _set_RatedCurrent(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def Delay(self) -> BatchFloat64ArrayProxy:
+    RatedCurrent = property(_get_RatedCurrent, _set_RatedCurrent)
+
+    def _get_Delay(self) -> BatchFloat64ArrayProxy:
         """
         Fixed delay time (sec) added to Fuse blowing time determined from the TCC curve. Default is 0.0. Used to represent fuse clearing time or any other delay.
 
@@ -441,9 +440,10 @@ class FuseBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @Delay.setter
-    def Delay(self, value: Union[float, Float64Array]):
+    def _set_Delay(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
+
+    Delay = property(_get_Delay, _set_Delay)
 
     def Action(self, value: Union[AnyStr, int, enums.FuseAction]):
         """
@@ -464,8 +464,7 @@ class FuseBatch(DSSBatch):
         '''Shortcut to Action(FuseAction.open)'''
         self._set_batch_int32_array(8, enums.FuseAction.open)
 
-    @property
-    def Normal(self) -> List[Int32Array]:
+    def _get_Normal(self) -> List[Int32Array]:
         """
         ARRAY of strings {Open | Closed} representing the Normal state of the fuse in each phase of the controlled element. The fuse reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -476,8 +475,7 @@ class FuseBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Normal.setter
-    def Normal(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]): #TODO: list of lists
+    def _set_Normal(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
             for x in self._unpack():
@@ -488,8 +486,9 @@ class FuseBatch(DSSBatch):
 
         self._set_batch_int32_array(9, value)
 
-    @property
-    def Normal_str(self) -> List[List[str]]:
+    Normal = property(_get_Normal, _set_Normal)
+
+    def _get_Normal_str(self) -> List[List[str]]:
         """
         ARRAY of strings {Open | Closed} representing the Normal state of the fuse in each phase of the controlled element. The fuse reverts to this state for reset, change of mode, etc. Defaults to "State" if not specifically declared.
 
@@ -497,12 +496,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_string_ll(9)
 
-    @Normal_str.setter
-    def Normal_str(self, value: AnyStr):
+    def _set_Normal_str(self, value: AnyStr):
         self.Normal = value
 
-    @property
-    def State(self) -> List[Int32Array]:
+    Normal_str = property(_get_Normal_str, _set_Normal_str)
+
+    def _get_State(self) -> List[Int32Array]:
         """
         ARRAY of strings {Open | Closed} representing the Actual state of the fuse in each phase of the controlled element. Upon setting, immediately forces state of fuse(s). Simulates manual control on Fuse. Defaults to Closed for all phases.
 
@@ -513,8 +512,7 @@ class FuseBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @State.setter
-    def State(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]): #TODO: list of lists
+    def _set_State(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
             for x in self._unpack():
@@ -525,8 +523,9 @@ class FuseBatch(DSSBatch):
 
         self._set_batch_int32_array(10, value)
 
-    @property
-    def State_str(self) -> List[List[str]]:
+    State = property(_get_State, _set_State)
+
+    def _get_State_str(self) -> List[List[str]]:
         """
         ARRAY of strings {Open | Closed} representing the Actual state of the fuse in each phase of the controlled element. Upon setting, immediately forces state of fuse(s). Simulates manual control on Fuse. Defaults to Closed for all phases.
 
@@ -534,12 +533,12 @@ class FuseBatch(DSSBatch):
         """
         return self._get_string_ll(10)
 
-    @State_str.setter
-    def State_str(self, value: AnyStr):
+    def _set_State_str(self, value: AnyStr):
         self.State = value
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    State_str = property(_get_State_str, _set_State_str)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -547,23 +546,25 @@ class FuseBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 12.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(12)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(12, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -596,7 +597,7 @@ class IFuse(IDSSObj,FuseBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Fuse, FuseBatch)
         FuseBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Fuse:

@@ -36,8 +36,7 @@ class WireData(DSSObj):
         'like': 14,
     }
 
-    @property
-    def RDC(self) -> float:
+    def _get_RDC(self) -> float:
         """
         dc Resistance, ohms per unit length (see Runits). Defaults to Rac/1.02 if not specified.
 
@@ -45,12 +44,12 @@ class WireData(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 1)
 
-    @RDC.setter
-    def RDC(self, value: float):
+    def _set_RDC(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 1, value)
 
-    @property
-    def RAC(self) -> float:
+    RDC = property(_get_RDC, _set_RDC)
+
+    def _get_RAC(self) -> float:
         """
         Resistance at 60 Hz per unit length. Defaults to 1.02*Rdc if not specified.
 
@@ -58,12 +57,12 @@ class WireData(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 2)
 
-    @RAC.setter
-    def RAC(self, value: float):
+    def _set_RAC(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 2, value)
 
-    @property
-    def RUnits(self) -> enums.LengthUnit:
+    RAC = property(_get_RAC, _set_RAC)
+
+    def _get_RUnits(self) -> enums.LengthUnit:
         """
         Length units for resistance: ohms per {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -71,15 +70,15 @@ class WireData(DSSObj):
         """
         return enums.LengthUnit(self._lib.Obj_GetInt32(self._ptr, 3))
 
-    @RUnits.setter
-    def RUnits(self, value: Union[AnyStr, int, enums.LengthUnit]):
+    def _set_RUnits(self, value: Union[AnyStr, int, enums.LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(3, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 3, value)
 
-    @property
-    def RUnits_str(self) -> str:
+    RUnits = property(_get_RUnits, _set_RUnits)
+
+    def _get_RUnits_str(self) -> str:
         """
         Length units for resistance: ohms per {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -87,12 +86,12 @@ class WireData(DSSObj):
         """
         return self._get_prop_string(3)
 
-    @RUnits_str.setter
-    def RUnits_str(self, value: AnyStr):
+    def _set_RUnits_str(self, value: AnyStr):
         self.RUnits = value
 
-    @property
-    def GMRAC(self) -> float:
+    RUnits_str = property(_get_RUnits_str, _set_RUnits_str)
+
+    def _get_GMRAC(self) -> float:
         """
         GMR at 60 Hz. Defaults to .7788*radius if not specified.
 
@@ -100,12 +99,12 @@ class WireData(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @GMRAC.setter
-    def GMRAC(self, value: float):
+    def _set_GMRAC(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def GMRUnits(self) -> enums.LengthUnit:
+    GMRAC = property(_get_GMRAC, _set_GMRAC)
+
+    def _get_GMRUnits(self) -> enums.LengthUnit:
         """
         Units for GMR: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -113,15 +112,15 @@ class WireData(DSSObj):
         """
         return enums.LengthUnit(self._lib.Obj_GetInt32(self._ptr, 5))
 
-    @GMRUnits.setter
-    def GMRUnits(self, value: Union[AnyStr, int, enums.LengthUnit]):
+    def _set_GMRUnits(self, value: Union[AnyStr, int, enums.LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(5, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
-    @property
-    def GMRUnits_str(self) -> str:
+    GMRUnits = property(_get_GMRUnits, _set_GMRUnits)
+
+    def _get_GMRUnits_str(self) -> str:
         """
         Units for GMR: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -129,12 +128,12 @@ class WireData(DSSObj):
         """
         return self._get_prop_string(5)
 
-    @GMRUnits_str.setter
-    def GMRUnits_str(self, value: AnyStr):
+    def _set_GMRUnits_str(self, value: AnyStr):
         self.GMRUnits = value
 
-    @property
-    def Radius(self) -> float:
+    GMRUnits_str = property(_get_GMRUnits_str, _set_GMRUnits_str)
+
+    def _get_Radius(self) -> float:
         """
         Outside radius of conductor. Defaults to GMR/0.7788 if not specified.
 
@@ -142,12 +141,12 @@ class WireData(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    @Radius.setter
-    def Radius(self, value: float):
+    def _set_Radius(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 6, value)
 
-    @property
-    def RadUnits(self) -> enums.LengthUnit:
+    Radius = property(_get_Radius, _set_Radius)
+
+    def _get_RadUnits(self) -> enums.LengthUnit:
         """
         Units for outside radius: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -155,15 +154,15 @@ class WireData(DSSObj):
         """
         return enums.LengthUnit(self._lib.Obj_GetInt32(self._ptr, 7))
 
-    @RadUnits.setter
-    def RadUnits(self, value: Union[AnyStr, int, enums.LengthUnit]):
+    def _set_RadUnits(self, value: Union[AnyStr, int, enums.LengthUnit]):
         if not isinstance(value, int):
             self._set_string_o(7, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
-    @property
-    def RadUnits_str(self) -> str:
+    RadUnits = property(_get_RadUnits, _set_RadUnits)
+
+    def _get_RadUnits_str(self) -> str:
         """
         Units for outside radius: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -171,12 +170,12 @@ class WireData(DSSObj):
         """
         return self._get_prop_string(7)
 
-    @RadUnits_str.setter
-    def RadUnits_str(self, value: AnyStr):
+    def _set_RadUnits_str(self, value: AnyStr):
         self.RadUnits = value
 
-    @property
-    def NormAmps(self) -> float:
+    RadUnits_str = property(_get_RadUnits_str, _set_RadUnits_str)
+
+    def _get_NormAmps(self) -> float:
         """
         Normal ampacity, amperes. Defaults to Emergency amps/1.5 if not specified.
 
@@ -184,12 +183,12 @@ class WireData(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @NormAmps.setter
-    def NormAmps(self, value: float):
+    def _set_NormAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def EmergAmps(self) -> float:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> float:
         """
         Emergency ampacity, amperes. Defaults to 1.5 * Normal Amps if not specified.
 
@@ -197,12 +196,12 @@ class WireData(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: float):
+    def _set_EmergAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def Diam(self) -> float:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_Diam(self) -> float:
         """
         Diameter; Alternative method for entering radius.
 
@@ -210,12 +209,12 @@ class WireData(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @Diam.setter
-    def Diam(self, value: float):
+    def _set_Diam(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def Seasons(self) -> int:
+    Diam = property(_get_Diam, _set_Diam)
+
+    def _get_Seasons(self) -> int:
         """
         Defines the number of ratings to be defined for the wire, to be used only when defining seasonal ratings using the "Ratings" property.
 
@@ -223,12 +222,12 @@ class WireData(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 11)
 
-    @Seasons.setter
-    def Seasons(self, value: int):
+    def _set_Seasons(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 11, value)
 
-    @property
-    def Ratings(self) -> Float64Array:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_Ratings(self) -> Float64Array:
         """
         An array of ratings to be used when the seasonal ratings flag is True. It can be used to insert
         multiple ratings to change during a QSTS simulation to evaluate different ratings in lines.
@@ -237,12 +236,12 @@ class WireData(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 12)
 
-    @Ratings.setter
-    def Ratings(self, value: Float64Array):
+    def _set_Ratings(self, value: Float64Array):
         self._set_float64_array_o(12, value)
 
-    @property
-    def CapRadius(self) -> float:
+    Ratings = property(_get_Ratings, _set_Ratings)
+
+    def _get_CapRadius(self) -> float:
         """
         Equivalent conductor radius for capacitance calcs. Specify this for bundled conductors. Defaults to same value as radius. Define Diam or Radius property first.
 
@@ -250,9 +249,10 @@ class WireData(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @CapRadius.setter
-    def CapRadius(self, value: float):
+    def _set_CapRadius(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
+
+    CapRadius = property(_get_CapRadius, _set_CapRadius)
 
     def Like(self, value: AnyStr):
         """
@@ -287,8 +287,7 @@ class WireDataBatch(DSSBatch):
     _cls_idx = 9
 
 
-    @property
-    def RDC(self) -> BatchFloat64ArrayProxy:
+    def _get_RDC(self) -> BatchFloat64ArrayProxy:
         """
         dc Resistance, ohms per unit length (see Runits). Defaults to Rac/1.02 if not specified.
 
@@ -296,12 +295,12 @@ class WireDataBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 1)
 
-    @RDC.setter
-    def RDC(self, value: Union[float, Float64Array]):
+    def _set_RDC(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(1, value)
 
-    @property
-    def RAC(self) -> BatchFloat64ArrayProxy:
+    RDC = property(_get_RDC, _set_RDC)
+
+    def _get_RAC(self) -> BatchFloat64ArrayProxy:
         """
         Resistance at 60 Hz per unit length. Defaults to 1.02*Rdc if not specified.
 
@@ -309,12 +308,12 @@ class WireDataBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 2)
 
-    @RAC.setter
-    def RAC(self, value: Union[float, Float64Array]):
+    def _set_RAC(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(2, value)
 
-    @property
-    def RUnits(self) -> BatchInt32ArrayProxy:
+    RAC = property(_get_RAC, _set_RAC)
+
+    def _get_RUnits(self) -> BatchInt32ArrayProxy:
         """
         Length units for resistance: ohms per {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -322,16 +321,16 @@ class WireDataBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    @RUnits.setter
-    def RUnits(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
+    def _set_RUnits(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(3, value)
             return
-    
+
         self._set_batch_int32_array(3, value)
 
-    @property
-    def RUnits_str(self) -> str:
+    RUnits = property(_get_RUnits, _set_RUnits)
+
+    def _get_RUnits_str(self) -> str:
         """
         Length units for resistance: ohms per {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -339,12 +338,12 @@ class WireDataBatch(DSSBatch):
         """
         return self._get_batch_str_prop(3)
 
-    @RUnits_str.setter
-    def RUnits_str(self, value: AnyStr):
+    def _set_RUnits_str(self, value: AnyStr):
         self.RUnits = value
 
-    @property
-    def GMRAC(self) -> BatchFloat64ArrayProxy:
+    RUnits_str = property(_get_RUnits_str, _set_RUnits_str)
+
+    def _get_GMRAC(self) -> BatchFloat64ArrayProxy:
         """
         GMR at 60 Hz. Defaults to .7788*radius if not specified.
 
@@ -352,12 +351,12 @@ class WireDataBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @GMRAC.setter
-    def GMRAC(self, value: Union[float, Float64Array]):
+    def _set_GMRAC(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def GMRUnits(self) -> BatchInt32ArrayProxy:
+    GMRAC = property(_get_GMRAC, _set_GMRAC)
+
+    def _get_GMRUnits(self) -> BatchInt32ArrayProxy:
         """
         Units for GMR: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -365,16 +364,16 @@ class WireDataBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 5)
 
-    @GMRUnits.setter
-    def GMRUnits(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
+    def _set_GMRUnits(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(5, value)
             return
-    
+
         self._set_batch_int32_array(5, value)
 
-    @property
-    def GMRUnits_str(self) -> str:
+    GMRUnits = property(_get_GMRUnits, _set_GMRUnits)
+
+    def _get_GMRUnits_str(self) -> str:
         """
         Units for GMR: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -382,12 +381,12 @@ class WireDataBatch(DSSBatch):
         """
         return self._get_batch_str_prop(5)
 
-    @GMRUnits_str.setter
-    def GMRUnits_str(self, value: AnyStr):
+    def _set_GMRUnits_str(self, value: AnyStr):
         self.GMRUnits = value
 
-    @property
-    def Radius(self) -> BatchFloat64ArrayProxy:
+    GMRUnits_str = property(_get_GMRUnits_str, _set_GMRUnits_str)
+
+    def _get_Radius(self) -> BatchFloat64ArrayProxy:
         """
         Outside radius of conductor. Defaults to GMR/0.7788 if not specified.
 
@@ -395,12 +394,12 @@ class WireDataBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    @Radius.setter
-    def Radius(self, value: Union[float, Float64Array]):
+    def _set_Radius(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(6, value)
 
-    @property
-    def RadUnits(self) -> BatchInt32ArrayProxy:
+    Radius = property(_get_Radius, _set_Radius)
+
+    def _get_RadUnits(self) -> BatchInt32ArrayProxy:
         """
         Units for outside radius: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -408,16 +407,16 @@ class WireDataBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 7)
 
-    @RadUnits.setter
-    def RadUnits(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
+    def _set_RadUnits(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(7, value)
             return
-    
+
         self._set_batch_int32_array(7, value)
 
-    @property
-    def RadUnits_str(self) -> str:
+    RadUnits = property(_get_RadUnits, _set_RadUnits)
+
+    def _get_RadUnits_str(self) -> str:
         """
         Units for outside radius: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -425,12 +424,12 @@ class WireDataBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @RadUnits_str.setter
-    def RadUnits_str(self, value: AnyStr):
+    def _set_RadUnits_str(self, value: AnyStr):
         self.RadUnits = value
 
-    @property
-    def NormAmps(self) -> BatchFloat64ArrayProxy:
+    RadUnits_str = property(_get_RadUnits_str, _set_RadUnits_str)
+
+    def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
         Normal ampacity, amperes. Defaults to Emergency amps/1.5 if not specified.
 
@@ -438,12 +437,12 @@ class WireDataBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @NormAmps.setter
-    def NormAmps(self, value: Union[float, Float64Array]):
+    def _set_NormAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def EmergAmps(self) -> BatchFloat64ArrayProxy:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
         Emergency ampacity, amperes. Defaults to 1.5 * Normal Amps if not specified.
 
@@ -451,12 +450,12 @@ class WireDataBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: Union[float, Float64Array]):
+    def _set_EmergAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def Diam(self) -> BatchFloat64ArrayProxy:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_Diam(self) -> BatchFloat64ArrayProxy:
         """
         Diameter; Alternative method for entering radius.
 
@@ -464,12 +463,12 @@ class WireDataBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @Diam.setter
-    def Diam(self, value: Union[float, Float64Array]):
+    def _set_Diam(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def Seasons(self) -> BatchInt32ArrayProxy:
+    Diam = property(_get_Diam, _set_Diam)
+
+    def _get_Seasons(self) -> BatchInt32ArrayProxy:
         """
         Defines the number of ratings to be defined for the wire, to be used only when defining seasonal ratings using the "Ratings" property.
 
@@ -477,12 +476,12 @@ class WireDataBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 11)
 
-    @Seasons.setter
-    def Seasons(self, value: Union[int, Int32Array]):
+    def _set_Seasons(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(11, value)
 
-    @property
-    def Ratings(self) -> List[Float64Array]:
+    Seasons = property(_get_Seasons, _set_Seasons)
+
+    def _get_Ratings(self) -> List[Float64Array]:
         """
         An array of ratings to be used when the seasonal ratings flag is True. It can be used to insert
         multiple ratings to change during a QSTS simulation to evaluate different ratings in lines.
@@ -494,12 +493,12 @@ class WireDataBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Ratings.setter
-    def Ratings(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(12, value)
 
-    @property
-    def CapRadius(self) -> BatchFloat64ArrayProxy:
+    Ratings = property(_get_Ratings, _set_Ratings)
+
+    def _get_CapRadius(self) -> BatchFloat64ArrayProxy:
         """
         Equivalent conductor radius for capacitance calcs. Specify this for bundled conductors. Defaults to same value as radius. Define Diam or Radius property first.
 
@@ -507,9 +506,10 @@ class WireDataBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @CapRadius.setter
-    def CapRadius(self, value: Union[float, Float64Array]):
+    def _set_CapRadius(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
+
+    CapRadius = property(_get_CapRadius, _set_CapRadius)
 
     def Like(self, value: AnyStr):
         """
@@ -543,7 +543,7 @@ class IWireData(IDSSObj,WireDataBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, WireData, WireDataBatch)
         WireDataBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> WireData:

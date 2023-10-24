@@ -73,8 +73,7 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         'like': 42,
     }
 
-    @property
-    def Phases(self) -> int:
+    def _get_Phases(self) -> int:
         """
         Number of Phases, this load.  Load is evenly divided among phases.
 
@@ -82,12 +81,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def Bus1(self) -> str:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> str:
         """
         Bus to which the load is connected.  May include specific node specification.
 
@@ -95,12 +94,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(2)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def kV(self) -> float:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> float:
         """
         Nominal rated (1.0 per unit) voltage, kV, for load. For 2- and 3-phase loads, specify phase-phase kV. Otherwise, specify actual kV across each branch of the load. If wye (star), specify phase-neutral kV. If delta or phase-phase connected, specify phase-phase kV.
 
@@ -108,12 +107,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @kV.setter
-    def kV(self, value: float):
+    def _set_kV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def kW(self) -> float:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_kW(self) -> float:
         """
         Total base kW for the load.  Normally, you would enter the maximum kW for the load for the first year and allow it to be adjusted by the load shapes, growth shapes, and global load multiplier.
 
@@ -128,12 +127,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @kW.setter
-    def kW(self, value: float):
+    def _set_kW(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def PF(self) -> float:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_PF(self) -> float:
         """
         Load power factor.  Enter negative for leading powerfactor (when kW and kvar have opposite signs.)
 
@@ -141,12 +140,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @PF.setter
-    def PF(self, value: float):
+    def _set_PF(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def Model(self) -> enums.LoadModel:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_Model(self) -> enums.LoadModel:
         """
         Integer code for the model to use for load variation with voltage. Valid values are:
 
@@ -165,12 +164,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.LoadModel(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    @Model.setter
-    def Model(self, value: Union[int, enums.LoadModel]):
+    def _set_Model(self, value: Union[int, enums.LoadModel]):
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def Yearly_str(self) -> str:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_Yearly_str(self) -> str:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -178,12 +177,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(7)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: AnyStr):
+    def _set_Yearly_str(self, value: AnyStr):
         self._set_string_o(7, value)
 
-    @property
-    def Yearly(self) -> LoadShape:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> LoadShape:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -191,16 +190,16 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(7, LoadShape)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(7, value)
             return
 
         self._set_string_o(7, value)
 
-    @property
-    def Daily_str(self) -> str:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> str:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -208,12 +207,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(8)
 
-    @Daily_str.setter
-    def Daily_str(self, value: AnyStr):
+    def _set_Daily_str(self, value: AnyStr):
         self._set_string_o(8, value)
 
-    @property
-    def Daily(self) -> LoadShape:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> LoadShape:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -221,16 +220,16 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(8, LoadShape)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(8, value)
             return
 
         self._set_string_o(8, value)
 
-    @property
-    def Duty_str(self) -> str:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> str:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -238,12 +237,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(9)
 
-    @Duty_str.setter
-    def Duty_str(self, value: AnyStr):
+    def _set_Duty_str(self, value: AnyStr):
         self._set_string_o(9, value)
 
-    @property
-    def Duty(self) -> LoadShape:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> LoadShape:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -251,16 +250,16 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(9, LoadShape)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(9, value)
             return
 
         self._set_string_o(9, value)
 
-    @property
-    def Growth_str(self) -> str:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_Growth_str(self) -> str:
         """
         Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
 
@@ -268,12 +267,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(10)
 
-    @Growth_str.setter
-    def Growth_str(self, value: AnyStr):
+    def _set_Growth_str(self, value: AnyStr):
         self._set_string_o(10, value)
 
-    @property
-    def Growth(self) -> GrowthShape:
+    Growth_str = property(_get_Growth_str, _set_Growth_str)
+
+    def _get_Growth(self) -> GrowthShape:
         """
         Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
 
@@ -281,16 +280,16 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(10, GrowthShape)
 
-    @Growth.setter
-    def Growth(self, value: Union[AnyStr, GrowthShape]):
+    def _set_Growth(self, value: Union[AnyStr, GrowthShape]):
         if isinstance(value, DSSObj):
             self._set_obj(10, value)
             return
 
         self._set_string_o(10, value)
 
-    @property
-    def Conn(self) -> enums.Connection:
+    Growth = property(_get_Growth, _set_Growth)
+
+    def _get_Conn(self) -> enums.Connection:
         """
         ={wye or LN | delta or LL}.  Default is wye.
 
@@ -298,15 +297,15 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 11))
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
         if not isinstance(value, int):
             self._set_string_o(11, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 11, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye or LN | delta or LL}.  Default is wye.
 
@@ -314,12 +313,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(11)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def kvar(self) -> float:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_kvar(self) -> float:
         """
         Specify the base kvar for specifying load as kW & kvar.  Assumes kW has been already defined.  Alternative to specifying the power factor.  Side effect:  the power factor and kVA is altered to agree.
 
@@ -327,12 +326,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @kvar.setter
-    def kvar(self, value: float):
+    def _set_kvar(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def RNeut(self) -> float:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_RNeut(self) -> float:
         """
         Default is -1. Neutral resistance of wye (star)-connected load in actual ohms. If entered as a negative value, the neutral can be open, or floating, or it can be connected to node 0 (ground), which is the usual default. If >=0 be sure to explicitly specify the node connection for the neutral, or last, conductor. Otherwise, the neutral impedance will be shorted to ground.
 
@@ -340,12 +339,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @RNeut.setter
-    def RNeut(self, value: float):
+    def _set_RNeut(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def XNeut(self) -> float:
+    RNeut = property(_get_RNeut, _set_RNeut)
+
+    def _get_XNeut(self) -> float:
         """
         Neutral reactance of wye(star)-connected load in actual ohms.  May be + or -.
 
@@ -353,12 +352,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @XNeut.setter
-    def XNeut(self, value: float):
+    def _set_XNeut(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def Status(self) -> enums.LoadStatus:
+    XNeut = property(_get_XNeut, _set_XNeut)
+
+    def _get_Status(self) -> enums.LoadStatus:
         """
         ={Variable | Fixed | Exempt}.  Default is variable. If Fixed, no load multipliers apply;  however, growth multipliers do apply.  All multipliers apply to Variable loads.  Exempt loads are not modified by the global load multiplier, such as in load duration curves, etc.  Daily multipliers do apply, so setting this property to Exempt is a good way to represent industrial load that stays the same day-after-day for the period study.
 
@@ -366,15 +365,15 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.LoadStatus(self._lib.Obj_GetInt32(self._ptr, 15))
 
-    @Status.setter
-    def Status(self, value: Union[AnyStr, int, enums.LoadStatus]):
+    def _set_Status(self, value: Union[AnyStr, int, enums.LoadStatus]):
         if not isinstance(value, int):
             self._set_string_o(15, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 15, value)
 
-    @property
-    def Status_str(self) -> str:
+    Status = property(_get_Status, _set_Status)
+
+    def _get_Status_str(self) -> str:
         """
         ={Variable | Fixed | Exempt}.  Default is variable. If Fixed, no load multipliers apply;  however, growth multipliers do apply.  All multipliers apply to Variable loads.  Exempt loads are not modified by the global load multiplier, such as in load duration curves, etc.  Daily multipliers do apply, so setting this property to Exempt is a good way to represent industrial load that stays the same day-after-day for the period study.
 
@@ -382,12 +381,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(15)
 
-    @Status_str.setter
-    def Status_str(self, value: AnyStr):
+    def _set_Status_str(self, value: AnyStr):
         self.Status = value
 
-    @property
-    def Class(self) -> int:
+    Status_str = property(_get_Status_str, _set_Status_str)
+
+    def _get_Class(self) -> int:
         """
         An arbitrary integer number representing the class of load so that load values may be segregated by load value. Default is 1; not used internally.
 
@@ -395,12 +394,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 16)
 
-    @Class.setter
-    def Class(self, value: int):
+    def _set_Class(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 16, value)
 
-    @property
-    def VMinpu(self) -> float:
+    Class = property(_get_Class, _set_Class)
+
+    def _get_VMinpu(self) -> float:
         """
         Default = 0.95.  Minimum per unit voltage for which the MODEL is assumed to apply. Lower end of normal voltage range.Below this value, the load model reverts to a constant impedance model that matches the model at the transition voltage. See also "Vlowpu" which causes the model to match Model=2 below the transition voltage.
 
@@ -408,12 +407,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @VMinpu.setter
-    def VMinpu(self, value: float):
+    def _set_VMinpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def VMaxpu(self) -> float:
+    VMinpu = property(_get_VMinpu, _set_VMinpu)
+
+    def _get_VMaxpu(self) -> float:
         """
         Default = 1.05.  Maximum per unit voltage for which the MODEL is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
@@ -421,12 +420,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    @VMaxpu.setter
-    def VMaxpu(self, value: float):
+    def _set_VMaxpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
-    @property
-    def VMinNorm(self) -> float:
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+
+    def _get_VMinNorm(self) -> float:
         """
         Minimum per unit voltage for load EEN evaluations, Normal limit.  Default = 0, which defaults to system "vminnorm" property (see Set Command under Executive).  If this property is specified, it ALWAYS overrides the system specification. This allows you to have different criteria for different loads. Set to zero to revert to the default system value.
 
@@ -434,12 +433,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @VMinNorm.setter
-    def VMinNorm(self, value: float):
+    def _set_VMinNorm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def VMinEmerg(self) -> float:
+    VMinNorm = property(_get_VMinNorm, _set_VMinNorm)
+
+    def _get_VMinEmerg(self) -> float:
         """
         Minimum per unit voltage for load UE evaluations, Emergency limit.  Default = 0, which defaults to system "vminemerg" property (see Set Command under Executive).  If this property is specified, it ALWAYS overrides the system specification. This allows you to have different criteria for different loads. Set to zero to revert to the default system value.
 
@@ -447,12 +446,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @VMinEmerg.setter
-    def VMinEmerg(self, value: float):
+    def _set_VMinEmerg(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def XfkVA(self) -> float:
+    VMinEmerg = property(_get_VMinEmerg, _set_VMinEmerg)
+
+    def _get_XfkVA(self) -> float:
         """
         Default = 0.0.  Rated kVA of service transformer for allocating loads based on connected kVA at a bus. Side effect:  kW, PF, and kvar are modified. See help on kVA.
 
@@ -460,12 +459,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @XfkVA.setter
-    def XfkVA(self, value: float):
+    def _set_XfkVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def AllocationFactor(self) -> float:
+    XfkVA = property(_get_XfkVA, _set_XfkVA)
+
+    def _get_AllocationFactor(self) -> float:
         """
         Default = 0.5.  Allocation factor for allocating loads based on connected kVA at a bus. Side effect:  kW, PF, and kvar are modified by multiplying this factor times the XFKVA (if > 0).
 
@@ -473,12 +472,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    @AllocationFactor.setter
-    def AllocationFactor(self, value: float):
+    def _set_AllocationFactor(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 22, value)
 
-    @property
-    def kVA(self) -> float:
+    AllocationFactor = property(_get_AllocationFactor, _set_AllocationFactor)
+
+    def _get_kVA(self) -> float:
         """
         Specify base Load in kVA (and power factor)
 
@@ -493,12 +492,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    @kVA.setter
-    def kVA(self, value: float):
+    def _set_kVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 23, value)
 
-    @property
-    def pctMean(self) -> float:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_pctMean(self) -> float:
         """
         Percent mean value for load to use for monte carlo studies if no loadshape is assigned to this load. Default is 50.
 
@@ -506,12 +505,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    @pctMean.setter
-    def pctMean(self, value: float):
+    def _set_pctMean(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 24, value)
 
-    @property
-    def pctStdDev(self) -> float:
+    pctMean = property(_get_pctMean, _set_pctMean)
+
+    def _get_pctStdDev(self) -> float:
         """
         Percent Std deviation value for load to use for monte carlo studies if no loadshape is assigned to this load. Default is 10.
 
@@ -519,12 +518,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 25)
 
-    @pctStdDev.setter
-    def pctStdDev(self, value: float):
+    def _set_pctStdDev(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 25, value)
 
-    @property
-    def CVRWatts(self) -> float:
+    pctStdDev = property(_get_pctStdDev, _set_pctStdDev)
+
+    def _get_CVRWatts(self) -> float:
         """
         Percent reduction in active power (watts) per 1% reduction in voltage from 100% rated. Default=1. 
          Typical values range from 0.4 to 0.8. Applies to Model=4 only.
@@ -534,12 +533,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 26)
 
-    @CVRWatts.setter
-    def CVRWatts(self, value: float):
+    def _set_CVRWatts(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 26, value)
 
-    @property
-    def CVRVars(self) -> float:
+    CVRWatts = property(_get_CVRWatts, _set_CVRWatts)
+
+    def _get_CVRVars(self) -> float:
         """
         Percent reduction in reactive power (vars) per 1% reduction in voltage from 100% rated. Default=2. 
          Typical values range from 2 to 3. Applies to Model=4 only.
@@ -549,12 +548,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    @CVRVars.setter
-    def CVRVars(self, value: float):
+    def _set_CVRVars(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 27, value)
 
-    @property
-    def kWh(self) -> float:
+    CVRVars = property(_get_CVRVars, _set_CVRVars)
+
+    def _get_kWh(self) -> float:
         """
         kWh billed for this period. Default is 0. See help on kVA and Cfactor and kWhDays.
 
@@ -562,12 +561,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 28)
 
-    @kWh.setter
-    def kWh(self, value: float):
+    def _set_kWh(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 28, value)
 
-    @property
-    def kWhDays(self) -> float:
+    kWh = property(_get_kWh, _set_kWh)
+
+    def _get_kWhDays(self) -> float:
         """
         Length of kWh billing period in days (24 hr days). Default is 30. Average demand is computed using this value.
 
@@ -575,12 +574,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 29)
 
-    @kWhDays.setter
-    def kWhDays(self, value: float):
+    def _set_kWhDays(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 29, value)
 
-    @property
-    def CFactor(self) -> float:
+    kWhDays = property(_get_kWhDays, _set_kWhDays)
+
+    def _get_CFactor(self) -> float:
         """
         Factor relating average kW to peak kW. Default is 4.0. See kWh and kWhdays. See kVA.
 
@@ -588,12 +587,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 30)
 
-    @CFactor.setter
-    def CFactor(self, value: float):
+    def _set_CFactor(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 30, value)
 
-    @property
-    def CVRCurve_str(self) -> str:
+    CFactor = property(_get_CFactor, _set_CFactor)
+
+    def _get_CVRCurve_str(self) -> str:
         """
         Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
 
@@ -601,12 +600,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(31)
 
-    @CVRCurve_str.setter
-    def CVRCurve_str(self, value: AnyStr):
+    def _set_CVRCurve_str(self, value: AnyStr):
         self._set_string_o(31, value)
 
-    @property
-    def CVRCurve(self) -> LoadShape:
+    CVRCurve_str = property(_get_CVRCurve_str, _set_CVRCurve_str)
+
+    def _get_CVRCurve(self) -> LoadShape:
         """
         Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
 
@@ -614,16 +613,16 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(31, LoadShape)
 
-    @CVRCurve.setter
-    def CVRCurve(self, value: Union[AnyStr, LoadShape]):
+    def _set_CVRCurve(self, value: Union[AnyStr, LoadShape]):
         if isinstance(value, DSSObj):
             self._set_obj(31, value)
             return
 
         self._set_string_o(31, value)
 
-    @property
-    def NumCust(self) -> int:
+    CVRCurve = property(_get_CVRCurve, _set_CVRCurve)
+
+    def _get_NumCust(self) -> int:
         """
         Number of customers, this load. Default is 1.
 
@@ -631,12 +630,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 32)
 
-    @NumCust.setter
-    def NumCust(self, value: int):
+    def _set_NumCust(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 32, value)
 
-    @property
-    def ZIPV(self) -> Float64Array:
+    NumCust = property(_get_NumCust, _set_NumCust)
+
+    def _get_ZIPV(self) -> Float64Array:
         """
         Array of 7 coefficients:
 
@@ -649,12 +648,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 33)
 
-    @ZIPV.setter
-    def ZIPV(self, value: Float64Array):
+    def _set_ZIPV(self, value: Float64Array):
         self._set_float64_array_o(33, value)
 
-    @property
-    def pctSeriesRL(self) -> float:
+    ZIPV = property(_get_ZIPV, _set_ZIPV)
+
+    def _get_pctSeriesRL(self) -> float:
         """
         Percent of load that is series R-L for Harmonic studies. Default is 50. Remainder is assumed to be parallel R and L. This can have a significant impact on the amount of damping observed in Harmonics solutions.
 
@@ -662,12 +661,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 34)
 
-    @pctSeriesRL.setter
-    def pctSeriesRL(self, value: float):
+    def _set_pctSeriesRL(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 34, value)
 
-    @property
-    def RelWeight(self) -> float:
+    pctSeriesRL = property(_get_pctSeriesRL, _set_pctSeriesRL)
+
+    def _get_RelWeight(self) -> float:
         """
         Relative weighting factor for reliability calcs. Default = 1. Used to designate high priority loads such as hospitals, etc. 
 
@@ -677,12 +676,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 35)
 
-    @RelWeight.setter
-    def RelWeight(self, value: float):
+    def _set_RelWeight(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 35, value)
 
-    @property
-    def VLowpu(self) -> float:
+    RelWeight = property(_get_RelWeight, _set_RelWeight)
+
+    def _get_VLowpu(self) -> float:
         """
         Default = 0.50.  Per unit voltage at which the model switches to same as constant Z model (model=2). This allows more consistent convergence at very low voltaes due to opening switches or solving for fault situations.
 
@@ -690,12 +689,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 36)
 
-    @VLowpu.setter
-    def VLowpu(self, value: float):
+    def _set_VLowpu(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 36, value)
 
-    @property
-    def puXHarm(self) -> float:
+    VLowpu = property(_get_VLowpu, _set_VLowpu)
+
+    def _get_puXHarm(self) -> float:
         """
         Special reactance, pu (based on kVA, kV properties), for the series impedance branch in the load model for HARMONICS analysis. Generally used to represent motor load blocked rotor reactance. If not specified (that is, set =0, the default value), the series branch is computed from the percentage of the nominal load at fundamental frequency specified by the %SERIESRL property. 
 
@@ -707,12 +706,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 37)
 
-    @puXHarm.setter
-    def puXHarm(self, value: float):
+    def _set_puXHarm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 37, value)
 
-    @property
-    def XRHarm(self) -> float:
+    puXHarm = property(_get_puXHarm, _set_puXHarm)
+
+    def _get_XRHarm(self) -> float:
         """
         X/R ratio of the special harmonics mode reactance specified by the puXHARM property at fundamental frequency. Default is 6. 
 
@@ -720,12 +719,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 38)
 
-    @XRHarm.setter
-    def XRHarm(self, value: float):
+    def _set_XRHarm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 38, value)
 
-    @property
-    def Spectrum_str(self) -> str:
+    XRHarm = property(_get_XRHarm, _set_XRHarm)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
 
@@ -733,12 +732,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(39)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(39, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
 
@@ -746,16 +745,16 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(39, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(39, value)
             return
 
         self._set_string_o(39, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -763,12 +762,12 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 40)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 40, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -776,9 +775,10 @@ class Load(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 41) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 41, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -841,8 +841,7 @@ class LoadBatch(DSSBatch):
     _cls_idx = 19
 
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of Phases, this load.  Load is evenly divided among phases.
 
@@ -850,25 +849,25 @@ class LoadBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def Bus1(self) -> List[str]:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Bus1(self) -> List[str]:
         """
         Bus to which the load is connected.  May include specific node specification.
 
         DSS property name: `Bus1`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def kV(self) -> BatchFloat64ArrayProxy:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
         Nominal rated (1.0 per unit) voltage, kV, for load. For 2- and 3-phase loads, specify phase-phase kV. Otherwise, specify actual kV across each branch of the load. If wye (star), specify phase-neutral kV. If delta or phase-phase connected, specify phase-phase kV.
 
@@ -876,12 +875,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @kV.setter
-    def kV(self, value: Union[float, Float64Array]):
+    def _set_kV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def kW(self) -> BatchFloat64ArrayProxy:
+    kV = property(_get_kV, _set_kV)
+
+    def _get_kW(self) -> BatchFloat64ArrayProxy:
         """
         Total base kW for the load.  Normally, you would enter the maximum kW for the load for the first year and allow it to be adjusted by the load shapes, growth shapes, and global load multiplier.
 
@@ -896,12 +895,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @kW.setter
-    def kW(self, value: Union[float, Float64Array]):
+    def _set_kW(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def PF(self) -> BatchFloat64ArrayProxy:
+    kW = property(_get_kW, _set_kW)
+
+    def _get_PF(self) -> BatchFloat64ArrayProxy:
         """
         Load power factor.  Enter negative for leading powerfactor (when kW and kvar have opposite signs.)
 
@@ -909,12 +908,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @PF.setter
-    def PF(self, value: Union[float, Float64Array]):
+    def _set_PF(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def Model(self) -> BatchInt32ArrayProxy:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_Model(self) -> BatchInt32ArrayProxy:
         """
         Integer code for the model to use for load variation with voltage. Valid values are:
 
@@ -933,12 +932,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Model.setter
-    def Model(self, value: Union[int, enums.LoadModel, Int32Array]):
+    def _set_Model(self, value: Union[int, enums.LoadModel, Int32Array]):
         self._set_batch_int32_array(6, value)
 
-    @property
-    def Yearly_str(self) -> List[str]:
+    Model = property(_get_Model, _set_Model)
+
+    def _get_Yearly_str(self) -> List[str]:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -946,12 +945,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    @Yearly_str.setter
-    def Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(7, value)
 
-    @property
-    def Yearly(self) -> List[LoadShape]:
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+
+    def _get_Yearly(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for yearly simulations.  Must be previously defined as a Loadshape object. Is set to the Daily load shape  when Daily is defined.  The daily load shape is repeated in this case. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. The default is no variation.
 
@@ -959,12 +958,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(7)
 
-    @Yearly.setter
-    def Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(7, value)
 
-    @property
-    def Daily_str(self) -> List[str]:
+    Yearly = property(_get_Yearly, _set_Yearly)
+
+    def _get_Daily_str(self) -> List[str]:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -972,12 +971,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    @Daily_str.setter
-    def Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(8, value)
 
-    @property
-    def Daily(self) -> List[LoadShape]:
+    Daily_str = property(_get_Daily_str, _set_Daily_str)
+
+    def _get_Daily(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for daily simulations.  Must be previously defined as a Loadshape object of 24 hrs, typically. Set Status=Fixed to ignore Loadshape designation. Set to NONE to reset to no loadshape. Default is no variation (constant) if not defined. Side effect: Sets Yearly load shape if not already defined.
 
@@ -985,12 +984,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(8)
 
-    @Daily.setter
-    def Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(8, value)
 
-    @property
-    def Duty_str(self) -> List[str]:
+    Daily = property(_get_Daily, _set_Daily)
+
+    def _get_Duty_str(self) -> List[str]:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -998,12 +997,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(9)
 
-    @Duty_str.setter
-    def Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(9, value)
 
-    @property
-    def Duty(self) -> List[LoadShape]:
+    Duty_str = property(_get_Duty_str, _set_Duty_str)
+
+    def _get_Duty(self) -> List[LoadShape]:
         """
         LOADSHAPE object to use for duty cycle simulations.  Must be previously defined as a Loadshape object.  Typically would have time intervals less than 1 hr. Designate the number of points to solve using the Set Number=xxxx command. If there are fewer points in the actual shape, the shape is assumed to repeat.Set to NONE to reset to no loadshape. Set Status=Fixed to ignore Loadshape designation.  Defaults to Daily curve If not specified.
 
@@ -1011,12 +1010,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(9)
 
-    @Duty.setter
-    def Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(9, value)
 
-    @property
-    def Growth_str(self) -> List[str]:
+    Duty = property(_get_Duty, _set_Duty)
+
+    def _get_Growth_str(self) -> List[str]:
         """
         Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
 
@@ -1024,12 +1023,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(10)
 
-    @Growth_str.setter
-    def Growth_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Growth_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(10, value)
 
-    @property
-    def Growth(self) -> List[GrowthShape]:
+    Growth_str = property(_get_Growth_str, _set_Growth_str)
+
+    def _get_Growth(self) -> List[GrowthShape]:
         """
         Characteristic  to use for growth factors by years.  Must be previously defined as a Growthshape object. Defaults to circuit default growth factor (see Set Growth command).
 
@@ -1037,12 +1036,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(10)
 
-    @Growth.setter
-    def Growth(self, value: Union[AnyStr, GrowthShape, List[AnyStr], List[GrowthShape]]):
+    def _set_Growth(self, value: Union[AnyStr, GrowthShape, List[AnyStr], List[GrowthShape]]):
         self._set_batch_obj_prop(10, value)
 
-    @property
-    def Conn(self) -> BatchInt32ArrayProxy:
+    Growth = property(_get_Growth, _set_Growth)
+
+    def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
         ={wye or LN | delta or LL}.  Default is wye.
 
@@ -1050,16 +1049,16 @@ class LoadBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 11)
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(11, value)
             return
-    
+
         self._set_batch_int32_array(11, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         ={wye or LN | delta or LL}.  Default is wye.
 
@@ -1067,12 +1066,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def kvar(self) -> BatchFloat64ArrayProxy:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_kvar(self) -> BatchFloat64ArrayProxy:
         """
         Specify the base kvar for specifying load as kW & kvar.  Assumes kW has been already defined.  Alternative to specifying the power factor.  Side effect:  the power factor and kVA is altered to agree.
 
@@ -1080,12 +1079,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @kvar.setter
-    def kvar(self, value: Union[float, Float64Array]):
+    def _set_kvar(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def RNeut(self) -> BatchFloat64ArrayProxy:
+    kvar = property(_get_kvar, _set_kvar)
+
+    def _get_RNeut(self) -> BatchFloat64ArrayProxy:
         """
         Default is -1. Neutral resistance of wye (star)-connected load in actual ohms. If entered as a negative value, the neutral can be open, or floating, or it can be connected to node 0 (ground), which is the usual default. If >=0 be sure to explicitly specify the node connection for the neutral, or last, conductor. Otherwise, the neutral impedance will be shorted to ground.
 
@@ -1093,12 +1092,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @RNeut.setter
-    def RNeut(self, value: Union[float, Float64Array]):
+    def _set_RNeut(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def XNeut(self) -> BatchFloat64ArrayProxy:
+    RNeut = property(_get_RNeut, _set_RNeut)
+
+    def _get_XNeut(self) -> BatchFloat64ArrayProxy:
         """
         Neutral reactance of wye(star)-connected load in actual ohms.  May be + or -.
 
@@ -1106,12 +1105,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @XNeut.setter
-    def XNeut(self, value: Union[float, Float64Array]):
+    def _set_XNeut(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def Status(self) -> BatchInt32ArrayProxy:
+    XNeut = property(_get_XNeut, _set_XNeut)
+
+    def _get_Status(self) -> BatchInt32ArrayProxy:
         """
         ={Variable | Fixed | Exempt}.  Default is variable. If Fixed, no load multipliers apply;  however, growth multipliers do apply.  All multipliers apply to Variable loads.  Exempt loads are not modified by the global load multiplier, such as in load duration curves, etc.  Daily multipliers do apply, so setting this property to Exempt is a good way to represent industrial load that stays the same day-after-day for the period study.
 
@@ -1119,16 +1118,16 @@ class LoadBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 15)
 
-    @Status.setter
-    def Status(self, value: Union[AnyStr, int, enums.LoadStatus, List[AnyStr], List[int], List[enums.LoadStatus], Int32Array]):
+    def _set_Status(self, value: Union[AnyStr, int, enums.LoadStatus, List[AnyStr], List[int], List[enums.LoadStatus], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(15, value)
             return
-    
+
         self._set_batch_int32_array(15, value)
 
-    @property
-    def Status_str(self) -> str:
+    Status = property(_get_Status, _set_Status)
+
+    def _get_Status_str(self) -> str:
         """
         ={Variable | Fixed | Exempt}.  Default is variable. If Fixed, no load multipliers apply;  however, growth multipliers do apply.  All multipliers apply to Variable loads.  Exempt loads are not modified by the global load multiplier, such as in load duration curves, etc.  Daily multipliers do apply, so setting this property to Exempt is a good way to represent industrial load that stays the same day-after-day for the period study.
 
@@ -1136,12 +1135,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(15)
 
-    @Status_str.setter
-    def Status_str(self, value: AnyStr):
+    def _set_Status_str(self, value: AnyStr):
         self.Status = value
 
-    @property
-    def Class(self) -> BatchInt32ArrayProxy:
+    Status_str = property(_get_Status_str, _set_Status_str)
+
+    def _get_Class(self) -> BatchInt32ArrayProxy:
         """
         An arbitrary integer number representing the class of load so that load values may be segregated by load value. Default is 1; not used internally.
 
@@ -1149,12 +1148,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 16)
 
-    @Class.setter
-    def Class(self, value: Union[int, Int32Array]):
+    def _set_Class(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(16, value)
 
-    @property
-    def VMinpu(self) -> BatchFloat64ArrayProxy:
+    Class = property(_get_Class, _set_Class)
+
+    def _get_VMinpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 0.95.  Minimum per unit voltage for which the MODEL is assumed to apply. Lower end of normal voltage range.Below this value, the load model reverts to a constant impedance model that matches the model at the transition voltage. See also "Vlowpu" which causes the model to match Model=2 below the transition voltage.
 
@@ -1162,12 +1161,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @VMinpu.setter
-    def VMinpu(self, value: Union[float, Float64Array]):
+    def _set_VMinpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def VMaxpu(self) -> BatchFloat64ArrayProxy:
+    VMinpu = property(_get_VMinpu, _set_VMinpu)
+
+    def _get_VMaxpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 1.05.  Maximum per unit voltage for which the MODEL is assumed to apply. Above this value, the load model reverts to a constant impedance model.
 
@@ -1175,12 +1174,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    @VMaxpu.setter
-    def VMaxpu(self, value: Union[float, Float64Array]):
+    def _set_VMaxpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
-    @property
-    def VMinNorm(self) -> BatchFloat64ArrayProxy:
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+
+    def _get_VMinNorm(self) -> BatchFloat64ArrayProxy:
         """
         Minimum per unit voltage for load EEN evaluations, Normal limit.  Default = 0, which defaults to system "vminnorm" property (see Set Command under Executive).  If this property is specified, it ALWAYS overrides the system specification. This allows you to have different criteria for different loads. Set to zero to revert to the default system value.
 
@@ -1188,12 +1187,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @VMinNorm.setter
-    def VMinNorm(self, value: Union[float, Float64Array]):
+    def _set_VMinNorm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def VMinEmerg(self) -> BatchFloat64ArrayProxy:
+    VMinNorm = property(_get_VMinNorm, _set_VMinNorm)
+
+    def _get_VMinEmerg(self) -> BatchFloat64ArrayProxy:
         """
         Minimum per unit voltage for load UE evaluations, Emergency limit.  Default = 0, which defaults to system "vminemerg" property (see Set Command under Executive).  If this property is specified, it ALWAYS overrides the system specification. This allows you to have different criteria for different loads. Set to zero to revert to the default system value.
 
@@ -1201,12 +1200,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @VMinEmerg.setter
-    def VMinEmerg(self, value: Union[float, Float64Array]):
+    def _set_VMinEmerg(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def XfkVA(self) -> BatchFloat64ArrayProxy:
+    VMinEmerg = property(_get_VMinEmerg, _set_VMinEmerg)
+
+    def _get_XfkVA(self) -> BatchFloat64ArrayProxy:
         """
         Default = 0.0.  Rated kVA of service transformer for allocating loads based on connected kVA at a bus. Side effect:  kW, PF, and kvar are modified. See help on kVA.
 
@@ -1214,12 +1213,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @XfkVA.setter
-    def XfkVA(self, value: Union[float, Float64Array]):
+    def _set_XfkVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def AllocationFactor(self) -> BatchFloat64ArrayProxy:
+    XfkVA = property(_get_XfkVA, _set_XfkVA)
+
+    def _get_AllocationFactor(self) -> BatchFloat64ArrayProxy:
         """
         Default = 0.5.  Allocation factor for allocating loads based on connected kVA at a bus. Side effect:  kW, PF, and kvar are modified by multiplying this factor times the XFKVA (if > 0).
 
@@ -1227,12 +1226,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    @AllocationFactor.setter
-    def AllocationFactor(self, value: Union[float, Float64Array]):
+    def _set_AllocationFactor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(22, value)
 
-    @property
-    def kVA(self) -> BatchFloat64ArrayProxy:
+    AllocationFactor = property(_get_AllocationFactor, _set_AllocationFactor)
+
+    def _get_kVA(self) -> BatchFloat64ArrayProxy:
         """
         Specify base Load in kVA (and power factor)
 
@@ -1247,12 +1246,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    @kVA.setter
-    def kVA(self, value: Union[float, Float64Array]):
+    def _set_kVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(23, value)
 
-    @property
-    def pctMean(self) -> BatchFloat64ArrayProxy:
+    kVA = property(_get_kVA, _set_kVA)
+
+    def _get_pctMean(self) -> BatchFloat64ArrayProxy:
         """
         Percent mean value for load to use for monte carlo studies if no loadshape is assigned to this load. Default is 50.
 
@@ -1260,12 +1259,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    @pctMean.setter
-    def pctMean(self, value: Union[float, Float64Array]):
+    def _set_pctMean(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(24, value)
 
-    @property
-    def pctStdDev(self) -> BatchFloat64ArrayProxy:
+    pctMean = property(_get_pctMean, _set_pctMean)
+
+    def _get_pctStdDev(self) -> BatchFloat64ArrayProxy:
         """
         Percent Std deviation value for load to use for monte carlo studies if no loadshape is assigned to this load. Default is 10.
 
@@ -1273,12 +1272,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 25)
 
-    @pctStdDev.setter
-    def pctStdDev(self, value: Union[float, Float64Array]):
+    def _set_pctStdDev(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(25, value)
 
-    @property
-    def CVRWatts(self) -> BatchFloat64ArrayProxy:
+    pctStdDev = property(_get_pctStdDev, _set_pctStdDev)
+
+    def _get_CVRWatts(self) -> BatchFloat64ArrayProxy:
         """
         Percent reduction in active power (watts) per 1% reduction in voltage from 100% rated. Default=1. 
          Typical values range from 0.4 to 0.8. Applies to Model=4 only.
@@ -1288,12 +1287,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 26)
 
-    @CVRWatts.setter
-    def CVRWatts(self, value: Union[float, Float64Array]):
+    def _set_CVRWatts(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(26, value)
 
-    @property
-    def CVRVars(self) -> BatchFloat64ArrayProxy:
+    CVRWatts = property(_get_CVRWatts, _set_CVRWatts)
+
+    def _get_CVRVars(self) -> BatchFloat64ArrayProxy:
         """
         Percent reduction in reactive power (vars) per 1% reduction in voltage from 100% rated. Default=2. 
          Typical values range from 2 to 3. Applies to Model=4 only.
@@ -1303,12 +1302,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    @CVRVars.setter
-    def CVRVars(self, value: Union[float, Float64Array]):
+    def _set_CVRVars(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(27, value)
 
-    @property
-    def kWh(self) -> BatchFloat64ArrayProxy:
+    CVRVars = property(_get_CVRVars, _set_CVRVars)
+
+    def _get_kWh(self) -> BatchFloat64ArrayProxy:
         """
         kWh billed for this period. Default is 0. See help on kVA and Cfactor and kWhDays.
 
@@ -1316,12 +1315,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 28)
 
-    @kWh.setter
-    def kWh(self, value: Union[float, Float64Array]):
+    def _set_kWh(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(28, value)
 
-    @property
-    def kWhDays(self) -> BatchFloat64ArrayProxy:
+    kWh = property(_get_kWh, _set_kWh)
+
+    def _get_kWhDays(self) -> BatchFloat64ArrayProxy:
         """
         Length of kWh billing period in days (24 hr days). Default is 30. Average demand is computed using this value.
 
@@ -1329,12 +1328,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 29)
 
-    @kWhDays.setter
-    def kWhDays(self, value: Union[float, Float64Array]):
+    def _set_kWhDays(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(29, value)
 
-    @property
-    def CFactor(self) -> BatchFloat64ArrayProxy:
+    kWhDays = property(_get_kWhDays, _set_kWhDays)
+
+    def _get_CFactor(self) -> BatchFloat64ArrayProxy:
         """
         Factor relating average kW to peak kW. Default is 4.0. See kWh and kWhdays. See kVA.
 
@@ -1342,12 +1341,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 30)
 
-    @CFactor.setter
-    def CFactor(self, value: Union[float, Float64Array]):
+    def _set_CFactor(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(30, value)
 
-    @property
-    def CVRCurve_str(self) -> List[str]:
+    CFactor = property(_get_CFactor, _set_CFactor)
+
+    def _get_CVRCurve_str(self) -> List[str]:
         """
         Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
 
@@ -1355,12 +1354,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(31)
 
-    @CVRCurve_str.setter
-    def CVRCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_CVRCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(31, value)
 
-    @property
-    def CVRCurve(self) -> List[LoadShape]:
+    CVRCurve_str = property(_get_CVRCurve_str, _set_CVRCurve_str)
+
+    def _get_CVRCurve(self) -> List[LoadShape]:
         """
         Default is NONE. Curve describing both watt and var factors as a function of time. Refers to a LoadShape object with both Mult and Qmult defined. Define a Loadshape to agree with yearly or daily curve according to the type of analysis being done. If NONE, the CVRwatts and CVRvars factors are used and assumed constant.
 
@@ -1368,12 +1367,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(31)
 
-    @CVRCurve.setter
-    def CVRCurve(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
+    def _set_CVRCurve(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
         self._set_batch_obj_prop(31, value)
 
-    @property
-    def NumCust(self) -> BatchInt32ArrayProxy:
+    CVRCurve = property(_get_CVRCurve, _set_CVRCurve)
+
+    def _get_NumCust(self) -> BatchInt32ArrayProxy:
         """
         Number of customers, this load. Default is 1.
 
@@ -1381,12 +1380,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 32)
 
-    @NumCust.setter
-    def NumCust(self, value: Union[int, Int32Array]):
+    def _set_NumCust(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(32, value)
 
-    @property
-    def ZIPV(self) -> List[Float64Array]:
+    NumCust = property(_get_NumCust, _set_NumCust)
+
+    def _get_ZIPV(self) -> List[Float64Array]:
         """
         Array of 7 coefficients:
 
@@ -1402,12 +1401,12 @@ class LoadBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @ZIPV.setter
-    def ZIPV(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_ZIPV(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(33, value)
 
-    @property
-    def pctSeriesRL(self) -> BatchFloat64ArrayProxy:
+    ZIPV = property(_get_ZIPV, _set_ZIPV)
+
+    def _get_pctSeriesRL(self) -> BatchFloat64ArrayProxy:
         """
         Percent of load that is series R-L for Harmonic studies. Default is 50. Remainder is assumed to be parallel R and L. This can have a significant impact on the amount of damping observed in Harmonics solutions.
 
@@ -1415,12 +1414,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 34)
 
-    @pctSeriesRL.setter
-    def pctSeriesRL(self, value: Union[float, Float64Array]):
+    def _set_pctSeriesRL(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(34, value)
 
-    @property
-    def RelWeight(self) -> BatchFloat64ArrayProxy:
+    pctSeriesRL = property(_get_pctSeriesRL, _set_pctSeriesRL)
+
+    def _get_RelWeight(self) -> BatchFloat64ArrayProxy:
         """
         Relative weighting factor for reliability calcs. Default = 1. Used to designate high priority loads such as hospitals, etc. 
 
@@ -1430,12 +1429,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 35)
 
-    @RelWeight.setter
-    def RelWeight(self, value: Union[float, Float64Array]):
+    def _set_RelWeight(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(35, value)
 
-    @property
-    def VLowpu(self) -> BatchFloat64ArrayProxy:
+    RelWeight = property(_get_RelWeight, _set_RelWeight)
+
+    def _get_VLowpu(self) -> BatchFloat64ArrayProxy:
         """
         Default = 0.50.  Per unit voltage at which the model switches to same as constant Z model (model=2). This allows more consistent convergence at very low voltaes due to opening switches or solving for fault situations.
 
@@ -1443,12 +1442,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 36)
 
-    @VLowpu.setter
-    def VLowpu(self, value: Union[float, Float64Array]):
+    def _set_VLowpu(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(36, value)
 
-    @property
-    def puXHarm(self) -> BatchFloat64ArrayProxy:
+    VLowpu = property(_get_VLowpu, _set_VLowpu)
+
+    def _get_puXHarm(self) -> BatchFloat64ArrayProxy:
         """
         Special reactance, pu (based on kVA, kV properties), for the series impedance branch in the load model for HARMONICS analysis. Generally used to represent motor load blocked rotor reactance. If not specified (that is, set =0, the default value), the series branch is computed from the percentage of the nominal load at fundamental frequency specified by the %SERIESRL property. 
 
@@ -1460,12 +1459,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 37)
 
-    @puXHarm.setter
-    def puXHarm(self, value: Union[float, Float64Array]):
+    def _set_puXHarm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(37, value)
 
-    @property
-    def XRHarm(self) -> BatchFloat64ArrayProxy:
+    puXHarm = property(_get_puXHarm, _set_puXHarm)
+
+    def _get_XRHarm(self) -> BatchFloat64ArrayProxy:
         """
         X/R ratio of the special harmonics mode reactance specified by the puXHARM property at fundamental frequency. Default is 6. 
 
@@ -1473,12 +1472,12 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 38)
 
-    @XRHarm.setter
-    def XRHarm(self, value: Union[float, Float64Array]):
+    def _set_XRHarm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(38, value)
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    XRHarm = property(_get_XRHarm, _set_XRHarm)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
 
@@ -1486,12 +1485,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_str_prop(39)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(39, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic current spectrum for this load.  Default is "defaultload", which is defined when the DSS starts.
 
@@ -1499,12 +1498,12 @@ class LoadBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(39)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(39, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -1512,23 +1511,25 @@ class LoadBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 40)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(40, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 41.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(41)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(41, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -1590,7 +1591,7 @@ class ILoad(IDSSObj,LoadBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Load, LoadBatch)
         LoadBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Load:

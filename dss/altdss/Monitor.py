@@ -34,8 +34,7 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         'like': 10,
     }
 
-    @property
-    def Element_str(self) -> str:
+    def _get_Element_str(self) -> str:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -43,12 +42,12 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         """
         return self._get_prop_string(1)
 
-    @Element_str.setter
-    def Element_str(self, value: AnyStr):
+    def _set_Element_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Element(self) -> DSSObj:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> DSSObj:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -56,16 +55,16 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         """
         return self._get_obj(1, None)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def Terminal(self) -> int:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> int:
         """
         Number of the terminal of the circuit element to which the monitor is connected. 1 or 2, typically. For monitoring states, attach monitor to terminal 1.
 
@@ -73,12 +72,12 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: int):
+    def _set_Terminal(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def Mode(self) -> int:
+    Terminal = property(_get_Terminal, _set_Terminal)
+
+    def _get_Mode(self) -> int:
         """
         Bitmask integer designating the values the monitor is to capture: 
         0 = Voltages and currents at designated terminal
@@ -110,9 +109,10 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 3)
 
-    @Mode.setter
-    def Mode(self, value: int):
+    def _set_Mode(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 3, value)
+
+    Mode = property(_get_Mode, _set_Mode)
 
     def Action(self, value: Union[AnyStr, int, enums.MonitorAction]):
         """
@@ -128,7 +128,7 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         if isinstance(value, int):
             self._lib.Obj_SetInt32(self._ptr, 4, value)
             return
-    
+
         self._set_string_o(4, value)
 
     def Clear(self):
@@ -151,8 +151,7 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         '''Shortcut to Action(MonitorAction.Reset)'''
         self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Reset)
 
-    @property
-    def Residual(self) -> bool:
+    def _get_Residual(self) -> bool:
         """
         {Yes/True | No/False} Default = No.  Include Residual cbannel (sum of all phases) for voltage and current. Does not apply to sequence quantity modes or power modes.
 
@@ -160,12 +159,12 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 5) != 0
 
-    @Residual.setter
-    def Residual(self, value: bool):
+    def _set_Residual(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
-    @property
-    def VIPolar(self) -> bool:
+    Residual = property(_get_Residual, _set_Residual)
+
+    def _get_VIPolar(self) -> bool:
         """
         {Yes/True | No/False} Default = YES. Report voltage and current in polar form (Mag/Angle). (default)  Otherwise, it will be real and imaginary.
 
@@ -173,12 +172,12 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 6) != 0
 
-    @VIPolar.setter
-    def VIPolar(self, value: bool):
+    def _set_VIPolar(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def PPolar(self) -> bool:
+    VIPolar = property(_get_VIPolar, _set_VIPolar)
+
+    def _get_PPolar(self) -> bool:
         """
         {Yes/True | No/False} Default = YES. Report power in Apparent power, S, in polar form (Mag/Angle).(default)  Otherwise, is P and Q
 
@@ -186,12 +185,12 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 7) != 0
 
-    @PPolar.setter
-    def PPolar(self, value: bool):
+    def _set_PPolar(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 7, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    PPolar = property(_get_PPolar, _set_PPolar)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -199,12 +198,12 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -212,9 +211,10 @@ class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 9) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 9, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -245,8 +245,7 @@ class MonitorBatch(DSSBatch):
     _cls_idx = 47
 
 
-    @property
-    def Element_str(self) -> List[str]:
+    def _get_Element_str(self) -> List[str]:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -254,12 +253,12 @@ class MonitorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Element_str.setter
-    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Element(self) -> List[DSSObj]:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> List[DSSObj]:
         """
         Name (Full Object name) of element to which the monitor is connected.
 
@@ -267,12 +266,12 @@ class MonitorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def Terminal(self) -> BatchInt32ArrayProxy:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the circuit element to which the monitor is connected. 1 or 2, typically. For monitoring states, attach monitor to terminal 1.
 
@@ -280,12 +279,12 @@ class MonitorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: Union[int, Int32Array]):
+    def _set_Terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def Mode(self) -> BatchInt32ArrayProxy:
+    Terminal = property(_get_Terminal, _set_Terminal)
+
+    def _get_Mode(self) -> BatchInt32ArrayProxy:
         """
         Bitmask integer designating the values the monitor is to capture: 
         0 = Voltages and currents at designated terminal
@@ -317,9 +316,10 @@ class MonitorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    @Mode.setter
-    def Mode(self, value: Union[int, Int32Array]):
+    def _set_Mode(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(3, value)
+
+    Mode = property(_get_Mode, _set_Mode)
 
     def Action(self, value: Union[AnyStr, int, enums.MonitorAction]):
         """
@@ -357,50 +357,52 @@ class MonitorBatch(DSSBatch):
         '''Shortcut to Action(MonitorAction.Reset)'''
         self._set_batch_int32_array(4, enums.MonitorAction.Reset)
 
-    @property
-    def Residual(self) -> List[bool]:
+    def _get_Residual(self) -> List[bool]:
         """
         {Yes/True | No/False} Default = No.  Include Residual cbannel (sum of all phases) for voltage and current. Does not apply to sequence quantity modes or power modes.
 
         DSS property name: `Residual`, DSS property index: 5.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(5)
         ]
-    @Residual.setter
-    def Residual(self, value: bool):
+
+    def _set_Residual(self, value: bool):
         self._set_batch_int32_array(5, value)
 
-    @property
-    def VIPolar(self) -> List[bool]:
+    Residual = property(_get_Residual, _set_Residual)
+
+    def _get_VIPolar(self) -> List[bool]:
         """
         {Yes/True | No/False} Default = YES. Report voltage and current in polar form (Mag/Angle). (default)  Otherwise, it will be real and imaginary.
 
         DSS property name: `VIPolar`, DSS property index: 6.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(6)
         ]
-    @VIPolar.setter
-    def VIPolar(self, value: bool):
+
+    def _set_VIPolar(self, value: bool):
         self._set_batch_int32_array(6, value)
 
-    @property
-    def PPolar(self) -> List[bool]:
+    VIPolar = property(_get_VIPolar, _set_VIPolar)
+
+    def _get_PPolar(self) -> List[bool]:
         """
         {Yes/True | No/False} Default = YES. Report power in Apparent power, S, in polar form (Mag/Angle).(default)  Otherwise, is P and Q
 
         DSS property name: `PPolar`, DSS property index: 7.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(7)
         ]
-    @PPolar.setter
-    def PPolar(self, value: bool):
+
+    def _set_PPolar(self, value: bool):
         self._set_batch_int32_array(7, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    PPolar = property(_get_PPolar, _set_PPolar)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -408,23 +410,25 @@ class MonitorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 9.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(9)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(9, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -454,7 +458,7 @@ class IMonitor(IDSSObj,MonitorBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Monitor, MonitorBatch)
         MonitorBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Monitor:

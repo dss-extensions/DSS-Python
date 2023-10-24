@@ -60,8 +60,7 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         'like': 21,
     }
 
-    @property
-    def Bus1(self) -> str:
+    def _get_Bus1(self) -> str:
         """
         Name of bus to which the input terminal (1) is connected.
         bus1=busname.1.3
@@ -71,12 +70,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Bus1.setter
-    def Bus1(self, value: AnyStr):
+    def _set_Bus1(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Bus2(self) -> str:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> str:
         """
         Name of bus to which the output terminal (2) is connected.
         bus2=busname.1.2
@@ -86,12 +85,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(2)
 
-    @Bus2.setter
-    def Bus2(self, value: AnyStr):
+    def _set_Bus2(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def RefkV(self) -> float:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_RefkV(self) -> float:
         """
         Base Voltage expected at the output of the UPFC
 
@@ -101,12 +100,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @RefkV.setter
-    def RefkV(self, value: float):
+    def _set_RefkV(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
 
-    @property
-    def PF(self) -> float:
+    RefkV = property(_get_RefkV, _set_RefkV)
+
+    def _get_PF(self) -> float:
         """
         Power factor target at the input terminal.
 
@@ -114,12 +113,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    @PF.setter
-    def PF(self, value: float):
+    def _set_PF(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 4, value)
 
-    @property
-    def Frequency(self) -> float:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_Frequency(self) -> float:
         """
         UPFC working frequency.  Defaults to system default base frequency.
 
@@ -127,12 +126,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    @Frequency.setter
-    def Frequency(self, value: float):
+    def _set_Frequency(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 5, value)
 
-    @property
-    def Phases(self) -> int:
+    Frequency = property(_get_Frequency, _set_Frequency)
+
+    def _get_Phases(self) -> int:
         """
         Number of phases.  Defaults to 1 phase (2 terminals, 1 conductor per terminal).
 
@@ -140,12 +139,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 6)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def Xs(self) -> float:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Xs(self) -> float:
         """
         Reactance of the series transformer of the UPFC, ohms (default=0.7540 ... 2 mH)
 
@@ -153,12 +152,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @Xs.setter
-    def Xs(self, value: float):
+    def _set_Xs(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def Tol1(self) -> float:
+    Xs = property(_get_Xs, _set_Xs)
+
+    def _get_Tol1(self) -> float:
         """
         Tolerance in pu for the series PI controller
         Tol1=0.02 is the format used to define 2% tolerance (Default=2%)
@@ -167,12 +166,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @Tol1.setter
-    def Tol1(self, value: float):
+    def _set_Tol1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def Mode(self) -> enums.UPFCMode:
+    Tol1 = property(_get_Tol1, _set_Tol1)
+
+    def _get_Mode(self) -> enums.UPFCMode:
         """
         Integer used to define the control mode of the UPFC: 
 
@@ -187,12 +186,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return enums.UPFCMode(self._lib.Obj_GetInt32(self._ptr, 9))
 
-    @Mode.setter
-    def Mode(self, value: Union[int, enums.UPFCMode]):
+    def _set_Mode(self, value: Union[int, enums.UPFCMode]):
         self._lib.Obj_SetInt32(self._ptr, 9, value)
 
-    @property
-    def VpqMax(self) -> float:
+    Mode = property(_get_Mode, _set_Mode)
+
+    def _get_VpqMax(self) -> float:
         """
         Maximum voltage (in volts) delivered by the series voltage source (Default = 24 V)
 
@@ -200,12 +199,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @VpqMax.setter
-    def VpqMax(self, value: float):
+    def _set_VpqMax(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def LossCurve_str(self) -> str:
+    VpqMax = property(_get_VpqMax, _set_VpqMax)
+
+    def _get_LossCurve_str(self) -> str:
         """
         Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
 
@@ -213,12 +212,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(11)
 
-    @LossCurve_str.setter
-    def LossCurve_str(self, value: AnyStr):
+    def _set_LossCurve_str(self, value: AnyStr):
         self._set_string_o(11, value)
 
-    @property
-    def LossCurve(self) -> XYcurve:
+    LossCurve_str = property(_get_LossCurve_str, _set_LossCurve_str)
+
+    def _get_LossCurve(self) -> XYcurve:
         """
         Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
 
@@ -226,16 +225,16 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(11, XYcurve)
 
-    @LossCurve.setter
-    def LossCurve(self, value: Union[AnyStr, XYcurve]):
+    def _set_LossCurve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(11, value)
             return
 
         self._set_string_o(11, value)
 
-    @property
-    def VHLimit(self) -> float:
+    LossCurve = property(_get_LossCurve, _set_LossCurve)
+
+    def _get_VHLimit(self) -> float:
         """
         High limit for the voltage at the input of the UPFC, if the voltage is above this value the UPFC turns off. This value is specified in Volts (default 300 V)
 
@@ -243,12 +242,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @VHLimit.setter
-    def VHLimit(self, value: float):
+    def _set_VHLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def VLLimit(self) -> float:
+    VHLimit = property(_get_VHLimit, _set_VHLimit)
+
+    def _get_VLLimit(self) -> float:
         """
         low limit for the voltage at the input of the UPFC, if voltage is below this value the UPFC turns off. This value is specified in Volts (default 125 V)
 
@@ -256,12 +255,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @VLLimit.setter
-    def VLLimit(self, value: float):
+    def _set_VLLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def CLimit(self) -> float:
+    VLLimit = property(_get_VLLimit, _set_VLLimit)
+
+    def _get_CLimit(self) -> float:
         """
         Current Limit for the UPFC, if the current passing through the UPFC is higher than this value the UPFC turns off. This value is specified in Amps (Default 265 A)
 
@@ -269,12 +268,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @CLimit.setter
-    def CLimit(self, value: float):
+    def _set_CLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def refkV2(self) -> float:
+    CLimit = property(_get_CLimit, _set_CLimit)
+
+    def _get_refkV2(self) -> float:
         """
         Base Voltage expected at the output of the UPFC for control modes 4 and 5.
 
@@ -284,12 +283,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @refkV2.setter
-    def refkV2(self, value: float):
+    def _set_refkV2(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def kvarLimit(self) -> float:
+    refkV2 = property(_get_refkV2, _set_refkV2)
+
+    def _get_kvarLimit(self) -> float:
         """
         Maximum amount of reactive power (kvar) that can be absorbed by the UPFC (Default = 5)
 
@@ -297,12 +296,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @kvarLimit.setter
-    def kvarLimit(self, value: float):
+    def _set_kvarLimit(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def Element_str(self) -> str:
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+
+    def _get_Element_str(self) -> str:
         """
         The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
 
@@ -310,12 +309,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(17)
 
-    @Element_str.setter
-    def Element_str(self, value: AnyStr):
+    def _set_Element_str(self, value: AnyStr):
         self._set_string_o(17, value)
 
-    @property
-    def Element(self) -> PDElement:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> PDElement:
         """
         The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
 
@@ -323,16 +322,16 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(17, PDElement)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, PDElement]):
+    def _set_Element(self, value: Union[AnyStr, PDElement]):
         if isinstance(value, DSSObj):
             self._set_obj(17, value)
             return
 
         self._set_string_o(17, value)
 
-    @property
-    def Spectrum_str(self) -> str:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Spectrum_str(self) -> str:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
@@ -340,12 +339,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_prop_string(18)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: AnyStr):
+    def _set_Spectrum_str(self, value: AnyStr):
         self._set_string_o(18, value)
 
-    @property
-    def Spectrum(self) -> SpectrumObj:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> SpectrumObj:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
@@ -353,16 +352,16 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._get_obj(18, SpectrumObj)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
         if isinstance(value, DSSObj):
             self._set_obj(18, value)
             return
 
         self._set_string_o(18, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -370,12 +369,12 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -383,9 +382,10 @@ class UPFC(DSSObj, CktElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 20) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 20, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -427,8 +427,7 @@ class UPFCBatch(DSSBatch):
     _cls_idx = 36
 
 
-    @property
-    def Bus1(self) -> List[str]:
+    def _get_Bus1(self) -> List[str]:
         """
         Name of bus to which the input terminal (1) is connected.
         bus1=busname.1.3
@@ -436,14 +435,14 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `Bus1`, DSS property index: 1.
         """
-        return self._get_batch_str_prop(1) 
+        return self._get_batch_str_prop(1)
 
-    @Bus1.setter
-    def Bus1(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Bus2(self) -> List[str]:
+    Bus1 = property(_get_Bus1, _set_Bus1)
+
+    def _get_Bus2(self) -> List[str]:
         """
         Name of bus to which the output terminal (2) is connected.
         bus2=busname.1.2
@@ -451,14 +450,14 @@ class UPFCBatch(DSSBatch):
 
         DSS property name: `Bus2`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @Bus2.setter
-    def Bus2(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def RefkV(self) -> BatchFloat64ArrayProxy:
+    Bus2 = property(_get_Bus2, _set_Bus2)
+
+    def _get_RefkV(self) -> BatchFloat64ArrayProxy:
         """
         Base Voltage expected at the output of the UPFC
 
@@ -468,12 +467,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @RefkV.setter
-    def RefkV(self, value: Union[float, Float64Array]):
+    def _set_RefkV(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
 
-    @property
-    def PF(self) -> BatchFloat64ArrayProxy:
+    RefkV = property(_get_RefkV, _set_RefkV)
+
+    def _get_PF(self) -> BatchFloat64ArrayProxy:
         """
         Power factor target at the input terminal.
 
@@ -481,12 +480,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    @PF.setter
-    def PF(self, value: Union[float, Float64Array]):
+    def _set_PF(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(4, value)
 
-    @property
-    def Frequency(self) -> BatchFloat64ArrayProxy:
+    PF = property(_get_PF, _set_PF)
+
+    def _get_Frequency(self) -> BatchFloat64ArrayProxy:
         """
         UPFC working frequency.  Defaults to system default base frequency.
 
@@ -494,12 +493,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    @Frequency.setter
-    def Frequency(self, value: Union[float, Float64Array]):
+    def _set_Frequency(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(5, value)
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    Frequency = property(_get_Frequency, _set_Frequency)
+
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of phases.  Defaults to 1 phase (2 terminals, 1 conductor per terminal).
 
@@ -507,12 +506,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(6, value)
 
-    @property
-    def Xs(self) -> BatchFloat64ArrayProxy:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Xs(self) -> BatchFloat64ArrayProxy:
         """
         Reactance of the series transformer of the UPFC, ohms (default=0.7540 ... 2 mH)
 
@@ -520,12 +519,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @Xs.setter
-    def Xs(self, value: Union[float, Float64Array]):
+    def _set_Xs(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def Tol1(self) -> BatchFloat64ArrayProxy:
+    Xs = property(_get_Xs, _set_Xs)
+
+    def _get_Tol1(self) -> BatchFloat64ArrayProxy:
         """
         Tolerance in pu for the series PI controller
         Tol1=0.02 is the format used to define 2% tolerance (Default=2%)
@@ -534,12 +533,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @Tol1.setter
-    def Tol1(self, value: Union[float, Float64Array]):
+    def _set_Tol1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def Mode(self) -> BatchInt32ArrayProxy:
+    Tol1 = property(_get_Tol1, _set_Tol1)
+
+    def _get_Mode(self) -> BatchInt32ArrayProxy:
         """
         Integer used to define the control mode of the UPFC: 
 
@@ -554,12 +553,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 9)
 
-    @Mode.setter
-    def Mode(self, value: Union[int, enums.UPFCMode, Int32Array]):
+    def _set_Mode(self, value: Union[int, enums.UPFCMode, Int32Array]):
         self._set_batch_int32_array(9, value)
 
-    @property
-    def VpqMax(self) -> BatchFloat64ArrayProxy:
+    Mode = property(_get_Mode, _set_Mode)
+
+    def _get_VpqMax(self) -> BatchFloat64ArrayProxy:
         """
         Maximum voltage (in volts) delivered by the series voltage source (Default = 24 V)
 
@@ -567,12 +566,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @VpqMax.setter
-    def VpqMax(self, value: Union[float, Float64Array]):
+    def _set_VpqMax(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def LossCurve_str(self) -> List[str]:
+    VpqMax = property(_get_VpqMax, _set_VpqMax)
+
+    def _get_LossCurve_str(self) -> List[str]:
         """
         Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
 
@@ -580,12 +579,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    @LossCurve_str.setter
-    def LossCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_LossCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(11, value)
 
-    @property
-    def LossCurve(self) -> List[XYcurve]:
+    LossCurve_str = property(_get_LossCurve_str, _set_LossCurve_str)
+
+    def _get_LossCurve(self) -> List[XYcurve]:
         """
         Name of the XYCurve for describing the losses behavior as a function of the voltage at the input of the UPFC
 
@@ -593,12 +592,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    @LossCurve.setter
-    def LossCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_LossCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(11, value)
 
-    @property
-    def VHLimit(self) -> BatchFloat64ArrayProxy:
+    LossCurve = property(_get_LossCurve, _set_LossCurve)
+
+    def _get_VHLimit(self) -> BatchFloat64ArrayProxy:
         """
         High limit for the voltage at the input of the UPFC, if the voltage is above this value the UPFC turns off. This value is specified in Volts (default 300 V)
 
@@ -606,12 +605,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @VHLimit.setter
-    def VHLimit(self, value: Union[float, Float64Array]):
+    def _set_VHLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def VLLimit(self) -> BatchFloat64ArrayProxy:
+    VHLimit = property(_get_VHLimit, _set_VHLimit)
+
+    def _get_VLLimit(self) -> BatchFloat64ArrayProxy:
         """
         low limit for the voltage at the input of the UPFC, if voltage is below this value the UPFC turns off. This value is specified in Volts (default 125 V)
 
@@ -619,12 +618,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @VLLimit.setter
-    def VLLimit(self, value: Union[float, Float64Array]):
+    def _set_VLLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def CLimit(self) -> BatchFloat64ArrayProxy:
+    VLLimit = property(_get_VLLimit, _set_VLLimit)
+
+    def _get_CLimit(self) -> BatchFloat64ArrayProxy:
         """
         Current Limit for the UPFC, if the current passing through the UPFC is higher than this value the UPFC turns off. This value is specified in Amps (Default 265 A)
 
@@ -632,12 +631,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @CLimit.setter
-    def CLimit(self, value: Union[float, Float64Array]):
+    def _set_CLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def refkV2(self) -> BatchFloat64ArrayProxy:
+    CLimit = property(_get_CLimit, _set_CLimit)
+
+    def _get_refkV2(self) -> BatchFloat64ArrayProxy:
         """
         Base Voltage expected at the output of the UPFC for control modes 4 and 5.
 
@@ -647,12 +646,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @refkV2.setter
-    def refkV2(self, value: Union[float, Float64Array]):
+    def _set_refkV2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def kvarLimit(self) -> BatchFloat64ArrayProxy:
+    refkV2 = property(_get_refkV2, _set_refkV2)
+
+    def _get_kvarLimit(self) -> BatchFloat64ArrayProxy:
         """
         Maximum amount of reactive power (kvar) that can be absorbed by the UPFC (Default = 5)
 
@@ -660,12 +659,12 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @kvarLimit.setter
-    def kvarLimit(self, value: Union[float, Float64Array]):
+    def _set_kvarLimit(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def Element_str(self) -> List[str]:
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+
+    def _get_Element_str(self) -> List[str]:
         """
         The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
 
@@ -673,12 +672,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_str_prop(17)
 
-    @Element_str.setter
-    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(17, value)
 
-    @property
-    def Element(self) -> List[PDElement]:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> List[PDElement]:
         """
         The name of the PD element monitored when operating with reactive power compensation. Normally, it should be the PD element immediately upstream the UPFC. The element must be defined including the class, e.g. Line.myline.
 
@@ -686,12 +685,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(17)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, PDElement, List[AnyStr], List[PDElement]]):
+    def _set_Element(self, value: Union[AnyStr, PDElement, List[AnyStr], List[PDElement]]):
         self._set_batch_obj_prop(17, value)
 
-    @property
-    def Spectrum_str(self) -> List[str]:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Spectrum_str(self) -> List[str]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
@@ -699,12 +698,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_str_prop(18)
 
-    @Spectrum_str.setter
-    def Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(18, value)
 
-    @property
-    def Spectrum(self) -> List[SpectrumObj]:
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+
+    def _get_Spectrum(self) -> List[SpectrumObj]:
         """
         Name of harmonic spectrum for this source.  Default is "defaultUPFC", which is defined when the DSS starts.
 
@@ -712,12 +711,12 @@ class UPFCBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(18)
 
-    @Spectrum.setter
-    def Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
         self._set_batch_obj_prop(18, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Spectrum = property(_get_Spectrum, _set_Spectrum)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -725,23 +724,25 @@ class UPFCBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 20.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(20)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(20, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -782,7 +783,7 @@ class IUPFC(IDSSObj,UPFCBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, UPFC, UPFCBatch)
         UPFCBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> UPFC:

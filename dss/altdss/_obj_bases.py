@@ -1279,6 +1279,7 @@ class CktElementMixin:
         self.Controllers = NonUniformBatch(self._lib.Alt_CE_Get_Controllers, self)
 
     def GUID(self) -> str:
+        '''Object's GUID/UUID. Currently used only in the CIM-related methods.'''
         return self._get_string(self._lib.Alt_CE_Get_GUID(self._ptr))
 
     def _getDisplayName(self) -> str:

@@ -39,8 +39,7 @@ class Sensor(DSSObj, CktElementMixin):
         'like': 15,
     }
 
-    @property
-    def Element_str(self) -> str:
+    def _get_Element_str(self) -> str:
         """
         Name (Full Object name) of element to which the Sensor is connected.
 
@@ -48,12 +47,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(1)
 
-    @Element_str.setter
-    def Element_str(self, value: AnyStr):
+    def _set_Element_str(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def Element(self) -> DSSObj:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> DSSObj:
         """
         Name (Full Object name) of element to which the Sensor is connected.
 
@@ -61,16 +60,16 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._get_obj(1, None)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj]):
         if isinstance(value, DSSObj):
             self._set_obj(1, value)
             return
 
         self._set_string_o(1, value)
 
-    @property
-    def Terminal(self) -> int:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> int:
         """
         Number of the terminal of the circuit element to which the Sensor is connected. 1 or 2, typically. Default is 1.
 
@@ -78,12 +77,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: int):
+    def _set_Terminal(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 2, value)
 
-    @property
-    def kVBase(self) -> float:
+    Terminal = property(_get_Terminal, _set_Terminal)
+
+    def _get_kVBase(self) -> float:
         """
         Voltage base for the sensor, in kV. If connected to a 2- or 3-phase terminal, 
         specify L-L voltage. For 1-phase devices specify L-N or actual 1-phase voltage. Like many other DSS devices, default is 12.47kV.
@@ -92,9 +91,10 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    @kVBase.setter
-    def kVBase(self, value: float):
+    def _set_kVBase(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 3, value)
+
+    kVBase = property(_get_kVBase, _set_kVBase)
 
     def Clear(self, value: bool = True):
         """
@@ -104,8 +104,7 @@ class Sensor(DSSObj, CktElementMixin):
         """
         self._lib.Obj_SetInt32(self._ptr, 4, value)
 
-    @property
-    def kVs(self) -> Float64Array:
+    def _get_kVs(self) -> Float64Array:
         """
         Array of Voltages (kV) measured by the voltage sensor. For Delta-connected sensors, Line-Line voltages are expected. For Wye, Line-Neutral are expected.
 
@@ -113,12 +112,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 5)
 
-    @kVs.setter
-    def kVs(self, value: Float64Array):
+    def _set_kVs(self, value: Float64Array):
         self._set_float64_array_o(5, value)
 
-    @property
-    def Currents(self) -> Float64Array:
+    kVs = property(_get_kVs, _set_kVs)
+
+    def _get_Currents(self) -> Float64Array:
         """
         Array of Currents (amps) measured by the current sensor. Specify this or power quantities; not both.
 
@@ -126,12 +125,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 6)
 
-    @Currents.setter
-    def Currents(self, value: Float64Array):
+    def _set_Currents(self, value: Float64Array):
         self._set_float64_array_o(6, value)
 
-    @property
-    def kWs(self) -> Float64Array:
+    Currents = property(_get_Currents, _set_Currents)
+
+    def _get_kWs(self) -> Float64Array:
         """
         Array of Active power (kW) measurements at the sensor. Is converted into Currents along with q=[...]
         Will override any currents=[...] specification.
@@ -140,12 +139,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 7)
 
-    @kWs.setter
-    def kWs(self, value: Float64Array):
+    def _set_kWs(self, value: Float64Array):
         self._set_float64_array_o(7, value)
 
-    @property
-    def kvars(self) -> Float64Array:
+    kWs = property(_get_kWs, _set_kWs)
+
+    def _get_kvars(self) -> Float64Array:
         """
         Array of Reactive power (kvar) measurements at the sensor. Is converted into Currents along with p=[...]
 
@@ -153,12 +152,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 8)
 
-    @kvars.setter
-    def kvars(self, value: Float64Array):
+    def _set_kvars(self, value: Float64Array):
         self._set_float64_array_o(8, value)
 
-    @property
-    def Conn(self) -> enums.Connection:
+    kvars = property(_get_kvars, _set_kvars)
+
+    def _get_Conn(self) -> enums.Connection:
         """
         Voltage sensor Connection: { wye | delta | LN | LL }.  Default is wye. Applies to voltage measurement only. 
         Currents are always assumed to be line currents.
@@ -168,15 +167,15 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 9))
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
         if not isinstance(value, int):
             self._set_string_o(9, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 9, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         Voltage sensor Connection: { wye | delta | LN | LL }.  Default is wye. Applies to voltage measurement only. 
         Currents are always assumed to be line currents.
@@ -186,12 +185,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._get_prop_string(9)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def DeltaDirection(self) -> int:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_DeltaDirection(self) -> int:
         """
         {1 or -1}  Default is 1:  1-2, 2-3, 3-1.  For reverse rotation, enter -1. Any positive or negative entry will suffice.
 
@@ -199,12 +198,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10)
 
-    @DeltaDirection.setter
-    def DeltaDirection(self, value: int):
+    def _set_DeltaDirection(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 10, value)
 
-    @property
-    def pctError(self) -> float:
+    DeltaDirection = property(_get_DeltaDirection, _set_DeltaDirection)
+
+    def _get_pctError(self) -> float:
         """
         Assumed percent error in the measurement. Default is 1.
 
@@ -212,12 +211,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @pctError.setter
-    def pctError(self, value: float):
+    def _set_pctError(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def Weight(self) -> float:
+    pctError = property(_get_pctError, _set_pctError)
+
+    def _get_Weight(self) -> float:
         """
         Weighting factor: Default is 1.
 
@@ -225,12 +224,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    @Weight.setter
-    def Weight(self, value: float):
+    def _set_Weight(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 12, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Weight = property(_get_Weight, _set_Weight)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -238,12 +237,12 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -251,9 +250,10 @@ class Sensor(DSSObj, CktElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 14) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 14, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -289,8 +289,7 @@ class SensorBatch(DSSBatch):
     _cls_idx = 49
 
 
-    @property
-    def Element_str(self) -> List[str]:
+    def _get_Element_str(self) -> List[str]:
         """
         Name (Full Object name) of element to which the Sensor is connected.
 
@@ -298,12 +297,12 @@ class SensorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(1)
 
-    @Element_str.setter
-    def Element_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def Element(self) -> List[DSSObj]:
+    Element_str = property(_get_Element_str, _set_Element_str)
+
+    def _get_Element(self) -> List[DSSObj]:
         """
         Name (Full Object name) of element to which the Sensor is connected.
 
@@ -311,12 +310,12 @@ class SensorBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(1)
 
-    @Element.setter
-    def Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
         self._set_batch_obj_prop(1, value)
 
-    @property
-    def Terminal(self) -> BatchInt32ArrayProxy:
+    Element = property(_get_Element, _set_Element)
+
+    def _get_Terminal(self) -> BatchInt32ArrayProxy:
         """
         Number of the terminal of the circuit element to which the Sensor is connected. 1 or 2, typically. Default is 1.
 
@@ -324,12 +323,12 @@ class SensorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    @Terminal.setter
-    def Terminal(self, value: Union[int, Int32Array]):
+    def _set_Terminal(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(2, value)
 
-    @property
-    def kVBase(self) -> BatchFloat64ArrayProxy:
+    Terminal = property(_get_Terminal, _set_Terminal)
+
+    def _get_kVBase(self) -> BatchFloat64ArrayProxy:
         """
         Voltage base for the sensor, in kV. If connected to a 2- or 3-phase terminal, 
         specify L-L voltage. For 1-phase devices specify L-N or actual 1-phase voltage. Like many other DSS devices, default is 12.47kV.
@@ -338,9 +337,10 @@ class SensorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    @kVBase.setter
-    def kVBase(self, value: Union[float, Float64Array]):
+    def _set_kVBase(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(3, value)
+
+    kVBase = property(_get_kVBase, _set_kVBase)
 
     def Clear(self, value: Union[bool, List[bool]] = True):
         """
@@ -350,8 +350,7 @@ class SensorBatch(DSSBatch):
         """
         self._set_batch_int32_array(4, value)
 
-    @property
-    def kVs(self) -> List[Float64Array]:
+    def _get_kVs(self) -> List[Float64Array]:
         """
         Array of Voltages (kV) measured by the voltage sensor. For Delta-connected sensors, Line-Line voltages are expected. For Wye, Line-Neutral are expected.
 
@@ -362,12 +361,12 @@ class SensorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @kVs.setter
-    def kVs(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_kVs(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(5, value)
 
-    @property
-    def Currents(self) -> List[Float64Array]:
+    kVs = property(_get_kVs, _set_kVs)
+
+    def _get_Currents(self) -> List[Float64Array]:
         """
         Array of Currents (amps) measured by the current sensor. Specify this or power quantities; not both.
 
@@ -378,12 +377,12 @@ class SensorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Currents.setter
-    def Currents(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Currents(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(6, value)
 
-    @property
-    def kWs(self) -> List[Float64Array]:
+    Currents = property(_get_Currents, _set_Currents)
+
+    def _get_kWs(self) -> List[Float64Array]:
         """
         Array of Active power (kW) measurements at the sensor. Is converted into Currents along with q=[...]
         Will override any currents=[...] specification.
@@ -395,12 +394,12 @@ class SensorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @kWs.setter
-    def kWs(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_kWs(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(7, value)
 
-    @property
-    def kvars(self) -> List[Float64Array]:
+    kWs = property(_get_kWs, _set_kWs)
+
+    def _get_kvars(self) -> List[Float64Array]:
         """
         Array of Reactive power (kvar) measurements at the sensor. Is converted into Currents along with p=[...]
 
@@ -411,12 +410,12 @@ class SensorBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @kvars.setter
-    def kvars(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_kvars(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(8, value)
 
-    @property
-    def Conn(self) -> BatchInt32ArrayProxy:
+    kvars = property(_get_kvars, _set_kvars)
+
+    def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
         Voltage sensor Connection: { wye | delta | LN | LL }.  Default is wye. Applies to voltage measurement only. 
         Currents are always assumed to be line currents.
@@ -426,16 +425,16 @@ class SensorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 9)
 
-    @Conn.setter
-    def Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(9, value)
             return
-    
+
         self._set_batch_int32_array(9, value)
 
-    @property
-    def Conn_str(self) -> str:
+    Conn = property(_get_Conn, _set_Conn)
+
+    def _get_Conn_str(self) -> str:
         """
         Voltage sensor Connection: { wye | delta | LN | LL }.  Default is wye. Applies to voltage measurement only. 
         Currents are always assumed to be line currents.
@@ -445,12 +444,12 @@ class SensorBatch(DSSBatch):
         """
         return self._get_batch_str_prop(9)
 
-    @Conn_str.setter
-    def Conn_str(self, value: AnyStr):
+    def _set_Conn_str(self, value: AnyStr):
         self.Conn = value
 
-    @property
-    def DeltaDirection(self) -> BatchInt32ArrayProxy:
+    Conn_str = property(_get_Conn_str, _set_Conn_str)
+
+    def _get_DeltaDirection(self) -> BatchInt32ArrayProxy:
         """
         {1 or -1}  Default is 1:  1-2, 2-3, 3-1.  For reverse rotation, enter -1. Any positive or negative entry will suffice.
 
@@ -458,12 +457,12 @@ class SensorBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 10)
 
-    @DeltaDirection.setter
-    def DeltaDirection(self, value: Union[int, Int32Array]):
+    def _set_DeltaDirection(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(10, value)
 
-    @property
-    def pctError(self) -> BatchFloat64ArrayProxy:
+    DeltaDirection = property(_get_DeltaDirection, _set_DeltaDirection)
+
+    def _get_pctError(self) -> BatchFloat64ArrayProxy:
         """
         Assumed percent error in the measurement. Default is 1.
 
@@ -471,12 +470,12 @@ class SensorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @pctError.setter
-    def pctError(self, value: Union[float, Float64Array]):
+    def _set_pctError(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def Weight(self) -> BatchFloat64ArrayProxy:
+    pctError = property(_get_pctError, _set_pctError)
+
+    def _get_Weight(self) -> BatchFloat64ArrayProxy:
         """
         Weighting factor: Default is 1.
 
@@ -484,12 +483,12 @@ class SensorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    @Weight.setter
-    def Weight(self, value: Union[float, Float64Array]):
+    def _set_Weight(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(12, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Weight = property(_get_Weight, _set_Weight)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -497,23 +496,25 @@ class SensorBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 14.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(14)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(14, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -550,7 +551,7 @@ class ISensor(IDSSObj,SensorBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Sensor, SensorBatch)
         SensorBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Sensor:

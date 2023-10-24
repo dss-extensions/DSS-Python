@@ -29,8 +29,7 @@ class Spectrum(DSSObj):
         'like': 6,
     }
 
-    @property
-    def NumHarm(self) -> int:
+    def _get_NumHarm(self) -> int:
         """
         Number of frequencies in this spectrum. (See CSVFile)
 
@@ -38,12 +37,12 @@ class Spectrum(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    @NumHarm.setter
-    def NumHarm(self, value: int):
+    def _set_NumHarm(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 1, value)
 
-    @property
-    def Harmonic(self) -> Float64Array:
+    NumHarm = property(_get_NumHarm, _set_NumHarm)
+
+    def _get_Harmonic(self) -> Float64Array:
         """
         Array of harmonic values. You can also use the syntax
         harmonic = (file=filename)     !for text file one value per line
@@ -54,12 +53,12 @@ class Spectrum(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 2)
 
-    @Harmonic.setter
-    def Harmonic(self, value: Float64Array):
+    def _set_Harmonic(self, value: Float64Array):
         self._set_float64_array_o(2, value)
 
-    @property
-    def pctMag(self) -> Float64Array:
+    Harmonic = property(_get_Harmonic, _set_Harmonic)
+
+    def _get_pctMag(self) -> Float64Array:
         """
         Array of magnitude values, assumed to be in PERCENT. You can also use the syntax
         %mag = (file=filename)     !for text file one value per line
@@ -70,12 +69,12 @@ class Spectrum(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    @pctMag.setter
-    def pctMag(self, value: Float64Array):
+    def _set_pctMag(self, value: Float64Array):
         self._set_float64_array_o(3, value)
 
-    @property
-    def Angle(self) -> Float64Array:
+    pctMag = property(_get_pctMag, _set_pctMag)
+
+    def _get_Angle(self) -> Float64Array:
         """
         Array of phase angle values, degrees.You can also use the syntax
         angle = (file=filename)     !for text file one value per line
@@ -86,12 +85,12 @@ class Spectrum(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 4)
 
-    @Angle.setter
-    def Angle(self, value: Float64Array):
+    def _set_Angle(self, value: Float64Array):
         self._set_float64_array_o(4, value)
 
-    @property
-    def CSVFile(self) -> str:
+    Angle = property(_get_Angle, _set_Angle)
+
+    def _get_CSVFile(self) -> str:
         """
         File of spectrum points with (harmonic, magnitude-percent, angle-degrees) values, one set of 3 per line, in CSV format. If fewer than NUMHARM frequencies found in the file, NUMHARM is set to the smaller value.
 
@@ -99,9 +98,10 @@ class Spectrum(DSSObj):
         """
         return self._get_prop_string(5)
 
-    @CSVFile.setter
-    def CSVFile(self, value: AnyStr):
+    def _set_CSVFile(self, value: AnyStr):
         self._set_string_o(5, value)
+
+    CSVFile = property(_get_CSVFile, _set_CSVFile)
 
     def Like(self, value: AnyStr):
         """
@@ -128,8 +128,7 @@ class SpectrumBatch(DSSBatch):
     _cls_idx = 8
 
 
-    @property
-    def NumHarm(self) -> BatchInt32ArrayProxy:
+    def _get_NumHarm(self) -> BatchInt32ArrayProxy:
         """
         Number of frequencies in this spectrum. (See CSVFile)
 
@@ -137,12 +136,12 @@ class SpectrumBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    @NumHarm.setter
-    def NumHarm(self, value: Union[int, Int32Array]):
+    def _set_NumHarm(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(1, value)
 
-    @property
-    def Harmonic(self) -> List[Float64Array]:
+    NumHarm = property(_get_NumHarm, _set_NumHarm)
+
+    def _get_Harmonic(self) -> List[Float64Array]:
         """
         Array of harmonic values. You can also use the syntax
         harmonic = (file=filename)     !for text file one value per line
@@ -156,12 +155,12 @@ class SpectrumBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Harmonic.setter
-    def Harmonic(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Harmonic(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(2, value)
 
-    @property
-    def pctMag(self) -> List[Float64Array]:
+    Harmonic = property(_get_Harmonic, _set_Harmonic)
+
+    def _get_pctMag(self) -> List[Float64Array]:
         """
         Array of magnitude values, assumed to be in PERCENT. You can also use the syntax
         %mag = (file=filename)     !for text file one value per line
@@ -175,12 +174,12 @@ class SpectrumBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @pctMag.setter
-    def pctMag(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_pctMag(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(3, value)
 
-    @property
-    def Angle(self) -> List[Float64Array]:
+    pctMag = property(_get_pctMag, _set_pctMag)
+
+    def _get_Angle(self) -> List[Float64Array]:
         """
         Array of phase angle values, degrees.You can also use the syntax
         angle = (file=filename)     !for text file one value per line
@@ -194,22 +193,23 @@ class SpectrumBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    @Angle.setter
-    def Angle(self, value: Union[Float64Array, List[Float64Array]]):
+    def _set_Angle(self, value: Union[Float64Array, List[Float64Array]]):
         self._set_batch_float64_array_prop(4, value)
 
-    @property
-    def CSVFile(self) -> List[str]:
+    Angle = property(_get_Angle, _set_Angle)
+
+    def _get_CSVFile(self) -> List[str]:
         """
         File of spectrum points with (harmonic, magnitude-percent, angle-degrees) values, one set of 3 per line, in CSV format. If fewer than NUMHARM frequencies found in the file, NUMHARM is set to the smaller value.
 
         DSS property name: `CSVFile`, DSS property index: 5.
         """
-        return self._get_batch_str_prop(5) 
+        return self._get_batch_str_prop(5)
 
-    @CSVFile.setter
-    def CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(5, value)
+
+    CSVFile = property(_get_CSVFile, _set_CSVFile)
 
     def Like(self, value: AnyStr):
         """
@@ -235,7 +235,7 @@ class ISpectrum(IDSSObj,SpectrumBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Spectrum, SpectrumBatch)
         SpectrumBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> Spectrum:

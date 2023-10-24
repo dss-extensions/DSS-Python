@@ -50,8 +50,7 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         'like': 23,
     }
 
-    @property
-    def BusH(self) -> str:
+    def _get_BusH(self) -> str:
         """
         Name of High-side(H) bus. Examples:
         BusH=busname
@@ -61,12 +60,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(1)
 
-    @BusH.setter
-    def BusH(self, value: AnyStr):
+    def _set_BusH(self, value: AnyStr):
         self._set_string_o(1, value)
 
-    @property
-    def BusNH(self) -> str:
+    BusH = property(_get_BusH, _set_BusH)
+
+    def _get_BusNH(self) -> str:
         """
         Name of Neutral bus for H, or first, winding. Defaults to all phases connected to H-side bus, node 0, if not specified and transformer type is either GSU or YY. (Shunt Wye Connection to ground reference)For Auto, this is automatically set to the X bus.
 
@@ -74,12 +73,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(2)
 
-    @BusNH.setter
-    def BusNH(self, value: AnyStr):
+    def _set_BusNH(self, value: AnyStr):
         self._set_string_o(2, value)
 
-    @property
-    def BusX(self) -> str:
+    BusNH = property(_get_BusNH, _set_BusNH)
+
+    def _get_BusX(self) -> str:
         """
         Name of Low-side(X) bus, if type=Auto or YY. 
 
@@ -87,12 +86,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(3)
 
-    @BusX.setter
-    def BusX(self, value: AnyStr):
+    def _set_BusX(self, value: AnyStr):
         self._set_string_o(3, value)
 
-    @property
-    def BusNX(self) -> str:
+    BusX = property(_get_BusX, _set_BusX)
+
+    def _get_BusNX(self) -> str:
         """
         Name of Neutral bus for X, or Second, winding. Defaults to all phases connected to X-side bus, node 0, if not specified. (Shunt Wye Connection to ground reference)
 
@@ -100,12 +99,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(4)
 
-    @BusNX.setter
-    def BusNX(self, value: AnyStr):
+    def _set_BusNX(self, value: AnyStr):
         self._set_string_o(4, value)
 
-    @property
-    def Phases(self) -> int:
+    BusNX = property(_get_BusNX, _set_BusNX)
+
+    def _get_Phases(self) -> int:
         """
         Number of Phases. Default is 3.
 
@@ -113,12 +112,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 5)
 
-    @Phases.setter
-    def Phases(self, value: int):
+    def _set_Phases(self, value: int):
         self._lib.Obj_SetInt32(self._ptr, 5, value)
 
-    @property
-    def Type(self) -> enums.GICTransformerType:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Type(self) -> enums.GICTransformerType:
         """
         Type of transformer: {GSU* | Auto | YY}. Default is GSU.
 
@@ -126,15 +125,15 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return enums.GICTransformerType(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    @Type.setter
-    def Type(self, value: Union[AnyStr, int, enums.GICTransformerType]):
+    def _set_Type(self, value: Union[AnyStr, int, enums.GICTransformerType]):
         if not isinstance(value, int):
             self._set_string_o(6, value)
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value)
 
-    @property
-    def Type_str(self) -> str:
+    Type = property(_get_Type, _set_Type)
+
+    def _get_Type_str(self) -> str:
         """
         Type of transformer: {GSU* | Auto | YY}. Default is GSU.
 
@@ -142,12 +141,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(6)
 
-    @Type_str.setter
-    def Type_str(self, value: AnyStr):
+    def _set_Type_str(self, value: AnyStr):
         self.Type = value
 
-    @property
-    def R1(self) -> float:
+    Type_str = property(_get_Type_str, _set_Type_str)
+
+    def _get_R1(self) -> float:
         """
         Resistance, each phase, ohms for H winding, (Series winding, if Auto). Default is 0.0001. If 
 
@@ -155,12 +154,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    @R1.setter
-    def R1(self, value: float):
+    def _set_R1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 7, value)
 
-    @property
-    def R2(self) -> float:
+    R1 = property(_get_R1, _set_R1)
+
+    def _get_R2(self) -> float:
         """
         Resistance, each phase, ohms for X winding, (Common winding, if Auto). Default is 0.0001. 
 
@@ -168,12 +167,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    @R2.setter
-    def R2(self, value: float):
+    def _set_R2(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 8, value)
 
-    @property
-    def kVLL1(self) -> float:
+    R2 = property(_get_R2, _set_R2)
+
+    def _get_kVLL1(self) -> float:
         """
         Optional. kV LL rating for H winding (winding 1). Default is 500. Required if you are going to export vars for power flow analysis or enter winding resistances in percent.
 
@@ -181,12 +180,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    @kVLL1.setter
-    def kVLL1(self, value: float):
+    def _set_kVLL1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 9, value)
 
-    @property
-    def kVLL2(self) -> float:
+    kVLL1 = property(_get_kVLL1, _set_kVLL1)
+
+    def _get_kVLL2(self) -> float:
         """
         Optional. kV LL rating for X winding (winding 2). Default is 138. Required if you are going to export vars for power flow analysis or enter winding resistances in percent..
 
@@ -194,12 +193,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    @kVLL2.setter
-    def kVLL2(self, value: float):
+    def _set_kVLL2(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 10, value)
 
-    @property
-    def MVA(self) -> float:
+    kVLL2 = property(_get_kVLL2, _set_kVLL2)
+
+    def _get_MVA(self) -> float:
         """
         Optional. MVA Rating assumed Transformer. Default is 100. Used for computing vars due to GIC and winding resistances if kV and MVA ratings are specified.
 
@@ -207,12 +206,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    @MVA.setter
-    def MVA(self, value: float):
+    def _set_MVA(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 11, value)
 
-    @property
-    def VarCurve_str(self) -> str:
+    MVA = property(_get_MVA, _set_MVA)
+
+    def _get_VarCurve_str(self) -> str:
         """
         Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
 
@@ -220,12 +219,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_prop_string(12)
 
-    @VarCurve_str.setter
-    def VarCurve_str(self, value: AnyStr):
+    def _set_VarCurve_str(self, value: AnyStr):
         self._set_string_o(12, value)
 
-    @property
-    def VarCurve(self) -> XYcurve:
+    VarCurve_str = property(_get_VarCurve_str, _set_VarCurve_str)
+
+    def _get_VarCurve(self) -> XYcurve:
         """
         Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
 
@@ -233,16 +232,16 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._get_obj(12, XYcurve)
 
-    @VarCurve.setter
-    def VarCurve(self, value: Union[AnyStr, XYcurve]):
+    def _set_VarCurve(self, value: Union[AnyStr, XYcurve]):
         if isinstance(value, DSSObj):
             self._set_obj(12, value)
             return
 
         self._set_string_o(12, value)
 
-    @property
-    def pctR1(self) -> float:
+    VarCurve = property(_get_VarCurve, _set_VarCurve)
+
+    def _get_pctR1(self) -> float:
         """
         Optional. Percent Resistance, each phase, for H winding (1), (Series winding, if Auto). Default is 0.2. 
 
@@ -252,12 +251,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    @pctR1.setter
-    def pctR1(self, value: float):
+    def _set_pctR1(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 13, value)
 
-    @property
-    def pctR2(self) -> float:
+    pctR1 = property(_get_pctR1, _set_pctR1)
+
+    def _get_pctR2(self) -> float:
         """
         Optional. Percent Resistance, each phase, for X winding (2), (Common winding, if Auto). Default is 0.2. 
 
@@ -267,12 +266,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    @pctR2.setter
-    def pctR2(self, value: float):
+    def _set_pctR2(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 14, value)
 
-    @property
-    def K(self) -> float:
+    pctR2 = property(_get_pctR2, _set_pctR2)
+
+    def _get_K(self) -> float:
         """
         Mvar K factor. Default way to convert GIC Amps in H winding (winding 1) to Mvar. Default is 2.2. Commonly-used simple multiplier for estimating Mvar losses for power flow analysis. 
 
@@ -284,12 +283,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    @K.setter
-    def K(self, value: float):
+    def _set_K(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 15, value)
 
-    @property
-    def NormAmps(self) -> float:
+    K = property(_get_K, _set_K)
+
+    def _get_NormAmps(self) -> float:
         """
         Normal rated current.
 
@@ -297,12 +296,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    @NormAmps.setter
-    def NormAmps(self, value: float):
+    def _set_NormAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 16, value)
 
-    @property
-    def EmergAmps(self) -> float:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> float:
         """
         Maximum or emerg current.
 
@@ -310,12 +309,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: float):
+    def _set_EmergAmps(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 17, value)
 
-    @property
-    def FaultRate(self) -> float:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> float:
         """
         Failure rate per year.
 
@@ -323,12 +322,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    @FaultRate.setter
-    def FaultRate(self, value: float):
+    def _set_FaultRate(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 18, value)
 
-    @property
-    def pctPerm(self) -> float:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> float:
         """
         Percent of failures that become permanent.
 
@@ -336,12 +335,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    @pctPerm.setter
-    def pctPerm(self, value: float):
+    def _set_pctPerm(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 19, value)
 
-    @property
-    def Repair(self) -> float:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> float:
         """
         Hours to repair.
 
@@ -349,12 +348,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    @Repair.setter
-    def Repair(self, value: float):
+    def _set_Repair(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 20, value)
 
-    @property
-    def BaseFreq(self) -> float:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> float:
         """
         Base Frequency for ratings.
 
@@ -362,12 +361,12 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: float):
+    def _set_BaseFreq(self, value: float):
         self._lib.Obj_SetFloat64(self._ptr, 21, value)
 
-    @property
-    def Enabled(self) -> bool:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> bool:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
@@ -375,9 +374,10 @@ class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 22) != 0
 
-    @Enabled.setter
-    def Enabled(self, value: bool):
+    def _set_Enabled(self, value: bool):
         self._lib.Obj_SetInt32(self._ptr, 22, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -421,8 +421,7 @@ class GICTransformerBatch(DSSBatch):
     _cls_idx = 45
 
 
-    @property
-    def BusH(self) -> List[str]:
+    def _get_BusH(self) -> List[str]:
         """
         Name of High-side(H) bus. Examples:
         BusH=busname
@@ -430,53 +429,53 @@ class GICTransformerBatch(DSSBatch):
 
         DSS property name: `BusH`, DSS property index: 1.
         """
-        return self._get_batch_str_prop(1) 
+        return self._get_batch_str_prop(1)
 
-    @BusH.setter
-    def BusH(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_BusH(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(1, value)
 
-    @property
-    def BusNH(self) -> List[str]:
+    BusH = property(_get_BusH, _set_BusH)
+
+    def _get_BusNH(self) -> List[str]:
         """
         Name of Neutral bus for H, or first, winding. Defaults to all phases connected to H-side bus, node 0, if not specified and transformer type is either GSU or YY. (Shunt Wye Connection to ground reference)For Auto, this is automatically set to the X bus.
 
         DSS property name: `BusNH`, DSS property index: 2.
         """
-        return self._get_batch_str_prop(2) 
+        return self._get_batch_str_prop(2)
 
-    @BusNH.setter
-    def BusNH(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_BusNH(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(2, value)
 
-    @property
-    def BusX(self) -> List[str]:
+    BusNH = property(_get_BusNH, _set_BusNH)
+
+    def _get_BusX(self) -> List[str]:
         """
         Name of Low-side(X) bus, if type=Auto or YY. 
 
         DSS property name: `BusX`, DSS property index: 3.
         """
-        return self._get_batch_str_prop(3) 
+        return self._get_batch_str_prop(3)
 
-    @BusX.setter
-    def BusX(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_BusX(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(3, value)
 
-    @property
-    def BusNX(self) -> List[str]:
+    BusX = property(_get_BusX, _set_BusX)
+
+    def _get_BusNX(self) -> List[str]:
         """
         Name of Neutral bus for X, or Second, winding. Defaults to all phases connected to X-side bus, node 0, if not specified. (Shunt Wye Connection to ground reference)
 
         DSS property name: `BusNX`, DSS property index: 4.
         """
-        return self._get_batch_str_prop(4) 
+        return self._get_batch_str_prop(4)
 
-    @BusNX.setter
-    def BusNX(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_BusNX(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(4, value)
 
-    @property
-    def Phases(self) -> BatchInt32ArrayProxy:
+    BusNX = property(_get_BusNX, _set_BusNX)
+
+    def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
         Number of Phases. Default is 3.
 
@@ -484,12 +483,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 5)
 
-    @Phases.setter
-    def Phases(self, value: Union[int, Int32Array]):
+    def _set_Phases(self, value: Union[int, Int32Array]):
         self._set_batch_int32_array(5, value)
 
-    @property
-    def Type(self) -> BatchInt32ArrayProxy:
+    Phases = property(_get_Phases, _set_Phases)
+
+    def _get_Type(self) -> BatchInt32ArrayProxy:
         """
         Type of transformer: {GSU* | Auto | YY}. Default is GSU.
 
@@ -497,16 +496,16 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    @Type.setter
-    def Type(self, value: Union[AnyStr, int, enums.GICTransformerType, List[AnyStr], List[int], List[enums.GICTransformerType], Int32Array]):
+    def _set_Type(self, value: Union[AnyStr, int, enums.GICTransformerType, List[AnyStr], List[int], List[enums.GICTransformerType], Int32Array]):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
             self._set_batch_string(6, value)
             return
-    
+
         self._set_batch_int32_array(6, value)
 
-    @property
-    def Type_str(self) -> str:
+    Type = property(_get_Type, _set_Type)
+
+    def _get_Type_str(self) -> str:
         """
         Type of transformer: {GSU* | Auto | YY}. Default is GSU.
 
@@ -514,12 +513,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    @Type_str.setter
-    def Type_str(self, value: AnyStr):
+    def _set_Type_str(self, value: AnyStr):
         self.Type = value
 
-    @property
-    def R1(self) -> BatchFloat64ArrayProxy:
+    Type_str = property(_get_Type_str, _set_Type_str)
+
+    def _get_R1(self) -> BatchFloat64ArrayProxy:
         """
         Resistance, each phase, ohms for H winding, (Series winding, if Auto). Default is 0.0001. If 
 
@@ -527,12 +526,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    @R1.setter
-    def R1(self, value: Union[float, Float64Array]):
+    def _set_R1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(7, value)
 
-    @property
-    def R2(self) -> BatchFloat64ArrayProxy:
+    R1 = property(_get_R1, _set_R1)
+
+    def _get_R2(self) -> BatchFloat64ArrayProxy:
         """
         Resistance, each phase, ohms for X winding, (Common winding, if Auto). Default is 0.0001. 
 
@@ -540,12 +539,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    @R2.setter
-    def R2(self, value: Union[float, Float64Array]):
+    def _set_R2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(8, value)
 
-    @property
-    def kVLL1(self) -> BatchFloat64ArrayProxy:
+    R2 = property(_get_R2, _set_R2)
+
+    def _get_kVLL1(self) -> BatchFloat64ArrayProxy:
         """
         Optional. kV LL rating for H winding (winding 1). Default is 500. Required if you are going to export vars for power flow analysis or enter winding resistances in percent.
 
@@ -553,12 +552,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    @kVLL1.setter
-    def kVLL1(self, value: Union[float, Float64Array]):
+    def _set_kVLL1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(9, value)
 
-    @property
-    def kVLL2(self) -> BatchFloat64ArrayProxy:
+    kVLL1 = property(_get_kVLL1, _set_kVLL1)
+
+    def _get_kVLL2(self) -> BatchFloat64ArrayProxy:
         """
         Optional. kV LL rating for X winding (winding 2). Default is 138. Required if you are going to export vars for power flow analysis or enter winding resistances in percent..
 
@@ -566,12 +565,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    @kVLL2.setter
-    def kVLL2(self, value: Union[float, Float64Array]):
+    def _set_kVLL2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(10, value)
 
-    @property
-    def MVA(self) -> BatchFloat64ArrayProxy:
+    kVLL2 = property(_get_kVLL2, _set_kVLL2)
+
+    def _get_MVA(self) -> BatchFloat64ArrayProxy:
         """
         Optional. MVA Rating assumed Transformer. Default is 100. Used for computing vars due to GIC and winding resistances if kV and MVA ratings are specified.
 
@@ -579,12 +578,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    @MVA.setter
-    def MVA(self, value: Union[float, Float64Array]):
+    def _set_MVA(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(11, value)
 
-    @property
-    def VarCurve_str(self) -> List[str]:
+    MVA = property(_get_MVA, _set_MVA)
+
+    def _get_VarCurve_str(self) -> List[str]:
         """
         Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
 
@@ -592,12 +591,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return self._get_batch_str_prop(12)
 
-    @VarCurve_str.setter
-    def VarCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
+    def _set_VarCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
         self._set_batch_string(12, value)
 
-    @property
-    def VarCurve(self) -> List[XYcurve]:
+    VarCurve_str = property(_get_VarCurve_str, _set_VarCurve_str)
+
+    def _get_VarCurve(self) -> List[XYcurve]:
         """
         Optional. XYCurve object name. Curve is expected as TOTAL pu vars vs pu GIC amps/phase. Vars are in pu of the MVA property. No Default value. Required only if you are going to export vars for power flow analysis. See K property.
 
@@ -605,12 +604,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(12)
 
-    @VarCurve.setter
-    def VarCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
+    def _set_VarCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
         self._set_batch_obj_prop(12, value)
 
-    @property
-    def pctR1(self) -> BatchFloat64ArrayProxy:
+    VarCurve = property(_get_VarCurve, _set_VarCurve)
+
+    def _get_pctR1(self) -> BatchFloat64ArrayProxy:
         """
         Optional. Percent Resistance, each phase, for H winding (1), (Series winding, if Auto). Default is 0.2. 
 
@@ -620,12 +619,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    @pctR1.setter
-    def pctR1(self, value: Union[float, Float64Array]):
+    def _set_pctR1(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(13, value)
 
-    @property
-    def pctR2(self) -> BatchFloat64ArrayProxy:
+    pctR1 = property(_get_pctR1, _set_pctR1)
+
+    def _get_pctR2(self) -> BatchFloat64ArrayProxy:
         """
         Optional. Percent Resistance, each phase, for X winding (2), (Common winding, if Auto). Default is 0.2. 
 
@@ -635,12 +634,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    @pctR2.setter
-    def pctR2(self, value: Union[float, Float64Array]):
+    def _set_pctR2(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(14, value)
 
-    @property
-    def K(self) -> BatchFloat64ArrayProxy:
+    pctR2 = property(_get_pctR2, _set_pctR2)
+
+    def _get_K(self) -> BatchFloat64ArrayProxy:
         """
         Mvar K factor. Default way to convert GIC Amps in H winding (winding 1) to Mvar. Default is 2.2. Commonly-used simple multiplier for estimating Mvar losses for power flow analysis. 
 
@@ -652,12 +651,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    @K.setter
-    def K(self, value: Union[float, Float64Array]):
+    def _set_K(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(15, value)
 
-    @property
-    def NormAmps(self) -> BatchFloat64ArrayProxy:
+    K = property(_get_K, _set_K)
+
+    def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
         Normal rated current.
 
@@ -665,12 +664,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    @NormAmps.setter
-    def NormAmps(self, value: Union[float, Float64Array]):
+    def _set_NormAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(16, value)
 
-    @property
-    def EmergAmps(self) -> BatchFloat64ArrayProxy:
+    NormAmps = property(_get_NormAmps, _set_NormAmps)
+
+    def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
         Maximum or emerg current.
 
@@ -678,12 +677,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    @EmergAmps.setter
-    def EmergAmps(self, value: Union[float, Float64Array]):
+    def _set_EmergAmps(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(17, value)
 
-    @property
-    def FaultRate(self) -> BatchFloat64ArrayProxy:
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+
+    def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
         Failure rate per year.
 
@@ -691,12 +690,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    @FaultRate.setter
-    def FaultRate(self, value: Union[float, Float64Array]):
+    def _set_FaultRate(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(18, value)
 
-    @property
-    def pctPerm(self) -> BatchFloat64ArrayProxy:
+    FaultRate = property(_get_FaultRate, _set_FaultRate)
+
+    def _get_pctPerm(self) -> BatchFloat64ArrayProxy:
         """
         Percent of failures that become permanent.
 
@@ -704,12 +703,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    @pctPerm.setter
-    def pctPerm(self, value: Union[float, Float64Array]):
+    def _set_pctPerm(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(19, value)
 
-    @property
-    def Repair(self) -> BatchFloat64ArrayProxy:
+    pctPerm = property(_get_pctPerm, _set_pctPerm)
+
+    def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
         Hours to repair.
 
@@ -717,12 +716,12 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    @Repair.setter
-    def Repair(self, value: Union[float, Float64Array]):
+    def _set_Repair(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(20, value)
 
-    @property
-    def BaseFreq(self) -> BatchFloat64ArrayProxy:
+    Repair = property(_get_Repair, _set_Repair)
+
+    def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
         Base Frequency for ratings.
 
@@ -730,23 +729,25 @@ class GICTransformerBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    @BaseFreq.setter
-    def BaseFreq(self, value: Union[float, Float64Array]):
+    def _set_BaseFreq(self, value: Union[float, Float64Array]):
         self._set_batch_float64_array(21, value)
 
-    @property
-    def Enabled(self) -> List[bool]:
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+
+    def _get_Enabled(self) -> List[bool]:
         """
         {Yes|No or True|False} Indicates whether this element is enabled.
 
         DSS property name: `Enabled`, DSS property index: 22.
         """
-        return [v != 0 for v in 
+        return [v != 0 for v in
             self._get_batch_int32_prop(22)
         ]
-    @Enabled.setter
-    def Enabled(self, value: bool):
+
+    def _set_Enabled(self, value: bool):
         self._set_batch_int32_array(22, value)
+
+    Enabled = property(_get_Enabled, _set_Enabled)
 
     def Like(self, value: AnyStr):
         """
@@ -789,7 +790,7 @@ class IGICTransformer(IDSSObj,GICTransformerBatch):
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, GICTransformer, GICTransformerBatch)
         GICTransformerBatch.__init__(self, self._api_util, sync_cls=True)
-        
+
 
     # We need this one for better type hinting
     def __getitem__(self, name_or_idx: Union[AnyStr, int]) -> GICTransformer:
