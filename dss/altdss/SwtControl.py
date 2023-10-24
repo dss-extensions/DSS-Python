@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -16,8 +17,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class SwtControl(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class SwtControl(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'SwtControl'
     _cls_idx = 34
     _cls_prop_idx = {
@@ -218,7 +219,7 @@ class SwtControlProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class SwtControlBatch(DSSBatch):
+class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'SwtControl'
     _obj_cls = SwtControl
     _cls_idx = 34
@@ -409,7 +410,7 @@ class SwtControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ISwtControl(IDSSObj,SwtControlBatch):
+class ISwtControl(IDSSObj, SwtControlBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

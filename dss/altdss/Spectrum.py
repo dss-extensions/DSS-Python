@@ -229,7 +229,7 @@ class SpectrumBatchProperties(TypedDict):
     CSVFile: Union[AnyStr, List[AnyStr]]
     Like: AnyStr
 
-class ISpectrum(IDSSObj,SpectrumBatch):
+class ISpectrum(IDSSObj, SpectrumBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

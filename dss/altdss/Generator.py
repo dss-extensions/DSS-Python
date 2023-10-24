@@ -3,9 +3,11 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
     ElementHasRegistersMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -21,8 +23,8 @@ from .DynamicExp import DynamicExp
 from .LoadShape import LoadShape
 from .Spectrum import Spectrum as SpectrumObj
 
-class Generator(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
+class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
     _cls_name = 'Generator'
     _cls_idx = 27
     _cls_prop_idx = {
@@ -884,7 +886,7 @@ class GeneratorProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class GeneratorBatch(DSSBatch):
+class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'Generator'
     _obj_cls = Generator
     _cls_idx = 27
@@ -1687,7 +1689,7 @@ class GeneratorBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IGenerator(IDSSObj,GeneratorBatch):
+class IGenerator(IDSSObj, GeneratorBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

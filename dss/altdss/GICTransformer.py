@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PDElementMixin,
+    CircuitElementBatchMixin,
+    PDElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -18,8 +20,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .XYcurve import XYcurve
 
-class GICTransformer(DSSObj, CktElementMixin, PDElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots
+class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PDElementMixin._extra_slots
     _cls_name = 'GICTransformer'
     _cls_idx = 45
     _cls_prop_idx = {
@@ -415,7 +417,7 @@ class GICTransformerProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class GICTransformerBatch(DSSBatch):
+class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _cls_name = 'GICTransformer'
     _obj_cls = GICTransformer
     _cls_idx = 45
@@ -784,7 +786,7 @@ class GICTransformerBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IGICTransformer(IDSSObj,GICTransformerBatch):
+class IGICTransformer(IDSSObj, GICTransformerBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

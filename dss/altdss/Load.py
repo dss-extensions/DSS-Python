@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -20,8 +22,8 @@ from .GrowthShape import GrowthShape
 from .LoadShape import LoadShape
 from .Spectrum import Spectrum as SpectrumObj
 
-class Load(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
+class Load(DSSObj, CircuitElementMixin, PCElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'Load'
     _cls_idx = 19
     _cls_prop_idx = {
@@ -835,7 +837,7 @@ class LoadProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class LoadBatch(DSSBatch):
+class LoadBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'Load'
     _obj_cls = Load
     _cls_idx = 19
@@ -1585,7 +1587,7 @@ class LoadBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ILoad(IDSSObj,LoadBatch):
+class ILoad(IDSSObj, LoadBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

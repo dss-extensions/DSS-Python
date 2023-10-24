@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -32,8 +34,8 @@ PDElement = Union[
 from .Spectrum import Spectrum as SpectrumObj
 from .XYcurve import XYcurve
 
-class UPFC(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
+class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'UPFC'
     _cls_idx = 36
     _cls_prop_idx = {
@@ -421,7 +423,7 @@ class UPFCProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class UPFCBatch(DSSBatch):
+class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'UPFC'
     _obj_cls = UPFC
     _cls_idx = 36
@@ -777,7 +779,7 @@ class UPFCBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IUPFC(IDSSObj,UPFCBatch):
+class IUPFC(IDSSObj, UPFCBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

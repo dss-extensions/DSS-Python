@@ -431,7 +431,7 @@ class XYcurveBatchProperties(TypedDict):
     YScale: Union[float, Float64Array]
     Like: AnyStr
 
-class IXYcurve(IDSSObj,XYcurveBatch):
+class IXYcurve(IDSSObj, XYcurveBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

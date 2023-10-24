@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -17,8 +18,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .LoadShape import LoadShape
 
-class StorageController(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class StorageController(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'StorageController'
     _cls_idx = 30
     _cls_prop_idx = {
@@ -797,7 +798,7 @@ class StorageControllerProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class StorageControllerBatch(DSSBatch):
+class StorageControllerBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'StorageController'
     _obj_cls = StorageController
     _cls_idx = 30
@@ -1528,7 +1529,7 @@ class StorageControllerBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IStorageController(IDSSObj,StorageControllerBatch):
+class IStorageController(IDSSObj, StorageControllerBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

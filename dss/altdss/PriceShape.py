@@ -447,7 +447,7 @@ class PriceShapeBatchProperties(TypedDict):
     Action: Union[AnyStr, int, enums.PriceShapeAction]
     Like: AnyStr
 
-class IPriceShape(IDSSObj,PriceShapeBatch):
+class IPriceShape(IDSSObj, PriceShapeBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

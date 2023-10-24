@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -19,8 +21,8 @@ from . import enums
 from .Spectrum import Spectrum as SpectrumObj
 from .XYcurve import XYcurve
 
-class VCCS(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
+class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'VCCS'
     _cls_idx = 18
     _cls_prop_idx = {
@@ -351,7 +353,7 @@ class VCCSProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class VCCSBatch(DSSBatch):
+class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'VCCS'
     _obj_cls = VCCS
     _cls_idx = 18
@@ -652,7 +654,7 @@ class VCCSBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IVCCS(IDSSObj,VCCSBatch):
+class IVCCS(IDSSObj, VCCSBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

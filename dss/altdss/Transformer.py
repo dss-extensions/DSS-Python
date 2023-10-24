@@ -3,9 +3,11 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PDElementMixin,
     TransformerObjMixin,
+    CircuitElementBatchMixin,
+    PDElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -19,8 +21,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .XfmrCode import XfmrCode as XfmrCodeObj
 
-class Transformer(DSSObj, CktElementMixin, PDElementMixin, TransformerObjMixin):
-    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots + TransformerObjMixin._extra_slots
+class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PDElementMixin._extra_slots + TransformerObjMixin._extra_slots
     _cls_name = 'Transformer'
     _cls_idx = 20
     _cls_prop_idx = {
@@ -874,7 +876,7 @@ class TransformerProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class TransformerBatch(DSSBatch):
+class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _cls_name = 'Transformer'
     _obj_cls = Transformer
     _cls_idx = 20
@@ -1718,7 +1720,7 @@ class TransformerBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ITransformer(IDSSObj,TransformerBatch):
+class ITransformer(IDSSObj, TransformerBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

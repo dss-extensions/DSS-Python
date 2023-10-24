@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -16,8 +17,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class UPFCControl(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class UPFCControl(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'UPFCControl'
     _cls_idx = 37
     _cls_prop_idx = {
@@ -85,7 +86,7 @@ class UPFCControlProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class UPFCControlBatch(DSSBatch):
+class UPFCControlBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'UPFCControl'
     _obj_cls = UPFCControl
     _cls_idx = 37
@@ -152,7 +153,7 @@ class UPFCControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IUPFCControl(IDSSObj,UPFCControlBatch):
+class IUPFCControl(IDSSObj, UPFCControlBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

@@ -921,7 +921,7 @@ class LineCodeBatchProperties(TypedDict):
     LineType: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array]
     Like: AnyStr
 
-class ILineCode(IDSSObj,LineCodeBatch):
+class ILineCode(IDSSObj, LineCodeBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

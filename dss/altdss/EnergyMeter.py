@@ -2,11 +2,15 @@
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
-from ._obj_bases import (
-    CktElementMixin,
+from .EnergyMeterExtras import (
     EnergyMeterObjMixin,
-    ElementHasRegistersMixin,
     IEnergyMeterMixin,
+    EnergyMeterBatchMixin,
+)
+from ._obj_bases import (
+    CircuitElementMixin,
+    ElementHasRegistersMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -19,8 +23,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class EnergyMeter(DSSObj, CktElementMixin, EnergyMeterObjMixin, ElementHasRegistersMixin):
-    __slots__ = CktElementMixin._extra_slots + EnergyMeterObjMixin._extra_slots + ElementHasRegistersMixin._extra_slots
+class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRegistersMixin):
+    __slots__ = CircuitElementMixin._extra_slots + EnergyMeterObjMixin._extra_slots + ElementHasRegistersMixin._extra_slots
     _cls_name = 'EnergyMeter'
     _cls_idx = 48
     _cls_prop_idx = {
@@ -497,7 +501,7 @@ class EnergyMeterProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class EnergyMeterBatch(DSSBatch):
+class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin):
     _cls_name = 'EnergyMeter'
     _obj_cls = EnergyMeter
     _cls_idx = 48
@@ -968,7 +972,7 @@ class EnergyMeterBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IEnergyMeter(IDSSObj,EnergyMeterBatch, IEnergyMeterMixin):
+class IEnergyMeter(IDSSObj, EnergyMeterBatch, IEnergyMeterMixin):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

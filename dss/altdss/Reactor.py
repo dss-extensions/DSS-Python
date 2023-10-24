@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PDElementMixin,
+    CircuitElementBatchMixin,
+    PDElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -18,8 +20,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .XYcurve import XYcurve
 
-class Reactor(DSSObj, CktElementMixin, PDElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots
+class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PDElementMixin._extra_slots
     _cls_name = 'Reactor'
     _cls_idx = 23
     _cls_prop_idx = {
@@ -490,7 +492,7 @@ class ReactorProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ReactorBatch(DSSBatch):
+class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _cls_name = 'Reactor'
     _obj_cls = Reactor
     _cls_idx = 23
@@ -999,7 +1001,7 @@ class ReactorBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IReactor(IDSSObj,ReactorBatch):
+class IReactor(IDSSObj, ReactorBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

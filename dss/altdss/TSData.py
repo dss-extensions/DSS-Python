@@ -740,7 +740,7 @@ class TSDataBatchProperties(TypedDict):
     CapRadius: Union[float, Float64Array]
     Like: AnyStr
 
-class ITSData(IDSSObj,TSDataBatch):
+class ITSData(IDSSObj, TSDataBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

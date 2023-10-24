@@ -81,11 +81,11 @@ class CtxLib:
         # First, process all `ctx_*`` functions
         for name, value in vars(lib).items():
             is_ctx = name.startswith('ctx_')
-            if not is_ctx and not name.startswith('Batch_Create'):
+            if not is_ctx and (not name.startswith('Batch_Create')):
                 continue
 
             # Keep the basic management functions alone
-            if name in ('ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'ctx_Error_Set_Description'):
+            if name in {'ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'ctx_Error_Set_Description'}:
                 if name == 'ctx_Error_Set_Description':
                     name = name[4:]
                     setattr(self, name, partial(value, ctx))
@@ -106,7 +106,10 @@ class CtxLib:
             if (not name.startswith('Alt_')) or name in done:
                 continue
 
-            setattr(self, name, partial(self._error_checked, _errorPtr, value))
+            if name.startswith('Alt_Bus'):
+                setattr(self, name, partial(self._error_checked, _errorPtr, partial(value, ctx)))
+            else:
+                setattr(self, name, partial(self._error_checked, _errorPtr, value))
 
 
         # Finally the remaining fields
@@ -139,8 +142,12 @@ class Base:
         '_prepare_string_array',
         '_get_complex128_array',
         '_get_complex128_simple',
+        '_get_fcomplex128_simple',
         '_get_complex128_gr_array',
         '_get_complex128_gr_simple',
+        '_get_fcomplex128_gr_array',
+        '_get_fcomplex128_array',
+        '_get_fcomplex128_gr_simple',
         '_prepare_complex128_array',
         '_prepare_complex128_simple',
         '_errorPtr',
@@ -153,6 +160,10 @@ class Base:
         self._api_util = api_util
         self._get_string = api_util.get_string
 
+        self._get_fcomplex128_gr_array = api_util.get_fcomplex128_gr_array
+        self._get_fcomplex128_array = api_util.get_fcomplex128_array
+        self._get_fcomplex128_simple = api_util.get_fcomplex128_simple
+        self._get_fcomplex128_gr_simple = api_util.get_fcomplex128_gr_simple
         if not prefer_lists:
             # Use NumPy arrays for most functions
             self._get_float64_array = api_util.get_float64_array
@@ -372,6 +383,20 @@ class CffiApiUtil(object):
 
         return res
 
+    def get_fcomplex128_array(self, func, *args) -> ComplexArray:
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr = self.ffi.new('double**')
+        cnt = self.ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
+        self.lib.DSS_Dispose_PDouble(ptr)
+
+        if cnt[3]:
+            # If the last element is filled, we have a matrix.  Otherwise, the 
+            # matrix feature is disabled or the result is indeed a vector
+            return res.reshape((cnt[2], cnt[3]), order='F')
+
+        return res
 
     def get_complex128_array2(self, func, *args) -> Float64ArrayOrComplexArray:
         if not self._allow_complex:
@@ -391,6 +416,17 @@ class CffiApiUtil(object):
         if not self._allow_complex:
             return self.get_float64_array(func, *args)
 
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr = self.ffi.new('double**')
+        cnt = self.ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        try:
+            assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
+            return self.ffi.cast('double _Complex**', ptr)[0][0]
+        finally:
+            self.lib.DSS_Dispose_PDouble(ptr)
+
+    def get_fcomplex128_simple(self, func, *args) -> Float64ArrayOrSimpleComplex:
         # Currently we use the same as API as get_float64_array, may change later
         ptr = self.ffi.new('double**')
         cnt = self.ffi.new('int32_t[4]')
@@ -437,6 +473,15 @@ class CffiApiUtil(object):
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
 
 
+    def get_fcomplex128_gr_array(self) -> ComplexArray:
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr, cnt = self.gr_float64_pointers
+        if self._allow_complex and cnt[3]:
+            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy().reshape((cnt[2], cnt[3]), order='F')
+        
+        return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
+
+
     def get_complex128_gr_array2(self) -> List[Union[complex, float]]:
         if not self._allow_complex:
             return self.get_float64_gr_array2()
@@ -451,6 +496,13 @@ class CffiApiUtil(object):
         if not self._allow_complex:
             return self.get_float64_gr_array()
 
+        # Currently we use the same as API as get_float64_array, may change later
+        ptr, cnt = self.gr_cfloat64_pointers
+        assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
+        return ptr[0][0]
+
+
+    def get_fcomplex128_gr_simple(self) -> complex:
         # Currently we use the same as API as get_float64_array, may change later
         ptr, cnt = self.gr_cfloat64_pointers
         assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])

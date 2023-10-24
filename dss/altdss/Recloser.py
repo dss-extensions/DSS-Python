@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -17,8 +18,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .TCC_Curve import TCC_Curve
 
-class Recloser(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class Recloser(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'Recloser'
     _cls_idx = 32
     _cls_prop_idx = {
@@ -549,7 +550,7 @@ class RecloserProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class RecloserBatch(DSSBatch):
+class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'Recloser'
     _obj_cls = Recloser
     _cls_idx = 32
@@ -1035,7 +1036,7 @@ class RecloserBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IRecloser(IDSSObj,RecloserBatch):
+class IRecloser(IDSSObj, RecloserBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

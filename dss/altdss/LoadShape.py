@@ -4,6 +4,7 @@ from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
     LoadShapeObjMixin,
+    LoadShapeBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -402,7 +403,7 @@ class LoadShapeProperties(TypedDict):
     Interpolation: Union[AnyStr, int, enums.LoadShapeInterpolation]
     Like: AnyStr
 
-class LoadShapeBatch(DSSBatch):
+class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
     _cls_name = 'LoadShape'
     _obj_cls = LoadShape
     _cls_idx = 2
@@ -776,7 +777,7 @@ class LoadShapeBatchProperties(TypedDict):
     Interpolation: Union[AnyStr, int, enums.LoadShapeInterpolation, List[AnyStr], List[int], List[enums.LoadShapeInterpolation], Int32Array]
     Like: AnyStr
 
-class ILoadShape(IDSSObj,LoadShapeBatch):
+class ILoadShape(IDSSObj, LoadShapeBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

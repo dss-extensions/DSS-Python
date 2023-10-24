@@ -53,6 +53,7 @@ class IBus(Base):
         return self.CheckForError(self._lib.Bus_GetUniqueNodeNumber(StartNumber))
 
     def ZscRefresh(self) -> bool:
+        '''Refreshes the Zsc matrix for the active bus.'''
         return self.CheckForError(self._lib.Bus_ZscRefresh()) != 0
 
     @property

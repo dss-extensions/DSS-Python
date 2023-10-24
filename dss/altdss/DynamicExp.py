@@ -269,7 +269,7 @@ class DynamicExpBatchProperties(TypedDict):
     Domain: Union[AnyStr, int, enums.DynamicExpDomain, List[AnyStr], List[int], List[enums.DynamicExpDomain], Int32Array]
     Like: AnyStr
 
-class IDynamicExp(IDSSObj,DynamicExpBatch):
+class IDynamicExp(IDSSObj, DynamicExpBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -16,8 +17,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class ESPVLControl(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class ESPVLControl(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'ESPVLControl'
     _cls_idx = 38
     _cls_prop_idx = {
@@ -272,7 +273,7 @@ class ESPVLControlProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ESPVLControlBatch(DSSBatch):
+class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'ESPVLControl'
     _obj_cls = ESPVLControl
     _cls_idx = 38
@@ -526,7 +527,7 @@ class ESPVLControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IESPVLControl(IDSSObj,ESPVLControlBatch):
+class IESPVLControl(IDSSObj, ESPVLControlBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

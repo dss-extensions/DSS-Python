@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PDElementMixin,
+    CircuitElementBatchMixin,
+    PDElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -17,8 +19,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class Capacitor(DSSObj, CktElementMixin, PDElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots
+class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PDElementMixin._extra_slots
     _cls_name = 'Capacitor'
     _cls_idx = 22
     _cls_prop_idx = {
@@ -366,7 +368,7 @@ class CapacitorProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class CapacitorBatch(DSSBatch):
+class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _cls_name = 'Capacitor'
     _obj_cls = Capacitor
     _cls_idx = 22
@@ -716,7 +718,7 @@ class CapacitorBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ICapacitor(IDSSObj,CapacitorBatch):
+class ICapacitor(IDSSObj, CapacitorBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

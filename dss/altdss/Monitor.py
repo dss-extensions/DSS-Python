@@ -3,8 +3,9 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     MonitorObjMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -17,8 +18,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class Monitor(DSSObj, CktElementMixin, MonitorObjMixin):
-    __slots__ = CktElementMixin._extra_slots + MonitorObjMixin._extra_slots
+class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
+    __slots__ = CircuitElementMixin._extra_slots + MonitorObjMixin._extra_slots
     _cls_name = 'Monitor'
     _cls_idx = 47
     _cls_prop_idx = {
@@ -239,7 +240,7 @@ class MonitorProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class MonitorBatch(DSSBatch):
+class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'Monitor'
     _obj_cls = Monitor
     _cls_idx = 47
@@ -452,7 +453,7 @@ class MonitorBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IMonitor(IDSSObj,MonitorBatch):
+class IMonitor(IDSSObj, MonitorBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

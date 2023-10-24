@@ -447,7 +447,7 @@ class TShapeBatchProperties(TypedDict):
     Action: Union[AnyStr, int, enums.TShapeAction]
     Like: AnyStr
 
-class ITShape(IDSSObj,TShapeBatch):
+class ITShape(IDSSObj, TShapeBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

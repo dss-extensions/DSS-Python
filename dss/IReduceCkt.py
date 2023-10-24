@@ -1,7 +1,7 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2019-2020 Paulo Meira
+Copyright (c) 2019-2023 Paulo Meira
 '''
 from ._cffi_api_util import Base
 from typing import AnyStr
@@ -22,7 +22,7 @@ class IReduceCkt(Base):
 
     @property
     def KeepLoad(self) -> bool:
-        '''Keep load flag (T/F) for Reduction options that remove branches'''
+        '''Keep load flag for Reduction options that remove branches'''
         return self.CheckForError(self._lib.ReduceCkt_Get_KeepLoad()) != 0
         
     @KeepLoad.setter

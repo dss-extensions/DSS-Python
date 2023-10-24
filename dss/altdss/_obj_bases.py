@@ -6,8 +6,9 @@ Copyright (c) 2021-2023 DSS-Extensions contributors
 '''
 import numpy as np
 from typing import Union, List, AnyStr, Optional, Generator, Dict
-from .._types import Float64Array, Int32Array, Int8Array, Float32Array, Float64ArrayOrComplexArray
-from .._cffi_api_util import Base, DSSException
+from typing_extensions import Self
+from .._types import Float64Array, Int32Array, Int8Array, Float32Array, ComplexArray
+from .._cffi_api_util import Base, DSSException, CffiApiUtil
 from ..enums import DSSJSONFlags, OCPDevType, SolveModes
 
 try:
@@ -15,8 +16,6 @@ try:
     LIST_LIKE = (pd.Series, list, tuple)
 except ModuleNotFoundError:
     LIST_LIKE = (list, tuple)
-
-# from typing_extensions import Self
 
 # class NotSet:
 #     pass
@@ -243,6 +242,7 @@ class BatchInt32ArrayProxy:
         )
         batch._check_for_error()
         return self
+
 
 class Edit:
     '''
@@ -540,12 +540,14 @@ class DSSObj(Base):
         self._lib.Obj_EndEdit(self._ptr, num_changes)
         self._check_for_error()
 
+
 def _get_dispose_batch(lib, ffi):
     def _dispose_batch(ptr):
         if ptr != ffi.NULL:
             lib.Batch_Dispose(ptr)
 
     return _dispose_batch
+
 
 class DSSBatch(Base):
 
@@ -581,6 +583,14 @@ class DSSBatch(Base):
                 self._pointer = self._lib.Obj_GetListPointer(self._api_util.ctx, self._cls_idx)                
                 self._count = self._lib.Obj_GetCount(self._api_util.ctx, self._cls_idx)
 
+            self._check_for_error()
+            return
+
+        from_func = kwargs.get('from_func')
+        if from_func is not None:
+            func, *func_args = from_func
+            func(ptrptr, countptr, *func_args)
+            self._wrap_ptr(ptrptr, countptr)
             self._check_for_error()
             return
 
@@ -784,8 +794,20 @@ class DSSBatch(Base):
     def _get_batch_float_prop(self, index):
         return self._get_float64_array(self._lib.Batch_GetFloat64, *self._get_ptr_cnt(), index)
 
+    def _get_batch_float_func(self, funcname):
+        func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
+        res = self._get_float64_array(self._lib.Batch_GetFloat64FromFunc, *self._get_ptr_cnt(), func)
+        self._check_for_error()
+        return res
+
     def _get_batch_int32_prop(self, index):
         return self._get_int32_array(self._lib.Batch_GetInt32, *self._get_ptr_cnt(), index)
+
+    def _get_batch_int32_func(self, funcname):
+        func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
+        res = self._get_int32_array(self._lib.Batch_GetInt32FromFunc, *self._get_ptr_cnt(), func)
+        self._check_for_error()
+        return res
 
     def _get_batch_str_prop(self, index):
         return self._get_string_array(self._lib.Batch_GetString, *self._get_ptr_cnt(), index)
@@ -1012,7 +1034,6 @@ class DSSBatch(Base):
         #     obj._set_obj_array(idx, other_objs)
 
 
-
 class IDSSObj(Base):
     def __init__(self, iobj, obj_cls, batch_cls):
         super().__init__(iobj._api_util)
@@ -1172,10 +1193,11 @@ class NonUniformBatch(Base):
         '_ptr',
         '_cnt',
         '_pycls',
-        '_ffi'
+        '_ffi',
+        '_copy_safe'
     )
 
-    def __init__(self, func, parent, pycls=None):
+    def __init__(self, func, parent, pycls=None, copy_safe=False):
         super().__init__(parent._api_util)
         self._ffi = self._api_util.ffi
         self._func = func
@@ -1183,21 +1205,21 @@ class NonUniformBatch(Base):
         self._pycls = pycls
         self._ptr = None
         self._cnt = None
+        self._copy_safe = copy_safe
 
     def _fill_data(self):
+        if self._copysafe and self._cnt is None:
+            return (self._ptr, self._cnt)
+                
         self._ptr = self._ffi.gc(self._ffi.new('void***'), _get_dispose_batch(self._lib, self._ffi))
         self._cnt = self._ffi.new('int32_t[4]')
         self._func(self._ptr, self._cnt, self._parent_ptr)
+
         return (self._ptr, self._cnt)
         
-    def _dispose_data(self):
-        self._ptr = None
-        self._cnt = None
-
     def __len__(self):
         _, cnt = self._fill_data()
         res = cnt[0]
-        self._dispose_data()
         return res
 
     def __iter__(self):
@@ -1232,7 +1254,6 @@ class NonUniformBatch(Base):
                 for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
             ]
 
-        self._dispose_data()
         return res
 
     def to_list(self):
@@ -1249,7 +1270,6 @@ class NonUniformBatch(Base):
             for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
         ]
         self._check_for_error()
-        self._dispose_data()
         return res
 
     def FullName(self) -> List[str]:
@@ -1264,12 +1284,10 @@ class NonUniformBatch(Base):
             for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
         ]
         self._check_for_error()
-        self._dispose_data()
         return res
-       
 
 
-class CktElementMixin:
+class CircuitElementMixin:
     __slots__ = () 
     # To avoid layout issues, let the final class use the following instead
     _extra_slots = ['Controllers', ]
@@ -1323,7 +1341,7 @@ class CktElementMixin:
     def OCPDeviceIndex(self) -> int:
         return self._lib.Alt_CE_Get_OCPDeviceIndex(self._ptr)
 
-    def OCPDeviceType(self) -> OCPDevType: #TODO: enum
+    def OCPDeviceType(self) -> OCPDevType:
         return OCPDevType(self._lib.Alt_CE_Get_OCPDeviceType(self._ptr))
 
     def IsIsolated(self) -> bool:
@@ -1356,32 +1374,32 @@ class CktElementMixin:
     def NodeRef(self) -> Float64Array:
         return self._get_int32_array(self._lib.Alt_CE_Get_NodeRef, self._ptr)
 
-    def ComplexSeqVoltages(self) -> Float64Array:
-        return self._get_complex128_array(self._lib.Alt_CE_Get_ComplexSeqVoltages, self._ptr)
+    def ComplexSeqVoltages(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_ComplexSeqVoltages, self._ptr)
 
-    def ComplexSeqCurrents(self) -> Float64Array:
-        return self._get_complex128_array(self._lib.Alt_CE_Get_ComplexSeqCurrents, self._ptr)
+    def ComplexSeqCurrents(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_ComplexSeqCurrents, self._ptr)
 
     def Currents(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_Currents, self._ptr)
 
-    def Voltages(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CE_Get_Voltages, self._ptr)
+    def Voltages(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_Voltages, self._ptr)
 
     def Losses(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_Losses, self._ptr)
 
-    def PhaseLosses(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CE_Get_PhaseLosses, self._ptr)
+    def PhaseLosses(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_PhaseLosses, self._ptr)
 
-    def Powers(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CE_Get_Powers, self._ptr)
+    def Powers(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_Powers, self._ptr)
 
     def SeqCurrents(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_SeqCurrents, self._ptr)
 
-    def SeqPowers(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CE_Get_SeqPowers, self._ptr)
+    def SeqPowers(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_SeqPowers, self._ptr)
 
     def SeqVoltages(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_SeqVoltages, self._ptr)
@@ -1389,8 +1407,8 @@ class CktElementMixin:
     def Residuals(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_Residuals, self._ptr)
 
-    def Yprim(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CE_Get_Yprim, self._ptr)
+    def Yprim(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_Yprim, self._ptr)
 
     def CurrentsMagAng(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_CurrentsMagAng, self._ptr)
@@ -1398,8 +1416,16 @@ class CktElementMixin:
     def VoltagesMagAng(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_VoltagesMagAng, self._ptr)
 
-    def TotalPowers(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CE_Get_TotalPowers, self._ptr)
+    def TotalPowers(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_TotalPowers, self._ptr)
+
+
+class CircuitElementBatchMixin:
+    __slots__ = ()
+
+    def GUID(self) -> str:
+        '''GUID/UUID for each object. Currently used only in the CIM-related methods.'''
+        return [self._get_string(self._lib.Alt_CE_Get_GUID(ptr)) for ptr in self._unpack()]
 
 
 class ElementHasRegistersMixin:
@@ -1455,6 +1481,54 @@ class PCElementMixin:
         return self._get_string(self._lib.Alt_PCE_Get_EnergyMeterName(self._ptr))
 
 
+class PCElementBatchMixin:
+    __slots__ = ()
+
+    def EnergyMeter(self) -> List[DSSObj]:
+        return [self._get_obj_from_ptr(self._lib.Alt_PCE_Get_EnergyMeter(ptr)) for ptr in self._unpack()]
+
+    def EnergyMeterName(self) -> List[str]:
+        return [self._get_string(self._lib.Alt_PCE_Get_EnergyMeterName(ptr)) for ptr in self._unpack()]
+
+    def Handle(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_Handle")
+
+    def NumConductors(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_NumConductors")
+
+    def NumPhases(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_NumPhases")
+
+    def NumTerminals(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_NumTerminals")
+
+    def NumControllers(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_NumControllers")
+
+    def OCPDevice(self) -> List[Union[DSSObj, None]]:
+        return self._get_obj_from_ptr(self._lib.Alt_CE_Get_OCPDevice(self._ptr))
+
+    def OCPDeviceIndex(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_OCPDeviceIndex")
+
+    def OCPDeviceType(self) -> OCPDevType: #TODO: enum
+        return [
+            OCPDevType(val) for val in self._get_batch_int32_func("Alt_CE_Get_OCPDeviceType")
+        ]
+
+    # def IsIsolated(self) -> bool:
+    #     return self._lib.Alt_CE_Get_IsIsolated(self._ptr) != 0
+
+    # def HasOCPDevice(self) -> bool:
+    #     return self._lib.Alt_CE_Get_HasOCPDevice(self._ptr) != 0
+
+    # def HasSwitchControl(self) -> bool:
+    #     return self._lib.Alt_CE_Get_HasSwitchControl(self._ptr) != 0
+
+    # def HasVoltControl(self) -> bool:
+    #     return self._lib.Alt_CE_Get_HasVoltControl(self._ptr) != 0
+
+
 class PDElementMixin:
     __slots__ = ()
     _extra_slots = []
@@ -1493,6 +1567,43 @@ class PDElementMixin:
         return self._lib.Alt_PDE_Get_SectionID(self._ptr)
 
 
+class PDElementBatchMixin:
+    __slots__ = ()
+
+    def EnergyMeter(self) -> List[DSSObj]:
+        return [self._get_obj_from_ptr(self._lib.Alt_PDE_Get_EnergyMeter(ptr)) for ptr in self._unpack()]
+
+    def EnergyMeterName(self) -> List[str]:
+        return [self._get_string(self._lib.Alt_PDE_Get_EnergyMeterName(ptr)) for ptr in self._unpack()]
+
+    def IsShunt(self) -> List[bool]:
+        return [self._lib.Alt_PDE_Get_IsShunt(ptr) != 0 for ptr in self._unpack()]
+
+    def AccumulatedL(self) -> Float64Array:
+        return self._get_batch_float_func("Alt_PDE_Get_AccumulatedL")
+
+    def Lambda(self) -> Float64Array:
+        return self._get_batch_float_func("Alt_PDE_Get_Lambda")
+
+    def NumCustomers(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_PDE_Get_NumCustomers")
+
+    def ParentPDElement(self) -> List[DSSObj]:
+        return [self._lib.Alt_PDE_Get_ParentPDElement(self._ptr) for ptr in self._unpack()]
+
+    def TotalCustomers(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_PDE_Get_TotalCustomers")
+
+    def FromTerminal(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_PDE_Get_FromTerminal")
+
+    def TotalMiles(self) -> Float64Array:
+        return self._get_batch_float_func("Alt_PDE_Get_TotalMiles")
+
+    def SectionID(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_PDE_Get_SectionID")
+
+
 class LoadShapeObjMixin:
     # TODO: integrate Alt_LoadShape_Set_Points
     __slots__ = ()
@@ -1513,6 +1624,28 @@ class LoadShapeObjMixin:
         this operation is not allowed.
         '''
         self._lib.Alt_LoadShape_UseFloat64(self._ptr)
+
+
+class LoadShapeBatchMixin:
+    __slots__ = ()
+
+    def UseFloat32(self):
+        '''
+        If the loadshapes are using float64/double precision internal data, use this function
+        to convert to float32/single precision. If the data is not owned by the loadshape,
+        this operation is not allowed.
+        '''
+        for ptr in self._unpack():
+            self._lib.Alt_LoadShape_UseFloat32(ptr)
+
+    def UseFloat64(self):
+        '''
+        If the loadshape are using float32/single precision internal data, use this function
+        to convert to float64/double precision. If the data is not owned by the loadshape,
+        this operation is not allowed.
+        '''
+        for ptr in self._unpack():
+            self._lib.Alt_LoadShape_UseFloat64(ptr)
 
 
 class MonitorObjMixin:
@@ -1618,229 +1751,57 @@ class MonitorObjMixin:
         return pd.DataFrame(data, columns=columns)
 
 
-
-class TransformerObjMixin:
+class TransformerObjMixin: #TODO: batch version?
     __slots__ = ()
     _extra_slots = []
 
-    def WindingCurrents(self) -> Float64ArrayOrComplexArray:
-        '''
-        Complex array of voltages for active winding
-        
-        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
-        in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
-        '''
-        return self._get_float64_array(self._lib.Alt_Transformer_Get_WdgCurrents, self._ptr)
-
-    def WindingVoltages(self) -> Float64ArrayOrComplexArray:
+    def WindingCurrents(self) -> ComplexArray:
         '''
         All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)
 
         WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
         in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
         '''
-        return self._get_float64_array(self._lib.Alt_Transformer_Get_WdgVoltages, self._ptr)
+        return self._get_fcomplex128_array(self._lib.Alt_Transformer_Get_WdgCurrents, self._ptr)
 
-    def LossesByType(self) -> Float64ArrayOrComplexArray:
+    def WindingVoltages(self, winding: int) -> ComplexArray:
+        '''
+        Complex array of voltages for a target winding
+        
+        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
+        in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+        '''
+        return self._get_fcomplex128_array(self._lib.Alt_Transformer_Get_WdgVoltages, self._ptr, winding)
+
+    def LossesByType(self) -> ComplexArray:
         '''
         Complex array with the losses by type (total losses, load losses, no-load losses), in VA
         '''
-        return self._get_float64_array(self._lib.Alt_Transformer_Get_LossesByType, self._ptr)
+        return self._get_fcomplex128_array(self._lib.Alt_Transformer_Get_LossesByType, self._ptr)
 
 
-class MeterSection:
+class CircuitElementBatch(NonUniformBatch, CircuitElementBatchMixin):
     '''
-    Encapsulates meter section functions
+    Non-uniform batch of circuit elements. Can contain distinct types, while providing 
+    common functions
     '''
-    __slots__ = (
-        '_meter',
-        '_idx',
-        '_lib',
-    )
+    pass
 
-    def __init__(self, meter, idx):
-        self._meter = meter
-        self._idx = idx
-        self._lib = meter._lib
 
-    def Index(self) -> int:
-        return self._idx
-        
-    def AvgRepairTime(self) -> float:
-        return self._lib.Alt_MeterSection_AvgRepairTime(self._meter._ptr, self._idx)
-
-    def FaultRateXRepairHrs(self) -> float:
-        return self._lib.Alt_MeterSection_FaultRateXRepairHrs(self._meter._ptr, self._idx)
-
-    def NumBranches(self) -> int:
-        return self._lib.Alt_MeterSection_NumBranches(self._meter._ptr, self._idx)
-
-    def NumCustomers(self) -> int:
-        return self._lib.Alt_MeterSection_NumCustomers(self._meter._ptr, self._idx)
-
-    def OCPDeviceType(self) -> int:
-        return self._lib.Alt_MeterSection_OCPDeviceType(self._meter._ptr, self._idx)
-
-    def SumBranchFaultRates(self) -> float:
-        return self._lib.Alt_MeterSection_SumBranchFaultRates(self._meter._ptr, self._idx)
-
-    def SequenceIndex(self) -> int:
-        return self._lib.Alt_MeterSection_SequenceIndex(self._meter._ptr, self._idx)
-
-    def TotalCustomers(self) -> int:
-        return self._lib.Alt_MeterSection_TotalCustomers(self._meter._ptr, self._idx)
-
-    def as_dict(self):
-        return {
-            k: getattr(self, k)() for k in (
-                'Index',
-                'AvgRepairTime',
-                'FaultRateXRepairHrs',
-                'NumBranches',
-                'NumCustomers',
-                'OCPDeviceType',
-                'SumBranchFaultRates',
-                'SequenceIndex',
-                'TotalCustomers'
-            )
-        }
-
-class MeterSections:
+class PCElementBatch(NonUniformBatch, CircuitElementBatchMixin, PCElementBatchMixin, ElementHasRegistersMixin):
     '''
-    Encapsulates meter sections to provide iteration and indexing.
+    Non-uniform batch of PC elements. Can contain distinct PC types, while providing 
+    common functions
     '''
-    __slots__ = (
-        '_meter',
-    )
-
-    def __init__(self, meter):
-        self._meter = meter
-
-    def __call__(self, idx: int) -> MeterSection:
-        '''Returns a meter section by index'''
-        if idx > 0 and idx <= self._meter.NumSections():
-            return MeterSection(self._meter, idx)
-        
-        raise IndexError(f'Invalid section index for meter "{self._meter.Name}"; this meter has {self._meter.NumSections()} sections in total.')
-
-    __getitem__ = __call__
-
-    def __len__(self):
-        return self._meter.NumSections()
-
-    def __iter__(self):
-        for idx in range(1, self._meter.NumSections() + 1):
-            yield self[idx]
+    pass
 
 
-class EnergyMeterObjMixin:
-    __slots__ = () 
-    # To avoid layout issues, let the final class use the following instead
-    _extra_slots = [
-        'ZonePCEs',
-        'EndElements',
-        'Branches',
-        'Loads',
-        'Sequence',
-    ]
+class PDElementBatch(NonUniformBatch, CircuitElementBatchMixin, PDElementBatchMixin):
+    '''
+    Non-uniform batch of PD elements. Can contain distinct PD types, while providing 
+    common functions
+    '''
+    pass
 
-    '''Accessor for all power converting elements (PCEs) within the area covered by this energy meter.'''
-    ZonePCEs: NonUniformBatch
-        
-    '''Accessor for all zone end elements for this meter.'''
-    EndElements: NonUniformBatch
-
-    '''Accessor for all branches in the meter zone.'''
-    Branches: NonUniformBatch
-
-    '''Accessor for all loads in the meter zone (internal LoadList).'''
-    Loads: NonUniformBatch #TODO: actually... is this uniform?
-
-    '''Accessor for all branches in the meter zone (internal SequenceList), in lexical order'''
-    Sequence: NonUniformBatch
-
-
-    def __init__(self, api_util):
-        self.ZonePCEs = NonUniformBatch(self._lib.Alt_Meter_Get_ZonePCEs, self)
-        self.EndElements = NonUniformBatch(self._lib.Alt_Meter_Get_EndElements, self)
-        self.Branches = NonUniformBatch(self._lib.Alt_Meter_Get_BranchesInZone, self)
-        self.Loads = NonUniformBatch(self._lib.Alt_Meter_Get_Loads, self)
-        self.Sequence = NonUniformBatch(self._lib.Alt_Meter_Get_SequenceList, self)
-
-    def TotalCustomers(self) -> int:
-        '''Total Number of customers in this zone (downline from the EnergyMeter)'''
-        return self._lib.Alt_Meter_Get_TotalCustomers(self._ptr)
-
-    def CountEndElements(self) -> int:
-        '''Number of zone end elements in the active meter zone.'''
-        return self._lib.Alt_Meter_Get_CountEndElements(self._ptr)
-
-    def NumSections(self) -> int:
-        '''Number of feeder sections in this meter's zone'''
-        return self._lib.Alt_Meter_Get_NumSections(self._ptr)
-
-    def DoReliabilityCalc(self, assumeRestoration) -> None:
-        '''Calculate reliability indices'''
-        self.lib._Alt_Meter_DoReliabilityCalc(self._ptr, assumeRestoration)
-
-    @property
-    def CalcCurrent(self) -> Float64Array:
-        '''
-        Set/get the magnitude of the real part of the Calculated Current (normally determined by solution) 
-        for the meter to force some behavior on Load Allocation
-        '''
-        return self._get_float64_array(self._lib.Alt_Meter_Get_CalcCurrent, self._ptr)
-
-    @CalcCurrent.setter
-    def CalcCurrent(self, value: Float64Array):
-        value, value_ptr, value_count = self._prepare_float64_array(value)
-        self._lib.Alt_Meter_Set_CalcCurrent(self._ptr, value_ptr, value_count)
-
-    @property
-    def AllocFactors(self) -> Float64Array:
-        '''Set the phase allocation factors for this meter.'''
-        return self._get_float64_array(self._lib.Alt_Meter_Get_AllocFactors, self._ptr)
-
-    @AllocFactors.setter
-    def AllocFactors(self, value: Float64Array):
-        value, value_ptr, value_count = self._prepare_float64_array(value)
-        self._lib.Alt_Meter_Set_AllocFactors(self._ptr, value_ptr, value_count)
-
-    def Section(self, idx: int) -> MeterSection:
-        '''Returns a wrapper for a single meter section'''
-        return MeterSection(self, idx)
-
-    def Sections(self) -> MeterSections:
-        '''Returns a wrapper for meter sections'''
-        return MeterSections(self)
-
-
-
-class IEnergyMeterMixin:
-    #TODO: automate create of these and others
-    # SampleAll = IMeters.SampleAll
-    # SaveAll = IMeters.SaveAll
-    # ResetAll = IMeters.ResetAll
-
-    def CloseAllDIFiles(self):
-        '''Close all Demand Interval files. Users are required to close the DI files at the end of a run.'''
-        self._check_for_error(self._lib.Meters_CloseAllDIFiles())
-
-    def OpenAllDIFiles(self):
-        '''Open Demand Interval (DI) files'''
-        self._check_for_error(self._lib.Meters_OpenAllDIFiles())
-
-    def DIFilesAreOpen(self) -> bool:
-        '''Indicates if Demand Interval (DI) files have been properly opened.'''
-        return self._check_for_error(self._lib.Meters_Get_DIFilesAreOpen()) != 0
-
-    def DoReliabilityCalc(self, assumeRestoration: bool):
-        '''Calculate reliability indices for ALL meters'''
-        for meter in self:
-            meter.DoReliabilityCalc(assumeRestoration)
-
-    def Totals(self) -> Float64Array:
-        '''Returns the totals of all registers of all meters'''
-        self._check_for_error(self._lib.Meters_Get_Totals_GR())
-        return self._get_float64_gr_array()
-
+import warnings
+warnings.warn('TODO: merge things like IPDElements into batches')

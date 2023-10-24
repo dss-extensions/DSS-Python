@@ -537,7 +537,7 @@ class WireDataBatchProperties(TypedDict):
     CapRadius: Union[float, Float64Array]
     Like: AnyStr
 
-class IWireData(IDSSObj,WireDataBatch):
+class IWireData(IDSSObj, WireDataBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

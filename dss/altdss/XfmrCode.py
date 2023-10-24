@@ -1169,7 +1169,7 @@ class XfmrCodeBatchProperties(TypedDict):
     Ratings: Float64Array
     Like: AnyStr
 
-class IXfmrCode(IDSSObj,XfmrCodeBatch):
+class IXfmrCode(IDSSObj, XfmrCodeBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

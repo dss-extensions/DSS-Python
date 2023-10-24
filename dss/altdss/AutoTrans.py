@@ -3,8 +3,11 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PDElementMixin,
+    TransformerObjMixin,
+    CircuitElementBatchMixin,
+    PDElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -17,8 +20,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class AutoTrans(DSSObj, CktElementMixin, PDElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots
+class AutoTrans(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PDElementMixin._extra_slots + TransformerObjMixin._extra_slots
     _cls_name = 'AutoTrans'
     _cls_idx = 41
     _cls_prop_idx = {
@@ -734,7 +737,7 @@ class AutoTransProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class AutoTransBatch(DSSBatch):
+class AutoTransBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _cls_name = 'AutoTrans'
     _obj_cls = AutoTrans
     _cls_idx = 41
@@ -1443,7 +1446,7 @@ class AutoTransBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IAutoTrans(IDSSObj,AutoTransBatch):
+class IAutoTrans(IDSSObj, AutoTransBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

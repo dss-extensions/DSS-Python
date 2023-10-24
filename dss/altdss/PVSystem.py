@@ -3,9 +3,11 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
     ElementHasRegistersMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -23,8 +25,8 @@ from .Spectrum import Spectrum as SpectrumObj
 from .TShape import TShape
 from .XYcurve import XYcurve
 
-class PVSystem(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
+class PVSystem(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
     _cls_name = 'PVSystem'
     _cls_idx = 35
     _cls_prop_idx = {
@@ -1066,7 +1068,7 @@ class PVSystemProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class PVSystemBatch(DSSBatch):
+class PVSystemBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'PVSystem'
     _obj_cls = PVSystem
     _cls_idx = 35
@@ -2022,7 +2024,7 @@ class PVSystemBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IPVSystem(IDSSObj,PVSystemBatch):
+class IPVSystem(IDSSObj, PVSystemBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

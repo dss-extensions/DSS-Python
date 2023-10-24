@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PDElementMixin,
+    CircuitElementBatchMixin,
+    PDElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -21,8 +23,8 @@ from .LineGeometry import LineGeometry
 from .LineSpacing import LineSpacing
 from .WireData import WireData
 
-class Line(DSSObj, CktElementMixin, PDElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots
+class Line(DSSObj, CircuitElementMixin, PDElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PDElementMixin._extra_slots
     _cls_name = 'Line'
     _cls_idx = 15
     _cls_prop_idx = {
@@ -710,7 +712,7 @@ class LineProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class LineBatch(DSSBatch):
+class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _cls_name = 'Line'
     _obj_cls = Line
     _cls_idx = 15
@@ -1365,7 +1367,7 @@ class LineBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ILine(IDSSObj,LineBatch):
+class ILine(IDSSObj, LineBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

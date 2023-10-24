@@ -250,7 +250,7 @@ class GrowthShapeBatchProperties(TypedDict):
     DblFile: Union[AnyStr, List[AnyStr]]
     Like: AnyStr
 
-class IGrowthShape(IDSSObj,GrowthShapeBatch):
+class IGrowthShape(IDSSObj, GrowthShapeBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

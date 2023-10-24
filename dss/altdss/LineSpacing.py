@@ -240,7 +240,7 @@ class LineSpacingBatchProperties(TypedDict):
     Units: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]
     Like: AnyStr
 
-class ILineSpacing(IDSSObj,LineSpacingBatch):
+class ILineSpacing(IDSSObj, LineSpacingBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

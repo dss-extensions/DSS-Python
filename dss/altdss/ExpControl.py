@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -16,8 +17,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class ExpControl(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class ExpControl(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'ExpControl'
     _cls_idx = 43
     _cls_prop_idx = {
@@ -304,7 +305,7 @@ class ExpControlProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ExpControlBatch(DSSBatch):
+class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'ExpControl'
     _obj_cls = ExpControl
     _cls_idx = 43
@@ -583,7 +584,7 @@ class ExpControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IExpControl(IDSSObj,ExpControlBatch):
+class IExpControl(IDSSObj, ExpControlBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

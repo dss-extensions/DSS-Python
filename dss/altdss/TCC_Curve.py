@@ -161,7 +161,7 @@ class TCC_CurveBatchProperties(TypedDict):
     T_Array: Float64Array
     Like: AnyStr
 
-class ITCC_Curve(IDSSObj,TCC_CurveBatch):
+class ITCC_Curve(IDSSObj, TCC_CurveBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

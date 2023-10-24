@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -18,8 +20,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .Spectrum import Spectrum as SpectrumObj
 
-class GICLine(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
+class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'GICLine'
     _cls_idx = 44
     _cls_prop_idx = {
@@ -341,7 +343,7 @@ class GICLineProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class GICLineBatch(DSSBatch):
+class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'GICLine'
     _obj_cls = GICLine
     _cls_idx = 44
@@ -641,7 +643,7 @@ class GICLineBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IGICLine(IDSSObj,GICLineBatch):
+class IGICLine(IDSSObj, GICLineBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

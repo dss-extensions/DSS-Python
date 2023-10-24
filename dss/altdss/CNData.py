@@ -769,7 +769,7 @@ class CNDataBatchProperties(TypedDict):
     CapRadius: Union[float, Float64Array]
     Like: AnyStr
 
-class ICNData(IDSSObj,CNDataBatch):
+class ICNData(IDSSObj, CNDataBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

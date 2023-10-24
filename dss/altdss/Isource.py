@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -19,8 +21,8 @@ from . import enums
 from .LoadShape import LoadShape
 from .Spectrum import Spectrum as SpectrumObj
 
-class Isource(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
+class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'Isource'
     _cls_idx = 17
     _cls_prop_idx = {
@@ -382,7 +384,7 @@ class IsourceProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IsourceBatch(DSSBatch):
+class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'Isource'
     _obj_cls = Isource
     _cls_idx = 17
@@ -716,7 +718,7 @@ class IsourceBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IIsource(IDSSObj,IsourceBatch):
+class IIsource(IDSSObj, IsourceBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

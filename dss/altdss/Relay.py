@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -17,8 +18,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .TCC_Curve import TCC_Curve
 
-class Relay(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class Relay(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'Relay'
     _cls_idx = 31
     _cls_prop_idx = {
@@ -1032,7 +1033,7 @@ class RelayProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class RelayBatch(DSSBatch):
+class RelayBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'Relay'
     _obj_cls = Relay
     _cls_idx = 31
@@ -1973,7 +1974,7 @@ class RelayBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IRelay(IDSSObj,RelayBatch):
+class IRelay(IDSSObj, RelayBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

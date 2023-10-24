@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -18,8 +20,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .Spectrum import Spectrum as SpectrumObj
 
-class VSConverter(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
+class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'VSConverter'
     _cls_idx = 46
     _cls_prop_idx = {
@@ -409,7 +411,7 @@ class VSConverterProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class VSConverterBatch(DSSBatch):
+class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'VSConverter'
     _obj_cls = VSConverter
     _cls_idx = 46
@@ -774,7 +776,7 @@ class VSConverterBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IVSConverter(IDSSObj,VSConverterBatch):
+class IVSConverter(IDSSObj, VSConverterBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

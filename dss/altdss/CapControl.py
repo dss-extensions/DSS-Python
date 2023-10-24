@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -18,8 +19,8 @@ from . import enums
 from .Capacitor import Capacitor as CapacitorObj
 from .LoadShape import LoadShape
 
-class CapControl(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class CapControl(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'CapControl'
     _cls_idx = 24
     _cls_prop_idx = {
@@ -530,7 +531,7 @@ class CapControlProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class CapControlBatch(DSSBatch):
+class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'CapControl'
     _obj_cls = CapControl
     _cls_idx = 24
@@ -1003,7 +1004,7 @@ class CapControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class ICapControl(IDSSObj,CapControlBatch):
+class ICapControl(IDSSObj, CapControlBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

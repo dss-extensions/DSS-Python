@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -17,8 +18,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .XYcurve import XYcurve
 
-class InvControl(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class InvControl(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'InvControl'
     _cls_idx = 42
     _cls_prop_idx = {
@@ -1040,7 +1041,7 @@ class InvControlProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class InvControlBatch(DSSBatch):
+class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'InvControl'
     _obj_cls = InvControl
     _cls_idx = 42
@@ -2018,7 +2019,7 @@ class InvControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IInvControl(IDSSObj,InvControlBatch):
+class IInvControl(IDSSObj, InvControlBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

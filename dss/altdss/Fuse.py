@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -17,8 +18,8 @@ from .._cffi_api_util import Base
 from . import enums
 from .TCC_Curve import TCC_Curve
 
-class Fuse(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class Fuse(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'Fuse'
     _cls_idx = 33
     _cls_prop_idx = {
@@ -309,7 +310,7 @@ class FuseProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class FuseBatch(DSSBatch):
+class FuseBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'Fuse'
     _obj_cls = Fuse
     _cls_idx = 33
@@ -591,7 +592,7 @@ class FuseBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IFuse(IDSSObj,FuseBatch):
+class IFuse(IDSSObj, FuseBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

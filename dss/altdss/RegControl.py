@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -18,8 +19,8 @@ from . import enums
 from .AutoTrans import AutoTrans
 from .Transformer import Transformer as TransformerObj
 
-class RegControl(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class RegControl(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'RegControl'
     _cls_idx = 21
     _cls_prop_idx = {
@@ -590,7 +591,7 @@ class RegControlProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class RegControlBatch(DSSBatch):
+class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'RegControl'
     _obj_cls = RegControl
     _cls_idx = 21
@@ -1132,7 +1133,7 @@ class RegControlBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IRegControl(IDSSObj,RegControlBatch):
+class IRegControl(IDSSObj, RegControlBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

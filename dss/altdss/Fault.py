@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PDElementMixin,
+    CircuitElementBatchMixin,
+    PDElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -17,8 +19,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class Fault(DSSObj, CktElementMixin, PDElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PDElementMixin._extra_slots
+class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PDElementMixin._extra_slots
     _cls_name = 'Fault'
     _cls_idx = 25
     _cls_prop_idx = {
@@ -287,7 +289,7 @@ class FaultProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class FaultBatch(DSSBatch):
+class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _cls_name = 'Fault'
     _obj_cls = Fault
     _cls_idx = 25
@@ -544,7 +546,7 @@ class FaultBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IFault(IDSSObj,FaultBatch):
+class IFault(IDSSObj, FaultBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

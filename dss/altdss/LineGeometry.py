@@ -617,7 +617,7 @@ class LineGeometryBatchProperties(TypedDict):
     LineType: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array]
     Like: AnyStr
 
-class ILineGeometry(IDSSObj,LineGeometryBatch):
+class ILineGeometry(IDSSObj, LineGeometryBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

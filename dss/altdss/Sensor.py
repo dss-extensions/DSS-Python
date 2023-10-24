@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -16,8 +17,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class Sensor(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class Sensor(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'Sensor'
     _cls_idx = 49
     _cls_prop_idx = {
@@ -283,7 +284,7 @@ class SensorProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class SensorBatch(DSSBatch):
+class SensorBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'Sensor'
     _obj_cls = Sensor
     _cls_idx = 49
@@ -545,7 +546,7 @@ class SensorBatchProperties(TypedDict):
 
 #TODO: warn that begin_edit=False with extra params will be ignored?
 
-class ISensor(IDSSObj,SensorBatch):
+class ISensor(IDSSObj, SensorBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

@@ -3,8 +3,10 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -19,8 +21,8 @@ from . import enums
 from .LoadShape import LoadShape
 from .Spectrum import Spectrum as SpectrumObj
 
-class IndMach012(DSSObj, CktElementMixin, PCElementMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots
+class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'IndMach012'
     _cls_idx = 39
     _cls_prop_idx = {
@@ -502,7 +504,7 @@ class IndMach012Properties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IndMach012Batch(DSSBatch):
+class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'IndMach012'
     _obj_cls = IndMach012
     _cls_idx = 39
@@ -948,7 +950,7 @@ class IndMach012BatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IIndMach012(IDSSObj,IndMach012Batch):
+class IIndMach012(IDSSObj, IndMach012Batch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

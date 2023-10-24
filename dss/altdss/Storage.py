@@ -3,9 +3,11 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
     PCElementMixin,
     ElementHasRegistersMixin,
+    CircuitElementBatchMixin,
+    PCElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -22,8 +24,8 @@ from .LoadShape import LoadShape
 from .Spectrum import Spectrum as SpectrumObj
 from .XYcurve import XYcurve
 
-class Storage(DSSObj, CktElementMixin, PCElementMixin, ElementHasRegistersMixin):
-    __slots__ = CktElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
+class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMixin):
+    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots + ElementHasRegistersMixin._extra_slots
     _cls_name = 'Storage'
     _cls_idx = 29
     _cls_prop_idx = {
@@ -1224,7 +1226,7 @@ class StorageProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class StorageBatch(DSSBatch):
+class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _cls_name = 'Storage'
     _obj_cls = Storage
     _cls_idx = 29
@@ -2339,7 +2341,7 @@ class StorageBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IStorage(IDSSObj,StorageBatch):
+class IStorage(IDSSObj, StorageBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):

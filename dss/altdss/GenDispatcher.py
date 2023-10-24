@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from ._obj_bases import (
-    CktElementMixin,
+    CircuitElementMixin,
+    CircuitElementBatchMixin,
     BatchFloat64ArrayProxy,
     BatchInt32ArrayProxy,
     DSSObj,
@@ -16,8 +17,8 @@ from .._types import Float64Array, Int32Array
 from .._cffi_api_util import Base
 from . import enums
 
-class GenDispatcher(DSSObj, CktElementMixin):
-    __slots__ = CktElementMixin._extra_slots
+class GenDispatcher(DSSObj, CircuitElementMixin):
+    __slots__ = CircuitElementMixin._extra_slots
     _cls_name = 'GenDispatcher'
     _cls_idx = 28
     _cls_prop_idx = {
@@ -192,7 +193,7 @@ class GenDispatcherProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class GenDispatcherBatch(DSSBatch):
+class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     _cls_name = 'GenDispatcher'
     _obj_cls = GenDispatcher
     _cls_idx = 28
@@ -359,7 +360,7 @@ class GenDispatcherBatchProperties(TypedDict):
     Enabled: bool
     Like: AnyStr
 
-class IGenDispatcher(IDSSObj,GenDispatcherBatch):
+class IGenDispatcher(IDSSObj, GenDispatcherBatch):
     # __slots__ = () #TODO
 
     def __init__(self, iobj):
