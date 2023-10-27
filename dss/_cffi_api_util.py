@@ -265,7 +265,7 @@ class Base:
 
         correct_key = self.__class__._dss_attributes.get(key.lower(), key)
         if key != correct_key:
-            warnings.warn('Wrong capitalization for attribute (getter) {}.{}: {}'.format(self.__class__.__name__, correct_key, key))
+            warnings.warn('Wrong capitalization for attribute (getter) {}.{}: {}'.format(self.__class__.__name__, correct_key, key), stacklevel=2)
 
         return object.__getattribute__(self, correct_key)
 
