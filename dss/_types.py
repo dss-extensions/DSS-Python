@@ -7,6 +7,7 @@ try:
     Float32Array = npt.NDArray[np.float32]
     Int32Array = npt.NDArray[np.int32]
     Int8Array = npt.NDArray[np.int8]
+    BoolArray = npt.NDArray[bool]
 except (ModuleNotFoundError, ImportError, AttributeError):
     from typing import List
     ComplexArray = List[complex]
@@ -14,6 +15,7 @@ except (ModuleNotFoundError, ImportError, AttributeError):
     Float32Array = List[np.float32]
     Int32Array = List[np.int32]
     Int8Array = List[np.int8]
+    BoolArray = List[bool]
 
 Float64ArrayOrComplexArray = Union[Float64Array, ComplexArray]
 Float64ArrayOrSimpleComplex = Union[Float64Array, complex]

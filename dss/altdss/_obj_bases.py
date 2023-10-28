@@ -7,7 +7,7 @@ Copyright (c) 2021-2023 DSS-Extensions contributors
 import numpy as np
 from typing import Union, List, AnyStr, Optional, Generator, Dict
 from typing_extensions import Self
-from .._types import Float64Array, Int32Array, Int8Array, Float32Array, ComplexArray
+from .._types import Float64Array, Int32Array, Int8Array, Float32Array, ComplexArray, BoolArray
 from .._cffi_api_util import Base, DSSException, CffiApiUtil
 from ..enums import DSSJSONFlags, OCPDevType, SolveModes
 
@@ -17,6 +17,7 @@ try:
 except ModuleNotFoundError:
     LIST_LIKE = (list, tuple)
 
+import warnings
 # class NotSet:
 #     pass
 
@@ -343,7 +344,7 @@ class DSSObj(Base):
 
         (API Extension)
         '''
-        s = self._lib.Obj_ToJSON(self._ptr, options)
+        s = self._ffi.gc(self._lib.Obj_ToJSON(self._ptr, options), self._lib.DSS_Dispose_String)
         self._check_for_error()
         return self._ffi.string(s).decode(self._api_util.codec)
 
@@ -647,7 +648,7 @@ class DSSBatch(Base):
 
         (API Extension)
         '''
-        s = self._lib.Batch_ToJSON(*self._get_ptr_cnt(), options)
+        s = self._ffi.gc(self._lib.Batch_ToJSON(*self._get_ptr_cnt(), options), self._lib.DSS_Dispose_String)
         self._check_for_error()
         return self._ffi.string(s).decode(self._api_util.codec)
 
@@ -797,6 +798,12 @@ class DSSBatch(Base):
     def _get_batch_float_func(self, funcname):
         func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
         res = self._get_float64_array(self._lib.Batch_GetFloat64FromFunc, *self._get_ptr_cnt(), func)
+        self._check_for_error()
+        return res
+
+    def _get_batch_float64_int32_func(self, funcname, funcArg: int):
+        func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
+        res = self._get_float64_array(self._lib.Batch_GetFloat64FromFunc2, *self._get_ptr_cnt(), func, funcArg)
         self._check_for_error()
         return res
 
@@ -1360,6 +1367,10 @@ class CircuitElementMixin:
         return self._lib.Alt_CE_IsOpen(self._ptr, terminal, phase) != 0
 
     def MaxCurrent(self, terminal: int) -> float:
+        '''
+        Returns the maximum current (magnitude) at the specificed terminal. 
+        Use -1 as terminal to get the value across all terminals.
+        '''
         return self._lib.Alt_CE_MaxCurrent(self._ptr, terminal)
 
     def Open(self, terminal: int, phase: int) -> None:
@@ -1368,10 +1379,10 @@ class CircuitElementMixin:
     def Close(self, terminal: int, phase: int) -> None:
         self._lib.Alt_CE_Close(self._ptr, terminal, phase)
 
-    def NodeOrder(self) -> Float64Array:
+    def NodeOrder(self) -> Int32Array:
         return self._get_int32_array(self._lib.Alt_CE_Get_NodeOrder, self._ptr)
 
-    def NodeRef(self) -> Float64Array:
+    def NodeRef(self) -> Int32Array:
         return self._get_int32_array(self._lib.Alt_CE_Get_NodeRef, self._ptr)
 
     def ComplexSeqVoltages(self) -> ComplexArray:
@@ -1380,16 +1391,18 @@ class CircuitElementMixin:
     def ComplexSeqCurrents(self) -> ComplexArray:
         return self._get_fcomplex128_array(self._lib.Alt_CE_Get_ComplexSeqCurrents, self._ptr)
 
-    def Currents(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CE_Get_Currents, self._ptr)
+    def Currents(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_Currents, self._ptr)
 
     def Voltages(self) -> ComplexArray:
         return self._get_fcomplex128_array(self._lib.Alt_CE_Get_Voltages, self._ptr)
 
-    def Losses(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CE_Get_Losses, self._ptr)
+    def Losses(self) -> complex:
+        '''Total (complex) losses in the element, in VA (watts, vars)'''
+        return self._get_fcomplex128_simple(self._lib.Alt_CE_Get_Losses, self._ptr)
 
     def PhaseLosses(self) -> ComplexArray:
+        '''Complex array of losses (kVA) by phase'''
         return self._get_fcomplex128_array(self._lib.Alt_CE_Get_PhaseLosses, self._ptr)
 
     def Powers(self) -> ComplexArray:
@@ -1410,9 +1423,6 @@ class CircuitElementMixin:
     def Yprim(self) -> ComplexArray:
         return self._get_fcomplex128_array(self._lib.Alt_CE_Get_Yprim, self._ptr)
 
-    def CurrentsMagAng(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CE_Get_CurrentsMagAng, self._ptr)
-
     def VoltagesMagAng(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_VoltagesMagAng, self._ptr)
 
@@ -1426,6 +1436,99 @@ class CircuitElementBatchMixin:
     def GUID(self) -> str:
         '''GUID/UUID for each object. Currently used only in the CIM-related methods.'''
         return [self._get_string(self._lib.Alt_CE_Get_GUID(ptr)) for ptr in self._unpack()]
+
+    def Handle(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_Handle")
+
+    def NumConductors(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_NumConductors")
+
+    def NumPhases(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_NumPhases")
+
+    def NumTerminals(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_NumTerminals")
+
+    def NumControllers(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_NumControllers")
+
+    def OCPDevice(self) -> List[Union[DSSObj, None]]: #TODO
+        return self._get_obj_from_ptr(self._lib.Alt_CE_Get_OCPDevice(self._ptr))
+
+    def OCPDeviceIndex(self) -> Int32Array:
+        return self._get_batch_int32_func("Alt_CE_Get_OCPDeviceIndex")
+
+    def OCPDeviceType(self) -> OCPDevType:
+        return [
+            OCPDevType(val) for val in self._get_batch_int32_func("Alt_CE_Get_OCPDeviceType")
+        ]
+
+    def MaxCurrent(self, terminal: int) -> float:
+        '''
+        Returns the maximum current (magnitude) at the specificed terminal for all elements in this batch. 
+        Use -1 as terminal to get the value across all terminals.
+        '''
+        return self._get_batch_float_int32_func("Alt_CE_MaxCurrent", terminal)
+    
+    def IsIsolated(self) -> BoolArray:
+        return self._get_batch_int32_func("Alt_CE_Get_IsIsolated").astype(bool)
+
+    def HasOCPDevice(self) -> bool:
+        return self._get_batch_int32_func("Alt_CE_Get_HasOCPDevice").astype(bool)
+
+    def HasSwitchControl(self) -> bool:
+        return self._get_batch_int32_func("Alt_CE_Get_HasSwitchControl").astype(bool)
+
+    def HasVoltControl(self) -> bool:
+        return self._get_batch_int32_func("Alt_CE_Get_HasVoltControl").astype(bool)
+
+    def Powers(self) -> ComplexArray:
+        '''Complex array of powers (kVA) into each conductor of each terminal, of each element in the batch.'''
+        return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_Powers, *self._get_ptr_cnt())
+
+    def Losses(self) -> ComplexArray:
+        '''Total losses for each element, complex VA (watts, vars)'''
+        return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_Losses, *self._get_ptr_cnt())
+
+    def PhaseLosses(self) -> ComplexArray:
+        '''Complex array of losses (kVA) by phase, for each element'''
+        return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_PhaseLosses, self._ptr)
+
+    def TotalPowers(self) -> ComplexArray:
+        '''
+        Returns an array with the total powers (complex, kVA) at all terminals of the circuit elements in this batch.
+
+        The resulting array is equivalent to concatenating the TotalPowers for each element.        
+        '''
+        return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_TotalPowers, *self._get_ptr_cnt())
+
+    def SeqPowers(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CEBatch_Get_SeqPowers, *self._get_ptr_cnt())
+
+    def SeqCurrents(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CEBatch_Get_SeqCurrents, *self._get_ptr_cnt())
+        
+    def ComplexSeqCurrents(self) -> ComplexArray:
+        return self._get_float64_array(self._lib.Alt_CEBatch_Get_ComplexSeqCurrents, *self._get_ptr_cnt())
+
+    def Currents(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_Currents, *self._get_ptr_cnt())
+
+    def CurrentsMagAng(self) -> Float64Array:
+        return self._get_float64_array(self._lib.Alt_CEBatch_Get_CurrentsMagAng, *self._get_ptr_cnt())
+
+    # def Voltages(self) -> ComplexArray:
+    #     return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_Voltages, *self._get_ptr_cnt())
+
+    # def SeqVoltages(self) -> Float64Array:
+    #     return self._get_float64_array(self._lib.Alt_CEBatch_Get_SeqVoltages, *self._get_ptr_cnt())
+
+    # def VoltagesMagAng(self) -> Float64Array:
+    #     return self._get_float64_array(self._lib.Alt_CEBatch_Get_VoltagesMagAng, *self._get_ptr_cnt())
+
+    # def ComplexSeqVoltages(self) -> ComplexArray:
+    #     return self._get_fcomplex128_array(self._lib.Alt_CE_Get_ComplexSeqVoltages, self._ptr)
+
 
 
 class ElementHasRegistersMixin:
@@ -1490,44 +1593,6 @@ class PCElementBatchMixin:
     def EnergyMeterName(self) -> List[str]:
         return [self._get_string(self._lib.Alt_PCE_Get_EnergyMeterName(ptr)) for ptr in self._unpack()]
 
-    def Handle(self) -> Int32Array:
-        return self._get_batch_int32_func("Alt_CE_Get_Handle")
-
-    def NumConductors(self) -> Int32Array:
-        return self._get_batch_int32_func("Alt_CE_Get_NumConductors")
-
-    def NumPhases(self) -> Int32Array:
-        return self._get_batch_int32_func("Alt_CE_Get_NumPhases")
-
-    def NumTerminals(self) -> Int32Array:
-        return self._get_batch_int32_func("Alt_CE_Get_NumTerminals")
-
-    def NumControllers(self) -> Int32Array:
-        return self._get_batch_int32_func("Alt_CE_Get_NumControllers")
-
-    def OCPDevice(self) -> List[Union[DSSObj, None]]:
-        return self._get_obj_from_ptr(self._lib.Alt_CE_Get_OCPDevice(self._ptr))
-
-    def OCPDeviceIndex(self) -> Int32Array:
-        return self._get_batch_int32_func("Alt_CE_Get_OCPDeviceIndex")
-
-    def OCPDeviceType(self) -> OCPDevType: #TODO: enum
-        return [
-            OCPDevType(val) for val in self._get_batch_int32_func("Alt_CE_Get_OCPDeviceType")
-        ]
-
-    # def IsIsolated(self) -> bool:
-    #     return self._lib.Alt_CE_Get_IsIsolated(self._ptr) != 0
-
-    # def HasOCPDevice(self) -> bool:
-    #     return self._lib.Alt_CE_Get_HasOCPDevice(self._ptr) != 0
-
-    # def HasSwitchControl(self) -> bool:
-    #     return self._lib.Alt_CE_Get_HasSwitchControl(self._ptr) != 0
-
-    # def HasVoltControl(self) -> bool:
-    #     return self._lib.Alt_CE_Get_HasVoltControl(self._ptr) != 0
-
 
 class PDElementMixin:
     __slots__ = ()
@@ -1565,6 +1630,16 @@ class PDElementMixin:
 
     def SectionID(self) -> int:
         return self._lib.Alt_PDE_Get_SectionID(self._ptr)
+
+    def pctNorm(self, allNodes=False) -> float:
+        '''
+        '''
+        return self._lib.Alt_PDE_Get_pctNorm(self._ptr, allNodes)
+
+    def pctEmerg(self, allNodes=False) -> float:
+        '''
+        '''
+        return self._lib.Alt_PDE_Get_pctEmerg(self._ptr, allNodes)
 
 
 class PDElementBatchMixin:
@@ -1785,7 +1860,6 @@ class CircuitElementBatch(NonUniformBatch, CircuitElementBatchMixin):
     Non-uniform batch of circuit elements. Can contain distinct types, while providing 
     common functions
     '''
-    pass
 
 
 class PCElementBatch(NonUniformBatch, CircuitElementBatchMixin, PCElementBatchMixin, ElementHasRegistersMixin):
@@ -1803,5 +1877,3 @@ class PDElementBatch(NonUniformBatch, CircuitElementBatchMixin, PDElementBatchMi
     '''
     pass
 
-import warnings
-warnings.warn('TODO: merge things like IPDElements into batches')

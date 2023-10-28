@@ -1,5 +1,7 @@
-from .._cffi_api_util import DSSException, CffiApiUtil
+from ._obj_bases import CircuitElementBatch, PCElementBatch, PDElementBatch, DSSObj, NonUniformBatch, DSSBatch
 from .Bus import IBuses
+from .IObj import IObj
+from .._cffi_api_util import DSSException, CffiApiUtil
 from ..ICtrlQueue import ICtrlQueue
 from ..IParallel import IParallel
 from ..IPDElements import IPDElements
@@ -10,9 +12,11 @@ from ..ITopology import ITopology
 from ..IYMatrix import IYMatrix
 from ..IZIP import IZIP
 from ..IText import IText
+from .._types import Float64Array, ComplexArray
+from typing import Union, List, AnyStr, Optional
+from typing_extensions import Self
 
-
-class AltDSSCircuitMixin:
+class IAltDSS(IObj):
     __slots__ = [
         'Buses',
         'CtrlQueue',
@@ -26,6 +30,8 @@ class AltDSSCircuitMixin:
         'Elements',
         'PCElements',
         'PDElements',
+        'YMatrix',
+        'ZIP',
     ]
    
     Buses: IBuses # TODO: new bus API implementation
@@ -39,8 +45,12 @@ class AltDSSCircuitMixin:
     Elements: CircuitElementBatch
     PCElements: PCElementBatch
     PDElements: PDElementBatch
+    ZIP: IZIP
+    YMatrix: IYMatrix
 
-    def __init__(self):
+    def __init__(self, api_util):
+        super().__init__(api_util)
+
         self.Buses = IBuses(self._api_util)
         self.CtrlQueue = ICtrlQueue(self._api_util)
         self.Parallel = IParallel(self._api_util)
@@ -51,6 +61,10 @@ class AltDSSCircuitMixin:
         self.ZIP = IZIP(self._api_util)
         self.Text = IText(self._api_util)
         self.YMatrix = IYMatrix(self._api_util)
+        self.Elements: CircuitElementBatch(self._api_util)
+        self.PCElements: PCElementBatch(self._api_util)
+        self.PDElements: PDElementBatch(self._api_util)
+
 
     # def Elements(self) -> NonUniformBatch:
     #     '''Batch of all circuit elements, mapped to Python.'''

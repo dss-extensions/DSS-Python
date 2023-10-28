@@ -19,3 +19,4 @@ develop a mechanism to ensure the dimensions match.
 
 from .enums import *
 from .IObj import *
+from .AltDSS import IAltDSS

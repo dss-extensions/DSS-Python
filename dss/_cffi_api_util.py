@@ -111,6 +111,7 @@ class CtxLib:
             else:
                 setattr(self, name, partial(self._error_checked, _errorPtr, value))
 
+            done.add(name)
 
         # Finally the remaining fields
         for name, value in vars(lib).items():
