@@ -1,23 +1,7 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
-from typing import Union, List, AnyStr, Optional
-from enum import IntEnum
-from typing_extensions import TypedDict, Unpack
-import numpy as np
-from ._obj_bases import (
-    BatchFloat64ArrayProxy,
-    BatchInt32ArrayProxy,
-    DSSObj,
-    DSSBatch,
-    IDSSObj,
-    LIST_LIKE,
-    # NotSet,
-)
-
-from .._types import Float64Array, Int32Array
-from .._cffi_api_util import Base
-
-from .enums import *
+from .DSSObj import DSSObj
+from .common import Base
 from .LineCode import ILineCode, LineCode
 from .LoadShape import ILoadShape, LoadShape
 from .TShape import ITShape, TShape

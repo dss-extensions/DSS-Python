@@ -5,8 +5,9 @@ Copyright (c) 2016-2023 Paulo Meira
 
 Copyright (c) 2018-2023 DSS-Extensions contributors
 '''
+from __future__ import annotations
 import warnings
-from typing import List, Union, AnyStr
+from typing import List, Union, AnyStr, TYPE_CHECKING
 from typing_extensions import Self
 from ._cffi_api_util import Base, CffiApiUtil, DSSException
 from .ICircuit import ICircuit
@@ -21,9 +22,8 @@ from .IDSSimComs import IDSSimComs
 from .IYMatrix import IYMatrix
 from .IZIP import IZIP
 
-#TODO: if this is too slow to import on Windows, make it lazy again,
-#      and use `from typing import TYPE_CHECKING`
-from .altdss import IAltDSS
+if TYPE_CHECKING:
+    from .altdss import IAltDSS
 
 class IDSS(Base):
     '''
@@ -45,9 +45,8 @@ class IDSS(Base):
         'DSSim_Coms',
         'YMatrix',
         'ZIP',
-        'AltDSS',
         '_version',
-        '_obj',
+        '_altdss',
     ]
     
     _columns = [
@@ -75,7 +74,7 @@ class IDSS(Base):
     DSSim_Coms: IDSSimComs
     YMatrix: IYMatrix
     ZIP: IZIP
-    AltDSS: IAltDSS
+    _altdss: IAltDSS
 
     def __init__(self, api_util):
         if api_util.ctx not in IDSS._ctx_to_dss:
@@ -86,7 +85,7 @@ class IDSS(Base):
             IDSS._ctx_to_dss[None] = self
 
         self._version = None
-        self._obj = None
+        self._altdss = None
 
         #: Provides access to the circuit attributes and objects in general.
         self.ActiveCircuit = ICircuit(api_util)
@@ -139,42 +138,40 @@ class IDSS(Base):
         #: (API Extension)
         self.ZIP = IZIP(api_util)
 
-        #: An experimental API that exposes all data classes of the DSS engine in a
-        #: new and pythonic API.
+        Base.__init__(self, api_util)    
+
+    @property
+    def AltDSS(self) -> IAltDSS:
+        #: Returns an AltDSS API instance, coupled with the current engine/DSSContext.
+        #: For stand-alone AltDSS usage, prefer to use `from altdss import AltDSS`
+        #:
+        #: In a future release, this attribute could be removed to also remove the
+        #: dependency on AltDSS-Python. AltDSS, the Python package, is currently a 
+        #: pure-Python package born from DSS-Python and OpenDSSDirect.py, sharing the
+        #: same underlying AltDSS/DSS C-API engine.
         #:
         #: (API Extension)
-        self.AltDSS = IAltDSS(api_util)
+        if self._altdss is not None:
+            return self._altdss
 
-        Base.__init__(self, api_util)    
+        #TODO: .altdss -> altdss (remove dot when the package is published
+        from .altdss import IAltDSS
+        self._altdss = IAltDSS.get_from_context(self._api_util)
+        return self._altdss
 
     @property
     def Obj(self) -> IAltDSS:
         """
-        Deprecated: provides access to the AltDSS API; use Alt
+        Deprecated: provides access to the AltDSS API; 
         """
-        warnings.warn("Obj identifier is deprecated; use AltDSS attribute instead.", DeprecationWarning, stacklevel=2)
-
-        # """
-        # Returns the Obj API instance.
-        # Since this will be moved out of DSS-Python eventually, the Obj API is created lazily,
-        # only when the user actually uses it, since it has some overhead.
-        # """
-        # if self._obj is not None:
-        #     return self._obj
-
-        # #: An experimental API that exposes all data classes of the DSS engine in a
-        # #: new and pythonic API.
-        # #:
-        # #: (API Extension)
-        # # from .altdss.IObj import IObj
-        # self._obj = IObj(self._api_util)
-        # return self._obj
-
+        warnings.warn("Obj identifier is deprecated; use AltDSS attribute instead, or import AltDSS directly.", DeprecationWarning, stacklevel=2)
+        return self.AltDSS
 
     def ClearAll(self):
         self.CheckForError(self._lib.DSS_ClearAll())
 
     def Reset(self):
+        '''This is a no-op function, does nothing. Left for compatibility.'''
         self.CheckForError(self._lib.DSS_Reset())
 
     def SetActiveClass(self, ClassName: AnyStr) -> int:
@@ -184,6 +181,15 @@ class IDSS(Base):
         return self.CheckForError(self._lib.DSS_SetActiveClass(ClassName))
 
     def Start(self, code: int) -> bool:
+        '''
+        This is a no-op function, does nothing. Left for compatibility.
+        
+        Calling `Start` in AltDSS/DSS-Extensions is required but that is already
+        handled automatically, so the users do not need to call it manually.
+
+        On the official OpenDSS, `Start` also does nothing at all in the current 
+        versions.
+        '''
         return self.CheckForError(self._lib.DSS_Start(code)) != 0
 
     @property

@@ -1,4 +1,4 @@
-from .._types import Float64Array, Int32Array
+from .types import Float64Array, Int32Array
 from ._obj_bases import PCElementBatch, PDElementBatch, CircuitElementBatch
 from .Load import LoadBatch
 

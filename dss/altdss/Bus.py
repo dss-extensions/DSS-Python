@@ -1,8 +1,8 @@
 # Copyright (c) 2023 Paulo Meira
 # Copyright (c) 2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
-from .._types import Float64Array, Int32Array, ComplexArray
-from .._cffi_api_util import Base
+from .types import Float64Array, Int32Array, ComplexArray
+from .common import Base
 from ._obj_bases import PCElementBatch, PDElementBatch
 from .Load import LoadBatch
 from .Line import LineBatch

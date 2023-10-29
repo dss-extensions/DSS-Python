@@ -1,88 +1,89 @@
-from ._obj_bases import CircuitElementBatch, PCElementBatch, PDElementBatch, DSSObj, NonUniformBatch, DSSBatch
+from typing import Union, List, AnyStr, Optional
+from typing_extensions import Self
+import numpy as np
+from .DSSObj import DSSObj
+from .Batch import NonUniformBatch, DSSBatch
+from .CircuitElement import CircuitElementBatch
+from .PCElement import PCElementBatch
+from .PDElement import PDElementBatch
 from .Bus import IBuses
-from .IObj import IObj
-from .._cffi_api_util import DSSException, CffiApiUtil
+from .Obj import IObj
+from .Settings import ISettings
+from .common import DSSException, CffiApiUtil
 from ..ICtrlQueue import ICtrlQueue
 from ..IParallel import IParallel
-from ..IPDElements import IPDElements
 from ..IReduceCkt import IReduceCkt
-from ..ISettings import ISettings
 from ..ISolution import ISolution
 from ..ITopology import ITopology
 from ..IYMatrix import IYMatrix
 from ..IZIP import IZIP
-from ..IText import IText
-from .._types import Float64Array, ComplexArray
-from typing import Union, List, AnyStr, Optional
-from typing_extensions import Self
+from ..IError import IError
+from ..IDSSEvents import IDSSEvents
+from .types import Float64Array, ComplexArray
+from .enums import *
 
 class IAltDSS(IObj):
     __slots__ = [
-        'Buses',
+        'Bus',
         'CtrlQueue',
+        'Element',
+        'Error',
+        'Events',
         'Parallel',
-        'PDElements',
+        'PCElement',
+        'PDElement',
         'ReduceCkt',
         'Settings',
         'Solution',
         'Topology',
-        'Text',
-        'Elements',
-        'PCElements',
-        'PDElements',
         'YMatrix',
         'ZIP',
     ]
+    _ctx_to_altdss = {}
    
-    Buses: IBuses # TODO: new bus API implementation
+    Bus: IBuses
     CtrlQueue: ICtrlQueue
+    Element: CircuitElementBatch
+    Error: IError
+    Events: IDSSEvents
     Parallel: IParallel
+    PCElement: PCElementBatch
+    PDElement: PDElementBatch
     ReduceCkt: IReduceCkt
     Settings: ISettings
     Solution: ISolution
     Topology: ITopology
     YMatrix: IYMatrix
-    Elements: CircuitElementBatch
-    PCElements: PCElementBatch
-    PDElements: PDElementBatch
     ZIP: IZIP
-    YMatrix: IYMatrix
+
+
+    @staticmethod
+    def get_from_context(api_util) -> Self:
+        existing = IAltDSS._ctx_to_altdss.get(api_util.ctx)
+        if existing is not None:
+            return existing
+        
+        return IAltDSS(api_util)
 
     def __init__(self, api_util):
         super().__init__(api_util)
+        IAltDSS._ctx_to_altdss[api_util.ctx] = self
 
-        self.Buses = IBuses(self._api_util)
+        self.Bus = IBuses(self._api_util)
         self.CtrlQueue = ICtrlQueue(self._api_util)
+        self.Element = CircuitElementBatch(self._api_util)
+        self.Error = IError(self._api_util)
+        self.Events = IDSSEvents(self._api_util)
         self.Parallel = IParallel(self._api_util)
+        self.PCElement = PCElementBatch(self._api_util)
+        self.PDElement = PDElementBatch(self._api_util)
         self.ReduceCkt = IReduceCkt(self._api_util)
         self.Settings = ISettings(self._api_util)
         self.Solution = ISolution(self._api_util)
         self.Topology = ITopology(self._api_util)
-        self.ZIP = IZIP(self._api_util)
-        self.Text = IText(self._api_util)
         self.YMatrix = IYMatrix(self._api_util)
-        self.Elements: CircuitElementBatch(self._api_util)
-        self.PCElements: PCElementBatch(self._api_util)
-        self.PDElements: PDElementBatch(self._api_util)
+        self.ZIP = IZIP(self._api_util)
 
-
-    # def Elements(self) -> NonUniformBatch:
-    #     '''Batch of all circuit elements, mapped to Python.'''
-    #     return self._get_string_array(self._lib.Alt_Circuit_Get_ElementList) #TODO
-
-    # def PCElements(self) -> NonUniformBatch:
-    #     '''Batch of all PC elements, mapped to Python.'''
-    #     return self._get_string_array(self._lib.Alt_Circuit_Get_PCElementList) #TODO
-
-    # def PDElements(self) -> NonUniformBatch:
-    #     '''Batch of all PD elements, mapped to Python.'''
-    #     return self._get_string_array(self._lib.Alt_Circuit_Get_PDElementList) #TODO
-
-        '''
-        IError
-        IDSS
-        IDSSEvents
-        '''
 
     def DisableElement(self, name: AnyStr):
         if type(name) is not bytes:
@@ -246,20 +247,6 @@ class IAltDSS(IObj):
         self._check_for_error(self._lib.Circuit_Get_YNodeVarray_GR())
         return self._get_fcomplex128_gr_array()
 
-    def ElementLosses(self, value: Optional[Union[List[DSSObj], NonUniformBatch, DSSBatch]]=None) -> ComplexArray:#TODO
-        '''
-        Array of total losses (complex) in a selection of elements provided by the user, or all elements (default).
-        
-        Optionally, pass a list of DSS objects or a batch object. Circuit elements are required.
-        '''
-        if value is None:
-            self._check_for_error(self._lib.Circuit_Get_AllElementLosses_GR())
-            return self._get_fcomplex128_gr_array()
-
-        Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
-        self._check_for_error(self._lib.Circuit_Get_ElementLosses_GR(ValuePtr, ValueCount))        
-        return self._get_fcomplex128_gr_array()
-
     def Capacity(self, Start: float, Increment: float) -> float:
         return self._check_for_error(self._lib.Circuit_Capacity(Start, Increment))
 
@@ -274,6 +261,12 @@ class IAltDSS(IObj):
 
     def UpdateStorage(self):
         self._check_for_error(self._lib.Circuit_UpdateStorage()) #TODO: move to the dedicated class/API
+
+    def Clear(self):
+        self._check_for_error(self._lib.DSS_Clear())
+
+    def ClearAll(self):
+        self._check_for_error(self._lib.DSS_ClearAll())
 
     def NewContext(self) -> Self:
         '''
@@ -290,7 +283,41 @@ class IAltDSS(IObj):
         new_api_util._allow_complex = self._api_util._allow_complex
         return type(self)(new_api_util)
 
-    def __call__(self, single:Union[AnyStr, List[AnyStr]]=None, block : AnyStr = None): #TODO: benchmark and simplify (single argument)
+
+    def Command(self, value: Optional[AnyStr]) -> Optional[str]:
+        '''
+        Input command string for the DSS engine.
+        
+        If no command is provided, the latest command string is returned.
+        '''
+        if value is None:
+            return self._get_string(self._check_for_error(self._lib.Text_Get_Command()))
+
+        if type(value) is not bytes:
+            value = value.encode(self._api_util.codec)
+
+        self._check_for_error(self._lib.Text_Set_Command(value))
+
+
+    def Commands(self, Value: Union[AnyStr, List[AnyStr]]):
+        '''
+        Runs a list of strings or a large string as commands directly in the DSS engine.
+        Intermediate results from the classic Text.Result are ignored.
+
+        Value can be a list of strings, or a single large string (usually faster).
+
+        (API Extension)
+        '''
+        if isinstance(Value, str) or isinstance(Value, bytes):
+            if type(Value) is not bytes:
+                Value = Value.encode(self._api_util.codec)
+            
+            self._check_for_error(self._lib.Text_CommandBlock(Value))
+        else:
+            self._check_for_error(self._set_string_array(self._lib.Text_CommandArray, Value))
+
+
+    def __call__(self, single: Union[AnyStr, List[AnyStr]]=None, block: AnyStr = None): #TODO: benchmark and simplify (single argument)
         '''
         Shortcut to pass text commands.
 

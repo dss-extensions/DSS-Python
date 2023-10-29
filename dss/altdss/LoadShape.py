@@ -13,8 +13,8 @@ from ._obj_bases import (
     LIST_LIKE,
     # NotSet,
 )
-from .._types import Float64Array, Int32Array
-from .._cffi_api_util import Base
+from .types import Float64Array, Int32Array
+from .common import Base
 from . import enums
 
 class LoadShape(DSSObj, LoadShapeObjMixin):
