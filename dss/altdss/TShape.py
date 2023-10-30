@@ -2,21 +2,15 @@
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
-from ._obj_bases import (
-    BatchFloat64ArrayProxy,
-    BatchInt32ArrayProxy,
-    DSSObj,
-    DSSBatch,
-    IDSSObj,
-    LIST_LIKE,
-    # NotSet,
-)
 from .types import Float64Array, Int32Array
-from .common import Base
 from . import enums
+from .DSSObj import IDSSObj, DSSObj
+from .Batch import DSSBatch
+from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
+from .common import LIST_LIKE
 
 class TShape(DSSObj):
-    __slots__ = []
+    __slots__ = DSSObj._extra_slots
     _cls_name = 'TShape'
     _cls_idx = 3
     _cls_prop_idx = {

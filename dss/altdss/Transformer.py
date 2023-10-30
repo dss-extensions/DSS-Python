@@ -2,27 +2,19 @@
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
-from ._obj_bases import (
-    CircuitElementMixin,
-    PDElementMixin,
-    TransformerObjMixin,
-    CircuitElementBatchMixin,
-    PDElementBatchMixin,
-    BatchFloat64ArrayProxy,
-    BatchInt32ArrayProxy,
-    DSSObj,
-    DSSBatch,
-    IDSSObj,
-    LIST_LIKE,
-    # NotSet,
-)
 from .types import Float64Array, Int32Array
-from .common import Base
 from . import enums
+from .DSSObj import IDSSObj, DSSObj
+from .Batch import DSSBatch
+from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
+from .common import LIST_LIKE
+from .PDElement import PDElementBatchMixin, PDElementMixin
+from .CircuitElement import CircuitElementBatchMixin, CircuitElementMixin
+from .TransformerExtras import TransformerObjMixin
 from .XfmrCode import XfmrCode as XfmrCodeObj
 
 class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMixin):
-    __slots__ = CircuitElementMixin._extra_slots + PDElementMixin._extra_slots + TransformerObjMixin._extra_slots
+    __slots__ = DSSObj._extra_slots + CircuitElementMixin._extra_slots + PDElementMixin._extra_slots + TransformerObjMixin._extra_slots
     _cls_name = 'Transformer'
     _cls_idx = 20
     _cls_prop_idx = {

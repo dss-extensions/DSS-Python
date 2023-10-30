@@ -2,28 +2,20 @@
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
-from ._obj_bases import (
-    CircuitElementMixin,
-    PCElementMixin,
-    CircuitElementBatchMixin,
-    PCElementBatchMixin,
-    BatchFloat64ArrayProxy,
-    BatchInt32ArrayProxy,
-    DSSObj,
-    DSSBatch,
-    IDSSObj,
-    LIST_LIKE,
-    # NotSet,
-)
 from .types import Float64Array, Int32Array
-from .common import Base
 from . import enums
+from .DSSObj import IDSSObj, DSSObj
+from .Batch import DSSBatch
+from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
+from .common import LIST_LIKE
+from .PCElement import PCElementBatchMixin, PCElementMixin
+from .CircuitElement import CircuitElementBatchMixin, CircuitElementMixin
 from .GrowthShape import GrowthShape
 from .LoadShape import LoadShape
 from .Spectrum import Spectrum as SpectrumObj
 
 class Load(DSSObj, CircuitElementMixin, PCElementMixin):
-    __slots__ = CircuitElementMixin._extra_slots + PCElementMixin._extra_slots
+    __slots__ = DSSObj._extra_slots + CircuitElementMixin._extra_slots + PCElementMixin._extra_slots
     _cls_name = 'Load'
     _cls_idx = 19
     _cls_prop_idx = {

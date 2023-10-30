@@ -2,6 +2,8 @@
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from .DSSObj import DSSObj
 from .common import Base
+
+from .enums import *
 from .LineCode import ILineCode, LineCode
 from .LoadShape import ILoadShape, LoadShape
 from .TShape import ITShape, TShape
@@ -53,8 +55,6 @@ from .EnergyMeter import IEnergyMeter, EnergyMeter
 from .Sensor import ISensor, Sensor
 
 _idx_to_cls = {}
-
-
 
 
 class IObj(Base):

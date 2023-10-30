@@ -18,5 +18,6 @@ develop a mechanism to ensure the dimensions match.
 '''
 
 from .enums import *
-from .IObj import *
+from .Obj import *
+from .common import Edit
 from .AltDSS import IAltDSS

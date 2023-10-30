@@ -1,5 +1,7 @@
 from .types import Float64Array, Int32Array
-from ._obj_bases import PCElementBatch, PDElementBatch, CircuitElementBatch
+from .PCElement import PCElementBatch
+from .CircuitElement import CircuitElementBatch
+from .PDElement import PDElementBatch
 from .Load import LoadBatch
 
 class MeterSection:

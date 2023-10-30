@@ -1,9 +1,8 @@
 import numpy as np
-from .common import Base
+from .common import Base, LIST_LIKE
 from .types import Float64Array, Int32Array
 from ..enums import DSSJSONFlags
 from typing import Union, List, AnyStr, Optional
-from ._obj_bases import LIST_LIKE
 
 class DSSObj(Base):
     # _properties_by_idx = {
@@ -17,6 +16,7 @@ class DSSObj(Base):
         '_ffi',
         '_get_int32_list',
     ]
+    _extra_slots = []
 
     def __init__(self, api_util, ptr):
         super().__init__(api_util)

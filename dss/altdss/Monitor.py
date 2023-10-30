@@ -2,24 +2,17 @@
 # Copyright (c) 2021-2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
-from ._obj_bases import (
-    CircuitElementMixin,
-    MonitorObjMixin,
-    CircuitElementBatchMixin,
-    BatchFloat64ArrayProxy,
-    BatchInt32ArrayProxy,
-    DSSObj,
-    DSSBatch,
-    IDSSObj,
-    LIST_LIKE,
-    # NotSet,
-)
 from .types import Float64Array, Int32Array
-from .common import Base
 from . import enums
+from .DSSObj import IDSSObj, DSSObj
+from .Batch import DSSBatch
+from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
+from .common import LIST_LIKE
+from .CircuitElement import CircuitElementBatchMixin, CircuitElementMixin
+from .MonitorExtras import MonitorObjMixin
 
 class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
-    __slots__ = CircuitElementMixin._extra_slots + MonitorObjMixin._extra_slots
+    __slots__ = DSSObj._extra_slots + CircuitElementMixin._extra_slots + MonitorObjMixin._extra_slots
     _cls_name = 'Monitor'
     _cls_idx = 47
     _cls_prop_idx = {

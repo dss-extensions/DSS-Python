@@ -1,11 +1,10 @@
 import numpy as np
-from .common import Base
+from typing import Union, List, AnyStr, Optional
+from .common import Base, LIST_LIKE
 from .types import Float64Array, Int32Array
 from ..enums import DSSJSONFlags
 from .DSSObj import DSSObj
-from typing import Union, List, AnyStr, Optional
-from ._obj_bases import LIST_LIKE
-from ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
+from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
 
 def _get_dispose_batch(lib, ffi):
     def _dispose_batch(ptr):

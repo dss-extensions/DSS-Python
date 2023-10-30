@@ -3,7 +3,8 @@
 from typing import Union, List, AnyStr, Optional
 from .types import Float64Array, Int32Array, ComplexArray
 from .common import Base
-from ._obj_bases import PCElementBatch, PDElementBatch
+from .PCElement import PCElementBatch
+from .PDElement import PDElementBatch
 from .Load import LoadBatch
 from .Line import LineBatch
 from ..enums import DSSJSONFlags
