@@ -1,8 +1,8 @@
 from typing import List
 import numpy as np
+from dss.enums import SolveModes
 from .common import DSSException
 from .types import Float64Array, Int8Array, Float32Array
-from ..enums import SolveModes
 
 class MonitorObjMixin:
     #TODO: dataframe

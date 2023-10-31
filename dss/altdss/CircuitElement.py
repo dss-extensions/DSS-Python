@@ -1,6 +1,6 @@
 from typing import Dict, List, Union, AnyStr
+from dss.enums import OCPDevType
 from .types import Float64Array, Int32Array, ComplexArray, BoolArray
-from ..enums import OCPDevType
 from .Batch import NonUniformBatch
 from .DSSObj import DSSObj
 

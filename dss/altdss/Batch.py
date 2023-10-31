@@ -1,8 +1,8 @@
 import numpy as np
 from typing import Union, List, AnyStr, Optional
+from dss.enums import DSSJSONFlags
 from .common import Base, LIST_LIKE
 from .types import Float64Array, Int32Array
-from ..enums import DSSJSONFlags
 from .DSSObj import DSSObj
 from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
 

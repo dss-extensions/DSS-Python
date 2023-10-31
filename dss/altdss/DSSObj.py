@@ -1,7 +1,7 @@
 import numpy as np
+from dss.enums import DSSJSONFlags
 from .common import Base, LIST_LIKE
 from .types import Float64Array, Int32Array
-from ..enums import DSSJSONFlags
 from typing import Union, List, AnyStr, Optional
 
 class DSSObj(Base):

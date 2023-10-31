@@ -1,13 +1,13 @@
 # Copyright (c) 2023 Paulo Meira
 # Copyright (c) 2023 DSS-Extensions contributors
 from typing import Union, List, AnyStr, Optional
+from dss.enums import DSSJSONFlags
 from .types import Float64Array, Int32Array, ComplexArray
 from .common import Base
 from .PCElement import PCElementBatch
 from .PDElement import PDElementBatch
 from .Load import LoadBatch
 from .Line import LineBatch
-from ..enums import DSSJSONFlags
 
 class Bus:
     __slots__ = (

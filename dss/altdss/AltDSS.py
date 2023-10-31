@@ -1,38 +1,38 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import Self
 import numpy as np
-from .DSSObj import DSSObj
-from .Batch import NonUniformBatch, DSSBatch
+
+# These are currently reused directly from DSS-Python; this may change later
+from dss.IDSSEvents import IDSSEvents
+from dss.IError import IError
+from dss.IReduceCkt import IReduceCkt
+from dss.ITopology import ITopology
+from dss.IYMatrix import IYMatrix
+
+from .common import CffiApiUtil
+from .enums import *
+from .Bus import IBuses
 from .CircuitElement import CircuitElementBatch
+from .ControlQueue import IControlQueue
+from .Obj import IObj
 from .PCElement import PCElementBatch
 from .PDElement import PDElementBatch
-from .Bus import IBuses
-from .Obj import IObj
 from .Settings import ISettings
-from .common import DSSException, CffiApiUtil
-from ..ICtrlQueue import ICtrlQueue
-from ..IParallel import IParallel
-from ..IReduceCkt import IReduceCkt
-from ..ISolution import ISolution
-from ..ITopology import ITopology
-from ..IYMatrix import IYMatrix
-from ..IZIP import IZIP
-from ..IError import IError
-from ..IDSSEvents import IDSSEvents
+from .Solution import ISolution
+from .ZIP import IZIP
 from .types import Float64Array, ComplexArray
-from .enums import *
 
 class IAltDSS(IObj):
     __slots__ = [
         'Bus',
-        'CtrlQueue',
+        'ControlQueue',
         'Element',
         'Error',
         'Events',
-        'Parallel',
+        # 'Parallel',
         'PCElement',
         'PDElement',
-        'ReduceCkt',
+        'ReduceCircuit',
         'Settings',
         'Solution',
         'Topology',
@@ -42,14 +42,14 @@ class IAltDSS(IObj):
     _ctx_to_altdss = {}
    
     Bus: IBuses
-    CtrlQueue: ICtrlQueue
+    ControlQueue: IControlQueue
     Element: CircuitElementBatch
     Error: IError
     Events: IDSSEvents
-    Parallel: IParallel
+    # Parallel: IParallel
     PCElement: PCElementBatch
     PDElement: PDElementBatch
-    ReduceCkt: IReduceCkt
+    ReduceCircuit: IReduceCkt
     Settings: ISettings
     Solution: ISolution
     Topology: ITopology
@@ -70,14 +70,14 @@ class IAltDSS(IObj):
         IAltDSS._ctx_to_altdss[api_util.ctx] = self
 
         self.Bus = IBuses(self._api_util)
-        self.CtrlQueue = ICtrlQueue(self._api_util)
-        self.Element = CircuitElementBatch(self._api_util)
+        self.ControlQueue = IControlQueue(self._api_util)
+        # TODO: self.Element = CircuitElementBatch(, self)
         self.Error = IError(self._api_util)
         self.Events = IDSSEvents(self._api_util)
-        self.Parallel = IParallel(self._api_util)
-        self.PCElement = PCElementBatch(self._api_util)
-        self.PDElement = PDElementBatch(self._api_util)
-        self.ReduceCkt = IReduceCkt(self._api_util)
+        # self.Parallel = IParallel(self._api_util)
+        #TODO: self.PCElement = PCElementBatch(self._api_util)
+        #TODO: self.PDElement = PDElementBatch(self._api_util)
+        self.ReduceCircuit = IReduceCkt(self._api_util)
         self.Settings = ISettings(self._api_util)
         self.Solution = ISolution(self._api_util)
         self.Topology = ITopology(self._api_util)
@@ -183,14 +183,18 @@ class IAltDSS(IObj):
     def SubstationLosses(self) -> complex: 
         '''Complex losses in all transformers designated to substations.'''
         self._check_for_error(self._lib.Circuit_Get_SubstationLosses_GR())
-        return self._get_fcomplex128_gr_simple() # TODO: FORCE ALWAYS use complex for AltDSS
+        return self._get_fcomplex128_gr_simple()
 
-    @property
-    def SystemY(self, dense_matrix=False) -> ComplexArray: #TODO: replace with sparse
+    def SystemY(self, dense_matrix=False) -> ComplexArray:
         '''
-        (read-only) System Y matrix (after a solution has been performed). 
-        This is deprecated as it returns a dense matrix. Only use it for small systems.
-        For large-scale systems, prefer YMatrix.GetCompressedYMatrix.
+        Get the system Y complex matrix.
+        Requires either a previous solution or explicitly building the marix.
+
+        In AltDSS, defaults to the sparse matrix data.
+        
+        Use `dense_matrix=True` to force a dense matrix. Beware the
+        memory requirements. The recommendation is to only use dense
+        matrices for small systems.
         '''
         if dense_matrix:
             self._check_for_error(self._lib.Circuit_Get_SystemY_GR())
@@ -234,7 +238,7 @@ class IAltDSS(IObj):
         return self._get_fcomplex128_gr_simple()
 
     def YCurrents(self) -> ComplexArray:
-        '''Array of doubles containing complex injection currents for the present solution. Is is the "I" vector of I=YV'''
+        '''Array of doubles containing complex injection currents for the present solution. It is the "I" vector of I=YV'''
         self._check_for_error(self._lib.Circuit_Get_YCurrents_GR())
         return self._get_fcomplex128_gr_array()
 
@@ -250,9 +254,6 @@ class IAltDSS(IObj):
     def Capacity(self, Start: float, Increment: float) -> float:
         return self._check_for_error(self._lib.Circuit_Capacity(Start, Increment))
 
-    def EndOfTimeStepUpdate(self):
-        self._check_for_error(self._lib.Circuit_EndOfTimeStepUpdate()) #TODO: move to Solution?
-
     def TakeSample(self):
         self._check_for_error(self._lib.Circuit_Sample())
 
@@ -263,7 +264,7 @@ class IAltDSS(IObj):
         self._check_for_error(self._lib.Circuit_UpdateStorage()) #TODO: move to the dedicated class/API
 
     def Clear(self):
-        self._check_for_error(self._lib.DSS_Clear())
+        self('clear')
 
     def ClearAll(self):
         self._check_for_error(self._lib.DSS_ClearAll())
@@ -286,9 +287,11 @@ class IAltDSS(IObj):
 
     def Command(self, value: Optional[AnyStr]) -> Optional[str]:
         '''
-        Input command string for the DSS engine.
+        Input command **string** for the DSS engine.
         
         If no command is provided, the latest command string is returned.
+
+        Prefer using the `Commands` function or the call operator from this class.
         '''
         if value is None:
             return self._get_string(self._check_for_error(self._lib.Text_Get_Command()))
@@ -304,7 +307,7 @@ class IAltDSS(IObj):
         Runs a list of strings or a large string as commands directly in the DSS engine.
         Intermediate results from the classic Text.Result are ignored.
 
-        Value can be a list of strings, or a single large string (usually faster).
+        Value can be a list of strings, or a single large string (usually faster, but varies).
 
         (API Extension)
         '''
@@ -317,41 +320,26 @@ class IAltDSS(IObj):
             self._check_for_error(self._set_string_array(self._lib.Text_CommandArray, Value))
 
 
-    def __call__(self, single: Union[AnyStr, List[AnyStr]]=None, block: AnyStr = None): #TODO: benchmark and simplify (single argument)
+    def __call__(self, cmds: Union[AnyStr, List[AnyStr]]):
         '''
-        Shortcut to pass text commands.
-
-        If `single` is set and is a string, a normal `DSS.Text.Command = single` is called.
-        Otherwise, the value is passed to `DSS.Text.Commands`.
+        Pass either a single string (with either one or multiples commands, separated by new lines),
+        or a list of strings.
 
         Examples:
 
             # single command
             DSS("new Circuit.test") 
-            DSS(single="new Circuit.test")
 
-            # list of commands (either will work)
+            # list of commands
             DSS(["new Circuit.test", "new Line.line1 bus1=a bus2=b"])
-            DSS(single=["new circuit.test", "new Line.line1 bus1=a bus2=b"])
-            DSS(block=["new circuit.test", "new Line.line1 bus1=a bus2=b"])
 
             # block of commands in a big string
-            DSS(block="""
+            DSS("""
                 clear
                 new Circuit.test
                 new Line.line1 bus1=a bus2=b
                 new Load.load1 bus1=a bus2=b
             """)
         '''
-        if (single is not None) and (block is not None):
-           raise DSSException("Only a single argument is accepted.")
-
-        if (single is None) and (block is None):
-           raise DSSException("A value is required.")
-
-        if single is not None:
-            self.Text.Command = single
-            return
-
-        self.Text.Commands(single or block)
+        self.Commands(cmds)
 

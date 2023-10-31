@@ -421,7 +421,7 @@ class ICircuit(Base):
 
     @property
     def YCurrents(self) -> Float64ArrayOrComplexArray:
-        '''Array of doubles containing complex injection currents for the present solution. Is is the "I" vector of I=YV'''
+        '''Array of doubles containing complex injection currents for the present solution. It is the "I" vector of I=YV'''
         self.CheckForError(self._lib.Circuit_Get_YCurrents_GR())
         return self._get_complex128_gr_array()
 

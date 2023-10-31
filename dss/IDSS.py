@@ -379,26 +379,23 @@ class IDSS(Base):
         new_api_util._allow_complex = self._api_util._allow_complex
         return IDSS(new_api_util)
 
-    def __call__(self, single:Union[AnyStr, List[AnyStr]]=None, block : AnyStr = None): #TODO: benchmark and simplify (single argument)
+    def __call__(self, cmds: Union[AnyStr, List[AnyStr]]):
         '''
         Shortcut to pass text commands.
 
-        If `single` is set and is a string, a normal `DSS.Text.Command = single` is called.
-        Otherwise, the value is passed to `DSS.Text.Commands`.
+        Pass either a single string (with either one or multiples commands, separated by new lines),
+        or a list of strings.
 
         Examples:
 
             # single command
             DSS("new Circuit.test") 
-            DSS(single="new Circuit.test")
 
-            # list of commands (either will work)
+            # list of commands
             DSS(["new Circuit.test", "new Line.line1 bus1=a bus2=b"])
-            DSS(single=["new circuit.test", "new Line.line1 bus1=a bus2=b"])
-            DSS(block=["new circuit.test", "new Line.line1 bus1=a bus2=b"])
 
             # block of commands in a big string
-            DSS(block="""
+            DSS("""
                 clear
                 new Circuit.test
                 new Line.line1 bus1=a bus2=b
@@ -407,17 +404,7 @@ class IDSS(Base):
 
         (API Extension)
         '''
-        if (single is not None) and (block is not None):
-           raise DSSException("Only a single argument is accepted.")
-
-        if (single is None) and (block is None):
-           raise DSSException("A value is required.")
-
-        if single is not None:
-            self.Text.Command = single
-            return
-
-        self.Text.Commands(single or block)
+        self.Text.Commands(cmds)
 
     @property
     def Plotting(self):
