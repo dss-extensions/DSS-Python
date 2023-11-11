@@ -6,6 +6,27 @@ try:
 except ModuleNotFoundError:
     LIST_LIKE = (list, tuple)
 
+class InvalidatedDSSObject:
+    '''
+    If you see this class somewhere, such as a traceback, it means that the related 
+    (parent) object was invalidated by an operation in the DSS engine. This could
+    be a "clear" command, or destruction of the DSSContext where the objects lived.
+    '''
+    pass
+
+InvalidatedObject = InvalidatedDSSObject()
+
+class InvalidatedDSSBus:
+    '''
+    If you see this class somewhere, such as a traceback, it means that the related
+    (parent) bus was invalidated by an operation in the DSS engine. This could be
+    a "clear" command, destruction of the DSSContext where the buses lived, or a 
+    redefinition of the circuit buses.
+    '''
+    pass
+
+InvalidatedBus = InvalidatedDSSBus()
+
 class Edit:
     '''
     Edit is a helper class that makes block-editing DSS properties

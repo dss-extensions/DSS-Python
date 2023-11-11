@@ -1,8 +1,10 @@
 import warnings
 from functools import partial
+from weakref import ref
 import numpy as np
 from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 from typing import Any, AnyStr, Callable, List, Union #, Iterator
+from .enums import AltDSSEvent
 
 # UTF8 under testing
 codec = 'UTF8'
@@ -297,27 +299,157 @@ class Base:
         return res
 
 
+def altdss_python_util_callback(ctx, event_code, step, ptr):
+    # print(ctx, AltDSSEvent(event_code), step, ptr)
+    util = CffiApiUtil._ctx_to_util[ctx]
+
+    if event_code == AltDSSEvent.ReprocessBuses:
+        util.reprocess_buses_callback(step)
+        return
+
+    if event_code == AltDSSEvent.Clear:
+        util.clear_callback(step)
+        return
+
+
 class CffiApiUtil(object):
+    '''
+    An internal class with various API and DSSContext management functions and structures.
+    '''
+    _ctx_to_util = {}
+    _altdss_python_util_callback = None
+
     def __init__(self, ffi, lib, ctx=None):
         self.owns_ctx = True
         self.codec = codec
         self.ctx = ctx
+        CffiApiUtil._ctx_to_util[ctx] = self
         self.ffi = ffi
         self.lib_unpatched = lib
+        self._batch_refs = []
+        self._bus_refs = []
+        self._obj_refs = []
+        self._bus_ref_to_name = None
+        self._is_clearing = False
         if ctx is None:
             self.lib = lib
         else:
             self.lib = CtxLib(ctx, ffi, lib)
 
         self._allow_complex = False
+        self.track_objects = True
         self.init_buffers()
+        self.register_callbacks()
 
-    # def __delete__(self):
+
+    def reprocess_buses_callback(self, step: int):
+        '''
+        Used internally to remap buses to Python objects after the bus list is built.
+        '''
+        if self._is_clearing:
+            return
+        
+        if step == 0:
+            # Drop dead references
+            self._bus_refs = [b for b in self._bus_refs if b() is not None]
+
+            # Create a name to object dict, dropping the weakref wrapper
+            self._bus_ref_to_name = {
+                b(): b().name
+                for b in self._bus_refs
+            }
+            return
+
+        if step != 1:
+            return
+        
+        # Now try to remap the objects; on exception, just invalidate everything
+        try:
+            ptrs = self._lib.Alt_Bus_GetListPtr()
+            names = self._check_for_error(self._get_string_array(self._lib.Circuit_Get_AllBusNames))
+        except:
+            for bus_ref in self._bus_refs:
+                bus_ref()._invalidate_ptr()
+
+            self._bus_refs.clear()
+            return
+
+        self._bus_refs.clear()
+        name_to_new_ptr = {name: ptrs[idx] for idx, name in enumerate(names)}
+        for old_bus, old_name in self._bus_ref_to_name:
+            new_ptr = name_to_new_ptr.get(old_name)
+            if new_ptr is None:
+                # This bus was removed, just invalidate it
+                old_bus._invalidate_ptr()
+                continue
+
+            # Successfully remapped the object to the live pointer, so keep a reference
+            old_bus._ptr = new_ptr
+            self._bus_refs.append(ref(old_bus))
+
+
+    def clear_callback(self, step: int):
+        if step == 0:
+            # Mark that we're clearing
+            self._is_clearing = True
+            return
+
+        if step != 1:
+            return
+        
+        for bus_ref in self._bus_refs:
+            bus = bus_ref()
+            if bus is not None:
+                bus._invalidate_ptr()
+
+        for batch_ref in self._batch_refs:
+            batch = batch_ref()
+            if batch is not None:
+                batch._invalidate_ptr()
+
+        for obj_ref in self._obj_refs:
+            obj = obj_ref()
+            if obj is not None:
+                obj._invalidate_ptr()
+
+        self._batch_refs.clear()
+        self._bus_refs.clear()
+        self._obj_refs.clear()
+
+        self._is_clearing = False
+
+
+    def register_callbacks(self):
+        if CffiApiUtil._altdss_python_util_callback is None:
+            CffiApiUtil._altdss_python_util_callback = self.ffi.def_extern(name='altdss_python_util_callback')(altdss_python_util_callback)
+
+        self.lib.DSSEvents_RegisterAlt(AltDSSEvent.Clear, self.lib_unpatched.altdss_python_util_callback)
+        self.lib.DSSEvents_RegisterAlt(AltDSSEvent.ReprocessBuses, self.lib_unpatched.altdss_python_util_callback)
+
+    # The context will die, no need to do anything else currently.
+    def __del__(self):
+        self.clear_callback(0)
+        self.clear_callback(1)
+
+    #     self.lib.DSSEvents_UnregisterAlt(AltDSSEvent.Clear, self.lib_unpatched.altdss_python_util_callback)
+    #     self.lib.DSSEvents_UnregisterAlt(AltDSSEvent.ReprocessBuses, self.lib_unpatched.altdss_python_util_callback)
     #     if self.ctx is None:
     #         return
              
     #     if self.lib.ctx_Get_Prime() != self.ctx and self.owns_ctx:
     #         self.lib.ctx_Dispose(self.ctx)
+
+    def track_batch(self, batch):
+        if self.track_objects:
+            self._batch_refs.append(ref(batch))
+
+    def track_bus(self, bus):
+        if self.track_objects:
+            self._bus_refs.append(ref(bus))
+
+    def track_obj(self, obj):
+        if self.track_objects:
+            self._obj_refs.append(ref(obj))
 
     def init_buffers(self):
         tmp_string_pointers = (self.ffi.new('char****'), self.ffi.new('int32_t**'))

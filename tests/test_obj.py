@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import pytest
 
 try:
     from ._settings import BASE_DIR, WIN32
@@ -658,6 +659,36 @@ def test_complex_property():
     batch.Z1 = [(31.1 + 24.5j), (27.6 + 52.7j)]
     assert reactor1.Z1 == (31.1 + 24.5j)
     assert reactor2.Z1 == (27.6 + 52.7j)
+
+
+def test_obj_lifetime():
+    create_ref_ckt13(dss)
+    alt = dss.AltDSS
+    load = alt.Load[1]
+    loads = alt.Load.batch(cls=1)
+    loads_all = alt.Load
+    bus = alt.Bus[10]
+
+    #TODO: test with NonUniformBatch too
+
+    name = load.name
+    names = loads.name
+    names = loads_all.name
+    name = bus.Name
+
+    create_ref_ckt13(dss)
+
+    with pytest.raises(TypeError):
+        name = bus.Name
+    
+    with pytest.raises(TypeError):
+        name = load.name
+
+    with pytest.raises(TypeError):
+        names = loads.name
+
+    # This one should work since it gets the list each time if uses it
+    names = loads_all.name
 
 
 if __name__ == '__main__':

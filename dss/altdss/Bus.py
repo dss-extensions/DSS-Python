@@ -3,7 +3,7 @@
 from typing import Union, List, AnyStr, Optional
 from dss.enums import DSSJSONFlags
 from .types import Float64Array, Int32Array, ComplexArray
-from .common import Base
+from .common import Base, InvalidatedBus
 from .PCElement import PCElementBatch
 from .PDElement import PDElementBatch
 from .Load import LoadBatch
@@ -18,8 +18,12 @@ class Bus:
         '_get_int32_array',
         '_get_string',
         '_api_util',
+        '__weakref__',
     )
     
+    def _invalidate_ptr(self):
+        self._ptr = InvalidatedBus
+
     def __init__(self, api_util, ptr):
         self._get_float64_array = api_util.get_float64_array
         self._get_fcomplex128_array = api_util.get_fcomplex128_array
@@ -28,6 +32,7 @@ class Bus:
         self._lib = api_util.lib
         self._ptr = ptr
         self._api_util = api_util
+        api_util.track_obj(self)
 
     def __repr__(self):
         return f'<Bus.{self.Name}>'

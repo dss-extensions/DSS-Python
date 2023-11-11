@@ -1,25 +1,29 @@
 import numpy as np
 from typing import Union, List, AnyStr, Optional
 from dss.enums import DSSJSONFlags
-from .common import Base, LIST_LIKE
+from .common import Base, LIST_LIKE, InvalidatedObject
 from .types import Float64Array, Int32Array
 from .DSSObj import DSSObj
 from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
 
-def _get_dispose_batch(lib, ffi):
-    def _dispose_batch(ptr):
-        if ptr != ffi.NULL:
-            lib.Batch_Dispose(ptr)
-
-    return _dispose_batch
-
-
 class DSSBatch(Base):
+
+    def _dispose_batch(self, batch_ptr):
+        if batch_ptr != self._ffi.NULL:
+            self._lib.Batch_Dispose(batch_ptr)
+
+    def _invalidate_ptr(self):
+        self._pointer = InvalidatedObject
 
     #TODO: keep property name for debugging? Or maybe use from the parent object
     def _wrap_ptr(self, ptrptr, countptr):
-        self._pointer = self._ffi.gc(ptrptr[0] if ptrptr != self._ffi.NULL else self._ffi.NULL, _get_dispose_batch(self._lib, self._ffi))
+        if ptrptr != self._ffi.NULL:
+            self._pointer = self._ffi.gc(ptrptr[0], self._dispose_batch)
+        else:
+            self._pointer = self._ffi.NULL
+
         self._count = countptr[0] if countptr != self._ffi.NULL else 0
+
 
     def __init__(self, api_util, **kwargs):
         begin_edit = kwargs.pop('begin_edit', None)
@@ -38,19 +42,20 @@ class DSSBatch(Base):
         self._ptrptr = ptrptr = self._ffi.new('void***')
         self._countptr = countptr = self._ffi.new('int32_t[4]')
 
-        #TODO: weakref
-
         if len(kwargs) == 0 or (len(kwargs) == 1 and self._sync_cls):
             if not self._sync_cls:
                 self._lib.Batch_CreateByClass(ptrptr, countptr, self._cls_idx)
                 self._wrap_ptr(ptrptr, countptr)
+                # No need to track this kind of batch since it's dynamic
             else:
                 self._pointer = self._lib.Obj_GetListPointer(self._api_util.ctx, self._cls_idx)                
                 self._count = self._lib.Obj_GetCount(self._api_util.ctx, self._cls_idx)
+                api_util.track_batch(self)
 
             self._check_for_error()
             return
 
+        api_util.track_batch(self)
         from_func = kwargs.get('from_func')
         if from_func is not None:
             func, *func_args = from_func
@@ -523,8 +528,12 @@ class NonUniformBatch(Base):
         '_cnt',
         '_pycls',
         '_ffi',
-        '_copy_safe'
+        '_copy_safe',
+        '__weakref__',
     )
+
+    def _invalidate_ptr(self):
+        self._ptr = InvalidatedObject
 
     def __init__(self, func, parent, pycls=None, copy_safe=False):
         super().__init__(parent._api_util)
@@ -535,15 +544,20 @@ class NonUniformBatch(Base):
         self._ptr = None
         self._cnt = None
         self._copy_safe = copy_safe
+        if self._copy_safe:
+            self._api_util.track_batch(self)
+
+    def _dispose_batch(self, batch_ptr):
+        if batch_ptr != self._ffi.NULL:
+            self._lib.Batch_Dispose(batch_ptr)
 
     def _fill_data(self):
-        if self._copysafe and self._cnt is None:
+        if self._copysafe and self._cnt is not None:
             return (self._ptr, self._cnt)
-                
-        self._ptr = self._ffi.gc(self._ffi.new('void***'), _get_dispose_batch(self._lib, self._ffi))
+
+        self._ptr = self._ffi.gc(self._ffi.new('void***'), self._dispose_batch)
         self._cnt = self._ffi.new('int32_t[4]')
         self._func(self._ptr, self._cnt, self._parent_ptr)
-
         return (self._ptr, self._cnt)
         
     def __len__(self):

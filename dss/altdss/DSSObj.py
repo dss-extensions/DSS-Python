@@ -1,6 +1,6 @@
 import numpy as np
 from dss.enums import DSSJSONFlags
-from .common import Base, LIST_LIKE
+from .common import Base, LIST_LIKE, InvalidatedObject
 from .types import Float64Array, Int32Array
 from typing import Union, List, AnyStr, Optional
 
@@ -15,6 +15,7 @@ class DSSObj(Base):
         '_ptr',
         '_ffi',
         '_get_int32_list',
+        '__weakref__',
     ]
     _extra_slots = []
 
@@ -23,6 +24,10 @@ class DSSObj(Base):
         self._ptr = ptr
         self._ffi = api_util.ffi
         self._get_int32_list = api_util.get_int32_array2
+        api_util.track_obj(self)
+
+    def _invalidate_ptr(self):
+        self._ptr = InvalidatedObject
 
     def __hash__(self):
         return self._ptr.__hash__()

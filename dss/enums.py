@@ -380,3 +380,16 @@ class DSSCompatFlags(IntFlag):
     we changed the behavior to follow what most of the other APIs do: use the active object in the internal
     list. This change was done for DSS C-API v0.13.5, as well as the introduction of this flag.
     """
+
+
+class AltDSSEvent(IntEnum):
+    """
+    Event codes used by the event callback system
+    """
+    Legacy_InitControls = 0
+    Legacy_CheckControls = 1
+    Legacy_StepControls = 2
+    Clear = 3
+    ReprocessBuses = 4
+    BuildSystemY = 5
+
