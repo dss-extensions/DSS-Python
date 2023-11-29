@@ -41,7 +41,8 @@ class BatchFloat64ArrayProxy:
                 *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Increment,
-                other
+                other,
+                0
             )
             return self
 
@@ -53,7 +54,8 @@ class BatchFloat64ArrayProxy:
         batch._lib.Batch_SetFloat64Array(
             *ptr_cnt,
             self._idx,
-            data_ptr
+            data_ptr,
+            0
         )
         batch._check_for_error()
         return self
@@ -69,7 +71,8 @@ class BatchFloat64ArrayProxy:
                 *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Multiply,
-                other
+                other,
+                0
             )
             return self
 
@@ -81,7 +84,8 @@ class BatchFloat64ArrayProxy:
         batch._lib.Batch_SetFloat64Array(
             *ptr_cnt,
             self._idx,
-            data_ptr
+            data_ptr,
+            0
         )
         batch._check_for_error()
         return self
@@ -94,7 +98,8 @@ class BatchFloat64ArrayProxy:
                 *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Multiply,
-                1 / other
+                1 / other,
+                0
             )
             return self
 
@@ -106,7 +111,8 @@ class BatchFloat64ArrayProxy:
         batch._lib.Batch_SetFloat64Array(
             *ptr_cnt,
             self._idx,
-            data_ptr
+            data_ptr,
+            0
         )
         batch._check_for_error()
         return self
@@ -153,7 +159,8 @@ class BatchInt32ArrayProxy:
                 *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Increment,
-                other
+                other,
+                0
             )
             return self
 
@@ -165,7 +172,8 @@ class BatchInt32ArrayProxy:
         batch._lib.Batch_SetInt32Array(
             *ptr_cnt,
             self._idx,
-            data_ptr
+            data_ptr,
+            0
         )
         batch._check_for_error()
         return self
@@ -181,7 +189,8 @@ class BatchInt32ArrayProxy:
                 *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Multiply,
-                other
+                other,
+                0
             )
             return self
 
@@ -193,7 +202,8 @@ class BatchInt32ArrayProxy:
         batch._lib.Batch_SetInt32Array(
             *ptr_cnt,
             self._idx,
-            data_ptr
+            data_ptr,
+            0
         )
         batch._check_for_error()
         return self
@@ -206,7 +216,8 @@ class BatchInt32ArrayProxy:
                 *ptr_cnt,
                 self._idx,
                 self._lib.BatchOperation_Multiply,
-                1 / other
+                1 / other,
+                0
             )
             return self
 
@@ -218,7 +229,8 @@ class BatchInt32ArrayProxy:
         self._lib.Batch_SetInt32Array(
             *ptr_cnt,
             self._idx,
-            data_ptr
+            data_ptr,
+            0
         )
         batch._check_for_error()
         return self

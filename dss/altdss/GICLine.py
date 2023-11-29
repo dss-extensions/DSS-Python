@@ -3,6 +3,7 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from .types import Float64Array, Int32Array
+from . import enums
 from .DSSObj import IDSSObj, DSSObj
 from .Batch import DSSBatch
 from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
@@ -46,8 +47,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_Bus1(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -63,8 +64,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(2)
 
-    def _set_Bus2(self, value: AnyStr):
-        self._set_string_o(2, value)
+    def _set_Bus2(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(2, value, flags)
 
     Bus2 = property(_get_Bus2, _set_Bus2)
 
@@ -84,8 +85,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    def _set_Volts(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 3, value)
+    def _set_Volts(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
     Volts = property(_get_Volts, _set_Volts)
 
@@ -97,8 +98,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    def _set_Angle(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 4, value)
+    def _set_Angle(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
     Angle = property(_get_Angle, _set_Angle)
 
@@ -110,8 +111,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_Frequency(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_Frequency(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     Frequency = property(_get_Frequency, _set_Frequency)
 
@@ -123,8 +124,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 6)
 
-    def _set_Phases(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 6, value)
+    def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -136,8 +137,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    def _set_R(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 7, value)
+    def _set_R(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
     R = property(_get_R, _set_R)
 
@@ -149,8 +150,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    def _set_X(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 8, value)
+    def _set_X(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
     X = property(_get_X, _set_X)
 
@@ -162,8 +163,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_C(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_C(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     C = property(_get_C, _set_C)
 
@@ -175,8 +176,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    def _set_EN(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 10, value)
+    def _set_EN(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
     EN = property(_get_EN, _set_EN)
 
@@ -188,8 +189,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_EE(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_EE(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     EE = property(_get_EE, _set_EE)
 
@@ -201,8 +202,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_Lat1(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_Lat1(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     Lat1 = property(_get_Lat1, _set_Lat1)
 
@@ -214,8 +215,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_Lon1(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_Lon1(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     Lon1 = property(_get_Lon1, _set_Lon1)
 
@@ -227,8 +228,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_Lat2(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_Lat2(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     Lat2 = property(_get_Lat2, _set_Lat2)
 
@@ -240,8 +241,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    def _set_Lon2(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 15, value)
+    def _set_Lon2(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
     Lon2 = property(_get_Lon2, _set_Lon2)
 
@@ -253,8 +254,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(16)
 
-    def _set_Spectrum_str(self, value: AnyStr):
-        self._set_string_o(16, value)
+    def _set_Spectrum_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(16, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -266,12 +267,12 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(16, SpectrumObj)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(16, value)
+            self._set_obj(16, value, flags)
             return
 
-        self._set_string_o(16, value)
+        self._set_string_o(16, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -283,8 +284,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 17, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -296,8 +297,8 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 18) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 18, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 18, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -349,8 +350,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -366,8 +367,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(2)
 
-    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(2, value)
+    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(2, value, flags)
 
     Bus2 = property(_get_Bus2, _set_Bus2)
 
@@ -387,8 +388,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    def _set_Volts(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(3, value)
+    def _set_Volts(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(3, value, flags)
 
     Volts = property(_get_Volts, _set_Volts)
 
@@ -400,8 +401,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    def _set_Angle(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(4, value)
+    def _set_Angle(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(4, value, flags)
 
     Angle = property(_get_Angle, _set_Angle)
 
@@ -413,8 +414,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_Frequency(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_Frequency(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     Frequency = property(_get_Frequency, _set_Frequency)
 
@@ -426,8 +427,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    def _set_Phases(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(6, value)
+    def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(6, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -439,8 +440,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    def _set_R(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(7, value)
+    def _set_R(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(7, value, flags)
 
     R = property(_get_R, _set_R)
 
@@ -452,8 +453,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    def _set_X(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(8, value)
+    def _set_X(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(8, value, flags)
 
     X = property(_get_X, _set_X)
 
@@ -465,8 +466,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_C(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_C(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     C = property(_get_C, _set_C)
 
@@ -478,8 +479,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    def _set_EN(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(10, value)
+    def _set_EN(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(10, value, flags)
 
     EN = property(_get_EN, _set_EN)
 
@@ -491,8 +492,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_EE(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_EE(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     EE = property(_get_EE, _set_EE)
 
@@ -504,8 +505,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_Lat1(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_Lat1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     Lat1 = property(_get_Lat1, _set_Lat1)
 
@@ -517,8 +518,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_Lon1(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_Lon1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     Lon1 = property(_get_Lon1, _set_Lon1)
 
@@ -530,8 +531,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_Lat2(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_Lat2(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     Lat2 = property(_get_Lat2, _set_Lat2)
 
@@ -543,8 +544,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    def _set_Lon2(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(15, value)
+    def _set_Lon2(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(15, value, flags)
 
     Lon2 = property(_get_Lon2, _set_Lon2)
 
@@ -556,8 +557,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(16)
 
-    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(16, value)
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(16, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -569,8 +570,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(16)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(16, value)
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(16, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -582,8 +583,8 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(17, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(17, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -597,12 +598,12 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(18)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(18, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(18, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -610,7 +611,7 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 19.
         """
-        self._set_batch_string(19, value)
+        self._set_batch_string(19, value, flags)
 
 class GICLineBatchProperties(TypedDict):
     Bus1: Union[AnyStr, List[AnyStr]]

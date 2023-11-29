@@ -48,8 +48,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_NPts(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_NPts(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     NPts = property(_get_NPts, _set_NPts)
 
@@ -63,8 +63,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 2)
 
-    def _set_Interval(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 2, value)
+    def _set_Interval(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 2, value, flags)
 
     Interval = property(_get_Interval, _set_Interval)
 
@@ -79,8 +79,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 4)
 
-    def _set_Hour(self, value: Float64Array):
-        self._set_float64_array_o(4, value)
+    def _set_Hour(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(4, value, flags)
 
     Hour = property(_get_Hour, _set_Hour)
 
@@ -92,8 +92,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_Mean(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_Mean(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     Mean = property(_get_Mean, _set_Mean)
 
@@ -107,8 +107,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    def _set_StdDev(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 6, value)
+    def _set_StdDev(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
     StdDev = property(_get_StdDev, _set_StdDev)
 
@@ -120,8 +120,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._get_prop_string(7)
 
-    def _set_CSVFile(self, value: AnyStr):
-        self._set_string_o(7, value)
+    def _set_CSVFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(7, value, flags)
 
     CSVFile = property(_get_CSVFile, _set_CSVFile)
 
@@ -133,8 +133,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._get_prop_string(8)
 
-    def _set_SngFile(self, value: AnyStr):
-        self._set_string_o(8, value)
+    def _set_SngFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(8, value, flags)
 
     SngFile = property(_get_SngFile, _set_SngFile)
 
@@ -146,12 +146,12 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._get_prop_string(9)
 
-    def _set_DblFile(self, value: AnyStr):
-        self._set_string_o(9, value)
+    def _set_DblFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(9, value, flags)
 
     DblFile = property(_get_DblFile, _set_DblFile)
 
-    def Action(self, value: Union[AnyStr, int, enums.LoadShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.LoadShapeAction], flags: enums.SetterFlags = 0):
         """
         {NORMALIZE | DblSave | SngSave} After defining load curve data, setting action=normalize will modify the multipliers so that the peak is 1.0. The mean and std deviation are recomputed.
 
@@ -160,22 +160,22 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         DSS property name: `Action`, DSS property index: 10.
         """
         if isinstance(value, int):
-            self._lib.Obj_SetInt32(self._ptr, 10, value)
+            self._lib.Obj_SetInt32(self._ptr, 10, value, flags)
             return
 
         self._set_string_o(10, value)
 
-    def Normalize(self):
+    def Normalize(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(LoadShapeAction.Normalize)'''
-        self._lib.Obj_SetInt32(self._ptr, 10, enums.LoadShapeAction.Normalize)
+        self._lib.Obj_SetInt32(self._ptr, 10, enums.LoadShapeAction.Normalize, flags)
 
-    def DblSave(self):
+    def DblSave(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(LoadShapeAction.DblSave)'''
-        self._lib.Obj_SetInt32(self._ptr, 10, enums.LoadShapeAction.DblSave)
+        self._lib.Obj_SetInt32(self._ptr, 10, enums.LoadShapeAction.DblSave, flags)
 
-    def SngSave(self):
+    def SngSave(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(LoadShapeAction.SngSave)'''
-        self._lib.Obj_SetInt32(self._ptr, 10, enums.LoadShapeAction.SngSave)
+        self._lib.Obj_SetInt32(self._ptr, 10, enums.LoadShapeAction.SngSave, flags)
 
     def _get_QMult(self) -> Float64Array:
         """
@@ -189,8 +189,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 11)
 
-    def _set_QMult(self, value: Float64Array):
-        self._set_float64_array_o(11, value)
+    def _set_QMult(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(11, value, flags)
 
     QMult = property(_get_QMult, _set_QMult)
 
@@ -202,8 +202,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 12) != 0
 
-    def _set_UseActual(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 12, value)
+    def _set_UseActual(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 12, value, flags)
 
     UseActual = property(_get_UseActual, _set_UseActual)
 
@@ -215,8 +215,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_PMax(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_PMax(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     PMax = property(_get_PMax, _set_PMax)
 
@@ -228,8 +228,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_QMax(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_QMax(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     QMax = property(_get_QMax, _set_QMax)
 
@@ -241,8 +241,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    def _set_SInterval(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 15, value)
+    def _set_SInterval(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
     SInterval = property(_get_SInterval, _set_SInterval)
 
@@ -254,8 +254,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    def _set_MInterval(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 16, value)
+    def _set_MInterval(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
     MInterval = property(_get_MInterval, _set_MInterval)
 
@@ -267,8 +267,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    def _set_PBase(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 17, value)
+    def _set_PBase(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
     PBase = property(_get_PBase, _set_PBase)
 
@@ -280,8 +280,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    def _set_QBase(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 18, value)
+    def _set_QBase(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
     QBase = property(_get_QBase, _set_QBase)
 
@@ -293,8 +293,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 19)
 
-    def _set_PMult(self, value: Float64Array):
-        self._set_float64_array_o(19, value)
+    def _set_PMult(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(19, value, flags)
 
     PMult = property(_get_PMult, _set_PMult)
 
@@ -307,8 +307,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._get_prop_string(20)
 
-    def _set_PQCSVFile(self, value: AnyStr):
-        self._set_string_o(20, value)
+    def _set_PQCSVFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(20, value, flags)
 
     PQCSVFile = property(_get_PQCSVFile, _set_PQCSVFile)
 
@@ -321,8 +321,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 21) != 0
 
-    def _set_MemoryMapping(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 21, value)
+    def _set_MemoryMapping(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 21, value, flags)
 
     MemoryMapping = property(_get_MemoryMapping, _set_MemoryMapping)
 
@@ -337,11 +337,11 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return enums.LoadShapeInterpolation(self._lib.Obj_GetInt32(self._ptr, 22))
 
-    def _set_Interpolation(self, value: Union[AnyStr, int, enums.LoadShapeInterpolation]):
+    def _set_Interpolation(self, value: Union[AnyStr, int, enums.LoadShapeInterpolation], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(22, value)
+            self._set_string_o(22, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 22, value)
+        self._lib.Obj_SetInt32(self._ptr, 22, value, flags)
 
     Interpolation = property(_get_Interpolation, _set_Interpolation)
 
@@ -356,8 +356,8 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         """
         return self._get_prop_string(22)
 
-    def _set_Interpolation_str(self, value: AnyStr):
-        self.Interpolation = value
+    def _set_Interpolation_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Interpolation(value, flags)
 
     Interpolation_str = property(_get_Interpolation_str, _set_Interpolation_str)
 
@@ -410,8 +410,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_NPts(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_NPts(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     NPts = property(_get_NPts, _set_NPts)
 
@@ -425,8 +425,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 2)
 
-    def _set_Interval(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(2, value)
+    def _set_Interval(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(2, value, flags)
 
     Interval = property(_get_Interval, _set_Interval)
 
@@ -444,8 +444,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_Hour(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(4, value)
+    def _set_Hour(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(4, value, flags)
 
     Hour = property(_get_Hour, _set_Hour)
 
@@ -457,8 +457,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_Mean(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_Mean(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     Mean = property(_get_Mean, _set_Mean)
 
@@ -472,8 +472,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    def _set_StdDev(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(6, value)
+    def _set_StdDev(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(6, value, flags)
 
     StdDev = property(_get_StdDev, _set_StdDev)
 
@@ -485,8 +485,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return self._get_batch_str_prop(7)
 
-    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(7, value)
+    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(7, value, flags)
 
     CSVFile = property(_get_CSVFile, _set_CSVFile)
 
@@ -498,8 +498,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return self._get_batch_str_prop(8)
 
-    def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(8, value)
+    def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(8, value, flags)
 
     SngFile = property(_get_SngFile, _set_SngFile)
 
@@ -511,12 +511,12 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return self._get_batch_str_prop(9)
 
-    def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(9, value)
+    def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(9, value, flags)
 
     DblFile = property(_get_DblFile, _set_DblFile)
 
-    def Action(self, value: Union[AnyStr, int, enums.LoadShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.LoadShapeAction], flags: enums.SetterFlags = 0):
         """
         {NORMALIZE | DblSave | SngSave} After defining load curve data, setting action=normalize will modify the multipliers so that the peak is 1.0. The mean and std deviation are recomputed.
 
@@ -525,21 +525,21 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         DSS property name: `Action`, DSS property index: 10.
         """
         if isinstance(value, (bytes, str)) or (isinstance(value, LIST_LIKE) and len(value) > 0 and isinstance(value[0], (bytes, str))):
-            self._set_batch_string(10, value)
+            self._set_batch_string(10, value, flags)
         else:
-            self._set_batch_int32_array(10, value)
+            self._set_batch_int32_array(10, value, flags)
 
-    def Normalize(self):
+    def Normalize(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(LoadShapeAction.Normalize)'''
-        self._set_batch_int32_array(10, enums.LoadShapeAction.Normalize)
+        self._set_batch_int32_array(10, enums.LoadShapeAction.Normalize, flags)
 
-    def DblSave(self):
+    def DblSave(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(LoadShapeAction.DblSave)'''
-        self._set_batch_int32_array(10, enums.LoadShapeAction.DblSave)
+        self._set_batch_int32_array(10, enums.LoadShapeAction.DblSave, flags)
 
-    def SngSave(self):
+    def SngSave(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(LoadShapeAction.SngSave)'''
-        self._set_batch_int32_array(10, enums.LoadShapeAction.SngSave)
+        self._set_batch_int32_array(10, enums.LoadShapeAction.SngSave, flags)
 
     def _get_QMult(self) -> List[Float64Array]:
         """
@@ -556,8 +556,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_QMult(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(11, value)
+    def _set_QMult(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(11, value, flags)
 
     QMult = property(_get_QMult, _set_QMult)
 
@@ -571,8 +571,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
             self._get_batch_int32_prop(12)
         ]
 
-    def _set_UseActual(self, value: bool):
-        self._set_batch_int32_array(12, value)
+    def _set_UseActual(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(12, value, flags)
 
     UseActual = property(_get_UseActual, _set_UseActual)
 
@@ -584,8 +584,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_PMax(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_PMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     PMax = property(_get_PMax, _set_PMax)
 
@@ -597,8 +597,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_QMax(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_QMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     QMax = property(_get_QMax, _set_QMax)
 
@@ -610,8 +610,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    def _set_SInterval(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(15, value)
+    def _set_SInterval(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(15, value, flags)
 
     SInterval = property(_get_SInterval, _set_SInterval)
 
@@ -623,8 +623,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    def _set_MInterval(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(16, value)
+    def _set_MInterval(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(16, value, flags)
 
     MInterval = property(_get_MInterval, _set_MInterval)
 
@@ -636,8 +636,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    def _set_PBase(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(17, value)
+    def _set_PBase(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(17, value, flags)
 
     PBase = property(_get_PBase, _set_PBase)
 
@@ -649,8 +649,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    def _set_QBase(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(18, value)
+    def _set_QBase(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(18, value, flags)
 
     QBase = property(_get_QBase, _set_QBase)
 
@@ -665,8 +665,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_PMult(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(19, value)
+    def _set_PMult(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(19, value, flags)
 
     PMult = property(_get_PMult, _set_PMult)
 
@@ -679,8 +679,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return self._get_batch_str_prop(20)
 
-    def _set_PQCSVFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(20, value)
+    def _set_PQCSVFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(20, value, flags)
 
     PQCSVFile = property(_get_PQCSVFile, _set_PQCSVFile)
 
@@ -695,8 +695,8 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
             self._get_batch_int32_prop(21)
         ]
 
-    def _set_MemoryMapping(self, value: bool):
-        self._set_batch_int32_array(21, value)
+    def _set_MemoryMapping(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(21, value, flags)
 
     MemoryMapping = property(_get_MemoryMapping, _set_MemoryMapping)
 
@@ -711,12 +711,12 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 22)
 
-    def _set_Interpolation(self, value: Union[AnyStr, int, enums.LoadShapeInterpolation, List[AnyStr], List[int], List[enums.LoadShapeInterpolation], Int32Array]):
+    def _set_Interpolation(self, value: Union[AnyStr, int, enums.LoadShapeInterpolation, List[AnyStr], List[int], List[enums.LoadShapeInterpolation], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(22, value)
+            self._set_batch_string(22, value, flags)
             return
 
-        self._set_batch_int32_array(22, value)
+        self._set_batch_int32_array(22, value, flags)
 
     Interpolation = property(_get_Interpolation, _set_Interpolation)
 
@@ -731,12 +731,12 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
         """
         return self._get_batch_str_prop(22)
 
-    def _set_Interpolation_str(self, value: AnyStr):
-        self.Interpolation = value
+    def _set_Interpolation_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Interpolation(value, flags)
 
     Interpolation_str = property(_get_Interpolation_str, _set_Interpolation_str)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -744,7 +744,7 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
 
         DSS property name: `Like`, DSS property index: 23.
         """
-        self._set_batch_string(23, value)
+        self._set_batch_string(23, value, flags)
 
 class LoadShapeBatchProperties(TypedDict):
     NPts: Union[int, Int32Array]

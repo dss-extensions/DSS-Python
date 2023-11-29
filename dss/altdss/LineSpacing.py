@@ -30,8 +30,8 @@ class LineSpacing(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_NConds(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_NConds(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     NConds = property(_get_NConds, _set_NConds)
 
@@ -43,8 +43,8 @@ class LineSpacing(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_NPhases(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_NPhases(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     NPhases = property(_get_NPhases, _set_NPhases)
 
@@ -56,8 +56,8 @@ class LineSpacing(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    def _set_X(self, value: Float64Array):
-        self._set_float64_array_o(3, value)
+    def _set_X(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(3, value, flags)
 
     X = property(_get_X, _set_X)
 
@@ -69,8 +69,8 @@ class LineSpacing(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 4)
 
-    def _set_H(self, value: Float64Array):
-        self._set_float64_array_o(4, value)
+    def _set_H(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(4, value, flags)
 
     H = property(_get_H, _set_H)
 
@@ -82,11 +82,11 @@ class LineSpacing(DSSObj):
         """
         return enums.LengthUnit(self._lib.Obj_GetInt32(self._ptr, 5))
 
-    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(5, value)
+            self._set_string_o(5, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 5, value)
+        self._lib.Obj_SetInt32(self._ptr, 5, value, flags)
 
     Units = property(_get_Units, _set_Units)
 
@@ -98,8 +98,8 @@ class LineSpacing(DSSObj):
         """
         return self._get_prop_string(5)
 
-    def _set_Units_str(self, value: AnyStr):
-        self.Units = value
+    def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Units(value, flags)
 
     Units_str = property(_get_Units_str, _set_Units_str)
 
@@ -136,8 +136,8 @@ class LineSpacingBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_NConds(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_NConds(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     NConds = property(_get_NConds, _set_NConds)
 
@@ -149,8 +149,8 @@ class LineSpacingBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_NPhases(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_NPhases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     NPhases = property(_get_NPhases, _set_NPhases)
 
@@ -165,8 +165,8 @@ class LineSpacingBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_X(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(3, value)
+    def _set_X(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(3, value, flags)
 
     X = property(_get_X, _set_X)
 
@@ -181,8 +181,8 @@ class LineSpacingBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_H(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(4, value)
+    def _set_H(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(4, value, flags)
 
     H = property(_get_H, _set_H)
 
@@ -194,12 +194,12 @@ class LineSpacingBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 5)
 
-    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(5, value)
+            self._set_batch_string(5, value, flags)
             return
 
-        self._set_batch_int32_array(5, value)
+        self._set_batch_int32_array(5, value, flags)
 
     Units = property(_get_Units, _set_Units)
 
@@ -211,12 +211,12 @@ class LineSpacingBatch(DSSBatch):
         """
         return self._get_batch_str_prop(5)
 
-    def _set_Units_str(self, value: AnyStr):
-        self.Units = value
+    def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Units(value, flags)
 
     Units_str = property(_get_Units_str, _set_Units_str)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -224,7 +224,7 @@ class LineSpacingBatch(DSSBatch):
 
         DSS property name: `Like`, DSS property index: 6.
         """
-        self._set_batch_string(6, value)
+        self._set_batch_string(6, value, flags)
 
 class LineSpacingBatchProperties(TypedDict):
     NConds: Union[int, Int32Array]

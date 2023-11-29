@@ -1,5 +1,6 @@
 import numpy as np
 from dss.enums import DSSJSONFlags
+from .enums import SetterFlags
 from .common import Base, LIST_LIKE, InvalidatedObject
 from .types import Float64Array, Int32Array
 from typing import Union, List, AnyStr, Optional
@@ -113,35 +114,35 @@ class DSSObj(Base):
             idx
         ).view(complex)[0]
 
-    def _set_complex(self, idx: int, value: complex):
+    def _set_complex(self, idx: int, value: complex, flags: SetterFlags = 0):
         data = np.array([complex(value)])
         data, data_ptr, cnt_ptr = self._prepare_float64_array(data.view(dtype=np.float64))
-        self._lib.Obj_SetFloat64Array(self._ptr, idx, data_ptr, cnt_ptr)
+        self._lib.Obj_SetFloat64Array(self._ptr, idx, data_ptr, cnt_ptr, flags)
         self._check_for_error()
 
     def _get_prop_string(self, idx: int) -> str:
         s = self._lib.Obj_GetString(self._ptr, idx)
         return self._decode_and_free_string(s)
 
-    def _set_string_o(self, idx: int, value: AnyStr):
+    def _set_string_o(self, idx: int, value: AnyStr, flags: SetterFlags = 0):
         if not isinstance(value, bytes):
             value = value.encode(self._api_util.codec)
-        self._lib.Obj_SetString(self._ptr, idx, value)
+        self._lib.Obj_SetString(self._ptr, idx, value, flags)
         self._check_for_error()
 
-    def _set_float64_array_o(self, idx: int, value: Float64Array):
+    def _set_float64_array_o(self, idx: int, value: Float64Array, flags: SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_float64_array(value)
-        self._lib.Obj_SetFloat64Array(self._ptr, idx, value_ptr, value_count)
+        self._lib.Obj_SetFloat64Array(self._ptr, idx, value_ptr, value_count, flags)
         self._check_for_error()
 
-    def _set_int32_array_o(self, idx: int, value: Int32Array):
+    def _set_int32_array_o(self, idx: int, value: Int32Array, flags: SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_int32_array(value)
-        self._lib.Obj_SetInt32Array(self._ptr, idx, value_ptr, value_count)
+        self._lib.Obj_SetInt32Array(self._ptr, idx, value_ptr, value_count, flags)
         self._check_for_error()
 
-    def _set_string_array_o(self, idx: int, value: List[AnyStr]):
+    def _set_string_array_o(self, idx: int, value: List[AnyStr], flags: SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, idx, value_ptr, value_count)
+        self._lib.Obj_SetStringArray(self._ptr, idx, value_ptr, value_count, flags)
         self._check_for_error()
 
     def _get_obj_from_ptr(self, other_ptr, pycls):
@@ -167,13 +168,13 @@ class DSSObj(Base):
 
         return pycls(self._api_util, other_ptr)
 
-    def _set_obj(self, idx: int, other):
+    def _set_obj(self, idx: int, other, flags: SetterFlags = 0):
         if other is not None:
             other_ptr = other._ptr
         else:
             other_ptr = self._ffi.NULL
 
-        self._lib.Obj_SetObject(self._ptr, idx, other_ptr)
+        self._lib.Obj_SetObject(self._ptr, idx, other_ptr, flags)
         self._check_for_error()
 
     def _get_obj_array(self, idx: int, pycls=None):
@@ -240,7 +241,7 @@ class DSSObj(Base):
         return res
 
 
-    def _set_obj_array(self, idx: int, other):
+    def _set_obj_array(self, idx: int, other, flags: SetterFlags = 0):
         if other is None or (isinstance(other, LIST_LIKE) and len(other) == 0):
             other_ptr = self._ffi.NULL
             other_cnt = 0
@@ -249,7 +250,7 @@ class DSSObj(Base):
             other_ptr = self.ffi.new('void*[]', other_cnt)
             other_ptr[:] = [o._ptr for o in other]
 
-        self._lib.Obj_SetObjectArray(self._ptr, idx, other_ptr, other_cnt)
+        self._lib.Obj_SetObjectArray(self._ptr, idx, other_ptr, other_cnt, flags)
         self._check_for_error()
 
     def begin_edit(self) -> None:

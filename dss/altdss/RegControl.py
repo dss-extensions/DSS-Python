@@ -64,8 +64,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_Transformer_str(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_Transformer_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     Transformer_str = property(_get_Transformer_str, _set_Transformer_str)
 
@@ -79,12 +79,12 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(1, None)
 
-    def _set_Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans]):
+    def _set_Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(1, value)
+            self._set_obj(1, value, flags)
             return
 
-        self._set_string_o(1, value)
+        self._set_string_o(1, value, flags)
 
     Transformer = property(_get_Transformer, _set_Transformer)
 
@@ -96,8 +96,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_Winding(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_Winding(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     Winding = property(_get_Winding, _set_Winding)
 
@@ -109,8 +109,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    def _set_VReg(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 3, value)
+    def _set_VReg(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
     VReg = property(_get_VReg, _set_VReg)
 
@@ -122,8 +122,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    def _set_Band(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 4, value)
+    def _set_Band(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
     Band = property(_get_Band, _set_Band)
 
@@ -135,8 +135,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_PTRatio(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_PTRatio(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     PTRatio = property(_get_PTRatio, _set_PTRatio)
 
@@ -148,8 +148,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    def _set_CTPrim(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 6, value)
+    def _set_CTPrim(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
     CTPrim = property(_get_CTPrim, _set_CTPrim)
 
@@ -161,8 +161,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    def _set_R(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 7, value)
+    def _set_R(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
     R = property(_get_R, _set_R)
 
@@ -174,8 +174,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    def _set_X(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 8, value)
+    def _set_X(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
     X = property(_get_X, _set_X)
 
@@ -187,8 +187,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(9)
 
-    def _set_Bus(self, value: AnyStr):
-        self._set_string_o(9, value)
+    def _set_Bus(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(9, value, flags)
 
     Bus = property(_get_Bus, _set_Bus)
 
@@ -200,8 +200,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    def _set_Delay(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 10, value)
+    def _set_Delay(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
@@ -213,8 +213,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 11) != 0
 
-    def _set_Reversible(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 11, value)
+    def _set_Reversible(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 11, value, flags)
 
     Reversible = property(_get_Reversible, _set_Reversible)
 
@@ -226,8 +226,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_RevVReg(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_RevVReg(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     RevVReg = property(_get_RevVReg, _set_RevVReg)
 
@@ -239,8 +239,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_RevBand(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_RevBand(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     RevBand = property(_get_RevBand, _set_RevBand)
 
@@ -252,8 +252,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_RevR(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_RevR(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     RevR = property(_get_RevR, _set_RevR)
 
@@ -265,8 +265,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    def _set_RevX(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 15, value)
+    def _set_RevX(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
     RevX = property(_get_RevX, _set_RevX)
 
@@ -278,8 +278,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    def _set_TapDelay(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 16, value)
+    def _set_TapDelay(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
     TapDelay = property(_get_TapDelay, _set_TapDelay)
 
@@ -291,8 +291,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 17) != 0
 
-    def _set_DebugTrace(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 17, value)
+    def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 17, value, flags)
 
     DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
 
@@ -308,8 +308,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 18)
 
-    def _set_MaxTapChange(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 18, value)
+    def _set_MaxTapChange(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 18, value, flags)
 
     MaxTapChange = property(_get_MaxTapChange, _set_MaxTapChange)
 
@@ -321,8 +321,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 19) != 0
 
-    def _set_InverseTime(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 19, value)
+    def _set_InverseTime(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 19, value, flags)
 
     InverseTime = property(_get_InverseTime, _set_InverseTime)
 
@@ -334,8 +334,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 20)
 
-    def _set_TapWinding(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 20, value)
+    def _set_TapWinding(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 20, value, flags)
 
     TapWinding = property(_get_TapWinding, _set_TapWinding)
 
@@ -347,8 +347,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    def _set_VLimit(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 21, value)
+    def _set_VLimit(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
     VLimit = property(_get_VLimit, _set_VLimit)
 
@@ -364,11 +364,11 @@ class RegControl(DSSObj, CircuitElementMixin):
 
         return enums.RegControlPhaseSelection(value)
 
-    def _set_PTPhase(self, value: Union[AnyStr, int, enums.RegControlPhaseSelection]):
+    def _set_PTPhase(self, value: Union[AnyStr, int, enums.RegControlPhaseSelection], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(22, value)
+            self._set_string_o(22, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 22, value)
+        self._lib.Obj_SetInt32(self._ptr, 22, value, flags)
 
     PTPhase = property(_get_PTPhase, _set_PTPhase)
 
@@ -380,8 +380,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(22)
 
-    def _set_PTPhase_str(self, value: AnyStr):
-        self.PTPhase = value
+    def _set_PTPhase_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_PTPhase(value, flags)
 
     PTPhase_str = property(_get_PTPhase_str, _set_PTPhase_str)
 
@@ -393,8 +393,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    def _set_RevThreshold(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 23, value)
+    def _set_RevThreshold(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
     RevThreshold = property(_get_RevThreshold, _set_RevThreshold)
 
@@ -406,8 +406,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    def _set_RevDelay(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 24, value)
+    def _set_RevDelay(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
     RevDelay = property(_get_RevDelay, _set_RevDelay)
 
@@ -419,8 +419,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 25) != 0
 
-    def _set_RevNeutral(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 25, value)
+    def _set_RevNeutral(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 25, value, flags)
 
     RevNeutral = property(_get_RevNeutral, _set_RevNeutral)
 
@@ -432,8 +432,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 26) != 0
 
-    def _set_EventLog(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 26, value)
+    def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 26, value, flags)
 
     EventLog = property(_get_EventLog, _set_EventLog)
 
@@ -445,8 +445,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    def _set_RemotePTRatio(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 27, value)
+    def _set_RemotePTRatio(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 27, value, flags)
 
     RemotePTRatio = property(_get_RemotePTRatio, _set_RemotePTRatio)
 
@@ -458,18 +458,18 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 28)
 
-    def _set_TapNum(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 28, value)
+    def _set_TapNum(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 28, value, flags)
 
     TapNum = property(_get_TapNum, _set_TapNum)
 
-    def Reset(self, value: bool = True):
+    def Reset(self, value: bool = True, flags: enums.SetterFlags = 0):
         """
         {Yes | No} If Yes, forces Reset of this RegControl.
 
         DSS property name: `Reset`, DSS property index: 29.
         """
-        self._lib.Obj_SetInt32(self._ptr, 29, value)
+        self._lib.Obj_SetInt32(self._ptr, 29, value, flags)
 
     def _get_LDC_Z(self) -> float:
         """
@@ -479,8 +479,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 30)
 
-    def _set_LDC_Z(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 30, value)
+    def _set_LDC_Z(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 30, value, flags)
 
     LDC_Z = property(_get_LDC_Z, _set_LDC_Z)
 
@@ -492,8 +492,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 31)
 
-    def _set_Rev_Z(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 31, value)
+    def _set_Rev_Z(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 31, value, flags)
 
     Rev_Z = property(_get_Rev_Z, _set_Rev_Z)
 
@@ -505,8 +505,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 32) != 0
 
-    def _set_Cogen(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 32, value)
+    def _set_Cogen(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 32, value, flags)
 
     Cogen = property(_get_Cogen, _set_Cogen)
 
@@ -518,8 +518,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 33)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 33, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 33, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -531,8 +531,8 @@ class RegControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 34) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 34, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 34, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -600,8 +600,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_Transformer_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_Transformer_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     Transformer_str = property(_get_Transformer_str, _set_Transformer_str)
 
@@ -615,8 +615,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(1)
 
-    def _set_Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans, List[AnyStr], List[Union[TransformerObj, AutoTrans]]]):
-        self._set_batch_obj_prop(1, value)
+    def _set_Transformer(self, value: Union[AnyStr, TransformerObj, AutoTrans, List[AnyStr], List[Union[TransformerObj, AutoTrans]]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(1, value, flags)
 
     Transformer = property(_get_Transformer, _set_Transformer)
 
@@ -628,8 +628,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_Winding(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_Winding(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     Winding = property(_get_Winding, _set_Winding)
 
@@ -641,8 +641,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    def _set_VReg(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(3, value)
+    def _set_VReg(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(3, value, flags)
 
     VReg = property(_get_VReg, _set_VReg)
 
@@ -654,8 +654,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    def _set_Band(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(4, value)
+    def _set_Band(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(4, value, flags)
 
     Band = property(_get_Band, _set_Band)
 
@@ -667,8 +667,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_PTRatio(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_PTRatio(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     PTRatio = property(_get_PTRatio, _set_PTRatio)
 
@@ -680,8 +680,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    def _set_CTPrim(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(6, value)
+    def _set_CTPrim(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(6, value, flags)
 
     CTPrim = property(_get_CTPrim, _set_CTPrim)
 
@@ -693,8 +693,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    def _set_R(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(7, value)
+    def _set_R(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(7, value, flags)
 
     R = property(_get_R, _set_R)
 
@@ -706,8 +706,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    def _set_X(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(8, value)
+    def _set_X(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(8, value, flags)
 
     X = property(_get_X, _set_X)
 
@@ -719,8 +719,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(9)
 
-    def _set_Bus(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(9, value)
+    def _set_Bus(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(9, value, flags)
 
     Bus = property(_get_Bus, _set_Bus)
 
@@ -732,8 +732,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    def _set_Delay(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(10, value)
+    def _set_Delay(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(10, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
@@ -747,8 +747,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(11)
         ]
 
-    def _set_Reversible(self, value: bool):
-        self._set_batch_int32_array(11, value)
+    def _set_Reversible(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(11, value, flags)
 
     Reversible = property(_get_Reversible, _set_Reversible)
 
@@ -760,8 +760,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_RevVReg(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_RevVReg(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     RevVReg = property(_get_RevVReg, _set_RevVReg)
 
@@ -773,8 +773,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_RevBand(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_RevBand(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     RevBand = property(_get_RevBand, _set_RevBand)
 
@@ -786,8 +786,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_RevR(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_RevR(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     RevR = property(_get_RevR, _set_RevR)
 
@@ -799,8 +799,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    def _set_RevX(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(15, value)
+    def _set_RevX(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(15, value, flags)
 
     RevX = property(_get_RevX, _set_RevX)
 
@@ -812,8 +812,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    def _set_TapDelay(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(16, value)
+    def _set_TapDelay(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(16, value, flags)
 
     TapDelay = property(_get_TapDelay, _set_TapDelay)
 
@@ -827,8 +827,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(17)
         ]
 
-    def _set_DebugTrace(self, value: bool):
-        self._set_batch_int32_array(17, value)
+    def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(17, value, flags)
 
     DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
 
@@ -844,8 +844,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 18)
 
-    def _set_MaxTapChange(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(18, value)
+    def _set_MaxTapChange(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(18, value, flags)
 
     MaxTapChange = property(_get_MaxTapChange, _set_MaxTapChange)
 
@@ -859,8 +859,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(19)
         ]
 
-    def _set_InverseTime(self, value: bool):
-        self._set_batch_int32_array(19, value)
+    def _set_InverseTime(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(19, value, flags)
 
     InverseTime = property(_get_InverseTime, _set_InverseTime)
 
@@ -872,8 +872,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 20)
 
-    def _set_TapWinding(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(20, value)
+    def _set_TapWinding(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(20, value, flags)
 
     TapWinding = property(_get_TapWinding, _set_TapWinding)
 
@@ -885,8 +885,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    def _set_VLimit(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(21, value)
+    def _set_VLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(21, value, flags)
 
     VLimit = property(_get_VLimit, _set_VLimit)
 
@@ -898,12 +898,12 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 22)
 
-    def _set_PTPhase(self, value: Union[AnyStr, int, enums.RegControlPhaseSelection, List[AnyStr], List[int], List[enums.RegControlPhaseSelection], Int32Array]):
+    def _set_PTPhase(self, value: Union[AnyStr, int, enums.RegControlPhaseSelection, List[AnyStr], List[int], List[enums.RegControlPhaseSelection], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(22, value)
+            self._set_batch_string(22, value, flags)
             return
 
-        self._set_batch_int32_array(22, value)
+        self._set_batch_int32_array(22, value, flags)
 
     PTPhase = property(_get_PTPhase, _set_PTPhase)
 
@@ -915,8 +915,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(22)
 
-    def _set_PTPhase_str(self, value: AnyStr):
-        self.PTPhase = value
+    def _set_PTPhase_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_PTPhase(value, flags)
 
     PTPhase_str = property(_get_PTPhase_str, _set_PTPhase_str)
 
@@ -928,8 +928,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    def _set_RevThreshold(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(23, value)
+    def _set_RevThreshold(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(23, value, flags)
 
     RevThreshold = property(_get_RevThreshold, _set_RevThreshold)
 
@@ -941,8 +941,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    def _set_RevDelay(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(24, value)
+    def _set_RevDelay(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(24, value, flags)
 
     RevDelay = property(_get_RevDelay, _set_RevDelay)
 
@@ -956,8 +956,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(25)
         ]
 
-    def _set_RevNeutral(self, value: bool):
-        self._set_batch_int32_array(25, value)
+    def _set_RevNeutral(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(25, value, flags)
 
     RevNeutral = property(_get_RevNeutral, _set_RevNeutral)
 
@@ -971,8 +971,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(26)
         ]
 
-    def _set_EventLog(self, value: bool):
-        self._set_batch_int32_array(26, value)
+    def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(26, value, flags)
 
     EventLog = property(_get_EventLog, _set_EventLog)
 
@@ -984,8 +984,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    def _set_RemotePTRatio(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(27, value)
+    def _set_RemotePTRatio(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(27, value, flags)
 
     RemotePTRatio = property(_get_RemotePTRatio, _set_RemotePTRatio)
 
@@ -997,18 +997,18 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 28)
 
-    def _set_TapNum(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(28, value)
+    def _set_TapNum(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(28, value, flags)
 
     TapNum = property(_get_TapNum, _set_TapNum)
 
-    def Reset(self, value: Union[bool, List[bool]] = True):
+    def Reset(self, value: Union[bool, List[bool]] = True, flags: enums.SetterFlags = 0):
         """
         {Yes | No} If Yes, forces Reset of this RegControl.
 
         DSS property name: `Reset`, DSS property index: 29.
         """
-        self._set_batch_int32_array(29, value)
+        self._set_batch_int32_array(29, value, flags)
 
     def _get_LDC_Z(self) -> BatchFloat64ArrayProxy:
         """
@@ -1018,8 +1018,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 30)
 
-    def _set_LDC_Z(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(30, value)
+    def _set_LDC_Z(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(30, value, flags)
 
     LDC_Z = property(_get_LDC_Z, _set_LDC_Z)
 
@@ -1031,8 +1031,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 31)
 
-    def _set_Rev_Z(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(31, value)
+    def _set_Rev_Z(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(31, value, flags)
 
     Rev_Z = property(_get_Rev_Z, _set_Rev_Z)
 
@@ -1046,8 +1046,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(32)
         ]
 
-    def _set_Cogen(self, value: bool):
-        self._set_batch_int32_array(32, value)
+    def _set_Cogen(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(32, value, flags)
 
     Cogen = property(_get_Cogen, _set_Cogen)
 
@@ -1059,8 +1059,8 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 33)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(33, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(33, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -1074,12 +1074,12 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(34)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(34, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(34, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -1087,7 +1087,7 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 35.
         """
-        self._set_batch_string(35, value)
+        self._set_batch_string(35, value, flags)
 
 class RegControlBatchProperties(TypedDict):
     Transformer: Union[AnyStr, TransformerObj, AutoTrans, List[AnyStr], List[Union[TransformerObj, AutoTrans]]]

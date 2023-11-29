@@ -80,8 +80,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_Phases(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -93,8 +93,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(2)
 
-    def _set_Bus1(self, value: AnyStr):
-        self._set_string_o(2, value)
+    def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(2, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -106,8 +106,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    def _set_kV(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 3, value)
+    def _set_kV(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
     kV = property(_get_kV, _set_kV)
 
@@ -120,8 +120,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    def _set_kW(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 4, value)
+    def _set_kW(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
     kW = property(_get_kW, _set_kW)
 
@@ -136,8 +136,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_PF(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_PF(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     PF = property(_get_PF, _set_PF)
 
@@ -149,8 +149,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    def _set_kvar(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 6, value)
+    def _set_kvar(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
     kvar = property(_get_kvar, _set_kvar)
 
@@ -170,8 +170,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return enums.GeneratorModel(self._lib.Obj_GetInt32(self._ptr, 7))
 
-    def _set_Model(self, value: Union[int, enums.GeneratorModel]):
-        self._lib.Obj_SetInt32(self._ptr, 7, value)
+    def _set_Model(self, value: Union[int, enums.GeneratorModel], flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 7, value, flags)
 
     Model = property(_get_Model, _set_Model)
 
@@ -183,8 +183,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    def _set_VMinpu(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 8, value)
+    def _set_VMinpu(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
     VMinpu = property(_get_VMinpu, _set_VMinpu)
 
@@ -196,8 +196,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_VMaxpu(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_VMaxpu(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
 
@@ -209,8 +209,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(10)
 
-    def _set_Yearly_str(self, value: AnyStr):
-        self._set_string_o(10, value)
+    def _set_Yearly_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(10, value, flags)
 
     Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
 
@@ -222,12 +222,12 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_obj(10, LoadShape)
 
-    def _set_Yearly(self, value: Union[AnyStr, LoadShape]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(10, value)
+            self._set_obj(10, value, flags)
             return
 
-        self._set_string_o(10, value)
+        self._set_string_o(10, value, flags)
 
     Yearly = property(_get_Yearly, _set_Yearly)
 
@@ -239,8 +239,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(11)
 
-    def _set_Daily_str(self, value: AnyStr):
-        self._set_string_o(11, value)
+    def _set_Daily_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(11, value, flags)
 
     Daily_str = property(_get_Daily_str, _set_Daily_str)
 
@@ -252,12 +252,12 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_obj(11, LoadShape)
 
-    def _set_Daily(self, value: Union[AnyStr, LoadShape]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(11, value)
+            self._set_obj(11, value, flags)
             return
 
-        self._set_string_o(11, value)
+        self._set_string_o(11, value, flags)
 
     Daily = property(_get_Daily, _set_Daily)
 
@@ -269,8 +269,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(12)
 
-    def _set_Duty_str(self, value: AnyStr):
-        self._set_string_o(12, value)
+    def _set_Duty_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(12, value, flags)
 
     Duty_str = property(_get_Duty_str, _set_Duty_str)
 
@@ -282,12 +282,12 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_obj(12, LoadShape)
 
-    def _set_Duty(self, value: Union[AnyStr, LoadShape]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(12, value)
+            self._set_obj(12, value, flags)
             return
 
-        self._set_string_o(12, value)
+        self._set_string_o(12, value, flags)
 
     Duty = property(_get_Duty, _set_Duty)
 
@@ -299,11 +299,11 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return enums.GeneratorDispatchMode(self._lib.Obj_GetInt32(self._ptr, 13))
 
-    def _set_DispMode(self, value: Union[AnyStr, int, enums.GeneratorDispatchMode]):
+    def _set_DispMode(self, value: Union[AnyStr, int, enums.GeneratorDispatchMode], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(13, value)
+            self._set_string_o(13, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 13, value)
+        self._lib.Obj_SetInt32(self._ptr, 13, value, flags)
 
     DispMode = property(_get_DispMode, _set_DispMode)
 
@@ -315,8 +315,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(13)
 
-    def _set_DispMode_str(self, value: AnyStr):
-        self.DispMode = value
+    def _set_DispMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_DispMode(value, flags)
 
     DispMode_str = property(_get_DispMode_str, _set_DispMode_str)
 
@@ -330,8 +330,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_DispValue(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_DispValue(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     DispValue = property(_get_DispValue, _set_DispValue)
 
@@ -343,11 +343,11 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 15))
 
-    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(15, value)
+            self._set_string_o(15, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 15, value)
+        self._lib.Obj_SetInt32(self._ptr, 15, value, flags)
 
     Conn = property(_get_Conn, _set_Conn)
 
@@ -359,8 +359,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(15)
 
-    def _set_Conn_str(self, value: AnyStr):
-        self.Conn = value
+    def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Conn(value, flags)
 
     Conn_str = property(_get_Conn_str, _set_Conn_str)
 
@@ -372,11 +372,11 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return enums.GeneratorStatus(self._lib.Obj_GetInt32(self._ptr, 16))
 
-    def _set_Status(self, value: Union[AnyStr, int, enums.GeneratorStatus]):
+    def _set_Status(self, value: Union[AnyStr, int, enums.GeneratorStatus], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(16, value)
+            self._set_string_o(16, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 16, value)
+        self._lib.Obj_SetInt32(self._ptr, 16, value, flags)
 
     Status = property(_get_Status, _set_Status)
 
@@ -388,8 +388,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(16)
 
-    def _set_Status_str(self, value: AnyStr):
-        self.Status = value
+    def _set_Status_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Status(value, flags)
 
     Status_str = property(_get_Status_str, _set_Status_str)
 
@@ -401,8 +401,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetInt32(self._ptr, 17)
 
-    def _set_Class(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 17, value)
+    def _set_Class(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 17, value, flags)
 
     Class = property(_get_Class, _set_Class)
 
@@ -414,8 +414,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    def _set_Vpu(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 18, value)
+    def _set_Vpu(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
     Vpu = property(_get_Vpu, _set_Vpu)
 
@@ -427,8 +427,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    def _set_Maxkvar(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 19, value)
+    def _set_Maxkvar(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
     Maxkvar = property(_get_Maxkvar, _set_Maxkvar)
 
@@ -440,8 +440,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    def _set_Minkvar(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 20, value)
+    def _set_Minkvar(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
     Minkvar = property(_get_Minkvar, _set_Minkvar)
 
@@ -453,8 +453,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    def _set_PVFactor(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 21, value)
+    def _set_PVFactor(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
     PVFactor = property(_get_PVFactor, _set_PVFactor)
 
@@ -466,8 +466,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetInt32(self._ptr, 22) != 0
 
-    def _set_ForceOn(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 22, value)
+    def _set_ForceOn(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 22, value, flags)
 
     ForceOn = property(_get_ForceOn, _set_ForceOn)
 
@@ -479,8 +479,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    def _set_kVA(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 23, value)
+    def _set_kVA(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
     kVA = property(_get_kVA, _set_kVA)
 
@@ -492,8 +492,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 25)
 
-    def _set_Xd(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 25, value)
+    def _set_Xd(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 25, value, flags)
 
     Xd = property(_get_Xd, _set_Xd)
 
@@ -505,8 +505,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 26)
 
-    def _set_Xdp(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 26, value)
+    def _set_Xdp(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 26, value, flags)
 
     Xdp = property(_get_Xdp, _set_Xdp)
 
@@ -518,8 +518,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    def _set_Xdpp(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 27, value)
+    def _set_Xdpp(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 27, value, flags)
 
     Xdpp = property(_get_Xdpp, _set_Xdpp)
 
@@ -531,8 +531,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 28)
 
-    def _set_H(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 28, value)
+    def _set_H(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 28, value, flags)
 
     H = property(_get_H, _set_H)
 
@@ -544,8 +544,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 29)
 
-    def _set_D(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 29, value)
+    def _set_D(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 29, value, flags)
 
     D = property(_get_D, _set_D)
 
@@ -557,8 +557,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(30)
 
-    def _set_UserModel(self, value: AnyStr):
-        self._set_string_o(30, value)
+    def _set_UserModel(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(30, value, flags)
 
     UserModel = property(_get_UserModel, _set_UserModel)
 
@@ -570,8 +570,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(31)
 
-    def _set_UserData(self, value: AnyStr):
-        self._set_string_o(31, value)
+    def _set_UserData(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(31, value, flags)
 
     UserData = property(_get_UserData, _set_UserData)
 
@@ -583,8 +583,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(32)
 
-    def _set_ShaftModel(self, value: AnyStr):
-        self._set_string_o(32, value)
+    def _set_ShaftModel(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(32, value, flags)
 
     ShaftModel = property(_get_ShaftModel, _set_ShaftModel)
 
@@ -596,8 +596,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(33)
 
-    def _set_ShaftData(self, value: AnyStr):
-        self._set_string_o(33, value)
+    def _set_ShaftData(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(33, value, flags)
 
     ShaftData = property(_get_ShaftData, _set_ShaftData)
 
@@ -609,8 +609,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 34)
 
-    def _set_DutyStart(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 34, value)
+    def _set_DutyStart(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 34, value, flags)
 
     DutyStart = property(_get_DutyStart, _set_DutyStart)
 
@@ -622,8 +622,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetInt32(self._ptr, 35) != 0
 
-    def _set_DebugTrace(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 35, value)
+    def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 35, value, flags)
 
     DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
 
@@ -635,8 +635,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetInt32(self._ptr, 36) != 0
 
-    def _set_Balanced(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 36, value)
+    def _set_Balanced(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 36, value, flags)
 
     Balanced = property(_get_Balanced, _set_Balanced)
 
@@ -648,8 +648,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 37)
 
-    def _set_XRdp(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 37, value)
+    def _set_XRdp(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 37, value, flags)
 
     XRdp = property(_get_XRdp, _set_XRdp)
 
@@ -661,8 +661,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetInt32(self._ptr, 38) != 0
 
-    def _set_UseFuel(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 38, value)
+    def _set_UseFuel(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 38, value, flags)
 
     UseFuel = property(_get_UseFuel, _set_UseFuel)
 
@@ -674,8 +674,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 39)
 
-    def _set_FuelkWh(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 39, value)
+    def _set_FuelkWh(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 39, value, flags)
 
     FuelkWh = property(_get_FuelkWh, _set_FuelkWh)
 
@@ -687,8 +687,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 40)
 
-    def _set_pctFuel(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 40, value)
+    def _set_pctFuel(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 40, value, flags)
 
     pctFuel = property(_get_pctFuel, _set_pctFuel)
 
@@ -700,18 +700,18 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 41)
 
-    def _set_pctReserve(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 41, value)
+    def _set_pctReserve(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 41, value, flags)
 
     pctReserve = property(_get_pctReserve, _set_pctReserve)
 
-    def Refuel(self, value: bool = True):
+    def Refuel(self, value: bool = True, flags: enums.SetterFlags = 0):
         """
         It is a boolean value (Yes/True, No/False) that can be used to manually refuel the generator when needed. It only applies if UseFuel = Yes/True
 
         DSS property name: `Refuel`, DSS property index: 42.
         """
-        self._lib.Obj_SetInt32(self._ptr, 42, value)
+        self._lib.Obj_SetInt32(self._ptr, 42, value, flags)
 
     def _get_DynamicEq_str(self) -> str:
         """
@@ -721,8 +721,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(43)
 
-    def _set_DynamicEq_str(self, value: AnyStr):
-        self._set_string_o(43, value)
+    def _set_DynamicEq_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(43, value, flags)
 
     DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
 
@@ -734,12 +734,12 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_obj(43, DynamicExp)
 
-    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp]):
+    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(43, value)
+            self._set_obj(43, value, flags)
             return
 
-        self._set_string_o(43, value)
+        self._set_string_o(43, value, flags)
 
     DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
 
@@ -756,8 +756,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(44)
 
-    def _set_DynOut(self, value: AnyStr):
-        self._set_string_o(44, value)
+    def _set_DynOut(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(44, value, flags)
 
     DynOut = property(_get_DynOut, _set_DynOut)
 
@@ -769,8 +769,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_prop_string(45)
 
-    def _set_Spectrum_str(self, value: AnyStr):
-        self._set_string_o(45, value)
+    def _set_Spectrum_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(45, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -782,12 +782,12 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._get_obj(45, SpectrumObj)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(45, value)
+            self._set_obj(45, value, flags)
             return
 
-        self._set_string_o(45, value)
+        self._set_string_o(45, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -799,8 +799,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetFloat64(self._ptr, 46)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 46, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 46, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -812,8 +812,8 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         """
         return self._lib.Obj_GetInt32(self._ptr, 47) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 47, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 47, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -891,8 +891,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_Phases(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -904,8 +904,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(2)
 
-    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(2, value)
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(2, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -917,8 +917,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    def _set_kV(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(3, value)
+    def _set_kV(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(3, value, flags)
 
     kV = property(_get_kV, _set_kV)
 
@@ -931,8 +931,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    def _set_kW(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(4, value)
+    def _set_kW(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(4, value, flags)
 
     kW = property(_get_kW, _set_kW)
 
@@ -947,8 +947,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_PF(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_PF(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     PF = property(_get_PF, _set_PF)
 
@@ -960,8 +960,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    def _set_kvar(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(6, value)
+    def _set_kvar(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(6, value, flags)
 
     kvar = property(_get_kvar, _set_kvar)
 
@@ -981,8 +981,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 7)
 
-    def _set_Model(self, value: Union[int, enums.GeneratorModel, Int32Array]):
-        self._set_batch_int32_array(7, value)
+    def _set_Model(self, value: Union[int, enums.GeneratorModel, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(7, value, flags)
 
     Model = property(_get_Model, _set_Model)
 
@@ -994,8 +994,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    def _set_VMinpu(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(8, value)
+    def _set_VMinpu(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(8, value, flags)
 
     VMinpu = property(_get_VMinpu, _set_VMinpu)
 
@@ -1007,8 +1007,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_VMaxpu(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_VMaxpu(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
 
@@ -1020,8 +1020,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(10)
 
-    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(10, value)
+    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(10, value, flags)
 
     Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
 
@@ -1033,8 +1033,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(10)
 
-    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(10, value)
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(10, value, flags)
 
     Yearly = property(_get_Yearly, _set_Yearly)
 
@@ -1046,8 +1046,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(11)
 
-    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(11, value)
+    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(11, value, flags)
 
     Daily_str = property(_get_Daily_str, _set_Daily_str)
 
@@ -1059,8 +1059,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(11)
 
-    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(11, value)
+    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(11, value, flags)
 
     Daily = property(_get_Daily, _set_Daily)
 
@@ -1072,8 +1072,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(12)
 
-    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(12, value)
+    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(12, value, flags)
 
     Duty_str = property(_get_Duty_str, _set_Duty_str)
 
@@ -1085,8 +1085,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(12)
 
-    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(12, value)
+    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(12, value, flags)
 
     Duty = property(_get_Duty, _set_Duty)
 
@@ -1098,12 +1098,12 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 13)
 
-    def _set_DispMode(self, value: Union[AnyStr, int, enums.GeneratorDispatchMode, List[AnyStr], List[int], List[enums.GeneratorDispatchMode], Int32Array]):
+    def _set_DispMode(self, value: Union[AnyStr, int, enums.GeneratorDispatchMode, List[AnyStr], List[int], List[enums.GeneratorDispatchMode], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(13, value)
+            self._set_batch_string(13, value, flags)
             return
 
-        self._set_batch_int32_array(13, value)
+        self._set_batch_int32_array(13, value, flags)
 
     DispMode = property(_get_DispMode, _set_DispMode)
 
@@ -1115,8 +1115,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(13)
 
-    def _set_DispMode_str(self, value: AnyStr):
-        self.DispMode = value
+    def _set_DispMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_DispMode(value, flags)
 
     DispMode_str = property(_get_DispMode_str, _set_DispMode_str)
 
@@ -1130,8 +1130,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_DispValue(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_DispValue(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     DispValue = property(_get_DispValue, _set_DispValue)
 
@@ -1143,12 +1143,12 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 15)
 
-    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(15, value)
+            self._set_batch_string(15, value, flags)
             return
 
-        self._set_batch_int32_array(15, value)
+        self._set_batch_int32_array(15, value, flags)
 
     Conn = property(_get_Conn, _set_Conn)
 
@@ -1160,8 +1160,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(15)
 
-    def _set_Conn_str(self, value: AnyStr):
-        self.Conn = value
+    def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Conn(value, flags)
 
     Conn_str = property(_get_Conn_str, _set_Conn_str)
 
@@ -1173,12 +1173,12 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 16)
 
-    def _set_Status(self, value: Union[AnyStr, int, enums.GeneratorStatus, List[AnyStr], List[int], List[enums.GeneratorStatus], Int32Array]):
+    def _set_Status(self, value: Union[AnyStr, int, enums.GeneratorStatus, List[AnyStr], List[int], List[enums.GeneratorStatus], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(16, value)
+            self._set_batch_string(16, value, flags)
             return
 
-        self._set_batch_int32_array(16, value)
+        self._set_batch_int32_array(16, value, flags)
 
     Status = property(_get_Status, _set_Status)
 
@@ -1190,8 +1190,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(16)
 
-    def _set_Status_str(self, value: AnyStr):
-        self.Status = value
+    def _set_Status_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Status(value, flags)
 
     Status_str = property(_get_Status_str, _set_Status_str)
 
@@ -1203,8 +1203,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 17)
 
-    def _set_Class(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(17, value)
+    def _set_Class(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(17, value, flags)
 
     Class = property(_get_Class, _set_Class)
 
@@ -1216,8 +1216,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    def _set_Vpu(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(18, value)
+    def _set_Vpu(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(18, value, flags)
 
     Vpu = property(_get_Vpu, _set_Vpu)
 
@@ -1229,8 +1229,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    def _set_Maxkvar(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(19, value)
+    def _set_Maxkvar(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(19, value, flags)
 
     Maxkvar = property(_get_Maxkvar, _set_Maxkvar)
 
@@ -1242,8 +1242,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    def _set_Minkvar(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(20, value)
+    def _set_Minkvar(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(20, value, flags)
 
     Minkvar = property(_get_Minkvar, _set_Minkvar)
 
@@ -1255,8 +1255,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    def _set_PVFactor(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(21, value)
+    def _set_PVFactor(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(21, value, flags)
 
     PVFactor = property(_get_PVFactor, _set_PVFactor)
 
@@ -1270,8 +1270,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(22)
         ]
 
-    def _set_ForceOn(self, value: bool):
-        self._set_batch_int32_array(22, value)
+    def _set_ForceOn(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(22, value, flags)
 
     ForceOn = property(_get_ForceOn, _set_ForceOn)
 
@@ -1283,8 +1283,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    def _set_kVA(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(23, value)
+    def _set_kVA(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(23, value, flags)
 
     kVA = property(_get_kVA, _set_kVA)
 
@@ -1296,8 +1296,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 25)
 
-    def _set_Xd(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(25, value)
+    def _set_Xd(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(25, value, flags)
 
     Xd = property(_get_Xd, _set_Xd)
 
@@ -1309,8 +1309,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 26)
 
-    def _set_Xdp(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(26, value)
+    def _set_Xdp(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(26, value, flags)
 
     Xdp = property(_get_Xdp, _set_Xdp)
 
@@ -1322,8 +1322,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    def _set_Xdpp(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(27, value)
+    def _set_Xdpp(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(27, value, flags)
 
     Xdpp = property(_get_Xdpp, _set_Xdpp)
 
@@ -1335,8 +1335,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 28)
 
-    def _set_H(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(28, value)
+    def _set_H(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(28, value, flags)
 
     H = property(_get_H, _set_H)
 
@@ -1348,8 +1348,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 29)
 
-    def _set_D(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(29, value)
+    def _set_D(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(29, value, flags)
 
     D = property(_get_D, _set_D)
 
@@ -1361,8 +1361,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(30)
 
-    def _set_UserModel(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(30, value)
+    def _set_UserModel(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(30, value, flags)
 
     UserModel = property(_get_UserModel, _set_UserModel)
 
@@ -1374,8 +1374,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(31)
 
-    def _set_UserData(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(31, value)
+    def _set_UserData(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(31, value, flags)
 
     UserData = property(_get_UserData, _set_UserData)
 
@@ -1387,8 +1387,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(32)
 
-    def _set_ShaftModel(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(32, value)
+    def _set_ShaftModel(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(32, value, flags)
 
     ShaftModel = property(_get_ShaftModel, _set_ShaftModel)
 
@@ -1400,8 +1400,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(33)
 
-    def _set_ShaftData(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(33, value)
+    def _set_ShaftData(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(33, value, flags)
 
     ShaftData = property(_get_ShaftData, _set_ShaftData)
 
@@ -1413,8 +1413,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 34)
 
-    def _set_DutyStart(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(34, value)
+    def _set_DutyStart(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(34, value, flags)
 
     DutyStart = property(_get_DutyStart, _set_DutyStart)
 
@@ -1428,8 +1428,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(35)
         ]
 
-    def _set_DebugTrace(self, value: bool):
-        self._set_batch_int32_array(35, value)
+    def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(35, value, flags)
 
     DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
 
@@ -1443,8 +1443,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(36)
         ]
 
-    def _set_Balanced(self, value: bool):
-        self._set_batch_int32_array(36, value)
+    def _set_Balanced(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(36, value, flags)
 
     Balanced = property(_get_Balanced, _set_Balanced)
 
@@ -1456,8 +1456,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 37)
 
-    def _set_XRdp(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(37, value)
+    def _set_XRdp(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(37, value, flags)
 
     XRdp = property(_get_XRdp, _set_XRdp)
 
@@ -1471,8 +1471,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(38)
         ]
 
-    def _set_UseFuel(self, value: bool):
-        self._set_batch_int32_array(38, value)
+    def _set_UseFuel(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(38, value, flags)
 
     UseFuel = property(_get_UseFuel, _set_UseFuel)
 
@@ -1484,8 +1484,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 39)
 
-    def _set_FuelkWh(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(39, value)
+    def _set_FuelkWh(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(39, value, flags)
 
     FuelkWh = property(_get_FuelkWh, _set_FuelkWh)
 
@@ -1497,8 +1497,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 40)
 
-    def _set_pctFuel(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(40, value)
+    def _set_pctFuel(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(40, value, flags)
 
     pctFuel = property(_get_pctFuel, _set_pctFuel)
 
@@ -1510,18 +1510,18 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 41)
 
-    def _set_pctReserve(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(41, value)
+    def _set_pctReserve(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(41, value, flags)
 
     pctReserve = property(_get_pctReserve, _set_pctReserve)
 
-    def Refuel(self, value: Union[bool, List[bool]] = True):
+    def Refuel(self, value: Union[bool, List[bool]] = True, flags: enums.SetterFlags = 0):
         """
         It is a boolean value (Yes/True, No/False) that can be used to manually refuel the generator when needed. It only applies if UseFuel = Yes/True
 
         DSS property name: `Refuel`, DSS property index: 42.
         """
-        self._set_batch_int32_array(42, value)
+        self._set_batch_int32_array(42, value, flags)
 
     def _get_DynamicEq_str(self) -> List[str]:
         """
@@ -1531,8 +1531,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(43)
 
-    def _set_DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(43, value)
+    def _set_DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(43, value, flags)
 
     DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
 
@@ -1544,8 +1544,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(43)
 
-    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]]):
-        self._set_batch_obj_prop(43, value)
+    def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(43, value, flags)
 
     DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
 
@@ -1562,8 +1562,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(44)
 
-    def _set_DynOut(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(44, value)
+    def _set_DynOut(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(44, value, flags)
 
     DynOut = property(_get_DynOut, _set_DynOut)
 
@@ -1575,8 +1575,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(45)
 
-    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(45, value)
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(45, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -1588,8 +1588,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(45)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(45, value)
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(45, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -1601,8 +1601,8 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 46)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(46, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(46, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -1616,12 +1616,12 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(47)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(47, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(47, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -1629,7 +1629,7 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 48.
         """
-        self._set_batch_string(48, value)
+        self._set_batch_string(48, value, flags)
 
 class GeneratorBatchProperties(TypedDict):
     Phases: Union[int, Int32Array]

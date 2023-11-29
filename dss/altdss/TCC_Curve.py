@@ -3,6 +3,7 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from .types import Float64Array, Int32Array
+from . import enums
 from .DSSObj import IDSSObj, DSSObj
 from .Batch import DSSBatch
 from .ArrayProxy import BatchInt32ArrayProxy
@@ -26,8 +27,8 @@ class TCC_Curve(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_NPts(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_NPts(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     NPts = property(_get_NPts, _set_NPts)
 
@@ -39,8 +40,8 @@ class TCC_Curve(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 2)
 
-    def _set_C_Array(self, value: Float64Array):
-        self._set_float64_array_o(2, value)
+    def _set_C_Array(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(2, value, flags)
 
     C_Array = property(_get_C_Array, _set_C_Array)
 
@@ -58,8 +59,8 @@ class TCC_Curve(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    def _set_T_Array(self, value: Float64Array):
-        self._set_float64_array_o(3, value)
+    def _set_T_Array(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(3, value, flags)
 
     T_Array = property(_get_T_Array, _set_T_Array)
 
@@ -94,8 +95,8 @@ class TCC_CurveBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_NPts(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_NPts(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     NPts = property(_get_NPts, _set_NPts)
 
@@ -110,8 +111,8 @@ class TCC_CurveBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_C_Array(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(2, value)
+    def _set_C_Array(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(2, value, flags)
 
     C_Array = property(_get_C_Array, _set_C_Array)
 
@@ -132,12 +133,12 @@ class TCC_CurveBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_T_Array(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(3, value)
+    def _set_T_Array(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(3, value, flags)
 
     T_Array = property(_get_T_Array, _set_T_Array)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -145,7 +146,7 @@ class TCC_CurveBatch(DSSBatch):
 
         DSS property name: `Like`, DSS property index: 4.
         """
-        self._set_batch_string(4, value)
+        self._set_batch_string(4, value, flags)
 
 class TCC_CurveBatchProperties(TypedDict):
     NPts: Union[int, Int32Array]

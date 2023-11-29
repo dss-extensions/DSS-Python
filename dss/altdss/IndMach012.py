@@ -53,8 +53,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_Phases(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -66,8 +66,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(2)
 
-    def _set_Bus1(self, value: AnyStr):
-        self._set_string_o(2, value)
+    def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(2, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -79,8 +79,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    def _set_kV(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 3, value)
+    def _set_kV(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
     kV = property(_get_kV, _set_kV)
 
@@ -93,8 +93,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    def _set_kW(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 4, value)
+    def _set_kW(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
     kW = property(_get_kW, _set_kW)
 
@@ -106,8 +106,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_PF(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_PF(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     PF = property(_get_PF, _set_PF)
 
@@ -119,11 +119,11 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(6, value)
+            self._set_string_o(6, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 6, value)
+        self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
     Conn = property(_get_Conn, _set_Conn)
 
@@ -135,8 +135,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(6)
 
-    def _set_Conn_str(self, value: AnyStr):
-        self.Conn = value
+    def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Conn(value, flags)
 
     Conn_str = property(_get_Conn_str, _set_Conn_str)
 
@@ -148,8 +148,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    def _set_kVA(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 7, value)
+    def _set_kVA(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
     kVA = property(_get_kVA, _set_kVA)
 
@@ -161,8 +161,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    def _set_H(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 8, value)
+    def _set_H(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
     H = property(_get_H, _set_H)
 
@@ -174,8 +174,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_D(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_D(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     D = property(_get_D, _set_D)
 
@@ -187,8 +187,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    def _set_puRs(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 10, value)
+    def _set_puRs(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
     puRs = property(_get_puRs, _set_puRs)
 
@@ -200,8 +200,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_puXs(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_puXs(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     puXs = property(_get_puXs, _set_puXs)
 
@@ -213,8 +213,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_puRr(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_puRr(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     puRr = property(_get_puRr, _set_puRr)
 
@@ -226,8 +226,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_puXr(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_puXr(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     puXr = property(_get_puXr, _set_puXr)
 
@@ -239,8 +239,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_puXm(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_puXm(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     puXm = property(_get_puXm, _set_puXm)
 
@@ -252,8 +252,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    def _set_Slip(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 15, value)
+    def _set_Slip(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
     Slip = property(_get_Slip, _set_Slip)
 
@@ -265,8 +265,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    def _set_MaxSlip(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 16, value)
+    def _set_MaxSlip(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
     MaxSlip = property(_get_MaxSlip, _set_MaxSlip)
 
@@ -278,11 +278,11 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return enums.IndMach012SlipOption(self._lib.Obj_GetInt32(self._ptr, 17))
 
-    def _set_SlipOption(self, value: Union[AnyStr, int, enums.IndMach012SlipOption]):
+    def _set_SlipOption(self, value: Union[AnyStr, int, enums.IndMach012SlipOption], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(17, value)
+            self._set_string_o(17, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 17, value)
+        self._lib.Obj_SetInt32(self._ptr, 17, value, flags)
 
     SlipOption = property(_get_SlipOption, _set_SlipOption)
 
@@ -294,8 +294,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(17)
 
-    def _set_SlipOption_str(self, value: AnyStr):
-        self.SlipOption = value
+    def _set_SlipOption_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_SlipOption(value, flags)
 
     SlipOption_str = property(_get_SlipOption_str, _set_SlipOption_str)
 
@@ -307,8 +307,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(18)
 
-    def _set_Yearly_str(self, value: AnyStr):
-        self._set_string_o(18, value)
+    def _set_Yearly_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(18, value, flags)
 
     Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
 
@@ -320,12 +320,12 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(18, LoadShape)
 
-    def _set_Yearly(self, value: Union[AnyStr, LoadShape]):
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(18, value)
+            self._set_obj(18, value, flags)
             return
 
-        self._set_string_o(18, value)
+        self._set_string_o(18, value, flags)
 
     Yearly = property(_get_Yearly, _set_Yearly)
 
@@ -337,8 +337,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(19)
 
-    def _set_Daily_str(self, value: AnyStr):
-        self._set_string_o(19, value)
+    def _set_Daily_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(19, value, flags)
 
     Daily_str = property(_get_Daily_str, _set_Daily_str)
 
@@ -350,12 +350,12 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(19, LoadShape)
 
-    def _set_Daily(self, value: Union[AnyStr, LoadShape]):
+    def _set_Daily(self, value: Union[AnyStr, LoadShape], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(19, value)
+            self._set_obj(19, value, flags)
             return
 
-        self._set_string_o(19, value)
+        self._set_string_o(19, value, flags)
 
     Daily = property(_get_Daily, _set_Daily)
 
@@ -367,8 +367,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(20)
 
-    def _set_Duty_str(self, value: AnyStr):
-        self._set_string_o(20, value)
+    def _set_Duty_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(20, value, flags)
 
     Duty_str = property(_get_Duty_str, _set_Duty_str)
 
@@ -380,12 +380,12 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(20, LoadShape)
 
-    def _set_Duty(self, value: Union[AnyStr, LoadShape]):
+    def _set_Duty(self, value: Union[AnyStr, LoadShape], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(20, value)
+            self._set_obj(20, value, flags)
             return
 
-        self._set_string_o(20, value)
+        self._set_string_o(20, value, flags)
 
     Duty = property(_get_Duty, _set_Duty)
 
@@ -397,8 +397,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 21) != 0
 
-    def _set_DebugTrace(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 21, value)
+    def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 21, value, flags)
 
     DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
 
@@ -410,8 +410,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(22)
 
-    def _set_Spectrum_str(self, value: AnyStr):
-        self._set_string_o(22, value)
+    def _set_Spectrum_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(22, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -423,12 +423,12 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(22, SpectrumObj)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(22, value)
+            self._set_obj(22, value, flags)
             return
 
-        self._set_string_o(22, value)
+        self._set_string_o(22, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -440,8 +440,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 23, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -453,8 +453,8 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 24) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 24, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 24, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -510,8 +510,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_Phases(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -523,8 +523,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(2)
 
-    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(2, value)
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(2, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -536,8 +536,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    def _set_kV(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(3, value)
+    def _set_kV(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(3, value, flags)
 
     kV = property(_get_kV, _set_kV)
 
@@ -550,8 +550,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    def _set_kW(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(4, value)
+    def _set_kW(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(4, value, flags)
 
     kW = property(_get_kW, _set_kW)
 
@@ -563,8 +563,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_PF(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_PF(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     PF = property(_get_PF, _set_PF)
 
@@ -576,12 +576,12 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(6, value)
+            self._set_batch_string(6, value, flags)
             return
 
-        self._set_batch_int32_array(6, value)
+        self._set_batch_int32_array(6, value, flags)
 
     Conn = property(_get_Conn, _set_Conn)
 
@@ -593,8 +593,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(6)
 
-    def _set_Conn_str(self, value: AnyStr):
-        self.Conn = value
+    def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Conn(value, flags)
 
     Conn_str = property(_get_Conn_str, _set_Conn_str)
 
@@ -606,8 +606,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    def _set_kVA(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(7, value)
+    def _set_kVA(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(7, value, flags)
 
     kVA = property(_get_kVA, _set_kVA)
 
@@ -619,8 +619,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    def _set_H(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(8, value)
+    def _set_H(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(8, value, flags)
 
     H = property(_get_H, _set_H)
 
@@ -632,8 +632,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_D(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_D(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     D = property(_get_D, _set_D)
 
@@ -645,8 +645,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    def _set_puRs(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(10, value)
+    def _set_puRs(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(10, value, flags)
 
     puRs = property(_get_puRs, _set_puRs)
 
@@ -658,8 +658,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_puXs(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_puXs(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     puXs = property(_get_puXs, _set_puXs)
 
@@ -671,8 +671,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_puRr(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_puRr(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     puRr = property(_get_puRr, _set_puRr)
 
@@ -684,8 +684,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_puXr(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_puXr(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     puXr = property(_get_puXr, _set_puXr)
 
@@ -697,8 +697,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_puXm(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_puXm(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     puXm = property(_get_puXm, _set_puXm)
 
@@ -710,8 +710,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    def _set_Slip(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(15, value)
+    def _set_Slip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(15, value, flags)
 
     Slip = property(_get_Slip, _set_Slip)
 
@@ -723,8 +723,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    def _set_MaxSlip(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(16, value)
+    def _set_MaxSlip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(16, value, flags)
 
     MaxSlip = property(_get_MaxSlip, _set_MaxSlip)
 
@@ -736,12 +736,12 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 17)
 
-    def _set_SlipOption(self, value: Union[AnyStr, int, enums.IndMach012SlipOption, List[AnyStr], List[int], List[enums.IndMach012SlipOption], Int32Array]):
+    def _set_SlipOption(self, value: Union[AnyStr, int, enums.IndMach012SlipOption, List[AnyStr], List[int], List[enums.IndMach012SlipOption], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(17, value)
+            self._set_batch_string(17, value, flags)
             return
 
-        self._set_batch_int32_array(17, value)
+        self._set_batch_int32_array(17, value, flags)
 
     SlipOption = property(_get_SlipOption, _set_SlipOption)
 
@@ -753,8 +753,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(17)
 
-    def _set_SlipOption_str(self, value: AnyStr):
-        self.SlipOption = value
+    def _set_SlipOption_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_SlipOption(value, flags)
 
     SlipOption_str = property(_get_SlipOption_str, _set_SlipOption_str)
 
@@ -766,8 +766,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(18)
 
-    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(18, value)
+    def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(18, value, flags)
 
     Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
 
@@ -779,8 +779,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(18)
 
-    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(18, value)
+    def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(18, value, flags)
 
     Yearly = property(_get_Yearly, _set_Yearly)
 
@@ -792,8 +792,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(19)
 
-    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(19, value)
+    def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(19, value, flags)
 
     Daily_str = property(_get_Daily_str, _set_Daily_str)
 
@@ -805,8 +805,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(19)
 
-    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(19, value)
+    def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(19, value, flags)
 
     Daily = property(_get_Daily, _set_Daily)
 
@@ -818,8 +818,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(20)
 
-    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(20, value)
+    def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(20, value, flags)
 
     Duty_str = property(_get_Duty_str, _set_Duty_str)
 
@@ -831,8 +831,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(20)
 
-    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]]):
-        self._set_batch_obj_prop(20, value)
+    def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(20, value, flags)
 
     Duty = property(_get_Duty, _set_Duty)
 
@@ -846,8 +846,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(21)
         ]
 
-    def _set_DebugTrace(self, value: bool):
-        self._set_batch_int32_array(21, value)
+    def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(21, value, flags)
 
     DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
 
@@ -859,8 +859,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(22)
 
-    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(22, value)
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(22, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -872,8 +872,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(22)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(22, value)
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(22, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -885,8 +885,8 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(23, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(23, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -900,12 +900,12 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(24)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(24, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(24, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -913,7 +913,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 25.
         """
-        self._set_batch_string(25, value)
+        self._set_batch_string(25, value, flags)
 
 class IndMach012BatchProperties(TypedDict):
     Phases: Union[int, Int32Array]

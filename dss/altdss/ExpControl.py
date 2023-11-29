@@ -3,6 +3,7 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from .types import Float64Array, Int32Array
+from . import enums
 from .DSSObj import IDSSObj, DSSObj
 from .Batch import DSSBatch
 from .ArrayProxy import BatchFloat64ArrayProxy
@@ -42,9 +43,9 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 1)
 
-    def _set_PVSystemList(self, value: List[AnyStr]):
+    def _set_PVSystemList(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count)
+        self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count, flags)
         self._check_for_error()
 
     PVSystemList = property(_get_PVSystemList, _set_PVSystemList)
@@ -59,8 +60,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 2)
 
-    def _set_VReg(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 2, value)
+    def _set_VReg(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 2, value, flags)
 
     VReg = property(_get_VReg, _set_VReg)
 
@@ -74,8 +75,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    def _set_Slope(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 3, value)
+    def _set_Slope(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
     Slope = property(_get_Slope, _set_Slope)
 
@@ -89,8 +90,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    def _set_VRegTau(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 4, value)
+    def _set_VRegTau(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
     VRegTau = property(_get_VRegTau, _set_VRegTau)
 
@@ -104,8 +105,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_QBias(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_QBias(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     QBias = property(_get_QBias, _set_QBias)
 
@@ -117,8 +118,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    def _set_VRegMin(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 6, value)
+    def _set_VRegMin(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
     VRegMin = property(_get_VRegMin, _set_VRegMin)
 
@@ -130,8 +131,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    def _set_VRegMax(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 7, value)
+    def _set_VRegMax(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
     VRegMax = property(_get_VRegMax, _set_VRegMax)
 
@@ -145,8 +146,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    def _set_QMaxLead(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 8, value)
+    def _set_QMaxLead(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
     QMaxLead = property(_get_QMaxLead, _set_QMaxLead)
 
@@ -160,8 +161,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_QMaxLag(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_QMaxLag(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     QMaxLag = property(_get_QMaxLag, _set_QMaxLag)
 
@@ -173,8 +174,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10) != 0
 
-    def _set_EventLog(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 10, value)
+    def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 10, value, flags)
 
     EventLog = property(_get_EventLog, _set_EventLog)
 
@@ -188,8 +189,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_DeltaQ_Factor(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_DeltaQ_Factor(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     DeltaQ_Factor = property(_get_DeltaQ_Factor, _set_DeltaQ_Factor)
 
@@ -203,8 +204,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 12) != 0
 
-    def _set_PreferQ(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 12, value)
+    def _set_PreferQ(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 12, value, flags)
 
     PreferQ = property(_get_PreferQ, _set_PreferQ)
 
@@ -218,8 +219,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_TResponse(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_TResponse(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     TResponse = property(_get_TResponse, _set_TResponse)
 
@@ -233,9 +234,9 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 14)
 
-    def _set_DERList(self, value: List[AnyStr]):
+    def _set_DERList(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, 14, value_ptr, value_count)
+        self._lib.Obj_SetStringArray(self._ptr, 14, value_ptr, value_count, flags)
         self._check_for_error()
 
     DERList = property(_get_DERList, _set_DERList)
@@ -248,8 +249,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 15, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -261,8 +262,8 @@ class ExpControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 16) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 16, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 16, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -312,10 +313,10 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_string_ll(1)
 
-    def _set_PVSystemList(self, value: List[AnyStr]):
+    def _set_PVSystemList(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
-            self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
+            self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count, flags)
 
         self._check_for_error()
 
@@ -331,8 +332,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 2)
 
-    def _set_VReg(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(2, value)
+    def _set_VReg(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(2, value, flags)
 
     VReg = property(_get_VReg, _set_VReg)
 
@@ -346,8 +347,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    def _set_Slope(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(3, value)
+    def _set_Slope(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(3, value, flags)
 
     Slope = property(_get_Slope, _set_Slope)
 
@@ -361,8 +362,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    def _set_VRegTau(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(4, value)
+    def _set_VRegTau(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(4, value, flags)
 
     VRegTau = property(_get_VRegTau, _set_VRegTau)
 
@@ -376,8 +377,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_QBias(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_QBias(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     QBias = property(_get_QBias, _set_QBias)
 
@@ -389,8 +390,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    def _set_VRegMin(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(6, value)
+    def _set_VRegMin(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(6, value, flags)
 
     VRegMin = property(_get_VRegMin, _set_VRegMin)
 
@@ -402,8 +403,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    def _set_VRegMax(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(7, value)
+    def _set_VRegMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(7, value, flags)
 
     VRegMax = property(_get_VRegMax, _set_VRegMax)
 
@@ -417,8 +418,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    def _set_QMaxLead(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(8, value)
+    def _set_QMaxLead(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(8, value, flags)
 
     QMaxLead = property(_get_QMaxLead, _set_QMaxLead)
 
@@ -432,8 +433,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_QMaxLag(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_QMaxLag(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     QMaxLag = property(_get_QMaxLag, _set_QMaxLag)
 
@@ -447,8 +448,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(10)
         ]
 
-    def _set_EventLog(self, value: bool):
-        self._set_batch_int32_array(10, value)
+    def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(10, value, flags)
 
     EventLog = property(_get_EventLog, _set_EventLog)
 
@@ -462,8 +463,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_DeltaQ_Factor(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_DeltaQ_Factor(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     DeltaQ_Factor = property(_get_DeltaQ_Factor, _set_DeltaQ_Factor)
 
@@ -479,8 +480,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(12)
         ]
 
-    def _set_PreferQ(self, value: bool):
-        self._set_batch_int32_array(12, value)
+    def _set_PreferQ(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(12, value, flags)
 
     PreferQ = property(_get_PreferQ, _set_PreferQ)
 
@@ -494,8 +495,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_TResponse(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_TResponse(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     TResponse = property(_get_TResponse, _set_TResponse)
 
@@ -509,10 +510,10 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_string_ll(14)
 
-    def _set_DERList(self, value: List[AnyStr]):
+    def _set_DERList(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
-            self._lib.Obj_SetStringArray(x, 14, value_ptr, value_count)
+            self._lib.Obj_SetStringArray(x, 14, value_ptr, value_count, flags)
 
         self._check_for_error()
 
@@ -526,8 +527,8 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(15, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(15, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -541,12 +542,12 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(16)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(16, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(16, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -554,7 +555,7 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 17.
         """
-        self._set_batch_string(17, value)
+        self._set_batch_string(17, value, flags)
 
 class ExpControlBatchProperties(TypedDict):
     PVSystemList: List[AnyStr]

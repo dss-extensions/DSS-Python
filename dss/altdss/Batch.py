@@ -1,6 +1,7 @@
 import numpy as np
 from typing import Union, List, AnyStr, Optional
 from dss.enums import DSSJSONFlags
+from .enums import SetterFlags
 from .common import Base, LIST_LIKE, InvalidatedObject
 from .types import Float64Array, Int32Array
 from .DSSObj import DSSObj
@@ -181,7 +182,7 @@ class DSSBatch(Base):
         ptr = _pointer[idx0]
         return self._obj_cls(self._api_util, ptr)
 
-    def _set_batch_float64_array(self, idx: int, value: Union[BatchFloat64ArrayProxy, float, List[float], Float64Array]):
+    def _set_batch_float64_array(self, idx: int, value: Union[BatchFloat64ArrayProxy, float, List[float], Float64Array], flags: SetterFlags = 0):
         if isinstance(value, (BatchFloat64ArrayProxy, BatchInt32ArrayProxy)):
             if self is value._batch and value._idx == idx:
                 # ignore if we're setting to property to itself
@@ -195,7 +196,8 @@ class DSSBatch(Base):
                 *ptr_cnt,
                 idx,
                 self._lib.BatchOperation_Set,
-                value
+                value,
+                flags
             )
             return
 
@@ -206,11 +208,12 @@ class DSSBatch(Base):
         self._lib.Batch_SetFloat64Array(
             *ptr_cnt,
             idx,
-            data_ptr
+            data_ptr,
+            flags
         )
 
 
-    def _set_batch_int32_array(self, idx: int, value: Union[BatchInt32ArrayProxy, int, List[int], Int32Array]):
+    def _set_batch_int32_array(self, idx: int, value: Union[BatchInt32ArrayProxy, int, List[int], Int32Array], flags: SetterFlags = 0):
         if isinstance(value, BatchInt32ArrayProxy):
             if self is value._batch and value._idx == idx:
                 # ignore if we're setting to property to itself
@@ -224,7 +227,8 @@ class DSSBatch(Base):
                 *ptr_cnt,
                 idx,
                 self._lib.BatchOperation_Set,
-                value
+                value,
+                flags
             )
             return
 
@@ -235,14 +239,15 @@ class DSSBatch(Base):
         self._lib.Batch_SetInt32Array(
             *ptr_cnt,
             idx,
-            data_ptr
+            data_ptr,
+            flags
         )
 
-    def _set_batch_string(self, idx: int, value: Union[AnyStr, List[AnyStr]]):
+    def _set_batch_string(self, idx: int, value: Union[AnyStr, List[AnyStr]], flags: SetterFlags = 0):
         if isinstance(value, (bytes, str)):
             if not isinstance(value, bytes):
                 value = value.encode(self._api_util.codec)
-            self._lib.Batch_SetString(*self._get_ptr_cnt(), idx, value)
+            self._lib.Batch_SetString(*self._get_ptr_cnt(), idx, value, flags)
             self._check_for_error()
             return
 
@@ -255,7 +260,7 @@ class DSSBatch(Base):
         else:
             value, value_ptr, _ = self._prepare_string_array(value)
 
-        self._lib.Batch_SetStringArray(*self._get_ptr_cnt(), idx, value_ptr)
+        self._lib.Batch_SetStringArray(*self._get_ptr_cnt(), idx, value_ptr, flags)
         self._check_for_error()
 
     def _unpack(self):
@@ -319,7 +324,7 @@ class DSSBatch(Base):
         self._check_for_error()
         return res
 
-    def _set_batch_stringlist_prop(self, idx: int, value: List[AnyStr]):
+    def _set_batch_stringlist_prop(self, idx: int, value: List[AnyStr], flags: SetterFlags = 0):
         '''
         A SINGLE STRING LIST is applied to all objects in the batch for property `idx`
         '''
@@ -332,12 +337,12 @@ class DSSBatch(Base):
             value, value_ptr, value_count = self._prepare_string_array(value)
 
         for x in self._unpack():
-            self._lib.Obj_SetStringArray(x, idx, value_ptr, value_count)
+            self._lib.Obj_SetStringArray(x, idx, value_ptr, value_count, flags)
 
         self._check_for_error()
 
 
-    def _set_batch_float64_array_prop(self, idx: int, value: Union[Float64Array, None]):
+    def _set_batch_float64_array_prop(self, idx: int, value: Union[Float64Array, None], flags: SetterFlags = 0):
         '''
         Set values to a FLOAT64 ARRAY property `idx`
         '''
@@ -374,12 +379,12 @@ class DSSBatch(Base):
                 else:
                     value, value_ptr, value_count = self._prepare_float64_array(value)
 
-                self._lib.Obj_SetFloat64Array(x, idx, value_ptr, value_count)
+                self._lib.Obj_SetFloat64Array(x, idx, value_ptr, value_count, flags)
 
         self._check_for_error()
 
 
-    def _set_batch_int32_array_prop(self, idx: int, value: Union[Int32Array, None]):
+    def _set_batch_int32_array_prop(self, idx: int, value: Union[Int32Array, None], flags: SetterFlags = 0):
         '''
         Set values to an INT32 ARRAY property `idx`
         '''
@@ -405,7 +410,7 @@ class DSSBatch(Base):
         if single_array:
             # Apply the same array for all objects in the batch
             for x in self._unpack():
-                self._lib.Obj_SetInt32Array(x, idx, value_ptr, value_count)
+                self._lib.Obj_SetInt32Array(x, idx, value_ptr, value_count, flags)
         else:
             # Apply one array for each object
             value_2d = value
@@ -415,7 +420,7 @@ class DSSBatch(Base):
                 else:
                     value, value_ptr, value_count = self._prepare_int32_array(value)
 
-                self._lib.Obj_SetInt32Array(x, idx, value_ptr, value_count)
+                self._lib.Obj_SetInt32Array(x, idx, value_ptr, value_count, flags)
 
         self._check_for_error()
 
@@ -453,22 +458,22 @@ class DSSBatch(Base):
 
         return res
 
-    def _set_batch_obj_prop(self, idx: int, other: Optional[Union[DSSObj, List[DSSObj]]]):
+    def _set_batch_obj_prop(self, idx: int, other: Optional[Union[DSSObj, List[DSSObj]]], flags: SetterFlags = 0):
         if len(self) == 0:
             return
 
         if other is None or (isinstance(other, LIST_LIKE) and len(other) == 0):
             # Set each object to empty
-            self._lib.Batch_SetObject(*self._get_ptr_cnt(), idx, self._ffi.NULL)
+            self._lib.Batch_SetObject(*self._get_ptr_cnt(), idx, self._ffi.NULL, flags)
             self._check_for_error()
             return
 
         if other is not None or isinstance(other, (bytes, str)) or (isinstance(other, LIST_LIKE) and len(other) and isinstance(other[0], (bytes, str))):
-            self._set_batch_string(idx, other)
+            self._set_batch_string(idx, other, flags)
             return
 
         if isinstance(other, DSSObj):
-            self._lib.Batch_SetObject(*self._get_ptr_cnt(), idx, other._ptr)
+            self._lib.Batch_SetObject(*self._get_ptr_cnt(), idx, other._ptr, flags)
             self._check_for_error()
             return
 
@@ -479,11 +484,11 @@ class DSSBatch(Base):
         other_ptr = self._ffi.new('void*[]', len(other))
         other_ptr[:] = [o._ptr if o is not None else self._ffi.NULL for o in other]
         other_cnt = len(other)
-        self._lib.Batch_SetObjectArray(*self._get_ptr_cnt(), idx, other_ptr)
+        self._lib.Batch_SetObjectArray(*self._get_ptr_cnt(), idx, other_ptr, flags)
         self._check_for_error()
 
 
-    def _set_batch_objlist_prop(self, idx: int, other: List[DSSObj]):
+    def _set_batch_objlist_prop(self, idx: int, other: List[DSSObj], flags: SetterFlags = 0):
         if len(self) == 0:
             return
 
@@ -496,7 +501,7 @@ class DSSBatch(Base):
             other_cnt = len(other)
 
         for ptr in self._unpack():
-            self._lib.Obj_SetObjectArray(ptr, idx, other_ptr, other_cnt)
+            self._lib.Obj_SetObjectArray(ptr, idx, other_ptr, other_cnt, flags)
 
         self._check_for_error()
 

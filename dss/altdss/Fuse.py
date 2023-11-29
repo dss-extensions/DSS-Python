@@ -39,8 +39,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_MonitoredObj_str(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_MonitoredObj_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
 
@@ -52,12 +52,12 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(1, None)
 
-    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(1, value)
+            self._set_obj(1, value, flags)
             return
 
-        self._set_string_o(1, value)
+        self._set_string_o(1, value, flags)
 
     MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
 
@@ -69,8 +69,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_MonitoredTerm(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_MonitoredTerm(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
 
@@ -82,8 +82,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(3)
 
-    def _set_SwitchedObj_str(self, value: AnyStr):
-        self._set_string_o(3, value)
+    def _set_SwitchedObj_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(3, value, flags)
 
     SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
 
@@ -95,12 +95,12 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(3, None)
 
-    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(3, value)
+            self._set_obj(3, value, flags)
             return
 
-        self._set_string_o(3, value)
+        self._set_string_o(3, value, flags)
 
     SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
 
@@ -112,8 +112,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 4)
 
-    def _set_SwitchedTerm(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 4, value)
+    def _set_SwitchedTerm(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 4, value, flags)
 
     SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
 
@@ -125,8 +125,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(5)
 
-    def _set_FuseCurve_str(self, value: AnyStr):
-        self._set_string_o(5, value)
+    def _set_FuseCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(5, value, flags)
 
     FuseCurve_str = property(_get_FuseCurve_str, _set_FuseCurve_str)
 
@@ -138,12 +138,12 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(5, TCC_Curve)
 
-    def _set_FuseCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_FuseCurve(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(5, value)
+            self._set_obj(5, value, flags)
             return
 
-        self._set_string_o(5, value)
+        self._set_string_o(5, value, flags)
 
     FuseCurve = property(_get_FuseCurve, _set_FuseCurve)
 
@@ -155,8 +155,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    def _set_RatedCurrent(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 6, value)
+    def _set_RatedCurrent(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
     RatedCurrent = property(_get_RatedCurrent, _set_RatedCurrent)
 
@@ -168,30 +168,30 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    def _set_Delay(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 7, value)
+    def _set_Delay(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
-    def Action(self, value: Union[AnyStr, int, enums.FuseAction]):
+    def Action(self, value: Union[AnyStr, int, enums.FuseAction], flags: enums.SetterFlags = 0):
         """
         DEPRECATED. See "State" property.
 
         DSS property name: `Action`, DSS property index: 8.
         """
         if isinstance(value, int):
-            self._lib.Obj_SetInt32(self._ptr, 8, value)
+            self._lib.Obj_SetInt32(self._ptr, 8, value, flags)
             return
 
         self._set_string_o(8, value)
 
-    def close(self):
+    def close(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(FuseAction.close)'''
-        self._lib.Obj_SetInt32(self._ptr, 8, enums.FuseAction.close)
+        self._lib.Obj_SetInt32(self._ptr, 8, enums.FuseAction.close, flags)
 
-    def open(self):
+    def open(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(FuseAction.open)'''
-        self._lib.Obj_SetInt32(self._ptr, 8, enums.FuseAction.open)
+        self._lib.Obj_SetInt32(self._ptr, 8, enums.FuseAction.open, flags)
 
     def _get_Normal(self) -> List[enums.FuseState]:
         """
@@ -201,11 +201,11 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return [enums.FuseState(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 9)]
 
-    def _set_Normal(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]):
+    def _set_Normal(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]], flags: enums.SetterFlags = 0):
         if len(value) and not isinstance(value[0], int):
-            self._set_string_array_o(9, value)
+            self._set_string_array_o(9, value, flags)
             return
-        self._set_int32_array_o(9, value)
+        self._set_int32_array_o(9, value, flags)
 
     Normal = property(_get_Normal, _set_Normal)
 
@@ -217,8 +217,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 9)
 
-    def _set_Normal_str(self, value: AnyStr):
-        self.Normal = value
+    def _set_Normal_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Normal(value, flags)
 
     Normal_str = property(_get_Normal_str, _set_Normal_str)
 
@@ -230,11 +230,11 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return [enums.FuseState(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 10)]
 
-    def _set_State(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]):
+    def _set_State(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]], flags: enums.SetterFlags = 0):
         if len(value) and not isinstance(value[0], int):
-            self._set_string_array_o(10, value)
+            self._set_string_array_o(10, value, flags)
             return
-        self._set_int32_array_o(10, value)
+        self._set_int32_array_o(10, value, flags)
 
     State = property(_get_State, _set_State)
 
@@ -246,8 +246,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 10)
 
-    def _set_State_str(self, value: AnyStr):
-        self.State = value
+    def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_State(value, flags)
 
     State_str = property(_get_State_str, _set_State_str)
 
@@ -259,8 +259,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -272,8 +272,8 @@ class Fuse(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 12) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 12, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 12, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -317,8 +317,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
 
@@ -330,8 +330,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(1)
 
-    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(1, value, flags)
 
     MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
 
@@ -343,8 +343,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_MonitoredTerm(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_MonitoredTerm(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
 
@@ -356,8 +356,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(3)
 
-    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(3, value)
+    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(3, value, flags)
 
     SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
 
@@ -369,8 +369,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(3)
 
-    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(3, value)
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(3, value, flags)
 
     SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
 
@@ -382,8 +382,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 4)
 
-    def _set_SwitchedTerm(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(4, value)
+    def _set_SwitchedTerm(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(4, value, flags)
 
     SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
 
@@ -395,8 +395,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(5)
 
-    def _set_FuseCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(5, value)
+    def _set_FuseCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(5, value, flags)
 
     FuseCurve_str = property(_get_FuseCurve_str, _set_FuseCurve_str)
 
@@ -408,8 +408,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(5)
 
-    def _set_FuseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(5, value)
+    def _set_FuseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(5, value, flags)
 
     FuseCurve = property(_get_FuseCurve, _set_FuseCurve)
 
@@ -421,8 +421,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    def _set_RatedCurrent(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(6, value)
+    def _set_RatedCurrent(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(6, value, flags)
 
     RatedCurrent = property(_get_RatedCurrent, _set_RatedCurrent)
 
@@ -434,29 +434,29 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    def _set_Delay(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(7, value)
+    def _set_Delay(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(7, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
-    def Action(self, value: Union[AnyStr, int, enums.FuseAction]):
+    def Action(self, value: Union[AnyStr, int, enums.FuseAction], flags: enums.SetterFlags = 0):
         """
         DEPRECATED. See "State" property.
 
         DSS property name: `Action`, DSS property index: 8.
         """
         if isinstance(value, (bytes, str)) or (isinstance(value, LIST_LIKE) and len(value) > 0 and isinstance(value[0], (bytes, str))):
-            self._set_batch_string(8, value)
+            self._set_batch_string(8, value, flags)
         else:
-            self._set_batch_int32_array(8, value)
+            self._set_batch_int32_array(8, value, flags)
 
-    def close(self):
+    def close(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(FuseAction.close)'''
-        self._set_batch_int32_array(8, enums.FuseAction.close)
+        self._set_batch_int32_array(8, enums.FuseAction.close, flags)
 
-    def open(self):
+    def open(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(FuseAction.open)'''
-        self._set_batch_int32_array(8, enums.FuseAction.open)
+        self._set_batch_int32_array(8, enums.FuseAction.open, flags)
 
     def _get_Normal(self) -> List[Int32Array]:
         """
@@ -469,16 +469,16 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_Normal(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]): #TODO: list of lists
+    def _set_Normal(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]], flags: enums.SetterFlags = 0): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
             for x in self._unpack():
-                self._lib.Obj_SetStringArray(x, 9, value_ptr, value_count)
+                self._lib.Obj_SetStringArray(x, 9, value_ptr, value_count, flags)
 
             self._check_for_error()
             return
 
-        self._set_batch_int32_array(9, value)
+        self._set_batch_int32_array(9, value, flags)
 
     Normal = property(_get_Normal, _set_Normal)
 
@@ -490,8 +490,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_string_ll(9)
 
-    def _set_Normal_str(self, value: AnyStr):
-        self.Normal = value
+    def _set_Normal_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Normal(value, flags)
 
     Normal_str = property(_get_Normal_str, _set_Normal_str)
 
@@ -506,16 +506,16 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_State(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]]): #TODO: list of lists
+    def _set_State(self, value: Union[List[Union[int, enums.FuseState]], List[AnyStr]], flags: enums.SetterFlags = 0): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
             for x in self._unpack():
-                self._lib.Obj_SetStringArray(x, 10, value_ptr, value_count)
+                self._lib.Obj_SetStringArray(x, 10, value_ptr, value_count, flags)
 
             self._check_for_error()
             return
 
-        self._set_batch_int32_array(10, value)
+        self._set_batch_int32_array(10, value, flags)
 
     State = property(_get_State, _set_State)
 
@@ -527,8 +527,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_string_ll(10)
 
-    def _set_State_str(self, value: AnyStr):
-        self.State = value
+    def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_State(value, flags)
 
     State_str = property(_get_State_str, _set_State_str)
 
@@ -540,8 +540,8 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -555,12 +555,12 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(12)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(12, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(12, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -568,7 +568,7 @@ class FuseBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 13.
         """
-        self._set_batch_string(13, value)
+        self._set_batch_string(13, value, flags)
 
 class FuseBatchProperties(TypedDict):
     MonitoredObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]

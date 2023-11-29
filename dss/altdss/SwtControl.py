@@ -36,8 +36,8 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_SwitchedObj_str(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_SwitchedObj_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
 
@@ -49,12 +49,12 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(1, None)
 
-    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(1, value)
+            self._set_obj(1, value, flags)
             return
 
-        self._set_string_o(1, value)
+        self._set_string_o(1, value, flags)
 
     SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
 
@@ -66,8 +66,8 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_SwitchedTerm(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_SwitchedTerm(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
 
@@ -79,8 +79,8 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 4) != 0
 
-    def _set_Lock(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 4, value)
+    def _set_Lock(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 4, value, flags)
 
     Lock = property(_get_Lock, _set_Lock)
 
@@ -92,8 +92,8 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_Delay(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_Delay(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
@@ -105,11 +105,11 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return enums.SwtControlState(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    def _set_Normal(self, value: Union[AnyStr, int, enums.SwtControlState]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.SwtControlState], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(6, value)
+            self._set_string_o(6, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 6, value)
+        self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
     Normal = property(_get_Normal, _set_Normal)
 
@@ -121,8 +121,8 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(6)
 
-    def _set_Normal_str(self, value: AnyStr):
-        self.Normal = value
+    def _set_Normal_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Normal(value, flags)
 
     Normal_str = property(_get_Normal_str, _set_Normal_str)
 
@@ -134,11 +134,11 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return enums.SwtControlState(self._lib.Obj_GetInt32(self._ptr, 7))
 
-    def _set_State(self, value: Union[AnyStr, int, enums.SwtControlState]):
+    def _set_State(self, value: Union[AnyStr, int, enums.SwtControlState], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(7, value)
+            self._set_string_o(7, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 7, value)
+        self._lib.Obj_SetInt32(self._ptr, 7, value, flags)
 
     State = property(_get_State, _set_State)
 
@@ -150,18 +150,18 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(7)
 
-    def _set_State_str(self, value: AnyStr):
-        self.State = value
+    def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_State(value, flags)
 
     State_str = property(_get_State_str, _set_State_str)
 
-    def Reset(self, value: bool = True):
+    def Reset(self, value: bool = True, flags: enums.SetterFlags = 0):
         """
         {Yes | No} If Yes, forces Reset of switch to Normal state and removes Lock independently of any internal reset command for mode change, etc.
 
         DSS property name: `Reset`, DSS property index: 8.
         """
-        self._lib.Obj_SetInt32(self._ptr, 8, value)
+        self._lib.Obj_SetInt32(self._ptr, 8, value, flags)
 
     def _get_BaseFreq(self) -> float:
         """
@@ -171,8 +171,8 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -184,8 +184,8 @@ class SwtControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 10, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 10, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -226,8 +226,8 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
 
@@ -239,8 +239,8 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(1)
 
-    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(1, value, flags)
 
     SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
 
@@ -252,8 +252,8 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_SwitchedTerm(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_SwitchedTerm(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
 
@@ -267,8 +267,8 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(4)
         ]
 
-    def _set_Lock(self, value: bool):
-        self._set_batch_int32_array(4, value)
+    def _set_Lock(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(4, value, flags)
 
     Lock = property(_get_Lock, _set_Lock)
 
@@ -280,8 +280,8 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_Delay(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_Delay(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
@@ -293,12 +293,12 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    def _set_Normal(self, value: Union[AnyStr, int, enums.SwtControlState, List[AnyStr], List[int], List[enums.SwtControlState], Int32Array]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.SwtControlState, List[AnyStr], List[int], List[enums.SwtControlState], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(6, value)
+            self._set_batch_string(6, value, flags)
             return
 
-        self._set_batch_int32_array(6, value)
+        self._set_batch_int32_array(6, value, flags)
 
     Normal = property(_get_Normal, _set_Normal)
 
@@ -310,8 +310,8 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(6)
 
-    def _set_Normal_str(self, value: AnyStr):
-        self.Normal = value
+    def _set_Normal_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Normal(value, flags)
 
     Normal_str = property(_get_Normal_str, _set_Normal_str)
 
@@ -323,12 +323,12 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 7)
 
-    def _set_State(self, value: Union[AnyStr, int, enums.SwtControlState, List[AnyStr], List[int], List[enums.SwtControlState], Int32Array]):
+    def _set_State(self, value: Union[AnyStr, int, enums.SwtControlState, List[AnyStr], List[int], List[enums.SwtControlState], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(7, value)
+            self._set_batch_string(7, value, flags)
             return
 
-        self._set_batch_int32_array(7, value)
+        self._set_batch_int32_array(7, value, flags)
 
     State = property(_get_State, _set_State)
 
@@ -340,18 +340,18 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(7)
 
-    def _set_State_str(self, value: AnyStr):
-        self.State = value
+    def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_State(value, flags)
 
     State_str = property(_get_State_str, _set_State_str)
 
-    def Reset(self, value: Union[bool, List[bool]] = True):
+    def Reset(self, value: Union[bool, List[bool]] = True, flags: enums.SetterFlags = 0):
         """
         {Yes | No} If Yes, forces Reset of switch to Normal state and removes Lock independently of any internal reset command for mode change, etc.
 
         DSS property name: `Reset`, DSS property index: 8.
         """
-        self._set_batch_int32_array(8, value)
+        self._set_batch_int32_array(8, value, flags)
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -361,8 +361,8 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -376,12 +376,12 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(10)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(10, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(10, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -389,7 +389,7 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 11.
         """
-        self._set_batch_string(11, value)
+        self._set_batch_string(11, value, flags)
 
 class SwtControlBatchProperties(TypedDict):
     SwitchedObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]

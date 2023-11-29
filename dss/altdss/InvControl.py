@@ -65,9 +65,9 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 1)
 
-    def _set_DERList(self, value: List[AnyStr]):
+    def _set_DERList(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count)
+        self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count, flags)
         self._check_for_error()
 
     DERList = property(_get_DERList, _set_DERList)
@@ -98,11 +98,11 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return enums.InvControlControlMode(self._lib.Obj_GetInt32(self._ptr, 2))
 
-    def _set_Mode(self, value: Union[AnyStr, int, enums.InvControlControlMode]):
+    def _set_Mode(self, value: Union[AnyStr, int, enums.InvControlControlMode], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(2, value)
+            self._set_string_o(2, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     Mode = property(_get_Mode, _set_Mode)
 
@@ -132,8 +132,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(2)
 
-    def _set_Mode_str(self, value: AnyStr):
-        self.Mode = value
+    def _set_Mode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Mode(value, flags)
 
     Mode_str = property(_get_Mode_str, _set_Mode_str)
 
@@ -152,11 +152,11 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return enums.InvControlCombiMode(self._lib.Obj_GetInt32(self._ptr, 3))
 
-    def _set_CombiMode(self, value: Union[AnyStr, int, enums.InvControlCombiMode]):
+    def _set_CombiMode(self, value: Union[AnyStr, int, enums.InvControlCombiMode], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(3, value)
+            self._set_string_o(3, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 3, value)
+        self._lib.Obj_SetInt32(self._ptr, 3, value, flags)
 
     CombiMode = property(_get_CombiMode, _set_CombiMode)
 
@@ -175,8 +175,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(3)
 
-    def _set_CombiMode_str(self, value: AnyStr):
-        self.CombiMode = value
+    def _set_CombiMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_CombiMode(value, flags)
 
     CombiMode_str = property(_get_CombiMode_str, _set_CombiMode_str)
 
@@ -193,8 +193,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(4)
 
-    def _set_VVC_Curve1_str(self, value: AnyStr):
-        self._set_string_o(4, value)
+    def _set_VVC_Curve1_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(4, value, flags)
 
     VVC_Curve1_str = property(_get_VVC_Curve1_str, _set_VVC_Curve1_str)
 
@@ -211,12 +211,12 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(4, XYcurve)
 
-    def _set_VVC_Curve1(self, value: Union[AnyStr, XYcurve]):
+    def _set_VVC_Curve1(self, value: Union[AnyStr, XYcurve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(4, value)
+            self._set_obj(4, value, flags)
             return
 
-        self._set_string_o(4, value)
+        self._set_string_o(4, value, flags)
 
     VVC_Curve1 = property(_get_VVC_Curve1, _set_VVC_Curve1)
 
@@ -238,8 +238,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_Hysteresis_Offset(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_Hysteresis_Offset(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     Hysteresis_Offset = property(_get_Hysteresis_Offset, _set_Hysteresis_Offset)
 
@@ -261,11 +261,11 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return enums.InvControlVoltageCurveXRef(self._lib.Obj_GetInt32(self._ptr, 6))
 
-    def _set_Voltage_CurveX_Ref(self, value: Union[AnyStr, int, enums.InvControlVoltageCurveXRef]):
+    def _set_Voltage_CurveX_Ref(self, value: Union[AnyStr, int, enums.InvControlVoltageCurveXRef], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(6, value)
+            self._set_string_o(6, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 6, value)
+        self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
     Voltage_CurveX_Ref = property(_get_Voltage_CurveX_Ref, _set_Voltage_CurveX_Ref)
 
@@ -287,8 +287,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(6)
 
-    def _set_Voltage_CurveX_Ref_str(self, value: AnyStr):
-        self.Voltage_CurveX_Ref = value
+    def _set_Voltage_CurveX_Ref_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Voltage_CurveX_Ref(value, flags)
 
     Voltage_CurveX_Ref_str = property(_get_Voltage_CurveX_Ref_str, _set_Voltage_CurveX_Ref_str)
 
@@ -308,8 +308,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 7)
 
-    def _set_AvgWindowLen(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 7, value)
+    def _set_AvgWindowLen(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 7, value, flags)
 
     AvgWindowLen = property(_get_AvgWindowLen, _set_AvgWindowLen)
 
@@ -327,8 +327,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(8)
 
-    def _set_VoltWatt_Curve_str(self, value: AnyStr):
-        self._set_string_o(8, value)
+    def _set_VoltWatt_Curve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(8, value, flags)
 
     VoltWatt_Curve_str = property(_get_VoltWatt_Curve_str, _set_VoltWatt_Curve_str)
 
@@ -346,12 +346,12 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(8, XYcurve)
 
-    def _set_VoltWatt_Curve(self, value: Union[AnyStr, XYcurve]):
+    def _set_VoltWatt_Curve(self, value: Union[AnyStr, XYcurve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(8, value)
+            self._set_obj(8, value, flags)
             return
 
-        self._set_string_o(8, value)
+        self._set_string_o(8, value, flags)
 
     VoltWatt_Curve = property(_get_VoltWatt_Curve, _set_VoltWatt_Curve)
 
@@ -365,8 +365,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_DbVMin(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_DbVMin(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     DbVMin = property(_get_DbVMin, _set_DbVMin)
 
@@ -380,8 +380,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    def _set_DbVMax(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 10, value)
+    def _set_DbVMax(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
     DbVMax = property(_get_DbVMax, _set_DbVMax)
 
@@ -399,8 +399,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_ArGraLowV(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_ArGraLowV(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     ArGraLowV = property(_get_ArGraLowV, _set_ArGraLowV)
 
@@ -418,8 +418,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_ArGraHiV(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_ArGraHiV(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     ArGraHiV = property(_get_ArGraHiV, _set_ArGraHiV)
 
@@ -439,8 +439,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 13)
 
-    def _set_DynReacAvgWindowLen(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 13, value)
+    def _set_DynReacAvgWindowLen(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 13, value, flags)
 
     DynReacAvgWindowLen = property(_get_DynReacAvgWindowLen, _set_DynReacAvgWindowLen)
 
@@ -463,8 +463,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_DeltaQ_Factor(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_DeltaQ_Factor(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     DeltaQ_Factor = property(_get_DeltaQ_Factor, _set_DeltaQ_Factor)
 
@@ -482,8 +482,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    def _set_VoltageChangeTolerance(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 15, value)
+    def _set_VoltageChangeTolerance(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
     VoltageChangeTolerance = property(_get_VoltageChangeTolerance, _set_VoltageChangeTolerance)
 
@@ -501,8 +501,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    def _set_VarChangeTolerance(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 16, value)
+    def _set_VarChangeTolerance(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
     VarChangeTolerance = property(_get_VarChangeTolerance, _set_VarChangeTolerance)
 
@@ -524,11 +524,11 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return enums.InvControlVoltWattYAxis(self._lib.Obj_GetInt32(self._ptr, 17))
 
-    def _set_VoltWattYAxis(self, value: Union[AnyStr, int, enums.InvControlVoltWattYAxis]):
+    def _set_VoltWattYAxis(self, value: Union[AnyStr, int, enums.InvControlVoltWattYAxis], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(17, value)
+            self._set_string_o(17, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 17, value)
+        self._lib.Obj_SetInt32(self._ptr, 17, value, flags)
 
     VoltWattYAxis = property(_get_VoltWattYAxis, _set_VoltWattYAxis)
 
@@ -550,8 +550,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(17)
 
-    def _set_VoltWattYAxis_str(self, value: AnyStr):
-        self.VoltWattYAxis = value
+    def _set_VoltWattYAxis_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_VoltWattYAxis(value, flags)
 
     VoltWattYAxis_str = property(_get_VoltWattYAxis_str, _set_VoltWattYAxis_str)
 
@@ -571,11 +571,11 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return enums.InvControlRateOfChangeMode(self._lib.Obj_GetInt32(self._ptr, 18))
 
-    def _set_RateOfChangeMode(self, value: Union[AnyStr, int, enums.InvControlRateOfChangeMode]):
+    def _set_RateOfChangeMode(self, value: Union[AnyStr, int, enums.InvControlRateOfChangeMode], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(18, value)
+            self._set_string_o(18, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 18, value)
+        self._lib.Obj_SetInt32(self._ptr, 18, value, flags)
 
     RateOfChangeMode = property(_get_RateOfChangeMode, _set_RateOfChangeMode)
 
@@ -595,8 +595,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(18)
 
-    def _set_RateOfChangeMode_str(self, value: AnyStr):
-        self.RateOfChangeMode = value
+    def _set_RateOfChangeMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_RateOfChangeMode(value, flags)
 
     RateOfChangeMode_str = property(_get_RateOfChangeMode_str, _set_RateOfChangeMode_str)
 
@@ -610,8 +610,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    def _set_LPFTau(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 19, value)
+    def _set_LPFTau(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
     LPFTau = property(_get_LPFTau, _set_LPFTau)
 
@@ -625,8 +625,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    def _set_RiseFallLimit(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 20, value)
+    def _set_RiseFallLimit(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
     RiseFallLimit = property(_get_RiseFallLimit, _set_RiseFallLimit)
 
@@ -647,8 +647,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    def _set_DeltaP_Factor(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 21, value)
+    def _set_DeltaP_Factor(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
     DeltaP_Factor = property(_get_DeltaP_Factor, _set_DeltaP_Factor)
 
@@ -660,8 +660,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 22) != 0
 
-    def _set_EventLog(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 22, value)
+    def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 22, value, flags)
 
     EventLog = property(_get_EventLog, _set_EventLog)
 
@@ -679,11 +679,11 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return enums.InvControlReactivePowerReference(self._lib.Obj_GetInt32(self._ptr, 23))
 
-    def _set_RefReactivePower(self, value: Union[AnyStr, int, enums.InvControlReactivePowerReference]):
+    def _set_RefReactivePower(self, value: Union[AnyStr, int, enums.InvControlReactivePowerReference], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(23, value)
+            self._set_string_o(23, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 23, value)
+        self._lib.Obj_SetInt32(self._ptr, 23, value, flags)
 
     RefReactivePower = property(_get_RefReactivePower, _set_RefReactivePower)
 
@@ -701,8 +701,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(23)
 
-    def _set_RefReactivePower_str(self, value: AnyStr):
-        self.RefReactivePower = value
+    def _set_RefReactivePower_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_RefReactivePower(value, flags)
 
     RefReactivePower_str = property(_get_RefReactivePower_str, _set_RefReactivePower_str)
 
@@ -720,8 +720,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    def _set_ActivePChangeTolerance(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 24, value)
+    def _set_ActivePChangeTolerance(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
     ActivePChangeTolerance = property(_get_ActivePChangeTolerance, _set_ActivePChangeTolerance)
 
@@ -737,11 +737,11 @@ class InvControl(DSSObj, CircuitElementMixin):
 
         return enums.MonitoredPhase(value)
 
-    def _set_MonVoltageCalc(self, value: Union[AnyStr, int, enums.MonitoredPhase]):
+    def _set_MonVoltageCalc(self, value: Union[AnyStr, int, enums.MonitoredPhase], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(25, value)
+            self._set_string_o(25, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 25, value)
+        self._lib.Obj_SetInt32(self._ptr, 25, value, flags)
 
     MonVoltageCalc = property(_get_MonVoltageCalc, _set_MonVoltageCalc)
 
@@ -753,8 +753,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(25)
 
-    def _set_MonVoltageCalc_str(self, value: AnyStr):
-        self.MonVoltageCalc = value
+    def _set_MonVoltageCalc_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_MonVoltageCalc(value, flags)
 
     MonVoltageCalc_str = property(_get_MonVoltageCalc_str, _set_MonVoltageCalc_str)
 
@@ -766,9 +766,9 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 26)
 
-    def _set_MonBus(self, value: List[AnyStr]):
+    def _set_MonBus(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, 26, value_ptr, value_count)
+        self._lib.Obj_SetStringArray(self._ptr, 26, value_ptr, value_count, flags)
         self._check_for_error()
 
     MonBus = property(_get_MonBus, _set_MonBus)
@@ -781,8 +781,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 27)
 
-    def _set_MonBusesVBase(self, value: Float64Array):
-        self._set_float64_array_o(27, value)
+    def _set_MonBusesVBase(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(27, value, flags)
 
     MonBusesVBase = property(_get_MonBusesVBase, _set_MonBusesVBase)
 
@@ -802,8 +802,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(28)
 
-    def _set_VoltWattCH_Curve_str(self, value: AnyStr):
-        self._set_string_o(28, value)
+    def _set_VoltWattCH_Curve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(28, value, flags)
 
     VoltWattCH_Curve_str = property(_get_VoltWattCH_Curve_str, _set_VoltWattCH_Curve_str)
 
@@ -823,12 +823,12 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(28, XYcurve)
 
-    def _set_VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve]):
+    def _set_VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(28, value)
+            self._set_obj(28, value, flags)
             return
 
-        self._set_string_o(28, value)
+        self._set_string_o(28, value, flags)
 
     VoltWattCH_Curve = property(_get_VoltWattCH_Curve, _set_VoltWattCH_Curve)
 
@@ -853,8 +853,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(29)
 
-    def _set_WattPF_Curve_str(self, value: AnyStr):
-        self._set_string_o(29, value)
+    def _set_WattPF_Curve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(29, value, flags)
 
     WattPF_Curve_str = property(_get_WattPF_Curve_str, _set_WattPF_Curve_str)
 
@@ -879,12 +879,12 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(29, XYcurve)
 
-    def _set_WattPF_Curve(self, value: Union[AnyStr, XYcurve]):
+    def _set_WattPF_Curve(self, value: Union[AnyStr, XYcurve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(29, value)
+            self._set_obj(29, value, flags)
             return
 
-        self._set_string_o(29, value)
+        self._set_string_o(29, value, flags)
 
     WattPF_Curve = property(_get_WattPF_Curve, _set_WattPF_Curve)
 
@@ -901,8 +901,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(30)
 
-    def _set_WattVar_Curve_str(self, value: AnyStr):
-        self._set_string_o(30, value)
+    def _set_WattVar_Curve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(30, value, flags)
 
     WattVar_Curve_str = property(_get_WattVar_Curve_str, _set_WattVar_Curve_str)
 
@@ -919,12 +919,12 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(30, XYcurve)
 
-    def _set_WattVar_Curve(self, value: Union[AnyStr, XYcurve]):
+    def _set_WattVar_Curve(self, value: Union[AnyStr, XYcurve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(30, value)
+            self._set_obj(30, value, flags)
             return
 
-        self._set_string_o(30, value)
+        self._set_string_o(30, value, flags)
 
     WattVar_Curve = property(_get_WattVar_Curve, _set_WattVar_Curve)
 
@@ -936,8 +936,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 33)
 
-    def _set_VSetPoint(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 33, value)
+    def _set_VSetPoint(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 33, value, flags)
 
     VSetPoint = property(_get_VSetPoint, _set_VSetPoint)
 
@@ -955,8 +955,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return enums.InvControlControlModel(self._lib.Obj_GetInt32(self._ptr, 34))
 
-    def _set_ControlModel(self, value: Union[int, enums.InvControlControlModel]):
-        self._lib.Obj_SetInt32(self._ptr, 34, value)
+    def _set_ControlModel(self, value: Union[int, enums.InvControlControlModel], flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 34, value, flags)
 
     ControlModel = property(_get_ControlModel, _set_ControlModel)
 
@@ -968,8 +968,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 35)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 35, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 35, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -981,8 +981,8 @@ class InvControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 36) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 36, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 36, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -1050,10 +1050,10 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_string_ll(1)
 
-    def _set_DERList(self, value: List[AnyStr]):
+    def _set_DERList(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
-            self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
+            self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count, flags)
 
         self._check_for_error()
 
@@ -1085,12 +1085,12 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_Mode(self, value: Union[AnyStr, int, enums.InvControlControlMode, List[AnyStr], List[int], List[enums.InvControlControlMode], Int32Array]):
+    def _set_Mode(self, value: Union[AnyStr, int, enums.InvControlControlMode, List[AnyStr], List[int], List[enums.InvControlControlMode], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(2, value)
+            self._set_batch_string(2, value, flags)
             return
 
-        self._set_batch_int32_array(2, value)
+        self._set_batch_int32_array(2, value, flags)
 
     Mode = property(_get_Mode, _set_Mode)
 
@@ -1120,8 +1120,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(2)
 
-    def _set_Mode_str(self, value: AnyStr):
-        self.Mode = value
+    def _set_Mode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Mode(value, flags)
 
     Mode_str = property(_get_Mode_str, _set_Mode_str)
 
@@ -1140,12 +1140,12 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    def _set_CombiMode(self, value: Union[AnyStr, int, enums.InvControlCombiMode, List[AnyStr], List[int], List[enums.InvControlCombiMode], Int32Array]):
+    def _set_CombiMode(self, value: Union[AnyStr, int, enums.InvControlCombiMode, List[AnyStr], List[int], List[enums.InvControlCombiMode], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(3, value)
+            self._set_batch_string(3, value, flags)
             return
 
-        self._set_batch_int32_array(3, value)
+        self._set_batch_int32_array(3, value, flags)
 
     CombiMode = property(_get_CombiMode, _set_CombiMode)
 
@@ -1164,8 +1164,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(3)
 
-    def _set_CombiMode_str(self, value: AnyStr):
-        self.CombiMode = value
+    def _set_CombiMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_CombiMode(value, flags)
 
     CombiMode_str = property(_get_CombiMode_str, _set_CombiMode_str)
 
@@ -1182,8 +1182,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(4)
 
-    def _set_VVC_Curve1_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(4, value)
+    def _set_VVC_Curve1_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(4, value, flags)
 
     VVC_Curve1_str = property(_get_VVC_Curve1_str, _set_VVC_Curve1_str)
 
@@ -1200,8 +1200,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(4)
 
-    def _set_VVC_Curve1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(4, value)
+    def _set_VVC_Curve1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(4, value, flags)
 
     VVC_Curve1 = property(_get_VVC_Curve1, _set_VVC_Curve1)
 
@@ -1223,8 +1223,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_Hysteresis_Offset(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_Hysteresis_Offset(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     Hysteresis_Offset = property(_get_Hysteresis_Offset, _set_Hysteresis_Offset)
 
@@ -1246,12 +1246,12 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    def _set_Voltage_CurveX_Ref(self, value: Union[AnyStr, int, enums.InvControlVoltageCurveXRef, List[AnyStr], List[int], List[enums.InvControlVoltageCurveXRef], Int32Array]):
+    def _set_Voltage_CurveX_Ref(self, value: Union[AnyStr, int, enums.InvControlVoltageCurveXRef, List[AnyStr], List[int], List[enums.InvControlVoltageCurveXRef], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(6, value)
+            self._set_batch_string(6, value, flags)
             return
 
-        self._set_batch_int32_array(6, value)
+        self._set_batch_int32_array(6, value, flags)
 
     Voltage_CurveX_Ref = property(_get_Voltage_CurveX_Ref, _set_Voltage_CurveX_Ref)
 
@@ -1273,8 +1273,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(6)
 
-    def _set_Voltage_CurveX_Ref_str(self, value: AnyStr):
-        self.Voltage_CurveX_Ref = value
+    def _set_Voltage_CurveX_Ref_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Voltage_CurveX_Ref(value, flags)
 
     Voltage_CurveX_Ref_str = property(_get_Voltage_CurveX_Ref_str, _set_Voltage_CurveX_Ref_str)
 
@@ -1294,8 +1294,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 7)
 
-    def _set_AvgWindowLen(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(7, value)
+    def _set_AvgWindowLen(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(7, value, flags)
 
     AvgWindowLen = property(_get_AvgWindowLen, _set_AvgWindowLen)
 
@@ -1313,8 +1313,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(8)
 
-    def _set_VoltWatt_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(8, value)
+    def _set_VoltWatt_Curve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(8, value, flags)
 
     VoltWatt_Curve_str = property(_get_VoltWatt_Curve_str, _set_VoltWatt_Curve_str)
 
@@ -1332,8 +1332,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(8)
 
-    def _set_VoltWatt_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(8, value)
+    def _set_VoltWatt_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(8, value, flags)
 
     VoltWatt_Curve = property(_get_VoltWatt_Curve, _set_VoltWatt_Curve)
 
@@ -1347,8 +1347,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_DbVMin(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_DbVMin(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     DbVMin = property(_get_DbVMin, _set_DbVMin)
 
@@ -1362,8 +1362,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    def _set_DbVMax(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(10, value)
+    def _set_DbVMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(10, value, flags)
 
     DbVMax = property(_get_DbVMax, _set_DbVMax)
 
@@ -1381,8 +1381,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_ArGraLowV(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_ArGraLowV(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     ArGraLowV = property(_get_ArGraLowV, _set_ArGraLowV)
 
@@ -1400,8 +1400,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_ArGraHiV(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_ArGraHiV(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     ArGraHiV = property(_get_ArGraHiV, _set_ArGraHiV)
 
@@ -1421,8 +1421,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 13)
 
-    def _set_DynReacAvgWindowLen(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(13, value)
+    def _set_DynReacAvgWindowLen(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(13, value, flags)
 
     DynReacAvgWindowLen = property(_get_DynReacAvgWindowLen, _set_DynReacAvgWindowLen)
 
@@ -1445,8 +1445,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_DeltaQ_Factor(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_DeltaQ_Factor(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     DeltaQ_Factor = property(_get_DeltaQ_Factor, _set_DeltaQ_Factor)
 
@@ -1464,8 +1464,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    def _set_VoltageChangeTolerance(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(15, value)
+    def _set_VoltageChangeTolerance(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(15, value, flags)
 
     VoltageChangeTolerance = property(_get_VoltageChangeTolerance, _set_VoltageChangeTolerance)
 
@@ -1483,8 +1483,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    def _set_VarChangeTolerance(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(16, value)
+    def _set_VarChangeTolerance(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(16, value, flags)
 
     VarChangeTolerance = property(_get_VarChangeTolerance, _set_VarChangeTolerance)
 
@@ -1506,12 +1506,12 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 17)
 
-    def _set_VoltWattYAxis(self, value: Union[AnyStr, int, enums.InvControlVoltWattYAxis, List[AnyStr], List[int], List[enums.InvControlVoltWattYAxis], Int32Array]):
+    def _set_VoltWattYAxis(self, value: Union[AnyStr, int, enums.InvControlVoltWattYAxis, List[AnyStr], List[int], List[enums.InvControlVoltWattYAxis], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(17, value)
+            self._set_batch_string(17, value, flags)
             return
 
-        self._set_batch_int32_array(17, value)
+        self._set_batch_int32_array(17, value, flags)
 
     VoltWattYAxis = property(_get_VoltWattYAxis, _set_VoltWattYAxis)
 
@@ -1533,8 +1533,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(17)
 
-    def _set_VoltWattYAxis_str(self, value: AnyStr):
-        self.VoltWattYAxis = value
+    def _set_VoltWattYAxis_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_VoltWattYAxis(value, flags)
 
     VoltWattYAxis_str = property(_get_VoltWattYAxis_str, _set_VoltWattYAxis_str)
 
@@ -1554,12 +1554,12 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 18)
 
-    def _set_RateOfChangeMode(self, value: Union[AnyStr, int, enums.InvControlRateOfChangeMode, List[AnyStr], List[int], List[enums.InvControlRateOfChangeMode], Int32Array]):
+    def _set_RateOfChangeMode(self, value: Union[AnyStr, int, enums.InvControlRateOfChangeMode, List[AnyStr], List[int], List[enums.InvControlRateOfChangeMode], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(18, value)
+            self._set_batch_string(18, value, flags)
             return
 
-        self._set_batch_int32_array(18, value)
+        self._set_batch_int32_array(18, value, flags)
 
     RateOfChangeMode = property(_get_RateOfChangeMode, _set_RateOfChangeMode)
 
@@ -1579,8 +1579,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(18)
 
-    def _set_RateOfChangeMode_str(self, value: AnyStr):
-        self.RateOfChangeMode = value
+    def _set_RateOfChangeMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_RateOfChangeMode(value, flags)
 
     RateOfChangeMode_str = property(_get_RateOfChangeMode_str, _set_RateOfChangeMode_str)
 
@@ -1594,8 +1594,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    def _set_LPFTau(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(19, value)
+    def _set_LPFTau(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(19, value, flags)
 
     LPFTau = property(_get_LPFTau, _set_LPFTau)
 
@@ -1609,8 +1609,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    def _set_RiseFallLimit(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(20, value)
+    def _set_RiseFallLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(20, value, flags)
 
     RiseFallLimit = property(_get_RiseFallLimit, _set_RiseFallLimit)
 
@@ -1631,8 +1631,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    def _set_DeltaP_Factor(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(21, value)
+    def _set_DeltaP_Factor(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(21, value, flags)
 
     DeltaP_Factor = property(_get_DeltaP_Factor, _set_DeltaP_Factor)
 
@@ -1646,8 +1646,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(22)
         ]
 
-    def _set_EventLog(self, value: bool):
-        self._set_batch_int32_array(22, value)
+    def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(22, value, flags)
 
     EventLog = property(_get_EventLog, _set_EventLog)
 
@@ -1665,12 +1665,12 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 23)
 
-    def _set_RefReactivePower(self, value: Union[AnyStr, int, enums.InvControlReactivePowerReference, List[AnyStr], List[int], List[enums.InvControlReactivePowerReference], Int32Array]):
+    def _set_RefReactivePower(self, value: Union[AnyStr, int, enums.InvControlReactivePowerReference, List[AnyStr], List[int], List[enums.InvControlReactivePowerReference], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(23, value)
+            self._set_batch_string(23, value, flags)
             return
 
-        self._set_batch_int32_array(23, value)
+        self._set_batch_int32_array(23, value, flags)
 
     RefReactivePower = property(_get_RefReactivePower, _set_RefReactivePower)
 
@@ -1688,8 +1688,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(23)
 
-    def _set_RefReactivePower_str(self, value: AnyStr):
-        self.RefReactivePower = value
+    def _set_RefReactivePower_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_RefReactivePower(value, flags)
 
     RefReactivePower_str = property(_get_RefReactivePower_str, _set_RefReactivePower_str)
 
@@ -1707,8 +1707,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    def _set_ActivePChangeTolerance(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(24, value)
+    def _set_ActivePChangeTolerance(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(24, value, flags)
 
     ActivePChangeTolerance = property(_get_ActivePChangeTolerance, _set_ActivePChangeTolerance)
 
@@ -1720,12 +1720,12 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 25)
 
-    def _set_MonVoltageCalc(self, value: Union[AnyStr, int, enums.MonitoredPhase, List[AnyStr], List[int], List[enums.MonitoredPhase], Int32Array]):
+    def _set_MonVoltageCalc(self, value: Union[AnyStr, int, enums.MonitoredPhase, List[AnyStr], List[int], List[enums.MonitoredPhase], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(25, value)
+            self._set_batch_string(25, value, flags)
             return
 
-        self._set_batch_int32_array(25, value)
+        self._set_batch_int32_array(25, value, flags)
 
     MonVoltageCalc = property(_get_MonVoltageCalc, _set_MonVoltageCalc)
 
@@ -1737,8 +1737,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(25)
 
-    def _set_MonVoltageCalc_str(self, value: AnyStr):
-        self.MonVoltageCalc = value
+    def _set_MonVoltageCalc_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_MonVoltageCalc(value, flags)
 
     MonVoltageCalc_str = property(_get_MonVoltageCalc_str, _set_MonVoltageCalc_str)
 
@@ -1750,10 +1750,10 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_string_ll(26)
 
-    def _set_MonBus(self, value: List[AnyStr]):
+    def _set_MonBus(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
-            self._lib.Obj_SetStringArray(x, 26, value_ptr, value_count)
+            self._lib.Obj_SetStringArray(x, 26, value_ptr, value_count, flags)
 
         self._check_for_error()
 
@@ -1770,8 +1770,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_MonBusesVBase(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(27, value)
+    def _set_MonBusesVBase(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(27, value, flags)
 
     MonBusesVBase = property(_get_MonBusesVBase, _set_MonBusesVBase)
 
@@ -1791,8 +1791,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(28)
 
-    def _set_VoltWattCH_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(28, value)
+    def _set_VoltWattCH_Curve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(28, value, flags)
 
     VoltWattCH_Curve_str = property(_get_VoltWattCH_Curve_str, _set_VoltWattCH_Curve_str)
 
@@ -1812,8 +1812,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(28)
 
-    def _set_VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(28, value)
+    def _set_VoltWattCH_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(28, value, flags)
 
     VoltWattCH_Curve = property(_get_VoltWattCH_Curve, _set_VoltWattCH_Curve)
 
@@ -1838,8 +1838,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(29)
 
-    def _set_WattPF_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(29, value)
+    def _set_WattPF_Curve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(29, value, flags)
 
     WattPF_Curve_str = property(_get_WattPF_Curve_str, _set_WattPF_Curve_str)
 
@@ -1864,8 +1864,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(29)
 
-    def _set_WattPF_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(29, value)
+    def _set_WattPF_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(29, value, flags)
 
     WattPF_Curve = property(_get_WattPF_Curve, _set_WattPF_Curve)
 
@@ -1882,8 +1882,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(30)
 
-    def _set_WattVar_Curve_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(30, value)
+    def _set_WattVar_Curve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(30, value, flags)
 
     WattVar_Curve_str = property(_get_WattVar_Curve_str, _set_WattVar_Curve_str)
 
@@ -1900,8 +1900,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(30)
 
-    def _set_WattVar_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(30, value)
+    def _set_WattVar_Curve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(30, value, flags)
 
     WattVar_Curve = property(_get_WattVar_Curve, _set_WattVar_Curve)
 
@@ -1913,8 +1913,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 33)
 
-    def _set_VSetPoint(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(33, value)
+    def _set_VSetPoint(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(33, value, flags)
 
     VSetPoint = property(_get_VSetPoint, _set_VSetPoint)
 
@@ -1932,8 +1932,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 34)
 
-    def _set_ControlModel(self, value: Union[int, enums.InvControlControlModel, Int32Array]):
-        self._set_batch_int32_array(34, value)
+    def _set_ControlModel(self, value: Union[int, enums.InvControlControlModel, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(34, value, flags)
 
     ControlModel = property(_get_ControlModel, _set_ControlModel)
 
@@ -1945,8 +1945,8 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 35)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(35, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(35, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -1960,12 +1960,12 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(36)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(36, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(36, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -1973,7 +1973,7 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 37.
         """
-        self._set_batch_string(37, value)
+        self._set_batch_string(37, value, flags)
 
 class InvControlBatchProperties(TypedDict):
     DERList: List[AnyStr]

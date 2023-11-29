@@ -37,8 +37,8 @@ class PriceShape(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_NPts(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_NPts(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     NPts = property(_get_NPts, _set_NPts)
 
@@ -52,8 +52,8 @@ class PriceShape(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 2)
 
-    def _set_Interval(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 2, value)
+    def _set_Interval(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 2, value, flags)
 
     Interval = property(_get_Interval, _set_Interval)
 
@@ -70,8 +70,8 @@ class PriceShape(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    def _set_Price(self, value: Float64Array):
-        self._set_float64_array_o(3, value)
+    def _set_Price(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(3, value, flags)
 
     Price = property(_get_Price, _set_Price)
 
@@ -86,8 +86,8 @@ class PriceShape(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 4)
 
-    def _set_Hour(self, value: Float64Array):
-        self._set_float64_array_o(4, value)
+    def _set_Hour(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(4, value, flags)
 
     Hour = property(_get_Hour, _set_Hour)
 
@@ -99,8 +99,8 @@ class PriceShape(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_Mean(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_Mean(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     Mean = property(_get_Mean, _set_Mean)
 
@@ -114,8 +114,8 @@ class PriceShape(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 6)
 
-    def _set_StdDev(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 6, value)
+    def _set_StdDev(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
     StdDev = property(_get_StdDev, _set_StdDev)
 
@@ -127,8 +127,8 @@ class PriceShape(DSSObj):
         """
         return self._get_prop_string(7)
 
-    def _set_CSVFile(self, value: AnyStr):
-        self._set_string_o(7, value)
+    def _set_CSVFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(7, value, flags)
 
     CSVFile = property(_get_CSVFile, _set_CSVFile)
 
@@ -140,8 +140,8 @@ class PriceShape(DSSObj):
         """
         return self._get_prop_string(8)
 
-    def _set_SngFile(self, value: AnyStr):
-        self._set_string_o(8, value)
+    def _set_SngFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(8, value, flags)
 
     SngFile = property(_get_SngFile, _set_SngFile)
 
@@ -153,8 +153,8 @@ class PriceShape(DSSObj):
         """
         return self._get_prop_string(9)
 
-    def _set_DblFile(self, value: AnyStr):
-        self._set_string_o(9, value)
+    def _set_DblFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(9, value, flags)
 
     DblFile = property(_get_DblFile, _set_DblFile)
 
@@ -166,8 +166,8 @@ class PriceShape(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    def _set_SInterval(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 10, value)
+    def _set_SInterval(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
     SInterval = property(_get_SInterval, _set_SInterval)
 
@@ -179,30 +179,30 @@ class PriceShape(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_MInterval(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_MInterval(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     MInterval = property(_get_MInterval, _set_MInterval)
 
-    def Action(self, value: Union[AnyStr, int, enums.PriceShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.PriceShapeAction], flags: enums.SetterFlags = 0):
         """
         {DblSave | SngSave} After defining Price curve data... Setting action=DblSave or SngSave will cause the present "Price" values to be written to either a packed file of double or single. The filename is the PriceShape name. 
 
         DSS property name: `Action`, DSS property index: 12.
         """
         if isinstance(value, int):
-            self._lib.Obj_SetInt32(self._ptr, 12, value)
+            self._lib.Obj_SetInt32(self._ptr, 12, value, flags)
             return
 
         self._set_string_o(12, value)
 
-    def DblSave(self):
+    def DblSave(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(PriceShapeAction.DblSave)'''
-        self._lib.Obj_SetInt32(self._ptr, 12, enums.PriceShapeAction.DblSave)
+        self._lib.Obj_SetInt32(self._ptr, 12, enums.PriceShapeAction.DblSave, flags)
 
-    def SngSave(self):
+    def SngSave(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(PriceShapeAction.SngSave)'''
-        self._lib.Obj_SetInt32(self._ptr, 12, enums.PriceShapeAction.SngSave)
+        self._lib.Obj_SetInt32(self._ptr, 12, enums.PriceShapeAction.SngSave, flags)
 
     def Like(self, value: AnyStr):
         """
@@ -244,8 +244,8 @@ class PriceShapeBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_NPts(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_NPts(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     NPts = property(_get_NPts, _set_NPts)
 
@@ -259,8 +259,8 @@ class PriceShapeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 2)
 
-    def _set_Interval(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(2, value)
+    def _set_Interval(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(2, value, flags)
 
     Interval = property(_get_Interval, _set_Interval)
 
@@ -280,8 +280,8 @@ class PriceShapeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_Price(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(3, value)
+    def _set_Price(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(3, value, flags)
 
     Price = property(_get_Price, _set_Price)
 
@@ -299,8 +299,8 @@ class PriceShapeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_Hour(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(4, value)
+    def _set_Hour(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(4, value, flags)
 
     Hour = property(_get_Hour, _set_Hour)
 
@@ -312,8 +312,8 @@ class PriceShapeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_Mean(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_Mean(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     Mean = property(_get_Mean, _set_Mean)
 
@@ -327,8 +327,8 @@ class PriceShapeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 6)
 
-    def _set_StdDev(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(6, value)
+    def _set_StdDev(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(6, value, flags)
 
     StdDev = property(_get_StdDev, _set_StdDev)
 
@@ -340,8 +340,8 @@ class PriceShapeBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(7, value)
+    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(7, value, flags)
 
     CSVFile = property(_get_CSVFile, _set_CSVFile)
 
@@ -353,8 +353,8 @@ class PriceShapeBatch(DSSBatch):
         """
         return self._get_batch_str_prop(8)
 
-    def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(8, value)
+    def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(8, value, flags)
 
     SngFile = property(_get_SngFile, _set_SngFile)
 
@@ -366,8 +366,8 @@ class PriceShapeBatch(DSSBatch):
         """
         return self._get_batch_str_prop(9)
 
-    def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(9, value)
+    def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(9, value, flags)
 
     DblFile = property(_get_DblFile, _set_DblFile)
 
@@ -379,8 +379,8 @@ class PriceShapeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    def _set_SInterval(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(10, value)
+    def _set_SInterval(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(10, value, flags)
 
     SInterval = property(_get_SInterval, _set_SInterval)
 
@@ -392,31 +392,31 @@ class PriceShapeBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_MInterval(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_MInterval(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     MInterval = property(_get_MInterval, _set_MInterval)
 
-    def Action(self, value: Union[AnyStr, int, enums.PriceShapeAction]):
+    def Action(self, value: Union[AnyStr, int, enums.PriceShapeAction], flags: enums.SetterFlags = 0):
         """
         {DblSave | SngSave} After defining Price curve data... Setting action=DblSave or SngSave will cause the present "Price" values to be written to either a packed file of double or single. The filename is the PriceShape name. 
 
         DSS property name: `Action`, DSS property index: 12.
         """
         if isinstance(value, (bytes, str)) or (isinstance(value, LIST_LIKE) and len(value) > 0 and isinstance(value[0], (bytes, str))):
-            self._set_batch_string(12, value)
+            self._set_batch_string(12, value, flags)
         else:
-            self._set_batch_int32_array(12, value)
+            self._set_batch_int32_array(12, value, flags)
 
-    def DblSave(self):
+    def DblSave(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(PriceShapeAction.DblSave)'''
-        self._set_batch_int32_array(12, enums.PriceShapeAction.DblSave)
+        self._set_batch_int32_array(12, enums.PriceShapeAction.DblSave, flags)
 
-    def SngSave(self):
+    def SngSave(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(PriceShapeAction.SngSave)'''
-        self._set_batch_int32_array(12, enums.PriceShapeAction.SngSave)
+        self._set_batch_int32_array(12, enums.PriceShapeAction.SngSave, flags)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -424,7 +424,7 @@ class PriceShapeBatch(DSSBatch):
 
         DSS property name: `Like`, DSS property index: 13.
         """
-        self._set_batch_string(13, value)
+        self._set_batch_string(13, value, flags)
 
 class PriceShapeBatchProperties(TypedDict):
     NPts: Union[int, Int32Array]

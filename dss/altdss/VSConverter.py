@@ -50,8 +50,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_Phases(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -63,8 +63,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(2)
 
-    def _set_Bus1(self, value: AnyStr):
-        self._set_string_o(2, value)
+    def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(2, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -76,8 +76,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    def _set_kVAC(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 3, value)
+    def _set_kVAC(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
     kVAC = property(_get_kVAC, _set_kVAC)
 
@@ -89,8 +89,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    def _set_kVDC(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 4, value)
+    def _set_kVDC(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
     kVDC = property(_get_kVDC, _set_kVDC)
 
@@ -102,8 +102,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_kW(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_kW(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     kW = property(_get_kW, _set_kW)
 
@@ -115,8 +115,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 6)
 
-    def _set_NDC(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 6, value)
+    def _set_NDC(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
     NDC = property(_get_NDC, _set_NDC)
 
@@ -129,8 +129,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    def _set_RAC(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 7, value)
+    def _set_RAC(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
     RAC = property(_get_RAC, _set_RAC)
 
@@ -143,8 +143,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    def _set_XAC(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 8, value)
+    def _set_XAC(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
     XAC = property(_get_XAC, _set_XAC)
 
@@ -156,8 +156,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_M0(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_M0(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     M0 = property(_get_M0, _set_M0)
 
@@ -169,8 +169,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    def _set_d0(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 10, value)
+    def _set_d0(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
     d0 = property(_get_d0, _set_d0)
 
@@ -182,8 +182,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_MMin(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_MMin(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     MMin = property(_get_MMin, _set_MMin)
 
@@ -195,8 +195,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_MMax(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_MMax(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     MMax = property(_get_MMax, _set_MMax)
 
@@ -208,8 +208,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_IACMax(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_IACMax(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     IACMax = property(_get_IACMax, _set_IACMax)
 
@@ -221,8 +221,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_IDCMax(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_IDCMax(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     IDCMax = property(_get_IDCMax, _set_IDCMax)
 
@@ -235,8 +235,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    def _set_VACRef(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 15, value)
+    def _set_VACRef(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
     VACRef = property(_get_VACRef, _set_VACRef)
 
@@ -249,8 +249,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 16)
 
-    def _set_PACRef(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 16, value)
+    def _set_PACRef(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
     PACRef = property(_get_PACRef, _set_PACRef)
 
@@ -263,8 +263,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    def _set_QACRef(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 17, value)
+    def _set_QACRef(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
     QACRef = property(_get_QACRef, _set_QACRef)
 
@@ -277,8 +277,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    def _set_VDCRef(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 18, value)
+    def _set_VDCRef(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
     VDCRef = property(_get_VDCRef, _set_VDCRef)
 
@@ -290,11 +290,11 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return enums.VSConverterControlMode(self._lib.Obj_GetInt32(self._ptr, 19))
 
-    def _set_VSCMode(self, value: Union[AnyStr, int, enums.VSConverterControlMode]):
+    def _set_VSCMode(self, value: Union[AnyStr, int, enums.VSConverterControlMode], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(19, value)
+            self._set_string_o(19, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 19, value)
+        self._lib.Obj_SetInt32(self._ptr, 19, value, flags)
 
     VSCMode = property(_get_VSCMode, _set_VSCMode)
 
@@ -306,8 +306,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(19)
 
-    def _set_VSCMode_str(self, value: AnyStr):
-        self.VSCMode = value
+    def _set_VSCMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_VSCMode(value, flags)
 
     VSCMode_str = property(_get_VSCMode_str, _set_VSCMode_str)
 
@@ -319,8 +319,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(20)
 
-    def _set_Spectrum_str(self, value: AnyStr):
-        self._set_string_o(20, value)
+    def _set_Spectrum_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(20, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -332,12 +332,12 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(20, SpectrumObj)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(20, value)
+            self._set_obj(20, value, flags)
             return
 
-        self._set_string_o(20, value)
+        self._set_string_o(20, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -349,8 +349,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 21, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -362,8 +362,8 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 22) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 22, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 22, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -417,8 +417,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_Phases(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -430,8 +430,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(2)
 
-    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(2, value)
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(2, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -443,8 +443,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    def _set_kVAC(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(3, value)
+    def _set_kVAC(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(3, value, flags)
 
     kVAC = property(_get_kVAC, _set_kVAC)
 
@@ -456,8 +456,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    def _set_kVDC(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(4, value)
+    def _set_kVDC(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(4, value, flags)
 
     kVDC = property(_get_kVDC, _set_kVDC)
 
@@ -469,8 +469,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_kW(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_kW(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     kW = property(_get_kW, _set_kW)
 
@@ -482,8 +482,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 6)
 
-    def _set_NDC(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(6, value)
+    def _set_NDC(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(6, value, flags)
 
     NDC = property(_get_NDC, _set_NDC)
 
@@ -496,8 +496,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    def _set_RAC(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(7, value)
+    def _set_RAC(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(7, value, flags)
 
     RAC = property(_get_RAC, _set_RAC)
 
@@ -510,8 +510,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    def _set_XAC(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(8, value)
+    def _set_XAC(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(8, value, flags)
 
     XAC = property(_get_XAC, _set_XAC)
 
@@ -523,8 +523,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_M0(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_M0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     M0 = property(_get_M0, _set_M0)
 
@@ -536,8 +536,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    def _set_d0(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(10, value)
+    def _set_d0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(10, value, flags)
 
     d0 = property(_get_d0, _set_d0)
 
@@ -549,8 +549,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_MMin(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_MMin(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     MMin = property(_get_MMin, _set_MMin)
 
@@ -562,8 +562,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_MMax(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_MMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     MMax = property(_get_MMax, _set_MMax)
 
@@ -575,8 +575,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_IACMax(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_IACMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     IACMax = property(_get_IACMax, _set_IACMax)
 
@@ -588,8 +588,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_IDCMax(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_IDCMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     IDCMax = property(_get_IDCMax, _set_IDCMax)
 
@@ -602,8 +602,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    def _set_VACRef(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(15, value)
+    def _set_VACRef(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(15, value, flags)
 
     VACRef = property(_get_VACRef, _set_VACRef)
 
@@ -616,8 +616,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 16)
 
-    def _set_PACRef(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(16, value)
+    def _set_PACRef(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(16, value, flags)
 
     PACRef = property(_get_PACRef, _set_PACRef)
 
@@ -630,8 +630,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    def _set_QACRef(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(17, value)
+    def _set_QACRef(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(17, value, flags)
 
     QACRef = property(_get_QACRef, _set_QACRef)
 
@@ -644,8 +644,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    def _set_VDCRef(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(18, value)
+    def _set_VDCRef(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(18, value, flags)
 
     VDCRef = property(_get_VDCRef, _set_VDCRef)
 
@@ -657,12 +657,12 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 19)
 
-    def _set_VSCMode(self, value: Union[AnyStr, int, enums.VSConverterControlMode, List[AnyStr], List[int], List[enums.VSConverterControlMode], Int32Array]):
+    def _set_VSCMode(self, value: Union[AnyStr, int, enums.VSConverterControlMode, List[AnyStr], List[int], List[enums.VSConverterControlMode], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(19, value)
+            self._set_batch_string(19, value, flags)
             return
 
-        self._set_batch_int32_array(19, value)
+        self._set_batch_int32_array(19, value, flags)
 
     VSCMode = property(_get_VSCMode, _set_VSCMode)
 
@@ -674,8 +674,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(19)
 
-    def _set_VSCMode_str(self, value: AnyStr):
-        self.VSCMode = value
+    def _set_VSCMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_VSCMode(value, flags)
 
     VSCMode_str = property(_get_VSCMode_str, _set_VSCMode_str)
 
@@ -687,8 +687,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(20)
 
-    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(20, value)
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(20, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -700,8 +700,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(20)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(20, value)
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(20, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -713,8 +713,8 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(21, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(21, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -728,12 +728,12 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(22)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(22, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(22, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -741,7 +741,7 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 23.
         """
-        self._set_batch_string(23, value)
+        self._set_batch_string(23, value, flags)
 
 class VSConverterBatchProperties(TypedDict):
     Phases: Union[int, Int32Array]

@@ -53,8 +53,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_MonitoredObj_str(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_MonitoredObj_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
 
@@ -66,12 +66,12 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(1, None)
 
-    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(1, value)
+            self._set_obj(1, value, flags)
             return
 
-        self._set_string_o(1, value)
+        self._set_string_o(1, value, flags)
 
     MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
 
@@ -83,8 +83,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_MonitoredTerm(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_MonitoredTerm(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
 
@@ -96,8 +96,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(3)
 
-    def _set_SwitchedObj_str(self, value: AnyStr):
-        self._set_string_o(3, value)
+    def _set_SwitchedObj_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(3, value, flags)
 
     SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
 
@@ -109,12 +109,12 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(3, None)
 
-    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(3, value)
+            self._set_obj(3, value, flags)
             return
 
-        self._set_string_o(3, value)
+        self._set_string_o(3, value, flags)
 
     SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
 
@@ -126,8 +126,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 4)
 
-    def _set_SwitchedTerm(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 4, value)
+    def _set_SwitchedTerm(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 4, value, flags)
 
     SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
 
@@ -139,8 +139,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 5)
 
-    def _set_NumFast(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 5, value)
+    def _set_NumFast(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 5, value, flags)
 
     NumFast = property(_get_NumFast, _set_NumFast)
 
@@ -152,8 +152,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(6)
 
-    def _set_PhaseFast_str(self, value: AnyStr):
-        self._set_string_o(6, value)
+    def _set_PhaseFast_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(6, value, flags)
 
     PhaseFast_str = property(_get_PhaseFast_str, _set_PhaseFast_str)
 
@@ -165,12 +165,12 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(6, TCC_Curve)
 
-    def _set_PhaseFast(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_PhaseFast(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(6, value)
+            self._set_obj(6, value, flags)
             return
 
-        self._set_string_o(6, value)
+        self._set_string_o(6, value, flags)
 
     PhaseFast = property(_get_PhaseFast, _set_PhaseFast)
 
@@ -182,8 +182,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(7)
 
-    def _set_PhaseDelayed_str(self, value: AnyStr):
-        self._set_string_o(7, value)
+    def _set_PhaseDelayed_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(7, value, flags)
 
     PhaseDelayed_str = property(_get_PhaseDelayed_str, _set_PhaseDelayed_str)
 
@@ -195,12 +195,12 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(7, TCC_Curve)
 
-    def _set_PhaseDelayed(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_PhaseDelayed(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(7, value)
+            self._set_obj(7, value, flags)
             return
 
-        self._set_string_o(7, value)
+        self._set_string_o(7, value, flags)
 
     PhaseDelayed = property(_get_PhaseDelayed, _set_PhaseDelayed)
 
@@ -212,8 +212,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(8)
 
-    def _set_GroundFast_str(self, value: AnyStr):
-        self._set_string_o(8, value)
+    def _set_GroundFast_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(8, value, flags)
 
     GroundFast_str = property(_get_GroundFast_str, _set_GroundFast_str)
 
@@ -225,12 +225,12 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(8, TCC_Curve)
 
-    def _set_GroundFast(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_GroundFast(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(8, value)
+            self._set_obj(8, value, flags)
             return
 
-        self._set_string_o(8, value)
+        self._set_string_o(8, value, flags)
 
     GroundFast = property(_get_GroundFast, _set_GroundFast)
 
@@ -242,8 +242,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(9)
 
-    def _set_GroundDelayed_str(self, value: AnyStr):
-        self._set_string_o(9, value)
+    def _set_GroundDelayed_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(9, value, flags)
 
     GroundDelayed_str = property(_get_GroundDelayed_str, _set_GroundDelayed_str)
 
@@ -255,12 +255,12 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(9, TCC_Curve)
 
-    def _set_GroundDelayed(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_GroundDelayed(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(9, value)
+            self._set_obj(9, value, flags)
             return
 
-        self._set_string_o(9, value)
+        self._set_string_o(9, value, flags)
 
     GroundDelayed = property(_get_GroundDelayed, _set_GroundDelayed)
 
@@ -272,8 +272,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    def _set_PhaseTrip(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 10, value)
+    def _set_PhaseTrip(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
     PhaseTrip = property(_get_PhaseTrip, _set_PhaseTrip)
 
@@ -285,8 +285,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_GroundTrip(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_GroundTrip(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     GroundTrip = property(_get_GroundTrip, _set_GroundTrip)
 
@@ -298,8 +298,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_PhaseInst(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_PhaseInst(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     PhaseInst = property(_get_PhaseInst, _set_PhaseInst)
 
@@ -311,8 +311,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_GroundInst(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_GroundInst(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     GroundInst = property(_get_GroundInst, _set_GroundInst)
 
@@ -324,8 +324,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_Reset(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_Reset(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     Reset = property(_get_Reset, _set_Reset)
 
@@ -337,8 +337,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 15)
 
-    def _set_Shots(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 15, value)
+    def _set_Shots(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 15, value, flags)
 
     Shots = property(_get_Shots, _set_Shots)
 
@@ -350,8 +350,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 16)
 
-    def _set_RecloseIntervals(self, value: Float64Array):
-        self._set_float64_array_o(16, value)
+    def _set_RecloseIntervals(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(16, value, flags)
 
     RecloseIntervals = property(_get_RecloseIntervals, _set_RecloseIntervals)
 
@@ -363,8 +363,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    def _set_Delay(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 17, value)
+    def _set_Delay(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
@@ -376,8 +376,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    def _set_TDPhFast(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 19, value)
+    def _set_TDPhFast(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
     TDPhFast = property(_get_TDPhFast, _set_TDPhFast)
 
@@ -389,8 +389,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    def _set_TDGrFast(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 20, value)
+    def _set_TDGrFast(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
     TDGrFast = property(_get_TDGrFast, _set_TDGrFast)
 
@@ -402,8 +402,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    def _set_TDPhDelayed(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 21, value)
+    def _set_TDPhDelayed(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
     TDPhDelayed = property(_get_TDPhDelayed, _set_TDPhDelayed)
 
@@ -415,8 +415,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    def _set_TDGrDelayed(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 22, value)
+    def _set_TDGrDelayed(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 22, value, flags)
 
     TDGrDelayed = property(_get_TDGrDelayed, _set_TDGrDelayed)
 
@@ -428,11 +428,11 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return enums.RecloserState(self._lib.Obj_GetInt32(self._ptr, 23))
 
-    def _set_Normal(self, value: Union[AnyStr, int, enums.RecloserState]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.RecloserState], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(23, value)
+            self._set_string_o(23, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 23, value)
+        self._lib.Obj_SetInt32(self._ptr, 23, value, flags)
 
     Normal = property(_get_Normal, _set_Normal)
 
@@ -444,8 +444,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(23)
 
-    def _set_Normal_str(self, value: AnyStr):
-        self.Normal = value
+    def _set_Normal_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Normal(value, flags)
 
     Normal_str = property(_get_Normal_str, _set_Normal_str)
 
@@ -457,11 +457,11 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return enums.RecloserState(self._lib.Obj_GetInt32(self._ptr, 24))
 
-    def _set_State(self, value: Union[AnyStr, int, enums.RecloserState]):
+    def _set_State(self, value: Union[AnyStr, int, enums.RecloserState], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(24, value)
+            self._set_string_o(24, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 24, value)
+        self._lib.Obj_SetInt32(self._ptr, 24, value, flags)
 
     State = property(_get_State, _set_State)
 
@@ -473,8 +473,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(24)
 
-    def _set_State_str(self, value: AnyStr):
-        self.State = value
+    def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_State(value, flags)
 
     State_str = property(_get_State_str, _set_State_str)
 
@@ -486,8 +486,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 25)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 25, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 25, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -499,8 +499,8 @@ class Recloser(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 26) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 26, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 26, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -557,8 +557,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
 
@@ -570,8 +570,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(1)
 
-    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(1, value, flags)
 
     MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
 
@@ -583,8 +583,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_MonitoredTerm(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_MonitoredTerm(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
 
@@ -596,8 +596,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(3)
 
-    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(3, value)
+    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(3, value, flags)
 
     SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
 
@@ -609,8 +609,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(3)
 
-    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(3, value)
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(3, value, flags)
 
     SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
 
@@ -622,8 +622,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 4)
 
-    def _set_SwitchedTerm(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(4, value)
+    def _set_SwitchedTerm(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(4, value, flags)
 
     SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
 
@@ -635,8 +635,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 5)
 
-    def _set_NumFast(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(5, value)
+    def _set_NumFast(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(5, value, flags)
 
     NumFast = property(_get_NumFast, _set_NumFast)
 
@@ -648,8 +648,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(6)
 
-    def _set_PhaseFast_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(6, value)
+    def _set_PhaseFast_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(6, value, flags)
 
     PhaseFast_str = property(_get_PhaseFast_str, _set_PhaseFast_str)
 
@@ -661,8 +661,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(6)
 
-    def _set_PhaseFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(6, value)
+    def _set_PhaseFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(6, value, flags)
 
     PhaseFast = property(_get_PhaseFast, _set_PhaseFast)
 
@@ -674,8 +674,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(7)
 
-    def _set_PhaseDelayed_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(7, value)
+    def _set_PhaseDelayed_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(7, value, flags)
 
     PhaseDelayed_str = property(_get_PhaseDelayed_str, _set_PhaseDelayed_str)
 
@@ -687,8 +687,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(7)
 
-    def _set_PhaseDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(7, value)
+    def _set_PhaseDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(7, value, flags)
 
     PhaseDelayed = property(_get_PhaseDelayed, _set_PhaseDelayed)
 
@@ -700,8 +700,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(8)
 
-    def _set_GroundFast_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(8, value)
+    def _set_GroundFast_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(8, value, flags)
 
     GroundFast_str = property(_get_GroundFast_str, _set_GroundFast_str)
 
@@ -713,8 +713,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(8)
 
-    def _set_GroundFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(8, value)
+    def _set_GroundFast(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(8, value, flags)
 
     GroundFast = property(_get_GroundFast, _set_GroundFast)
 
@@ -726,8 +726,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(9)
 
-    def _set_GroundDelayed_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(9, value)
+    def _set_GroundDelayed_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(9, value, flags)
 
     GroundDelayed_str = property(_get_GroundDelayed_str, _set_GroundDelayed_str)
 
@@ -739,8 +739,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(9)
 
-    def _set_GroundDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(9, value)
+    def _set_GroundDelayed(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(9, value, flags)
 
     GroundDelayed = property(_get_GroundDelayed, _set_GroundDelayed)
 
@@ -752,8 +752,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    def _set_PhaseTrip(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(10, value)
+    def _set_PhaseTrip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(10, value, flags)
 
     PhaseTrip = property(_get_PhaseTrip, _set_PhaseTrip)
 
@@ -765,8 +765,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_GroundTrip(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_GroundTrip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     GroundTrip = property(_get_GroundTrip, _set_GroundTrip)
 
@@ -778,8 +778,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_PhaseInst(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_PhaseInst(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     PhaseInst = property(_get_PhaseInst, _set_PhaseInst)
 
@@ -791,8 +791,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_GroundInst(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_GroundInst(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     GroundInst = property(_get_GroundInst, _set_GroundInst)
 
@@ -804,8 +804,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_Reset(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_Reset(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     Reset = property(_get_Reset, _set_Reset)
 
@@ -817,8 +817,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 15)
 
-    def _set_Shots(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(15, value)
+    def _set_Shots(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(15, value, flags)
 
     Shots = property(_get_Shots, _set_Shots)
 
@@ -833,8 +833,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_RecloseIntervals(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(16, value)
+    def _set_RecloseIntervals(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(16, value, flags)
 
     RecloseIntervals = property(_get_RecloseIntervals, _set_RecloseIntervals)
 
@@ -846,8 +846,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    def _set_Delay(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(17, value)
+    def _set_Delay(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(17, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
@@ -859,8 +859,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    def _set_TDPhFast(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(19, value)
+    def _set_TDPhFast(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(19, value, flags)
 
     TDPhFast = property(_get_TDPhFast, _set_TDPhFast)
 
@@ -872,8 +872,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    def _set_TDGrFast(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(20, value)
+    def _set_TDGrFast(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(20, value, flags)
 
     TDGrFast = property(_get_TDGrFast, _set_TDGrFast)
 
@@ -885,8 +885,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    def _set_TDPhDelayed(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(21, value)
+    def _set_TDPhDelayed(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(21, value, flags)
 
     TDPhDelayed = property(_get_TDPhDelayed, _set_TDPhDelayed)
 
@@ -898,8 +898,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    def _set_TDGrDelayed(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(22, value)
+    def _set_TDGrDelayed(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(22, value, flags)
 
     TDGrDelayed = property(_get_TDGrDelayed, _set_TDGrDelayed)
 
@@ -911,12 +911,12 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 23)
 
-    def _set_Normal(self, value: Union[AnyStr, int, enums.RecloserState, List[AnyStr], List[int], List[enums.RecloserState], Int32Array]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.RecloserState, List[AnyStr], List[int], List[enums.RecloserState], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(23, value)
+            self._set_batch_string(23, value, flags)
             return
 
-        self._set_batch_int32_array(23, value)
+        self._set_batch_int32_array(23, value, flags)
 
     Normal = property(_get_Normal, _set_Normal)
 
@@ -928,8 +928,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(23)
 
-    def _set_Normal_str(self, value: AnyStr):
-        self.Normal = value
+    def _set_Normal_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Normal(value, flags)
 
     Normal_str = property(_get_Normal_str, _set_Normal_str)
 
@@ -941,12 +941,12 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 24)
 
-    def _set_State(self, value: Union[AnyStr, int, enums.RecloserState, List[AnyStr], List[int], List[enums.RecloserState], Int32Array]):
+    def _set_State(self, value: Union[AnyStr, int, enums.RecloserState, List[AnyStr], List[int], List[enums.RecloserState], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(24, value)
+            self._set_batch_string(24, value, flags)
             return
 
-        self._set_batch_int32_array(24, value)
+        self._set_batch_int32_array(24, value, flags)
 
     State = property(_get_State, _set_State)
 
@@ -958,8 +958,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(24)
 
-    def _set_State_str(self, value: AnyStr):
-        self.State = value
+    def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_State(value, flags)
 
     State_str = property(_get_State_str, _set_State_str)
 
@@ -971,8 +971,8 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 25)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(25, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(25, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -986,12 +986,12 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(26)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(26, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(26, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -999,7 +999,7 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 27.
         """
-        self._set_batch_string(27, value)
+        self._set_batch_string(27, value, flags)
 
 class RecloserBatchProperties(TypedDict):
     MonitoredObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]

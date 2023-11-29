@@ -1,7 +1,41 @@
 # Copyright (c) 2021-2023 Paulo Meira
 # Copyright (c) 2021-2023 DSS-Extensions contributors
-from enum import IntEnum
+from enum import IntEnum, IntFlag
 # Global enumerations
+
+
+class SetterFlags(IntFlag):
+    """
+    Setter flags for the AltDSS modern API
+
+    These bit flags can change the behavior when setting DSS property values,
+    allowing fine tuning of how the internal state of the element being
+    edited is updated.
+      
+    Most of the flags are for advanced uses only. 
+    The flags do not affect DSS scripts in general, or the classic APIs, only
+    uses through the modern alternative API from AltDSS.
+    """
+
+    ImplicitSizes = 0x01
+    """
+    Most array properties depend on sizes defined by other properties.
+    Using this flag, many properties allow users to skip setting the other property
+    directly, allowing the engine to use the size of the provided array to
+    initialize the other property.
+    """
+
+    AvoidFullRecalc = 0x02
+    """
+    Some components like Loads don't need to update YPrim or full recalc for every change, 
+    e.g. setting "`load.a_load.kW=1`" if was "kW" previously 2 should not force a YPrim 
+    update, but it does force an update by default.
+    Using this flag will reproduce what the classic OpenDSS API for Loads (DSS.ActiveCircuit.Loads)
+    does, but removes a lot of duplicated code. Besides that, we can extend the feature 
+    for other components if we think it fits.
+    """
+
+
 class VisualizeQuantity(IntEnum):
     """Visualize: Quantity (DSS enumeration)"""
     Currents = 1 # Currents

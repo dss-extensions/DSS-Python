@@ -3,6 +3,7 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from .types import Float64Array, Int32Array
+from . import enums
 from .DSSObj import IDSSObj, DSSObj
 from .Batch import DSSBatch
 from .ArrayProxy import BatchFloat64ArrayProxy
@@ -27,9 +28,9 @@ class UPFCControl(DSSObj, CircuitElementMixin):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 1)
 
-    def _set_UPFCList(self, value: List[AnyStr]):
+    def _set_UPFCList(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count)
+        self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count, flags)
         self._check_for_error()
 
     UPFCList = property(_get_UPFCList, _set_UPFCList)
@@ -42,8 +43,8 @@ class UPFCControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 2)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 2, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 2, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -55,8 +56,8 @@ class UPFCControl(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 3) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 3, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 3, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -91,10 +92,10 @@ class UPFCControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_string_ll(1)
 
-    def _set_UPFCList(self, value: List[AnyStr]):
+    def _set_UPFCList(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
-            self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count)
+            self._lib.Obj_SetStringArray(x, 1, value_ptr, value_count, flags)
 
         self._check_for_error()
 
@@ -108,8 +109,8 @@ class UPFCControlBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 2)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(2, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(2, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -123,12 +124,12 @@ class UPFCControlBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(3)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(3, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(3, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -136,7 +137,7 @@ class UPFCControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 4.
         """
-        self._set_batch_string(4, value)
+        self._set_batch_string(4, value, flags)
 
 class UPFCControlBatchProperties(TypedDict):
     UPFCList: List[AnyStr]

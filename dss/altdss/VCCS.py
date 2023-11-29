@@ -3,6 +3,7 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from .types import Float64Array, Int32Array
+from . import enums
 from .DSSObj import IDSSObj, DSSObj
 from .Batch import DSSBatch
 from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
@@ -45,8 +46,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_Bus1(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -58,8 +59,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_Phases(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -71,8 +72,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    def _set_PRated(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 3, value)
+    def _set_PRated(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
     PRated = property(_get_PRated, _set_PRated)
 
@@ -84,8 +85,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    def _set_VRated(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 4, value)
+    def _set_VRated(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
     VRated = property(_get_VRated, _set_VRated)
 
@@ -97,8 +98,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_Ppct(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_Ppct(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     Ppct = property(_get_Ppct, _set_Ppct)
 
@@ -110,8 +111,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(6)
 
-    def _set_BP1_str(self, value: AnyStr):
-        self._set_string_o(6, value)
+    def _set_BP1_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(6, value, flags)
 
     BP1_str = property(_get_BP1_str, _set_BP1_str)
 
@@ -123,12 +124,12 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(6, XYcurve)
 
-    def _set_BP1(self, value: Union[AnyStr, XYcurve]):
+    def _set_BP1(self, value: Union[AnyStr, XYcurve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(6, value)
+            self._set_obj(6, value, flags)
             return
 
-        self._set_string_o(6, value)
+        self._set_string_o(6, value, flags)
 
     BP1 = property(_get_BP1, _set_BP1)
 
@@ -140,8 +141,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(7)
 
-    def _set_BP2_str(self, value: AnyStr):
-        self._set_string_o(7, value)
+    def _set_BP2_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(7, value, flags)
 
     BP2_str = property(_get_BP2_str, _set_BP2_str)
 
@@ -153,12 +154,12 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(7, XYcurve)
 
-    def _set_BP2(self, value: Union[AnyStr, XYcurve]):
+    def _set_BP2(self, value: Union[AnyStr, XYcurve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(7, value)
+            self._set_obj(7, value, flags)
             return
 
-        self._set_string_o(7, value)
+        self._set_string_o(7, value, flags)
 
     BP2 = property(_get_BP2, _set_BP2)
 
@@ -170,8 +171,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(8)
 
-    def _set_Filter_str(self, value: AnyStr):
-        self._set_string_o(8, value)
+    def _set_Filter_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(8, value, flags)
 
     Filter_str = property(_get_Filter_str, _set_Filter_str)
 
@@ -183,12 +184,12 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(8, XYcurve)
 
-    def _set_Filter(self, value: Union[AnyStr, XYcurve]):
+    def _set_Filter(self, value: Union[AnyStr, XYcurve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(8, value)
+            self._set_obj(8, value, flags)
             return
 
-        self._set_string_o(8, value)
+        self._set_string_o(8, value, flags)
 
     Filter = property(_get_Filter, _set_Filter)
 
@@ -200,8 +201,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_FSample(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_FSample(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     FSample = property(_get_FSample, _set_FSample)
 
@@ -213,8 +214,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10) != 0
 
-    def _set_RMSMode(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 10, value)
+    def _set_RMSMode(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 10, value, flags)
 
     RMSMode = property(_get_RMSMode, _set_RMSMode)
 
@@ -226,8 +227,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_IMaxpu(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_IMaxpu(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     IMaxpu = property(_get_IMaxpu, _set_IMaxpu)
 
@@ -239,8 +240,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_VRMSTau(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_VRMSTau(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     VRMSTau = property(_get_VRMSTau, _set_VRMSTau)
 
@@ -252,8 +253,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_IRMSTau(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_IRMSTau(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     IRMSTau = property(_get_IRMSTau, _set_IRMSTau)
 
@@ -265,8 +266,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_prop_string(14)
 
-    def _set_Spectrum_str(self, value: AnyStr):
-        self._set_string_o(14, value)
+    def _set_Spectrum_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(14, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -278,12 +279,12 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._get_obj(14, SpectrumObj)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj]):
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(14, value)
+            self._set_obj(14, value, flags)
             return
 
-        self._set_string_o(14, value)
+        self._set_string_o(14, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -295,8 +296,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 15, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -308,8 +309,8 @@ class VCCS(DSSObj, CircuitElementMixin, PCElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 16) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 16, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 16, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -359,8 +360,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -372,8 +373,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_Phases(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -385,8 +386,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    def _set_PRated(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(3, value)
+    def _set_PRated(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(3, value, flags)
 
     PRated = property(_get_PRated, _set_PRated)
 
@@ -398,8 +399,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    def _set_VRated(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(4, value)
+    def _set_VRated(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(4, value, flags)
 
     VRated = property(_get_VRated, _set_VRated)
 
@@ -411,8 +412,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_Ppct(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_Ppct(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     Ppct = property(_get_Ppct, _set_Ppct)
 
@@ -424,8 +425,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(6)
 
-    def _set_BP1_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(6, value)
+    def _set_BP1_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(6, value, flags)
 
     BP1_str = property(_get_BP1_str, _set_BP1_str)
 
@@ -437,8 +438,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(6)
 
-    def _set_BP1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(6, value)
+    def _set_BP1(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(6, value, flags)
 
     BP1 = property(_get_BP1, _set_BP1)
 
@@ -450,8 +451,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(7)
 
-    def _set_BP2_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(7, value)
+    def _set_BP2_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(7, value, flags)
 
     BP2_str = property(_get_BP2_str, _set_BP2_str)
 
@@ -463,8 +464,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(7)
 
-    def _set_BP2(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(7, value)
+    def _set_BP2(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(7, value, flags)
 
     BP2 = property(_get_BP2, _set_BP2)
 
@@ -476,8 +477,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(8)
 
-    def _set_Filter_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(8, value)
+    def _set_Filter_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(8, value, flags)
 
     Filter_str = property(_get_Filter_str, _set_Filter_str)
 
@@ -489,8 +490,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(8)
 
-    def _set_Filter(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]]):
-        self._set_batch_obj_prop(8, value)
+    def _set_Filter(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(8, value, flags)
 
     Filter = property(_get_Filter, _set_Filter)
 
@@ -502,8 +503,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_FSample(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_FSample(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     FSample = property(_get_FSample, _set_FSample)
 
@@ -517,8 +518,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(10)
         ]
 
-    def _set_RMSMode(self, value: bool):
-        self._set_batch_int32_array(10, value)
+    def _set_RMSMode(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(10, value, flags)
 
     RMSMode = property(_get_RMSMode, _set_RMSMode)
 
@@ -530,8 +531,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_IMaxpu(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_IMaxpu(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     IMaxpu = property(_get_IMaxpu, _set_IMaxpu)
 
@@ -543,8 +544,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_VRMSTau(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_VRMSTau(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     VRMSTau = property(_get_VRMSTau, _set_VRMSTau)
 
@@ -556,8 +557,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_IRMSTau(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_IRMSTau(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     IRMSTau = property(_get_IRMSTau, _set_IRMSTau)
 
@@ -569,8 +570,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_str_prop(14)
 
-    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(14, value)
+    def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(14, value, flags)
 
     Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
 
@@ -582,8 +583,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return self._get_batch_obj_prop(14)
 
-    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]]):
-        self._set_batch_obj_prop(14, value)
+    def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(14, value, flags)
 
     Spectrum = property(_get_Spectrum, _set_Spectrum)
 
@@ -595,8 +596,8 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(15, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(15, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -610,12 +611,12 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
             self._get_batch_int32_prop(16)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(16, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(16, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -623,7 +624,7 @@ class VCCSBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 17.
         """
-        self._set_batch_string(17, value)
+        self._set_batch_string(17, value, flags)
 
 class VCCSBatchProperties(TypedDict):
     Bus1: Union[AnyStr, List[AnyStr]]

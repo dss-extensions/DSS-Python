@@ -87,8 +87,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_MonitoredObj_str(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_MonitoredObj_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
 
@@ -100,12 +100,12 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(1, None)
 
-    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(1, value)
+            self._set_obj(1, value, flags)
             return
 
-        self._set_string_o(1, value)
+        self._set_string_o(1, value, flags)
 
     MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
 
@@ -117,8 +117,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_MonitoredTerm(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_MonitoredTerm(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
 
@@ -130,8 +130,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(3)
 
-    def _set_SwitchedObj_str(self, value: AnyStr):
-        self._set_string_o(3, value)
+    def _set_SwitchedObj_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(3, value, flags)
 
     SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
 
@@ -143,12 +143,12 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(3, None)
 
-    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj]):
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(3, value)
+            self._set_obj(3, value, flags)
             return
 
-        self._set_string_o(3, value)
+        self._set_string_o(3, value, flags)
 
     SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
 
@@ -160,8 +160,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 4)
 
-    def _set_SwitchedTerm(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 4, value)
+    def _set_SwitchedTerm(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 4, value, flags)
 
     SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
 
@@ -184,11 +184,11 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return enums.RelayType(self._lib.Obj_GetInt32(self._ptr, 5))
 
-    def _set_Type(self, value: Union[AnyStr, int, enums.RelayType]):
+    def _set_Type(self, value: Union[AnyStr, int, enums.RelayType], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(5, value)
+            self._set_string_o(5, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 5, value)
+        self._lib.Obj_SetInt32(self._ptr, 5, value, flags)
 
     Type = property(_get_Type, _set_Type)
 
@@ -211,8 +211,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(5)
 
-    def _set_Type_str(self, value: AnyStr):
-        self.Type = value
+    def _set_Type_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Type(value, flags)
 
     Type_str = property(_get_Type_str, _set_Type_str)
 
@@ -224,8 +224,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(6)
 
-    def _set_PhaseCurve_str(self, value: AnyStr):
-        self._set_string_o(6, value)
+    def _set_PhaseCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(6, value, flags)
 
     PhaseCurve_str = property(_get_PhaseCurve_str, _set_PhaseCurve_str)
 
@@ -237,12 +237,12 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(6, TCC_Curve)
 
-    def _set_PhaseCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_PhaseCurve(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(6, value)
+            self._set_obj(6, value, flags)
             return
 
-        self._set_string_o(6, value)
+        self._set_string_o(6, value, flags)
 
     PhaseCurve = property(_get_PhaseCurve, _set_PhaseCurve)
 
@@ -254,8 +254,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(7)
 
-    def _set_GroundCurve_str(self, value: AnyStr):
-        self._set_string_o(7, value)
+    def _set_GroundCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(7, value, flags)
 
     GroundCurve_str = property(_get_GroundCurve_str, _set_GroundCurve_str)
 
@@ -267,12 +267,12 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(7, TCC_Curve)
 
-    def _set_GroundCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_GroundCurve(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(7, value)
+            self._set_obj(7, value, flags)
             return
 
-        self._set_string_o(7, value)
+        self._set_string_o(7, value, flags)
 
     GroundCurve = property(_get_GroundCurve, _set_GroundCurve)
 
@@ -284,8 +284,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    def _set_PhaseTrip(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 8, value)
+    def _set_PhaseTrip(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
     PhaseTrip = property(_get_PhaseTrip, _set_PhaseTrip)
 
@@ -297,8 +297,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_GroundTrip(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_GroundTrip(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     GroundTrip = property(_get_GroundTrip, _set_GroundTrip)
 
@@ -310,8 +310,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    def _set_TDPhase(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 10, value)
+    def _set_TDPhase(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
     TDPhase = property(_get_TDPhase, _set_TDPhase)
 
@@ -323,8 +323,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_TDGround(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_TDGround(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     TDGround = property(_get_TDGround, _set_TDGround)
 
@@ -336,8 +336,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_PhaseInst(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_PhaseInst(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     PhaseInst = property(_get_PhaseInst, _set_PhaseInst)
 
@@ -349,8 +349,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_GroundInst(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_GroundInst(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     GroundInst = property(_get_GroundInst, _set_GroundInst)
 
@@ -362,8 +362,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_Reset(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_Reset(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     Reset = property(_get_Reset, _set_Reset)
 
@@ -375,8 +375,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 15)
 
-    def _set_Shots(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 15, value)
+    def _set_Shots(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 15, value, flags)
 
     Shots = property(_get_Shots, _set_Shots)
 
@@ -388,8 +388,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 16)
 
-    def _set_RecloseIntervals(self, value: Float64Array):
-        self._set_float64_array_o(16, value)
+    def _set_RecloseIntervals(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(16, value, flags)
 
     RecloseIntervals = property(_get_RecloseIntervals, _set_RecloseIntervals)
 
@@ -401,8 +401,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    def _set_Delay(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 17, value)
+    def _set_Delay(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
@@ -414,8 +414,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(18)
 
-    def _set_OvervoltCurve_str(self, value: AnyStr):
-        self._set_string_o(18, value)
+    def _set_OvervoltCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(18, value, flags)
 
     OvervoltCurve_str = property(_get_OvervoltCurve_str, _set_OvervoltCurve_str)
 
@@ -427,12 +427,12 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(18, TCC_Curve)
 
-    def _set_OvervoltCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_OvervoltCurve(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(18, value)
+            self._set_obj(18, value, flags)
             return
 
-        self._set_string_o(18, value)
+        self._set_string_o(18, value, flags)
 
     OvervoltCurve = property(_get_OvervoltCurve, _set_OvervoltCurve)
 
@@ -444,8 +444,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(19)
 
-    def _set_UndervoltCurve_str(self, value: AnyStr):
-        self._set_string_o(19, value)
+    def _set_UndervoltCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(19, value, flags)
 
     UndervoltCurve_str = property(_get_UndervoltCurve_str, _set_UndervoltCurve_str)
 
@@ -457,12 +457,12 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(19, TCC_Curve)
 
-    def _set_UndervoltCurve(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_UndervoltCurve(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(19, value)
+            self._set_obj(19, value, flags)
             return
 
-        self._set_string_o(19, value)
+        self._set_string_o(19, value, flags)
 
     UndervoltCurve = property(_get_UndervoltCurve, _set_UndervoltCurve)
 
@@ -474,8 +474,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 20)
 
-    def _set_kVBase(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 20, value)
+    def _set_kVBase(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
     kVBase = property(_get_kVBase, _set_kVBase)
 
@@ -487,8 +487,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    def _set_F47pctPickup(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 21, value)
+    def _set_F47pctPickup(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
     F47pctPickup = property(_get_F47pctPickup, _set_F47pctPickup)
 
@@ -500,8 +500,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    def _set_F46BaseAmps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 22, value)
+    def _set_F46BaseAmps(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 22, value, flags)
 
     F46BaseAmps = property(_get_F46BaseAmps, _set_F46BaseAmps)
 
@@ -513,8 +513,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    def _set_F46pctPickup(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 23, value)
+    def _set_F46pctPickup(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
     F46pctPickup = property(_get_F46pctPickup, _set_F46pctPickup)
 
@@ -526,8 +526,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    def _set_F46isqt(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 24, value)
+    def _set_F46isqt(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
     F46isqt = property(_get_F46isqt, _set_F46isqt)
 
@@ -539,8 +539,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(25)
 
-    def _set_Variable(self, value: AnyStr):
-        self._set_string_o(25, value)
+    def _set_Variable(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(25, value, flags)
 
     Variable = property(_get_Variable, _set_Variable)
 
@@ -552,8 +552,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 26)
 
-    def _set_Overtrip(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 26, value)
+    def _set_Overtrip(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 26, value, flags)
 
     Overtrip = property(_get_Overtrip, _set_Overtrip)
 
@@ -565,8 +565,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    def _set_Undertrip(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 27, value)
+    def _set_Undertrip(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 27, value, flags)
 
     Undertrip = property(_get_Undertrip, _set_Undertrip)
 
@@ -578,8 +578,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 28)
 
-    def _set_BreakerTime(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 28, value)
+    def _set_BreakerTime(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 28, value, flags)
 
     BreakerTime = property(_get_BreakerTime, _set_BreakerTime)
 
@@ -591,11 +591,11 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return enums.RelayAction(self._lib.Obj_GetInt32(self._ptr, 29))
 
-    def _set_Action(self, value: Union[AnyStr, int, enums.RelayAction]):
+    def _set_Action(self, value: Union[AnyStr, int, enums.RelayAction], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(29, value)
+            self._set_string_o(29, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 29, value)
+        self._lib.Obj_SetInt32(self._ptr, 29, value, flags)
 
     Action = property(_get_Action, _set_Action)
 
@@ -607,8 +607,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(29)
 
-    def _set_Action_str(self, value: AnyStr):
-        self.Action = value
+    def _set_Action_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Action(value, flags)
 
     Action_str = property(_get_Action_str, _set_Action_str)
 
@@ -620,8 +620,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 30)
 
-    def _set_Z1Mag(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 30, value)
+    def _set_Z1Mag(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 30, value, flags)
 
     Z1Mag = property(_get_Z1Mag, _set_Z1Mag)
 
@@ -633,8 +633,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 31)
 
-    def _set_Z1Ang(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 31, value)
+    def _set_Z1Ang(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 31, value, flags)
 
     Z1Ang = property(_get_Z1Ang, _set_Z1Ang)
 
@@ -646,8 +646,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 32)
 
-    def _set_Z0Mag(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 32, value)
+    def _set_Z0Mag(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 32, value, flags)
 
     Z0Mag = property(_get_Z0Mag, _set_Z0Mag)
 
@@ -659,8 +659,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 33)
 
-    def _set_Z0Ang(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 33, value)
+    def _set_Z0Ang(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 33, value, flags)
 
     Z0Ang = property(_get_Z0Ang, _set_Z0Ang)
 
@@ -672,8 +672,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 34)
 
-    def _set_MPhase(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 34, value)
+    def _set_MPhase(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 34, value, flags)
 
     MPhase = property(_get_MPhase, _set_MPhase)
 
@@ -685,8 +685,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 35)
 
-    def _set_MGround(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 35, value)
+    def _set_MGround(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 35, value, flags)
 
     MGround = property(_get_MGround, _set_MGround)
 
@@ -698,8 +698,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 36) != 0
 
-    def _set_EventLog(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 36, value)
+    def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 36, value, flags)
 
     EventLog = property(_get_EventLog, _set_EventLog)
 
@@ -711,8 +711,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 37) != 0
 
-    def _set_DebugTrace(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 37, value)
+    def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 37, value, flags)
 
     DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
 
@@ -724,8 +724,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 38) != 0
 
-    def _set_DistReverse(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 38, value)
+    def _set_DistReverse(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 38, value, flags)
 
     DistReverse = property(_get_DistReverse, _set_DistReverse)
 
@@ -737,11 +737,11 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return enums.RelayState(self._lib.Obj_GetInt32(self._ptr, 39))
 
-    def _set_Normal(self, value: Union[AnyStr, int, enums.RelayState]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.RelayState], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(39, value)
+            self._set_string_o(39, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 39, value)
+        self._lib.Obj_SetInt32(self._ptr, 39, value, flags)
 
     Normal = property(_get_Normal, _set_Normal)
 
@@ -753,8 +753,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(39)
 
-    def _set_Normal_str(self, value: AnyStr):
-        self.Normal = value
+    def _set_Normal_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Normal(value, flags)
 
     Normal_str = property(_get_Normal_str, _set_Normal_str)
 
@@ -766,11 +766,11 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return enums.RelayState(self._lib.Obj_GetInt32(self._ptr, 40))
 
-    def _set_State(self, value: Union[AnyStr, int, enums.RelayState]):
+    def _set_State(self, value: Union[AnyStr, int, enums.RelayState], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(40, value)
+            self._set_string_o(40, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 40, value)
+        self._lib.Obj_SetInt32(self._ptr, 40, value, flags)
 
     State = property(_get_State, _set_State)
 
@@ -782,8 +782,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(40)
 
-    def _set_State_str(self, value: AnyStr):
-        self.State = value
+    def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_State(value, flags)
 
     State_str = property(_get_State_str, _set_State_str)
 
@@ -795,8 +795,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 41)
 
-    def _set_DOC_TiltAngleLow(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 41, value)
+    def _set_DOC_TiltAngleLow(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 41, value, flags)
 
     DOC_TiltAngleLow = property(_get_DOC_TiltAngleLow, _set_DOC_TiltAngleLow)
 
@@ -808,8 +808,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 42)
 
-    def _set_DOC_TiltAngleHigh(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 42, value)
+    def _set_DOC_TiltAngleHigh(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 42, value, flags)
 
     DOC_TiltAngleHigh = property(_get_DOC_TiltAngleHigh, _set_DOC_TiltAngleHigh)
 
@@ -821,8 +821,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 43)
 
-    def _set_DOC_TripSettingLow(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 43, value)
+    def _set_DOC_TripSettingLow(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 43, value, flags)
 
     DOC_TripSettingLow = property(_get_DOC_TripSettingLow, _set_DOC_TripSettingLow)
 
@@ -834,8 +834,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 44)
 
-    def _set_DOC_TripSettingHigh(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 44, value)
+    def _set_DOC_TripSettingHigh(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 44, value, flags)
 
     DOC_TripSettingHigh = property(_get_DOC_TripSettingHigh, _set_DOC_TripSettingHigh)
 
@@ -847,8 +847,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 45)
 
-    def _set_DOC_TripSettingMag(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 45, value)
+    def _set_DOC_TripSettingMag(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 45, value, flags)
 
     DOC_TripSettingMag = property(_get_DOC_TripSettingMag, _set_DOC_TripSettingMag)
 
@@ -860,8 +860,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 46)
 
-    def _set_DOC_DelayInner(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 46, value)
+    def _set_DOC_DelayInner(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 46, value, flags)
 
     DOC_DelayInner = property(_get_DOC_DelayInner, _set_DOC_DelayInner)
 
@@ -873,8 +873,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(47)
 
-    def _set_DOC_PhaseCurveInner_str(self, value: AnyStr):
-        self._set_string_o(47, value)
+    def _set_DOC_PhaseCurveInner_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(47, value, flags)
 
     DOC_PhaseCurveInner_str = property(_get_DOC_PhaseCurveInner_str, _set_DOC_PhaseCurveInner_str)
 
@@ -886,12 +886,12 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(47, TCC_Curve)
 
-    def _set_DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve]):
+    def _set_DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(47, value)
+            self._set_obj(47, value, flags)
             return
 
-        self._set_string_o(47, value)
+        self._set_string_o(47, value, flags)
 
     DOC_PhaseCurveInner = property(_get_DOC_PhaseCurveInner, _set_DOC_PhaseCurveInner)
 
@@ -903,8 +903,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 48)
 
-    def _set_DOC_PhaseTripInner(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 48, value)
+    def _set_DOC_PhaseTripInner(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 48, value, flags)
 
     DOC_PhaseTripInner = property(_get_DOC_PhaseTripInner, _set_DOC_PhaseTripInner)
 
@@ -916,8 +916,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 49)
 
-    def _set_DOC_TDPhaseInner(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 49, value)
+    def _set_DOC_TDPhaseInner(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 49, value, flags)
 
     DOC_TDPhaseInner = property(_get_DOC_TDPhaseInner, _set_DOC_TDPhaseInner)
 
@@ -929,8 +929,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 50) != 0
 
-    def _set_DOC_P1Blocking(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 50, value)
+    def _set_DOC_P1Blocking(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 50, value, flags)
 
     DOC_P1Blocking = property(_get_DOC_P1Blocking, _set_DOC_P1Blocking)
 
@@ -942,8 +942,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 51)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 51, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 51, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -955,8 +955,8 @@ class Relay(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 52) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 52, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 52, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -1040,8 +1040,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_MonitoredObj_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     MonitoredObj_str = property(_get_MonitoredObj_str, _set_MonitoredObj_str)
 
@@ -1053,8 +1053,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(1)
 
-    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    def _set_MonitoredObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(1, value, flags)
 
     MonitoredObj = property(_get_MonitoredObj, _set_MonitoredObj)
 
@@ -1066,8 +1066,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_MonitoredTerm(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_MonitoredTerm(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     MonitoredTerm = property(_get_MonitoredTerm, _set_MonitoredTerm)
 
@@ -1079,8 +1079,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(3)
 
-    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(3, value)
+    def _set_SwitchedObj_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(3, value, flags)
 
     SwitchedObj_str = property(_get_SwitchedObj_str, _set_SwitchedObj_str)
 
@@ -1092,8 +1092,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(3)
 
-    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(3, value)
+    def _set_SwitchedObj(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(3, value, flags)
 
     SwitchedObj = property(_get_SwitchedObj, _set_SwitchedObj)
 
@@ -1105,8 +1105,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 4)
 
-    def _set_SwitchedTerm(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(4, value)
+    def _set_SwitchedTerm(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(4, value, flags)
 
     SwitchedTerm = property(_get_SwitchedTerm, _set_SwitchedTerm)
 
@@ -1129,12 +1129,12 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 5)
 
-    def _set_Type(self, value: Union[AnyStr, int, enums.RelayType, List[AnyStr], List[int], List[enums.RelayType], Int32Array]):
+    def _set_Type(self, value: Union[AnyStr, int, enums.RelayType, List[AnyStr], List[int], List[enums.RelayType], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(5, value)
+            self._set_batch_string(5, value, flags)
             return
 
-        self._set_batch_int32_array(5, value)
+        self._set_batch_int32_array(5, value, flags)
 
     Type = property(_get_Type, _set_Type)
 
@@ -1157,8 +1157,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(5)
 
-    def _set_Type_str(self, value: AnyStr):
-        self.Type = value
+    def _set_Type_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Type(value, flags)
 
     Type_str = property(_get_Type_str, _set_Type_str)
 
@@ -1170,8 +1170,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(6)
 
-    def _set_PhaseCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(6, value)
+    def _set_PhaseCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(6, value, flags)
 
     PhaseCurve_str = property(_get_PhaseCurve_str, _set_PhaseCurve_str)
 
@@ -1183,8 +1183,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(6)
 
-    def _set_PhaseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(6, value)
+    def _set_PhaseCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(6, value, flags)
 
     PhaseCurve = property(_get_PhaseCurve, _set_PhaseCurve)
 
@@ -1196,8 +1196,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(7)
 
-    def _set_GroundCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(7, value)
+    def _set_GroundCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(7, value, flags)
 
     GroundCurve_str = property(_get_GroundCurve_str, _set_GroundCurve_str)
 
@@ -1209,8 +1209,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(7)
 
-    def _set_GroundCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(7, value)
+    def _set_GroundCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(7, value, flags)
 
     GroundCurve = property(_get_GroundCurve, _set_GroundCurve)
 
@@ -1222,8 +1222,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    def _set_PhaseTrip(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(8, value)
+    def _set_PhaseTrip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(8, value, flags)
 
     PhaseTrip = property(_get_PhaseTrip, _set_PhaseTrip)
 
@@ -1235,8 +1235,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_GroundTrip(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_GroundTrip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     GroundTrip = property(_get_GroundTrip, _set_GroundTrip)
 
@@ -1248,8 +1248,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    def _set_TDPhase(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(10, value)
+    def _set_TDPhase(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(10, value, flags)
 
     TDPhase = property(_get_TDPhase, _set_TDPhase)
 
@@ -1261,8 +1261,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_TDGround(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_TDGround(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     TDGround = property(_get_TDGround, _set_TDGround)
 
@@ -1274,8 +1274,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_PhaseInst(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_PhaseInst(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     PhaseInst = property(_get_PhaseInst, _set_PhaseInst)
 
@@ -1287,8 +1287,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_GroundInst(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_GroundInst(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     GroundInst = property(_get_GroundInst, _set_GroundInst)
 
@@ -1300,8 +1300,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_Reset(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_Reset(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     Reset = property(_get_Reset, _set_Reset)
 
@@ -1313,8 +1313,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 15)
 
-    def _set_Shots(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(15, value)
+    def _set_Shots(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(15, value, flags)
 
     Shots = property(_get_Shots, _set_Shots)
 
@@ -1329,8 +1329,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_RecloseIntervals(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(16, value)
+    def _set_RecloseIntervals(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(16, value, flags)
 
     RecloseIntervals = property(_get_RecloseIntervals, _set_RecloseIntervals)
 
@@ -1342,8 +1342,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    def _set_Delay(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(17, value)
+    def _set_Delay(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(17, value, flags)
 
     Delay = property(_get_Delay, _set_Delay)
 
@@ -1355,8 +1355,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(18)
 
-    def _set_OvervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(18, value)
+    def _set_OvervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(18, value, flags)
 
     OvervoltCurve_str = property(_get_OvervoltCurve_str, _set_OvervoltCurve_str)
 
@@ -1368,8 +1368,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(18)
 
-    def _set_OvervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(18, value)
+    def _set_OvervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(18, value, flags)
 
     OvervoltCurve = property(_get_OvervoltCurve, _set_OvervoltCurve)
 
@@ -1381,8 +1381,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(19)
 
-    def _set_UndervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(19, value)
+    def _set_UndervoltCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(19, value, flags)
 
     UndervoltCurve_str = property(_get_UndervoltCurve_str, _set_UndervoltCurve_str)
 
@@ -1394,8 +1394,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(19)
 
-    def _set_UndervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(19, value)
+    def _set_UndervoltCurve(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(19, value, flags)
 
     UndervoltCurve = property(_get_UndervoltCurve, _set_UndervoltCurve)
 
@@ -1407,8 +1407,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 20)
 
-    def _set_kVBase(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(20, value)
+    def _set_kVBase(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(20, value, flags)
 
     kVBase = property(_get_kVBase, _set_kVBase)
 
@@ -1420,8 +1420,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    def _set_F47pctPickup(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(21, value)
+    def _set_F47pctPickup(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(21, value, flags)
 
     F47pctPickup = property(_get_F47pctPickup, _set_F47pctPickup)
 
@@ -1433,8 +1433,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    def _set_F46BaseAmps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(22, value)
+    def _set_F46BaseAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(22, value, flags)
 
     F46BaseAmps = property(_get_F46BaseAmps, _set_F46BaseAmps)
 
@@ -1446,8 +1446,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    def _set_F46pctPickup(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(23, value)
+    def _set_F46pctPickup(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(23, value, flags)
 
     F46pctPickup = property(_get_F46pctPickup, _set_F46pctPickup)
 
@@ -1459,8 +1459,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    def _set_F46isqt(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(24, value)
+    def _set_F46isqt(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(24, value, flags)
 
     F46isqt = property(_get_F46isqt, _set_F46isqt)
 
@@ -1472,8 +1472,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(25)
 
-    def _set_Variable(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(25, value)
+    def _set_Variable(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(25, value, flags)
 
     Variable = property(_get_Variable, _set_Variable)
 
@@ -1485,8 +1485,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 26)
 
-    def _set_Overtrip(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(26, value)
+    def _set_Overtrip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(26, value, flags)
 
     Overtrip = property(_get_Overtrip, _set_Overtrip)
 
@@ -1498,8 +1498,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    def _set_Undertrip(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(27, value)
+    def _set_Undertrip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(27, value, flags)
 
     Undertrip = property(_get_Undertrip, _set_Undertrip)
 
@@ -1511,8 +1511,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 28)
 
-    def _set_BreakerTime(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(28, value)
+    def _set_BreakerTime(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(28, value, flags)
 
     BreakerTime = property(_get_BreakerTime, _set_BreakerTime)
 
@@ -1524,12 +1524,12 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 29)
 
-    def _set_Action(self, value: Union[AnyStr, int, enums.RelayAction, List[AnyStr], List[int], List[enums.RelayAction], Int32Array]):
+    def _set_Action(self, value: Union[AnyStr, int, enums.RelayAction, List[AnyStr], List[int], List[enums.RelayAction], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(29, value)
+            self._set_batch_string(29, value, flags)
             return
 
-        self._set_batch_int32_array(29, value)
+        self._set_batch_int32_array(29, value, flags)
 
     Action = property(_get_Action, _set_Action)
 
@@ -1541,8 +1541,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(29)
 
-    def _set_Action_str(self, value: AnyStr):
-        self.Action = value
+    def _set_Action_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Action(value, flags)
 
     Action_str = property(_get_Action_str, _set_Action_str)
 
@@ -1554,8 +1554,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 30)
 
-    def _set_Z1Mag(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(30, value)
+    def _set_Z1Mag(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(30, value, flags)
 
     Z1Mag = property(_get_Z1Mag, _set_Z1Mag)
 
@@ -1567,8 +1567,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 31)
 
-    def _set_Z1Ang(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(31, value)
+    def _set_Z1Ang(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(31, value, flags)
 
     Z1Ang = property(_get_Z1Ang, _set_Z1Ang)
 
@@ -1580,8 +1580,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 32)
 
-    def _set_Z0Mag(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(32, value)
+    def _set_Z0Mag(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(32, value, flags)
 
     Z0Mag = property(_get_Z0Mag, _set_Z0Mag)
 
@@ -1593,8 +1593,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 33)
 
-    def _set_Z0Ang(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(33, value)
+    def _set_Z0Ang(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(33, value, flags)
 
     Z0Ang = property(_get_Z0Ang, _set_Z0Ang)
 
@@ -1606,8 +1606,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 34)
 
-    def _set_MPhase(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(34, value)
+    def _set_MPhase(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(34, value, flags)
 
     MPhase = property(_get_MPhase, _set_MPhase)
 
@@ -1619,8 +1619,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 35)
 
-    def _set_MGround(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(35, value)
+    def _set_MGround(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(35, value, flags)
 
     MGround = property(_get_MGround, _set_MGround)
 
@@ -1634,8 +1634,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(36)
         ]
 
-    def _set_EventLog(self, value: bool):
-        self._set_batch_int32_array(36, value)
+    def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(36, value, flags)
 
     EventLog = property(_get_EventLog, _set_EventLog)
 
@@ -1649,8 +1649,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(37)
         ]
 
-    def _set_DebugTrace(self, value: bool):
-        self._set_batch_int32_array(37, value)
+    def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(37, value, flags)
 
     DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
 
@@ -1664,8 +1664,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(38)
         ]
 
-    def _set_DistReverse(self, value: bool):
-        self._set_batch_int32_array(38, value)
+    def _set_DistReverse(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(38, value, flags)
 
     DistReverse = property(_get_DistReverse, _set_DistReverse)
 
@@ -1677,12 +1677,12 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 39)
 
-    def _set_Normal(self, value: Union[AnyStr, int, enums.RelayState, List[AnyStr], List[int], List[enums.RelayState], Int32Array]):
+    def _set_Normal(self, value: Union[AnyStr, int, enums.RelayState, List[AnyStr], List[int], List[enums.RelayState], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(39, value)
+            self._set_batch_string(39, value, flags)
             return
 
-        self._set_batch_int32_array(39, value)
+        self._set_batch_int32_array(39, value, flags)
 
     Normal = property(_get_Normal, _set_Normal)
 
@@ -1694,8 +1694,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(39)
 
-    def _set_Normal_str(self, value: AnyStr):
-        self.Normal = value
+    def _set_Normal_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Normal(value, flags)
 
     Normal_str = property(_get_Normal_str, _set_Normal_str)
 
@@ -1707,12 +1707,12 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 40)
 
-    def _set_State(self, value: Union[AnyStr, int, enums.RelayState, List[AnyStr], List[int], List[enums.RelayState], Int32Array]):
+    def _set_State(self, value: Union[AnyStr, int, enums.RelayState, List[AnyStr], List[int], List[enums.RelayState], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(40, value)
+            self._set_batch_string(40, value, flags)
             return
 
-        self._set_batch_int32_array(40, value)
+        self._set_batch_int32_array(40, value, flags)
 
     State = property(_get_State, _set_State)
 
@@ -1724,8 +1724,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(40)
 
-    def _set_State_str(self, value: AnyStr):
-        self.State = value
+    def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_State(value, flags)
 
     State_str = property(_get_State_str, _set_State_str)
 
@@ -1737,8 +1737,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 41)
 
-    def _set_DOC_TiltAngleLow(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(41, value)
+    def _set_DOC_TiltAngleLow(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(41, value, flags)
 
     DOC_TiltAngleLow = property(_get_DOC_TiltAngleLow, _set_DOC_TiltAngleLow)
 
@@ -1750,8 +1750,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 42)
 
-    def _set_DOC_TiltAngleHigh(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(42, value)
+    def _set_DOC_TiltAngleHigh(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(42, value, flags)
 
     DOC_TiltAngleHigh = property(_get_DOC_TiltAngleHigh, _set_DOC_TiltAngleHigh)
 
@@ -1763,8 +1763,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 43)
 
-    def _set_DOC_TripSettingLow(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(43, value)
+    def _set_DOC_TripSettingLow(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(43, value, flags)
 
     DOC_TripSettingLow = property(_get_DOC_TripSettingLow, _set_DOC_TripSettingLow)
 
@@ -1776,8 +1776,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 44)
 
-    def _set_DOC_TripSettingHigh(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(44, value)
+    def _set_DOC_TripSettingHigh(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(44, value, flags)
 
     DOC_TripSettingHigh = property(_get_DOC_TripSettingHigh, _set_DOC_TripSettingHigh)
 
@@ -1789,8 +1789,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 45)
 
-    def _set_DOC_TripSettingMag(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(45, value)
+    def _set_DOC_TripSettingMag(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(45, value, flags)
 
     DOC_TripSettingMag = property(_get_DOC_TripSettingMag, _set_DOC_TripSettingMag)
 
@@ -1802,8 +1802,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 46)
 
-    def _set_DOC_DelayInner(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(46, value)
+    def _set_DOC_DelayInner(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(46, value, flags)
 
     DOC_DelayInner = property(_get_DOC_DelayInner, _set_DOC_DelayInner)
 
@@ -1815,8 +1815,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(47)
 
-    def _set_DOC_PhaseCurveInner_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(47, value)
+    def _set_DOC_PhaseCurveInner_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(47, value, flags)
 
     DOC_PhaseCurveInner_str = property(_get_DOC_PhaseCurveInner_str, _set_DOC_PhaseCurveInner_str)
 
@@ -1828,8 +1828,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(47)
 
-    def _set_DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]]):
-        self._set_batch_obj_prop(47, value)
+    def _set_DOC_PhaseCurveInner(self, value: Union[AnyStr, TCC_Curve, List[AnyStr], List[TCC_Curve]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(47, value, flags)
 
     DOC_PhaseCurveInner = property(_get_DOC_PhaseCurveInner, _set_DOC_PhaseCurveInner)
 
@@ -1841,8 +1841,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 48)
 
-    def _set_DOC_PhaseTripInner(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(48, value)
+    def _set_DOC_PhaseTripInner(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(48, value, flags)
 
     DOC_PhaseTripInner = property(_get_DOC_PhaseTripInner, _set_DOC_PhaseTripInner)
 
@@ -1854,8 +1854,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 49)
 
-    def _set_DOC_TDPhaseInner(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(49, value)
+    def _set_DOC_TDPhaseInner(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(49, value, flags)
 
     DOC_TDPhaseInner = property(_get_DOC_TDPhaseInner, _set_DOC_TDPhaseInner)
 
@@ -1869,8 +1869,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(50)
         ]
 
-    def _set_DOC_P1Blocking(self, value: bool):
-        self._set_batch_int32_array(50, value)
+    def _set_DOC_P1Blocking(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(50, value, flags)
 
     DOC_P1Blocking = property(_get_DOC_P1Blocking, _set_DOC_P1Blocking)
 
@@ -1882,8 +1882,8 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 51)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(51, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(51, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -1897,12 +1897,12 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(52)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(52, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(52, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -1910,7 +1910,7 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 53.
         """
-        self._set_batch_string(53, value)
+        self._set_batch_string(53, value, flags)
 
 class RelayBatchProperties(TypedDict):
     MonitoredObj: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]

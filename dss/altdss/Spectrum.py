@@ -3,6 +3,7 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from .types import Float64Array, Int32Array
+from . import enums
 from .DSSObj import IDSSObj, DSSObj
 from .Batch import DSSBatch
 from .ArrayProxy import BatchInt32ArrayProxy
@@ -29,8 +30,8 @@ class Spectrum(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_NumHarm(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_NumHarm(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     NumHarm = property(_get_NumHarm, _set_NumHarm)
 
@@ -45,8 +46,8 @@ class Spectrum(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 2)
 
-    def _set_Harmonic(self, value: Float64Array):
-        self._set_float64_array_o(2, value)
+    def _set_Harmonic(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(2, value, flags)
 
     Harmonic = property(_get_Harmonic, _set_Harmonic)
 
@@ -61,8 +62,8 @@ class Spectrum(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    def _set_pctMag(self, value: Float64Array):
-        self._set_float64_array_o(3, value)
+    def _set_pctMag(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(3, value, flags)
 
     pctMag = property(_get_pctMag, _set_pctMag)
 
@@ -77,8 +78,8 @@ class Spectrum(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 4)
 
-    def _set_Angle(self, value: Float64Array):
-        self._set_float64_array_o(4, value)
+    def _set_Angle(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(4, value, flags)
 
     Angle = property(_get_Angle, _set_Angle)
 
@@ -90,8 +91,8 @@ class Spectrum(DSSObj):
         """
         return self._get_prop_string(5)
 
-    def _set_CSVFile(self, value: AnyStr):
-        self._set_string_o(5, value)
+    def _set_CSVFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(5, value, flags)
 
     CSVFile = property(_get_CSVFile, _set_CSVFile)
 
@@ -128,8 +129,8 @@ class SpectrumBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_NumHarm(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_NumHarm(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     NumHarm = property(_get_NumHarm, _set_NumHarm)
 
@@ -147,8 +148,8 @@ class SpectrumBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_Harmonic(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(2, value)
+    def _set_Harmonic(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(2, value, flags)
 
     Harmonic = property(_get_Harmonic, _set_Harmonic)
 
@@ -166,8 +167,8 @@ class SpectrumBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_pctMag(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(3, value)
+    def _set_pctMag(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(3, value, flags)
 
     pctMag = property(_get_pctMag, _set_pctMag)
 
@@ -185,8 +186,8 @@ class SpectrumBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_Angle(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(4, value)
+    def _set_Angle(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(4, value, flags)
 
     Angle = property(_get_Angle, _set_Angle)
 
@@ -198,12 +199,12 @@ class SpectrumBatch(DSSBatch):
         """
         return self._get_batch_str_prop(5)
 
-    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(5, value)
+    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(5, value, flags)
 
     CSVFile = property(_get_CSVFile, _set_CSVFile)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -211,7 +212,7 @@ class SpectrumBatch(DSSBatch):
 
         DSS property name: `Like`, DSS property index: 6.
         """
-        self._set_batch_string(6, value)
+        self._set_batch_string(6, value, flags)
 
 class SpectrumBatchProperties(TypedDict):
     NumHarm: Union[int, Int32Array]

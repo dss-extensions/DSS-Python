@@ -3,6 +3,7 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from .types import Float64Array, Int32Array
+from . import enums
 from .DSSObj import IDSSObj, DSSObj
 from .Batch import DSSBatch
 from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
@@ -47,8 +48,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_Bus1(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -62,8 +63,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._get_prop_string(2)
 
-    def _set_Bus2(self, value: AnyStr):
-        self._set_string_o(2, value)
+    def _set_Bus2(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(2, value, flags)
 
     Bus2 = property(_get_Bus2, _set_Bus2)
 
@@ -75,8 +76,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 3)
 
-    def _set_Phases(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 3, value)
+    def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 3, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -88,8 +89,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 4)
 
-    def _set_R(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 4, value)
+    def _set_R(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
     R = property(_get_R, _set_R)
 
@@ -101,8 +102,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 5)
 
-    def _set_pctStdDev(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 5, value)
+    def _set_pctStdDev(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
     pctStdDev = property(_get_pctStdDev, _set_pctStdDev)
 
@@ -114,8 +115,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 6)
 
-    def _set_GMatrix(self, value: Float64Array):
-        self._set_float64_array_o(6, value)
+    def _set_GMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(6, value, flags)
 
     GMatrix = property(_get_GMatrix, _set_GMatrix)
 
@@ -127,8 +128,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 7)
 
-    def _set_OnTime(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 7, value)
+    def _set_OnTime(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
     OnTime = property(_get_OnTime, _set_OnTime)
 
@@ -140,8 +141,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 8) != 0
 
-    def _set_Temporary(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 8, value)
+    def _set_Temporary(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 8, value, flags)
 
     Temporary = property(_get_Temporary, _set_Temporary)
 
@@ -153,8 +154,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_MinAmps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_MinAmps(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     MinAmps = property(_get_MinAmps, _set_MinAmps)
 
@@ -166,8 +167,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 10)
 
-    def _set_NormAmps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 10, value)
+    def _set_NormAmps(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
     NormAmps = property(_get_NormAmps, _set_NormAmps)
 
@@ -179,8 +180,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_EmergAmps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_EmergAmps(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
 
@@ -192,8 +193,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_FaultRate(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_FaultRate(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     FaultRate = property(_get_FaultRate, _set_FaultRate)
 
@@ -205,8 +206,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_pctPerm(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_pctPerm(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     pctPerm = property(_get_pctPerm, _set_pctPerm)
 
@@ -218,8 +219,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 14)
 
-    def _set_Repair(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 14, value)
+    def _set_Repair(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
     Repair = property(_get_Repair, _set_Repair)
 
@@ -231,8 +232,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 15)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 15, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -244,8 +245,8 @@ class Fault(DSSObj, CircuitElementMixin, PDElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 16) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 16, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 16, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -298,8 +299,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     Bus1 = property(_get_Bus1, _set_Bus1)
 
@@ -313,8 +314,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_batch_str_prop(2)
 
-    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(2, value)
+    def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(2, value, flags)
 
     Bus2 = property(_get_Bus2, _set_Bus2)
 
@@ -326,8 +327,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    def _set_Phases(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(3, value)
+    def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(3, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -339,8 +340,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 4)
 
-    def _set_R(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(4, value)
+    def _set_R(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(4, value, flags)
 
     R = property(_get_R, _set_R)
 
@@ -352,8 +353,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 5)
 
-    def _set_pctStdDev(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(5, value)
+    def _set_pctStdDev(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(5, value, flags)
 
     pctStdDev = property(_get_pctStdDev, _set_pctStdDev)
 
@@ -368,8 +369,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_GMatrix(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(6, value)
+    def _set_GMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(6, value, flags)
 
     GMatrix = property(_get_GMatrix, _set_GMatrix)
 
@@ -381,8 +382,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 7)
 
-    def _set_OnTime(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(7, value)
+    def _set_OnTime(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(7, value, flags)
 
     OnTime = property(_get_OnTime, _set_OnTime)
 
@@ -396,8 +397,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             self._get_batch_int32_prop(8)
         ]
 
-    def _set_Temporary(self, value: bool):
-        self._set_batch_int32_array(8, value)
+    def _set_Temporary(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(8, value, flags)
 
     Temporary = property(_get_Temporary, _set_Temporary)
 
@@ -409,8 +410,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_MinAmps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_MinAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     MinAmps = property(_get_MinAmps, _set_MinAmps)
 
@@ -422,8 +423,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 10)
 
-    def _set_NormAmps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(10, value)
+    def _set_NormAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(10, value, flags)
 
     NormAmps = property(_get_NormAmps, _set_NormAmps)
 
@@ -435,8 +436,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_EmergAmps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_EmergAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
 
@@ -448,8 +449,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_FaultRate(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_FaultRate(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     FaultRate = property(_get_FaultRate, _set_FaultRate)
 
@@ -461,8 +462,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_pctPerm(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_pctPerm(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     pctPerm = property(_get_pctPerm, _set_pctPerm)
 
@@ -474,8 +475,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 14)
 
-    def _set_Repair(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(14, value)
+    def _set_Repair(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(14, value, flags)
 
     Repair = property(_get_Repair, _set_Repair)
 
@@ -487,8 +488,8 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 15)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(15, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(15, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -502,12 +503,12 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             self._get_batch_int32_prop(16)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(16, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(16, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -515,7 +516,7 @@ class FaultBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 17.
         """
-        self._set_batch_string(17, value)
+        self._set_batch_string(17, value, flags)
 
 class FaultBatchProperties(TypedDict):
     Bus1: Union[AnyStr, List[AnyStr]]

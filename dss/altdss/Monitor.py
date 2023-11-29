@@ -36,8 +36,8 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_Element_str(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_Element_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     Element_str = property(_get_Element_str, _set_Element_str)
 
@@ -49,12 +49,12 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         """
         return self._get_obj(1, None)
 
-    def _set_Element(self, value: Union[AnyStr, DSSObj]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(1, value)
+            self._set_obj(1, value, flags)
             return
 
-        self._set_string_o(1, value)
+        self._set_string_o(1, value, flags)
 
     Element = property(_get_Element, _set_Element)
 
@@ -66,8 +66,8 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_Terminal(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_Terminal(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     Terminal = property(_get_Terminal, _set_Terminal)
 
@@ -103,12 +103,12 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 3)
 
-    def _set_Mode(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 3, value)
+    def _set_Mode(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 3, value, flags)
 
     Mode = property(_get_Mode, _set_Mode)
 
-    def Action(self, value: Union[AnyStr, int, enums.MonitorAction]):
+    def Action(self, value: Union[AnyStr, int, enums.MonitorAction], flags: enums.SetterFlags = 0):
         """
         {Clear | Save | Take | Process}
         (C)lears or (S)aves current buffer.
@@ -120,30 +120,30 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         DSS property name: `Action`, DSS property index: 4.
         """
         if isinstance(value, int):
-            self._lib.Obj_SetInt32(self._ptr, 4, value)
+            self._lib.Obj_SetInt32(self._ptr, 4, value, flags)
             return
 
         self._set_string_o(4, value)
 
-    def Clear(self):
+    def Clear(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.Clear)'''
-        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Clear)
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Clear, flags)
 
-    def Save(self):
+    def Save(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.Save)'''
-        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Save)
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Save, flags)
 
-    def TakeSample(self):
+    def TakeSample(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.TakeSample)'''
-        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.TakeSample)
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.TakeSample, flags)
 
-    def Process(self):
+    def Process(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.Process)'''
-        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Process)
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Process, flags)
 
-    def Reset(self):
+    def Reset(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.Reset)'''
-        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Reset)
+        self._lib.Obj_SetInt32(self._ptr, 4, enums.MonitorAction.Reset, flags)
 
     def _get_Residual(self) -> bool:
         """
@@ -153,8 +153,8 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 5) != 0
 
-    def _set_Residual(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 5, value)
+    def _set_Residual(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 5, value, flags)
 
     Residual = property(_get_Residual, _set_Residual)
 
@@ -166,8 +166,8 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 6) != 0
 
-    def _set_VIPolar(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 6, value)
+    def _set_VIPolar(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
     VIPolar = property(_get_VIPolar, _set_VIPolar)
 
@@ -179,8 +179,8 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 7) != 0
 
-    def _set_PPolar(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 7, value)
+    def _set_PPolar(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 7, value, flags)
 
     PPolar = property(_get_PPolar, _set_PPolar)
 
@@ -192,8 +192,8 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 8, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -205,8 +205,8 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 9) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 9, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 9, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -247,8 +247,8 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     Element_str = property(_get_Element_str, _set_Element_str)
 
@@ -260,8 +260,8 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(1)
 
-    def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(1, value, flags)
 
     Element = property(_get_Element, _set_Element)
 
@@ -273,8 +273,8 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_Terminal(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_Terminal(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     Terminal = property(_get_Terminal, _set_Terminal)
 
@@ -310,12 +310,12 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 3)
 
-    def _set_Mode(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(3, value)
+    def _set_Mode(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(3, value, flags)
 
     Mode = property(_get_Mode, _set_Mode)
 
-    def Action(self, value: Union[AnyStr, int, enums.MonitorAction]):
+    def Action(self, value: Union[AnyStr, int, enums.MonitorAction], flags: enums.SetterFlags = 0):
         """
         {Clear | Save | Take | Process}
         (C)lears or (S)aves current buffer.
@@ -327,29 +327,29 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
         DSS property name: `Action`, DSS property index: 4.
         """
         if isinstance(value, (bytes, str)) or (isinstance(value, LIST_LIKE) and len(value) > 0 and isinstance(value[0], (bytes, str))):
-            self._set_batch_string(4, value)
+            self._set_batch_string(4, value, flags)
         else:
-            self._set_batch_int32_array(4, value)
+            self._set_batch_int32_array(4, value, flags)
 
-    def Clear(self):
+    def Clear(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.Clear)'''
-        self._set_batch_int32_array(4, enums.MonitorAction.Clear)
+        self._set_batch_int32_array(4, enums.MonitorAction.Clear, flags)
 
-    def Save(self):
+    def Save(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.Save)'''
-        self._set_batch_int32_array(4, enums.MonitorAction.Save)
+        self._set_batch_int32_array(4, enums.MonitorAction.Save, flags)
 
-    def TakeSample(self):
+    def TakeSample(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.TakeSample)'''
-        self._set_batch_int32_array(4, enums.MonitorAction.TakeSample)
+        self._set_batch_int32_array(4, enums.MonitorAction.TakeSample, flags)
 
-    def Process(self):
+    def Process(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.Process)'''
-        self._set_batch_int32_array(4, enums.MonitorAction.Process)
+        self._set_batch_int32_array(4, enums.MonitorAction.Process, flags)
 
-    def Reset(self):
+    def Reset(self, flags: enums.SetterFlags = 0):
         '''Shortcut to Action(MonitorAction.Reset)'''
-        self._set_batch_int32_array(4, enums.MonitorAction.Reset)
+        self._set_batch_int32_array(4, enums.MonitorAction.Reset, flags)
 
     def _get_Residual(self) -> List[bool]:
         """
@@ -361,8 +361,8 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(5)
         ]
 
-    def _set_Residual(self, value: bool):
-        self._set_batch_int32_array(5, value)
+    def _set_Residual(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(5, value, flags)
 
     Residual = property(_get_Residual, _set_Residual)
 
@@ -376,8 +376,8 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(6)
         ]
 
-    def _set_VIPolar(self, value: bool):
-        self._set_batch_int32_array(6, value)
+    def _set_VIPolar(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(6, value, flags)
 
     VIPolar = property(_get_VIPolar, _set_VIPolar)
 
@@ -391,8 +391,8 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(7)
         ]
 
-    def _set_PPolar(self, value: bool):
-        self._set_batch_int32_array(7, value)
+    def _set_PPolar(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(7, value, flags)
 
     PPolar = property(_get_PPolar, _set_PPolar)
 
@@ -404,8 +404,8 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(8, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(8, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -419,12 +419,12 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(9)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(9, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(9, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -432,7 +432,7 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 10.
         """
-        self._set_batch_string(10, value)
+        self._set_batch_string(10, value, flags)
 
 class MonitorBatchProperties(TypedDict):
     Element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]

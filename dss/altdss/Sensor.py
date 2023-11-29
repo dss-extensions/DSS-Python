@@ -41,8 +41,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(1)
 
-    def _set_Element_str(self, value: AnyStr):
-        self._set_string_o(1, value)
+    def _set_Element_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(1, value, flags)
 
     Element_str = property(_get_Element_str, _set_Element_str)
 
@@ -54,12 +54,12 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._get_obj(1, None)
 
-    def _set_Element(self, value: Union[AnyStr, DSSObj]):
+    def _set_Element(self, value: Union[AnyStr, DSSObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(1, value)
+            self._set_obj(1, value, flags)
             return
 
-        self._set_string_o(1, value)
+        self._set_string_o(1, value, flags)
 
     Element = property(_get_Element, _set_Element)
 
@@ -71,8 +71,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_Terminal(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_Terminal(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     Terminal = property(_get_Terminal, _set_Terminal)
 
@@ -85,18 +85,18 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 3)
 
-    def _set_kVBase(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 3, value)
+    def _set_kVBase(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
     kVBase = property(_get_kVBase, _set_kVBase)
 
-    def Clear(self, value: bool = True):
+    def Clear(self, value: bool = True, flags: enums.SetterFlags = 0):
         """
         { Yes | No }. Clear=Yes clears sensor values. Should be issued before putting in a new set of measurements.
 
         DSS property name: `Clear`, DSS property index: 4.
         """
-        self._lib.Obj_SetInt32(self._ptr, 4, value)
+        self._lib.Obj_SetInt32(self._ptr, 4, value, flags)
 
     def _get_kVs(self) -> Float64Array:
         """
@@ -106,8 +106,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 5)
 
-    def _set_kVs(self, value: Float64Array):
-        self._set_float64_array_o(5, value)
+    def _set_kVs(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(5, value, flags)
 
     kVs = property(_get_kVs, _set_kVs)
 
@@ -119,8 +119,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 6)
 
-    def _set_Currents(self, value: Float64Array):
-        self._set_float64_array_o(6, value)
+    def _set_Currents(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(6, value, flags)
 
     Currents = property(_get_Currents, _set_Currents)
 
@@ -133,8 +133,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 7)
 
-    def _set_kWs(self, value: Float64Array):
-        self._set_float64_array_o(7, value)
+    def _set_kWs(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(7, value, flags)
 
     kWs = property(_get_kWs, _set_kWs)
 
@@ -146,8 +146,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 8)
 
-    def _set_kvars(self, value: Float64Array):
-        self._set_float64_array_o(8, value)
+    def _set_kvars(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(8, value, flags)
 
     kvars = property(_get_kvars, _set_kvars)
 
@@ -161,11 +161,11 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return enums.Connection(self._lib.Obj_GetInt32(self._ptr, 9))
 
-    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(9, value)
+            self._set_string_o(9, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 9, value)
+        self._lib.Obj_SetInt32(self._ptr, 9, value, flags)
 
     Conn = property(_get_Conn, _set_Conn)
 
@@ -179,8 +179,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._get_prop_string(9)
 
-    def _set_Conn_str(self, value: AnyStr):
-        self.Conn = value
+    def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Conn(value, flags)
 
     Conn_str = property(_get_Conn_str, _set_Conn_str)
 
@@ -192,8 +192,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10)
 
-    def _set_DeltaDirection(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 10, value)
+    def _set_DeltaDirection(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 10, value, flags)
 
     DeltaDirection = property(_get_DeltaDirection, _set_DeltaDirection)
 
@@ -205,8 +205,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 11)
 
-    def _set_pctError(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 11, value)
+    def _set_pctError(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
     pctError = property(_get_pctError, _set_pctError)
 
@@ -218,8 +218,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 12)
 
-    def _set_Weight(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 12, value)
+    def _set_Weight(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
     Weight = property(_get_Weight, _set_Weight)
 
@@ -231,8 +231,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 13)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 13, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -244,8 +244,8 @@ class Sensor(DSSObj, CircuitElementMixin):
         """
         return self._lib.Obj_GetInt32(self._ptr, 14) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 14, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 14, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -291,8 +291,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(1)
 
-    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(1, value)
+    def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(1, value, flags)
 
     Element_str = property(_get_Element_str, _set_Element_str)
 
@@ -304,8 +304,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_obj_prop(1)
 
-    def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]):
-        self._set_batch_obj_prop(1, value)
+    def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(1, value, flags)
 
     Element = property(_get_Element, _set_Element)
 
@@ -317,8 +317,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_Terminal(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_Terminal(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     Terminal = property(_get_Terminal, _set_Terminal)
 
@@ -331,18 +331,18 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 3)
 
-    def _set_kVBase(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(3, value)
+    def _set_kVBase(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(3, value, flags)
 
     kVBase = property(_get_kVBase, _set_kVBase)
 
-    def Clear(self, value: Union[bool, List[bool]] = True):
+    def Clear(self, value: Union[bool, List[bool]] = True, flags: enums.SetterFlags = 0):
         """
         { Yes | No }. Clear=Yes clears sensor values. Should be issued before putting in a new set of measurements.
 
         DSS property name: `Clear`, DSS property index: 4.
         """
-        self._set_batch_int32_array(4, value)
+        self._set_batch_int32_array(4, value, flags)
 
     def _get_kVs(self) -> List[Float64Array]:
         """
@@ -355,8 +355,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_kVs(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(5, value)
+    def _set_kVs(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(5, value, flags)
 
     kVs = property(_get_kVs, _set_kVs)
 
@@ -371,8 +371,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_Currents(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(6, value)
+    def _set_Currents(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(6, value, flags)
 
     Currents = property(_get_Currents, _set_Currents)
 
@@ -388,8 +388,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_kWs(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(7, value)
+    def _set_kWs(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(7, value, flags)
 
     kWs = property(_get_kWs, _set_kWs)
 
@@ -404,8 +404,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_kvars(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(8, value)
+    def _set_kvars(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(8, value, flags)
 
     kvars = property(_get_kvars, _set_kvars)
 
@@ -419,12 +419,12 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 9)
 
-    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array]):
+    def _set_Conn(self, value: Union[AnyStr, int, enums.Connection, List[AnyStr], List[int], List[enums.Connection], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(9, value)
+            self._set_batch_string(9, value, flags)
             return
 
-        self._set_batch_int32_array(9, value)
+        self._set_batch_int32_array(9, value, flags)
 
     Conn = property(_get_Conn, _set_Conn)
 
@@ -438,8 +438,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return self._get_batch_str_prop(9)
 
-    def _set_Conn_str(self, value: AnyStr):
-        self.Conn = value
+    def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Conn(value, flags)
 
     Conn_str = property(_get_Conn_str, _set_Conn_str)
 
@@ -451,8 +451,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 10)
 
-    def _set_DeltaDirection(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(10, value)
+    def _set_DeltaDirection(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(10, value, flags)
 
     DeltaDirection = property(_get_DeltaDirection, _set_DeltaDirection)
 
@@ -464,8 +464,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 11)
 
-    def _set_pctError(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(11, value)
+    def _set_pctError(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(11, value, flags)
 
     pctError = property(_get_pctError, _set_pctError)
 
@@ -477,8 +477,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 12)
 
-    def _set_Weight(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(12, value)
+    def _set_Weight(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(12, value, flags)
 
     Weight = property(_get_Weight, _set_Weight)
 
@@ -490,8 +490,8 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 13)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(13, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(13, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -505,12 +505,12 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
             self._get_batch_int32_prop(14)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(14, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(14, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -518,7 +518,7 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 15.
         """
-        self._set_batch_string(15, value)
+        self._set_batch_string(15, value, flags)
 
 class SensorBatchProperties(TypedDict):
     Element: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]]

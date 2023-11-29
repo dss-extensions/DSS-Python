@@ -3,6 +3,7 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import TypedDict, Unpack
 from .types import Float64Array, Int32Array
+from . import enums
 from .DSSObj import IDSSObj, DSSObj
 from .Batch import DSSBatch
 from .ArrayProxy import BatchInt32ArrayProxy
@@ -29,8 +30,8 @@ class GrowthShape(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_NPts(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_NPts(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     NPts = property(_get_NPts, _set_NPts)
 
@@ -42,8 +43,8 @@ class GrowthShape(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 2)
 
-    def _set_Year(self, value: Float64Array):
-        self._set_float64_array_o(2, value)
+    def _set_Year(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(2, value, flags)
 
     Year = property(_get_Year, _set_Year)
 
@@ -62,8 +63,8 @@ class GrowthShape(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 3)
 
-    def _set_Mult(self, value: Float64Array):
-        self._set_float64_array_o(3, value)
+    def _set_Mult(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(3, value, flags)
 
     Mult = property(_get_Mult, _set_Mult)
 
@@ -75,8 +76,8 @@ class GrowthShape(DSSObj):
         """
         return self._get_prop_string(4)
 
-    def _set_CSVFile(self, value: AnyStr):
-        self._set_string_o(4, value)
+    def _set_CSVFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(4, value, flags)
 
     CSVFile = property(_get_CSVFile, _set_CSVFile)
 
@@ -88,8 +89,8 @@ class GrowthShape(DSSObj):
         """
         return self._get_prop_string(5)
 
-    def _set_SngFile(self, value: AnyStr):
-        self._set_string_o(5, value)
+    def _set_SngFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(5, value, flags)
 
     SngFile = property(_get_SngFile, _set_SngFile)
 
@@ -101,8 +102,8 @@ class GrowthShape(DSSObj):
         """
         return self._get_prop_string(6)
 
-    def _set_DblFile(self, value: AnyStr):
-        self._set_string_o(6, value)
+    def _set_DblFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(6, value, flags)
 
     DblFile = property(_get_DblFile, _set_DblFile)
 
@@ -140,8 +141,8 @@ class GrowthShapeBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_NPts(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_NPts(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     NPts = property(_get_NPts, _set_NPts)
 
@@ -156,8 +157,8 @@ class GrowthShapeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_Year(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(2, value)
+    def _set_Year(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(2, value, flags)
 
     Year = property(_get_Year, _set_Year)
 
@@ -179,8 +180,8 @@ class GrowthShapeBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_Mult(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(3, value)
+    def _set_Mult(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(3, value, flags)
 
     Mult = property(_get_Mult, _set_Mult)
 
@@ -192,8 +193,8 @@ class GrowthShapeBatch(DSSBatch):
         """
         return self._get_batch_str_prop(4)
 
-    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(4, value)
+    def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(4, value, flags)
 
     CSVFile = property(_get_CSVFile, _set_CSVFile)
 
@@ -205,8 +206,8 @@ class GrowthShapeBatch(DSSBatch):
         """
         return self._get_batch_str_prop(5)
 
-    def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(5, value)
+    def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(5, value, flags)
 
     SngFile = property(_get_SngFile, _set_SngFile)
 
@@ -218,12 +219,12 @@ class GrowthShapeBatch(DSSBatch):
         """
         return self._get_batch_str_prop(6)
 
-    def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(6, value)
+    def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(6, value, flags)
 
     DblFile = property(_get_DblFile, _set_DblFile)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -231,7 +232,7 @@ class GrowthShapeBatch(DSSBatch):
 
         DSS property name: `Like`, DSS property index: 7.
         """
-        self._set_batch_string(7, value)
+        self._set_batch_string(7, value, flags)
 
 class GrowthShapeBatchProperties(TypedDict):
     NPts: Union[int, Int32Array]

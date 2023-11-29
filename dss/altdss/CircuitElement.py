@@ -130,8 +130,8 @@ class CircuitElementMixin:
     def Residuals(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_Residuals, self._ptr)
 
-    def Yprim(self) -> ComplexArray:
-        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_Yprim, self._ptr)
+    def YPrim(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_YPrim, self._ptr)
 
     def VoltagesMagAng(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CE_Get_VoltagesMagAng, self._ptr)

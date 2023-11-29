@@ -47,8 +47,8 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_NConds(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_NConds(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     NConds = property(_get_NConds, _set_NConds)
 
@@ -60,8 +60,8 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_NPhases(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_NPhases(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     NPhases = property(_get_NPhases, _set_NPhases)
 
@@ -75,8 +75,8 @@ class LineGeometry(DSSObj):
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 4)
 
-    def _set_Wire_str(self, value: List[AnyStr]):
-        self._set_string_array_o(4, value)
+    def _set_Wire_str(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
+        self._set_string_array_o(4, value, flags)
 
     Wire_str = property(_get_Wire_str, _set_Wire_str)
 
@@ -90,12 +90,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_obj_array(4, WireData)
 
-    def _set_Wire(self, value: List[Union[AnyStr, WireData]]):
+    def _set_Wire(self, value: List[Union[AnyStr, WireData]], flags: enums.SetterFlags = 0):
         if value is None or len(value) == 0 or not isinstance(value[0], DSSObj):
-            self._set_string_array_o(4, value)
+            self._set_string_array_o(4, value, flags)
             return
 
-        self._set_obj_array(4, value)
+        self._set_obj_array(4, value, flags)
 
     Wire = property(_get_Wire, _set_Wire)
 
@@ -107,8 +107,8 @@ class LineGeometry(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 5)
 
-    def _set_X(self, value: Float64Array):
-        self._set_float64_array_o(5, value)
+    def _set_X(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(5, value, flags)
 
     X = property(_get_X, _set_X)
 
@@ -120,8 +120,8 @@ class LineGeometry(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 6)
 
-    def _set_H(self, value: Float64Array):
-        self._set_float64_array_o(6, value)
+    def _set_H(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(6, value, flags)
 
     H = property(_get_H, _set_H)
 
@@ -133,11 +133,11 @@ class LineGeometry(DSSObj):
         """
         return enums.LengthUnit(self._lib.Obj_GetInt32(self._ptr, 7))
 
-    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(7, value)
+            self._set_string_o(7, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 7, value)
+        self._lib.Obj_SetInt32(self._ptr, 7, value, flags)
 
     Units = property(_get_Units, _set_Units)
 
@@ -149,8 +149,8 @@ class LineGeometry(DSSObj):
         """
         return self._get_prop_string(7)
 
-    def _set_Units_str(self, value: AnyStr):
-        self.Units = value
+    def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Units(value, flags)
 
     Units_str = property(_get_Units_str, _set_Units_str)
 
@@ -162,8 +162,8 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 8)
 
-    def _set_NormAmps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 8, value)
+    def _set_NormAmps(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
     NormAmps = property(_get_NormAmps, _set_NormAmps)
 
@@ -175,8 +175,8 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetFloat64(self._ptr, 9)
 
-    def _set_EmergAmps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 9, value)
+    def _set_EmergAmps(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
     EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
 
@@ -188,8 +188,8 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 10) != 0
 
-    def _set_Reduce(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 10, value)
+    def _set_Reduce(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 10, value, flags)
 
     Reduce = property(_get_Reduce, _set_Reduce)
 
@@ -204,8 +204,8 @@ class LineGeometry(DSSObj):
         """
         return self._get_prop_string(11)
 
-    def _set_Spacing_str(self, value: AnyStr):
-        self._set_string_o(11, value)
+    def _set_Spacing_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(11, value, flags)
 
     Spacing_str = property(_get_Spacing_str, _set_Spacing_str)
 
@@ -220,12 +220,12 @@ class LineGeometry(DSSObj):
         """
         return self._get_obj(11, LineSpacing)
 
-    def _set_Spacing(self, value: Union[AnyStr, LineSpacing]):
+    def _set_Spacing(self, value: Union[AnyStr, LineSpacing], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(11, value)
+            self._set_obj(11, value, flags)
             return
 
-        self._set_string_o(11, value)
+        self._set_string_o(11, value, flags)
 
     Spacing = property(_get_Spacing, _set_Spacing)
 
@@ -237,8 +237,8 @@ class LineGeometry(DSSObj):
         """
         return self._lib.Obj_GetInt32(self._ptr, 17)
 
-    def _set_Seasons(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 17, value)
+    def _set_Seasons(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 17, value, flags)
 
     Seasons = property(_get_Seasons, _set_Seasons)
 
@@ -251,8 +251,8 @@ class LineGeometry(DSSObj):
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 18)
 
-    def _set_Ratings(self, value: Float64Array):
-        self._set_float64_array_o(18, value)
+    def _set_Ratings(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(18, value, flags)
 
     Ratings = property(_get_Ratings, _set_Ratings)
 
@@ -267,11 +267,11 @@ class LineGeometry(DSSObj):
         """
         return enums.LineType(self._lib.Obj_GetInt32(self._ptr, 19))
 
-    def _set_LineType(self, value: Union[AnyStr, int, enums.LineType]):
+    def _set_LineType(self, value: Union[AnyStr, int, enums.LineType], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(19, value)
+            self._set_string_o(19, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 19, value)
+        self._lib.Obj_SetInt32(self._ptr, 19, value, flags)
 
     LineType = property(_get_LineType, _set_LineType)
 
@@ -286,8 +286,8 @@ class LineGeometry(DSSObj):
         """
         return self._get_prop_string(19)
 
-    def _set_LineType_str(self, value: AnyStr):
-        self.LineType = value
+    def _set_LineType_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_LineType(value, flags)
 
     LineType_str = property(_get_LineType_str, _set_LineType_str)
 
@@ -332,8 +332,8 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_NConds(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_NConds(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     NConds = property(_get_NConds, _set_NConds)
 
@@ -345,8 +345,8 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_NPhases(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_NPhases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     NPhases = property(_get_NPhases, _set_NPhases)
 
@@ -360,8 +360,8 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_string_ll(4)
 
-    def _set_Wire_str(self, value: List[AnyStr]):
-        self._set_batch_stringlist_prop(4, value)
+    def _set_Wire_str(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
+        self._set_batch_stringlist_prop(4, value, flags)
 
     Wire_str = property(_get_Wire_str, _set_Wire_str)
 
@@ -375,12 +375,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_obj_ll(4, WireData)
 
-    def _set_Wire(self, value: Union[List[AnyStr], List[WireData]]):
+    def _set_Wire(self, value: Union[List[AnyStr], List[WireData]], flags: enums.SetterFlags = 0):
         if (not len(value)) or isinstance(value[0], (bytes, str)) or (len(value[0]) and isinstance(value[0][0], (bytes, str))):
-            self._set_batch_stringlist_prop(4, value)
+            self._set_batch_stringlist_prop(4, value, flags)
             return
 
-        self._set_batch_objlist_prop(4, value)
+        self._set_batch_objlist_prop(4, value, flags)
 
     Wire = property(_get_Wire, _set_Wire)
 
@@ -395,8 +395,8 @@ class LineGeometryBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_X(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(5, value)
+    def _set_X(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(5, value, flags)
 
     X = property(_get_X, _set_X)
 
@@ -411,8 +411,8 @@ class LineGeometryBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_H(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(6, value)
+    def _set_H(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(6, value, flags)
 
     H = property(_get_H, _set_H)
 
@@ -424,12 +424,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 7)
 
-    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array]):
+    def _set_Units(self, value: Union[AnyStr, int, enums.LengthUnit, List[AnyStr], List[int], List[enums.LengthUnit], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(7, value)
+            self._set_batch_string(7, value, flags)
             return
 
-        self._set_batch_int32_array(7, value)
+        self._set_batch_int32_array(7, value, flags)
 
     Units = property(_get_Units, _set_Units)
 
@@ -441,8 +441,8 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_str_prop(7)
 
-    def _set_Units_str(self, value: AnyStr):
-        self.Units = value
+    def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Units(value, flags)
 
     Units_str = property(_get_Units_str, _set_Units_str)
 
@@ -454,8 +454,8 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 8)
 
-    def _set_NormAmps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(8, value)
+    def _set_NormAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(8, value, flags)
 
     NormAmps = property(_get_NormAmps, _set_NormAmps)
 
@@ -467,8 +467,8 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchFloat64ArrayProxy(self, 9)
 
-    def _set_EmergAmps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(9, value)
+    def _set_EmergAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(9, value, flags)
 
     EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
 
@@ -482,8 +482,8 @@ class LineGeometryBatch(DSSBatch):
             self._get_batch_int32_prop(10)
         ]
 
-    def _set_Reduce(self, value: bool):
-        self._set_batch_int32_array(10, value)
+    def _set_Reduce(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(10, value, flags)
 
     Reduce = property(_get_Reduce, _set_Reduce)
 
@@ -498,8 +498,8 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_str_prop(11)
 
-    def _set_Spacing_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(11, value)
+    def _set_Spacing_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(11, value, flags)
 
     Spacing_str = property(_get_Spacing_str, _set_Spacing_str)
 
@@ -514,8 +514,8 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_obj_prop(11)
 
-    def _set_Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]]):
-        self._set_batch_obj_prop(11, value)
+    def _set_Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(11, value, flags)
 
     Spacing = property(_get_Spacing, _set_Spacing)
 
@@ -527,8 +527,8 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 17)
 
-    def _set_Seasons(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(17, value)
+    def _set_Seasons(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(17, value, flags)
 
     Seasons = property(_get_Seasons, _set_Seasons)
 
@@ -544,8 +544,8 @@ class LineGeometryBatch(DSSBatch):
             for x in self._unpack()
         ]
 
-    def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(18, value)
+    def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(18, value, flags)
 
     Ratings = property(_get_Ratings, _set_Ratings)
 
@@ -560,12 +560,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return BatchInt32ArrayProxy(self, 19)
 
-    def _set_LineType(self, value: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array]):
+    def _set_LineType(self, value: Union[AnyStr, int, enums.LineType, List[AnyStr], List[int], List[enums.LineType], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(19, value)
+            self._set_batch_string(19, value, flags)
             return
 
-        self._set_batch_int32_array(19, value)
+        self._set_batch_int32_array(19, value, flags)
 
     LineType = property(_get_LineType, _set_LineType)
 
@@ -580,12 +580,12 @@ class LineGeometryBatch(DSSBatch):
         """
         return self._get_batch_str_prop(19)
 
-    def _set_LineType_str(self, value: AnyStr):
-        self.LineType = value
+    def _set_LineType_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_LineType(value, flags)
 
     LineType_str = property(_get_LineType_str, _set_LineType_str)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -593,7 +593,7 @@ class LineGeometryBatch(DSSBatch):
 
         DSS property name: `Like`, DSS property index: 20.
         """
-        self._set_batch_string(20, value)
+        self._set_batch_string(20, value, flags)
 
 class LineGeometryBatchProperties(TypedDict):
     NConds: Union[int, Int32Array]

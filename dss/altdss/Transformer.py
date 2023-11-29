@@ -90,8 +90,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetInt32(self._ptr, 1)
 
-    def _set_Phases(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 1, value)
+    def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -103,8 +103,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetInt32(self._ptr, 2)
 
-    def _set_Windings(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 2, value)
+    def _set_Windings(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
     Windings = property(_get_Windings, _set_Windings)
 
@@ -116,8 +116,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 9)
 
-    def _set_pctR(self, value: Float64Array):
-        self._set_float64_array_o(9, value)
+    def _set_pctR(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(9, value, flags)
 
     pctR = property(_get_pctR, _set_pctR)
 
@@ -129,8 +129,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 10)
 
-    def _set_RNeut(self, value: Float64Array):
-        self._set_float64_array_o(10, value)
+    def _set_RNeut(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(10, value, flags)
 
     RNeut = property(_get_RNeut, _set_RNeut)
 
@@ -142,8 +142,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 11)
 
-    def _set_XNeut(self, value: Float64Array):
-        self._set_float64_array_o(11, value)
+    def _set_XNeut(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(11, value, flags)
 
     XNeut = property(_get_XNeut, _set_XNeut)
 
@@ -157,9 +157,9 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 12)
 
-    def _set_Buses(self, value: List[AnyStr]):
+    def _set_Buses(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
-        self._lib.Obj_SetStringArray(self._ptr, 12, value_ptr, value_count)
+        self._lib.Obj_SetStringArray(self._ptr, 12, value_ptr, value_count, flags)
         self._check_for_error()
 
     Buses = property(_get_Buses, _set_Buses)
@@ -174,11 +174,11 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return [enums.Connection(val) for val in self._get_int32_list(self._lib.Obj_GetInt32Array, self._ptr, 13)]
 
-    def _set_Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]]):
+    def _set_Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]], flags: enums.SetterFlags = 0):
         if len(value) and not isinstance(value[0], int):
-            self._set_string_array_o(13, value)
+            self._set_string_array_o(13, value, flags)
             return
-        self._set_int32_array_o(13, value)
+        self._set_int32_array_o(13, value, flags)
 
     Conns = property(_get_Conns, _set_Conns)
 
@@ -192,8 +192,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_string_array(self._lib.Obj_GetStringArray, self._ptr, 13)
 
-    def _set_Conns_str(self, value: AnyStr):
-        self.Conns = value
+    def _set_Conns_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Conns(value, flags)
 
     Conns_str = property(_get_Conns_str, _set_Conns_str)
 
@@ -211,8 +211,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 14)
 
-    def _set_kVs(self, value: Float64Array):
-        self._set_float64_array_o(14, value)
+    def _set_kVs(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(14, value, flags)
 
     kVs = property(_get_kVs, _set_kVs)
 
@@ -224,8 +224,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 15)
 
-    def _set_kVAs(self, value: Float64Array):
-        self._set_float64_array_o(15, value)
+    def _set_kVAs(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(15, value, flags)
 
     kVAs = property(_get_kVAs, _set_kVAs)
 
@@ -237,8 +237,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 16)
 
-    def _set_Taps(self, value: Float64Array):
-        self._set_float64_array_o(16, value)
+    def _set_Taps(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(16, value, flags)
 
     Taps = property(_get_Taps, _set_Taps)
 
@@ -250,8 +250,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 17)
 
-    def _set_XHL(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 17, value)
+    def _set_XHL(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
     XHL = property(_get_XHL, _set_XHL)
 
@@ -263,8 +263,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 18)
 
-    def _set_XHT(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 18, value)
+    def _set_XHT(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
     XHT = property(_get_XHT, _set_XHT)
 
@@ -276,8 +276,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 19)
 
-    def _set_XLT(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 19, value)
+    def _set_XLT(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
     XLT = property(_get_XLT, _set_XLT)
 
@@ -293,8 +293,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 20)
 
-    def _set_XSCArray(self, value: Float64Array):
-        self._set_float64_array_o(20, value)
+    def _set_XSCArray(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(20, value, flags)
 
     XSCArray = property(_get_XSCArray, _set_XSCArray)
 
@@ -306,8 +306,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 21)
 
-    def _set_Thermal(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 21, value)
+    def _set_Thermal(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
     Thermal = property(_get_Thermal, _set_Thermal)
 
@@ -319,8 +319,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 22)
 
-    def _set_n(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 22, value)
+    def _set_n(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 22, value, flags)
 
     n = property(_get_n, _set_n)
 
@@ -332,8 +332,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 23)
 
-    def _set_m(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 23, value)
+    def _set_m(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
     m = property(_get_m, _set_m)
 
@@ -345,8 +345,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 24)
 
-    def _set_FLRise(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 24, value)
+    def _set_FLRise(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
     FLRise = property(_get_FLRise, _set_FLRise)
 
@@ -358,8 +358,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 25)
 
-    def _set_HSRise(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 25, value)
+    def _set_HSRise(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 25, value, flags)
 
     HSRise = property(_get_HSRise, _set_HSRise)
 
@@ -371,8 +371,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 26)
 
-    def _set_pctLoadLoss(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 26, value)
+    def _set_pctLoadLoss(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 26, value, flags)
 
     pctLoadLoss = property(_get_pctLoadLoss, _set_pctLoadLoss)
 
@@ -384,8 +384,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 27)
 
-    def _set_pctNoLoadLoss(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 27, value)
+    def _set_pctNoLoadLoss(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 27, value, flags)
 
     pctNoLoadLoss = property(_get_pctNoLoadLoss, _set_pctNoLoadLoss)
 
@@ -397,8 +397,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 28)
 
-    def _set_NormHkVA(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 28, value)
+    def _set_NormHkVA(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 28, value, flags)
 
     NormHkVA = property(_get_NormHkVA, _set_NormHkVA)
 
@@ -410,8 +410,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 29)
 
-    def _set_EmergHkVA(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 29, value)
+    def _set_EmergHkVA(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 29, value, flags)
 
     EmergHkVA = property(_get_EmergHkVA, _set_EmergHkVA)
 
@@ -423,8 +423,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetInt32(self._ptr, 30) != 0
 
-    def _set_Sub(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 30, value)
+    def _set_Sub(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 30, value, flags)
 
     Sub = property(_get_Sub, _set_Sub)
 
@@ -436,8 +436,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 31)
 
-    def _set_MaxTap(self, value: Float64Array):
-        self._set_float64_array_o(31, value)
+    def _set_MaxTap(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(31, value, flags)
 
     MaxTap = property(_get_MaxTap, _set_MaxTap)
 
@@ -449,8 +449,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 32)
 
-    def _set_MinTap(self, value: Float64Array):
-        self._set_float64_array_o(32, value)
+    def _set_MinTap(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(32, value, flags)
 
     MinTap = property(_get_MinTap, _set_MinTap)
 
@@ -462,8 +462,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_int32_array(self._lib.Obj_GetInt32Array, self._ptr, 33)
 
-    def _set_NumTaps(self, value: Int32Array):
-        self._set_int32_array_o(33, value)
+    def _set_NumTaps(self, value: Int32Array, flags: enums.SetterFlags = 0):
+        self._set_int32_array_o(33, value, flags)
 
     NumTaps = property(_get_NumTaps, _set_NumTaps)
 
@@ -475,8 +475,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_prop_string(34)
 
-    def _set_SubName(self, value: AnyStr):
-        self._set_string_o(34, value)
+    def _set_SubName(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(34, value, flags)
 
     SubName = property(_get_SubName, _set_SubName)
 
@@ -488,8 +488,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 35)
 
-    def _set_pctIMag(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 35, value)
+    def _set_pctIMag(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 35, value, flags)
 
     pctIMag = property(_get_pctIMag, _set_pctIMag)
 
@@ -501,8 +501,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 36)
 
-    def _set_ppm_Antifloat(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 36, value)
+    def _set_ppm_Antifloat(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 36, value, flags)
 
     ppm_Antifloat = property(_get_ppm_Antifloat, _set_ppm_Antifloat)
 
@@ -516,8 +516,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 37)
 
-    def _set_pctRs(self, value: Float64Array):
-        self._set_float64_array_o(37, value)
+    def _set_pctRs(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(37, value, flags)
 
     pctRs = property(_get_pctRs, _set_pctRs)
 
@@ -529,8 +529,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_prop_string(38)
 
-    def _set_Bank(self, value: AnyStr):
-        self._set_string_o(38, value)
+    def _set_Bank(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(38, value, flags)
 
     Bank = property(_get_Bank, _set_Bank)
 
@@ -542,8 +542,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_prop_string(39)
 
-    def _set_XfmrCode_str(self, value: AnyStr):
-        self._set_string_o(39, value)
+    def _set_XfmrCode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_string_o(39, value, flags)
 
     XfmrCode_str = property(_get_XfmrCode_str, _set_XfmrCode_str)
 
@@ -555,12 +555,12 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_obj(39, XfmrCodeObj)
 
-    def _set_XfmrCode(self, value: Union[AnyStr, XfmrCodeObj]):
+    def _set_XfmrCode(self, value: Union[AnyStr, XfmrCodeObj], flags: enums.SetterFlags = 0):
         if isinstance(value, DSSObj):
-            self._set_obj(39, value)
+            self._set_obj(39, value, flags)
             return
 
-        self._set_string_o(39, value)
+        self._set_string_o(39, value, flags)
 
     XfmrCode = property(_get_XfmrCode, _set_XfmrCode)
 
@@ -572,8 +572,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetInt32(self._ptr, 40) != 0
 
-    def _set_XRConst(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 40, value)
+    def _set_XRConst(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 40, value, flags)
 
     XRConst = property(_get_XRConst, _set_XRConst)
 
@@ -585,8 +585,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 41)
 
-    def _set_X12(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 41, value)
+    def _set_X12(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 41, value, flags)
 
     X12 = property(_get_X12, _set_X12)
 
@@ -598,8 +598,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 42)
 
-    def _set_X13(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 42, value)
+    def _set_X13(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 42, value, flags)
 
     X13 = property(_get_X13, _set_X13)
 
@@ -611,8 +611,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 43)
 
-    def _set_X23(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 43, value)
+    def _set_X23(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 43, value, flags)
 
     X23 = property(_get_X23, _set_X23)
 
@@ -624,11 +624,11 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return enums.PhaseSequence(self._lib.Obj_GetInt32(self._ptr, 44))
 
-    def _set_LeadLag(self, value: Union[AnyStr, int, enums.PhaseSequence]):
+    def _set_LeadLag(self, value: Union[AnyStr, int, enums.PhaseSequence], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(44, value)
+            self._set_string_o(44, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 44, value)
+        self._lib.Obj_SetInt32(self._ptr, 44, value, flags)
 
     LeadLag = property(_get_LeadLag, _set_LeadLag)
 
@@ -640,8 +640,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_prop_string(44)
 
-    def _set_LeadLag_str(self, value: AnyStr):
-        self.LeadLag = value
+    def _set_LeadLag_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_LeadLag(value, flags)
 
     LeadLag_str = property(_get_LeadLag_str, _set_LeadLag_str)
 
@@ -653,11 +653,11 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return enums.CoreType(self._lib.Obj_GetInt32(self._ptr, 46))
 
-    def _set_Core(self, value: Union[AnyStr, int, enums.CoreType]):
+    def _set_Core(self, value: Union[AnyStr, int, enums.CoreType], flags: enums.SetterFlags = 0):
         if not isinstance(value, int):
-            self._set_string_o(46, value)
+            self._set_string_o(46, value, flags)
             return
-        self._lib.Obj_SetInt32(self._ptr, 46, value)
+        self._lib.Obj_SetInt32(self._ptr, 46, value, flags)
 
     Core = property(_get_Core, _set_Core)
 
@@ -669,8 +669,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_prop_string(46)
 
-    def _set_Core_str(self, value: AnyStr):
-        self.Core = value
+    def _set_Core_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Core(value, flags)
 
     Core_str = property(_get_Core_str, _set_Core_str)
 
@@ -682,8 +682,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 47)
 
-    def _set_RDCOhms(self, value: Float64Array):
-        self._set_float64_array_o(47, value)
+    def _set_RDCOhms(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(47, value, flags)
 
     RDCOhms = property(_get_RDCOhms, _set_RDCOhms)
 
@@ -695,8 +695,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetInt32(self._ptr, 48)
 
-    def _set_Seasons(self, value: int):
-        self._lib.Obj_SetInt32(self._ptr, 48, value)
+    def _set_Seasons(self, value: int, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 48, value, flags)
 
     Seasons = property(_get_Seasons, _set_Seasons)
 
@@ -709,8 +709,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._get_float64_array(self._lib.Obj_GetFloat64Array, self._ptr, 49)
 
-    def _set_Ratings(self, value: Float64Array):
-        self._set_float64_array_o(49, value)
+    def _set_Ratings(self, value: Float64Array, flags: enums.SetterFlags = 0):
+        self._set_float64_array_o(49, value, flags)
 
     Ratings = property(_get_Ratings, _set_Ratings)
 
@@ -722,8 +722,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 50)
 
-    def _set_NormAmps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 50, value)
+    def _set_NormAmps(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 50, value, flags)
 
     NormAmps = property(_get_NormAmps, _set_NormAmps)
 
@@ -735,8 +735,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 51)
 
-    def _set_EmergAmps(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 51, value)
+    def _set_EmergAmps(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 51, value, flags)
 
     EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
 
@@ -748,8 +748,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 52)
 
-    def _set_FaultRate(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 52, value)
+    def _set_FaultRate(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 52, value, flags)
 
     FaultRate = property(_get_FaultRate, _set_FaultRate)
 
@@ -761,8 +761,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 53)
 
-    def _set_pctPerm(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 53, value)
+    def _set_pctPerm(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 53, value, flags)
 
     pctPerm = property(_get_pctPerm, _set_pctPerm)
 
@@ -774,8 +774,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 54)
 
-    def _set_Repair(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 54, value)
+    def _set_Repair(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 54, value, flags)
 
     Repair = property(_get_Repair, _set_Repair)
 
@@ -787,8 +787,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetFloat64(self._ptr, 55)
 
-    def _set_BaseFreq(self, value: float):
-        self._lib.Obj_SetFloat64(self._ptr, 55, value)
+    def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetFloat64(self._ptr, 55, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -800,8 +800,8 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         """
         return self._lib.Obj_GetInt32(self._ptr, 56) != 0
 
-    def _set_Enabled(self, value: bool):
-        self._lib.Obj_SetInt32(self._ptr, 56, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._lib.Obj_SetInt32(self._ptr, 56, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
@@ -882,8 +882,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 1)
 
-    def _set_Phases(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(1, value)
+    def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(1, value, flags)
 
     Phases = property(_get_Phases, _set_Phases)
 
@@ -895,8 +895,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 2)
 
-    def _set_Windings(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(2, value)
+    def _set_Windings(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(2, value, flags)
 
     Windings = property(_get_Windings, _set_Windings)
 
@@ -911,8 +911,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_pctR(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(9, value)
+    def _set_pctR(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(9, value, flags)
 
     pctR = property(_get_pctR, _set_pctR)
 
@@ -927,8 +927,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_RNeut(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(10, value)
+    def _set_RNeut(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(10, value, flags)
 
     RNeut = property(_get_RNeut, _set_RNeut)
 
@@ -943,8 +943,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_XNeut(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(11, value)
+    def _set_XNeut(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(11, value, flags)
 
     XNeut = property(_get_XNeut, _set_XNeut)
 
@@ -958,10 +958,10 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_string_ll(12)
 
-    def _set_Buses(self, value: List[AnyStr]):
+    def _set_Buses(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         value, value_ptr, value_count = self._prepare_string_array(value)
         for x in self._unpack():
-            self._lib.Obj_SetStringArray(x, 12, value_ptr, value_count)
+            self._lib.Obj_SetStringArray(x, 12, value_ptr, value_count, flags)
 
         self._check_for_error()
 
@@ -980,16 +980,16 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]]): #TODO: list of lists
+    def _set_Conns(self, value: Union[List[Union[int, enums.Connection]], List[AnyStr]], flags: enums.SetterFlags = 0): #TODO: list of lists
         if len(value) and not isinstance(value[0], int):
             value, value_ptr, value_count = self._prepare_string_array(value)
             for x in self._unpack():
-                self._lib.Obj_SetStringArray(x, 13, value_ptr, value_count)
+                self._lib.Obj_SetStringArray(x, 13, value_ptr, value_count, flags)
 
             self._check_for_error()
             return
 
-        self._set_batch_int32_array(13, value)
+        self._set_batch_int32_array(13, value, flags)
 
     Conns = property(_get_Conns, _set_Conns)
 
@@ -1003,8 +1003,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_string_ll(13)
 
-    def _set_Conns_str(self, value: AnyStr):
-        self.Conns = value
+    def _set_Conns_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Conns(value, flags)
 
     Conns_str = property(_get_Conns_str, _set_Conns_str)
 
@@ -1025,8 +1025,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_kVs(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(14, value)
+    def _set_kVs(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(14, value, flags)
 
     kVs = property(_get_kVs, _set_kVs)
 
@@ -1041,8 +1041,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_kVAs(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(15, value)
+    def _set_kVAs(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(15, value, flags)
 
     kVAs = property(_get_kVAs, _set_kVAs)
 
@@ -1057,8 +1057,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_Taps(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(16, value)
+    def _set_Taps(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(16, value, flags)
 
     Taps = property(_get_Taps, _set_Taps)
 
@@ -1070,8 +1070,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 17)
 
-    def _set_XHL(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(17, value)
+    def _set_XHL(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(17, value, flags)
 
     XHL = property(_get_XHL, _set_XHL)
 
@@ -1083,8 +1083,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 18)
 
-    def _set_XHT(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(18, value)
+    def _set_XHT(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(18, value, flags)
 
     XHT = property(_get_XHT, _set_XHT)
 
@@ -1096,8 +1096,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 19)
 
-    def _set_XLT(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(19, value)
+    def _set_XLT(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(19, value, flags)
 
     XLT = property(_get_XLT, _set_XLT)
 
@@ -1116,8 +1116,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_XSCArray(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(20, value)
+    def _set_XSCArray(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(20, value, flags)
 
     XSCArray = property(_get_XSCArray, _set_XSCArray)
 
@@ -1129,8 +1129,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 21)
 
-    def _set_Thermal(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(21, value)
+    def _set_Thermal(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(21, value, flags)
 
     Thermal = property(_get_Thermal, _set_Thermal)
 
@@ -1142,8 +1142,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 22)
 
-    def _set_n(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(22, value)
+    def _set_n(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(22, value, flags)
 
     n = property(_get_n, _set_n)
 
@@ -1155,8 +1155,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 23)
 
-    def _set_m(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(23, value)
+    def _set_m(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(23, value, flags)
 
     m = property(_get_m, _set_m)
 
@@ -1168,8 +1168,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 24)
 
-    def _set_FLRise(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(24, value)
+    def _set_FLRise(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(24, value, flags)
 
     FLRise = property(_get_FLRise, _set_FLRise)
 
@@ -1181,8 +1181,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 25)
 
-    def _set_HSRise(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(25, value)
+    def _set_HSRise(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(25, value, flags)
 
     HSRise = property(_get_HSRise, _set_HSRise)
 
@@ -1194,8 +1194,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 26)
 
-    def _set_pctLoadLoss(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(26, value)
+    def _set_pctLoadLoss(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(26, value, flags)
 
     pctLoadLoss = property(_get_pctLoadLoss, _set_pctLoadLoss)
 
@@ -1207,8 +1207,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 27)
 
-    def _set_pctNoLoadLoss(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(27, value)
+    def _set_pctNoLoadLoss(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(27, value, flags)
 
     pctNoLoadLoss = property(_get_pctNoLoadLoss, _set_pctNoLoadLoss)
 
@@ -1220,8 +1220,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 28)
 
-    def _set_NormHkVA(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(28, value)
+    def _set_NormHkVA(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(28, value, flags)
 
     NormHkVA = property(_get_NormHkVA, _set_NormHkVA)
 
@@ -1233,8 +1233,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 29)
 
-    def _set_EmergHkVA(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(29, value)
+    def _set_EmergHkVA(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(29, value, flags)
 
     EmergHkVA = property(_get_EmergHkVA, _set_EmergHkVA)
 
@@ -1248,8 +1248,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             self._get_batch_int32_prop(30)
         ]
 
-    def _set_Sub(self, value: bool):
-        self._set_batch_int32_array(30, value)
+    def _set_Sub(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(30, value, flags)
 
     Sub = property(_get_Sub, _set_Sub)
 
@@ -1264,8 +1264,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_MaxTap(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(31, value)
+    def _set_MaxTap(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(31, value, flags)
 
     MaxTap = property(_get_MaxTap, _set_MaxTap)
 
@@ -1280,8 +1280,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_MinTap(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(32, value)
+    def _set_MinTap(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(32, value, flags)
 
     MinTap = property(_get_MinTap, _set_MinTap)
 
@@ -1296,8 +1296,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_NumTaps(self, value: Union[Int32Array, List[Int32Array]]):
-        self._set_batch_int32_array_prop(33, value)
+    def _set_NumTaps(self, value: Union[Int32Array, List[Int32Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array_prop(33, value, flags)
 
     NumTaps = property(_get_NumTaps, _set_NumTaps)
 
@@ -1309,8 +1309,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_batch_str_prop(34)
 
-    def _set_SubName(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(34, value)
+    def _set_SubName(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(34, value, flags)
 
     SubName = property(_get_SubName, _set_SubName)
 
@@ -1322,8 +1322,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 35)
 
-    def _set_pctIMag(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(35, value)
+    def _set_pctIMag(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(35, value, flags)
 
     pctIMag = property(_get_pctIMag, _set_pctIMag)
 
@@ -1335,8 +1335,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 36)
 
-    def _set_ppm_Antifloat(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(36, value)
+    def _set_ppm_Antifloat(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(36, value, flags)
 
     ppm_Antifloat = property(_get_ppm_Antifloat, _set_ppm_Antifloat)
 
@@ -1353,8 +1353,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_pctRs(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(37, value)
+    def _set_pctRs(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(37, value, flags)
 
     pctRs = property(_get_pctRs, _set_pctRs)
 
@@ -1366,8 +1366,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_batch_str_prop(38)
 
-    def _set_Bank(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(38, value)
+    def _set_Bank(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(38, value, flags)
 
     Bank = property(_get_Bank, _set_Bank)
 
@@ -1379,8 +1379,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_batch_str_prop(39)
 
-    def _set_XfmrCode_str(self, value: Union[AnyStr, List[AnyStr]]):
-        self._set_batch_string(39, value)
+    def _set_XfmrCode_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
+        self._set_batch_string(39, value, flags)
 
     XfmrCode_str = property(_get_XfmrCode_str, _set_XfmrCode_str)
 
@@ -1392,8 +1392,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_batch_obj_prop(39)
 
-    def _set_XfmrCode(self, value: Union[AnyStr, XfmrCodeObj, List[AnyStr], List[XfmrCodeObj]]):
-        self._set_batch_obj_prop(39, value)
+    def _set_XfmrCode(self, value: Union[AnyStr, XfmrCodeObj, List[AnyStr], List[XfmrCodeObj]], flags: enums.SetterFlags = 0):
+        self._set_batch_obj_prop(39, value, flags)
 
     XfmrCode = property(_get_XfmrCode, _set_XfmrCode)
 
@@ -1407,8 +1407,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             self._get_batch_int32_prop(40)
         ]
 
-    def _set_XRConst(self, value: bool):
-        self._set_batch_int32_array(40, value)
+    def _set_XRConst(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(40, value, flags)
 
     XRConst = property(_get_XRConst, _set_XRConst)
 
@@ -1420,8 +1420,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 41)
 
-    def _set_X12(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(41, value)
+    def _set_X12(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(41, value, flags)
 
     X12 = property(_get_X12, _set_X12)
 
@@ -1433,8 +1433,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 42)
 
-    def _set_X13(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(42, value)
+    def _set_X13(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(42, value, flags)
 
     X13 = property(_get_X13, _set_X13)
 
@@ -1446,8 +1446,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 43)
 
-    def _set_X23(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(43, value)
+    def _set_X23(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(43, value, flags)
 
     X23 = property(_get_X23, _set_X23)
 
@@ -1459,12 +1459,12 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 44)
 
-    def _set_LeadLag(self, value: Union[AnyStr, int, enums.PhaseSequence, List[AnyStr], List[int], List[enums.PhaseSequence], Int32Array]):
+    def _set_LeadLag(self, value: Union[AnyStr, int, enums.PhaseSequence, List[AnyStr], List[int], List[enums.PhaseSequence], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(44, value)
+            self._set_batch_string(44, value, flags)
             return
 
-        self._set_batch_int32_array(44, value)
+        self._set_batch_int32_array(44, value, flags)
 
     LeadLag = property(_get_LeadLag, _set_LeadLag)
 
@@ -1476,8 +1476,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_batch_str_prop(44)
 
-    def _set_LeadLag_str(self, value: AnyStr):
-        self.LeadLag = value
+    def _set_LeadLag_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_LeadLag(value, flags)
 
     LeadLag_str = property(_get_LeadLag_str, _set_LeadLag_str)
 
@@ -1489,12 +1489,12 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 46)
 
-    def _set_Core(self, value: Union[AnyStr, int, enums.CoreType, List[AnyStr], List[int], List[enums.CoreType], Int32Array]):
+    def _set_Core(self, value: Union[AnyStr, int, enums.CoreType, List[AnyStr], List[int], List[enums.CoreType], Int32Array], flags: enums.SetterFlags = 0):
         if isinstance(value, (str, bytes)) or (isinstance(value, LIST_LIKE) and isinstance(value[0], (str, bytes))):
-            self._set_batch_string(46, value)
+            self._set_batch_string(46, value, flags)
             return
 
-        self._set_batch_int32_array(46, value)
+        self._set_batch_int32_array(46, value, flags)
 
     Core = property(_get_Core, _set_Core)
 
@@ -1506,8 +1506,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return self._get_batch_str_prop(46)
 
-    def _set_Core_str(self, value: AnyStr):
-        self.Core = value
+    def _set_Core_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
+        self._set_Core(value, flags)
 
     Core_str = property(_get_Core_str, _set_Core_str)
 
@@ -1522,8 +1522,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_RDCOhms(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(47, value)
+    def _set_RDCOhms(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(47, value, flags)
 
     RDCOhms = property(_get_RDCOhms, _set_RDCOhms)
 
@@ -1535,8 +1535,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchInt32ArrayProxy(self, 48)
 
-    def _set_Seasons(self, value: Union[int, Int32Array]):
-        self._set_batch_int32_array(48, value)
+    def _set_Seasons(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(48, value, flags)
 
     Seasons = property(_get_Seasons, _set_Seasons)
 
@@ -1552,8 +1552,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             for x in self._unpack()
         ]
 
-    def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]]):
-        self._set_batch_float64_array_prop(49, value)
+    def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array_prop(49, value, flags)
 
     Ratings = property(_get_Ratings, _set_Ratings)
 
@@ -1565,8 +1565,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 50)
 
-    def _set_NormAmps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(50, value)
+    def _set_NormAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(50, value, flags)
 
     NormAmps = property(_get_NormAmps, _set_NormAmps)
 
@@ -1578,8 +1578,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 51)
 
-    def _set_EmergAmps(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(51, value)
+    def _set_EmergAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(51, value, flags)
 
     EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
 
@@ -1591,8 +1591,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 52)
 
-    def _set_FaultRate(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(52, value)
+    def _set_FaultRate(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(52, value, flags)
 
     FaultRate = property(_get_FaultRate, _set_FaultRate)
 
@@ -1604,8 +1604,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 53)
 
-    def _set_pctPerm(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(53, value)
+    def _set_pctPerm(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(53, value, flags)
 
     pctPerm = property(_get_pctPerm, _set_pctPerm)
 
@@ -1617,8 +1617,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 54)
 
-    def _set_Repair(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(54, value)
+    def _set_Repair(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(54, value, flags)
 
     Repair = property(_get_Repair, _set_Repair)
 
@@ -1630,8 +1630,8 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
         """
         return BatchFloat64ArrayProxy(self, 55)
 
-    def _set_BaseFreq(self, value: Union[float, Float64Array]):
-        self._set_batch_float64_array(55, value)
+    def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
+        self._set_batch_float64_array(55, value, flags)
 
     BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
 
@@ -1645,12 +1645,12 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             self._get_batch_int32_prop(56)
         ]
 
-    def _set_Enabled(self, value: bool):
-        self._set_batch_int32_array(56, value)
+    def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
+        self._set_batch_int32_array(56, value, flags)
 
     Enabled = property(_get_Enabled, _set_Enabled)
 
-    def Like(self, value: AnyStr):
+    def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
         Make like another object, e.g.:
 
@@ -1658,7 +1658,7 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
 
         DSS property name: `Like`, DSS property index: 57.
         """
-        self._set_batch_string(57, value)
+        self._set_batch_string(57, value, flags)
 
 class TransformerBatchProperties(TypedDict):
     Phases: Union[int, Int32Array]
