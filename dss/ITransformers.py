@@ -7,7 +7,8 @@ Copyright (c) 2018-2023 DSS-Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from ._types import Float64ArrayOrComplexArray
-from typing import AnyStr
+from typing import AnyStr, Union
+from .enums import CoreType as TransformerCoreType
 
 class ITransformers(Iterable):
     __slots__ = []
@@ -221,12 +222,12 @@ class ITransformers(Iterable):
         return self._get_string(self.CheckForError(self._lib.Transformers_Get_strWdgCurrents()))
 
     @property
-    def CoreType(self) -> int:
+    def CoreType(self) -> TransformerCoreType:
         '''Transformer Core Type: 0=Shell; 1=1ph; 3-3leg; 4=4-Leg; 5=5-leg; 9=Core-1-phase'''
-        return self.CheckForError(self._lib.Transformers_Get_CoreType()) #TODO: use enum
+        return TransformerCoreType(self.CheckForError(self._lib.Transformers_Get_CoreType()))
 
     @CoreType.setter
-    def CoreType(self, Value: int):
+    def CoreType(self, Value: Union[int, TransformerCoreType]):
         self.CheckForError(self._lib.Transformers_Set_CoreType(Value))
 
     @property

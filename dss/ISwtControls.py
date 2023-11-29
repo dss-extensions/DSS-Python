@@ -6,7 +6,8 @@ Copyright (c) 2016-2023 Paulo Meira
 Copyright (c) 2018-2023 DSS-Extensions contributors
 '''
 from ._cffi_api_util import Iterable
-from typing import AnyStr
+from typing import AnyStr, Union
+from .enums import ActionCodes
 
 class ISwtControls(Iterable):
     __slots__ = []
@@ -55,14 +56,14 @@ class ISwtControls(Iterable):
         self.CheckForError(self._lib.SwtControls_Set_IsLocked(Value))
 
     @property
-    def NormalState(self) -> int:
+    def NormalState(self) -> ActionCodes:
         '''
         Get/set Normal state of switch (see actioncodes) dssActionOpen or dssActionClose
         '''
-        return self.CheckForError(self._lib.SwtControls_Get_NormalState()) #TODO: use enum
+        return ActionCodes(self.CheckForError(self._lib.SwtControls_Get_NormalState()))
 
     @NormalState.setter
-    def NormalState(self, Value: int):
+    def NormalState(self, Value: Union[int, ActionCodes]):
         self.CheckForError(self._lib.SwtControls_Set_NormalState(Value))
 
     @property

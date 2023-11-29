@@ -262,6 +262,17 @@ class OCPDevType(IntEnum):
     Recloser = 2
     Relay = 3
 
+
+class CoreType(IntEnum):
+    """Transformer Core Type"""
+    shell = 0 # shell
+    one_phase = 1 # 1-phase
+    three_leg = 3 # 3-leg
+    four_leg = 4 # 4-leg
+    five_leg = 5 # 5-leg
+    core_1_phase = 9 # core-1-phase
+
+
 class SparseSolverOptions(IntEnum):
     ReuseNothing = 0 
     """
