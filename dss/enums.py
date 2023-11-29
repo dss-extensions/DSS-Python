@@ -355,20 +355,20 @@ class DSSCompatFlags(IntFlag):
     for other aspects of the engine in the future, so this flag can be used to
     toggle the old/bad values where feasible.
     """
-    
+
     InvControl9611 = 0x00000004
     """
     Toggle some InvControl behavior introduced in OpenDSS 9.6.1.1. It could be a regression 
     but needs further investigation, so we added this flag in the time being.
     """
-    
+
     SaveCalcVoltageBases = 0x00000008
     """
     When using "save circuit", the official OpenDSS always includes the "CalcVoltageBases" command in the
     saved script. We found that it is not always a good idea, so we removed the command (leaving it commented).
     Use this flag to enable the command in the saved script.
     """
-    
+
     ActiveLine = 0x00000010
     """
     In the official OpenDSS implementation, the Lines API use the active circuit element instead of the
@@ -379,6 +379,26 @@ class DSSCompatFlags(IntFlag):
     This flag enables this behavior above if compatibility at this level is required. On DSS-Extensions,
     we changed the behavior to follow what most of the other APIs do: use the active object in the internal
     list. This change was done for DSS C-API v0.13.5, as well as the introduction of this flag.
+    """
+
+    NoPropertyTracking = 0x00000020
+    """
+    On DSS-Extensions/AltDSS, when setting a property invalidates a previous input value, the engine
+    will try to mark the invalidated data as unset. This allows for better exports and tracking of 
+    the current state of DSS objects.
+    Set this flag to disable this behavior, following the original OpenDSS implementation for potential
+    compatibility with older software that may require the original behavior; note that may lead to
+    errorneous interpretation of the data in the DSS properties. This was introduced in DSS C-API v0.14.0
+    and will be further developed for future versions.
+    """
+
+    SkipSideEffects = 0x00000040
+    """
+    Some specific functions on the official OpenDSS APIs skip important side-effects.
+    By default, on DSS-Extensions/AltDSS, those side-effects are enabled. Use this flag
+    to try to follow the behavior of the official APIs. Beware that some side-effects are
+    important and skipping them may result in incorrect results.
+    This flag only affects some of the classic API functions, especially Loads and Generators.
     """
 
 
