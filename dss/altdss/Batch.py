@@ -436,7 +436,7 @@ class DSSBatch(Base):
         return self._ffi.string(str_ptr).decode(self._api_util.codec)
 
     @property
-    def name(self) -> List[str]:
+    def Name(self) -> List[str]:
         res = [
             self._ffi.string(self._lib.Obj_GetName(ptr)).decode(self._api_util.codec)
             for ptr in self._unpack()

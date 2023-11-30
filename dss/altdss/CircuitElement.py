@@ -202,7 +202,7 @@ class CircuitElementBatchMixin:
 
     def PhaseLosses(self) -> ComplexArray:
         '''Complex array of losses (kVA) by phase, for each element'''
-        return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_PhaseLosses, self._ptr)
+        return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_PhaseLosses, *self._get_ptr_cnt())
 
     def TotalPowers(self) -> ComplexArray:
         '''
@@ -237,12 +237,15 @@ class CircuitElementBatchMixin:
         return self._get_float64_array(self._lib.Alt_CEBatch_Get_VoltagesMagAng, *self._get_ptr_cnt())
 
     def ComplexSeqVoltages(self) -> ComplexArray:
-        return self._get_fcomplex128_array(self._lib.Alt_CE_Get_ComplexSeqVoltages, self._ptr)
+        return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_ComplexSeqVoltages, *self._get_ptr_cnt())
 
 
 class ElementHasRegistersMixin:
     __slots__ = ()
     _extra_slots = []
+
+    # def __init__(self, *args):
+    #     super().__init__(*args)
 
     def RegisterNames(self) -> List[str]:
         return self._get_string_array(self._lib.Alt_CE_Get_RegisterNames, self._ptr)

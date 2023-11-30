@@ -99,10 +99,10 @@ class DSSObj(Base):
         #     if propseq:
         #         vals.append(f'{self._properties_by_idx[propidx][0]}={self[propidx]}')
 
-        return f'<{self._cls_name}.{self.name}>'# {" ".join(vals)}'
+        return f'<{self._cls_name}.{self.Name}>'# {" ".join(vals)}'
 
     @property
-    def name(self) -> str:
+    def Name(self) -> str:
         s = self._lib.Obj_GetName(self._ptr)
         self._check_for_error()
         return self._ffi.string(s).decode(self._api_util.codec)

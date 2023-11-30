@@ -54,7 +54,7 @@ class MonitorObjMixin:
         if index < 1 or index > num_channels:
             raise DSSException(
                 'Monitor Channel: Invalid channel index ({}), monitor "{}" has {} channels.'.format(
-                index, self.name, num_channels
+                index, self.Name, num_channels
             ))
         
         buffer = self._get_int8_array(self._lib.Alt_Monitor_Get_ByteStream, self._ptr)
