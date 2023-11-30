@@ -33,7 +33,7 @@ class LineSpacing(DSSObj):
     def _set_NConds(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    NConds = property(_get_NConds, _set_NConds)
+    NConds = property(_get_NConds, _set_NConds) # type: int
 
     def _get_NPhases(self) -> int:
         """
@@ -46,7 +46,7 @@ class LineSpacing(DSSObj):
     def _set_NPhases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
-    NPhases = property(_get_NPhases, _set_NPhases)
+    NPhases = property(_get_NPhases, _set_NPhases) # type: int
 
     def _get_X(self) -> Float64Array:
         """
@@ -59,7 +59,7 @@ class LineSpacing(DSSObj):
     def _set_X(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(3, value, flags)
 
-    X = property(_get_X, _set_X)
+    X = property(_get_X, _set_X) # type: Float64Array
 
     def _get_H(self) -> Float64Array:
         """
@@ -72,7 +72,7 @@ class LineSpacing(DSSObj):
     def _set_H(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(4, value, flags)
 
-    H = property(_get_H, _set_H)
+    H = property(_get_H, _set_H) # type: Float64Array
 
     def _get_Units(self) -> enums.LengthUnit:
         """
@@ -88,7 +88,7 @@ class LineSpacing(DSSObj):
             return
         self._lib.Obj_SetInt32(self._ptr, 5, value, flags)
 
-    Units = property(_get_Units, _set_Units)
+    Units = property(_get_Units, _set_Units) # type: enums.LengthUnit
 
     def _get_Units_str(self) -> str:
         """
@@ -101,7 +101,7 @@ class LineSpacing(DSSObj):
     def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Units(value, flags)
 
-    Units_str = property(_get_Units_str, _set_Units_str)
+    Units_str = property(_get_Units_str, _set_Units_str) # type: str
 
     def Like(self, value: AnyStr):
         """
@@ -139,7 +139,7 @@ class LineSpacingBatch(DSSBatch):
     def _set_NConds(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    NConds = property(_get_NConds, _set_NConds)
+    NConds = property(_get_NConds, _set_NConds) # type: BatchInt32ArrayProxy
 
     def _get_NPhases(self) -> BatchInt32ArrayProxy:
         """
@@ -152,7 +152,7 @@ class LineSpacingBatch(DSSBatch):
     def _set_NPhases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(2, value, flags)
 
-    NPhases = property(_get_NPhases, _set_NPhases)
+    NPhases = property(_get_NPhases, _set_NPhases) # type: BatchInt32ArrayProxy
 
     def _get_X(self) -> List[Float64Array]:
         """
@@ -168,7 +168,7 @@ class LineSpacingBatch(DSSBatch):
     def _set_X(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(3, value, flags)
 
-    X = property(_get_X, _set_X)
+    X = property(_get_X, _set_X) # type: List[Float64Array]
 
     def _get_H(self) -> List[Float64Array]:
         """
@@ -184,7 +184,7 @@ class LineSpacingBatch(DSSBatch):
     def _set_H(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(4, value, flags)
 
-    H = property(_get_H, _set_H)
+    H = property(_get_H, _set_H) # type: List[Float64Array]
 
     def _get_Units(self) -> BatchInt32ArrayProxy:
         """
@@ -201,9 +201,9 @@ class LineSpacingBatch(DSSBatch):
 
         self._set_batch_int32_array(5, value, flags)
 
-    Units = property(_get_Units, _set_Units)
+    Units = property(_get_Units, _set_Units) # type: BatchInt32ArrayProxy
 
-    def _get_Units_str(self) -> str:
+    def _get_Units_str(self) -> List[str]:
         """
         Units for x and h: {mi|kft|km|m|Ft|in|cm } Initial default is "ft", but defaults to last unit defined
 
@@ -214,7 +214,7 @@ class LineSpacingBatch(DSSBatch):
     def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Units(value, flags)
 
-    Units_str = property(_get_Units_str, _set_Units_str)
+    Units_str = property(_get_Units_str, _set_Units_str) # type: List[str]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -239,7 +239,7 @@ class ILineSpacing(IDSSObj, LineSpacingBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, LineSpacing, LineSpacingBatch)
-        LineSpacingBatch.__init__(self, self._api_util, sync_cls=True)
+        LineSpacingBatch.__init__(self, self._api_util, sync_cls_idx=LineSpacing._cls_idx)
 
 
     # We need this one for better type hinting

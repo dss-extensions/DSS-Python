@@ -40,7 +40,7 @@ class TShape(DSSObj):
     def _set_NPts(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    NPts = property(_get_NPts, _set_NPts)
+    NPts = property(_get_NPts, _set_NPts) # type: int
 
     def _get_Interval(self) -> float:
         """
@@ -55,7 +55,7 @@ class TShape(DSSObj):
     def _set_Interval(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 2, value, flags)
 
-    Interval = property(_get_Interval, _set_Interval)
+    Interval = property(_get_Interval, _set_Interval) # type: float
 
     def _get_Temp(self) -> Float64Array:
         """
@@ -73,7 +73,7 @@ class TShape(DSSObj):
     def _set_Temp(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(3, value, flags)
 
-    Temp = property(_get_Temp, _set_Temp)
+    Temp = property(_get_Temp, _set_Temp) # type: Float64Array
 
     def _get_Hour(self) -> Float64Array:
         """
@@ -89,7 +89,7 @@ class TShape(DSSObj):
     def _set_Hour(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(4, value, flags)
 
-    Hour = property(_get_Hour, _set_Hour)
+    Hour = property(_get_Hour, _set_Hour) # type: Float64Array
 
     def _get_Mean(self) -> float:
         """
@@ -102,7 +102,7 @@ class TShape(DSSObj):
     def _set_Mean(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    Mean = property(_get_Mean, _set_Mean)
+    Mean = property(_get_Mean, _set_Mean) # type: float
 
     def _get_StdDev(self) -> float:
         """
@@ -117,7 +117,7 @@ class TShape(DSSObj):
     def _set_StdDev(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
-    StdDev = property(_get_StdDev, _set_StdDev)
+    StdDev = property(_get_StdDev, _set_StdDev) # type: float
 
     def _get_CSVFile(self) -> str:
         """
@@ -130,7 +130,7 @@ class TShape(DSSObj):
     def _set_CSVFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(7, value, flags)
 
-    CSVFile = property(_get_CSVFile, _set_CSVFile)
+    CSVFile = property(_get_CSVFile, _set_CSVFile) # type: str
 
     def _get_SngFile(self) -> str:
         """
@@ -143,7 +143,7 @@ class TShape(DSSObj):
     def _set_SngFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(8, value, flags)
 
-    SngFile = property(_get_SngFile, _set_SngFile)
+    SngFile = property(_get_SngFile, _set_SngFile) # type: str
 
     def _get_DblFile(self) -> str:
         """
@@ -156,7 +156,7 @@ class TShape(DSSObj):
     def _set_DblFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(9, value, flags)
 
-    DblFile = property(_get_DblFile, _set_DblFile)
+    DblFile = property(_get_DblFile, _set_DblFile) # type: str
 
     def _get_SInterval(self) -> float:
         """
@@ -169,7 +169,7 @@ class TShape(DSSObj):
     def _set_SInterval(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
-    SInterval = property(_get_SInterval, _set_SInterval)
+    SInterval = property(_get_SInterval, _set_SInterval) # type: float
 
     def _get_MInterval(self) -> float:
         """
@@ -182,7 +182,7 @@ class TShape(DSSObj):
     def _set_MInterval(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
-    MInterval = property(_get_MInterval, _set_MInterval)
+    MInterval = property(_get_MInterval, _set_MInterval) # type: float
 
     def Action(self, value: Union[AnyStr, int, enums.TShapeAction], flags: enums.SetterFlags = 0):
         """
@@ -247,7 +247,7 @@ class TShapeBatch(DSSBatch):
     def _set_NPts(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    NPts = property(_get_NPts, _set_NPts)
+    NPts = property(_get_NPts, _set_NPts) # type: BatchInt32ArrayProxy
 
     def _get_Interval(self) -> BatchFloat64ArrayProxy:
         """
@@ -262,7 +262,7 @@ class TShapeBatch(DSSBatch):
     def _set_Interval(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(2, value, flags)
 
-    Interval = property(_get_Interval, _set_Interval)
+    Interval = property(_get_Interval, _set_Interval) # type: BatchFloat64ArrayProxy
 
     def _get_Temp(self) -> List[Float64Array]:
         """
@@ -283,7 +283,7 @@ class TShapeBatch(DSSBatch):
     def _set_Temp(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(3, value, flags)
 
-    Temp = property(_get_Temp, _set_Temp)
+    Temp = property(_get_Temp, _set_Temp) # type: List[Float64Array]
 
     def _get_Hour(self) -> List[Float64Array]:
         """
@@ -302,7 +302,7 @@ class TShapeBatch(DSSBatch):
     def _set_Hour(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(4, value, flags)
 
-    Hour = property(_get_Hour, _set_Hour)
+    Hour = property(_get_Hour, _set_Hour) # type: List[Float64Array]
 
     def _get_Mean(self) -> BatchFloat64ArrayProxy:
         """
@@ -315,7 +315,7 @@ class TShapeBatch(DSSBatch):
     def _set_Mean(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    Mean = property(_get_Mean, _set_Mean)
+    Mean = property(_get_Mean, _set_Mean) # type: BatchFloat64ArrayProxy
 
     def _get_StdDev(self) -> BatchFloat64ArrayProxy:
         """
@@ -330,7 +330,7 @@ class TShapeBatch(DSSBatch):
     def _set_StdDev(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(6, value, flags)
 
-    StdDev = property(_get_StdDev, _set_StdDev)
+    StdDev = property(_get_StdDev, _set_StdDev) # type: BatchFloat64ArrayProxy
 
     def _get_CSVFile(self) -> List[str]:
         """
@@ -343,7 +343,7 @@ class TShapeBatch(DSSBatch):
     def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(7, value, flags)
 
-    CSVFile = property(_get_CSVFile, _set_CSVFile)
+    CSVFile = property(_get_CSVFile, _set_CSVFile) # type: List[str]
 
     def _get_SngFile(self) -> List[str]:
         """
@@ -356,7 +356,7 @@ class TShapeBatch(DSSBatch):
     def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(8, value, flags)
 
-    SngFile = property(_get_SngFile, _set_SngFile)
+    SngFile = property(_get_SngFile, _set_SngFile) # type: List[str]
 
     def _get_DblFile(self) -> List[str]:
         """
@@ -369,7 +369,7 @@ class TShapeBatch(DSSBatch):
     def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(9, value, flags)
 
-    DblFile = property(_get_DblFile, _set_DblFile)
+    DblFile = property(_get_DblFile, _set_DblFile) # type: List[str]
 
     def _get_SInterval(self) -> BatchFloat64ArrayProxy:
         """
@@ -382,7 +382,7 @@ class TShapeBatch(DSSBatch):
     def _set_SInterval(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(10, value, flags)
 
-    SInterval = property(_get_SInterval, _set_SInterval)
+    SInterval = property(_get_SInterval, _set_SInterval) # type: BatchFloat64ArrayProxy
 
     def _get_MInterval(self) -> BatchFloat64ArrayProxy:
         """
@@ -395,7 +395,7 @@ class TShapeBatch(DSSBatch):
     def _set_MInterval(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(11, value, flags)
 
-    MInterval = property(_get_MInterval, _set_MInterval)
+    MInterval = property(_get_MInterval, _set_MInterval) # type: BatchFloat64ArrayProxy
 
     def Action(self, value: Union[AnyStr, int, enums.TShapeAction], flags: enums.SetterFlags = 0):
         """
@@ -446,7 +446,7 @@ class ITShape(IDSSObj, TShapeBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, TShape, TShapeBatch)
-        TShapeBatch.__init__(self, self._api_util, sync_cls=True)
+        TShapeBatch.__init__(self, self._api_util, sync_cls_idx=TShape._cls_idx)
 
 
     # We need this one for better type hinting

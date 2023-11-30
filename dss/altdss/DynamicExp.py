@@ -34,7 +34,7 @@ class DynamicExp(DSSObj):
     def _set_NVariables(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    NVariables = property(_get_NVariables, _set_NVariables)
+    NVariables = property(_get_NVariables, _set_NVariables) # type: int
 
     def _get_VarNames(self) -> List[str]:
         """
@@ -49,7 +49,7 @@ class DynamicExp(DSSObj):
         self._lib.Obj_SetStringArray(self._ptr, 2, value_ptr, value_count, flags)
         self._check_for_error()
 
-    VarNames = property(_get_VarNames, _set_VarNames)
+    VarNames = property(_get_VarNames, _set_VarNames) # type: List[str]
 
     def _get_Var(self) -> str:
         """
@@ -62,7 +62,7 @@ class DynamicExp(DSSObj):
     def _set_Var(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(3, value, flags)
 
-    Var = property(_get_Var, _set_Var)
+    Var = property(_get_Var, _set_Var) # type: str
 
     def _get_VarIdx(self) -> int:
         """
@@ -75,7 +75,7 @@ class DynamicExp(DSSObj):
     def _set_VarIdx(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 4, value, flags)
 
-    VarIdx = property(_get_VarIdx, _set_VarIdx)
+    VarIdx = property(_get_VarIdx, _set_VarIdx) # type: int
 
     def _get_Expression(self) -> str:
         """
@@ -90,7 +90,7 @@ class DynamicExp(DSSObj):
     def _set_Expression(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(5, value, flags)
 
-    Expression = property(_get_Expression, _set_Expression)
+    Expression = property(_get_Expression, _set_Expression) # type: str
 
     def _get_Domain(self) -> enums.DynamicExpDomain:
         """
@@ -106,7 +106,7 @@ class DynamicExp(DSSObj):
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
-    Domain = property(_get_Domain, _set_Domain)
+    Domain = property(_get_Domain, _set_Domain) # type: enums.DynamicExpDomain
 
     def _get_Domain_str(self) -> str:
         """
@@ -119,7 +119,7 @@ class DynamicExp(DSSObj):
     def _set_Domain_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Domain(value, flags)
 
-    Domain_str = property(_get_Domain_str, _set_Domain_str)
+    Domain_str = property(_get_Domain_str, _set_Domain_str) # type: str
 
     def Like(self, value: AnyStr):
         """
@@ -156,7 +156,7 @@ class DynamicExpBatch(DSSBatch):
     def _set_NVariables(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    NVariables = property(_get_NVariables, _set_NVariables)
+    NVariables = property(_get_NVariables, _set_NVariables) # type: BatchInt32ArrayProxy
 
     def _get_VarNames(self) -> List[List[str]]:
         """
@@ -173,7 +173,7 @@ class DynamicExpBatch(DSSBatch):
 
         self._check_for_error()
 
-    VarNames = property(_get_VarNames, _set_VarNames)
+    VarNames = property(_get_VarNames, _set_VarNames) # type: List[List[str]]
 
     def _get_Var(self) -> List[str]:
         """
@@ -186,7 +186,7 @@ class DynamicExpBatch(DSSBatch):
     def _set_Var(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(3, value, flags)
 
-    Var = property(_get_Var, _set_Var)
+    Var = property(_get_Var, _set_Var) # type: List[str]
 
     def _get_VarIdx(self) -> BatchInt32ArrayProxy:
         """
@@ -199,7 +199,7 @@ class DynamicExpBatch(DSSBatch):
     def _set_VarIdx(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(4, value, flags)
 
-    VarIdx = property(_get_VarIdx, _set_VarIdx)
+    VarIdx = property(_get_VarIdx, _set_VarIdx) # type: BatchInt32ArrayProxy
 
     def _get_Expression(self) -> List[str]:
         """
@@ -214,7 +214,7 @@ class DynamicExpBatch(DSSBatch):
     def _set_Expression(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(5, value, flags)
 
-    Expression = property(_get_Expression, _set_Expression)
+    Expression = property(_get_Expression, _set_Expression) # type: List[str]
 
     def _get_Domain(self) -> BatchInt32ArrayProxy:
         """
@@ -231,9 +231,9 @@ class DynamicExpBatch(DSSBatch):
 
         self._set_batch_int32_array(6, value, flags)
 
-    Domain = property(_get_Domain, _set_Domain)
+    Domain = property(_get_Domain, _set_Domain) # type: BatchInt32ArrayProxy
 
-    def _get_Domain_str(self) -> str:
+    def _get_Domain_str(self) -> List[str]:
         """
         It is the domain for which the equation is defined, it can be one of [time*, dq]. By deafult, dynamic epxressions are defined in the time domain.
 
@@ -244,7 +244,7 @@ class DynamicExpBatch(DSSBatch):
     def _set_Domain_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Domain(value, flags)
 
-    Domain_str = property(_get_Domain_str, _set_Domain_str)
+    Domain_str = property(_get_Domain_str, _set_Domain_str) # type: List[str]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -268,7 +268,7 @@ class IDynamicExp(IDSSObj, DynamicExpBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, DynamicExp, DynamicExpBatch)
-        DynamicExpBatch.__init__(self, self._api_util, sync_cls=True)
+        DynamicExpBatch.__init__(self, self._api_util, sync_cls_idx=DynamicExp._cls_idx)
 
 
     # We need this one for better type hinting

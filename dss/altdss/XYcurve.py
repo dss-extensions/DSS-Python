@@ -40,7 +40,7 @@ class XYcurve(DSSObj):
     def _set_NPts(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    NPts = property(_get_NPts, _set_NPts)
+    NPts = property(_get_NPts, _set_NPts) # type: int
 
     def _get_YArray(self) -> Float64Array:
         """
@@ -58,7 +58,7 @@ class XYcurve(DSSObj):
     def _set_YArray(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(3, value, flags)
 
-    YArray = property(_get_YArray, _set_YArray)
+    YArray = property(_get_YArray, _set_YArray) # type: Float64Array
 
     def _get_XArray(self) -> Float64Array:
         """
@@ -76,7 +76,7 @@ class XYcurve(DSSObj):
     def _set_XArray(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(4, value, flags)
 
-    XArray = property(_get_XArray, _set_XArray)
+    XArray = property(_get_XArray, _set_XArray) # type: Float64Array
 
     def _get_CSVFile(self) -> str:
         """
@@ -89,7 +89,7 @@ class XYcurve(DSSObj):
     def _set_CSVFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(5, value, flags)
 
-    CSVFile = property(_get_CSVFile, _set_CSVFile)
+    CSVFile = property(_get_CSVFile, _set_CSVFile) # type: str
 
     def _get_SngFile(self) -> str:
         """
@@ -102,7 +102,7 @@ class XYcurve(DSSObj):
     def _set_SngFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(6, value, flags)
 
-    SngFile = property(_get_SngFile, _set_SngFile)
+    SngFile = property(_get_SngFile, _set_SngFile) # type: str
 
     def _get_DblFile(self) -> str:
         """
@@ -115,7 +115,7 @@ class XYcurve(DSSObj):
     def _set_DblFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(7, value, flags)
 
-    DblFile = property(_get_DblFile, _set_DblFile)
+    DblFile = property(_get_DblFile, _set_DblFile) # type: str
 
     def _get_X(self) -> float:
         """
@@ -128,7 +128,7 @@ class XYcurve(DSSObj):
     def _set_X(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
-    X = property(_get_X, _set_X)
+    X = property(_get_X, _set_X) # type: float
 
     def _get_Y(self) -> float:
         """
@@ -141,7 +141,7 @@ class XYcurve(DSSObj):
     def _set_Y(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
-    Y = property(_get_Y, _set_Y)
+    Y = property(_get_Y, _set_Y) # type: float
 
     def _get_XShift(self) -> float:
         """
@@ -154,7 +154,7 @@ class XYcurve(DSSObj):
     def _set_XShift(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
-    XShift = property(_get_XShift, _set_XShift)
+    XShift = property(_get_XShift, _set_XShift) # type: float
 
     def _get_YShift(self) -> float:
         """
@@ -167,7 +167,7 @@ class XYcurve(DSSObj):
     def _set_YShift(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
-    YShift = property(_get_YShift, _set_YShift)
+    YShift = property(_get_YShift, _set_YShift) # type: float
 
     def _get_XScale(self) -> float:
         """
@@ -180,7 +180,7 @@ class XYcurve(DSSObj):
     def _set_XScale(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
-    XScale = property(_get_XScale, _set_XScale)
+    XScale = property(_get_XScale, _set_XScale) # type: float
 
     def _get_YScale(self) -> float:
         """
@@ -193,7 +193,7 @@ class XYcurve(DSSObj):
     def _set_YScale(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
-    YScale = property(_get_YScale, _set_YScale)
+    YScale = property(_get_YScale, _set_YScale) # type: float
 
     def Like(self, value: AnyStr):
         """
@@ -238,7 +238,7 @@ class XYcurveBatch(DSSBatch):
     def _set_NPts(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    NPts = property(_get_NPts, _set_NPts)
+    NPts = property(_get_NPts, _set_NPts) # type: BatchInt32ArrayProxy
 
     def _get_YArray(self) -> List[Float64Array]:
         """
@@ -259,7 +259,7 @@ class XYcurveBatch(DSSBatch):
     def _set_YArray(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(3, value, flags)
 
-    YArray = property(_get_YArray, _set_YArray)
+    YArray = property(_get_YArray, _set_YArray) # type: List[Float64Array]
 
     def _get_XArray(self) -> List[Float64Array]:
         """
@@ -280,7 +280,7 @@ class XYcurveBatch(DSSBatch):
     def _set_XArray(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(4, value, flags)
 
-    XArray = property(_get_XArray, _set_XArray)
+    XArray = property(_get_XArray, _set_XArray) # type: List[Float64Array]
 
     def _get_CSVFile(self) -> List[str]:
         """
@@ -293,7 +293,7 @@ class XYcurveBatch(DSSBatch):
     def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(5, value, flags)
 
-    CSVFile = property(_get_CSVFile, _set_CSVFile)
+    CSVFile = property(_get_CSVFile, _set_CSVFile) # type: List[str]
 
     def _get_SngFile(self) -> List[str]:
         """
@@ -306,7 +306,7 @@ class XYcurveBatch(DSSBatch):
     def _set_SngFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(6, value, flags)
 
-    SngFile = property(_get_SngFile, _set_SngFile)
+    SngFile = property(_get_SngFile, _set_SngFile) # type: List[str]
 
     def _get_DblFile(self) -> List[str]:
         """
@@ -319,7 +319,7 @@ class XYcurveBatch(DSSBatch):
     def _set_DblFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(7, value, flags)
 
-    DblFile = property(_get_DblFile, _set_DblFile)
+    DblFile = property(_get_DblFile, _set_DblFile) # type: List[str]
 
     def _get_X(self) -> BatchFloat64ArrayProxy:
         """
@@ -332,7 +332,7 @@ class XYcurveBatch(DSSBatch):
     def _set_X(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(8, value, flags)
 
-    X = property(_get_X, _set_X)
+    X = property(_get_X, _set_X) # type: BatchFloat64ArrayProxy
 
     def _get_Y(self) -> BatchFloat64ArrayProxy:
         """
@@ -345,7 +345,7 @@ class XYcurveBatch(DSSBatch):
     def _set_Y(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(9, value, flags)
 
-    Y = property(_get_Y, _set_Y)
+    Y = property(_get_Y, _set_Y) # type: BatchFloat64ArrayProxy
 
     def _get_XShift(self) -> BatchFloat64ArrayProxy:
         """
@@ -358,7 +358,7 @@ class XYcurveBatch(DSSBatch):
     def _set_XShift(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(10, value, flags)
 
-    XShift = property(_get_XShift, _set_XShift)
+    XShift = property(_get_XShift, _set_XShift) # type: BatchFloat64ArrayProxy
 
     def _get_YShift(self) -> BatchFloat64ArrayProxy:
         """
@@ -371,7 +371,7 @@ class XYcurveBatch(DSSBatch):
     def _set_YShift(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(11, value, flags)
 
-    YShift = property(_get_YShift, _set_YShift)
+    YShift = property(_get_YShift, _set_YShift) # type: BatchFloat64ArrayProxy
 
     def _get_XScale(self) -> BatchFloat64ArrayProxy:
         """
@@ -384,7 +384,7 @@ class XYcurveBatch(DSSBatch):
     def _set_XScale(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(12, value, flags)
 
-    XScale = property(_get_XScale, _set_XScale)
+    XScale = property(_get_XScale, _set_XScale) # type: BatchFloat64ArrayProxy
 
     def _get_YScale(self) -> BatchFloat64ArrayProxy:
         """
@@ -397,7 +397,7 @@ class XYcurveBatch(DSSBatch):
     def _set_YScale(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(13, value, flags)
 
-    YScale = property(_get_YScale, _set_YScale)
+    YScale = property(_get_YScale, _set_YScale) # type: BatchFloat64ArrayProxy
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -429,7 +429,7 @@ class IXYcurve(IDSSObj, XYcurveBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, XYcurve, XYcurveBatch)
-        XYcurveBatch.__init__(self, self._api_util, sync_cls=True)
+        XYcurveBatch.__init__(self, self._api_util, sync_cls_idx=XYcurve._cls_idx)
 
 
     # We need this one for better type hinting

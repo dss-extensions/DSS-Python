@@ -48,7 +48,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: str
 
     def _get_Amps(self) -> float:
         """
@@ -61,7 +61,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Amps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 2, value, flags)
 
-    Amps = property(_get_Amps, _set_Amps)
+    Amps = property(_get_Amps, _set_Amps) # type: float
 
     def _get_Angle(self) -> float:
         """
@@ -75,7 +75,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Angle(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
-    Angle = property(_get_Angle, _set_Angle)
+    Angle = property(_get_Angle, _set_Angle) # type: float
 
     def _get_Frequency(self) -> float:
         """
@@ -88,7 +88,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Frequency(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
-    Frequency = property(_get_Frequency, _set_Frequency)
+    Frequency = property(_get_Frequency, _set_Frequency) # type: float
 
     def _get_Phases(self) -> int:
         """
@@ -101,7 +101,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 5, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: int
 
     def _get_ScanType(self) -> enums.ScanType:
         """
@@ -117,7 +117,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
-    ScanType = property(_get_ScanType, _set_ScanType)
+    ScanType = property(_get_ScanType, _set_ScanType) # type: enums.ScanType
 
     def _get_ScanType_str(self) -> str:
         """
@@ -130,7 +130,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_ScanType_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_ScanType(value, flags)
 
-    ScanType_str = property(_get_ScanType_str, _set_ScanType_str)
+    ScanType_str = property(_get_ScanType_str, _set_ScanType_str) # type: str
 
     def _get_Sequence(self) -> enums.SequenceType:
         """
@@ -146,7 +146,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 7, value, flags)
 
-    Sequence = property(_get_Sequence, _set_Sequence)
+    Sequence = property(_get_Sequence, _set_Sequence) # type: enums.SequenceType
 
     def _get_Sequence_str(self) -> str:
         """
@@ -159,7 +159,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Sequence_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Sequence(value, flags)
 
-    Sequence_str = property(_get_Sequence_str, _set_Sequence_str)
+    Sequence_str = property(_get_Sequence_str, _set_Sequence_str) # type: str
 
     def _get_Yearly_str(self) -> str:
         """
@@ -176,7 +176,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Yearly_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(8, value, flags)
 
-    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str) # type: str
 
     def _get_Yearly(self) -> LoadShape:
         """
@@ -197,7 +197,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(8, value, flags)
 
-    Yearly = property(_get_Yearly, _set_Yearly)
+    Yearly = property(_get_Yearly, _set_Yearly) # type: LoadShape
 
     def _get_Daily_str(self) -> str:
         """
@@ -214,7 +214,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Daily_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(9, value, flags)
 
-    Daily_str = property(_get_Daily_str, _set_Daily_str)
+    Daily_str = property(_get_Daily_str, _set_Daily_str) # type: str
 
     def _get_Daily(self) -> LoadShape:
         """
@@ -235,7 +235,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(9, value, flags)
 
-    Daily = property(_get_Daily, _set_Daily)
+    Daily = property(_get_Daily, _set_Daily) # type: LoadShape
 
     def _get_Duty_str(self) -> str:
         """
@@ -252,7 +252,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Duty_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(10, value, flags)
 
-    Duty_str = property(_get_Duty_str, _set_Duty_str)
+    Duty_str = property(_get_Duty_str, _set_Duty_str) # type: str
 
     def _get_Duty(self) -> LoadShape:
         """
@@ -273,7 +273,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(10, value, flags)
 
-    Duty = property(_get_Duty, _set_Duty)
+    Duty = property(_get_Duty, _set_Duty) # type: LoadShape
 
     def _get_Bus2(self) -> str:
         """
@@ -290,7 +290,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Bus2(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(11, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: str
 
     def _get_Spectrum_str(self) -> str:
         """
@@ -303,7 +303,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Spectrum_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(12, value, flags)
 
-    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str) # type: str
 
     def _get_Spectrum(self) -> SpectrumObj:
         """
@@ -320,7 +320,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(12, value, flags)
 
-    Spectrum = property(_get_Spectrum, _set_Spectrum)
+    Spectrum = property(_get_Spectrum, _set_Spectrum) # type: SpectrumObj
 
     def _get_BaseFreq(self) -> float:
         """
@@ -333,7 +333,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -346,7 +346,7 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 14, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -395,7 +395,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: List[str]
 
     def _get_Amps(self) -> BatchFloat64ArrayProxy:
         """
@@ -408,7 +408,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Amps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(2, value, flags)
 
-    Amps = property(_get_Amps, _set_Amps)
+    Amps = property(_get_Amps, _set_Amps) # type: BatchFloat64ArrayProxy
 
     def _get_Angle(self) -> BatchFloat64ArrayProxy:
         """
@@ -422,7 +422,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Angle(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(3, value, flags)
 
-    Angle = property(_get_Angle, _set_Angle)
+    Angle = property(_get_Angle, _set_Angle) # type: BatchFloat64ArrayProxy
 
     def _get_Frequency(self) -> BatchFloat64ArrayProxy:
         """
@@ -435,7 +435,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Frequency(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(4, value, flags)
 
-    Frequency = property(_get_Frequency, _set_Frequency)
+    Frequency = property(_get_Frequency, _set_Frequency) # type: BatchFloat64ArrayProxy
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
@@ -448,7 +448,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(5, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: BatchInt32ArrayProxy
 
     def _get_ScanType(self) -> BatchInt32ArrayProxy:
         """
@@ -465,9 +465,9 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         self._set_batch_int32_array(6, value, flags)
 
-    ScanType = property(_get_ScanType, _set_ScanType)
+    ScanType = property(_get_ScanType, _set_ScanType) # type: BatchInt32ArrayProxy
 
-    def _get_ScanType_str(self) -> str:
+    def _get_ScanType_str(self) -> List[str]:
         """
         {pos*| zero | none} Maintain specified sequence for harmonic solution. Default is positive sequence. Otherwise, angle between phases rotates with harmonic.
 
@@ -478,7 +478,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_ScanType_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_ScanType(value, flags)
 
-    ScanType_str = property(_get_ScanType_str, _set_ScanType_str)
+    ScanType_str = property(_get_ScanType_str, _set_ScanType_str) # type: List[str]
 
     def _get_Sequence(self) -> BatchInt32ArrayProxy:
         """
@@ -495,9 +495,9 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         self._set_batch_int32_array(7, value, flags)
 
-    Sequence = property(_get_Sequence, _set_Sequence)
+    Sequence = property(_get_Sequence, _set_Sequence) # type: BatchInt32ArrayProxy
 
-    def _get_Sequence_str(self) -> str:
+    def _get_Sequence_str(self) -> List[str]:
         """
         {pos*| neg | zero} Set the phase angles for the specified symmetrical component sequence for non-harmonic solution modes. Default is positive sequence. 
 
@@ -508,7 +508,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Sequence_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Sequence(value, flags)
 
-    Sequence_str = property(_get_Sequence_str, _set_Sequence_str)
+    Sequence_str = property(_get_Sequence_str, _set_Sequence_str) # type: List[str]
 
     def _get_Yearly_str(self) -> List[str]:
         """
@@ -525,7 +525,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(8, value, flags)
 
-    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str) # type: List[str]
 
     def _get_Yearly(self) -> List[LoadShape]:
         """
@@ -542,7 +542,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(8, value, flags)
 
-    Yearly = property(_get_Yearly, _set_Yearly)
+    Yearly = property(_get_Yearly, _set_Yearly) # type: List[LoadShape]
 
     def _get_Daily_str(self) -> List[str]:
         """
@@ -559,7 +559,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(9, value, flags)
 
-    Daily_str = property(_get_Daily_str, _set_Daily_str)
+    Daily_str = property(_get_Daily_str, _set_Daily_str) # type: List[str]
 
     def _get_Daily(self) -> List[LoadShape]:
         """
@@ -576,7 +576,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(9, value, flags)
 
-    Daily = property(_get_Daily, _set_Daily)
+    Daily = property(_get_Daily, _set_Daily) # type: List[LoadShape]
 
     def _get_Duty_str(self) -> List[str]:
         """
@@ -593,7 +593,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(10, value, flags)
 
-    Duty_str = property(_get_Duty_str, _set_Duty_str)
+    Duty_str = property(_get_Duty_str, _set_Duty_str) # type: List[str]
 
     def _get_Duty(self) -> List[LoadShape]:
         """
@@ -610,7 +610,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(10, value, flags)
 
-    Duty = property(_get_Duty, _set_Duty)
+    Duty = property(_get_Duty, _set_Duty) # type: List[LoadShape]
 
     def _get_Bus2(self) -> List[str]:
         """
@@ -627,7 +627,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(11, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: List[str]
 
     def _get_Spectrum_str(self) -> List[str]:
         """
@@ -640,7 +640,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(12, value, flags)
 
-    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str) # type: List[str]
 
     def _get_Spectrum(self) -> List[SpectrumObj]:
         """
@@ -653,7 +653,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(12, value, flags)
 
-    Spectrum = property(_get_Spectrum, _set_Spectrum)
+    Spectrum = property(_get_Spectrum, _set_Spectrum) # type: List[SpectrumObj]
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -666,7 +666,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(13, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -681,7 +681,7 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(14, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -715,7 +715,7 @@ class IIsource(IDSSObj, IsourceBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Isource, IsourceBatch)
-        IsourceBatch.__init__(self, self._api_util, sync_cls=True)
+        IsourceBatch.__init__(self, self._api_util, sync_cls_idx=Isource._cls_idx)
 
 
     # We need this one for better type hinting

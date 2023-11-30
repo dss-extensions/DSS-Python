@@ -37,7 +37,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
     def _set_Element_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: str
 
     def _get_Element(self) -> DSSObj:
         """
@@ -54,7 +54,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
 
         self._set_string_o(1, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: DSSObj
 
     def _get_Terminal(self) -> int:
         """
@@ -67,7 +67,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
     def _set_Terminal(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
-    Terminal = property(_get_Terminal, _set_Terminal)
+    Terminal = property(_get_Terminal, _set_Terminal) # type: int
 
     def _get_kWLimit(self) -> float:
         """
@@ -80,7 +80,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
     def _set_kWLimit(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
-    kWLimit = property(_get_kWLimit, _set_kWLimit)
+    kWLimit = property(_get_kWLimit, _set_kWLimit) # type: float
 
     def _get_kWBand(self) -> float:
         """
@@ -93,7 +93,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
     def _set_kWBand(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
-    kWBand = property(_get_kWBand, _set_kWBand)
+    kWBand = property(_get_kWBand, _set_kWBand) # type: float
 
     def _get_kvarLimit(self) -> float:
         """
@@ -106,7 +106,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
     def _set_kvarLimit(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit) # type: float
 
     def _get_GenList(self) -> List[str]:
         """
@@ -121,7 +121,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
         self._lib.Obj_SetStringArray(self._ptr, 6, value_ptr, value_count, flags)
         self._check_for_error()
 
-    GenList = property(_get_GenList, _set_GenList)
+    GenList = property(_get_GenList, _set_GenList) # type: List[str]
 
     def _get_Weights(self) -> Float64Array:
         """
@@ -134,7 +134,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
     def _set_Weights(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(7, value, flags)
 
-    Weights = property(_get_Weights, _set_Weights)
+    Weights = property(_get_Weights, _set_Weights) # type: Float64Array
 
     def _get_BaseFreq(self) -> float:
         """
@@ -147,7 +147,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -160,7 +160,7 @@ class GenDispatcher(DSSObj, CircuitElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 9, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -202,7 +202,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: List[str]
 
     def _get_Element(self) -> List[DSSObj]:
         """
@@ -215,7 +215,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(1, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: List[DSSObj]
 
     def _get_Terminal(self) -> BatchInt32ArrayProxy:
         """
@@ -228,7 +228,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Terminal(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(2, value, flags)
 
-    Terminal = property(_get_Terminal, _set_Terminal)
+    Terminal = property(_get_Terminal, _set_Terminal) # type: BatchInt32ArrayProxy
 
     def _get_kWLimit(self) -> BatchFloat64ArrayProxy:
         """
@@ -241,7 +241,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_kWLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(3, value, flags)
 
-    kWLimit = property(_get_kWLimit, _set_kWLimit)
+    kWLimit = property(_get_kWLimit, _set_kWLimit) # type: BatchFloat64ArrayProxy
 
     def _get_kWBand(self) -> BatchFloat64ArrayProxy:
         """
@@ -254,7 +254,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_kWBand(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(4, value, flags)
 
-    kWBand = property(_get_kWBand, _set_kWBand)
+    kWBand = property(_get_kWBand, _set_kWBand) # type: BatchFloat64ArrayProxy
 
     def _get_kvarLimit(self) -> BatchFloat64ArrayProxy:
         """
@@ -267,7 +267,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_kvarLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit) # type: BatchFloat64ArrayProxy
 
     def _get_GenList(self) -> List[List[str]]:
         """
@@ -284,7 +284,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
 
         self._check_for_error()
 
-    GenList = property(_get_GenList, _set_GenList)
+    GenList = property(_get_GenList, _set_GenList) # type: List[List[str]]
 
     def _get_Weights(self) -> List[Float64Array]:
         """
@@ -300,7 +300,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Weights(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(7, value, flags)
 
-    Weights = property(_get_Weights, _set_Weights)
+    Weights = property(_get_Weights, _set_Weights) # type: List[Float64Array]
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -313,7 +313,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(8, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -328,7 +328,7 @@ class GenDispatcherBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(9, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -357,7 +357,7 @@ class IGenDispatcher(IDSSObj, GenDispatcherBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, GenDispatcher, GenDispatcherBatch)
-        GenDispatcherBatch.__init__(self, self._api_util, sync_cls=True)
+        GenDispatcherBatch.__init__(self, self._api_util, sync_cls_idx=GenDispatcher._cls_idx)
 
 
     # We need this one for better type hinting

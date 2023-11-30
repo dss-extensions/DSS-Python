@@ -66,7 +66,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: str
 
     def _get_Bus2(self) -> str:
         """
@@ -81,7 +81,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Bus2(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(2, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: str
 
     def _get_RefkV(self) -> float:
         """
@@ -96,7 +96,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_RefkV(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
-    RefkV = property(_get_RefkV, _set_RefkV)
+    RefkV = property(_get_RefkV, _set_RefkV) # type: float
 
     def _get_PF(self) -> float:
         """
@@ -109,7 +109,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_PF(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
-    PF = property(_get_PF, _set_PF)
+    PF = property(_get_PF, _set_PF) # type: float
 
     def _get_Frequency(self) -> float:
         """
@@ -122,7 +122,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Frequency(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    Frequency = property(_get_Frequency, _set_Frequency)
+    Frequency = property(_get_Frequency, _set_Frequency) # type: float
 
     def _get_Phases(self) -> int:
         """
@@ -135,7 +135,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: int
 
     def _get_Xs(self) -> float:
         """
@@ -148,7 +148,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Xs(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
-    Xs = property(_get_Xs, _set_Xs)
+    Xs = property(_get_Xs, _set_Xs) # type: float
 
     def _get_Tol1(self) -> float:
         """
@@ -162,7 +162,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Tol1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
-    Tol1 = property(_get_Tol1, _set_Tol1)
+    Tol1 = property(_get_Tol1, _set_Tol1) # type: float
 
     def _get_Mode(self) -> enums.UPFCMode:
         """
@@ -182,7 +182,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Mode(self, value: Union[int, enums.UPFCMode], flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 9, value, flags)
 
-    Mode = property(_get_Mode, _set_Mode)
+    Mode = property(_get_Mode, _set_Mode) # type: enums.UPFCMode
 
     def _get_VpqMax(self) -> float:
         """
@@ -195,7 +195,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_VpqMax(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
-    VpqMax = property(_get_VpqMax, _set_VpqMax)
+    VpqMax = property(_get_VpqMax, _set_VpqMax) # type: float
 
     def _get_LossCurve_str(self) -> str:
         """
@@ -208,7 +208,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_LossCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(11, value, flags)
 
-    LossCurve_str = property(_get_LossCurve_str, _set_LossCurve_str)
+    LossCurve_str = property(_get_LossCurve_str, _set_LossCurve_str) # type: str
 
     def _get_LossCurve(self) -> XYcurve:
         """
@@ -225,7 +225,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(11, value, flags)
 
-    LossCurve = property(_get_LossCurve, _set_LossCurve)
+    LossCurve = property(_get_LossCurve, _set_LossCurve) # type: XYcurve
 
     def _get_VHLimit(self) -> float:
         """
@@ -238,7 +238,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_VHLimit(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
-    VHLimit = property(_get_VHLimit, _set_VHLimit)
+    VHLimit = property(_get_VHLimit, _set_VHLimit) # type: float
 
     def _get_VLLimit(self) -> float:
         """
@@ -251,7 +251,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_VLLimit(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
-    VLLimit = property(_get_VLLimit, _set_VLLimit)
+    VLLimit = property(_get_VLLimit, _set_VLLimit) # type: float
 
     def _get_CLimit(self) -> float:
         """
@@ -264,7 +264,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_CLimit(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
-    CLimit = property(_get_CLimit, _set_CLimit)
+    CLimit = property(_get_CLimit, _set_CLimit) # type: float
 
     def _get_refkV2(self) -> float:
         """
@@ -279,7 +279,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_refkV2(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
-    refkV2 = property(_get_refkV2, _set_refkV2)
+    refkV2 = property(_get_refkV2, _set_refkV2) # type: float
 
     def _get_kvarLimit(self) -> float:
         """
@@ -292,7 +292,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_kvarLimit(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
-    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit) # type: float
 
     def _get_Element_str(self) -> str:
         """
@@ -305,7 +305,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Element_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(17, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: str
 
     def _get_Element(self) -> PDElement:
         """
@@ -322,7 +322,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(17, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: PDElement
 
     def _get_Spectrum_str(self) -> str:
         """
@@ -335,7 +335,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Spectrum_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(18, value, flags)
 
-    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str) # type: str
 
     def _get_Spectrum(self) -> SpectrumObj:
         """
@@ -352,7 +352,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(18, value, flags)
 
-    Spectrum = property(_get_Spectrum, _set_Spectrum)
+    Spectrum = property(_get_Spectrum, _set_Spectrum) # type: SpectrumObj
 
     def _get_BaseFreq(self) -> float:
         """
@@ -365,7 +365,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -378,7 +378,7 @@ class UPFC(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 20, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -433,7 +433,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: List[str]
 
     def _get_Bus2(self) -> List[str]:
         """
@@ -448,7 +448,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(2, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: List[str]
 
     def _get_RefkV(self) -> BatchFloat64ArrayProxy:
         """
@@ -463,7 +463,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_RefkV(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(3, value, flags)
 
-    RefkV = property(_get_RefkV, _set_RefkV)
+    RefkV = property(_get_RefkV, _set_RefkV) # type: BatchFloat64ArrayProxy
 
     def _get_PF(self) -> BatchFloat64ArrayProxy:
         """
@@ -476,7 +476,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_PF(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(4, value, flags)
 
-    PF = property(_get_PF, _set_PF)
+    PF = property(_get_PF, _set_PF) # type: BatchFloat64ArrayProxy
 
     def _get_Frequency(self) -> BatchFloat64ArrayProxy:
         """
@@ -489,7 +489,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Frequency(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    Frequency = property(_get_Frequency, _set_Frequency)
+    Frequency = property(_get_Frequency, _set_Frequency) # type: BatchFloat64ArrayProxy
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
@@ -502,7 +502,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(6, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: BatchInt32ArrayProxy
 
     def _get_Xs(self) -> BatchFloat64ArrayProxy:
         """
@@ -515,7 +515,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Xs(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(7, value, flags)
 
-    Xs = property(_get_Xs, _set_Xs)
+    Xs = property(_get_Xs, _set_Xs) # type: BatchFloat64ArrayProxy
 
     def _get_Tol1(self) -> BatchFloat64ArrayProxy:
         """
@@ -529,7 +529,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Tol1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(8, value, flags)
 
-    Tol1 = property(_get_Tol1, _set_Tol1)
+    Tol1 = property(_get_Tol1, _set_Tol1) # type: BatchFloat64ArrayProxy
 
     def _get_Mode(self) -> BatchInt32ArrayProxy:
         """
@@ -549,7 +549,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Mode(self, value: Union[int, enums.UPFCMode, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(9, value, flags)
 
-    Mode = property(_get_Mode, _set_Mode)
+    Mode = property(_get_Mode, _set_Mode) # type: BatchInt32ArrayProxy
 
     def _get_VpqMax(self) -> BatchFloat64ArrayProxy:
         """
@@ -562,7 +562,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_VpqMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(10, value, flags)
 
-    VpqMax = property(_get_VpqMax, _set_VpqMax)
+    VpqMax = property(_get_VpqMax, _set_VpqMax) # type: BatchFloat64ArrayProxy
 
     def _get_LossCurve_str(self) -> List[str]:
         """
@@ -575,7 +575,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_LossCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(11, value, flags)
 
-    LossCurve_str = property(_get_LossCurve_str, _set_LossCurve_str)
+    LossCurve_str = property(_get_LossCurve_str, _set_LossCurve_str) # type: List[str]
 
     def _get_LossCurve(self) -> List[XYcurve]:
         """
@@ -588,7 +588,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_LossCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(11, value, flags)
 
-    LossCurve = property(_get_LossCurve, _set_LossCurve)
+    LossCurve = property(_get_LossCurve, _set_LossCurve) # type: List[XYcurve]
 
     def _get_VHLimit(self) -> BatchFloat64ArrayProxy:
         """
@@ -601,7 +601,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_VHLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(12, value, flags)
 
-    VHLimit = property(_get_VHLimit, _set_VHLimit)
+    VHLimit = property(_get_VHLimit, _set_VHLimit) # type: BatchFloat64ArrayProxy
 
     def _get_VLLimit(self) -> BatchFloat64ArrayProxy:
         """
@@ -614,7 +614,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_VLLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(13, value, flags)
 
-    VLLimit = property(_get_VLLimit, _set_VLLimit)
+    VLLimit = property(_get_VLLimit, _set_VLLimit) # type: BatchFloat64ArrayProxy
 
     def _get_CLimit(self) -> BatchFloat64ArrayProxy:
         """
@@ -627,7 +627,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_CLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(14, value, flags)
 
-    CLimit = property(_get_CLimit, _set_CLimit)
+    CLimit = property(_get_CLimit, _set_CLimit) # type: BatchFloat64ArrayProxy
 
     def _get_refkV2(self) -> BatchFloat64ArrayProxy:
         """
@@ -642,7 +642,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_refkV2(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(15, value, flags)
 
-    refkV2 = property(_get_refkV2, _set_refkV2)
+    refkV2 = property(_get_refkV2, _set_refkV2) # type: BatchFloat64ArrayProxy
 
     def _get_kvarLimit(self) -> BatchFloat64ArrayProxy:
         """
@@ -655,7 +655,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kvarLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(16, value, flags)
 
-    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit) # type: BatchFloat64ArrayProxy
 
     def _get_Element_str(self) -> List[str]:
         """
@@ -668,7 +668,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(17, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: List[str]
 
     def _get_Element(self) -> List[PDElement]:
         """
@@ -681,7 +681,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Element(self, value: Union[AnyStr, PDElement, List[AnyStr], List[PDElement]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(17, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: List[PDElement]
 
     def _get_Spectrum_str(self) -> List[str]:
         """
@@ -694,7 +694,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(18, value, flags)
 
-    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str) # type: List[str]
 
     def _get_Spectrum(self) -> List[SpectrumObj]:
         """
@@ -707,7 +707,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(18, value, flags)
 
-    Spectrum = property(_get_Spectrum, _set_Spectrum)
+    Spectrum = property(_get_Spectrum, _set_Spectrum) # type: List[SpectrumObj]
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -720,7 +720,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(19, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -735,7 +735,7 @@ class UPFCBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(20, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -775,7 +775,7 @@ class IUPFC(IDSSObj, UPFCBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, UPFC, UPFCBatch)
-        UPFCBatch.__init__(self, self._api_util, sync_cls=True)
+        UPFCBatch.__init__(self, self._api_util, sync_cls_idx=UPFC._cls_idx)
 
 
     # We need this one for better type hinting

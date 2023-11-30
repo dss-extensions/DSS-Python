@@ -54,7 +54,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: str
 
     def _get_Bus2(self) -> str:
         """
@@ -69,7 +69,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Bus2(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(2, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: str
 
     def _get_Phases(self) -> int:
         """
@@ -82,7 +82,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 3, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: int
 
     def _get_kvar(self) -> Float64Array:
         """
@@ -95,7 +95,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_kvar(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(4, value, flags)
 
-    kvar = property(_get_kvar, _set_kvar)
+    kvar = property(_get_kvar, _set_kvar) # type: Float64Array
 
     def _get_kV(self) -> float:
         """
@@ -108,7 +108,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_kV(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    kV = property(_get_kV, _set_kV)
+    kV = property(_get_kV, _set_kV) # type: float
 
     def _get_Conn(self) -> enums.Connection:
         """
@@ -124,7 +124,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
-    Conn = property(_get_Conn, _set_Conn)
+    Conn = property(_get_Conn, _set_Conn) # type: enums.Connection
 
     def _get_Conn_str(self) -> str:
         """
@@ -137,7 +137,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conn(value, flags)
 
-    Conn_str = property(_get_Conn_str, _set_Conn_str)
+    Conn_str = property(_get_Conn_str, _set_Conn_str) # type: str
 
     def _get_CMatrix(self) -> Float64Array:
         """
@@ -154,7 +154,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_CMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(7, value, flags)
 
-    CMatrix = property(_get_CMatrix, _set_CMatrix)
+    CMatrix = property(_get_CMatrix, _set_CMatrix) # type: Float64Array
 
     def _get_Cuf(self) -> Float64Array:
         """
@@ -168,7 +168,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Cuf(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(8, value, flags)
 
-    Cuf = property(_get_Cuf, _set_Cuf)
+    Cuf = property(_get_Cuf, _set_Cuf) # type: Float64Array
 
     def _get_R(self) -> Float64Array:
         """
@@ -181,7 +181,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_R(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(9, value, flags)
 
-    R = property(_get_R, _set_R)
+    R = property(_get_R, _set_R) # type: Float64Array
 
     def _get_XL(self) -> Float64Array:
         """
@@ -194,7 +194,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_XL(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(10, value, flags)
 
-    XL = property(_get_XL, _set_XL)
+    XL = property(_get_XL, _set_XL) # type: Float64Array
 
     def _get_Harm(self) -> Float64Array:
         """
@@ -207,7 +207,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Harm(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(11, value, flags)
 
-    Harm = property(_get_Harm, _set_Harm)
+    Harm = property(_get_Harm, _set_Harm) # type: Float64Array
 
     def _get_NumSteps(self) -> int:
         """
@@ -220,7 +220,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_NumSteps(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 12, value, flags)
 
-    NumSteps = property(_get_NumSteps, _set_NumSteps)
+    NumSteps = property(_get_NumSteps, _set_NumSteps) # type: int
 
     def _get_States(self) -> Int32Array:
         """
@@ -233,7 +233,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_States(self, value: Int32Array, flags: enums.SetterFlags = 0):
         self._set_int32_array_o(13, value, flags)
 
-    States = property(_get_States, _set_States)
+    States = property(_get_States, _set_States) # type: Int32Array
 
     def _get_NormAmps(self) -> float:
         """
@@ -246,7 +246,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_NormAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: float
 
     def _get_EmergAmps(self) -> float:
         """
@@ -259,7 +259,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_EmergAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: float
 
     def _get_FaultRate(self) -> float:
         """
@@ -272,7 +272,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_FaultRate(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: float
 
     def _get_pctPerm(self) -> float:
         """
@@ -285,7 +285,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_pctPerm(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
-    pctPerm = property(_get_pctPerm, _set_pctPerm)
+    pctPerm = property(_get_pctPerm, _set_pctPerm) # type: float
 
     def _get_Repair(self) -> float:
         """
@@ -298,7 +298,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Repair(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: float
 
     def _get_BaseFreq(self) -> float:
         """
@@ -311,7 +311,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -324,7 +324,7 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 20, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -381,7 +381,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: List[str]
 
     def _get_Bus2(self) -> List[str]:
         """
@@ -396,7 +396,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(2, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: List[str]
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
@@ -409,7 +409,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(3, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: BatchInt32ArrayProxy
 
     def _get_kvar(self) -> List[Float64Array]:
         """
@@ -425,7 +425,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_kvar(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(4, value, flags)
 
-    kvar = property(_get_kvar, _set_kvar)
+    kvar = property(_get_kvar, _set_kvar) # type: List[Float64Array]
 
     def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
@@ -438,7 +438,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_kV(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    kV = property(_get_kV, _set_kV)
+    kV = property(_get_kV, _set_kV) # type: BatchFloat64ArrayProxy
 
     def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
@@ -455,9 +455,9 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
 
         self._set_batch_int32_array(6, value, flags)
 
-    Conn = property(_get_Conn, _set_Conn)
+    Conn = property(_get_Conn, _set_Conn) # type: BatchInt32ArrayProxy
 
-    def _get_Conn_str(self) -> str:
+    def _get_Conn_str(self) -> List[str]:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN
 
@@ -468,7 +468,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conn(value, flags)
 
-    Conn_str = property(_get_Conn_str, _set_Conn_str)
+    Conn_str = property(_get_Conn_str, _set_Conn_str) # type: List[str]
 
     def _get_CMatrix(self) -> List[Float64Array]:
         """
@@ -488,7 +488,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_CMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(7, value, flags)
 
-    CMatrix = property(_get_CMatrix, _set_CMatrix)
+    CMatrix = property(_get_CMatrix, _set_CMatrix) # type: List[Float64Array]
 
     def _get_Cuf(self) -> List[Float64Array]:
         """
@@ -505,7 +505,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Cuf(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(8, value, flags)
 
-    Cuf = property(_get_Cuf, _set_Cuf)
+    Cuf = property(_get_Cuf, _set_Cuf) # type: List[Float64Array]
 
     def _get_R(self) -> List[Float64Array]:
         """
@@ -521,7 +521,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_R(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(9, value, flags)
 
-    R = property(_get_R, _set_R)
+    R = property(_get_R, _set_R) # type: List[Float64Array]
 
     def _get_XL(self) -> List[Float64Array]:
         """
@@ -537,7 +537,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_XL(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(10, value, flags)
 
-    XL = property(_get_XL, _set_XL)
+    XL = property(_get_XL, _set_XL) # type: List[Float64Array]
 
     def _get_Harm(self) -> List[Float64Array]:
         """
@@ -553,7 +553,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Harm(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(11, value, flags)
 
-    Harm = property(_get_Harm, _set_Harm)
+    Harm = property(_get_Harm, _set_Harm) # type: List[Float64Array]
 
     def _get_NumSteps(self) -> BatchInt32ArrayProxy:
         """
@@ -566,7 +566,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_NumSteps(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(12, value, flags)
 
-    NumSteps = property(_get_NumSteps, _set_NumSteps)
+    NumSteps = property(_get_NumSteps, _set_NumSteps) # type: BatchInt32ArrayProxy
 
     def _get_States(self) -> List[Int32Array]:
         """
@@ -582,7 +582,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_States(self, value: Union[Int32Array, List[Int32Array]], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array_prop(13, value, flags)
 
-    States = property(_get_States, _set_States)
+    States = property(_get_States, _set_States) # type: List[Int32Array]
 
     def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -595,7 +595,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_NormAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(14, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: BatchFloat64ArrayProxy
 
     def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -608,7 +608,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_EmergAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(15, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: BatchFloat64ArrayProxy
 
     def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
@@ -621,7 +621,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_FaultRate(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(16, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: BatchFloat64ArrayProxy
 
     def _get_pctPerm(self) -> BatchFloat64ArrayProxy:
         """
@@ -634,7 +634,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_pctPerm(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(17, value, flags)
 
-    pctPerm = property(_get_pctPerm, _set_pctPerm)
+    pctPerm = property(_get_pctPerm, _set_pctPerm) # type: BatchFloat64ArrayProxy
 
     def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
@@ -647,7 +647,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Repair(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(18, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: BatchFloat64ArrayProxy
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -660,7 +660,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(19, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -675,7 +675,7 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(20, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -715,7 +715,7 @@ class ICapacitor(IDSSObj, CapacitorBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Capacitor, CapacitorBatch)
-        CapacitorBatch.__init__(self, self._api_util, sync_cls=True)
+        CapacitorBatch.__init__(self, self._api_util, sync_cls_idx=Capacitor._cls_idx)
 
 
     # We need this one for better type hinting

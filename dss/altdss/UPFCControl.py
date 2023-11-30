@@ -33,7 +33,7 @@ class UPFCControl(DSSObj, CircuitElementMixin):
         self._lib.Obj_SetStringArray(self._ptr, 1, value_ptr, value_count, flags)
         self._check_for_error()
 
-    UPFCList = property(_get_UPFCList, _set_UPFCList)
+    UPFCList = property(_get_UPFCList, _set_UPFCList) # type: List[str]
 
     def _get_BaseFreq(self) -> float:
         """
@@ -46,7 +46,7 @@ class UPFCControl(DSSObj, CircuitElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 2, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -59,7 +59,7 @@ class UPFCControl(DSSObj, CircuitElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 3, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -99,7 +99,7 @@ class UPFCControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         self._check_for_error()
 
-    UPFCList = property(_get_UPFCList, _set_UPFCList)
+    UPFCList = property(_get_UPFCList, _set_UPFCList) # type: List[List[str]]
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -112,7 +112,7 @@ class UPFCControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(2, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -127,7 +127,7 @@ class UPFCControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(3, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -150,7 +150,7 @@ class IUPFCControl(IDSSObj, UPFCControlBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, UPFCControl, UPFCControlBatch)
-        UPFCControlBatch.__init__(self, self._api_util, sync_cls=True)
+        UPFCControlBatch.__init__(self, self._api_util, sync_cls_idx=UPFCControl._cls_idx)
 
 
     # We need this one for better type hinting

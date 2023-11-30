@@ -58,7 +58,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_Element_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: str
 
     def _get_Element(self) -> DSSObj:
         """
@@ -75,7 +75,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
 
         self._set_string_o(1, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: DSSObj
 
     def _get_Terminal(self) -> int:
         """
@@ -88,7 +88,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_Terminal(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
-    Terminal = property(_get_Terminal, _set_Terminal)
+    Terminal = property(_get_Terminal, _set_Terminal) # type: int
 
     def Action(self, value: Union[AnyStr, int, enums.EnergyMeterAction], flags: enums.SetterFlags = 0):
         """
@@ -157,7 +157,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
         self._lib.Obj_SetStringArray(self._ptr, 4, value_ptr, value_count, flags)
         self._check_for_error()
 
-    Option = property(_get_Option, _set_Option)
+    Option = property(_get_Option, _set_Option) # type: List[str]
 
     def _get_kVANormal(self) -> float:
         """
@@ -170,7 +170,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_kVANormal(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    kVANormal = property(_get_kVANormal, _set_kVANormal)
+    kVANormal = property(_get_kVANormal, _set_kVANormal) # type: float
 
     def _get_kVAEmerg(self) -> float:
         """
@@ -183,7 +183,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_kVAEmerg(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
-    kVAEmerg = property(_get_kVAEmerg, _set_kVAEmerg)
+    kVAEmerg = property(_get_kVAEmerg, _set_kVAEmerg) # type: float
 
     def _get_PeakCurrent(self) -> Float64Array:
         """
@@ -196,7 +196,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_PeakCurrent(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(7, value, flags)
 
-    PeakCurrent = property(_get_PeakCurrent, _set_PeakCurrent)
+    PeakCurrent = property(_get_PeakCurrent, _set_PeakCurrent) # type: Float64Array
 
     def _get_ZoneList(self) -> List[str]:
         """
@@ -214,7 +214,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
         self._lib.Obj_SetStringArray(self._ptr, 8, value_ptr, value_count, flags)
         self._check_for_error()
 
-    ZoneList = property(_get_ZoneList, _set_ZoneList)
+    ZoneList = property(_get_ZoneList, _set_ZoneList) # type: List[str]
 
     def _get_LocalOnly(self) -> bool:
         """
@@ -227,7 +227,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_LocalOnly(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 9, value, flags)
 
-    LocalOnly = property(_get_LocalOnly, _set_LocalOnly)
+    LocalOnly = property(_get_LocalOnly, _set_LocalOnly) # type: bool
 
     def _get_Mask(self) -> Float64Array:
         """
@@ -240,7 +240,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_Mask(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(10, value, flags)
 
-    Mask = property(_get_Mask, _set_Mask)
+    Mask = property(_get_Mask, _set_Mask) # type: Float64Array
 
     def _get_Losses(self) -> bool:
         """
@@ -253,7 +253,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_Losses(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 11, value, flags)
 
-    Losses = property(_get_Losses, _set_Losses)
+    Losses = property(_get_Losses, _set_Losses) # type: bool
 
     def _get_LineLosses(self) -> bool:
         """
@@ -266,7 +266,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_LineLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 12, value, flags)
 
-    LineLosses = property(_get_LineLosses, _set_LineLosses)
+    LineLosses = property(_get_LineLosses, _set_LineLosses) # type: bool
 
     def _get_XfmrLosses(self) -> bool:
         """
@@ -279,7 +279,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_XfmrLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 13, value, flags)
 
-    XfmrLosses = property(_get_XfmrLosses, _set_XfmrLosses)
+    XfmrLosses = property(_get_XfmrLosses, _set_XfmrLosses) # type: bool
 
     def _get_SeqLosses(self) -> bool:
         """
@@ -292,7 +292,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_SeqLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 14, value, flags)
 
-    SeqLosses = property(_get_SeqLosses, _set_SeqLosses)
+    SeqLosses = property(_get_SeqLosses, _set_SeqLosses) # type: bool
 
     def _get_ThreePhaseLosses(self) -> bool:
         """
@@ -305,7 +305,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_ThreePhaseLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 15, value, flags)
 
-    ThreePhaseLosses = property(_get_ThreePhaseLosses, _set_ThreePhaseLosses)
+    ThreePhaseLosses = property(_get_ThreePhaseLosses, _set_ThreePhaseLosses) # type: bool
 
     def _get_VBaseLosses(self) -> bool:
         """
@@ -318,7 +318,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_VBaseLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 16, value, flags)
 
-    VBaseLosses = property(_get_VBaseLosses, _set_VBaseLosses)
+    VBaseLosses = property(_get_VBaseLosses, _set_VBaseLosses) # type: bool
 
     def _get_PhaseVoltageReport(self) -> bool:
         """
@@ -331,7 +331,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_PhaseVoltageReport(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 17, value, flags)
 
-    PhaseVoltageReport = property(_get_PhaseVoltageReport, _set_PhaseVoltageReport)
+    PhaseVoltageReport = property(_get_PhaseVoltageReport, _set_PhaseVoltageReport) # type: bool
 
     def _get_Int_Rate(self) -> float:
         """
@@ -344,7 +344,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_Int_Rate(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
-    Int_Rate = property(_get_Int_Rate, _set_Int_Rate)
+    Int_Rate = property(_get_Int_Rate, _set_Int_Rate) # type: float
 
     def _get_Int_Duration(self) -> float:
         """
@@ -357,7 +357,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_Int_Duration(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
-    Int_Duration = property(_get_Int_Duration, _set_Int_Duration)
+    Int_Duration = property(_get_Int_Duration, _set_Int_Duration) # type: float
 
     def _get_SAIFI(self) -> float:
         """
@@ -370,7 +370,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_SAIFI(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
-    SAIFI = property(_get_SAIFI, _set_SAIFI)
+    SAIFI = property(_get_SAIFI, _set_SAIFI) # type: float
 
     def _get_SAIFIkW(self) -> float:
         """
@@ -383,7 +383,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_SAIFIkW(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
-    SAIFIkW = property(_get_SAIFIkW, _set_SAIFIkW)
+    SAIFIkW = property(_get_SAIFIkW, _set_SAIFIkW) # type: float
 
     def _get_SAIDI(self) -> float:
         """
@@ -396,7 +396,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_SAIDI(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 22, value, flags)
 
-    SAIDI = property(_get_SAIDI, _set_SAIDI)
+    SAIDI = property(_get_SAIDI, _set_SAIDI) # type: float
 
     def _get_CAIDI(self) -> float:
         """
@@ -409,7 +409,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_CAIDI(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
-    CAIDI = property(_get_CAIDI, _set_CAIDI)
+    CAIDI = property(_get_CAIDI, _set_CAIDI) # type: float
 
     def _get_CustInterrupts(self) -> float:
         """
@@ -422,7 +422,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_CustInterrupts(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
-    CustInterrupts = property(_get_CustInterrupts, _set_CustInterrupts)
+    CustInterrupts = property(_get_CustInterrupts, _set_CustInterrupts) # type: float
 
     def _get_BaseFreq(self) -> float:
         """
@@ -435,7 +435,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 25, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -448,7 +448,7 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 26, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -507,7 +507,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: List[str]
 
     def _get_Element(self) -> List[DSSObj]:
         """
@@ -520,7 +520,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(1, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: List[DSSObj]
 
     def _get_Terminal(self) -> BatchInt32ArrayProxy:
         """
@@ -533,7 +533,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_Terminal(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(2, value, flags)
 
-    Terminal = property(_get_Terminal, _set_Terminal)
+    Terminal = property(_get_Terminal, _set_Terminal) # type: BatchInt32ArrayProxy
 
     def Action(self, value: Union[AnyStr, int, enums.EnergyMeterAction], flags: enums.SetterFlags = 0):
         """
@@ -603,7 +603,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
 
         self._check_for_error()
 
-    Option = property(_get_Option, _set_Option)
+    Option = property(_get_Option, _set_Option) # type: List[List[str]]
 
     def _get_kVANormal(self) -> BatchFloat64ArrayProxy:
         """
@@ -616,7 +616,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_kVANormal(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    kVANormal = property(_get_kVANormal, _set_kVANormal)
+    kVANormal = property(_get_kVANormal, _set_kVANormal) # type: BatchFloat64ArrayProxy
 
     def _get_kVAEmerg(self) -> BatchFloat64ArrayProxy:
         """
@@ -629,7 +629,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_kVAEmerg(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(6, value, flags)
 
-    kVAEmerg = property(_get_kVAEmerg, _set_kVAEmerg)
+    kVAEmerg = property(_get_kVAEmerg, _set_kVAEmerg) # type: BatchFloat64ArrayProxy
 
     def _get_PeakCurrent(self) -> List[Float64Array]:
         """
@@ -645,7 +645,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_PeakCurrent(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(7, value, flags)
 
-    PeakCurrent = property(_get_PeakCurrent, _set_PeakCurrent)
+    PeakCurrent = property(_get_PeakCurrent, _set_PeakCurrent) # type: List[Float64Array]
 
     def _get_ZoneList(self) -> List[List[str]]:
         """
@@ -665,7 +665,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
 
         self._check_for_error()
 
-    ZoneList = property(_get_ZoneList, _set_ZoneList)
+    ZoneList = property(_get_ZoneList, _set_ZoneList) # type: List[List[str]]
 
     def _get_LocalOnly(self) -> List[bool]:
         """
@@ -680,7 +680,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_LocalOnly(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(9, value, flags)
 
-    LocalOnly = property(_get_LocalOnly, _set_LocalOnly)
+    LocalOnly = property(_get_LocalOnly, _set_LocalOnly) # type: List[bool]
 
     def _get_Mask(self) -> List[Float64Array]:
         """
@@ -696,7 +696,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_Mask(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(10, value, flags)
 
-    Mask = property(_get_Mask, _set_Mask)
+    Mask = property(_get_Mask, _set_Mask) # type: List[Float64Array]
 
     def _get_Losses(self) -> List[bool]:
         """
@@ -711,7 +711,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_Losses(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(11, value, flags)
 
-    Losses = property(_get_Losses, _set_Losses)
+    Losses = property(_get_Losses, _set_Losses) # type: List[bool]
 
     def _get_LineLosses(self) -> List[bool]:
         """
@@ -726,7 +726,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_LineLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(12, value, flags)
 
-    LineLosses = property(_get_LineLosses, _set_LineLosses)
+    LineLosses = property(_get_LineLosses, _set_LineLosses) # type: List[bool]
 
     def _get_XfmrLosses(self) -> List[bool]:
         """
@@ -741,7 +741,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_XfmrLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(13, value, flags)
 
-    XfmrLosses = property(_get_XfmrLosses, _set_XfmrLosses)
+    XfmrLosses = property(_get_XfmrLosses, _set_XfmrLosses) # type: List[bool]
 
     def _get_SeqLosses(self) -> List[bool]:
         """
@@ -756,7 +756,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_SeqLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(14, value, flags)
 
-    SeqLosses = property(_get_SeqLosses, _set_SeqLosses)
+    SeqLosses = property(_get_SeqLosses, _set_SeqLosses) # type: List[bool]
 
     def _get_ThreePhaseLosses(self) -> List[bool]:
         """
@@ -771,7 +771,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_ThreePhaseLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(15, value, flags)
 
-    ThreePhaseLosses = property(_get_ThreePhaseLosses, _set_ThreePhaseLosses)
+    ThreePhaseLosses = property(_get_ThreePhaseLosses, _set_ThreePhaseLosses) # type: List[bool]
 
     def _get_VBaseLosses(self) -> List[bool]:
         """
@@ -786,7 +786,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_VBaseLosses(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(16, value, flags)
 
-    VBaseLosses = property(_get_VBaseLosses, _set_VBaseLosses)
+    VBaseLosses = property(_get_VBaseLosses, _set_VBaseLosses) # type: List[bool]
 
     def _get_PhaseVoltageReport(self) -> List[bool]:
         """
@@ -801,7 +801,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_PhaseVoltageReport(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(17, value, flags)
 
-    PhaseVoltageReport = property(_get_PhaseVoltageReport, _set_PhaseVoltageReport)
+    PhaseVoltageReport = property(_get_PhaseVoltageReport, _set_PhaseVoltageReport) # type: List[bool]
 
     def _get_Int_Rate(self) -> BatchFloat64ArrayProxy:
         """
@@ -814,7 +814,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_Int_Rate(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(18, value, flags)
 
-    Int_Rate = property(_get_Int_Rate, _set_Int_Rate)
+    Int_Rate = property(_get_Int_Rate, _set_Int_Rate) # type: BatchFloat64ArrayProxy
 
     def _get_Int_Duration(self) -> BatchFloat64ArrayProxy:
         """
@@ -827,7 +827,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_Int_Duration(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(19, value, flags)
 
-    Int_Duration = property(_get_Int_Duration, _set_Int_Duration)
+    Int_Duration = property(_get_Int_Duration, _set_Int_Duration) # type: BatchFloat64ArrayProxy
 
     def _get_SAIFI(self) -> BatchFloat64ArrayProxy:
         """
@@ -840,7 +840,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_SAIFI(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(20, value, flags)
 
-    SAIFI = property(_get_SAIFI, _set_SAIFI)
+    SAIFI = property(_get_SAIFI, _set_SAIFI) # type: BatchFloat64ArrayProxy
 
     def _get_SAIFIkW(self) -> BatchFloat64ArrayProxy:
         """
@@ -853,7 +853,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_SAIFIkW(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(21, value, flags)
 
-    SAIFIkW = property(_get_SAIFIkW, _set_SAIFIkW)
+    SAIFIkW = property(_get_SAIFIkW, _set_SAIFIkW) # type: BatchFloat64ArrayProxy
 
     def _get_SAIDI(self) -> BatchFloat64ArrayProxy:
         """
@@ -866,7 +866,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_SAIDI(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(22, value, flags)
 
-    SAIDI = property(_get_SAIDI, _set_SAIDI)
+    SAIDI = property(_get_SAIDI, _set_SAIDI) # type: BatchFloat64ArrayProxy
 
     def _get_CAIDI(self) -> BatchFloat64ArrayProxy:
         """
@@ -879,7 +879,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_CAIDI(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(23, value, flags)
 
-    CAIDI = property(_get_CAIDI, _set_CAIDI)
+    CAIDI = property(_get_CAIDI, _set_CAIDI) # type: BatchFloat64ArrayProxy
 
     def _get_CustInterrupts(self) -> BatchFloat64ArrayProxy:
         """
@@ -892,7 +892,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_CustInterrupts(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(24, value, flags)
 
-    CustInterrupts = property(_get_CustInterrupts, _set_CustInterrupts)
+    CustInterrupts = property(_get_CustInterrupts, _set_CustInterrupts) # type: BatchFloat64ArrayProxy
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -905,7 +905,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(25, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -920,7 +920,7 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(26, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -966,7 +966,7 @@ class IEnergyMeter(IDSSObj, EnergyMeterBatch, IEnergyMeterMixin):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, EnergyMeter, EnergyMeterBatch)
-        EnergyMeterBatch.__init__(self, self._api_util, sync_cls=True)
+        EnergyMeterBatch.__init__(self, self._api_util, sync_cls_idx=EnergyMeter._cls_idx)
 
 
     # We need this one for better type hinting

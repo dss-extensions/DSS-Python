@@ -55,7 +55,7 @@ class LineCode(DSSObj):
     def _set_NPhases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    NPhases = property(_get_NPhases, _set_NPhases)
+    NPhases = property(_get_NPhases, _set_NPhases) # type: int
 
     def _get_R1(self) -> float:
         """
@@ -68,7 +68,7 @@ class LineCode(DSSObj):
     def _set_R1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 2, value, flags)
 
-    R1 = property(_get_R1, _set_R1)
+    R1 = property(_get_R1, _set_R1) # type: float
 
     def _get_X1(self) -> float:
         """
@@ -81,7 +81,7 @@ class LineCode(DSSObj):
     def _set_X1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
-    X1 = property(_get_X1, _set_X1)
+    X1 = property(_get_X1, _set_X1) # type: float
 
     def _get_R0(self) -> float:
         """
@@ -94,7 +94,7 @@ class LineCode(DSSObj):
     def _set_R0(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
-    R0 = property(_get_R0, _set_R0)
+    R0 = property(_get_R0, _set_R0) # type: float
 
     def _get_X0(self) -> float:
         """
@@ -107,7 +107,7 @@ class LineCode(DSSObj):
     def _set_X0(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    X0 = property(_get_X0, _set_X0)
+    X0 = property(_get_X0, _set_X0) # type: float
 
     def _get_C1(self) -> float:
         """
@@ -120,7 +120,7 @@ class LineCode(DSSObj):
     def _set_C1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
-    C1 = property(_get_C1, _set_C1)
+    C1 = property(_get_C1, _set_C1) # type: float
 
     def _get_C0(self) -> float:
         """
@@ -133,7 +133,7 @@ class LineCode(DSSObj):
     def _set_C0(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
-    C0 = property(_get_C0, _set_C0)
+    C0 = property(_get_C0, _set_C0) # type: float
 
     def _get_Units(self) -> enums.LengthUnit:
         """
@@ -149,7 +149,7 @@ class LineCode(DSSObj):
             return
         self._lib.Obj_SetInt32(self._ptr, 8, value, flags)
 
-    Units = property(_get_Units, _set_Units)
+    Units = property(_get_Units, _set_Units) # type: enums.LengthUnit
 
     def _get_Units_str(self) -> str:
         """
@@ -162,7 +162,7 @@ class LineCode(DSSObj):
     def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Units(value, flags)
 
-    Units_str = property(_get_Units_str, _set_Units_str)
+    Units_str = property(_get_Units_str, _set_Units_str) # type: str
 
     def _get_RMatrix(self) -> Float64Array:
         """
@@ -175,7 +175,7 @@ class LineCode(DSSObj):
     def _set_RMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(9, value, flags)
 
-    RMatrix = property(_get_RMatrix, _set_RMatrix)
+    RMatrix = property(_get_RMatrix, _set_RMatrix) # type: Float64Array
 
     def _get_XMatrix(self) -> Float64Array:
         """
@@ -188,7 +188,7 @@ class LineCode(DSSObj):
     def _set_XMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(10, value, flags)
 
-    XMatrix = property(_get_XMatrix, _set_XMatrix)
+    XMatrix = property(_get_XMatrix, _set_XMatrix) # type: Float64Array
 
     def _get_CMatrix(self) -> Float64Array:
         """
@@ -201,7 +201,7 @@ class LineCode(DSSObj):
     def _set_CMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(11, value, flags)
 
-    CMatrix = property(_get_CMatrix, _set_CMatrix)
+    CMatrix = property(_get_CMatrix, _set_CMatrix) # type: Float64Array
 
     def _get_BaseFreq(self) -> float:
         """
@@ -214,7 +214,7 @@ class LineCode(DSSObj):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_NormAmps(self) -> float:
         """
@@ -227,7 +227,7 @@ class LineCode(DSSObj):
     def _set_NormAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: float
 
     def _get_EmergAmps(self) -> float:
         """
@@ -240,7 +240,7 @@ class LineCode(DSSObj):
     def _set_EmergAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: float
 
     def _get_FaultRate(self) -> float:
         """
@@ -253,7 +253,7 @@ class LineCode(DSSObj):
     def _set_FaultRate(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: float
 
     def _get_PctPerm(self) -> float:
         """
@@ -266,7 +266,7 @@ class LineCode(DSSObj):
     def _set_PctPerm(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
-    PctPerm = property(_get_PctPerm, _set_PctPerm)
+    PctPerm = property(_get_PctPerm, _set_PctPerm) # type: float
 
     def _get_Repair(self) -> float:
         """
@@ -279,7 +279,7 @@ class LineCode(DSSObj):
     def _set_Repair(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: float
 
     def Kron(self, value: bool = True, flags: enums.SetterFlags = 0):
         """
@@ -300,7 +300,7 @@ class LineCode(DSSObj):
     def _set_Rg(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
-    Rg = property(_get_Rg, _set_Rg)
+    Rg = property(_get_Rg, _set_Rg) # type: float
 
     def _get_Xg(self) -> float:
         """
@@ -313,7 +313,7 @@ class LineCode(DSSObj):
     def _set_Xg(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
-    Xg = property(_get_Xg, _set_Xg)
+    Xg = property(_get_Xg, _set_Xg) # type: float
 
     def _get_rho(self) -> float:
         """
@@ -326,7 +326,7 @@ class LineCode(DSSObj):
     def _set_rho(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
-    rho = property(_get_rho, _set_rho)
+    rho = property(_get_rho, _set_rho) # type: float
 
     def _get_Neutral(self) -> int:
         """
@@ -339,7 +339,7 @@ class LineCode(DSSObj):
     def _set_Neutral(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 22, value, flags)
 
-    Neutral = property(_get_Neutral, _set_Neutral)
+    Neutral = property(_get_Neutral, _set_Neutral) # type: int
 
     def _get_B1(self) -> float:
         """
@@ -352,7 +352,7 @@ class LineCode(DSSObj):
     def _set_B1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
-    B1 = property(_get_B1, _set_B1)
+    B1 = property(_get_B1, _set_B1) # type: float
 
     def _get_B0(self) -> float:
         """
@@ -365,7 +365,7 @@ class LineCode(DSSObj):
     def _set_B0(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
-    B0 = property(_get_B0, _set_B0)
+    B0 = property(_get_B0, _set_B0) # type: float
 
     def _get_Seasons(self) -> int:
         """
@@ -378,7 +378,7 @@ class LineCode(DSSObj):
     def _set_Seasons(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 25, value, flags)
 
-    Seasons = property(_get_Seasons, _set_Seasons)
+    Seasons = property(_get_Seasons, _set_Seasons) # type: int
 
     def _get_Ratings(self) -> Float64Array:
         """
@@ -392,7 +392,7 @@ class LineCode(DSSObj):
     def _set_Ratings(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(26, value, flags)
 
-    Ratings = property(_get_Ratings, _set_Ratings)
+    Ratings = property(_get_Ratings, _set_Ratings) # type: Float64Array
 
     def _get_LineType(self) -> enums.LineType:
         """
@@ -411,7 +411,7 @@ class LineCode(DSSObj):
             return
         self._lib.Obj_SetInt32(self._ptr, 27, value, flags)
 
-    LineType = property(_get_LineType, _set_LineType)
+    LineType = property(_get_LineType, _set_LineType) # type: enums.LineType
 
     def _get_LineType_str(self) -> str:
         """
@@ -427,7 +427,7 @@ class LineCode(DSSObj):
     def _set_LineType_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_LineType(value, flags)
 
-    LineType_str = property(_get_LineType_str, _set_LineType_str)
+    LineType_str = property(_get_LineType_str, _set_LineType_str) # type: str
 
     def Like(self, value: AnyStr):
         """
@@ -487,7 +487,7 @@ class LineCodeBatch(DSSBatch):
     def _set_NPhases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    NPhases = property(_get_NPhases, _set_NPhases)
+    NPhases = property(_get_NPhases, _set_NPhases) # type: BatchInt32ArrayProxy
 
     def _get_R1(self) -> BatchFloat64ArrayProxy:
         """
@@ -500,7 +500,7 @@ class LineCodeBatch(DSSBatch):
     def _set_R1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(2, value, flags)
 
-    R1 = property(_get_R1, _set_R1)
+    R1 = property(_get_R1, _set_R1) # type: BatchFloat64ArrayProxy
 
     def _get_X1(self) -> BatchFloat64ArrayProxy:
         """
@@ -513,7 +513,7 @@ class LineCodeBatch(DSSBatch):
     def _set_X1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(3, value, flags)
 
-    X1 = property(_get_X1, _set_X1)
+    X1 = property(_get_X1, _set_X1) # type: BatchFloat64ArrayProxy
 
     def _get_R0(self) -> BatchFloat64ArrayProxy:
         """
@@ -526,7 +526,7 @@ class LineCodeBatch(DSSBatch):
     def _set_R0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(4, value, flags)
 
-    R0 = property(_get_R0, _set_R0)
+    R0 = property(_get_R0, _set_R0) # type: BatchFloat64ArrayProxy
 
     def _get_X0(self) -> BatchFloat64ArrayProxy:
         """
@@ -539,7 +539,7 @@ class LineCodeBatch(DSSBatch):
     def _set_X0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    X0 = property(_get_X0, _set_X0)
+    X0 = property(_get_X0, _set_X0) # type: BatchFloat64ArrayProxy
 
     def _get_C1(self) -> BatchFloat64ArrayProxy:
         """
@@ -552,7 +552,7 @@ class LineCodeBatch(DSSBatch):
     def _set_C1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(6, value, flags)
 
-    C1 = property(_get_C1, _set_C1)
+    C1 = property(_get_C1, _set_C1) # type: BatchFloat64ArrayProxy
 
     def _get_C0(self) -> BatchFloat64ArrayProxy:
         """
@@ -565,7 +565,7 @@ class LineCodeBatch(DSSBatch):
     def _set_C0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(7, value, flags)
 
-    C0 = property(_get_C0, _set_C0)
+    C0 = property(_get_C0, _set_C0) # type: BatchFloat64ArrayProxy
 
     def _get_Units(self) -> BatchInt32ArrayProxy:
         """
@@ -582,9 +582,9 @@ class LineCodeBatch(DSSBatch):
 
         self._set_batch_int32_array(8, value, flags)
 
-    Units = property(_get_Units, _set_Units)
+    Units = property(_get_Units, _set_Units) # type: BatchInt32ArrayProxy
 
-    def _get_Units_str(self) -> str:
+    def _get_Units_str(self) -> List[str]:
         """
         One of (ohms per ...) {none|mi|km|kft|m|me|ft|in|cm}.  Default is none; assumes units agree with length units given in Line object
 
@@ -595,7 +595,7 @@ class LineCodeBatch(DSSBatch):
     def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Units(value, flags)
 
-    Units_str = property(_get_Units_str, _set_Units_str)
+    Units_str = property(_get_Units_str, _set_Units_str) # type: List[str]
 
     def _get_RMatrix(self) -> List[Float64Array]:
         """
@@ -611,7 +611,7 @@ class LineCodeBatch(DSSBatch):
     def _set_RMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(9, value, flags)
 
-    RMatrix = property(_get_RMatrix, _set_RMatrix)
+    RMatrix = property(_get_RMatrix, _set_RMatrix) # type: List[Float64Array]
 
     def _get_XMatrix(self) -> List[Float64Array]:
         """
@@ -627,7 +627,7 @@ class LineCodeBatch(DSSBatch):
     def _set_XMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(10, value, flags)
 
-    XMatrix = property(_get_XMatrix, _set_XMatrix)
+    XMatrix = property(_get_XMatrix, _set_XMatrix) # type: List[Float64Array]
 
     def _get_CMatrix(self) -> List[Float64Array]:
         """
@@ -643,7 +643,7 @@ class LineCodeBatch(DSSBatch):
     def _set_CMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(11, value, flags)
 
-    CMatrix = property(_get_CMatrix, _set_CMatrix)
+    CMatrix = property(_get_CMatrix, _set_CMatrix) # type: List[Float64Array]
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -656,7 +656,7 @@ class LineCodeBatch(DSSBatch):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(12, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -669,7 +669,7 @@ class LineCodeBatch(DSSBatch):
     def _set_NormAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(13, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: BatchFloat64ArrayProxy
 
     def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -682,7 +682,7 @@ class LineCodeBatch(DSSBatch):
     def _set_EmergAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(14, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: BatchFloat64ArrayProxy
 
     def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
@@ -695,7 +695,7 @@ class LineCodeBatch(DSSBatch):
     def _set_FaultRate(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(15, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: BatchFloat64ArrayProxy
 
     def _get_PctPerm(self) -> BatchFloat64ArrayProxy:
         """
@@ -708,7 +708,7 @@ class LineCodeBatch(DSSBatch):
     def _set_PctPerm(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(16, value, flags)
 
-    PctPerm = property(_get_PctPerm, _set_PctPerm)
+    PctPerm = property(_get_PctPerm, _set_PctPerm) # type: BatchFloat64ArrayProxy
 
     def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
@@ -721,7 +721,7 @@ class LineCodeBatch(DSSBatch):
     def _set_Repair(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(17, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: BatchFloat64ArrayProxy
 
     def Kron(self, value: Union[bool, List[bool]] = True, flags: enums.SetterFlags = 0):
         """
@@ -742,7 +742,7 @@ class LineCodeBatch(DSSBatch):
     def _set_Rg(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(19, value, flags)
 
-    Rg = property(_get_Rg, _set_Rg)
+    Rg = property(_get_Rg, _set_Rg) # type: BatchFloat64ArrayProxy
 
     def _get_Xg(self) -> BatchFloat64ArrayProxy:
         """
@@ -755,7 +755,7 @@ class LineCodeBatch(DSSBatch):
     def _set_Xg(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(20, value, flags)
 
-    Xg = property(_get_Xg, _set_Xg)
+    Xg = property(_get_Xg, _set_Xg) # type: BatchFloat64ArrayProxy
 
     def _get_rho(self) -> BatchFloat64ArrayProxy:
         """
@@ -768,7 +768,7 @@ class LineCodeBatch(DSSBatch):
     def _set_rho(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(21, value, flags)
 
-    rho = property(_get_rho, _set_rho)
+    rho = property(_get_rho, _set_rho) # type: BatchFloat64ArrayProxy
 
     def _get_Neutral(self) -> BatchInt32ArrayProxy:
         """
@@ -781,7 +781,7 @@ class LineCodeBatch(DSSBatch):
     def _set_Neutral(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(22, value, flags)
 
-    Neutral = property(_get_Neutral, _set_Neutral)
+    Neutral = property(_get_Neutral, _set_Neutral) # type: BatchInt32ArrayProxy
 
     def _get_B1(self) -> BatchFloat64ArrayProxy:
         """
@@ -794,7 +794,7 @@ class LineCodeBatch(DSSBatch):
     def _set_B1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(23, value, flags)
 
-    B1 = property(_get_B1, _set_B1)
+    B1 = property(_get_B1, _set_B1) # type: BatchFloat64ArrayProxy
 
     def _get_B0(self) -> BatchFloat64ArrayProxy:
         """
@@ -807,7 +807,7 @@ class LineCodeBatch(DSSBatch):
     def _set_B0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(24, value, flags)
 
-    B0 = property(_get_B0, _set_B0)
+    B0 = property(_get_B0, _set_B0) # type: BatchFloat64ArrayProxy
 
     def _get_Seasons(self) -> BatchInt32ArrayProxy:
         """
@@ -820,7 +820,7 @@ class LineCodeBatch(DSSBatch):
     def _set_Seasons(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(25, value, flags)
 
-    Seasons = property(_get_Seasons, _set_Seasons)
+    Seasons = property(_get_Seasons, _set_Seasons) # type: BatchInt32ArrayProxy
 
     def _get_Ratings(self) -> List[Float64Array]:
         """
@@ -837,7 +837,7 @@ class LineCodeBatch(DSSBatch):
     def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(26, value, flags)
 
-    Ratings = property(_get_Ratings, _set_Ratings)
+    Ratings = property(_get_Ratings, _set_Ratings) # type: List[Float64Array]
 
     def _get_LineType(self) -> BatchInt32ArrayProxy:
         """
@@ -857,9 +857,9 @@ class LineCodeBatch(DSSBatch):
 
         self._set_batch_int32_array(27, value, flags)
 
-    LineType = property(_get_LineType, _set_LineType)
+    LineType = property(_get_LineType, _set_LineType) # type: BatchInt32ArrayProxy
 
-    def _get_LineType_str(self) -> str:
+    def _get_LineType_str(self) -> List[str]:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -873,7 +873,7 @@ class LineCodeBatch(DSSBatch):
     def _set_LineType_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_LineType(value, flags)
 
-    LineType_str = property(_get_LineType_str, _set_LineType_str)
+    LineType_str = property(_get_LineType_str, _set_LineType_str) # type: List[str]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -920,7 +920,7 @@ class ILineCode(IDSSObj, LineCodeBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, LineCode, LineCodeBatch)
-        LineCodeBatch.__init__(self, self._api_util, sync_cls=True)
+        LineCodeBatch.__init__(self, self._api_util, sync_cls_idx=LineCode._cls_idx)
 
 
     # We need this one for better type hinting

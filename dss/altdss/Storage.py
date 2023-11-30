@@ -114,7 +114,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: int
 
     def _get_Bus1(self) -> str:
         """
@@ -127,7 +127,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(2, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: str
 
     def _get_kV(self) -> float:
         """
@@ -144,7 +144,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kV(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
-    kV = property(_get_kV, _set_kV)
+    kV = property(_get_kV, _set_kV) # type: float
 
     def _get_Conn(self) -> enums.Connection:
         """
@@ -160,7 +160,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
             return
         self._lib.Obj_SetInt32(self._ptr, 4, value, flags)
 
-    Conn = property(_get_Conn, _set_Conn)
+    Conn = property(_get_Conn, _set_Conn) # type: enums.Connection
 
     def _get_Conn_str(self) -> str:
         """
@@ -173,7 +173,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conn(value, flags)
 
-    Conn_str = property(_get_Conn_str, _set_Conn_str)
+    Conn_str = property(_get_Conn_str, _set_Conn_str) # type: str
 
     def _get_kW(self) -> float:
         """
@@ -186,7 +186,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kW(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    kW = property(_get_kW, _set_kW)
+    kW = property(_get_kW, _set_kW) # type: float
 
     def _get_kvar(self) -> float:
         """
@@ -199,7 +199,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kvar(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
-    kvar = property(_get_kvar, _set_kvar)
+    kvar = property(_get_kvar, _set_kvar) # type: float
 
     def _get_PF(self) -> float:
         """
@@ -216,7 +216,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_PF(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
-    PF = property(_get_PF, _set_PF)
+    PF = property(_get_PF, _set_PF) # type: float
 
     def _get_kVA(self) -> float:
         """
@@ -229,7 +229,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kVA(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
-    kVA = property(_get_kVA, _set_kVA)
+    kVA = property(_get_kVA, _set_kVA) # type: float
 
     def _get_pctCutIn(self) -> float:
         """
@@ -242,7 +242,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctCutIn(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
-    pctCutIn = property(_get_pctCutIn, _set_pctCutIn)
+    pctCutIn = property(_get_pctCutIn, _set_pctCutIn) # type: float
 
     def _get_pctCutOut(self) -> float:
         """
@@ -255,7 +255,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctCutOut(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
-    pctCutOut = property(_get_pctCutOut, _set_pctCutOut)
+    pctCutOut = property(_get_pctCutOut, _set_pctCutOut) # type: float
 
     def _get_EffCurve_str(self) -> str:
         """
@@ -268,7 +268,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_EffCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(11, value, flags)
 
-    EffCurve_str = property(_get_EffCurve_str, _set_EffCurve_str)
+    EffCurve_str = property(_get_EffCurve_str, _set_EffCurve_str) # type: str
 
     def _get_EffCurve(self) -> XYcurve:
         """
@@ -285,7 +285,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
 
         self._set_string_o(11, value, flags)
 
-    EffCurve = property(_get_EffCurve, _set_EffCurve)
+    EffCurve = property(_get_EffCurve, _set_EffCurve) # type: XYcurve
 
     def _get_VarFollowInverter(self) -> bool:
         """
@@ -298,7 +298,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_VarFollowInverter(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 12, value, flags)
 
-    VarFollowInverter = property(_get_VarFollowInverter, _set_VarFollowInverter)
+    VarFollowInverter = property(_get_VarFollowInverter, _set_VarFollowInverter) # type: bool
 
     def _get_kvarMax(self) -> float:
         """
@@ -311,7 +311,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kvarMax(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
-    kvarMax = property(_get_kvarMax, _set_kvarMax)
+    kvarMax = property(_get_kvarMax, _set_kvarMax) # type: float
 
     def _get_kvarMaxAbs(self) -> float:
         """
@@ -324,7 +324,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kvarMaxAbs(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
-    kvarMaxAbs = property(_get_kvarMaxAbs, _set_kvarMaxAbs)
+    kvarMaxAbs = property(_get_kvarMaxAbs, _set_kvarMaxAbs) # type: float
 
     def _get_WattPriority(self) -> bool:
         """
@@ -337,7 +337,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_WattPriority(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 15, value, flags)
 
-    WattPriority = property(_get_WattPriority, _set_WattPriority)
+    WattPriority = property(_get_WattPriority, _set_WattPriority) # type: bool
 
     def _get_PFPriority(self) -> bool:
         """
@@ -350,7 +350,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_PFPriority(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 16, value, flags)
 
-    PFPriority = property(_get_PFPriority, _set_PFPriority)
+    PFPriority = property(_get_PFPriority, _set_PFPriority) # type: bool
 
     def _get_pctPMinNoVars(self) -> float:
         """
@@ -363,7 +363,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctPMinNoVars(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
-    pctPMinNoVars = property(_get_pctPMinNoVars, _set_pctPMinNoVars)
+    pctPMinNoVars = property(_get_pctPMinNoVars, _set_pctPMinNoVars) # type: float
 
     def _get_pctPMinkvarMax(self) -> float:
         """
@@ -376,7 +376,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctPMinkvarMax(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
-    pctPMinkvarMax = property(_get_pctPMinkvarMax, _set_pctPMinkvarMax)
+    pctPMinkvarMax = property(_get_pctPMinkvarMax, _set_pctPMinkvarMax) # type: float
 
     def _get_kWRated(self) -> float:
         """
@@ -389,7 +389,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kWRated(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
-    kWRated = property(_get_kWRated, _set_kWRated)
+    kWRated = property(_get_kWRated, _set_kWRated) # type: float
 
     def _get_pctkWRated(self) -> float:
         """
@@ -402,7 +402,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctkWRated(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
-    pctkWRated = property(_get_pctkWRated, _set_pctkWRated)
+    pctkWRated = property(_get_pctkWRated, _set_pctkWRated) # type: float
 
     def _get_kWhRated(self) -> float:
         """
@@ -415,7 +415,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kWhRated(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
-    kWhRated = property(_get_kWhRated, _set_kWhRated)
+    kWhRated = property(_get_kWhRated, _set_kWhRated) # type: float
 
     def _get_kWhStored(self) -> float:
         """
@@ -428,7 +428,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kWhStored(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 22, value, flags)
 
-    kWhStored = property(_get_kWhStored, _set_kWhStored)
+    kWhStored = property(_get_kWhStored, _set_kWhStored) # type: float
 
     def _get_pctStored(self) -> float:
         """
@@ -441,7 +441,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctStored(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
-    pctStored = property(_get_pctStored, _set_pctStored)
+    pctStored = property(_get_pctStored, _set_pctStored) # type: float
 
     def _get_pctReserve(self) -> float:
         """
@@ -455,7 +455,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctReserve(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
-    pctReserve = property(_get_pctReserve, _set_pctReserve)
+    pctReserve = property(_get_pctReserve, _set_pctReserve) # type: float
 
     def _get_State(self) -> enums.StorageState:
         """
@@ -471,7 +471,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
             return
         self._lib.Obj_SetInt32(self._ptr, 25, value, flags)
 
-    State = property(_get_State, _set_State)
+    State = property(_get_State, _set_State) # type: enums.StorageState
 
     def _get_State_str(self) -> str:
         """
@@ -484,7 +484,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_State(value, flags)
 
-    State_str = property(_get_State_str, _set_State_str)
+    State_str = property(_get_State_str, _set_State_str) # type: str
 
     def _get_pctDischarge(self) -> float:
         """
@@ -497,7 +497,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctDischarge(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 26, value, flags)
 
-    pctDischarge = property(_get_pctDischarge, _set_pctDischarge)
+    pctDischarge = property(_get_pctDischarge, _set_pctDischarge) # type: float
 
     def _get_pctCharge(self) -> float:
         """
@@ -510,7 +510,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctCharge(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 27, value, flags)
 
-    pctCharge = property(_get_pctCharge, _set_pctCharge)
+    pctCharge = property(_get_pctCharge, _set_pctCharge) # type: float
 
     def _get_pctEffCharge(self) -> float:
         """
@@ -523,7 +523,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctEffCharge(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 28, value, flags)
 
-    pctEffCharge = property(_get_pctEffCharge, _set_pctEffCharge)
+    pctEffCharge = property(_get_pctEffCharge, _set_pctEffCharge) # type: float
 
     def _get_pctEffDischarge(self) -> float:
         """
@@ -536,7 +536,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctEffDischarge(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 29, value, flags)
 
-    pctEffDischarge = property(_get_pctEffDischarge, _set_pctEffDischarge)
+    pctEffDischarge = property(_get_pctEffDischarge, _set_pctEffDischarge) # type: float
 
     def _get_pctIdlingkW(self) -> float:
         """
@@ -549,7 +549,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctIdlingkW(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 30, value, flags)
 
-    pctIdlingkW = property(_get_pctIdlingkW, _set_pctIdlingkW)
+    pctIdlingkW = property(_get_pctIdlingkW, _set_pctIdlingkW) # type: float
 
     def _get_pctR(self) -> float:
         """
@@ -562,7 +562,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctR(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 32, value, flags)
 
-    pctR = property(_get_pctR, _set_pctR)
+    pctR = property(_get_pctR, _set_pctR) # type: float
 
     def _get_pctX(self) -> float:
         """
@@ -575,7 +575,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_pctX(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 33, value, flags)
 
-    pctX = property(_get_pctX, _set_pctX)
+    pctX = property(_get_pctX, _set_pctX) # type: float
 
     def _get_Model(self) -> int:
         """
@@ -592,7 +592,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Model(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 34, value, flags)
 
-    Model = property(_get_Model, _set_Model)
+    Model = property(_get_Model, _set_Model) # type: int
 
     def _get_VMinpu(self) -> float:
         """
@@ -605,7 +605,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_VMinpu(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 35, value, flags)
 
-    VMinpu = property(_get_VMinpu, _set_VMinpu)
+    VMinpu = property(_get_VMinpu, _set_VMinpu) # type: float
 
     def _get_VMaxpu(self) -> float:
         """
@@ -618,7 +618,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_VMaxpu(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 36, value, flags)
 
-    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu) # type: float
 
     def _get_Balanced(self) -> bool:
         """
@@ -631,7 +631,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Balanced(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 37, value, flags)
 
-    Balanced = property(_get_Balanced, _set_Balanced)
+    Balanced = property(_get_Balanced, _set_Balanced) # type: bool
 
     def _get_LimitCurrent(self) -> bool:
         """
@@ -644,7 +644,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_LimitCurrent(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 38, value, flags)
 
-    LimitCurrent = property(_get_LimitCurrent, _set_LimitCurrent)
+    LimitCurrent = property(_get_LimitCurrent, _set_LimitCurrent) # type: bool
 
     def _get_Yearly_str(self) -> str:
         """
@@ -657,7 +657,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Yearly_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(39, value, flags)
 
-    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str) # type: str
 
     def _get_Yearly(self) -> LoadShape:
         """
@@ -674,7 +674,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
 
         self._set_string_o(39, value, flags)
 
-    Yearly = property(_get_Yearly, _set_Yearly)
+    Yearly = property(_get_Yearly, _set_Yearly) # type: LoadShape
 
     def _get_Daily_str(self) -> str:
         """
@@ -687,7 +687,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Daily_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(40, value, flags)
 
-    Daily_str = property(_get_Daily_str, _set_Daily_str)
+    Daily_str = property(_get_Daily_str, _set_Daily_str) # type: str
 
     def _get_Daily(self) -> LoadShape:
         """
@@ -704,7 +704,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
 
         self._set_string_o(40, value, flags)
 
-    Daily = property(_get_Daily, _set_Daily)
+    Daily = property(_get_Daily, _set_Daily) # type: LoadShape
 
     def _get_Duty_str(self) -> str:
         """
@@ -721,7 +721,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Duty_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(41, value, flags)
 
-    Duty_str = property(_get_Duty_str, _set_Duty_str)
+    Duty_str = property(_get_Duty_str, _set_Duty_str) # type: str
 
     def _get_Duty(self) -> LoadShape:
         """
@@ -742,7 +742,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
 
         self._set_string_o(41, value, flags)
 
-    Duty = property(_get_Duty, _set_Duty)
+    Duty = property(_get_Duty, _set_Duty) # type: LoadShape
 
     def _get_DispMode(self) -> enums.StorageDispatchMode:
         """
@@ -766,7 +766,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
             return
         self._lib.Obj_SetInt32(self._ptr, 42, value, flags)
 
-    DispMode = property(_get_DispMode, _set_DispMode)
+    DispMode = property(_get_DispMode, _set_DispMode) # type: enums.StorageDispatchMode
 
     def _get_DispMode_str(self) -> str:
         """
@@ -787,7 +787,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_DispMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_DispMode(value, flags)
 
-    DispMode_str = property(_get_DispMode_str, _set_DispMode_str)
+    DispMode_str = property(_get_DispMode_str, _set_DispMode_str) # type: str
 
     def _get_DischargeTrigger(self) -> float:
         """
@@ -802,7 +802,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_DischargeTrigger(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 43, value, flags)
 
-    DischargeTrigger = property(_get_DischargeTrigger, _set_DischargeTrigger)
+    DischargeTrigger = property(_get_DischargeTrigger, _set_DischargeTrigger) # type: float
 
     def _get_ChargeTrigger(self) -> float:
         """
@@ -819,7 +819,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_ChargeTrigger(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 44, value, flags)
 
-    ChargeTrigger = property(_get_ChargeTrigger, _set_ChargeTrigger)
+    ChargeTrigger = property(_get_ChargeTrigger, _set_ChargeTrigger) # type: float
 
     def _get_TimeChargeTrig(self) -> float:
         """
@@ -832,7 +832,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_TimeChargeTrig(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 45, value, flags)
 
-    TimeChargeTrig = property(_get_TimeChargeTrig, _set_TimeChargeTrig)
+    TimeChargeTrig = property(_get_TimeChargeTrig, _set_TimeChargeTrig) # type: float
 
     def _get_Class(self) -> int:
         """
@@ -845,7 +845,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Class(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 46, value, flags)
 
-    Class = property(_get_Class, _set_Class)
+    Class = property(_get_Class, _set_Class) # type: int
 
     def _get_DynaDLL(self) -> str:
         """
@@ -858,7 +858,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_DynaDLL(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(47, value, flags)
 
-    DynaDLL = property(_get_DynaDLL, _set_DynaDLL)
+    DynaDLL = property(_get_DynaDLL, _set_DynaDLL) # type: str
 
     def _get_DynaData(self) -> str:
         """
@@ -871,7 +871,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_DynaData(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(48, value, flags)
 
-    DynaData = property(_get_DynaData, _set_DynaData)
+    DynaData = property(_get_DynaData, _set_DynaData) # type: str
 
     def _get_UserModel(self) -> str:
         """
@@ -884,7 +884,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_UserModel(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(49, value, flags)
 
-    UserModel = property(_get_UserModel, _set_UserModel)
+    UserModel = property(_get_UserModel, _set_UserModel) # type: str
 
     def _get_UserData(self) -> str:
         """
@@ -897,7 +897,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_UserData(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(50, value, flags)
 
-    UserData = property(_get_UserData, _set_UserData)
+    UserData = property(_get_UserData, _set_UserData) # type: str
 
     def _get_DebugTrace(self) -> bool:
         """
@@ -910,7 +910,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 51, value, flags)
 
-    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace) # type: bool
 
     def _get_kVDC(self) -> float:
         """
@@ -923,7 +923,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_kVDC(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 52, value, flags)
 
-    kVDC = property(_get_kVDC, _set_kVDC)
+    kVDC = property(_get_kVDC, _set_kVDC) # type: float
 
     def _get_Kp(self) -> float:
         """
@@ -936,7 +936,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Kp(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 53, value, flags)
 
-    Kp = property(_get_Kp, _set_Kp)
+    Kp = property(_get_Kp, _set_Kp) # type: float
 
     def _get_PITol(self) -> float:
         """
@@ -949,7 +949,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_PITol(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 54, value, flags)
 
-    PITol = property(_get_PITol, _set_PITol)
+    PITol = property(_get_PITol, _set_PITol) # type: float
 
     def _get_SafeVoltage(self) -> float:
         """
@@ -962,7 +962,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_SafeVoltage(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 55, value, flags)
 
-    SafeVoltage = property(_get_SafeVoltage, _set_SafeVoltage)
+    SafeVoltage = property(_get_SafeVoltage, _set_SafeVoltage) # type: float
 
     def _get_SafeMode(self) -> bool:
         """
@@ -975,7 +975,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_SafeMode(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 56, value, flags)
 
-    SafeMode = property(_get_SafeMode, _set_SafeMode)
+    SafeMode = property(_get_SafeMode, _set_SafeMode) # type: bool
 
     def _get_DynamicEq_str(self) -> str:
         """
@@ -988,7 +988,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_DynamicEq_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(57, value, flags)
 
-    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
+    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str) # type: str
 
     def _get_DynamicEq(self) -> DynamicExp:
         """
@@ -1005,7 +1005,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
 
         self._set_string_o(57, value, flags)
 
-    DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
+    DynamicEq = property(_get_DynamicEq, _set_DynamicEq) # type: DynamicExp
 
     def _get_DynOut(self) -> str:
         """
@@ -1022,7 +1022,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_DynOut(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(58, value, flags)
 
-    DynOut = property(_get_DynOut, _set_DynOut)
+    DynOut = property(_get_DynOut, _set_DynOut) # type: str
 
     def _get_ControlMode(self) -> enums.InverterControlMode:
         """
@@ -1040,7 +1040,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
             return
         self._lib.Obj_SetInt32(self._ptr, 59, value, flags)
 
-    ControlMode = property(_get_ControlMode, _set_ControlMode)
+    ControlMode = property(_get_ControlMode, _set_ControlMode) # type: enums.InverterControlMode
 
     def _get_ControlMode_str(self) -> str:
         """
@@ -1055,7 +1055,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_ControlMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_ControlMode(value, flags)
 
-    ControlMode_str = property(_get_ControlMode_str, _set_ControlMode_str)
+    ControlMode_str = property(_get_ControlMode_str, _set_ControlMode_str) # type: str
 
     def _get_AmpLimit(self) -> float:
         """
@@ -1069,7 +1069,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_AmpLimit(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 60, value, flags)
 
-    AmpLimit = property(_get_AmpLimit, _set_AmpLimit)
+    AmpLimit = property(_get_AmpLimit, _set_AmpLimit) # type: float
 
     def _get_AmpLimitGain(self) -> float:
         """
@@ -1082,7 +1082,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_AmpLimitGain(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 61, value, flags)
 
-    AmpLimitGain = property(_get_AmpLimitGain, _set_AmpLimitGain)
+    AmpLimitGain = property(_get_AmpLimitGain, _set_AmpLimitGain) # type: float
 
     def _get_Spectrum_str(self) -> str:
         """
@@ -1095,7 +1095,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Spectrum_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(62, value, flags)
 
-    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str) # type: str
 
     def _get_Spectrum(self) -> SpectrumObj:
         """
@@ -1112,7 +1112,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
 
         self._set_string_o(62, value, flags)
 
-    Spectrum = property(_get_Spectrum, _set_Spectrum)
+    Spectrum = property(_get_Spectrum, _set_Spectrum) # type: SpectrumObj
 
     def _get_BaseFreq(self) -> float:
         """
@@ -1125,7 +1125,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 63, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -1138,7 +1138,7 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 64, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -1234,7 +1234,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: BatchInt32ArrayProxy
 
     def _get_Bus1(self) -> List[str]:
         """
@@ -1247,7 +1247,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(2, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: List[str]
 
     def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
@@ -1264,7 +1264,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kV(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(3, value, flags)
 
-    kV = property(_get_kV, _set_kV)
+    kV = property(_get_kV, _set_kV) # type: BatchFloat64ArrayProxy
 
     def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
@@ -1281,9 +1281,9 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         self._set_batch_int32_array(4, value, flags)
 
-    Conn = property(_get_Conn, _set_Conn)
+    Conn = property(_get_Conn, _set_Conn) # type: BatchInt32ArrayProxy
 
-    def _get_Conn_str(self) -> str:
+    def _get_Conn_str(self) -> List[str]:
         """
         ={wye|LN|delta|LL}.  Default is wye.
 
@@ -1294,7 +1294,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conn(value, flags)
 
-    Conn_str = property(_get_Conn_str, _set_Conn_str)
+    Conn_str = property(_get_Conn_str, _set_Conn_str) # type: List[str]
 
     def _get_kW(self) -> BatchFloat64ArrayProxy:
         """
@@ -1307,7 +1307,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kW(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    kW = property(_get_kW, _set_kW)
+    kW = property(_get_kW, _set_kW) # type: BatchFloat64ArrayProxy
 
     def _get_kvar(self) -> BatchFloat64ArrayProxy:
         """
@@ -1320,7 +1320,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kvar(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(6, value, flags)
 
-    kvar = property(_get_kvar, _set_kvar)
+    kvar = property(_get_kvar, _set_kvar) # type: BatchFloat64ArrayProxy
 
     def _get_PF(self) -> BatchFloat64ArrayProxy:
         """
@@ -1337,7 +1337,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_PF(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(7, value, flags)
 
-    PF = property(_get_PF, _set_PF)
+    PF = property(_get_PF, _set_PF) # type: BatchFloat64ArrayProxy
 
     def _get_kVA(self) -> BatchFloat64ArrayProxy:
         """
@@ -1350,7 +1350,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kVA(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(8, value, flags)
 
-    kVA = property(_get_kVA, _set_kVA)
+    kVA = property(_get_kVA, _set_kVA) # type: BatchFloat64ArrayProxy
 
     def _get_pctCutIn(self) -> BatchFloat64ArrayProxy:
         """
@@ -1363,7 +1363,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctCutIn(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(9, value, flags)
 
-    pctCutIn = property(_get_pctCutIn, _set_pctCutIn)
+    pctCutIn = property(_get_pctCutIn, _set_pctCutIn) # type: BatchFloat64ArrayProxy
 
     def _get_pctCutOut(self) -> BatchFloat64ArrayProxy:
         """
@@ -1376,7 +1376,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctCutOut(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(10, value, flags)
 
-    pctCutOut = property(_get_pctCutOut, _set_pctCutOut)
+    pctCutOut = property(_get_pctCutOut, _set_pctCutOut) # type: BatchFloat64ArrayProxy
 
     def _get_EffCurve_str(self) -> List[str]:
         """
@@ -1389,7 +1389,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_EffCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(11, value, flags)
 
-    EffCurve_str = property(_get_EffCurve_str, _set_EffCurve_str)
+    EffCurve_str = property(_get_EffCurve_str, _set_EffCurve_str) # type: List[str]
 
     def _get_EffCurve(self) -> List[XYcurve]:
         """
@@ -1402,7 +1402,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_EffCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(11, value, flags)
 
-    EffCurve = property(_get_EffCurve, _set_EffCurve)
+    EffCurve = property(_get_EffCurve, _set_EffCurve) # type: List[XYcurve]
 
     def _get_VarFollowInverter(self) -> List[bool]:
         """
@@ -1417,7 +1417,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_VarFollowInverter(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(12, value, flags)
 
-    VarFollowInverter = property(_get_VarFollowInverter, _set_VarFollowInverter)
+    VarFollowInverter = property(_get_VarFollowInverter, _set_VarFollowInverter) # type: List[bool]
 
     def _get_kvarMax(self) -> BatchFloat64ArrayProxy:
         """
@@ -1430,7 +1430,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kvarMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(13, value, flags)
 
-    kvarMax = property(_get_kvarMax, _set_kvarMax)
+    kvarMax = property(_get_kvarMax, _set_kvarMax) # type: BatchFloat64ArrayProxy
 
     def _get_kvarMaxAbs(self) -> BatchFloat64ArrayProxy:
         """
@@ -1443,7 +1443,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kvarMaxAbs(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(14, value, flags)
 
-    kvarMaxAbs = property(_get_kvarMaxAbs, _set_kvarMaxAbs)
+    kvarMaxAbs = property(_get_kvarMaxAbs, _set_kvarMaxAbs) # type: BatchFloat64ArrayProxy
 
     def _get_WattPriority(self) -> List[bool]:
         """
@@ -1458,7 +1458,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_WattPriority(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(15, value, flags)
 
-    WattPriority = property(_get_WattPriority, _set_WattPriority)
+    WattPriority = property(_get_WattPriority, _set_WattPriority) # type: List[bool]
 
     def _get_PFPriority(self) -> List[bool]:
         """
@@ -1473,7 +1473,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_PFPriority(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(16, value, flags)
 
-    PFPriority = property(_get_PFPriority, _set_PFPriority)
+    PFPriority = property(_get_PFPriority, _set_PFPriority) # type: List[bool]
 
     def _get_pctPMinNoVars(self) -> BatchFloat64ArrayProxy:
         """
@@ -1486,7 +1486,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctPMinNoVars(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(17, value, flags)
 
-    pctPMinNoVars = property(_get_pctPMinNoVars, _set_pctPMinNoVars)
+    pctPMinNoVars = property(_get_pctPMinNoVars, _set_pctPMinNoVars) # type: BatchFloat64ArrayProxy
 
     def _get_pctPMinkvarMax(self) -> BatchFloat64ArrayProxy:
         """
@@ -1499,7 +1499,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctPMinkvarMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(18, value, flags)
 
-    pctPMinkvarMax = property(_get_pctPMinkvarMax, _set_pctPMinkvarMax)
+    pctPMinkvarMax = property(_get_pctPMinkvarMax, _set_pctPMinkvarMax) # type: BatchFloat64ArrayProxy
 
     def _get_kWRated(self) -> BatchFloat64ArrayProxy:
         """
@@ -1512,7 +1512,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kWRated(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(19, value, flags)
 
-    kWRated = property(_get_kWRated, _set_kWRated)
+    kWRated = property(_get_kWRated, _set_kWRated) # type: BatchFloat64ArrayProxy
 
     def _get_pctkWRated(self) -> BatchFloat64ArrayProxy:
         """
@@ -1525,7 +1525,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctkWRated(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(20, value, flags)
 
-    pctkWRated = property(_get_pctkWRated, _set_pctkWRated)
+    pctkWRated = property(_get_pctkWRated, _set_pctkWRated) # type: BatchFloat64ArrayProxy
 
     def _get_kWhRated(self) -> BatchFloat64ArrayProxy:
         """
@@ -1538,7 +1538,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kWhRated(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(21, value, flags)
 
-    kWhRated = property(_get_kWhRated, _set_kWhRated)
+    kWhRated = property(_get_kWhRated, _set_kWhRated) # type: BatchFloat64ArrayProxy
 
     def _get_kWhStored(self) -> BatchFloat64ArrayProxy:
         """
@@ -1551,7 +1551,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kWhStored(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(22, value, flags)
 
-    kWhStored = property(_get_kWhStored, _set_kWhStored)
+    kWhStored = property(_get_kWhStored, _set_kWhStored) # type: BatchFloat64ArrayProxy
 
     def _get_pctStored(self) -> BatchFloat64ArrayProxy:
         """
@@ -1564,7 +1564,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctStored(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(23, value, flags)
 
-    pctStored = property(_get_pctStored, _set_pctStored)
+    pctStored = property(_get_pctStored, _set_pctStored) # type: BatchFloat64ArrayProxy
 
     def _get_pctReserve(self) -> BatchFloat64ArrayProxy:
         """
@@ -1578,7 +1578,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctReserve(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(24, value, flags)
 
-    pctReserve = property(_get_pctReserve, _set_pctReserve)
+    pctReserve = property(_get_pctReserve, _set_pctReserve) # type: BatchFloat64ArrayProxy
 
     def _get_State(self) -> BatchInt32ArrayProxy:
         """
@@ -1595,9 +1595,9 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         self._set_batch_int32_array(25, value, flags)
 
-    State = property(_get_State, _set_State)
+    State = property(_get_State, _set_State) # type: BatchInt32ArrayProxy
 
-    def _get_State_str(self) -> str:
+    def _get_State_str(self) -> List[str]:
         """
         {IDLING | CHARGING | DISCHARGING}  Get/Set present operational state. In DISCHARGING mode, the Storage element acts as a generator and the kW property is positive. The element continues discharging at the scheduled output power level until the Storage reaches the reserve value. Then the state reverts to IDLING. In the CHARGING state, the Storage element behaves like a Load and the kW property is negative. The element continues to charge until the max Storage kWh is reached and then switches to IDLING state. In IDLING state, the element draws the idling losses plus the associated inverter losses.
 
@@ -1608,7 +1608,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_State_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_State(value, flags)
 
-    State_str = property(_get_State_str, _set_State_str)
+    State_str = property(_get_State_str, _set_State_str) # type: List[str]
 
     def _get_pctDischarge(self) -> BatchFloat64ArrayProxy:
         """
@@ -1621,7 +1621,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctDischarge(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(26, value, flags)
 
-    pctDischarge = property(_get_pctDischarge, _set_pctDischarge)
+    pctDischarge = property(_get_pctDischarge, _set_pctDischarge) # type: BatchFloat64ArrayProxy
 
     def _get_pctCharge(self) -> BatchFloat64ArrayProxy:
         """
@@ -1634,7 +1634,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctCharge(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(27, value, flags)
 
-    pctCharge = property(_get_pctCharge, _set_pctCharge)
+    pctCharge = property(_get_pctCharge, _set_pctCharge) # type: BatchFloat64ArrayProxy
 
     def _get_pctEffCharge(self) -> BatchFloat64ArrayProxy:
         """
@@ -1647,7 +1647,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctEffCharge(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(28, value, flags)
 
-    pctEffCharge = property(_get_pctEffCharge, _set_pctEffCharge)
+    pctEffCharge = property(_get_pctEffCharge, _set_pctEffCharge) # type: BatchFloat64ArrayProxy
 
     def _get_pctEffDischarge(self) -> BatchFloat64ArrayProxy:
         """
@@ -1660,7 +1660,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctEffDischarge(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(29, value, flags)
 
-    pctEffDischarge = property(_get_pctEffDischarge, _set_pctEffDischarge)
+    pctEffDischarge = property(_get_pctEffDischarge, _set_pctEffDischarge) # type: BatchFloat64ArrayProxy
 
     def _get_pctIdlingkW(self) -> BatchFloat64ArrayProxy:
         """
@@ -1673,7 +1673,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctIdlingkW(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(30, value, flags)
 
-    pctIdlingkW = property(_get_pctIdlingkW, _set_pctIdlingkW)
+    pctIdlingkW = property(_get_pctIdlingkW, _set_pctIdlingkW) # type: BatchFloat64ArrayProxy
 
     def _get_pctR(self) -> BatchFloat64ArrayProxy:
         """
@@ -1686,7 +1686,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctR(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(32, value, flags)
 
-    pctR = property(_get_pctR, _set_pctR)
+    pctR = property(_get_pctR, _set_pctR) # type: BatchFloat64ArrayProxy
 
     def _get_pctX(self) -> BatchFloat64ArrayProxy:
         """
@@ -1699,7 +1699,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_pctX(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(33, value, flags)
 
-    pctX = property(_get_pctX, _set_pctX)
+    pctX = property(_get_pctX, _set_pctX) # type: BatchFloat64ArrayProxy
 
     def _get_Model(self) -> BatchInt32ArrayProxy:
         """
@@ -1716,7 +1716,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Model(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(34, value, flags)
 
-    Model = property(_get_Model, _set_Model)
+    Model = property(_get_Model, _set_Model) # type: BatchInt32ArrayProxy
 
     def _get_VMinpu(self) -> BatchFloat64ArrayProxy:
         """
@@ -1729,7 +1729,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_VMinpu(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(35, value, flags)
 
-    VMinpu = property(_get_VMinpu, _set_VMinpu)
+    VMinpu = property(_get_VMinpu, _set_VMinpu) # type: BatchFloat64ArrayProxy
 
     def _get_VMaxpu(self) -> BatchFloat64ArrayProxy:
         """
@@ -1742,7 +1742,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_VMaxpu(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(36, value, flags)
 
-    VMaxpu = property(_get_VMaxpu, _set_VMaxpu)
+    VMaxpu = property(_get_VMaxpu, _set_VMaxpu) # type: BatchFloat64ArrayProxy
 
     def _get_Balanced(self) -> List[bool]:
         """
@@ -1757,7 +1757,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Balanced(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(37, value, flags)
 
-    Balanced = property(_get_Balanced, _set_Balanced)
+    Balanced = property(_get_Balanced, _set_Balanced) # type: List[bool]
 
     def _get_LimitCurrent(self) -> List[bool]:
         """
@@ -1772,7 +1772,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_LimitCurrent(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(38, value, flags)
 
-    LimitCurrent = property(_get_LimitCurrent, _set_LimitCurrent)
+    LimitCurrent = property(_get_LimitCurrent, _set_LimitCurrent) # type: List[bool]
 
     def _get_Yearly_str(self) -> List[str]:
         """
@@ -1785,7 +1785,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(39, value, flags)
 
-    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str) # type: List[str]
 
     def _get_Yearly(self) -> List[LoadShape]:
         """
@@ -1798,7 +1798,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(39, value, flags)
 
-    Yearly = property(_get_Yearly, _set_Yearly)
+    Yearly = property(_get_Yearly, _set_Yearly) # type: List[LoadShape]
 
     def _get_Daily_str(self) -> List[str]:
         """
@@ -1811,7 +1811,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(40, value, flags)
 
-    Daily_str = property(_get_Daily_str, _set_Daily_str)
+    Daily_str = property(_get_Daily_str, _set_Daily_str) # type: List[str]
 
     def _get_Daily(self) -> List[LoadShape]:
         """
@@ -1824,7 +1824,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(40, value, flags)
 
-    Daily = property(_get_Daily, _set_Daily)
+    Daily = property(_get_Daily, _set_Daily) # type: List[LoadShape]
 
     def _get_Duty_str(self) -> List[str]:
         """
@@ -1841,7 +1841,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(41, value, flags)
 
-    Duty_str = property(_get_Duty_str, _set_Duty_str)
+    Duty_str = property(_get_Duty_str, _set_Duty_str) # type: List[str]
 
     def _get_Duty(self) -> List[LoadShape]:
         """
@@ -1858,7 +1858,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(41, value, flags)
 
-    Duty = property(_get_Duty, _set_Duty)
+    Duty = property(_get_Duty, _set_Duty) # type: List[LoadShape]
 
     def _get_DispMode(self) -> BatchInt32ArrayProxy:
         """
@@ -1883,9 +1883,9 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         self._set_batch_int32_array(42, value, flags)
 
-    DispMode = property(_get_DispMode, _set_DispMode)
+    DispMode = property(_get_DispMode, _set_DispMode) # type: BatchInt32ArrayProxy
 
-    def _get_DispMode_str(self) -> str:
+    def _get_DispMode_str(self) -> List[str]:
         """
         {DEFAULT | FOLLOW | EXTERNAL | LOADLEVEL | PRICE } Default = "DEFAULT". Dispatch mode. 
 
@@ -1904,7 +1904,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_DispMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_DispMode(value, flags)
 
-    DispMode_str = property(_get_DispMode_str, _set_DispMode_str)
+    DispMode_str = property(_get_DispMode_str, _set_DispMode_str) # type: List[str]
 
     def _get_DischargeTrigger(self) -> BatchFloat64ArrayProxy:
         """
@@ -1919,7 +1919,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_DischargeTrigger(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(43, value, flags)
 
-    DischargeTrigger = property(_get_DischargeTrigger, _set_DischargeTrigger)
+    DischargeTrigger = property(_get_DischargeTrigger, _set_DischargeTrigger) # type: BatchFloat64ArrayProxy
 
     def _get_ChargeTrigger(self) -> BatchFloat64ArrayProxy:
         """
@@ -1936,7 +1936,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_ChargeTrigger(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(44, value, flags)
 
-    ChargeTrigger = property(_get_ChargeTrigger, _set_ChargeTrigger)
+    ChargeTrigger = property(_get_ChargeTrigger, _set_ChargeTrigger) # type: BatchFloat64ArrayProxy
 
     def _get_TimeChargeTrig(self) -> BatchFloat64ArrayProxy:
         """
@@ -1949,7 +1949,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_TimeChargeTrig(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(45, value, flags)
 
-    TimeChargeTrig = property(_get_TimeChargeTrig, _set_TimeChargeTrig)
+    TimeChargeTrig = property(_get_TimeChargeTrig, _set_TimeChargeTrig) # type: BatchFloat64ArrayProxy
 
     def _get_Class(self) -> BatchInt32ArrayProxy:
         """
@@ -1962,7 +1962,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Class(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(46, value, flags)
 
-    Class = property(_get_Class, _set_Class)
+    Class = property(_get_Class, _set_Class) # type: BatchInt32ArrayProxy
 
     def _get_DynaDLL(self) -> List[str]:
         """
@@ -1975,7 +1975,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_DynaDLL(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(47, value, flags)
 
-    DynaDLL = property(_get_DynaDLL, _set_DynaDLL)
+    DynaDLL = property(_get_DynaDLL, _set_DynaDLL) # type: List[str]
 
     def _get_DynaData(self) -> List[str]:
         """
@@ -1988,7 +1988,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_DynaData(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(48, value, flags)
 
-    DynaData = property(_get_DynaData, _set_DynaData)
+    DynaData = property(_get_DynaData, _set_DynaData) # type: List[str]
 
     def _get_UserModel(self) -> List[str]:
         """
@@ -2001,7 +2001,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_UserModel(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(49, value, flags)
 
-    UserModel = property(_get_UserModel, _set_UserModel)
+    UserModel = property(_get_UserModel, _set_UserModel) # type: List[str]
 
     def _get_UserData(self) -> List[str]:
         """
@@ -2014,7 +2014,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_UserData(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(50, value, flags)
 
-    UserData = property(_get_UserData, _set_UserData)
+    UserData = property(_get_UserData, _set_UserData) # type: List[str]
 
     def _get_DebugTrace(self) -> List[bool]:
         """
@@ -2029,7 +2029,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(51, value, flags)
 
-    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace) # type: List[bool]
 
     def _get_kVDC(self) -> BatchFloat64ArrayProxy:
         """
@@ -2042,7 +2042,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kVDC(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(52, value, flags)
 
-    kVDC = property(_get_kVDC, _set_kVDC)
+    kVDC = property(_get_kVDC, _set_kVDC) # type: BatchFloat64ArrayProxy
 
     def _get_Kp(self) -> BatchFloat64ArrayProxy:
         """
@@ -2055,7 +2055,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Kp(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(53, value, flags)
 
-    Kp = property(_get_Kp, _set_Kp)
+    Kp = property(_get_Kp, _set_Kp) # type: BatchFloat64ArrayProxy
 
     def _get_PITol(self) -> BatchFloat64ArrayProxy:
         """
@@ -2068,7 +2068,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_PITol(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(54, value, flags)
 
-    PITol = property(_get_PITol, _set_PITol)
+    PITol = property(_get_PITol, _set_PITol) # type: BatchFloat64ArrayProxy
 
     def _get_SafeVoltage(self) -> BatchFloat64ArrayProxy:
         """
@@ -2081,7 +2081,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_SafeVoltage(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(55, value, flags)
 
-    SafeVoltage = property(_get_SafeVoltage, _set_SafeVoltage)
+    SafeVoltage = property(_get_SafeVoltage, _set_SafeVoltage) # type: BatchFloat64ArrayProxy
 
     def _get_SafeMode(self) -> List[bool]:
         """
@@ -2096,7 +2096,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_SafeMode(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(56, value, flags)
 
-    SafeMode = property(_get_SafeMode, _set_SafeMode)
+    SafeMode = property(_get_SafeMode, _set_SafeMode) # type: List[bool]
 
     def _get_DynamicEq_str(self) -> List[str]:
         """
@@ -2109,7 +2109,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_DynamicEq_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(57, value, flags)
 
-    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str)
+    DynamicEq_str = property(_get_DynamicEq_str, _set_DynamicEq_str) # type: List[str]
 
     def _get_DynamicEq(self) -> List[DynamicExp]:
         """
@@ -2122,7 +2122,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_DynamicEq(self, value: Union[AnyStr, DynamicExp, List[AnyStr], List[DynamicExp]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(57, value, flags)
 
-    DynamicEq = property(_get_DynamicEq, _set_DynamicEq)
+    DynamicEq = property(_get_DynamicEq, _set_DynamicEq) # type: List[DynamicExp]
 
     def _get_DynOut(self) -> List[str]:
         """
@@ -2139,7 +2139,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_DynOut(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(58, value, flags)
 
-    DynOut = property(_get_DynOut, _set_DynOut)
+    DynOut = property(_get_DynOut, _set_DynOut) # type: List[str]
 
     def _get_ControlMode(self) -> BatchInt32ArrayProxy:
         """
@@ -2158,9 +2158,9 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         self._set_batch_int32_array(59, value, flags)
 
-    ControlMode = property(_get_ControlMode, _set_ControlMode)
+    ControlMode = property(_get_ControlMode, _set_ControlMode) # type: BatchInt32ArrayProxy
 
-    def _get_ControlMode_str(self) -> str:
+    def _get_ControlMode_str(self) -> List[str]:
         """
         Defines the control mode for the inverter. It can be one of {GFM | GFL*}. By default it is GFL (Grid Following Inverter). Use GFM (Grid Forming Inverter) for energizing islanded microgrids, but, if the device is connected to the grid, it is highly recommended to use GFL.
 
@@ -2173,7 +2173,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_ControlMode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_ControlMode(value, flags)
 
-    ControlMode_str = property(_get_ControlMode_str, _set_ControlMode_str)
+    ControlMode_str = property(_get_ControlMode_str, _set_ControlMode_str) # type: List[str]
 
     def _get_AmpLimit(self) -> BatchFloat64ArrayProxy:
         """
@@ -2187,7 +2187,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_AmpLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(60, value, flags)
 
-    AmpLimit = property(_get_AmpLimit, _set_AmpLimit)
+    AmpLimit = property(_get_AmpLimit, _set_AmpLimit) # type: BatchFloat64ArrayProxy
 
     def _get_AmpLimitGain(self) -> BatchFloat64ArrayProxy:
         """
@@ -2200,7 +2200,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_AmpLimitGain(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(61, value, flags)
 
-    AmpLimitGain = property(_get_AmpLimitGain, _set_AmpLimitGain)
+    AmpLimitGain = property(_get_AmpLimitGain, _set_AmpLimitGain) # type: BatchFloat64ArrayProxy
 
     def _get_Spectrum_str(self) -> List[str]:
         """
@@ -2213,7 +2213,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(62, value, flags)
 
-    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str) # type: List[str]
 
     def _get_Spectrum(self) -> List[SpectrumObj]:
         """
@@ -2226,7 +2226,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(62, value, flags)
 
-    Spectrum = property(_get_Spectrum, _set_Spectrum)
+    Spectrum = property(_get_Spectrum, _set_Spectrum) # type: List[SpectrumObj]
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -2239,7 +2239,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(63, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -2254,7 +2254,7 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(64, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -2337,7 +2337,7 @@ class IStorage(IDSSObj, StorageBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Storage, StorageBatch)
-        StorageBatch.__init__(self, self._api_util, sync_cls=True)
+        StorageBatch.__init__(self, self._api_util, sync_cls_idx=Storage._cls_idx)
 
 
     # We need this one for better type hinting

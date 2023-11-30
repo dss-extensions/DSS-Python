@@ -49,7 +49,7 @@ class CNData(DSSObj):
     def _set_k(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    k = property(_get_k, _set_k)
+    k = property(_get_k, _set_k) # type: int
 
     def _get_DiaStrand(self) -> float:
         """
@@ -62,7 +62,7 @@ class CNData(DSSObj):
     def _set_DiaStrand(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 2, value, flags)
 
-    DiaStrand = property(_get_DiaStrand, _set_DiaStrand)
+    DiaStrand = property(_get_DiaStrand, _set_DiaStrand) # type: float
 
     def _get_GMRStrand(self) -> float:
         """
@@ -75,7 +75,7 @@ class CNData(DSSObj):
     def _set_GMRStrand(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
-    GMRStrand = property(_get_GMRStrand, _set_GMRStrand)
+    GMRStrand = property(_get_GMRStrand, _set_GMRStrand) # type: float
 
     def _get_RStrand(self) -> float:
         """
@@ -88,7 +88,7 @@ class CNData(DSSObj):
     def _set_RStrand(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
-    RStrand = property(_get_RStrand, _set_RStrand)
+    RStrand = property(_get_RStrand, _set_RStrand) # type: float
 
     def _get_EpsR(self) -> float:
         """
@@ -101,7 +101,7 @@ class CNData(DSSObj):
     def _set_EpsR(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    EpsR = property(_get_EpsR, _set_EpsR)
+    EpsR = property(_get_EpsR, _set_EpsR) # type: float
 
     def _get_InsLayer(self) -> float:
         """
@@ -114,7 +114,7 @@ class CNData(DSSObj):
     def _set_InsLayer(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
-    InsLayer = property(_get_InsLayer, _set_InsLayer)
+    InsLayer = property(_get_InsLayer, _set_InsLayer) # type: float
 
     def _get_DiaIns(self) -> float:
         """
@@ -127,7 +127,7 @@ class CNData(DSSObj):
     def _set_DiaIns(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
-    DiaIns = property(_get_DiaIns, _set_DiaIns)
+    DiaIns = property(_get_DiaIns, _set_DiaIns) # type: float
 
     def _get_DiaCable(self) -> float:
         """
@@ -140,7 +140,7 @@ class CNData(DSSObj):
     def _set_DiaCable(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
-    DiaCable = property(_get_DiaCable, _set_DiaCable)
+    DiaCable = property(_get_DiaCable, _set_DiaCable) # type: float
 
     def _get_RDC(self) -> float:
         """
@@ -153,7 +153,7 @@ class CNData(DSSObj):
     def _set_RDC(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
-    RDC = property(_get_RDC, _set_RDC)
+    RDC = property(_get_RDC, _set_RDC) # type: float
 
     def _get_RAC(self) -> float:
         """
@@ -166,7 +166,7 @@ class CNData(DSSObj):
     def _set_RAC(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
-    RAC = property(_get_RAC, _set_RAC)
+    RAC = property(_get_RAC, _set_RAC) # type: float
 
     def _get_RUnits(self) -> enums.LengthUnit:
         """
@@ -182,7 +182,7 @@ class CNData(DSSObj):
             return
         self._lib.Obj_SetInt32(self._ptr, 11, value, flags)
 
-    RUnits = property(_get_RUnits, _set_RUnits)
+    RUnits = property(_get_RUnits, _set_RUnits) # type: enums.LengthUnit
 
     def _get_RUnits_str(self) -> str:
         """
@@ -195,7 +195,7 @@ class CNData(DSSObj):
     def _set_RUnits_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_RUnits(value, flags)
 
-    RUnits_str = property(_get_RUnits_str, _set_RUnits_str)
+    RUnits_str = property(_get_RUnits_str, _set_RUnits_str) # type: str
 
     def _get_GMRAC(self) -> float:
         """
@@ -208,7 +208,7 @@ class CNData(DSSObj):
     def _set_GMRAC(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
-    GMRAC = property(_get_GMRAC, _set_GMRAC)
+    GMRAC = property(_get_GMRAC, _set_GMRAC) # type: float
 
     def _get_GMRUnits(self) -> enums.LengthUnit:
         """
@@ -224,7 +224,7 @@ class CNData(DSSObj):
             return
         self._lib.Obj_SetInt32(self._ptr, 13, value, flags)
 
-    GMRUnits = property(_get_GMRUnits, _set_GMRUnits)
+    GMRUnits = property(_get_GMRUnits, _set_GMRUnits) # type: enums.LengthUnit
 
     def _get_GMRUnits_str(self) -> str:
         """
@@ -237,7 +237,7 @@ class CNData(DSSObj):
     def _set_GMRUnits_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_GMRUnits(value, flags)
 
-    GMRUnits_str = property(_get_GMRUnits_str, _set_GMRUnits_str)
+    GMRUnits_str = property(_get_GMRUnits_str, _set_GMRUnits_str) # type: str
 
     def _get_Radius(self) -> float:
         """
@@ -250,7 +250,7 @@ class CNData(DSSObj):
     def _set_Radius(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
-    Radius = property(_get_Radius, _set_Radius)
+    Radius = property(_get_Radius, _set_Radius) # type: float
 
     def _get_RadUnits(self) -> enums.LengthUnit:
         """
@@ -266,7 +266,7 @@ class CNData(DSSObj):
             return
         self._lib.Obj_SetInt32(self._ptr, 15, value, flags)
 
-    RadUnits = property(_get_RadUnits, _set_RadUnits)
+    RadUnits = property(_get_RadUnits, _set_RadUnits) # type: enums.LengthUnit
 
     def _get_RadUnits_str(self) -> str:
         """
@@ -279,7 +279,7 @@ class CNData(DSSObj):
     def _set_RadUnits_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_RadUnits(value, flags)
 
-    RadUnits_str = property(_get_RadUnits_str, _set_RadUnits_str)
+    RadUnits_str = property(_get_RadUnits_str, _set_RadUnits_str) # type: str
 
     def _get_NormAmps(self) -> float:
         """
@@ -292,7 +292,7 @@ class CNData(DSSObj):
     def _set_NormAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: float
 
     def _get_EmergAmps(self) -> float:
         """
@@ -305,7 +305,7 @@ class CNData(DSSObj):
     def _set_EmergAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: float
 
     def _get_Diam(self) -> float:
         """
@@ -318,7 +318,7 @@ class CNData(DSSObj):
     def _set_Diam(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
-    Diam = property(_get_Diam, _set_Diam)
+    Diam = property(_get_Diam, _set_Diam) # type: float
 
     def _get_Seasons(self) -> int:
         """
@@ -331,7 +331,7 @@ class CNData(DSSObj):
     def _set_Seasons(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 19, value, flags)
 
-    Seasons = property(_get_Seasons, _set_Seasons)
+    Seasons = property(_get_Seasons, _set_Seasons) # type: int
 
     def _get_Ratings(self) -> Float64Array:
         """
@@ -345,7 +345,7 @@ class CNData(DSSObj):
     def _set_Ratings(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(20, value, flags)
 
-    Ratings = property(_get_Ratings, _set_Ratings)
+    Ratings = property(_get_Ratings, _set_Ratings) # type: Float64Array
 
     def _get_CapRadius(self) -> float:
         """
@@ -358,7 +358,7 @@ class CNData(DSSObj):
     def _set_CapRadius(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
-    CapRadius = property(_get_CapRadius, _set_CapRadius)
+    CapRadius = property(_get_CapRadius, _set_CapRadius) # type: float
 
     def Like(self, value: AnyStr):
         """
@@ -412,7 +412,7 @@ class CNDataBatch(DSSBatch):
     def _set_k(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    k = property(_get_k, _set_k)
+    k = property(_get_k, _set_k) # type: BatchInt32ArrayProxy
 
     def _get_DiaStrand(self) -> BatchFloat64ArrayProxy:
         """
@@ -425,7 +425,7 @@ class CNDataBatch(DSSBatch):
     def _set_DiaStrand(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(2, value, flags)
 
-    DiaStrand = property(_get_DiaStrand, _set_DiaStrand)
+    DiaStrand = property(_get_DiaStrand, _set_DiaStrand) # type: BatchFloat64ArrayProxy
 
     def _get_GMRStrand(self) -> BatchFloat64ArrayProxy:
         """
@@ -438,7 +438,7 @@ class CNDataBatch(DSSBatch):
     def _set_GMRStrand(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(3, value, flags)
 
-    GMRStrand = property(_get_GMRStrand, _set_GMRStrand)
+    GMRStrand = property(_get_GMRStrand, _set_GMRStrand) # type: BatchFloat64ArrayProxy
 
     def _get_RStrand(self) -> BatchFloat64ArrayProxy:
         """
@@ -451,7 +451,7 @@ class CNDataBatch(DSSBatch):
     def _set_RStrand(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(4, value, flags)
 
-    RStrand = property(_get_RStrand, _set_RStrand)
+    RStrand = property(_get_RStrand, _set_RStrand) # type: BatchFloat64ArrayProxy
 
     def _get_EpsR(self) -> BatchFloat64ArrayProxy:
         """
@@ -464,7 +464,7 @@ class CNDataBatch(DSSBatch):
     def _set_EpsR(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    EpsR = property(_get_EpsR, _set_EpsR)
+    EpsR = property(_get_EpsR, _set_EpsR) # type: BatchFloat64ArrayProxy
 
     def _get_InsLayer(self) -> BatchFloat64ArrayProxy:
         """
@@ -477,7 +477,7 @@ class CNDataBatch(DSSBatch):
     def _set_InsLayer(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(6, value, flags)
 
-    InsLayer = property(_get_InsLayer, _set_InsLayer)
+    InsLayer = property(_get_InsLayer, _set_InsLayer) # type: BatchFloat64ArrayProxy
 
     def _get_DiaIns(self) -> BatchFloat64ArrayProxy:
         """
@@ -490,7 +490,7 @@ class CNDataBatch(DSSBatch):
     def _set_DiaIns(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(7, value, flags)
 
-    DiaIns = property(_get_DiaIns, _set_DiaIns)
+    DiaIns = property(_get_DiaIns, _set_DiaIns) # type: BatchFloat64ArrayProxy
 
     def _get_DiaCable(self) -> BatchFloat64ArrayProxy:
         """
@@ -503,7 +503,7 @@ class CNDataBatch(DSSBatch):
     def _set_DiaCable(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(8, value, flags)
 
-    DiaCable = property(_get_DiaCable, _set_DiaCable)
+    DiaCable = property(_get_DiaCable, _set_DiaCable) # type: BatchFloat64ArrayProxy
 
     def _get_RDC(self) -> BatchFloat64ArrayProxy:
         """
@@ -516,7 +516,7 @@ class CNDataBatch(DSSBatch):
     def _set_RDC(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(9, value, flags)
 
-    RDC = property(_get_RDC, _set_RDC)
+    RDC = property(_get_RDC, _set_RDC) # type: BatchFloat64ArrayProxy
 
     def _get_RAC(self) -> BatchFloat64ArrayProxy:
         """
@@ -529,7 +529,7 @@ class CNDataBatch(DSSBatch):
     def _set_RAC(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(10, value, flags)
 
-    RAC = property(_get_RAC, _set_RAC)
+    RAC = property(_get_RAC, _set_RAC) # type: BatchFloat64ArrayProxy
 
     def _get_RUnits(self) -> BatchInt32ArrayProxy:
         """
@@ -546,9 +546,9 @@ class CNDataBatch(DSSBatch):
 
         self._set_batch_int32_array(11, value, flags)
 
-    RUnits = property(_get_RUnits, _set_RUnits)
+    RUnits = property(_get_RUnits, _set_RUnits) # type: BatchInt32ArrayProxy
 
-    def _get_RUnits_str(self) -> str:
+    def _get_RUnits_str(self) -> List[str]:
         """
         Length units for resistance: ohms per {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -559,7 +559,7 @@ class CNDataBatch(DSSBatch):
     def _set_RUnits_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_RUnits(value, flags)
 
-    RUnits_str = property(_get_RUnits_str, _set_RUnits_str)
+    RUnits_str = property(_get_RUnits_str, _set_RUnits_str) # type: List[str]
 
     def _get_GMRAC(self) -> BatchFloat64ArrayProxy:
         """
@@ -572,7 +572,7 @@ class CNDataBatch(DSSBatch):
     def _set_GMRAC(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(12, value, flags)
 
-    GMRAC = property(_get_GMRAC, _set_GMRAC)
+    GMRAC = property(_get_GMRAC, _set_GMRAC) # type: BatchFloat64ArrayProxy
 
     def _get_GMRUnits(self) -> BatchInt32ArrayProxy:
         """
@@ -589,9 +589,9 @@ class CNDataBatch(DSSBatch):
 
         self._set_batch_int32_array(13, value, flags)
 
-    GMRUnits = property(_get_GMRUnits, _set_GMRUnits)
+    GMRUnits = property(_get_GMRUnits, _set_GMRUnits) # type: BatchInt32ArrayProxy
 
-    def _get_GMRUnits_str(self) -> str:
+    def _get_GMRUnits_str(self) -> List[str]:
         """
         Units for GMR: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -602,7 +602,7 @@ class CNDataBatch(DSSBatch):
     def _set_GMRUnits_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_GMRUnits(value, flags)
 
-    GMRUnits_str = property(_get_GMRUnits_str, _set_GMRUnits_str)
+    GMRUnits_str = property(_get_GMRUnits_str, _set_GMRUnits_str) # type: List[str]
 
     def _get_Radius(self) -> BatchFloat64ArrayProxy:
         """
@@ -615,7 +615,7 @@ class CNDataBatch(DSSBatch):
     def _set_Radius(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(14, value, flags)
 
-    Radius = property(_get_Radius, _set_Radius)
+    Radius = property(_get_Radius, _set_Radius) # type: BatchFloat64ArrayProxy
 
     def _get_RadUnits(self) -> BatchInt32ArrayProxy:
         """
@@ -632,9 +632,9 @@ class CNDataBatch(DSSBatch):
 
         self._set_batch_int32_array(15, value, flags)
 
-    RadUnits = property(_get_RadUnits, _set_RadUnits)
+    RadUnits = property(_get_RadUnits, _set_RadUnits) # type: BatchInt32ArrayProxy
 
-    def _get_RadUnits_str(self) -> str:
+    def _get_RadUnits_str(self) -> List[str]:
         """
         Units for outside radius: {mi|kft|km|m|Ft|in|cm|mm} Default=none.
 
@@ -645,7 +645,7 @@ class CNDataBatch(DSSBatch):
     def _set_RadUnits_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_RadUnits(value, flags)
 
-    RadUnits_str = property(_get_RadUnits_str, _set_RadUnits_str)
+    RadUnits_str = property(_get_RadUnits_str, _set_RadUnits_str) # type: List[str]
 
     def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -658,7 +658,7 @@ class CNDataBatch(DSSBatch):
     def _set_NormAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(16, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: BatchFloat64ArrayProxy
 
     def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -671,7 +671,7 @@ class CNDataBatch(DSSBatch):
     def _set_EmergAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(17, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: BatchFloat64ArrayProxy
 
     def _get_Diam(self) -> BatchFloat64ArrayProxy:
         """
@@ -684,7 +684,7 @@ class CNDataBatch(DSSBatch):
     def _set_Diam(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(18, value, flags)
 
-    Diam = property(_get_Diam, _set_Diam)
+    Diam = property(_get_Diam, _set_Diam) # type: BatchFloat64ArrayProxy
 
     def _get_Seasons(self) -> BatchInt32ArrayProxy:
         """
@@ -697,7 +697,7 @@ class CNDataBatch(DSSBatch):
     def _set_Seasons(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(19, value, flags)
 
-    Seasons = property(_get_Seasons, _set_Seasons)
+    Seasons = property(_get_Seasons, _set_Seasons) # type: BatchInt32ArrayProxy
 
     def _get_Ratings(self) -> List[Float64Array]:
         """
@@ -714,7 +714,7 @@ class CNDataBatch(DSSBatch):
     def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(20, value, flags)
 
-    Ratings = property(_get_Ratings, _set_Ratings)
+    Ratings = property(_get_Ratings, _set_Ratings) # type: List[Float64Array]
 
     def _get_CapRadius(self) -> BatchFloat64ArrayProxy:
         """
@@ -727,7 +727,7 @@ class CNDataBatch(DSSBatch):
     def _set_CapRadius(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(21, value, flags)
 
-    CapRadius = property(_get_CapRadius, _set_CapRadius)
+    CapRadius = property(_get_CapRadius, _set_CapRadius) # type: BatchFloat64ArrayProxy
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -768,7 +768,7 @@ class ICNData(IDSSObj, CNDataBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, CNData, CNDataBatch)
-        CNDataBatch.__init__(self, self._api_util, sync_cls=True)
+        CNDataBatch.__init__(self, self._api_util, sync_cls_idx=CNData._cls_idx)
 
 
     # We need this one for better type hinting

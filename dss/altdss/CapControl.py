@@ -56,7 +56,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_Element_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: str
 
     def _get_Element(self) -> DSSObj:
         """
@@ -73,7 +73,7 @@ class CapControl(DSSObj, CircuitElementMixin):
 
         self._set_string_o(1, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: DSSObj
 
     def _get_Terminal(self) -> int:
         """
@@ -86,7 +86,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_Terminal(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
-    Terminal = property(_get_Terminal, _set_Terminal)
+    Terminal = property(_get_Terminal, _set_Terminal) # type: int
 
     def _get_Capacitor_str(self) -> str:
         """
@@ -101,7 +101,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_Capacitor_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(3, value, flags)
 
-    Capacitor_str = property(_get_Capacitor_str, _set_Capacitor_str)
+    Capacitor_str = property(_get_Capacitor_str, _set_Capacitor_str) # type: str
 
     def _get_Capacitor(self) -> CapacitorObj:
         """
@@ -120,7 +120,7 @@ class CapControl(DSSObj, CircuitElementMixin):
 
         self._set_string_o(3, value, flags)
 
-    Capacitor = property(_get_Capacitor, _set_Capacitor)
+    Capacitor = property(_get_Capacitor, _set_Capacitor) # type: CapacitorObj
 
     def _get_Type(self) -> enums.CapControlType:
         """
@@ -136,7 +136,7 @@ class CapControl(DSSObj, CircuitElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 4, value, flags)
 
-    Type = property(_get_Type, _set_Type)
+    Type = property(_get_Type, _set_Type) # type: enums.CapControlType
 
     def _get_Type_str(self) -> str:
         """
@@ -149,7 +149,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_Type_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Type(value, flags)
 
-    Type_str = property(_get_Type_str, _set_Type_str)
+    Type_str = property(_get_Type_str, _set_Type_str) # type: str
 
     def _get_PTRatio(self) -> float:
         """
@@ -162,7 +162,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_PTRatio(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    PTRatio = property(_get_PTRatio, _set_PTRatio)
+    PTRatio = property(_get_PTRatio, _set_PTRatio) # type: float
 
     def _get_CTRatio(self) -> float:
         """
@@ -175,7 +175,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_CTRatio(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
-    CTRatio = property(_get_CTRatio, _set_CTRatio)
+    CTRatio = property(_get_CTRatio, _set_CTRatio) # type: float
 
     def _get_OnSetting(self) -> float:
         """
@@ -197,7 +197,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_OnSetting(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
-    OnSetting = property(_get_OnSetting, _set_OnSetting)
+    OnSetting = property(_get_OnSetting, _set_OnSetting) # type: float
 
     def _get_OffSetting(self) -> float:
         """
@@ -210,7 +210,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_OffSetting(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
-    OffSetting = property(_get_OffSetting, _set_OffSetting)
+    OffSetting = property(_get_OffSetting, _set_OffSetting) # type: float
 
     def _get_Delay(self) -> float:
         """
@@ -223,7 +223,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_Delay(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
-    Delay = property(_get_Delay, _set_Delay)
+    Delay = property(_get_Delay, _set_Delay) # type: float
 
     def _get_VoltOverride(self) -> bool:
         """
@@ -236,7 +236,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_VoltOverride(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 10, value, flags)
 
-    VoltOverride = property(_get_VoltOverride, _set_VoltOverride)
+    VoltOverride = property(_get_VoltOverride, _set_VoltOverride) # type: bool
 
     def _get_VMax(self) -> float:
         """
@@ -249,7 +249,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_VMax(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
-    VMax = property(_get_VMax, _set_VMax)
+    VMax = property(_get_VMax, _set_VMax) # type: float
 
     def _get_VMin(self) -> float:
         """
@@ -262,7 +262,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_VMin(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
-    VMin = property(_get_VMin, _set_VMin)
+    VMin = property(_get_VMin, _set_VMin) # type: float
 
     def _get_DelayOff(self) -> float:
         """
@@ -275,7 +275,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_DelayOff(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
-    DelayOff = property(_get_DelayOff, _set_DelayOff)
+    DelayOff = property(_get_DelayOff, _set_DelayOff) # type: float
 
     def _get_DeadTime(self) -> float:
         """
@@ -288,7 +288,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_DeadTime(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
-    DeadTime = property(_get_DeadTime, _set_DeadTime)
+    DeadTime = property(_get_DeadTime, _set_DeadTime) # type: float
 
     def _get_CTPhase(self) -> Union[enums.MonitoredPhase, int]:
         """
@@ -308,7 +308,7 @@ class CapControl(DSSObj, CircuitElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 15, value, flags)
 
-    CTPhase = property(_get_CTPhase, _set_CTPhase)
+    CTPhase = property(_get_CTPhase, _set_CTPhase) # type: enums.MonitoredPhase
 
     def _get_CTPhase_str(self) -> str:
         """
@@ -321,7 +321,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_CTPhase_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_CTPhase(value, flags)
 
-    CTPhase_str = property(_get_CTPhase_str, _set_CTPhase_str)
+    CTPhase_str = property(_get_CTPhase_str, _set_CTPhase_str) # type: str
 
     def _get_PTPhase(self) -> Union[enums.MonitoredPhase, int]:
         """
@@ -341,7 +341,7 @@ class CapControl(DSSObj, CircuitElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 16, value, flags)
 
-    PTPhase = property(_get_PTPhase, _set_PTPhase)
+    PTPhase = property(_get_PTPhase, _set_PTPhase) # type: enums.MonitoredPhase
 
     def _get_PTPhase_str(self) -> str:
         """
@@ -354,7 +354,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_PTPhase_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_PTPhase(value, flags)
 
-    PTPhase_str = property(_get_PTPhase_str, _set_PTPhase_str)
+    PTPhase_str = property(_get_PTPhase_str, _set_PTPhase_str) # type: str
 
     def _get_VBus(self) -> str:
         """
@@ -367,7 +367,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_VBus(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(17, value, flags)
 
-    VBus = property(_get_VBus, _set_VBus)
+    VBus = property(_get_VBus, _set_VBus) # type: str
 
     def _get_EventLog(self) -> bool:
         """
@@ -380,7 +380,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 18, value, flags)
 
-    EventLog = property(_get_EventLog, _set_EventLog)
+    EventLog = property(_get_EventLog, _set_EventLog) # type: bool
 
     def _get_UserModel(self) -> str:
         """
@@ -393,7 +393,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_UserModel(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(19, value, flags)
 
-    UserModel = property(_get_UserModel, _set_UserModel)
+    UserModel = property(_get_UserModel, _set_UserModel) # type: str
 
     def _get_UserData(self) -> str:
         """
@@ -406,7 +406,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_UserData(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(20, value, flags)
 
-    UserData = property(_get_UserData, _set_UserData)
+    UserData = property(_get_UserData, _set_UserData) # type: str
 
     def _get_pctMinkvar(self) -> float:
         """
@@ -419,7 +419,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_pctMinkvar(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
-    pctMinkvar = property(_get_pctMinkvar, _set_pctMinkvar)
+    pctMinkvar = property(_get_pctMinkvar, _set_pctMinkvar) # type: float
 
     def Reset(self, value: bool = True, flags: enums.SetterFlags = 0):
         """
@@ -440,7 +440,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_ControlSignal_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(23, value, flags)
 
-    ControlSignal_str = property(_get_ControlSignal_str, _set_ControlSignal_str)
+    ControlSignal_str = property(_get_ControlSignal_str, _set_ControlSignal_str) # type: str
 
     def _get_ControlSignal(self) -> LoadShape:
         """
@@ -457,7 +457,7 @@ class CapControl(DSSObj, CircuitElementMixin):
 
         self._set_string_o(23, value, flags)
 
-    ControlSignal = property(_get_ControlSignal, _set_ControlSignal)
+    ControlSignal = property(_get_ControlSignal, _set_ControlSignal) # type: LoadShape
 
     def _get_BaseFreq(self) -> float:
         """
@@ -470,7 +470,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -483,7 +483,7 @@ class CapControl(DSSObj, CircuitElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 25, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -541,7 +541,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: List[str]
 
     def _get_Element(self) -> List[DSSObj]:
         """
@@ -554,7 +554,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(1, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: List[DSSObj]
 
     def _get_Terminal(self) -> BatchInt32ArrayProxy:
         """
@@ -567,7 +567,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Terminal(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(2, value, flags)
 
-    Terminal = property(_get_Terminal, _set_Terminal)
+    Terminal = property(_get_Terminal, _set_Terminal) # type: BatchInt32ArrayProxy
 
     def _get_Capacitor_str(self) -> List[str]:
         """
@@ -582,7 +582,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Capacitor_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(3, value, flags)
 
-    Capacitor_str = property(_get_Capacitor_str, _set_Capacitor_str)
+    Capacitor_str = property(_get_Capacitor_str, _set_Capacitor_str) # type: List[str]
 
     def _get_Capacitor(self) -> List[CapacitorObj]:
         """
@@ -597,7 +597,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Capacitor(self, value: Union[AnyStr, CapacitorObj, List[AnyStr], List[CapacitorObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(3, value, flags)
 
-    Capacitor = property(_get_Capacitor, _set_Capacitor)
+    Capacitor = property(_get_Capacitor, _set_Capacitor) # type: List[CapacitorObj]
 
     def _get_Type(self) -> BatchInt32ArrayProxy:
         """
@@ -614,9 +614,9 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         self._set_batch_int32_array(4, value, flags)
 
-    Type = property(_get_Type, _set_Type)
+    Type = property(_get_Type, _set_Type) # type: BatchInt32ArrayProxy
 
-    def _get_Type_str(self) -> str:
+    def _get_Type_str(self) -> List[str]:
         """
         {Current | Voltage | kvar | PF | Time | Follow} Control type.  Specify the ONsetting and OFFsetting appropriately with the type of control. (See help for ONsetting)
 
@@ -627,7 +627,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Type_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Type(value, flags)
 
-    Type_str = property(_get_Type_str, _set_Type_str)
+    Type_str = property(_get_Type_str, _set_Type_str) # type: List[str]
 
     def _get_PTRatio(self) -> BatchFloat64ArrayProxy:
         """
@@ -640,7 +640,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_PTRatio(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    PTRatio = property(_get_PTRatio, _set_PTRatio)
+    PTRatio = property(_get_PTRatio, _set_PTRatio) # type: BatchFloat64ArrayProxy
 
     def _get_CTRatio(self) -> BatchFloat64ArrayProxy:
         """
@@ -653,7 +653,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_CTRatio(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(6, value, flags)
 
-    CTRatio = property(_get_CTRatio, _set_CTRatio)
+    CTRatio = property(_get_CTRatio, _set_CTRatio) # type: BatchFloat64ArrayProxy
 
     def _get_OnSetting(self) -> BatchFloat64ArrayProxy:
         """
@@ -675,7 +675,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_OnSetting(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(7, value, flags)
 
-    OnSetting = property(_get_OnSetting, _set_OnSetting)
+    OnSetting = property(_get_OnSetting, _set_OnSetting) # type: BatchFloat64ArrayProxy
 
     def _get_OffSetting(self) -> BatchFloat64ArrayProxy:
         """
@@ -688,7 +688,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_OffSetting(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(8, value, flags)
 
-    OffSetting = property(_get_OffSetting, _set_OffSetting)
+    OffSetting = property(_get_OffSetting, _set_OffSetting) # type: BatchFloat64ArrayProxy
 
     def _get_Delay(self) -> BatchFloat64ArrayProxy:
         """
@@ -701,7 +701,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Delay(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(9, value, flags)
 
-    Delay = property(_get_Delay, _set_Delay)
+    Delay = property(_get_Delay, _set_Delay) # type: BatchFloat64ArrayProxy
 
     def _get_VoltOverride(self) -> List[bool]:
         """
@@ -716,7 +716,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_VoltOverride(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(10, value, flags)
 
-    VoltOverride = property(_get_VoltOverride, _set_VoltOverride)
+    VoltOverride = property(_get_VoltOverride, _set_VoltOverride) # type: List[bool]
 
     def _get_VMax(self) -> BatchFloat64ArrayProxy:
         """
@@ -729,7 +729,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_VMax(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(11, value, flags)
 
-    VMax = property(_get_VMax, _set_VMax)
+    VMax = property(_get_VMax, _set_VMax) # type: BatchFloat64ArrayProxy
 
     def _get_VMin(self) -> BatchFloat64ArrayProxy:
         """
@@ -742,7 +742,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_VMin(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(12, value, flags)
 
-    VMin = property(_get_VMin, _set_VMin)
+    VMin = property(_get_VMin, _set_VMin) # type: BatchFloat64ArrayProxy
 
     def _get_DelayOff(self) -> BatchFloat64ArrayProxy:
         """
@@ -755,7 +755,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_DelayOff(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(13, value, flags)
 
-    DelayOff = property(_get_DelayOff, _set_DelayOff)
+    DelayOff = property(_get_DelayOff, _set_DelayOff) # type: BatchFloat64ArrayProxy
 
     def _get_DeadTime(self) -> BatchFloat64ArrayProxy:
         """
@@ -768,7 +768,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_DeadTime(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(14, value, flags)
 
-    DeadTime = property(_get_DeadTime, _set_DeadTime)
+    DeadTime = property(_get_DeadTime, _set_DeadTime) # type: BatchFloat64ArrayProxy
 
     def _get_CTPhase(self) -> BatchInt32ArrayProxy:
         """
@@ -785,9 +785,9 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         self._set_batch_int32_array(15, value, flags)
 
-    CTPhase = property(_get_CTPhase, _set_CTPhase)
+    CTPhase = property(_get_CTPhase, _set_CTPhase) # type: BatchInt32ArrayProxy
 
-    def _get_CTPhase_str(self) -> str:
+    def _get_CTPhase_str(self) -> List[str]:
         """
         Number of the phase being monitored for CURRENT control or one of {AVG | MAX | MIN} for all phases. Default=1. If delta or L-L connection, enter the first or the two phases being monitored [1-2, 2-3, 3-1]. Must be less than the number of phases. Does not apply to kvar control which uses all phases by default.
 
@@ -798,7 +798,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_CTPhase_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_CTPhase(value, flags)
 
-    CTPhase_str = property(_get_CTPhase_str, _set_CTPhase_str)
+    CTPhase_str = property(_get_CTPhase_str, _set_CTPhase_str) # type: List[str]
 
     def _get_PTPhase(self) -> BatchInt32ArrayProxy:
         """
@@ -815,9 +815,9 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         self._set_batch_int32_array(16, value, flags)
 
-    PTPhase = property(_get_PTPhase, _set_PTPhase)
+    PTPhase = property(_get_PTPhase, _set_PTPhase) # type: BatchInt32ArrayProxy
 
-    def _get_PTPhase_str(self) -> str:
+    def _get_PTPhase_str(self) -> List[str]:
         """
         Number of the phase being monitored for VOLTAGE control or one of {AVG | MAX | MIN} for all phases. Default=1. If delta or L-L connection, enter the first or the two phases being monitored [1-2, 2-3, 3-1]. Must be less than the number of phases. Does not apply to kvar control which uses all phases by default.
 
@@ -828,7 +828,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_PTPhase_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_PTPhase(value, flags)
 
-    PTPhase_str = property(_get_PTPhase_str, _set_PTPhase_str)
+    PTPhase_str = property(_get_PTPhase_str, _set_PTPhase_str) # type: List[str]
 
     def _get_VBus(self) -> List[str]:
         """
@@ -841,7 +841,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_VBus(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(17, value, flags)
 
-    VBus = property(_get_VBus, _set_VBus)
+    VBus = property(_get_VBus, _set_VBus) # type: List[str]
 
     def _get_EventLog(self) -> List[bool]:
         """
@@ -856,7 +856,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_EventLog(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(18, value, flags)
 
-    EventLog = property(_get_EventLog, _set_EventLog)
+    EventLog = property(_get_EventLog, _set_EventLog) # type: List[bool]
 
     def _get_UserModel(self) -> List[str]:
         """
@@ -869,7 +869,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_UserModel(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(19, value, flags)
 
-    UserModel = property(_get_UserModel, _set_UserModel)
+    UserModel = property(_get_UserModel, _set_UserModel) # type: List[str]
 
     def _get_UserData(self) -> List[str]:
         """
@@ -882,7 +882,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_UserData(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(20, value, flags)
 
-    UserData = property(_get_UserData, _set_UserData)
+    UserData = property(_get_UserData, _set_UserData) # type: List[str]
 
     def _get_pctMinkvar(self) -> BatchFloat64ArrayProxy:
         """
@@ -895,7 +895,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_pctMinkvar(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(21, value, flags)
 
-    pctMinkvar = property(_get_pctMinkvar, _set_pctMinkvar)
+    pctMinkvar = property(_get_pctMinkvar, _set_pctMinkvar) # type: BatchFloat64ArrayProxy
 
     def Reset(self, value: Union[bool, List[bool]] = True, flags: enums.SetterFlags = 0):
         """
@@ -916,7 +916,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_ControlSignal_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(23, value, flags)
 
-    ControlSignal_str = property(_get_ControlSignal_str, _set_ControlSignal_str)
+    ControlSignal_str = property(_get_ControlSignal_str, _set_ControlSignal_str) # type: List[str]
 
     def _get_ControlSignal(self) -> List[LoadShape]:
         """
@@ -929,7 +929,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_ControlSignal(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(23, value, flags)
 
-    ControlSignal = property(_get_ControlSignal, _set_ControlSignal)
+    ControlSignal = property(_get_ControlSignal, _set_ControlSignal) # type: List[LoadShape]
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -942,7 +942,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(24, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -957,7 +957,7 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(25, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -1002,7 +1002,7 @@ class ICapControl(IDSSObj, CapControlBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, CapControl, CapControlBatch)
-        CapControlBatch.__init__(self, self._api_util, sync_cls=True)
+        CapControlBatch.__init__(self, self._api_util, sync_cls_idx=CapControl._cls_idx)
 
 
     # We need this one for better type hinting

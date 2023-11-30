@@ -30,7 +30,7 @@ class TCC_Curve(DSSObj):
     def _set_NPts(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    NPts = property(_get_NPts, _set_NPts)
+    NPts = property(_get_NPts, _set_NPts) # type: int
 
     def _get_C_Array(self) -> Float64Array:
         """
@@ -43,7 +43,7 @@ class TCC_Curve(DSSObj):
     def _set_C_Array(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(2, value, flags)
 
-    C_Array = property(_get_C_Array, _set_C_Array)
+    C_Array = property(_get_C_Array, _set_C_Array) # type: Float64Array
 
     def _get_T_Array(self) -> Float64Array:
         """
@@ -62,7 +62,7 @@ class TCC_Curve(DSSObj):
     def _set_T_Array(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(3, value, flags)
 
-    T_Array = property(_get_T_Array, _set_T_Array)
+    T_Array = property(_get_T_Array, _set_T_Array) # type: Float64Array
 
     def Like(self, value: AnyStr):
         """
@@ -98,7 +98,7 @@ class TCC_CurveBatch(DSSBatch):
     def _set_NPts(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    NPts = property(_get_NPts, _set_NPts)
+    NPts = property(_get_NPts, _set_NPts) # type: BatchInt32ArrayProxy
 
     def _get_C_Array(self) -> List[Float64Array]:
         """
@@ -114,7 +114,7 @@ class TCC_CurveBatch(DSSBatch):
     def _set_C_Array(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(2, value, flags)
 
-    C_Array = property(_get_C_Array, _set_C_Array)
+    C_Array = property(_get_C_Array, _set_C_Array) # type: List[Float64Array]
 
     def _get_T_Array(self) -> List[Float64Array]:
         """
@@ -136,7 +136,7 @@ class TCC_CurveBatch(DSSBatch):
     def _set_T_Array(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(3, value, flags)
 
-    T_Array = property(_get_T_Array, _set_T_Array)
+    T_Array = property(_get_T_Array, _set_T_Array) # type: List[Float64Array]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -159,7 +159,7 @@ class ITCC_Curve(IDSSObj, TCC_CurveBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, TCC_Curve, TCC_CurveBatch)
-        TCC_CurveBatch.__init__(self, self._api_util, sync_cls=True)
+        TCC_CurveBatch.__init__(self, self._api_util, sync_cls_idx=TCC_Curve._cls_idx)
 
 
     # We need this one for better type hinting

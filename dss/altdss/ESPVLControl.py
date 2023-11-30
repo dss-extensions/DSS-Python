@@ -42,7 +42,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_Element_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: str
 
     def _get_Element(self) -> DSSObj:
         """
@@ -59,7 +59,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
 
         self._set_string_o(1, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: DSSObj
 
     def _get_Terminal(self) -> int:
         """
@@ -72,7 +72,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_Terminal(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
-    Terminal = property(_get_Terminal, _set_Terminal)
+    Terminal = property(_get_Terminal, _set_Terminal) # type: int
 
     def _get_Type(self) -> enums.ESPVLControlType:
         """
@@ -88,7 +88,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 3, value, flags)
 
-    Type = property(_get_Type, _set_Type)
+    Type = property(_get_Type, _set_Type) # type: enums.ESPVLControlType
 
     def _get_Type_str(self) -> str:
         """
@@ -101,7 +101,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_Type_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Type(value, flags)
 
-    Type_str = property(_get_Type_str, _set_Type_str)
+    Type_str = property(_get_Type_str, _set_Type_str) # type: str
 
     def _get_kWBand(self) -> float:
         """
@@ -114,7 +114,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_kWBand(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
-    kWBand = property(_get_kWBand, _set_kWBand)
+    kWBand = property(_get_kWBand, _set_kWBand) # type: float
 
     def _get_kvarLimit(self) -> float:
         """
@@ -127,7 +127,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_kvarLimit(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit) # type: float
 
     def _get_LocalControlList(self) -> List[str]:
         """
@@ -142,7 +142,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
         self._lib.Obj_SetStringArray(self._ptr, 6, value_ptr, value_count, flags)
         self._check_for_error()
 
-    LocalControlList = property(_get_LocalControlList, _set_LocalControlList)
+    LocalControlList = property(_get_LocalControlList, _set_LocalControlList) # type: List[str]
 
     def _get_LocalControlWeights(self) -> Float64Array:
         """
@@ -155,7 +155,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_LocalControlWeights(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(7, value, flags)
 
-    LocalControlWeights = property(_get_LocalControlWeights, _set_LocalControlWeights)
+    LocalControlWeights = property(_get_LocalControlWeights, _set_LocalControlWeights) # type: Float64Array
 
     def _get_PVSystemList(self) -> List[str]:
         """
@@ -170,7 +170,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
         self._lib.Obj_SetStringArray(self._ptr, 8, value_ptr, value_count, flags)
         self._check_for_error()
 
-    PVSystemList = property(_get_PVSystemList, _set_PVSystemList)
+    PVSystemList = property(_get_PVSystemList, _set_PVSystemList) # type: List[str]
 
     def _get_PVSystemWeights(self) -> Float64Array:
         """
@@ -183,7 +183,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_PVSystemWeights(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(9, value, flags)
 
-    PVSystemWeights = property(_get_PVSystemWeights, _set_PVSystemWeights)
+    PVSystemWeights = property(_get_PVSystemWeights, _set_PVSystemWeights) # type: Float64Array
 
     def _get_StorageList(self) -> List[str]:
         """
@@ -198,7 +198,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
         self._lib.Obj_SetStringArray(self._ptr, 10, value_ptr, value_count, flags)
         self._check_for_error()
 
-    StorageList = property(_get_StorageList, _set_StorageList)
+    StorageList = property(_get_StorageList, _set_StorageList) # type: List[str]
 
     def _get_StorageWeights(self) -> Float64Array:
         """
@@ -211,7 +211,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_StorageWeights(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(11, value, flags)
 
-    StorageWeights = property(_get_StorageWeights, _set_StorageWeights)
+    StorageWeights = property(_get_StorageWeights, _set_StorageWeights) # type: Float64Array
 
     def _get_BaseFreq(self) -> float:
         """
@@ -224,7 +224,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -237,7 +237,7 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 13, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -283,7 +283,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Element_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    Element_str = property(_get_Element_str, _set_Element_str)
+    Element_str = property(_get_Element_str, _set_Element_str) # type: List[str]
 
     def _get_Element(self) -> List[DSSObj]:
         """
@@ -296,7 +296,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Element(self, value: Union[AnyStr, DSSObj, List[AnyStr], List[DSSObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(1, value, flags)
 
-    Element = property(_get_Element, _set_Element)
+    Element = property(_get_Element, _set_Element) # type: List[DSSObj]
 
     def _get_Terminal(self) -> BatchInt32ArrayProxy:
         """
@@ -309,7 +309,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Terminal(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(2, value, flags)
 
-    Terminal = property(_get_Terminal, _set_Terminal)
+    Terminal = property(_get_Terminal, _set_Terminal) # type: BatchInt32ArrayProxy
 
     def _get_Type(self) -> BatchInt32ArrayProxy:
         """
@@ -326,9 +326,9 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         self._set_batch_int32_array(3, value, flags)
 
-    Type = property(_get_Type, _set_Type)
+    Type = property(_get_Type, _set_Type) # type: BatchInt32ArrayProxy
 
-    def _get_Type_str(self) -> str:
+    def _get_Type_str(self) -> List[str]:
         """
         Type of controller.  1= System Controller; 2= Local controller. 
 
@@ -339,7 +339,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Type_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Type(value, flags)
 
-    Type_str = property(_get_Type_str, _set_Type_str)
+    Type_str = property(_get_Type_str, _set_Type_str) # type: List[str]
 
     def _get_kWBand(self) -> BatchFloat64ArrayProxy:
         """
@@ -352,7 +352,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_kWBand(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(4, value, flags)
 
-    kWBand = property(_get_kWBand, _set_kWBand)
+    kWBand = property(_get_kWBand, _set_kWBand) # type: BatchFloat64ArrayProxy
 
     def _get_kvarLimit(self) -> BatchFloat64ArrayProxy:
         """
@@ -365,7 +365,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_kvarLimit(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    kvarLimit = property(_get_kvarLimit, _set_kvarLimit)
+    kvarLimit = property(_get_kvarLimit, _set_kvarLimit) # type: BatchFloat64ArrayProxy
 
     def _get_LocalControlList(self) -> List[List[str]]:
         """
@@ -382,7 +382,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         self._check_for_error()
 
-    LocalControlList = property(_get_LocalControlList, _set_LocalControlList)
+    LocalControlList = property(_get_LocalControlList, _set_LocalControlList) # type: List[List[str]]
 
     def _get_LocalControlWeights(self) -> List[Float64Array]:
         """
@@ -398,7 +398,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_LocalControlWeights(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(7, value, flags)
 
-    LocalControlWeights = property(_get_LocalControlWeights, _set_LocalControlWeights)
+    LocalControlWeights = property(_get_LocalControlWeights, _set_LocalControlWeights) # type: List[Float64Array]
 
     def _get_PVSystemList(self) -> List[List[str]]:
         """
@@ -415,7 +415,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         self._check_for_error()
 
-    PVSystemList = property(_get_PVSystemList, _set_PVSystemList)
+    PVSystemList = property(_get_PVSystemList, _set_PVSystemList) # type: List[List[str]]
 
     def _get_PVSystemWeights(self) -> List[Float64Array]:
         """
@@ -431,7 +431,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_PVSystemWeights(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(9, value, flags)
 
-    PVSystemWeights = property(_get_PVSystemWeights, _set_PVSystemWeights)
+    PVSystemWeights = property(_get_PVSystemWeights, _set_PVSystemWeights) # type: List[Float64Array]
 
     def _get_StorageList(self) -> List[List[str]]:
         """
@@ -448,7 +448,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
 
         self._check_for_error()
 
-    StorageList = property(_get_StorageList, _set_StorageList)
+    StorageList = property(_get_StorageList, _set_StorageList) # type: List[List[str]]
 
     def _get_StorageWeights(self) -> List[Float64Array]:
         """
@@ -464,7 +464,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_StorageWeights(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(11, value, flags)
 
-    StorageWeights = property(_get_StorageWeights, _set_StorageWeights)
+    StorageWeights = property(_get_StorageWeights, _set_StorageWeights) # type: List[Float64Array]
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -477,7 +477,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(12, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -492,7 +492,7 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(13, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -525,7 +525,7 @@ class IESPVLControl(IDSSObj, ESPVLControlBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, ESPVLControl, ESPVLControlBatch)
-        ESPVLControlBatch.__init__(self, self._api_util, sync_cls=True)
+        ESPVLControlBatch.__init__(self, self._api_util, sync_cls_idx=ESPVLControl._cls_idx)
 
 
     # We need this one for better type hinting

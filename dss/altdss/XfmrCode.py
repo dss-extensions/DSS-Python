@@ -71,7 +71,7 @@ class XfmrCode(DSSObj):
     def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: int
 
     def _get_Windings(self) -> int:
         """
@@ -84,7 +84,7 @@ class XfmrCode(DSSObj):
     def _set_Windings(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 2, value, flags)
 
-    Windings = property(_get_Windings, _set_Windings)
+    Windings = property(_get_Windings, _set_Windings) # type: int
 
     def _get_pctR(self) -> Float64Array:
         """
@@ -97,7 +97,7 @@ class XfmrCode(DSSObj):
     def _set_pctR(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(8, value, flags)
 
-    pctR = property(_get_pctR, _set_pctR)
+    pctR = property(_get_pctR, _set_pctR) # type: Float64Array
 
     def _get_RNeut(self) -> Float64Array:
         """
@@ -110,7 +110,7 @@ class XfmrCode(DSSObj):
     def _set_RNeut(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(9, value, flags)
 
-    RNeut = property(_get_RNeut, _set_RNeut)
+    RNeut = property(_get_RNeut, _set_RNeut) # type: Float64Array
 
     def _get_XNeut(self) -> Float64Array:
         """
@@ -123,7 +123,7 @@ class XfmrCode(DSSObj):
     def _set_XNeut(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(10, value, flags)
 
-    XNeut = property(_get_XNeut, _set_XNeut)
+    XNeut = property(_get_XNeut, _set_XNeut) # type: Float64Array
 
     def _get_Conns(self) -> List[enums.Connection]:
         """
@@ -142,7 +142,7 @@ class XfmrCode(DSSObj):
             return
         self._set_int32_array_o(11, value, flags)
 
-    Conns = property(_get_Conns, _set_Conns)
+    Conns = property(_get_Conns, _set_Conns) # type: enums.Connection
 
     def _get_Conns_str(self) -> List[str]:
         """
@@ -158,7 +158,7 @@ class XfmrCode(DSSObj):
     def _set_Conns_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conns(value, flags)
 
-    Conns_str = property(_get_Conns_str, _set_Conns_str)
+    Conns_str = property(_get_Conns_str, _set_Conns_str) # type: List[str]
 
     def _get_kVs(self) -> Float64Array:
         """
@@ -177,7 +177,7 @@ class XfmrCode(DSSObj):
     def _set_kVs(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(12, value, flags)
 
-    kVs = property(_get_kVs, _set_kVs)
+    kVs = property(_get_kVs, _set_kVs) # type: Float64Array
 
     def _get_kVAs(self) -> Float64Array:
         """
@@ -190,7 +190,7 @@ class XfmrCode(DSSObj):
     def _set_kVAs(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(13, value, flags)
 
-    kVAs = property(_get_kVAs, _set_kVAs)
+    kVAs = property(_get_kVAs, _set_kVAs) # type: Float64Array
 
     def _get_Taps(self) -> Float64Array:
         """
@@ -203,7 +203,7 @@ class XfmrCode(DSSObj):
     def _set_Taps(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(14, value, flags)
 
-    Taps = property(_get_Taps, _set_Taps)
+    Taps = property(_get_Taps, _set_Taps) # type: Float64Array
 
     def _get_XHL(self) -> float:
         """
@@ -216,7 +216,7 @@ class XfmrCode(DSSObj):
     def _set_XHL(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
-    XHL = property(_get_XHL, _set_XHL)
+    XHL = property(_get_XHL, _set_XHL) # type: float
 
     def _get_XHT(self) -> float:
         """
@@ -229,7 +229,7 @@ class XfmrCode(DSSObj):
     def _set_XHT(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
-    XHT = property(_get_XHT, _set_XHT)
+    XHT = property(_get_XHT, _set_XHT) # type: float
 
     def _get_XLT(self) -> float:
         """
@@ -242,7 +242,7 @@ class XfmrCode(DSSObj):
     def _set_XLT(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
-    XLT = property(_get_XLT, _set_XLT)
+    XLT = property(_get_XLT, _set_XLT) # type: float
 
     def _get_XSCArray(self) -> Float64Array:
         """
@@ -259,7 +259,7 @@ class XfmrCode(DSSObj):
     def _set_XSCArray(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(18, value, flags)
 
-    XSCArray = property(_get_XSCArray, _set_XSCArray)
+    XSCArray = property(_get_XSCArray, _set_XSCArray) # type: Float64Array
 
     def _get_Thermal(self) -> float:
         """
@@ -272,7 +272,7 @@ class XfmrCode(DSSObj):
     def _set_Thermal(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
-    Thermal = property(_get_Thermal, _set_Thermal)
+    Thermal = property(_get_Thermal, _set_Thermal) # type: float
 
     def _get_n(self) -> float:
         """
@@ -285,7 +285,7 @@ class XfmrCode(DSSObj):
     def _set_n(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
-    n = property(_get_n, _set_n)
+    n = property(_get_n, _set_n) # type: float
 
     def _get_m(self) -> float:
         """
@@ -298,7 +298,7 @@ class XfmrCode(DSSObj):
     def _set_m(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
-    m = property(_get_m, _set_m)
+    m = property(_get_m, _set_m) # type: float
 
     def _get_FLRise(self) -> float:
         """
@@ -311,7 +311,7 @@ class XfmrCode(DSSObj):
     def _set_FLRise(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 22, value, flags)
 
-    FLRise = property(_get_FLRise, _set_FLRise)
+    FLRise = property(_get_FLRise, _set_FLRise) # type: float
 
     def _get_HSRise(self) -> float:
         """
@@ -324,7 +324,7 @@ class XfmrCode(DSSObj):
     def _set_HSRise(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
-    HSRise = property(_get_HSRise, _set_HSRise)
+    HSRise = property(_get_HSRise, _set_HSRise) # type: float
 
     def _get_pctLoadLoss(self) -> float:
         """
@@ -337,7 +337,7 @@ class XfmrCode(DSSObj):
     def _set_pctLoadLoss(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
-    pctLoadLoss = property(_get_pctLoadLoss, _set_pctLoadLoss)
+    pctLoadLoss = property(_get_pctLoadLoss, _set_pctLoadLoss) # type: float
 
     def _get_pctNoLoadLoss(self) -> float:
         """
@@ -350,7 +350,7 @@ class XfmrCode(DSSObj):
     def _set_pctNoLoadLoss(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 25, value, flags)
 
-    pctNoLoadLoss = property(_get_pctNoLoadLoss, _set_pctNoLoadLoss)
+    pctNoLoadLoss = property(_get_pctNoLoadLoss, _set_pctNoLoadLoss) # type: float
 
     def _get_NormHkVA(self) -> float:
         """
@@ -363,7 +363,7 @@ class XfmrCode(DSSObj):
     def _set_NormHkVA(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 26, value, flags)
 
-    NormHkVA = property(_get_NormHkVA, _set_NormHkVA)
+    NormHkVA = property(_get_NormHkVA, _set_NormHkVA) # type: float
 
     def _get_EmergHkVA(self) -> float:
         """
@@ -376,7 +376,7 @@ class XfmrCode(DSSObj):
     def _set_EmergHkVA(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 27, value, flags)
 
-    EmergHkVA = property(_get_EmergHkVA, _set_EmergHkVA)
+    EmergHkVA = property(_get_EmergHkVA, _set_EmergHkVA) # type: float
 
     def _get_MaxTap(self) -> Float64Array:
         """
@@ -389,7 +389,7 @@ class XfmrCode(DSSObj):
     def _set_MaxTap(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(28, value, flags)
 
-    MaxTap = property(_get_MaxTap, _set_MaxTap)
+    MaxTap = property(_get_MaxTap, _set_MaxTap) # type: Float64Array
 
     def _get_MinTap(self) -> Float64Array:
         """
@@ -402,7 +402,7 @@ class XfmrCode(DSSObj):
     def _set_MinTap(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(29, value, flags)
 
-    MinTap = property(_get_MinTap, _set_MinTap)
+    MinTap = property(_get_MinTap, _set_MinTap) # type: Float64Array
 
     def _get_NumTaps(self) -> Int32Array:
         """
@@ -415,7 +415,7 @@ class XfmrCode(DSSObj):
     def _set_NumTaps(self, value: Int32Array, flags: enums.SetterFlags = 0):
         self._set_int32_array_o(30, value, flags)
 
-    NumTaps = property(_get_NumTaps, _set_NumTaps)
+    NumTaps = property(_get_NumTaps, _set_NumTaps) # type: Int32Array
 
     def _get_pctIMag(self) -> float:
         """
@@ -428,7 +428,7 @@ class XfmrCode(DSSObj):
     def _set_pctIMag(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 31, value, flags)
 
-    pctIMag = property(_get_pctIMag, _set_pctIMag)
+    pctIMag = property(_get_pctIMag, _set_pctIMag) # type: float
 
     def _get_ppm_Antifloat(self) -> float:
         """
@@ -441,7 +441,7 @@ class XfmrCode(DSSObj):
     def _set_ppm_Antifloat(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 32, value, flags)
 
-    ppm_Antifloat = property(_get_ppm_Antifloat, _set_ppm_Antifloat)
+    ppm_Antifloat = property(_get_ppm_Antifloat, _set_ppm_Antifloat) # type: float
 
     def _get_pctRs(self) -> Float64Array:
         """
@@ -456,7 +456,7 @@ class XfmrCode(DSSObj):
     def _set_pctRs(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(33, value, flags)
 
-    pctRs = property(_get_pctRs, _set_pctRs)
+    pctRs = property(_get_pctRs, _set_pctRs) # type: Float64Array
 
     def _get_X12(self) -> float:
         """
@@ -469,7 +469,7 @@ class XfmrCode(DSSObj):
     def _set_X12(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 34, value, flags)
 
-    X12 = property(_get_X12, _set_X12)
+    X12 = property(_get_X12, _set_X12) # type: float
 
     def _get_X13(self) -> float:
         """
@@ -482,7 +482,7 @@ class XfmrCode(DSSObj):
     def _set_X13(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 35, value, flags)
 
-    X13 = property(_get_X13, _set_X13)
+    X13 = property(_get_X13, _set_X13) # type: float
 
     def _get_X23(self) -> float:
         """
@@ -495,7 +495,7 @@ class XfmrCode(DSSObj):
     def _set_X23(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 36, value, flags)
 
-    X23 = property(_get_X23, _set_X23)
+    X23 = property(_get_X23, _set_X23) # type: float
 
     def _get_RDCOhms(self) -> Float64Array:
         """
@@ -508,7 +508,7 @@ class XfmrCode(DSSObj):
     def _set_RDCOhms(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(37, value, flags)
 
-    RDCOhms = property(_get_RDCOhms, _set_RDCOhms)
+    RDCOhms = property(_get_RDCOhms, _set_RDCOhms) # type: Float64Array
 
     def _get_Seasons(self) -> int:
         """
@@ -521,7 +521,7 @@ class XfmrCode(DSSObj):
     def _set_Seasons(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 38, value, flags)
 
-    Seasons = property(_get_Seasons, _set_Seasons)
+    Seasons = property(_get_Seasons, _set_Seasons) # type: int
 
     def _get_Ratings(self) -> Float64Array:
         """
@@ -535,7 +535,7 @@ class XfmrCode(DSSObj):
     def _set_Ratings(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(39, value, flags)
 
-    Ratings = property(_get_Ratings, _set_Ratings)
+    Ratings = property(_get_Ratings, _set_Ratings) # type: Float64Array
 
     def Like(self, value: AnyStr):
         """
@@ -602,7 +602,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: BatchInt32ArrayProxy
 
     def _get_Windings(self) -> BatchInt32ArrayProxy:
         """
@@ -615,7 +615,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_Windings(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(2, value, flags)
 
-    Windings = property(_get_Windings, _set_Windings)
+    Windings = property(_get_Windings, _set_Windings) # type: BatchInt32ArrayProxy
 
     def _get_pctR(self) -> List[Float64Array]:
         """
@@ -631,7 +631,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_pctR(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(8, value, flags)
 
-    pctR = property(_get_pctR, _set_pctR)
+    pctR = property(_get_pctR, _set_pctR) # type: List[Float64Array]
 
     def _get_RNeut(self) -> List[Float64Array]:
         """
@@ -647,7 +647,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_RNeut(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(9, value, flags)
 
-    RNeut = property(_get_RNeut, _set_RNeut)
+    RNeut = property(_get_RNeut, _set_RNeut) # type: List[Float64Array]
 
     def _get_XNeut(self) -> List[Float64Array]:
         """
@@ -663,7 +663,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_XNeut(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(10, value, flags)
 
-    XNeut = property(_get_XNeut, _set_XNeut)
+    XNeut = property(_get_XNeut, _set_XNeut) # type: List[Float64Array]
 
     def _get_Conns(self) -> List[Int32Array]:
         """
@@ -690,7 +690,7 @@ class XfmrCodeBatch(DSSBatch):
 
         self._set_batch_int32_array(11, value, flags)
 
-    Conns = property(_get_Conns, _set_Conns)
+    Conns = property(_get_Conns, _set_Conns) # type: List[Int32Array]
 
     def _get_Conns_str(self) -> List[List[str]]:
         """
@@ -706,7 +706,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_Conns_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conns(value, flags)
 
-    Conns_str = property(_get_Conns_str, _set_Conns_str)
+    Conns_str = property(_get_Conns_str, _set_Conns_str) # type: List[List[str]]
 
     def _get_kVs(self) -> List[Float64Array]:
         """
@@ -728,7 +728,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_kVs(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(12, value, flags)
 
-    kVs = property(_get_kVs, _set_kVs)
+    kVs = property(_get_kVs, _set_kVs) # type: List[Float64Array]
 
     def _get_kVAs(self) -> List[Float64Array]:
         """
@@ -744,7 +744,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_kVAs(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(13, value, flags)
 
-    kVAs = property(_get_kVAs, _set_kVAs)
+    kVAs = property(_get_kVAs, _set_kVAs) # type: List[Float64Array]
 
     def _get_Taps(self) -> List[Float64Array]:
         """
@@ -760,7 +760,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_Taps(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(14, value, flags)
 
-    Taps = property(_get_Taps, _set_Taps)
+    Taps = property(_get_Taps, _set_Taps) # type: List[Float64Array]
 
     def _get_XHL(self) -> BatchFloat64ArrayProxy:
         """
@@ -773,7 +773,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_XHL(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(15, value, flags)
 
-    XHL = property(_get_XHL, _set_XHL)
+    XHL = property(_get_XHL, _set_XHL) # type: BatchFloat64ArrayProxy
 
     def _get_XHT(self) -> BatchFloat64ArrayProxy:
         """
@@ -786,7 +786,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_XHT(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(16, value, flags)
 
-    XHT = property(_get_XHT, _set_XHT)
+    XHT = property(_get_XHT, _set_XHT) # type: BatchFloat64ArrayProxy
 
     def _get_XLT(self) -> BatchFloat64ArrayProxy:
         """
@@ -799,7 +799,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_XLT(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(17, value, flags)
 
-    XLT = property(_get_XLT, _set_XLT)
+    XLT = property(_get_XLT, _set_XLT) # type: BatchFloat64ArrayProxy
 
     def _get_XSCArray(self) -> List[Float64Array]:
         """
@@ -819,7 +819,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_XSCArray(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(18, value, flags)
 
-    XSCArray = property(_get_XSCArray, _set_XSCArray)
+    XSCArray = property(_get_XSCArray, _set_XSCArray) # type: List[Float64Array]
 
     def _get_Thermal(self) -> BatchFloat64ArrayProxy:
         """
@@ -832,7 +832,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_Thermal(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(19, value, flags)
 
-    Thermal = property(_get_Thermal, _set_Thermal)
+    Thermal = property(_get_Thermal, _set_Thermal) # type: BatchFloat64ArrayProxy
 
     def _get_n(self) -> BatchFloat64ArrayProxy:
         """
@@ -845,7 +845,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_n(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(20, value, flags)
 
-    n = property(_get_n, _set_n)
+    n = property(_get_n, _set_n) # type: BatchFloat64ArrayProxy
 
     def _get_m(self) -> BatchFloat64ArrayProxy:
         """
@@ -858,7 +858,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_m(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(21, value, flags)
 
-    m = property(_get_m, _set_m)
+    m = property(_get_m, _set_m) # type: BatchFloat64ArrayProxy
 
     def _get_FLRise(self) -> BatchFloat64ArrayProxy:
         """
@@ -871,7 +871,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_FLRise(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(22, value, flags)
 
-    FLRise = property(_get_FLRise, _set_FLRise)
+    FLRise = property(_get_FLRise, _set_FLRise) # type: BatchFloat64ArrayProxy
 
     def _get_HSRise(self) -> BatchFloat64ArrayProxy:
         """
@@ -884,7 +884,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_HSRise(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(23, value, flags)
 
-    HSRise = property(_get_HSRise, _set_HSRise)
+    HSRise = property(_get_HSRise, _set_HSRise) # type: BatchFloat64ArrayProxy
 
     def _get_pctLoadLoss(self) -> BatchFloat64ArrayProxy:
         """
@@ -897,7 +897,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_pctLoadLoss(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(24, value, flags)
 
-    pctLoadLoss = property(_get_pctLoadLoss, _set_pctLoadLoss)
+    pctLoadLoss = property(_get_pctLoadLoss, _set_pctLoadLoss) # type: BatchFloat64ArrayProxy
 
     def _get_pctNoLoadLoss(self) -> BatchFloat64ArrayProxy:
         """
@@ -910,7 +910,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_pctNoLoadLoss(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(25, value, flags)
 
-    pctNoLoadLoss = property(_get_pctNoLoadLoss, _set_pctNoLoadLoss)
+    pctNoLoadLoss = property(_get_pctNoLoadLoss, _set_pctNoLoadLoss) # type: BatchFloat64ArrayProxy
 
     def _get_NormHkVA(self) -> BatchFloat64ArrayProxy:
         """
@@ -923,7 +923,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_NormHkVA(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(26, value, flags)
 
-    NormHkVA = property(_get_NormHkVA, _set_NormHkVA)
+    NormHkVA = property(_get_NormHkVA, _set_NormHkVA) # type: BatchFloat64ArrayProxy
 
     def _get_EmergHkVA(self) -> BatchFloat64ArrayProxy:
         """
@@ -936,7 +936,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_EmergHkVA(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(27, value, flags)
 
-    EmergHkVA = property(_get_EmergHkVA, _set_EmergHkVA)
+    EmergHkVA = property(_get_EmergHkVA, _set_EmergHkVA) # type: BatchFloat64ArrayProxy
 
     def _get_MaxTap(self) -> List[Float64Array]:
         """
@@ -952,7 +952,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_MaxTap(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(28, value, flags)
 
-    MaxTap = property(_get_MaxTap, _set_MaxTap)
+    MaxTap = property(_get_MaxTap, _set_MaxTap) # type: List[Float64Array]
 
     def _get_MinTap(self) -> List[Float64Array]:
         """
@@ -968,7 +968,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_MinTap(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(29, value, flags)
 
-    MinTap = property(_get_MinTap, _set_MinTap)
+    MinTap = property(_get_MinTap, _set_MinTap) # type: List[Float64Array]
 
     def _get_NumTaps(self) -> List[Int32Array]:
         """
@@ -984,7 +984,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_NumTaps(self, value: Union[Int32Array, List[Int32Array]], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array_prop(30, value, flags)
 
-    NumTaps = property(_get_NumTaps, _set_NumTaps)
+    NumTaps = property(_get_NumTaps, _set_NumTaps) # type: List[Int32Array]
 
     def _get_pctIMag(self) -> BatchFloat64ArrayProxy:
         """
@@ -997,7 +997,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_pctIMag(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(31, value, flags)
 
-    pctIMag = property(_get_pctIMag, _set_pctIMag)
+    pctIMag = property(_get_pctIMag, _set_pctIMag) # type: BatchFloat64ArrayProxy
 
     def _get_ppm_Antifloat(self) -> BatchFloat64ArrayProxy:
         """
@@ -1010,7 +1010,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_ppm_Antifloat(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(32, value, flags)
 
-    ppm_Antifloat = property(_get_ppm_Antifloat, _set_ppm_Antifloat)
+    ppm_Antifloat = property(_get_ppm_Antifloat, _set_ppm_Antifloat) # type: BatchFloat64ArrayProxy
 
     def _get_pctRs(self) -> List[Float64Array]:
         """
@@ -1028,7 +1028,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_pctRs(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(33, value, flags)
 
-    pctRs = property(_get_pctRs, _set_pctRs)
+    pctRs = property(_get_pctRs, _set_pctRs) # type: List[Float64Array]
 
     def _get_X12(self) -> BatchFloat64ArrayProxy:
         """
@@ -1041,7 +1041,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_X12(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(34, value, flags)
 
-    X12 = property(_get_X12, _set_X12)
+    X12 = property(_get_X12, _set_X12) # type: BatchFloat64ArrayProxy
 
     def _get_X13(self) -> BatchFloat64ArrayProxy:
         """
@@ -1054,7 +1054,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_X13(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(35, value, flags)
 
-    X13 = property(_get_X13, _set_X13)
+    X13 = property(_get_X13, _set_X13) # type: BatchFloat64ArrayProxy
 
     def _get_X23(self) -> BatchFloat64ArrayProxy:
         """
@@ -1067,7 +1067,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_X23(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(36, value, flags)
 
-    X23 = property(_get_X23, _set_X23)
+    X23 = property(_get_X23, _set_X23) # type: BatchFloat64ArrayProxy
 
     def _get_RDCOhms(self) -> List[Float64Array]:
         """
@@ -1083,7 +1083,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_RDCOhms(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(37, value, flags)
 
-    RDCOhms = property(_get_RDCOhms, _set_RDCOhms)
+    RDCOhms = property(_get_RDCOhms, _set_RDCOhms) # type: List[Float64Array]
 
     def _get_Seasons(self) -> BatchInt32ArrayProxy:
         """
@@ -1096,7 +1096,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_Seasons(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(38, value, flags)
 
-    Seasons = property(_get_Seasons, _set_Seasons)
+    Seasons = property(_get_Seasons, _set_Seasons) # type: BatchInt32ArrayProxy
 
     def _get_Ratings(self) -> List[Float64Array]:
         """
@@ -1113,7 +1113,7 @@ class XfmrCodeBatch(DSSBatch):
     def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(39, value, flags)
 
-    Ratings = property(_get_Ratings, _set_Ratings)
+    Ratings = property(_get_Ratings, _set_Ratings) # type: List[Float64Array]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -1167,7 +1167,7 @@ class IXfmrCode(IDSSObj, XfmrCodeBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, XfmrCode, XfmrCodeBatch)
-        XfmrCodeBatch.__init__(self, self._api_util, sync_cls=True)
+        XfmrCodeBatch.__init__(self, self._api_util, sync_cls_idx=XfmrCode._cls_idx)
 
 
     # We need this one for better type hinting

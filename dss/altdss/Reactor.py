@@ -61,7 +61,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: str
 
     def _get_Bus2(self) -> str:
         """
@@ -76,7 +76,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Bus2(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(2, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: str
 
     def _get_Phases(self) -> int:
         """
@@ -89,7 +89,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 3, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: int
 
     def _get_kvar(self) -> float:
         """
@@ -102,7 +102,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_kvar(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
-    kvar = property(_get_kvar, _set_kvar)
+    kvar = property(_get_kvar, _set_kvar) # type: float
 
     def _get_kV(self) -> float:
         """
@@ -115,7 +115,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_kV(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    kV = property(_get_kV, _set_kV)
+    kV = property(_get_kV, _set_kV) # type: float
 
     def _get_Conn(self) -> enums.Connection:
         """
@@ -131,7 +131,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
-    Conn = property(_get_Conn, _set_Conn)
+    Conn = property(_get_Conn, _set_Conn) # type: enums.Connection
 
     def _get_Conn_str(self) -> str:
         """
@@ -144,7 +144,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conn(value, flags)
 
-    Conn_str = property(_get_Conn_str, _set_Conn_str)
+    Conn_str = property(_get_Conn_str, _set_Conn_str) # type: str
 
     def _get_RMatrix(self) -> Float64Array:
         """
@@ -157,7 +157,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_RMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(7, value, flags)
 
-    RMatrix = property(_get_RMatrix, _set_RMatrix)
+    RMatrix = property(_get_RMatrix, _set_RMatrix) # type: Float64Array
 
     def _get_XMatrix(self) -> Float64Array:
         """
@@ -170,7 +170,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_XMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(8, value, flags)
 
-    XMatrix = property(_get_XMatrix, _set_XMatrix)
+    XMatrix = property(_get_XMatrix, _set_XMatrix) # type: Float64Array
 
     def _get_Parallel(self) -> bool:
         """
@@ -183,7 +183,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Parallel(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 9, value, flags)
 
-    Parallel = property(_get_Parallel, _set_Parallel)
+    Parallel = property(_get_Parallel, _set_Parallel) # type: bool
 
     def _get_R(self) -> float:
         """
@@ -196,7 +196,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_R(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
-    R = property(_get_R, _set_R)
+    R = property(_get_R, _set_R) # type: float
 
     def _get_X(self) -> float:
         """
@@ -209,7 +209,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_X(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
-    X = property(_get_X, _set_X)
+    X = property(_get_X, _set_X) # type: float
 
     def _get_Rp(self) -> float:
         """
@@ -222,7 +222,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Rp(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
-    Rp = property(_get_Rp, _set_Rp)
+    Rp = property(_get_Rp, _set_Rp) # type: float
 
     def _get_Z1(self) -> complex:
         """
@@ -241,7 +241,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Z1(self, value: complex, flags: enums.SetterFlags = 0):
         self._set_complex(13, value, flags)
 
-    Z1 = property(_get_Z1, _set_Z1)
+    Z1 = property(_get_Z1, _set_Z1) # type: complex
 
     def _get_Z2(self) -> complex:
         """
@@ -260,7 +260,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Z2(self, value: complex, flags: enums.SetterFlags = 0):
         self._set_complex(14, value, flags)
 
-    Z2 = property(_get_Z2, _set_Z2)
+    Z2 = property(_get_Z2, _set_Z2) # type: complex
 
     def _get_Z0(self) -> complex:
         """
@@ -279,7 +279,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Z0(self, value: complex, flags: enums.SetterFlags = 0):
         self._set_complex(15, value, flags)
 
-    Z0 = property(_get_Z0, _set_Z0)
+    Z0 = property(_get_Z0, _set_Z0) # type: complex
 
     def _get_RCurve_str(self) -> str:
         """
@@ -292,7 +292,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_RCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(17, value, flags)
 
-    RCurve_str = property(_get_RCurve_str, _set_RCurve_str)
+    RCurve_str = property(_get_RCurve_str, _set_RCurve_str) # type: str
 
     def _get_RCurve(self) -> XYcurve:
         """
@@ -309,7 +309,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
 
         self._set_string_o(17, value, flags)
 
-    RCurve = property(_get_RCurve, _set_RCurve)
+    RCurve = property(_get_RCurve, _set_RCurve) # type: XYcurve
 
     def _get_LCurve_str(self) -> str:
         """
@@ -322,7 +322,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_LCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(18, value, flags)
 
-    LCurve_str = property(_get_LCurve_str, _set_LCurve_str)
+    LCurve_str = property(_get_LCurve_str, _set_LCurve_str) # type: str
 
     def _get_LCurve(self) -> XYcurve:
         """
@@ -339,7 +339,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
 
         self._set_string_o(18, value, flags)
 
-    LCurve = property(_get_LCurve, _set_LCurve)
+    LCurve = property(_get_LCurve, _set_LCurve) # type: XYcurve
 
     def _get_LmH(self) -> float:
         """
@@ -352,7 +352,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_LmH(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
-    LmH = property(_get_LmH, _set_LmH)
+    LmH = property(_get_LmH, _set_LmH) # type: float
 
     def _get_NormAmps(self) -> float:
         """
@@ -365,7 +365,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_NormAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: float
 
     def _get_EmergAmps(self) -> float:
         """
@@ -378,7 +378,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_EmergAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: float
 
     def _get_FaultRate(self) -> float:
         """
@@ -391,7 +391,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_FaultRate(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 22, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: float
 
     def _get_pctPerm(self) -> float:
         """
@@ -404,7 +404,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_pctPerm(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
-    pctPerm = property(_get_pctPerm, _set_pctPerm)
+    pctPerm = property(_get_pctPerm, _set_pctPerm) # type: float
 
     def _get_Repair(self) -> float:
         """
@@ -417,7 +417,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Repair(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 24, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: float
 
     def _get_BaseFreq(self) -> float:
         """
@@ -430,7 +430,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 25, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -443,7 +443,7 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 26, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -505,7 +505,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: List[str]
 
     def _get_Bus2(self) -> List[str]:
         """
@@ -520,7 +520,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(2, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: List[str]
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
@@ -533,7 +533,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(3, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: BatchInt32ArrayProxy
 
     def _get_kvar(self) -> BatchFloat64ArrayProxy:
         """
@@ -546,7 +546,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_kvar(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(4, value, flags)
 
-    kvar = property(_get_kvar, _set_kvar)
+    kvar = property(_get_kvar, _set_kvar) # type: BatchFloat64ArrayProxy
 
     def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
@@ -559,7 +559,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_kV(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    kV = property(_get_kV, _set_kV)
+    kV = property(_get_kV, _set_kV) # type: BatchFloat64ArrayProxy
 
     def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
@@ -576,9 +576,9 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
 
         self._set_batch_int32_array(6, value, flags)
 
-    Conn = property(_get_Conn, _set_Conn)
+    Conn = property(_get_Conn, _set_Conn) # type: BatchInt32ArrayProxy
 
-    def _get_Conn_str(self) -> str:
+    def _get_Conn_str(self) -> List[str]:
         """
         ={wye | delta |LN |LL}  Default is wye, which is equivalent to LN. If Delta, then only one terminal.
 
@@ -589,7 +589,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conn(value, flags)
 
-    Conn_str = property(_get_Conn_str, _set_Conn_str)
+    Conn_str = property(_get_Conn_str, _set_Conn_str) # type: List[str]
 
     def _get_RMatrix(self) -> List[Float64Array]:
         """
@@ -605,7 +605,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_RMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(7, value, flags)
 
-    RMatrix = property(_get_RMatrix, _set_RMatrix)
+    RMatrix = property(_get_RMatrix, _set_RMatrix) # type: List[Float64Array]
 
     def _get_XMatrix(self) -> List[Float64Array]:
         """
@@ -621,7 +621,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_XMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(8, value, flags)
 
-    XMatrix = property(_get_XMatrix, _set_XMatrix)
+    XMatrix = property(_get_XMatrix, _set_XMatrix) # type: List[Float64Array]
 
     def _get_Parallel(self) -> List[bool]:
         """
@@ -636,7 +636,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Parallel(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(9, value, flags)
 
-    Parallel = property(_get_Parallel, _set_Parallel)
+    Parallel = property(_get_Parallel, _set_Parallel) # type: List[bool]
 
     def _get_R(self) -> BatchFloat64ArrayProxy:
         """
@@ -649,7 +649,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_R(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(10, value, flags)
 
-    R = property(_get_R, _set_R)
+    R = property(_get_R, _set_R) # type: BatchFloat64ArrayProxy
 
     def _get_X(self) -> BatchFloat64ArrayProxy:
         """
@@ -662,7 +662,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_X(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(11, value, flags)
 
-    X = property(_get_X, _set_X)
+    X = property(_get_X, _set_X) # type: BatchFloat64ArrayProxy
 
     def _get_Rp(self) -> BatchFloat64ArrayProxy:
         """
@@ -675,7 +675,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Rp(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(12, value, flags)
 
-    Rp = property(_get_Rp, _set_Rp)
+    Rp = property(_get_Rp, _set_Rp) # type: BatchFloat64ArrayProxy
 
     def _get_Z1(self) -> List[complex]:
         """
@@ -715,7 +715,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 13, value_ptr, value_count, flags)
 
-    Z1 = property(_get_Z1, _set_Z1)
+    Z1 = property(_get_Z1, _set_Z1) # type: List[complex]
 
     def _get_Z2(self) -> List[complex]:
         """
@@ -755,7 +755,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 14, value_ptr, value_count, flags)
 
-    Z2 = property(_get_Z2, _set_Z2)
+    Z2 = property(_get_Z2, _set_Z2) # type: List[complex]
 
     def _get_Z0(self) -> List[complex]:
         """
@@ -795,7 +795,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
             value[1] = v.imag
             self._lib.Obj_SetFloat64Array(x, 15, value_ptr, value_count, flags)
 
-    Z0 = property(_get_Z0, _set_Z0)
+    Z0 = property(_get_Z0, _set_Z0) # type: List[complex]
 
     def _get_RCurve_str(self) -> List[str]:
         """
@@ -808,7 +808,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_RCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(17, value, flags)
 
-    RCurve_str = property(_get_RCurve_str, _set_RCurve_str)
+    RCurve_str = property(_get_RCurve_str, _set_RCurve_str) # type: List[str]
 
     def _get_RCurve(self) -> List[XYcurve]:
         """
@@ -821,7 +821,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_RCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(17, value, flags)
 
-    RCurve = property(_get_RCurve, _set_RCurve)
+    RCurve = property(_get_RCurve, _set_RCurve) # type: List[XYcurve]
 
     def _get_LCurve_str(self) -> List[str]:
         """
@@ -834,7 +834,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_LCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(18, value, flags)
 
-    LCurve_str = property(_get_LCurve_str, _set_LCurve_str)
+    LCurve_str = property(_get_LCurve_str, _set_LCurve_str) # type: List[str]
 
     def _get_LCurve(self) -> List[XYcurve]:
         """
@@ -847,7 +847,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_LCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(18, value, flags)
 
-    LCurve = property(_get_LCurve, _set_LCurve)
+    LCurve = property(_get_LCurve, _set_LCurve) # type: List[XYcurve]
 
     def _get_LmH(self) -> BatchFloat64ArrayProxy:
         """
@@ -860,7 +860,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_LmH(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(19, value, flags)
 
-    LmH = property(_get_LmH, _set_LmH)
+    LmH = property(_get_LmH, _set_LmH) # type: BatchFloat64ArrayProxy
 
     def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -873,7 +873,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_NormAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(20, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: BatchFloat64ArrayProxy
 
     def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -886,7 +886,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_EmergAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(21, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: BatchFloat64ArrayProxy
 
     def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
@@ -899,7 +899,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_FaultRate(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(22, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: BatchFloat64ArrayProxy
 
     def _get_pctPerm(self) -> BatchFloat64ArrayProxy:
         """
@@ -912,7 +912,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_pctPerm(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(23, value, flags)
 
-    pctPerm = property(_get_pctPerm, _set_pctPerm)
+    pctPerm = property(_get_pctPerm, _set_pctPerm) # type: BatchFloat64ArrayProxy
 
     def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
@@ -925,7 +925,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Repair(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(24, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: BatchFloat64ArrayProxy
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -938,7 +938,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(25, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -953,7 +953,7 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(26, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -998,7 +998,7 @@ class IReactor(IDSSObj, ReactorBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Reactor, ReactorBatch)
-        ReactorBatch.__init__(self, self._api_util, sync_cls=True)
+        ReactorBatch.__init__(self, self._api_util, sync_cls_idx=Reactor._cls_idx)
 
 
     # We need this one for better type hinting

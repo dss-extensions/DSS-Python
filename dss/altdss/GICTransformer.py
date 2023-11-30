@@ -57,7 +57,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_BusH(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    BusH = property(_get_BusH, _set_BusH)
+    BusH = property(_get_BusH, _set_BusH) # type: str
 
     def _get_BusNH(self) -> str:
         """
@@ -70,7 +70,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_BusNH(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(2, value, flags)
 
-    BusNH = property(_get_BusNH, _set_BusNH)
+    BusNH = property(_get_BusNH, _set_BusNH) # type: str
 
     def _get_BusX(self) -> str:
         """
@@ -83,7 +83,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_BusX(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(3, value, flags)
 
-    BusX = property(_get_BusX, _set_BusX)
+    BusX = property(_get_BusX, _set_BusX) # type: str
 
     def _get_BusNX(self) -> str:
         """
@@ -96,7 +96,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_BusNX(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(4, value, flags)
 
-    BusNX = property(_get_BusNX, _set_BusNX)
+    BusNX = property(_get_BusNX, _set_BusNX) # type: str
 
     def _get_Phases(self) -> int:
         """
@@ -109,7 +109,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 5, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: int
 
     def _get_Type(self) -> enums.GICTransformerType:
         """
@@ -125,7 +125,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
-    Type = property(_get_Type, _set_Type)
+    Type = property(_get_Type, _set_Type) # type: enums.GICTransformerType
 
     def _get_Type_str(self) -> str:
         """
@@ -138,7 +138,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Type_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Type(value, flags)
 
-    Type_str = property(_get_Type_str, _set_Type_str)
+    Type_str = property(_get_Type_str, _set_Type_str) # type: str
 
     def _get_R1(self) -> float:
         """
@@ -151,7 +151,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_R1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
-    R1 = property(_get_R1, _set_R1)
+    R1 = property(_get_R1, _set_R1) # type: float
 
     def _get_R2(self) -> float:
         """
@@ -164,7 +164,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_R2(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
-    R2 = property(_get_R2, _set_R2)
+    R2 = property(_get_R2, _set_R2) # type: float
 
     def _get_kVLL1(self) -> float:
         """
@@ -177,7 +177,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_kVLL1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
-    kVLL1 = property(_get_kVLL1, _set_kVLL1)
+    kVLL1 = property(_get_kVLL1, _set_kVLL1) # type: float
 
     def _get_kVLL2(self) -> float:
         """
@@ -190,7 +190,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_kVLL2(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
-    kVLL2 = property(_get_kVLL2, _set_kVLL2)
+    kVLL2 = property(_get_kVLL2, _set_kVLL2) # type: float
 
     def _get_MVA(self) -> float:
         """
@@ -203,7 +203,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_MVA(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
-    MVA = property(_get_MVA, _set_MVA)
+    MVA = property(_get_MVA, _set_MVA) # type: float
 
     def _get_VarCurve_str(self) -> str:
         """
@@ -216,7 +216,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_VarCurve_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(12, value, flags)
 
-    VarCurve_str = property(_get_VarCurve_str, _set_VarCurve_str)
+    VarCurve_str = property(_get_VarCurve_str, _set_VarCurve_str) # type: str
 
     def _get_VarCurve(self) -> XYcurve:
         """
@@ -233,7 +233,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
 
         self._set_string_o(12, value, flags)
 
-    VarCurve = property(_get_VarCurve, _set_VarCurve)
+    VarCurve = property(_get_VarCurve, _set_VarCurve) # type: XYcurve
 
     def _get_pctR1(self) -> float:
         """
@@ -248,7 +248,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_pctR1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
-    pctR1 = property(_get_pctR1, _set_pctR1)
+    pctR1 = property(_get_pctR1, _set_pctR1) # type: float
 
     def _get_pctR2(self) -> float:
         """
@@ -263,7 +263,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_pctR2(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
-    pctR2 = property(_get_pctR2, _set_pctR2)
+    pctR2 = property(_get_pctR2, _set_pctR2) # type: float
 
     def _get_K(self) -> float:
         """
@@ -280,7 +280,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_K(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
-    K = property(_get_K, _set_K)
+    K = property(_get_K, _set_K) # type: float
 
     def _get_NormAmps(self) -> float:
         """
@@ -293,7 +293,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_NormAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: float
 
     def _get_EmergAmps(self) -> float:
         """
@@ -306,7 +306,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_EmergAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: float
 
     def _get_FaultRate(self) -> float:
         """
@@ -319,7 +319,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_FaultRate(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: float
 
     def _get_pctPerm(self) -> float:
         """
@@ -332,7 +332,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_pctPerm(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 19, value, flags)
 
-    pctPerm = property(_get_pctPerm, _set_pctPerm)
+    pctPerm = property(_get_pctPerm, _set_pctPerm) # type: float
 
     def _get_Repair(self) -> float:
         """
@@ -345,7 +345,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Repair(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 20, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: float
 
     def _get_BaseFreq(self) -> float:
         """
@@ -358,7 +358,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 21, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -371,7 +371,7 @@ class GICTransformer(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 22, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -428,7 +428,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_BusH(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    BusH = property(_get_BusH, _set_BusH)
+    BusH = property(_get_BusH, _set_BusH) # type: List[str]
 
     def _get_BusNH(self) -> List[str]:
         """
@@ -441,7 +441,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_BusNH(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(2, value, flags)
 
-    BusNH = property(_get_BusNH, _set_BusNH)
+    BusNH = property(_get_BusNH, _set_BusNH) # type: List[str]
 
     def _get_BusX(self) -> List[str]:
         """
@@ -454,7 +454,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_BusX(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(3, value, flags)
 
-    BusX = property(_get_BusX, _set_BusX)
+    BusX = property(_get_BusX, _set_BusX) # type: List[str]
 
     def _get_BusNX(self) -> List[str]:
         """
@@ -467,7 +467,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_BusNX(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(4, value, flags)
 
-    BusNX = property(_get_BusNX, _set_BusNX)
+    BusNX = property(_get_BusNX, _set_BusNX) # type: List[str]
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
@@ -480,7 +480,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(5, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: BatchInt32ArrayProxy
 
     def _get_Type(self) -> BatchInt32ArrayProxy:
         """
@@ -497,9 +497,9 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
 
         self._set_batch_int32_array(6, value, flags)
 
-    Type = property(_get_Type, _set_Type)
+    Type = property(_get_Type, _set_Type) # type: BatchInt32ArrayProxy
 
-    def _get_Type_str(self) -> str:
+    def _get_Type_str(self) -> List[str]:
         """
         Type of transformer: {GSU* | Auto | YY}. Default is GSU.
 
@@ -510,7 +510,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_Type_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Type(value, flags)
 
-    Type_str = property(_get_Type_str, _set_Type_str)
+    Type_str = property(_get_Type_str, _set_Type_str) # type: List[str]
 
     def _get_R1(self) -> BatchFloat64ArrayProxy:
         """
@@ -523,7 +523,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_R1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(7, value, flags)
 
-    R1 = property(_get_R1, _set_R1)
+    R1 = property(_get_R1, _set_R1) # type: BatchFloat64ArrayProxy
 
     def _get_R2(self) -> BatchFloat64ArrayProxy:
         """
@@ -536,7 +536,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_R2(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(8, value, flags)
 
-    R2 = property(_get_R2, _set_R2)
+    R2 = property(_get_R2, _set_R2) # type: BatchFloat64ArrayProxy
 
     def _get_kVLL1(self) -> BatchFloat64ArrayProxy:
         """
@@ -549,7 +549,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_kVLL1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(9, value, flags)
 
-    kVLL1 = property(_get_kVLL1, _set_kVLL1)
+    kVLL1 = property(_get_kVLL1, _set_kVLL1) # type: BatchFloat64ArrayProxy
 
     def _get_kVLL2(self) -> BatchFloat64ArrayProxy:
         """
@@ -562,7 +562,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_kVLL2(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(10, value, flags)
 
-    kVLL2 = property(_get_kVLL2, _set_kVLL2)
+    kVLL2 = property(_get_kVLL2, _set_kVLL2) # type: BatchFloat64ArrayProxy
 
     def _get_MVA(self) -> BatchFloat64ArrayProxy:
         """
@@ -575,7 +575,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_MVA(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(11, value, flags)
 
-    MVA = property(_get_MVA, _set_MVA)
+    MVA = property(_get_MVA, _set_MVA) # type: BatchFloat64ArrayProxy
 
     def _get_VarCurve_str(self) -> List[str]:
         """
@@ -588,7 +588,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_VarCurve_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(12, value, flags)
 
-    VarCurve_str = property(_get_VarCurve_str, _set_VarCurve_str)
+    VarCurve_str = property(_get_VarCurve_str, _set_VarCurve_str) # type: List[str]
 
     def _get_VarCurve(self) -> List[XYcurve]:
         """
@@ -601,7 +601,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_VarCurve(self, value: Union[AnyStr, XYcurve, List[AnyStr], List[XYcurve]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(12, value, flags)
 
-    VarCurve = property(_get_VarCurve, _set_VarCurve)
+    VarCurve = property(_get_VarCurve, _set_VarCurve) # type: List[XYcurve]
 
     def _get_pctR1(self) -> BatchFloat64ArrayProxy:
         """
@@ -616,7 +616,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_pctR1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(13, value, flags)
 
-    pctR1 = property(_get_pctR1, _set_pctR1)
+    pctR1 = property(_get_pctR1, _set_pctR1) # type: BatchFloat64ArrayProxy
 
     def _get_pctR2(self) -> BatchFloat64ArrayProxy:
         """
@@ -631,7 +631,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_pctR2(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(14, value, flags)
 
-    pctR2 = property(_get_pctR2, _set_pctR2)
+    pctR2 = property(_get_pctR2, _set_pctR2) # type: BatchFloat64ArrayProxy
 
     def _get_K(self) -> BatchFloat64ArrayProxy:
         """
@@ -648,7 +648,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_K(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(15, value, flags)
 
-    K = property(_get_K, _set_K)
+    K = property(_get_K, _set_K) # type: BatchFloat64ArrayProxy
 
     def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -661,7 +661,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_NormAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(16, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: BatchFloat64ArrayProxy
 
     def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -674,7 +674,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_EmergAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(17, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: BatchFloat64ArrayProxy
 
     def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
@@ -687,7 +687,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_FaultRate(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(18, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: BatchFloat64ArrayProxy
 
     def _get_pctPerm(self) -> BatchFloat64ArrayProxy:
         """
@@ -700,7 +700,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_pctPerm(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(19, value, flags)
 
-    pctPerm = property(_get_pctPerm, _set_pctPerm)
+    pctPerm = property(_get_pctPerm, _set_pctPerm) # type: BatchFloat64ArrayProxy
 
     def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
@@ -713,7 +713,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_Repair(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(20, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: BatchFloat64ArrayProxy
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -726,7 +726,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(21, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -741,7 +741,7 @@ class GICTransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixi
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(22, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -783,7 +783,7 @@ class IGICTransformer(IDSSObj, GICTransformerBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, GICTransformer, GICTransformerBatch)
-        GICTransformerBatch.__init__(self, self._api_util, sync_cls=True)
+        GICTransformerBatch.__init__(self, self._api_util, sync_cls_idx=GICTransformer._cls_idx)
 
 
     # We need this one for better type hinting

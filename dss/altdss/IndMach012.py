@@ -56,7 +56,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: int
 
     def _get_Bus1(self) -> str:
         """
@@ -69,7 +69,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(2, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: str
 
     def _get_kV(self) -> float:
         """
@@ -82,7 +82,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_kV(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 3, value, flags)
 
-    kV = property(_get_kV, _set_kV)
+    kV = property(_get_kV, _set_kV) # type: float
 
     def _get_kW(self) -> float:
         """
@@ -96,7 +96,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_kW(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
-    kW = property(_get_kW, _set_kW)
+    kW = property(_get_kW, _set_kW) # type: float
 
     def _get_PF(self) -> float:
         """
@@ -109,7 +109,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_PF(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 5, value, flags)
 
-    PF = property(_get_PF, _set_PF)
+    PF = property(_get_PF, _set_PF) # type: float
 
     def _get_Conn(self) -> enums.Connection:
         """
@@ -125,7 +125,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 6, value, flags)
 
-    Conn = property(_get_Conn, _set_Conn)
+    Conn = property(_get_Conn, _set_Conn) # type: enums.Connection
 
     def _get_Conn_str(self) -> str:
         """
@@ -138,7 +138,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conn(value, flags)
 
-    Conn_str = property(_get_Conn_str, _set_Conn_str)
+    Conn_str = property(_get_Conn_str, _set_Conn_str) # type: str
 
     def _get_kVA(self) -> float:
         """
@@ -151,7 +151,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_kVA(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
-    kVA = property(_get_kVA, _set_kVA)
+    kVA = property(_get_kVA, _set_kVA) # type: float
 
     def _get_H(self) -> float:
         """
@@ -164,7 +164,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_H(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
-    H = property(_get_H, _set_H)
+    H = property(_get_H, _set_H) # type: float
 
     def _get_D(self) -> float:
         """
@@ -177,7 +177,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_D(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
-    D = property(_get_D, _set_D)
+    D = property(_get_D, _set_D) # type: float
 
     def _get_puRs(self) -> float:
         """
@@ -190,7 +190,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_puRs(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
-    puRs = property(_get_puRs, _set_puRs)
+    puRs = property(_get_puRs, _set_puRs) # type: float
 
     def _get_puXs(self) -> float:
         """
@@ -203,7 +203,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_puXs(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
-    puXs = property(_get_puXs, _set_puXs)
+    puXs = property(_get_puXs, _set_puXs) # type: float
 
     def _get_puRr(self) -> float:
         """
@@ -216,7 +216,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_puRr(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 12, value, flags)
 
-    puRr = property(_get_puRr, _set_puRr)
+    puRr = property(_get_puRr, _set_puRr) # type: float
 
     def _get_puXr(self) -> float:
         """
@@ -229,7 +229,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_puXr(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 13, value, flags)
 
-    puXr = property(_get_puXr, _set_puXr)
+    puXr = property(_get_puXr, _set_puXr) # type: float
 
     def _get_puXm(self) -> float:
         """
@@ -242,7 +242,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_puXm(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 14, value, flags)
 
-    puXm = property(_get_puXm, _set_puXm)
+    puXm = property(_get_puXm, _set_puXm) # type: float
 
     def _get_Slip(self) -> float:
         """
@@ -255,7 +255,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Slip(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 15, value, flags)
 
-    Slip = property(_get_Slip, _set_Slip)
+    Slip = property(_get_Slip, _set_Slip) # type: float
 
     def _get_MaxSlip(self) -> float:
         """
@@ -268,7 +268,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_MaxSlip(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
-    MaxSlip = property(_get_MaxSlip, _set_MaxSlip)
+    MaxSlip = property(_get_MaxSlip, _set_MaxSlip) # type: float
 
     def _get_SlipOption(self) -> enums.IndMach012SlipOption:
         """
@@ -284,7 +284,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 17, value, flags)
 
-    SlipOption = property(_get_SlipOption, _set_SlipOption)
+    SlipOption = property(_get_SlipOption, _set_SlipOption) # type: enums.IndMach012SlipOption
 
     def _get_SlipOption_str(self) -> str:
         """
@@ -297,7 +297,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_SlipOption_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_SlipOption(value, flags)
 
-    SlipOption_str = property(_get_SlipOption_str, _set_SlipOption_str)
+    SlipOption_str = property(_get_SlipOption_str, _set_SlipOption_str) # type: str
 
     def _get_Yearly_str(self) -> str:
         """
@@ -310,7 +310,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Yearly_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(18, value, flags)
 
-    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str) # type: str
 
     def _get_Yearly(self) -> LoadShape:
         """
@@ -327,7 +327,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(18, value, flags)
 
-    Yearly = property(_get_Yearly, _set_Yearly)
+    Yearly = property(_get_Yearly, _set_Yearly) # type: LoadShape
 
     def _get_Daily_str(self) -> str:
         """
@@ -340,7 +340,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Daily_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(19, value, flags)
 
-    Daily_str = property(_get_Daily_str, _set_Daily_str)
+    Daily_str = property(_get_Daily_str, _set_Daily_str) # type: str
 
     def _get_Daily(self) -> LoadShape:
         """
@@ -357,7 +357,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(19, value, flags)
 
-    Daily = property(_get_Daily, _set_Daily)
+    Daily = property(_get_Daily, _set_Daily) # type: LoadShape
 
     def _get_Duty_str(self) -> str:
         """
@@ -370,7 +370,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Duty_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(20, value, flags)
 
-    Duty_str = property(_get_Duty_str, _set_Duty_str)
+    Duty_str = property(_get_Duty_str, _set_Duty_str) # type: str
 
     def _get_Duty(self) -> LoadShape:
         """
@@ -387,7 +387,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(20, value, flags)
 
-    Duty = property(_get_Duty, _set_Duty)
+    Duty = property(_get_Duty, _set_Duty) # type: LoadShape
 
     def _get_DebugTrace(self) -> bool:
         """
@@ -400,7 +400,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 21, value, flags)
 
-    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace) # type: bool
 
     def _get_Spectrum_str(self) -> str:
         """
@@ -413,7 +413,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Spectrum_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(22, value, flags)
 
-    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str) # type: str
 
     def _get_Spectrum(self) -> SpectrumObj:
         """
@@ -430,7 +430,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
 
         self._set_string_o(22, value, flags)
 
-    Spectrum = property(_get_Spectrum, _set_Spectrum)
+    Spectrum = property(_get_Spectrum, _set_Spectrum) # type: SpectrumObj
 
     def _get_BaseFreq(self) -> float:
         """
@@ -443,7 +443,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 23, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -456,7 +456,7 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 24, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -513,7 +513,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: BatchInt32ArrayProxy
 
     def _get_Bus1(self) -> List[str]:
         """
@@ -526,7 +526,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(2, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: List[str]
 
     def _get_kV(self) -> BatchFloat64ArrayProxy:
         """
@@ -539,7 +539,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kV(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(3, value, flags)
 
-    kV = property(_get_kV, _set_kV)
+    kV = property(_get_kV, _set_kV) # type: BatchFloat64ArrayProxy
 
     def _get_kW(self) -> BatchFloat64ArrayProxy:
         """
@@ -553,7 +553,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kW(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(4, value, flags)
 
-    kW = property(_get_kW, _set_kW)
+    kW = property(_get_kW, _set_kW) # type: BatchFloat64ArrayProxy
 
     def _get_PF(self) -> BatchFloat64ArrayProxy:
         """
@@ -566,7 +566,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_PF(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(5, value, flags)
 
-    PF = property(_get_PF, _set_PF)
+    PF = property(_get_PF, _set_PF) # type: BatchFloat64ArrayProxy
 
     def _get_Conn(self) -> BatchInt32ArrayProxy:
         """
@@ -583,9 +583,9 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         self._set_batch_int32_array(6, value, flags)
 
-    Conn = property(_get_Conn, _set_Conn)
+    Conn = property(_get_Conn, _set_Conn) # type: BatchInt32ArrayProxy
 
-    def _get_Conn_str(self) -> str:
+    def _get_Conn_str(self) -> List[str]:
         """
         Connection of stator: Delta or Wye. Default is Delta.
 
@@ -596,7 +596,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Conn_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Conn(value, flags)
 
-    Conn_str = property(_get_Conn_str, _set_Conn_str)
+    Conn_str = property(_get_Conn_str, _set_Conn_str) # type: List[str]
 
     def _get_kVA(self) -> BatchFloat64ArrayProxy:
         """
@@ -609,7 +609,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_kVA(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(7, value, flags)
 
-    kVA = property(_get_kVA, _set_kVA)
+    kVA = property(_get_kVA, _set_kVA) # type: BatchFloat64ArrayProxy
 
     def _get_H(self) -> BatchFloat64ArrayProxy:
         """
@@ -622,7 +622,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_H(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(8, value, flags)
 
-    H = property(_get_H, _set_H)
+    H = property(_get_H, _set_H) # type: BatchFloat64ArrayProxy
 
     def _get_D(self) -> BatchFloat64ArrayProxy:
         """
@@ -635,7 +635,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_D(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(9, value, flags)
 
-    D = property(_get_D, _set_D)
+    D = property(_get_D, _set_D) # type: BatchFloat64ArrayProxy
 
     def _get_puRs(self) -> BatchFloat64ArrayProxy:
         """
@@ -648,7 +648,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_puRs(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(10, value, flags)
 
-    puRs = property(_get_puRs, _set_puRs)
+    puRs = property(_get_puRs, _set_puRs) # type: BatchFloat64ArrayProxy
 
     def _get_puXs(self) -> BatchFloat64ArrayProxy:
         """
@@ -661,7 +661,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_puXs(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(11, value, flags)
 
-    puXs = property(_get_puXs, _set_puXs)
+    puXs = property(_get_puXs, _set_puXs) # type: BatchFloat64ArrayProxy
 
     def _get_puRr(self) -> BatchFloat64ArrayProxy:
         """
@@ -674,7 +674,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_puRr(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(12, value, flags)
 
-    puRr = property(_get_puRr, _set_puRr)
+    puRr = property(_get_puRr, _set_puRr) # type: BatchFloat64ArrayProxy
 
     def _get_puXr(self) -> BatchFloat64ArrayProxy:
         """
@@ -687,7 +687,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_puXr(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(13, value, flags)
 
-    puXr = property(_get_puXr, _set_puXr)
+    puXr = property(_get_puXr, _set_puXr) # type: BatchFloat64ArrayProxy
 
     def _get_puXm(self) -> BatchFloat64ArrayProxy:
         """
@@ -700,7 +700,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_puXm(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(14, value, flags)
 
-    puXm = property(_get_puXm, _set_puXm)
+    puXm = property(_get_puXm, _set_puXm) # type: BatchFloat64ArrayProxy
 
     def _get_Slip(self) -> BatchFloat64ArrayProxy:
         """
@@ -713,7 +713,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Slip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(15, value, flags)
 
-    Slip = property(_get_Slip, _set_Slip)
+    Slip = property(_get_Slip, _set_Slip) # type: BatchFloat64ArrayProxy
 
     def _get_MaxSlip(self) -> BatchFloat64ArrayProxy:
         """
@@ -726,7 +726,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_MaxSlip(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(16, value, flags)
 
-    MaxSlip = property(_get_MaxSlip, _set_MaxSlip)
+    MaxSlip = property(_get_MaxSlip, _set_MaxSlip) # type: BatchFloat64ArrayProxy
 
     def _get_SlipOption(self) -> BatchInt32ArrayProxy:
         """
@@ -743,9 +743,9 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
 
         self._set_batch_int32_array(17, value, flags)
 
-    SlipOption = property(_get_SlipOption, _set_SlipOption)
+    SlipOption = property(_get_SlipOption, _set_SlipOption) # type: BatchInt32ArrayProxy
 
-    def _get_SlipOption_str(self) -> str:
+    def _get_SlipOption_str(self) -> List[str]:
         """
         Option for slip model. One of {fixedslip | variableslip*  }
 
@@ -756,7 +756,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_SlipOption_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_SlipOption(value, flags)
 
-    SlipOption_str = property(_get_SlipOption_str, _set_SlipOption_str)
+    SlipOption_str = property(_get_SlipOption_str, _set_SlipOption_str) # type: List[str]
 
     def _get_Yearly_str(self) -> List[str]:
         """
@@ -769,7 +769,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Yearly_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(18, value, flags)
 
-    Yearly_str = property(_get_Yearly_str, _set_Yearly_str)
+    Yearly_str = property(_get_Yearly_str, _set_Yearly_str) # type: List[str]
 
     def _get_Yearly(self) -> List[LoadShape]:
         """
@@ -782,7 +782,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Yearly(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(18, value, flags)
 
-    Yearly = property(_get_Yearly, _set_Yearly)
+    Yearly = property(_get_Yearly, _set_Yearly) # type: List[LoadShape]
 
     def _get_Daily_str(self) -> List[str]:
         """
@@ -795,7 +795,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Daily_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(19, value, flags)
 
-    Daily_str = property(_get_Daily_str, _set_Daily_str)
+    Daily_str = property(_get_Daily_str, _set_Daily_str) # type: List[str]
 
     def _get_Daily(self) -> List[LoadShape]:
         """
@@ -808,7 +808,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Daily(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(19, value, flags)
 
-    Daily = property(_get_Daily, _set_Daily)
+    Daily = property(_get_Daily, _set_Daily) # type: List[LoadShape]
 
     def _get_Duty_str(self) -> List[str]:
         """
@@ -821,7 +821,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Duty_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(20, value, flags)
 
-    Duty_str = property(_get_Duty_str, _set_Duty_str)
+    Duty_str = property(_get_Duty_str, _set_Duty_str) # type: List[str]
 
     def _get_Duty(self) -> List[LoadShape]:
         """
@@ -834,7 +834,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Duty(self, value: Union[AnyStr, LoadShape, List[AnyStr], List[LoadShape]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(20, value, flags)
 
-    Duty = property(_get_Duty, _set_Duty)
+    Duty = property(_get_Duty, _set_Duty) # type: List[LoadShape]
 
     def _get_DebugTrace(self) -> List[bool]:
         """
@@ -849,7 +849,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_DebugTrace(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(21, value, flags)
 
-    DebugTrace = property(_get_DebugTrace, _set_DebugTrace)
+    DebugTrace = property(_get_DebugTrace, _set_DebugTrace) # type: List[bool]
 
     def _get_Spectrum_str(self) -> List[str]:
         """
@@ -862,7 +862,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Spectrum_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(22, value, flags)
 
-    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str)
+    Spectrum_str = property(_get_Spectrum_str, _set_Spectrum_str) # type: List[str]
 
     def _get_Spectrum(self) -> List[SpectrumObj]:
         """
@@ -875,7 +875,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Spectrum(self, value: Union[AnyStr, SpectrumObj, List[AnyStr], List[SpectrumObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(22, value, flags)
 
-    Spectrum = property(_get_Spectrum, _set_Spectrum)
+    Spectrum = property(_get_Spectrum, _set_Spectrum) # type: List[SpectrumObj]
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -888,7 +888,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(23, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -903,7 +903,7 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(24, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -947,7 +947,7 @@ class IIndMach012(IDSSObj, IndMach012Batch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, IndMach012, IndMach012Batch)
-        IndMach012Batch.__init__(self, self._api_util, sync_cls=True)
+        IndMach012Batch.__init__(self, self._api_util, sync_cls_idx=IndMach012._cls_idx)
 
 
     # We need this one for better type hinting

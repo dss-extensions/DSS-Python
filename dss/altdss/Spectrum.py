@@ -33,7 +33,7 @@ class Spectrum(DSSObj):
     def _set_NumHarm(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 1, value, flags)
 
-    NumHarm = property(_get_NumHarm, _set_NumHarm)
+    NumHarm = property(_get_NumHarm, _set_NumHarm) # type: int
 
     def _get_Harmonic(self) -> Float64Array:
         """
@@ -49,7 +49,7 @@ class Spectrum(DSSObj):
     def _set_Harmonic(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(2, value, flags)
 
-    Harmonic = property(_get_Harmonic, _set_Harmonic)
+    Harmonic = property(_get_Harmonic, _set_Harmonic) # type: Float64Array
 
     def _get_pctMag(self) -> Float64Array:
         """
@@ -65,7 +65,7 @@ class Spectrum(DSSObj):
     def _set_pctMag(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(3, value, flags)
 
-    pctMag = property(_get_pctMag, _set_pctMag)
+    pctMag = property(_get_pctMag, _set_pctMag) # type: Float64Array
 
     def _get_Angle(self) -> Float64Array:
         """
@@ -81,7 +81,7 @@ class Spectrum(DSSObj):
     def _set_Angle(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(4, value, flags)
 
-    Angle = property(_get_Angle, _set_Angle)
+    Angle = property(_get_Angle, _set_Angle) # type: Float64Array
 
     def _get_CSVFile(self) -> str:
         """
@@ -94,7 +94,7 @@ class Spectrum(DSSObj):
     def _set_CSVFile(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(5, value, flags)
 
-    CSVFile = property(_get_CSVFile, _set_CSVFile)
+    CSVFile = property(_get_CSVFile, _set_CSVFile) # type: str
 
     def Like(self, value: AnyStr):
         """
@@ -132,7 +132,7 @@ class SpectrumBatch(DSSBatch):
     def _set_NumHarm(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(1, value, flags)
 
-    NumHarm = property(_get_NumHarm, _set_NumHarm)
+    NumHarm = property(_get_NumHarm, _set_NumHarm) # type: BatchInt32ArrayProxy
 
     def _get_Harmonic(self) -> List[Float64Array]:
         """
@@ -151,7 +151,7 @@ class SpectrumBatch(DSSBatch):
     def _set_Harmonic(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(2, value, flags)
 
-    Harmonic = property(_get_Harmonic, _set_Harmonic)
+    Harmonic = property(_get_Harmonic, _set_Harmonic) # type: List[Float64Array]
 
     def _get_pctMag(self) -> List[Float64Array]:
         """
@@ -170,7 +170,7 @@ class SpectrumBatch(DSSBatch):
     def _set_pctMag(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(3, value, flags)
 
-    pctMag = property(_get_pctMag, _set_pctMag)
+    pctMag = property(_get_pctMag, _set_pctMag) # type: List[Float64Array]
 
     def _get_Angle(self) -> List[Float64Array]:
         """
@@ -189,7 +189,7 @@ class SpectrumBatch(DSSBatch):
     def _set_Angle(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(4, value, flags)
 
-    Angle = property(_get_Angle, _set_Angle)
+    Angle = property(_get_Angle, _set_Angle) # type: List[Float64Array]
 
     def _get_CSVFile(self) -> List[str]:
         """
@@ -202,7 +202,7 @@ class SpectrumBatch(DSSBatch):
     def _set_CSVFile(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(5, value, flags)
 
-    CSVFile = property(_get_CSVFile, _set_CSVFile)
+    CSVFile = property(_get_CSVFile, _set_CSVFile) # type: List[str]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -227,7 +227,7 @@ class ISpectrum(IDSSObj, SpectrumBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Spectrum, SpectrumBatch)
-        SpectrumBatch.__init__(self, self._api_util, sync_cls=True)
+        SpectrumBatch.__init__(self, self._api_util, sync_cls_idx=Spectrum._cls_idx)
 
 
     # We need this one for better type hinting

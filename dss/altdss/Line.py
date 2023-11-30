@@ -75,7 +75,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Bus1(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: str
 
     def _get_Bus2(self) -> str:
         """
@@ -88,7 +88,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Bus2(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(2, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: str
 
     def _get_LineCode_str(self) -> str:
         """
@@ -102,7 +102,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_LineCode_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(3, value, flags)
 
-    LineCode_str = property(_get_LineCode_str, _set_LineCode_str)
+    LineCode_str = property(_get_LineCode_str, _set_LineCode_str) # type: str
 
     def _get_LineCode(self) -> LineCodeObj:
         """
@@ -120,7 +120,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
 
         self._set_string_o(3, value, flags)
 
-    LineCode = property(_get_LineCode, _set_LineCode)
+    LineCode = property(_get_LineCode, _set_LineCode) # type: LineCodeObj
 
     def _get_Length(self) -> float:
         """
@@ -133,7 +133,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Length(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 4, value, flags)
 
-    Length = property(_get_Length, _set_Length)
+    Length = property(_get_Length, _set_Length) # type: float
 
     def _get_Phases(self) -> int:
         """
@@ -146,7 +146,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Phases(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 5, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: int
 
     def _get_R1(self) -> float:
         """
@@ -159,7 +159,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_R1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 6, value, flags)
 
-    R1 = property(_get_R1, _set_R1)
+    R1 = property(_get_R1, _set_R1) # type: float
 
     def _get_X1(self) -> float:
         """
@@ -172,7 +172,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_X1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 7, value, flags)
 
-    X1 = property(_get_X1, _set_X1)
+    X1 = property(_get_X1, _set_X1) # type: float
 
     def _get_R0(self) -> float:
         """
@@ -185,7 +185,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_R0(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 8, value, flags)
 
-    R0 = property(_get_R0, _set_R0)
+    R0 = property(_get_R0, _set_R0) # type: float
 
     def _get_X0(self) -> float:
         """
@@ -198,7 +198,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_X0(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 9, value, flags)
 
-    X0 = property(_get_X0, _set_X0)
+    X0 = property(_get_X0, _set_X0) # type: float
 
     def _get_C1(self) -> float:
         """
@@ -211,7 +211,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_C1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 10, value, flags)
 
-    C1 = property(_get_C1, _set_C1)
+    C1 = property(_get_C1, _set_C1) # type: float
 
     def _get_C0(self) -> float:
         """
@@ -224,7 +224,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_C0(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 11, value, flags)
 
-    C0 = property(_get_C0, _set_C0)
+    C0 = property(_get_C0, _set_C0) # type: float
 
     def _get_RMatrix(self) -> Float64Array:
         """
@@ -237,7 +237,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_RMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(12, value, flags)
 
-    RMatrix = property(_get_RMatrix, _set_RMatrix)
+    RMatrix = property(_get_RMatrix, _set_RMatrix) # type: Float64Array
 
     def _get_XMatrix(self) -> Float64Array:
         """
@@ -250,7 +250,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_XMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(13, value, flags)
 
-    XMatrix = property(_get_XMatrix, _set_XMatrix)
+    XMatrix = property(_get_XMatrix, _set_XMatrix) # type: Float64Array
 
     def _get_CMatrix(self) -> Float64Array:
         """
@@ -263,7 +263,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_CMatrix(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(14, value, flags)
 
-    CMatrix = property(_get_CMatrix, _set_CMatrix)
+    CMatrix = property(_get_CMatrix, _set_CMatrix) # type: Float64Array
 
     def _get_Switch(self) -> bool:
         """
@@ -277,7 +277,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Switch(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 15, value, flags)
 
-    Switch = property(_get_Switch, _set_Switch)
+    Switch = property(_get_Switch, _set_Switch) # type: bool
 
     def _get_Rg(self) -> float:
         """
@@ -290,7 +290,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Rg(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 16, value, flags)
 
-    Rg = property(_get_Rg, _set_Rg)
+    Rg = property(_get_Rg, _set_Rg) # type: float
 
     def _get_Xg(self) -> float:
         """
@@ -303,7 +303,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Xg(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 17, value, flags)
 
-    Xg = property(_get_Xg, _set_Xg)
+    Xg = property(_get_Xg, _set_Xg) # type: float
 
     def _get_rho(self) -> float:
         """
@@ -316,7 +316,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_rho(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 18, value, flags)
 
-    rho = property(_get_rho, _set_rho)
+    rho = property(_get_rho, _set_rho) # type: float
 
     def _get_Geometry_str(self) -> str:
         """
@@ -329,7 +329,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Geometry_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(19, value, flags)
 
-    Geometry_str = property(_get_Geometry_str, _set_Geometry_str)
+    Geometry_str = property(_get_Geometry_str, _set_Geometry_str) # type: str
 
     def _get_Geometry(self) -> LineGeometry:
         """
@@ -346,7 +346,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
 
         self._set_string_o(19, value, flags)
 
-    Geometry = property(_get_Geometry, _set_Geometry)
+    Geometry = property(_get_Geometry, _set_Geometry) # type: LineGeometry
 
     def _get_Units(self) -> enums.LengthUnit:
         """
@@ -362,7 +362,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 20, value, flags)
 
-    Units = property(_get_Units, _set_Units)
+    Units = property(_get_Units, _set_Units) # type: enums.LengthUnit
 
     def _get_Units_str(self) -> str:
         """
@@ -375,7 +375,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Units(value, flags)
 
-    Units_str = property(_get_Units_str, _set_Units_str)
+    Units_str = property(_get_Units_str, _set_Units_str) # type: str
 
     def _get_Spacing_str(self) -> str:
         """
@@ -390,7 +390,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Spacing_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_string_o(21, value, flags)
 
-    Spacing_str = property(_get_Spacing_str, _set_Spacing_str)
+    Spacing_str = property(_get_Spacing_str, _set_Spacing_str) # type: str
 
     def _get_Spacing(self) -> LineSpacing:
         """
@@ -409,7 +409,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
 
         self._set_string_o(21, value, flags)
 
-    Spacing = property(_get_Spacing, _set_Spacing)
+    Spacing = property(_get_Spacing, _set_Spacing) # type: LineSpacing
 
     def _get_Conductors_str(self) -> List[str]:
         """
@@ -425,7 +425,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Conductors_str(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         self._set_string_array_o(22, value, flags)
 
-    Conductors_str = property(_get_Conductors_str, _set_Conductors_str)
+    Conductors_str = property(_get_Conductors_str, _set_Conductors_str) # type: List[str]
 
     def _get_Conductors(self) -> List[WireData]:
         """
@@ -445,7 +445,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
 
         self._set_obj_array(22, value, flags)
 
-    Conductors = property(_get_Conductors, _set_Conductors)
+    Conductors = property(_get_Conductors, _set_Conductors) # type: List[WireData]
 
     def _get_EarthModel(self) -> enums.EarthModel:
         """
@@ -461,7 +461,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 23, value, flags)
 
-    EarthModel = property(_get_EarthModel, _set_EarthModel)
+    EarthModel = property(_get_EarthModel, _set_EarthModel) # type: enums.EarthModel
 
     def _get_EarthModel_str(self) -> str:
         """
@@ -474,7 +474,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_EarthModel_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_EarthModel(value, flags)
 
-    EarthModel_str = property(_get_EarthModel_str, _set_EarthModel_str)
+    EarthModel_str = property(_get_EarthModel_str, _set_EarthModel_str) # type: str
 
     def _get_B1(self) -> float:
         """
@@ -487,7 +487,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_B1(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 26, value, flags)
 
-    B1 = property(_get_B1, _set_B1)
+    B1 = property(_get_B1, _set_B1) # type: float
 
     def _get_B0(self) -> float:
         """
@@ -500,7 +500,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_B0(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 27, value, flags)
 
-    B0 = property(_get_B0, _set_B0)
+    B0 = property(_get_B0, _set_B0) # type: float
 
     def _get_Seasons(self) -> int:
         """
@@ -513,7 +513,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Seasons(self, value: int, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 28, value, flags)
 
-    Seasons = property(_get_Seasons, _set_Seasons)
+    Seasons = property(_get_Seasons, _set_Seasons) # type: int
 
     def _get_Ratings(self) -> Float64Array:
         """
@@ -527,7 +527,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Ratings(self, value: Float64Array, flags: enums.SetterFlags = 0):
         self._set_float64_array_o(29, value, flags)
 
-    Ratings = property(_get_Ratings, _set_Ratings)
+    Ratings = property(_get_Ratings, _set_Ratings) # type: Float64Array
 
     def _get_LineType(self) -> enums.LineType:
         """
@@ -546,7 +546,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
             return
         self._lib.Obj_SetInt32(self._ptr, 30, value, flags)
 
-    LineType = property(_get_LineType, _set_LineType)
+    LineType = property(_get_LineType, _set_LineType) # type: enums.LineType
 
     def _get_LineType_str(self) -> str:
         """
@@ -562,7 +562,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_LineType_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_LineType(value, flags)
 
-    LineType_str = property(_get_LineType_str, _set_LineType_str)
+    LineType_str = property(_get_LineType_str, _set_LineType_str) # type: str
 
     def _get_NormAmps(self) -> float:
         """
@@ -575,7 +575,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_NormAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 31, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: float
 
     def _get_EmergAmps(self) -> float:
         """
@@ -588,7 +588,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_EmergAmps(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 32, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: float
 
     def _get_FaultRate(self) -> float:
         """
@@ -601,7 +601,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_FaultRate(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 33, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: float
 
     def _get_pctPerm(self) -> float:
         """
@@ -614,7 +614,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_pctPerm(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 34, value, flags)
 
-    pctPerm = property(_get_pctPerm, _set_pctPerm)
+    pctPerm = property(_get_pctPerm, _set_pctPerm) # type: float
 
     def _get_Repair(self) -> float:
         """
@@ -627,7 +627,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Repair(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 35, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: float
 
     def _get_BaseFreq(self) -> float:
         """
@@ -640,7 +640,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_BaseFreq(self, value: float, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetFloat64(self._ptr, 36, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: float
 
     def _get_Enabled(self) -> bool:
         """
@@ -653,7 +653,7 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._lib.Obj_SetInt32(self._ptr, 37, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: bool
 
     def Like(self, value: AnyStr):
         """
@@ -724,7 +724,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Bus1(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(1, value, flags)
 
-    Bus1 = property(_get_Bus1, _set_Bus1)
+    Bus1 = property(_get_Bus1, _set_Bus1) # type: List[str]
 
     def _get_Bus2(self) -> List[str]:
         """
@@ -737,7 +737,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Bus2(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(2, value, flags)
 
-    Bus2 = property(_get_Bus2, _set_Bus2)
+    Bus2 = property(_get_Bus2, _set_Bus2) # type: List[str]
 
     def _get_LineCode_str(self) -> List[str]:
         """
@@ -751,7 +751,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_LineCode_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(3, value, flags)
 
-    LineCode_str = property(_get_LineCode_str, _set_LineCode_str)
+    LineCode_str = property(_get_LineCode_str, _set_LineCode_str) # type: List[str]
 
     def _get_LineCode(self) -> List[LineCodeObj]:
         """
@@ -765,7 +765,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_LineCode(self, value: Union[AnyStr, LineCodeObj, List[AnyStr], List[LineCodeObj]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(3, value, flags)
 
-    LineCode = property(_get_LineCode, _set_LineCode)
+    LineCode = property(_get_LineCode, _set_LineCode) # type: List[LineCodeObj]
 
     def _get_Length(self) -> BatchFloat64ArrayProxy:
         """
@@ -778,7 +778,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Length(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(4, value, flags)
 
-    Length = property(_get_Length, _set_Length)
+    Length = property(_get_Length, _set_Length) # type: BatchFloat64ArrayProxy
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """
@@ -791,7 +791,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Phases(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(5, value, flags)
 
-    Phases = property(_get_Phases, _set_Phases)
+    Phases = property(_get_Phases, _set_Phases) # type: BatchInt32ArrayProxy
 
     def _get_R1(self) -> BatchFloat64ArrayProxy:
         """
@@ -804,7 +804,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_R1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(6, value, flags)
 
-    R1 = property(_get_R1, _set_R1)
+    R1 = property(_get_R1, _set_R1) # type: BatchFloat64ArrayProxy
 
     def _get_X1(self) -> BatchFloat64ArrayProxy:
         """
@@ -817,7 +817,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_X1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(7, value, flags)
 
-    X1 = property(_get_X1, _set_X1)
+    X1 = property(_get_X1, _set_X1) # type: BatchFloat64ArrayProxy
 
     def _get_R0(self) -> BatchFloat64ArrayProxy:
         """
@@ -830,7 +830,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_R0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(8, value, flags)
 
-    R0 = property(_get_R0, _set_R0)
+    R0 = property(_get_R0, _set_R0) # type: BatchFloat64ArrayProxy
 
     def _get_X0(self) -> BatchFloat64ArrayProxy:
         """
@@ -843,7 +843,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_X0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(9, value, flags)
 
-    X0 = property(_get_X0, _set_X0)
+    X0 = property(_get_X0, _set_X0) # type: BatchFloat64ArrayProxy
 
     def _get_C1(self) -> BatchFloat64ArrayProxy:
         """
@@ -856,7 +856,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_C1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(10, value, flags)
 
-    C1 = property(_get_C1, _set_C1)
+    C1 = property(_get_C1, _set_C1) # type: BatchFloat64ArrayProxy
 
     def _get_C0(self) -> BatchFloat64ArrayProxy:
         """
@@ -869,7 +869,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_C0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(11, value, flags)
 
-    C0 = property(_get_C0, _set_C0)
+    C0 = property(_get_C0, _set_C0) # type: BatchFloat64ArrayProxy
 
     def _get_RMatrix(self) -> List[Float64Array]:
         """
@@ -885,7 +885,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_RMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(12, value, flags)
 
-    RMatrix = property(_get_RMatrix, _set_RMatrix)
+    RMatrix = property(_get_RMatrix, _set_RMatrix) # type: List[Float64Array]
 
     def _get_XMatrix(self) -> List[Float64Array]:
         """
@@ -901,7 +901,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_XMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(13, value, flags)
 
-    XMatrix = property(_get_XMatrix, _set_XMatrix)
+    XMatrix = property(_get_XMatrix, _set_XMatrix) # type: List[Float64Array]
 
     def _get_CMatrix(self) -> List[Float64Array]:
         """
@@ -917,7 +917,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_CMatrix(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(14, value, flags)
 
-    CMatrix = property(_get_CMatrix, _set_CMatrix)
+    CMatrix = property(_get_CMatrix, _set_CMatrix) # type: List[Float64Array]
 
     def _get_Switch(self) -> List[bool]:
         """
@@ -933,7 +933,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Switch(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(15, value, flags)
 
-    Switch = property(_get_Switch, _set_Switch)
+    Switch = property(_get_Switch, _set_Switch) # type: List[bool]
 
     def _get_Rg(self) -> BatchFloat64ArrayProxy:
         """
@@ -946,7 +946,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Rg(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(16, value, flags)
 
-    Rg = property(_get_Rg, _set_Rg)
+    Rg = property(_get_Rg, _set_Rg) # type: BatchFloat64ArrayProxy
 
     def _get_Xg(self) -> BatchFloat64ArrayProxy:
         """
@@ -959,7 +959,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Xg(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(17, value, flags)
 
-    Xg = property(_get_Xg, _set_Xg)
+    Xg = property(_get_Xg, _set_Xg) # type: BatchFloat64ArrayProxy
 
     def _get_rho(self) -> BatchFloat64ArrayProxy:
         """
@@ -972,7 +972,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_rho(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(18, value, flags)
 
-    rho = property(_get_rho, _set_rho)
+    rho = property(_get_rho, _set_rho) # type: BatchFloat64ArrayProxy
 
     def _get_Geometry_str(self) -> List[str]:
         """
@@ -985,7 +985,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Geometry_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(19, value, flags)
 
-    Geometry_str = property(_get_Geometry_str, _set_Geometry_str)
+    Geometry_str = property(_get_Geometry_str, _set_Geometry_str) # type: List[str]
 
     def _get_Geometry(self) -> List[LineGeometry]:
         """
@@ -998,7 +998,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Geometry(self, value: Union[AnyStr, LineGeometry, List[AnyStr], List[LineGeometry]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(19, value, flags)
 
-    Geometry = property(_get_Geometry, _set_Geometry)
+    Geometry = property(_get_Geometry, _set_Geometry) # type: List[LineGeometry]
 
     def _get_Units(self) -> BatchInt32ArrayProxy:
         """
@@ -1015,9 +1015,9 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
 
         self._set_batch_int32_array(20, value, flags)
 
-    Units = property(_get_Units, _set_Units)
+    Units = property(_get_Units, _set_Units) # type: BatchInt32ArrayProxy
 
-    def _get_Units_str(self) -> str:
+    def _get_Units_str(self) -> List[str]:
         """
         Length Units = {none | mi|kft|km|m|Ft|in|cm } Default is None - assumes length units match impedance units.
 
@@ -1028,7 +1028,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Units_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_Units(value, flags)
 
-    Units_str = property(_get_Units_str, _set_Units_str)
+    Units_str = property(_get_Units_str, _set_Units_str) # type: List[str]
 
     def _get_Spacing_str(self) -> List[str]:
         """
@@ -1043,7 +1043,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Spacing_str(self, value: Union[AnyStr, List[AnyStr]], flags: enums.SetterFlags = 0):
         self._set_batch_string(21, value, flags)
 
-    Spacing_str = property(_get_Spacing_str, _set_Spacing_str)
+    Spacing_str = property(_get_Spacing_str, _set_Spacing_str) # type: List[str]
 
     def _get_Spacing(self) -> List[LineSpacing]:
         """
@@ -1058,7 +1058,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Spacing(self, value: Union[AnyStr, LineSpacing, List[AnyStr], List[LineSpacing]], flags: enums.SetterFlags = 0):
         self._set_batch_obj_prop(21, value, flags)
 
-    Spacing = property(_get_Spacing, _set_Spacing)
+    Spacing = property(_get_Spacing, _set_Spacing) # type: List[LineSpacing]
 
     def _get_Conductors_str(self) -> List[List[str]]:
         """
@@ -1074,7 +1074,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Conductors_str(self, value: List[AnyStr], flags: enums.SetterFlags = 0):
         self._set_batch_stringlist_prop(22, value, flags)
 
-    Conductors_str = property(_get_Conductors_str, _set_Conductors_str)
+    Conductors_str = property(_get_Conductors_str, _set_Conductors_str) # type: List[List[str]]
 
     def _get_Conductors(self) -> List[List[WireData]]:
         """
@@ -1094,7 +1094,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
 
         self._set_batch_objlist_prop(22, value, flags)
 
-    Conductors = property(_get_Conductors, _set_Conductors)
+    Conductors = property(_get_Conductors, _set_Conductors) # type: List[List[WireData]]
 
     def _get_EarthModel(self) -> BatchInt32ArrayProxy:
         """
@@ -1111,9 +1111,9 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
 
         self._set_batch_int32_array(23, value, flags)
 
-    EarthModel = property(_get_EarthModel, _set_EarthModel)
+    EarthModel = property(_get_EarthModel, _set_EarthModel) # type: BatchInt32ArrayProxy
 
-    def _get_EarthModel_str(self) -> str:
+    def _get_EarthModel_str(self) -> List[str]:
         """
         One of {Carson | FullCarson | Deri}. Default is the global value established with the Set EarthModel command. See the Options Help on EarthModel option. This is used to override the global value for this line. This option applies only when the "geometry" property is used.
 
@@ -1124,7 +1124,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_EarthModel_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_EarthModel(value, flags)
 
-    EarthModel_str = property(_get_EarthModel_str, _set_EarthModel_str)
+    EarthModel_str = property(_get_EarthModel_str, _set_EarthModel_str) # type: List[str]
 
     def _get_B1(self) -> BatchFloat64ArrayProxy:
         """
@@ -1137,7 +1137,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_B1(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(26, value, flags)
 
-    B1 = property(_get_B1, _set_B1)
+    B1 = property(_get_B1, _set_B1) # type: BatchFloat64ArrayProxy
 
     def _get_B0(self) -> BatchFloat64ArrayProxy:
         """
@@ -1150,7 +1150,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_B0(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(27, value, flags)
 
-    B0 = property(_get_B0, _set_B0)
+    B0 = property(_get_B0, _set_B0) # type: BatchFloat64ArrayProxy
 
     def _get_Seasons(self) -> BatchInt32ArrayProxy:
         """
@@ -1163,7 +1163,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Seasons(self, value: Union[int, Int32Array], flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(28, value, flags)
 
-    Seasons = property(_get_Seasons, _set_Seasons)
+    Seasons = property(_get_Seasons, _set_Seasons) # type: BatchInt32ArrayProxy
 
     def _get_Ratings(self) -> List[Float64Array]:
         """
@@ -1180,7 +1180,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Ratings(self, value: Union[Float64Array, List[Float64Array]], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array_prop(29, value, flags)
 
-    Ratings = property(_get_Ratings, _set_Ratings)
+    Ratings = property(_get_Ratings, _set_Ratings) # type: List[Float64Array]
 
     def _get_LineType(self) -> BatchInt32ArrayProxy:
         """
@@ -1200,9 +1200,9 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
 
         self._set_batch_int32_array(30, value, flags)
 
-    LineType = property(_get_LineType, _set_LineType)
+    LineType = property(_get_LineType, _set_LineType) # type: BatchInt32ArrayProxy
 
-    def _get_LineType_str(self) -> str:
+    def _get_LineType_str(self) -> List[str]:
         """
         Code designating the type of line. 
         One of: OH, UG, UG_TS, UG_CN, SWT_LDBRK, SWT_FUSE, SWT_SECT, SWT_REC, SWT_DISC, SWT_BRK, SWT_ELBOW, BUSBAR
@@ -1216,7 +1216,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_LineType_str(self, value: AnyStr, flags: enums.SetterFlags = 0):
         self._set_LineType(value, flags)
 
-    LineType_str = property(_get_LineType_str, _set_LineType_str)
+    LineType_str = property(_get_LineType_str, _set_LineType_str) # type: List[str]
 
     def _get_NormAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -1229,7 +1229,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_NormAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(31, value, flags)
 
-    NormAmps = property(_get_NormAmps, _set_NormAmps)
+    NormAmps = property(_get_NormAmps, _set_NormAmps) # type: BatchFloat64ArrayProxy
 
     def _get_EmergAmps(self) -> BatchFloat64ArrayProxy:
         """
@@ -1242,7 +1242,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_EmergAmps(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(32, value, flags)
 
-    EmergAmps = property(_get_EmergAmps, _set_EmergAmps)
+    EmergAmps = property(_get_EmergAmps, _set_EmergAmps) # type: BatchFloat64ArrayProxy
 
     def _get_FaultRate(self) -> BatchFloat64ArrayProxy:
         """
@@ -1255,7 +1255,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_FaultRate(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(33, value, flags)
 
-    FaultRate = property(_get_FaultRate, _set_FaultRate)
+    FaultRate = property(_get_FaultRate, _set_FaultRate) # type: BatchFloat64ArrayProxy
 
     def _get_pctPerm(self) -> BatchFloat64ArrayProxy:
         """
@@ -1268,7 +1268,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_pctPerm(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(34, value, flags)
 
-    pctPerm = property(_get_pctPerm, _set_pctPerm)
+    pctPerm = property(_get_pctPerm, _set_pctPerm) # type: BatchFloat64ArrayProxy
 
     def _get_Repair(self) -> BatchFloat64ArrayProxy:
         """
@@ -1281,7 +1281,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Repair(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(35, value, flags)
 
-    Repair = property(_get_Repair, _set_Repair)
+    Repair = property(_get_Repair, _set_Repair) # type: BatchFloat64ArrayProxy
 
     def _get_BaseFreq(self) -> BatchFloat64ArrayProxy:
         """
@@ -1294,7 +1294,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_BaseFreq(self, value: Union[float, Float64Array], flags: enums.SetterFlags = 0):
         self._set_batch_float64_array(36, value, flags)
 
-    BaseFreq = property(_get_BaseFreq, _set_BaseFreq)
+    BaseFreq = property(_get_BaseFreq, _set_BaseFreq) # type: BatchFloat64ArrayProxy
 
     def _get_Enabled(self) -> List[bool]:
         """
@@ -1309,7 +1309,7 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     def _set_Enabled(self, value: bool, flags: enums.SetterFlags = 0):
         self._set_batch_int32_array(37, value, flags)
 
-    Enabled = property(_get_Enabled, _set_Enabled)
+    Enabled = property(_get_Enabled, _set_Enabled) # type: List[bool]
 
     def Like(self, value: AnyStr, flags: enums.SetterFlags = 0):
         """
@@ -1364,7 +1364,7 @@ class ILine(IDSSObj, LineBatch):
 
     def __init__(self, iobj):
         IDSSObj.__init__(self, iobj, Line, LineBatch)
-        LineBatch.__init__(self, self._api_util, sync_cls=True)
+        LineBatch.__init__(self, self._api_util, sync_cls_idx=Line._cls_idx)
 
 
     # We need this one for better type hinting
