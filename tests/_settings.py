@@ -68,6 +68,7 @@ L!Test/MultiCircuitTest.DSS
 Version8/Distrib/EPRITestCircuits/epri_dpv/M1/Master_NoPV.dss
 Version8/Distrib/EPRITestCircuits/epri_dpv/K1/Master_NoPV.dss
 Version8/Distrib/EPRITestCircuits/epri_dpv/J1/Master_withPV.dss
+Version8/Distrib/IEEETestCases/LVTestCase/Master.dss
 Version8/Distrib/IEEETestCases/LVTestCaseNorthAmerican/Master.dss
 Version8/Distrib/IEEETestCases/SecondaryTestCircuit_modified/Master.DSS
 L!Test/Cable_constants.DSS
