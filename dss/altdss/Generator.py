@@ -72,6 +72,12 @@ class Generator(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegisters
         'like': 48,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PCElementMixin.__init__(self)
+       ElementHasRegistersMixin.__init__(self)
+
     def _get_Phases(self) -> int:
         """
         Number of Phases, this Generator.  Power is evenly divided among phases.
@@ -882,6 +888,10 @@ class GeneratorBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _obj_cls = Generator
     _cls_idx = 27
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PCElementBatchMixin.__init__(self)
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """

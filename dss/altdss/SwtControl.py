@@ -28,6 +28,10 @@ class SwtControl(DSSObj, CircuitElementMixin):
         'like': 11,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_SwitchedObj_str(self) -> str:
         """
         Name of circuit element switch that the SwtControl operates. Specify the full object class and name.
@@ -217,6 +221,9 @@ class SwtControlBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = SwtControl
     _cls_idx = 34
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_SwitchedObj_str(self) -> List[str]:
         """

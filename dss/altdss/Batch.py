@@ -7,7 +7,46 @@ from .types import Float64Array, Int32Array
 from .DSSObj import DSSObj
 from .ArrayProxy import BatchFloat64ArrayProxy, BatchInt32ArrayProxy
 
-class DSSBatch(Base):
+class BatchCommon:
+    @property
+    def Name(self) -> List[str]:
+        res = [
+            self._ffi.string(self._lib.Obj_GetName(ptr)).decode(self._api_util.codec)
+            for ptr in self._unpack()
+        ]
+        self._check_for_error()
+        return res
+
+    def FullName(self) -> List[str]:
+        '''Returns the full name (including object type) for all objects in this batch'''
+
+        res = [
+            f'{DSSObj._idx_to_cls[self._lib.Obj_GetClassIdx(ptr)]._cls_name}.' + self._ffi.string(self._lib.Obj_GetName(ptr)).decode()
+            for ptr in self._unpack()
+        ]
+        self._check_for_error()
+        return res
+
+    def _get_batch_float_func(self, funcname):
+        func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
+        res = self._get_float64_array(self._lib.Batch_GetFloat64FromFunc, *self._get_ptr_cnt(), func)
+        self._check_for_error()
+        return res
+
+    def _get_batch_float64_int32_func(self, funcname, funcArg: int):
+        func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
+        res = self._get_float64_array(self._lib.Batch_GetFloat64FromFunc2, *self._get_ptr_cnt(), func, funcArg)
+        self._check_for_error()
+        return res
+
+    def _get_batch_int32_func(self, funcname):
+        func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
+        res = self._get_int32_array(self._lib.Batch_GetInt32FromFunc, *self._get_ptr_cnt(), func)
+        self._check_for_error()
+        return res
+
+    def _unpack(self):
+        return self._ffi.unpack(*self._get_ptr_cnt())
 
     def _dispose_batch(self, batch_ptr):
         if batch_ptr != self._ffi.NULL:
@@ -16,7 +55,6 @@ class DSSBatch(Base):
     def _invalidate_ptr(self):
         self._pointer = InvalidatedObject
 
-    #TODO: keep property name for debugging? Or maybe use from the parent object
     def _wrap_ptr(self, ptrptr, countptr):
         if ptrptr != self._ffi.NULL:
             self._pointer = self._ffi.gc(ptrptr[0], self._dispose_batch)
@@ -25,7 +63,53 @@ class DSSBatch(Base):
 
         self._count = countptr[0] if countptr != self._ffi.NULL else 0
 
+    def __eq__(self, other):
+        return self is other
 
+    def __len__(self):
+        if self._sync_cls_idx:
+            return self._lib.Obj_GetCount(self._api_util.ctx, self._sync_cls_idx)
+
+        _, cnt = self._get_ptr_cnt()
+        if cnt is None or cnt == self._ffi.NULL:
+            return 0
+
+        return cnt
+    
+    def __call__(self):
+        if self._pycls is None:
+            res = []
+            for other_ptr in self._unpack():
+                cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
+                pycls = DSSObj._idx_to_cls[cls_idx]
+                res.append(pycls(self._api_util, other_ptr))
+        else:
+            res = [
+                self._pycls(self._api_util, other_ptr)
+                for other_ptr in self._unpack()
+            ]
+
+        return res
+
+    def to_list(self):
+        return self()
+
+    def to_json(self, options: Union[int, DSSJSONFlags] = 0):
+        '''
+        Returns the data (as a list) of the elements in a batch as a JSON-encoded string.
+
+        The `options` parameter contains bit-flags to toggle specific features.
+        See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
+
+        Additionally, the `ExcludeDisabled` flag can be used to excluded disabled elements from the output.
+        '''
+        s = self._ffi.gc(self._lib.Batch_ToJSON(*self._get_ptr_cnt(), options), self._lib.DSS_Dispose_String)
+        self._check_for_error()
+        return self._ffi.string(s).decode(self._api_util.codec)
+
+
+class DSSBatch(Base, BatchCommon):
+    #TODO: keep property name for debugging? Or maybe use from the parent object
     def __init__(self, api_util, **kwargs):
         begin_edit = kwargs.pop('begin_edit', None)
         if begin_edit is None:
@@ -34,17 +118,17 @@ class DSSBatch(Base):
         if len(kwargs) > 1:
             raise ValueError('Exactly one argument is expected.')
 
-        self._sync_cls = kwargs.get('sync_cls', False)
+        self._sync_cls_idx = kwargs.get('sync_cls_idx', False)
 
-        if not self._sync_cls:
+        if not self._sync_cls_idx:
             Base.__init__(self, api_util)
 
         self._ffi = api_util.ffi
         self._ptrptr = ptrptr = self._ffi.new('void***')
         self._countptr = countptr = self._ffi.new('int32_t[4]')
 
-        if len(kwargs) == 0 or (len(kwargs) == 1 and self._sync_cls):
-            if not self._sync_cls:
+        if len(kwargs) == 0 or (len(kwargs) == 1 and self._sync_cls_idx):
+            if not self._sync_cls_idx:
                 self._lib.Batch_CreateByClass(ptrptr, countptr, self._cls_idx)
                 self._wrap_ptr(ptrptr, countptr)
                 # No need to track this kind of batch since it's dynamic
@@ -106,22 +190,6 @@ class DSSBatch(Base):
         self._wrap_ptr(ptrptr, countptr)
         self._check_for_error()
 
-
-    def to_json(self, options: Union[int, DSSJSONFlags] = 0):
-        '''
-        Returns the data (as a list) of the elements in a batch as a JSON-encoded string.
-
-        The `options` parameter contains bit-flags to toggle specific features.
-        See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
-
-        Additionally, the `ExcludeDisabled` flag can be used to excluded disabled elements from the output.
-
-        (API Extension)
-        '''
-        s = self._ffi.gc(self._lib.Batch_ToJSON(*self._get_ptr_cnt(), options), self._lib.DSS_Dispose_String)
-        self._check_for_error()
-        return self._ffi.string(s).decode(self._api_util.codec)
-
     def begin_edit(self) -> None:
         '''
         Marks for editing all DSS objects in the batch
@@ -149,22 +217,10 @@ class DSSBatch(Base):
         self._lib.Batch_EndEdit(*self._get_ptr_cnt(), num_changes)
         self._check_for_error()
 
-    def __eq__(self, other):
-        return self is other
-
-    def __len__(self):
-        if self._sync_cls:
-            return self._lib.Obj_GetCount(self._api_util.ctx, self._cls_idx)
-
-        if self._count is None or self._count == self._ffi.NULL:
-            return 0
-
-        return self._count
-    
     def _get_ptr_cnt(self):
-        if self._sync_cls:
-            self._pointer = self._lib.Obj_GetListPointer(self._api_util.ctx, self._cls_idx)                
-            self._count = self._lib.Obj_GetCount(self._api_util.ctx, self._cls_idx)
+        if self._sync_cls_idx:
+            self._pointer = self._lib.Obj_GetListPointer(self._api_util.ctx, self._sync_cls_idx)
+            self._count = self._lib.Obj_GetCount(self._api_util.ctx, self._sync_cls_idx)
 
         return (self._pointer, self._count)
 
@@ -263,32 +319,11 @@ class DSSBatch(Base):
         self._lib.Batch_SetStringArray(*self._get_ptr_cnt(), idx, value_ptr, flags)
         self._check_for_error()
 
-    def _unpack(self):
-        return self._ffi.unpack(*self._get_ptr_cnt())
-
     def _get_batch_float_prop(self, index):
         return self._get_float64_array(self._lib.Batch_GetFloat64, *self._get_ptr_cnt(), index)
 
-    def _get_batch_float_func(self, funcname):
-        func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
-        res = self._get_float64_array(self._lib.Batch_GetFloat64FromFunc, *self._get_ptr_cnt(), func)
-        self._check_for_error()
-        return res
-
-    def _get_batch_float64_int32_func(self, funcname, funcArg: int):
-        func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
-        res = self._get_float64_array(self._lib.Batch_GetFloat64FromFunc2, *self._get_ptr_cnt(), func, funcArg)
-        self._check_for_error()
-        return res
-
     def _get_batch_int32_prop(self, index):
         return self._get_int32_array(self._lib.Batch_GetInt32, *self._get_ptr_cnt(), index)
-
-    def _get_batch_int32_func(self, funcname):
-        func = self._ffi.addressof(self._api_util.lib_unpatched, funcname)
-        res = self._get_int32_array(self._lib.Batch_GetInt32FromFunc, *self._get_ptr_cnt(), func)
-        self._check_for_error()
-        return res
 
     def _get_batch_str_prop(self, index):
         return self._get_string_array(self._lib.Batch_GetString, *self._get_ptr_cnt(), index)
@@ -435,16 +470,6 @@ class DSSBatch(Base):
         self._check_for_error()
         return self._ffi.string(str_ptr).decode(self._api_util.codec)
 
-    @property
-    def Name(self) -> List[str]:
-        res = [
-            self._ffi.string(self._lib.Obj_GetName(ptr)).decode(self._api_util.codec)
-            for ptr in self._unpack()
-        ]
-        self._check_for_error()
-        return res
-
-
     def _get_obj_ll(self, idx: int, pycls):
         if len(self) == 0:
             return []
@@ -515,7 +540,7 @@ class DSSBatch(Base):
         #     obj._set_obj_array(idx, other_objs)
 
 
-class NonUniformBatch(Base):
+class NonUniformBatch(Base, BatchCommon):
     '''
     A batch of non-uniform objects.
 
@@ -540,8 +565,9 @@ class NonUniformBatch(Base):
     def _invalidate_ptr(self):
         self._ptr = InvalidatedObject
 
-    def __init__(self, func, parent, pycls=None, copy_safe=False):
-        super().__init__(parent._api_util)
+    def __init__(self, func, parent, pycls=None, copy_safe=False, sync_cls_idx=None):
+        Base.__init__(self, parent._api_util)
+        BatchCommon.__init__(self)
         self._ffi = self._api_util.ffi
         self._func = func
         self._parent_ptr = parent._ptr
@@ -552,29 +578,33 @@ class NonUniformBatch(Base):
         if self._copy_safe:
             self._api_util.track_batch(self)
 
+        if func is None:
+            self._sync_cls_idx = sync_cls_idx
+        else:
+            self._sync_cls_idx = None
+
     def _dispose_batch(self, batch_ptr):
         if batch_ptr != self._ffi.NULL:
             self._lib.Batch_Dispose(batch_ptr)
 
-    def _fill_data(self):
-        if self._copysafe and self._cnt is not None:
-            return (self._ptr, self._cnt)
+    def _get_ptr_cnt(self):
+        if self._sync_cls_idx:
+            self._pointer = self._lib.Obj_GetListPointer(self._api_util.ctx, self._sync_cls_idx)
+            self._count = self._lib.Obj_GetCount(self._api_util.ctx, self._sync_cls_idx)
+            return (self._pointer, self._count)
 
-        self._ptr = self._ffi.gc(self._ffi.new('void***'), self._dispose_batch)
+        if self._copy_safe and self._cnt is not None:
+            return (self._ptr[0], self._cnt[0])
+
+        self._ptr = self._ffi.gc(self._ffi.new('void***'), lambda ptr2: self._dispose_batch(ptr2[0]))
         self._cnt = self._ffi.new('int32_t[4]')
         self._func(self._ptr, self._cnt, self._parent_ptr)
-        return (self._ptr, self._cnt)
-        
-    def __len__(self):
-        _, cnt = self._fill_data()
-        res = cnt[0]
-        return res
+        return (self._ptr[0], self._cnt[0])
 
     def __iter__(self):
-        ptr, cnt = self._fill_data()
-        ptr = ptr[0]
+        ptr, cnt = self._get_ptr_cnt()
         if self._pycls is None:
-            for idx in range(cnt[0]):
+            for idx in range(cnt):
                 other_ptr = ptr[idx]
                 cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
                 pycls = DSSObj._idx_to_cls[cls_idx]
@@ -584,55 +614,6 @@ class NonUniformBatch(Base):
 
         for idx in range(cnt[0]):
             yield self._pycls(self._api_util, ptr[idx])
-
-    def __call__(self):
-        ptr, cnt = self._fill_data()
-        if not cnt[0]:
-            return []
-    
-        if self._pycls is None:
-            res = []
-            for other_ptr in self._ffi.unpack(ptr[0], cnt[0]):
-                cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
-                pycls = DSSObj._idx_to_cls[cls_idx]
-                res.append(pycls(self._api_util, other_ptr))
-        else:
-            res = [
-                self._pycls(self._api_util, other_ptr)
-                for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
-            ]
-
-        return res
-
-    def to_list(self):
-        return self()
-
-    def Name(self) -> List[str]:
-        '''Returns the name (without object type) for all objects in this batch'''
-        ptr, cnt = self._fill_data()
-        if not cnt[0]:
-            return []
-
-        res = [
-            self._ffi.string(self._lib.Obj_GetName(other_ptr)).decode()
-            for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
-        ]
-        self._check_for_error()
-        return res
-
-    def FullName(self) -> List[str]:
-        '''Returns the full name (including object type) for all objects in this batch'''
-
-        ptr, cnt = self._fill_data()
-        if not cnt[0]:
-            return []
-
-        res = [
-            f'{DSSObj._idx_to_cls[self._lib.Obj_GetClassIdx(other_ptr)]._cls_name}.' + self._ffi.string(self._lib.Obj_GetName(other_ptr)).decode()
-            for other_ptr in self._ffi.unpack(ptr[0], cnt[0])
-        ]
-        self._check_for_error()
-        return res
 
 
 __all__ = ('DSSBatch', 'NonUniformBatch', )

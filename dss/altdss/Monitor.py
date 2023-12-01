@@ -28,6 +28,11 @@ class Monitor(DSSObj, CircuitElementMixin, MonitorObjMixin):
         'like': 10,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       MonitorObjMixin.__init__(self)
+
     def _get_Element_str(self) -> str:
         """
         Name (Full Object name) of element to which the monitor is connected.
@@ -238,6 +243,9 @@ class MonitorBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = Monitor
     _cls_idx = 47
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_Element_str(self) -> List[str]:
         """

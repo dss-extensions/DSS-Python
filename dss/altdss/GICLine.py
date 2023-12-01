@@ -37,6 +37,11 @@ class GICLine(DSSObj, CircuitElementMixin, PCElementMixin):
         'like': 19,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PCElementMixin.__init__(self)
+
     def _get_Bus1(self) -> str:
         """
         Name of bus to which the main terminal (1) is connected.
@@ -339,6 +344,10 @@ class GICLineBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _obj_cls = GICLine
     _cls_idx = 44
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PCElementBatchMixin.__init__(self)
 
     def _get_Bus1(self) -> List[str]:
         """

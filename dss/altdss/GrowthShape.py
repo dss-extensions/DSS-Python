@@ -22,6 +22,7 @@ class GrowthShape(DSSObj):
         'like': 7,
     }
 
+
     def _get_NPts(self) -> int:
         """
         Number of points to expect in subsequent vector.

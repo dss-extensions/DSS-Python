@@ -86,6 +86,12 @@ class PVSystem(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersM
         'like': 54,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PCElementMixin.__init__(self)
+       ElementHasRegistersMixin.__init__(self)
+
     def _get_Phases(self) -> int:
         """
         Number of Phases, this PVSystem element.  Power is evenly divided among phases.
@@ -1064,6 +1070,10 @@ class PVSystemBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _obj_cls = PVSystem
     _cls_idx = 35
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PCElementBatchMixin.__init__(self)
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """

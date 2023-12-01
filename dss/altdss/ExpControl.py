@@ -33,6 +33,10 @@ class ExpControl(DSSObj, CircuitElementMixin):
         'like': 17,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_PVSystemList(self) -> List[str]:
         """
         Array list of PVSystems to be controlled.
@@ -302,6 +306,9 @@ class ExpControlBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = ExpControl
     _cls_idx = 43
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_PVSystemList(self) -> List[List[str]]:
         """

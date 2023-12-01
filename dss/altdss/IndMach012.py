@@ -45,6 +45,11 @@ class IndMach012(DSSObj, CircuitElementMixin, PCElementMixin):
         'like': 25,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PCElementMixin.__init__(self)
+
     def _get_Phases(self) -> int:
         """
         Number of Phases, this Induction Machine.  
@@ -501,6 +506,10 @@ class IndMach012Batch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _obj_cls = IndMach012
     _cls_idx = 39
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PCElementBatchMixin.__init__(self)
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """

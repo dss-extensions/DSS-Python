@@ -33,6 +33,10 @@ class Sensor(DSSObj, CircuitElementMixin):
         'like': 15,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_Element_str(self) -> str:
         """
         Name (Full Object name) of element to which the Sensor is connected.
@@ -282,6 +286,9 @@ class SensorBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = Sensor
     _cls_idx = 49
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_Element_str(self) -> List[str]:
         """

@@ -55,6 +55,10 @@ class InvControl(DSSObj, CircuitElementMixin):
         'like': 37,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_DERList(self) -> List[str]:
         """
         Array list of PVSystem and/or Storage elements to be controlled. If not specified, all PVSystem and Storage in the circuit are assumed to be controlled by this control. 
@@ -1039,6 +1043,9 @@ class InvControlBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = InvControl
     _cls_idx = 42
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_DERList(self) -> List[List[str]]:
         """

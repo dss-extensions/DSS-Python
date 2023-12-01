@@ -23,6 +23,7 @@ class DynamicExp(DSSObj):
         'like': 7,
     }
 
+
     def _get_NVariables(self) -> int:
         """
         (Int) Number of state variables to be considered in the differential equation.

@@ -22,6 +22,7 @@ class LineSpacing(DSSObj):
         'like': 6,
     }
 
+
     def _get_NConds(self) -> int:
         """
         Number of wires in this geometry. Default is 3. Triggers memory allocations. Define first!

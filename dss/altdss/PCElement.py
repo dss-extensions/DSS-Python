@@ -1,4 +1,5 @@
 from typing import Union, List, AnyStr, Dict
+from .enums import ExtraClassIDs
 from .types import Float64Array
 from .DSSObj import DSSObj
 from .CircuitElement import CircuitElementBatch, ElementHasRegistersMixin
@@ -58,5 +59,10 @@ class PCElementBatch(CircuitElementBatch, PCElementBatchMixin, ElementHasRegiste
     Non-uniform batch of PC elements. Can contain distinct PC types, while providing 
     common functions
     '''
-    pass
 
+    __slots__ = ()
+
+    def __init__(self, func, parent, sync_cls_idx=ExtraClassIDs.PCElements):
+        CircuitElementBatch.__init__(self, func, parent, sync_cls_idx=sync_cls_idx)
+        PCElementBatchMixin.__init__(self)
+        ElementHasRegistersMixin.__init__(self)

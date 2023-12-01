@@ -21,7 +21,7 @@ class DSSObj(Base):
     _extra_slots = []
 
     def __init__(self, api_util, ptr):
-        super().__init__(api_util)
+        Base.__init__(self, api_util)
         self._ptr = ptr
         self._ffi = api_util.ffi
         self._get_int32_list = api_util.get_int32_array2
@@ -107,6 +107,9 @@ class DSSObj(Base):
         self._check_for_error()
         return self._ffi.string(s).decode(self._api_util.codec)
 
+    def FullName(self) -> str:
+        return f'{self._cls_name}.{self.Name}'
+
     def _get_complex(self, idx: int) -> complex:
         return self._get_float64_array(
             self._lib.Obj_GetFloat64Array,
@@ -145,7 +148,7 @@ class DSSObj(Base):
         self._lib.Obj_SetStringArray(self._ptr, idx, value_ptr, value_count, flags)
         self._check_for_error()
 
-    def _get_obj_from_ptr(self, other_ptr, pycls):
+    def _get_obj_from_ptr(self, other_ptr, pycls=None):
         self._check_for_error()
         if other_ptr == self._ffi.NULL:
             return None
@@ -283,7 +286,7 @@ class DSSObj(Base):
 
 class IDSSObj(Base):
     def __init__(self, iobj, obj_cls, batch_cls):
-        super().__init__(iobj._api_util)
+        Base.__init__(self, iobj._api_util)
         self._iobj = iobj
         self.cls_idx = obj_cls._cls_idx
         self._obj_cls = obj_cls
@@ -402,6 +405,7 @@ class IDSSObj(Base):
             if ptr == self._api_util.ffi.NULL:
                 raise ValueError('Could not find object by name "{}".'.format(name_or_idx))
 
+        print(self._obj_cls)
         return self._obj_cls(self._api_util, ptr)
 
     def __len__(self):

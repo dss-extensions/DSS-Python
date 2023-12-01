@@ -103,6 +103,12 @@ class Storage(DSSObj, CircuitElementMixin, PCElementMixin, ElementHasRegistersMi
         'like': 65,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PCElementMixin.__init__(self)
+       ElementHasRegistersMixin.__init__(self)
+
     def _get_Phases(self) -> int:
         """
         Number of Phases, this Storage element.  Power is evenly divided among phases.
@@ -1222,6 +1228,10 @@ class StorageBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _obj_cls = Storage
     _cls_idx = 29
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PCElementBatchMixin.__init__(self)
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """

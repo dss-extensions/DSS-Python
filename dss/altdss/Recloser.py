@@ -45,6 +45,10 @@ class Recloser(DSSObj, CircuitElementMixin):
         'like': 27,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_MonitoredObj_str(self) -> str:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the Recloser's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
@@ -548,6 +552,9 @@ class RecloserBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = Recloser
     _cls_idx = 32
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_MonitoredObj_str(self) -> List[str]:
         """

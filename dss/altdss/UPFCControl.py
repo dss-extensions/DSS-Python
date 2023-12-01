@@ -20,6 +20,10 @@ class UPFCControl(DSSObj, CircuitElementMixin):
         'like': 4,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_UPFCList(self) -> List[str]:
         """
         The list of all the UPFC devices to be controlled by this controller, If left empty, this control will apply for all UPFCs in the model.
@@ -83,6 +87,9 @@ class UPFCControlBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = UPFCControl
     _cls_idx = 37
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_UPFCList(self) -> List[List[str]]:
         """

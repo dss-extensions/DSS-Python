@@ -1,5 +1,6 @@
 from typing import Dict, List, Union, AnyStr
 from dss.enums import OCPDevType
+from .enums import ExtraClassIDs
 from .types import Float64Array, Int32Array, ComplexArray, BoolArray
 from .Batch import NonUniformBatch
 from .DSSObj import DSSObj
@@ -10,22 +11,21 @@ class CircuitElementMixin:
     _extra_slots = ['Controllers', ]
 
     def __init__(self, *args):
-        super().__init__(*args)
         self.Controllers = NonUniformBatch(self._lib.Alt_CE_Get_Controllers, self)
 
     def GUID(self) -> str:
         '''Object's GUID/UUID. Currently used only in the CIM-related methods.'''
         return self._get_string(self._lib.Alt_CE_Get_GUID(self._ptr))
 
-    def _getDisplayName(self) -> str:
+    def _get_DisplayName(self) -> str:
         return self._get_string(self._lib.Alt_CE_Get_DisplayName(self._ptr))
     
-    def _setDisplayName(self, value: AnyStr):
+    def _set_DisplayName(self, value: AnyStr):
         if not isinstance(value, bytes):
             value = value.encode(self._api_util.codec)
         self._lib.Alt_CE_Set_DisplayName(self._ptr, value)
 
-    DisplayName = property(_getDisplayName, _setDisplayName)
+    DisplayName = property(_get_DisplayName, _set_DisplayName) # type: str
 
     # TODO: is BusNames too redundant to keep?
     # def GetBusNames(self) -> List[str]:
@@ -212,8 +212,8 @@ class CircuitElementBatchMixin:
         '''
         return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_TotalPowers, *self._get_ptr_cnt())
 
-    def SeqPowers(self) -> Float64Array:
-        return self._get_float64_array(self._lib.Alt_CEBatch_Get_SeqPowers, *self._get_ptr_cnt())
+    def SeqPowers(self) -> ComplexArray:
+        return self._get_fcomplex128_array(self._lib.Alt_CEBatch_Get_SeqPowers, *self._get_ptr_cnt())
 
     def SeqCurrents(self) -> Float64Array:
         return self._get_float64_array(self._lib.Alt_CEBatch_Get_SeqCurrents, *self._get_ptr_cnt())
@@ -244,9 +244,6 @@ class ElementHasRegistersMixin:
     __slots__ = ()
     _extra_slots = []
 
-    # def __init__(self, *args):
-    #     super().__init__(*args)
-
     def RegisterNames(self) -> List[str]:
         return self._get_string_array(self._lib.Alt_CE_Get_RegisterNames, self._ptr)
 
@@ -263,3 +260,8 @@ class CircuitElementBatch(NonUniformBatch, CircuitElementBatchMixin):
     common functions
     '''
 
+    __slots__ = ()
+
+    def __init__(self, func, parent, sync_cls_idx=ExtraClassIDs.PCElements):
+        NonUniformBatch.__init__(self, func, parent, sync_cls_idx=sync_cls_idx)
+        CircuitElementBatchMixin.__init__(self)

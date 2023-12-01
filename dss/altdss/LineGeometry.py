@@ -39,6 +39,7 @@ class LineGeometry(DSSObj):
         'like': 20,
     }
 
+
     def _get_NConds(self) -> int:
         """
         Number of conductors in this geometry. Default is 3. Triggers memory allocations. Define first!

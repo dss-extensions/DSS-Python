@@ -35,6 +35,11 @@ class Isource(DSSObj, CircuitElementMixin, PCElementMixin):
         'like': 15,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PCElementMixin.__init__(self)
+
     def _get_Bus1(self) -> str:
         """
         Name of bus to which source is connected.
@@ -381,6 +386,10 @@ class IsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _obj_cls = Isource
     _cls_idx = 17
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PCElementBatchMixin.__init__(self)
 
     def _get_Bus1(self) -> List[str]:
         """

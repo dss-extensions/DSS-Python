@@ -40,6 +40,10 @@ class LoadShape(DSSObj, LoadShapeObjMixin):
         'like': 23,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       LoadShapeObjMixin.__init__(self)
+
     def _get_NPts(self) -> int:
         """
         Max number of points to expect in load shape vectors. This gets reset to the number of multiplier values found (in files only) if less than specified.
@@ -401,6 +405,9 @@ class LoadShapeBatch(DSSBatch, LoadShapeBatchMixin):
     _obj_cls = LoadShape
     _cls_idx = 2
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       LoadShapeBatchMixin.__init__(self)
 
     def _get_NPts(self) -> BatchInt32ArrayProxy:
         """

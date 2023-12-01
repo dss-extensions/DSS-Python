@@ -29,6 +29,7 @@ class TShape(DSSObj):
         'like': 13,
     }
 
+
     def _get_NPts(self) -> int:
         """
         Max number of points to expect in temperature shape vectors. This gets reset to the number of Temperature values found if less than specified.

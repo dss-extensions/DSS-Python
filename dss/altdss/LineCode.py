@@ -44,6 +44,7 @@ class LineCode(DSSObj):
         'like': 28,
     }
 
+
     def _get_NPhases(self) -> int:
         """
         Number of phases in the line this line code data represents.  Setting this property reinitializes the line code.  Impedance matrix is reset for default symmetrical component.

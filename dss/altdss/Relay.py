@@ -79,6 +79,10 @@ class Relay(DSSObj, CircuitElementMixin):
         'like': 53,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_MonitoredObj_str(self) -> str:
         """
         Full object name of the circuit element, typically a line, transformer, load, or generator, to which the relay's PT and/or CT are connected. This is the "monitored" element. There is no default; must be specified.
@@ -1031,6 +1035,9 @@ class RelayBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = Relay
     _cls_idx = 31
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_MonitoredObj_str(self) -> List[str]:
         """

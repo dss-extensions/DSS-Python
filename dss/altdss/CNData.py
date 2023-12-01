@@ -38,6 +38,7 @@ class CNData(DSSObj):
         'like': 22,
     }
 
+
     def _get_k(self) -> int:
         """
         Number of concentric neutral strands; default is 2

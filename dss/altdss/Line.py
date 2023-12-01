@@ -61,6 +61,11 @@ class Line(DSSObj, CircuitElementMixin, PDElementMixin):
         'like': 38,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PDElementMixin.__init__(self)
+
     def _get_Bus1(self) -> str:
         """
         Name of bus to which first terminal is connected.
@@ -709,6 +714,10 @@ class LineBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _obj_cls = Line
     _cls_idx = 15
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PDElementBatchMixin.__init__(self)
 
     def _get_Bus1(self) -> List[str]:
         """

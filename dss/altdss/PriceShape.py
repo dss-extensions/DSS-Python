@@ -29,6 +29,7 @@ class PriceShape(DSSObj):
         'like': 13,
     }
 
+
     def _get_NPts(self) -> int:
         """
         Max number of points to expect in price shape vectors. This gets reset to the number of Price values found if less than specified.

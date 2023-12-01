@@ -31,6 +31,10 @@ class ESPVLControl(DSSObj, CircuitElementMixin):
         'like': 14,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_Element_str(self) -> str:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; must be specified.
@@ -271,6 +275,9 @@ class ESPVLControlBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = ESPVLControl
     _cls_idx = 38
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_Element_str(self) -> List[str]:
         """

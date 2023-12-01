@@ -45,6 +45,10 @@ class CapControl(DSSObj, CircuitElementMixin):
         'like': 26,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_Element_str(self) -> str:
         """
         Full object name of the circuit element, typically a line or transformer, to which the capacitor control's PT and/or CT are connected.There is no default; must be specified.
@@ -529,6 +533,9 @@ class CapControlBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = CapControl
     _cls_idx = 24
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_Element_str(self) -> List[str]:
         """

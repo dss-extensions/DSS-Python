@@ -1,4 +1,5 @@
 from typing import List
+from .enums import ExtraClassIDs
 from .types import Float64Array, Int32Array
 from .DSSObj import DSSObj
 from .CircuitElement import CircuitElementBatch
@@ -93,7 +94,12 @@ class PDElementBatch(CircuitElementBatch, PDElementBatchMixin):
     Non-uniform batch of PD elements. Can contain distinct PD types, while providing 
     common functions
     '''
-    pass
+
+    __slots__ = ()
+
+    def __init__(self, func, parent, sync_cls_idx=ExtraClassIDs.PCElements):
+        CircuitElementBatch.__init__(self, func, parent, sync_cls_idx=sync_cls_idx)
+        PDElementBatchMixin.__init__(self)
 
 
 __all__ = ('PDElementMixin', 'PDElementBatchMixin', 'PDElementBatch',)

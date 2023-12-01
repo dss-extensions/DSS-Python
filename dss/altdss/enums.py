@@ -4,6 +4,17 @@ from enum import IntEnum, IntFlag
 # Global enumerations
 
 
+class ExtraClassIDs(IntEnum):
+    """
+    A very limited set of functions accept the numbers from this enumeration
+    as shortcuts to the internal prepared element lists of the engine.
+    """
+    DSSObjs = -1
+    CktElements = -2
+    PCElements = -3
+    PDElements = -4
+
+
 class SetterFlags(IntFlag):
     """
     Setter flags for the AltDSS modern API

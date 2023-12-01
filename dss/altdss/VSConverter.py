@@ -42,6 +42,11 @@ class VSConverter(DSSObj, CircuitElementMixin, PCElementMixin):
         'like': 23,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PCElementMixin.__init__(self)
+
     def _get_Phases(self) -> int:
         """
         Number of AC plus DC conductors. Default is 4. AC phases numbered before DC conductors.
@@ -408,6 +413,10 @@ class VSConverterBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _obj_cls = VSConverter
     _cls_idx = 46
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PCElementBatchMixin.__init__(self)
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """

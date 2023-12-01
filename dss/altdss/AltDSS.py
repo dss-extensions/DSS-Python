@@ -1,6 +1,7 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import Self
 import numpy as np
+from enum import IntEnum
 
 # These are currently reused directly from DSS-Python; this may change later
 from dss.IDSSEvents import IDSSEvents
@@ -38,6 +39,7 @@ class IAltDSS(IObj):
         'Topology',
         'YMatrix',
         'ZIP',
+        '_ptr',
     ]
     _ctx_to_altdss = {}
    
@@ -66,17 +68,18 @@ class IAltDSS(IObj):
         return IAltDSS(api_util)
 
     def __init__(self, api_util):
-        super().__init__(api_util)
+        IObj.__init__(self, api_util)
         IAltDSS._ctx_to_altdss[api_util.ctx] = self
+        self._ptr = api_util.ctx
 
         self.Bus = IBuses(self._api_util)
         self.ControlQueue = IControlQueue(self._api_util)
-        # TODO: self.Element = CircuitElementBatch(, self)
+        self.Element = CircuitElementBatch(None, self)
         self.Error = IError(self._api_util)
         self.Events = IDSSEvents(self._api_util)
         # self.Parallel = IParallel(self._api_util)
-        #TODO: self.PCElement = PCElementBatch(self._api_util)
-        #TODO: self.PDElement = PDElementBatch(self._api_util)
+        self.PCElement = PCElementBatch(None, self)
+        self.PDElement = PDElementBatch(None, self)
         self.ReduceCircuit = IReduceCkt(self._api_util)
         self.Settings = ISettings(self._api_util)
         self.Solution = ISolution(self._api_util)

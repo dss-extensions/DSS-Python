@@ -37,6 +37,7 @@ class TSData(DSSObj):
         'like': 21,
     }
 
+
     def _get_DiaShield(self) -> float:
         """
         Diameter over tape shield; same units as radius; no default.

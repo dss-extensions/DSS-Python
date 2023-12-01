@@ -46,6 +46,11 @@ class Reactor(DSSObj, CircuitElementMixin, PDElementMixin):
         'like': 27,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PDElementMixin.__init__(self)
+
     def _get_Bus1(self) -> str:
         """
         Name of first bus. Examples:
@@ -489,6 +494,10 @@ class ReactorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _obj_cls = Reactor
     _cls_idx = 23
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PDElementBatchMixin.__init__(self)
 
     def _get_Bus1(self) -> List[str]:
         """

@@ -32,6 +32,11 @@ class GICsource(DSSObj, CircuitElementMixin, PCElementMixin):
         'like': 14,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PCElementMixin.__init__(self)
+
     def _get_Volts(self) -> float:
         """
         Voltage magnitude, in volts, of the GIC voltage induced across the associated line. When specified, induced voltage is assumed defined by Voltage and Angle properties. 
@@ -258,6 +263,10 @@ class GICsourceBatch(DSSBatch, CircuitElementBatchMixin, PCElementBatchMixin):
     _obj_cls = GICsource
     _cls_idx = 40
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PCElementBatchMixin.__init__(self)
 
     def _get_Volts(self) -> BatchFloat64ArrayProxy:
         """

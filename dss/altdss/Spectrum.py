@@ -22,6 +22,7 @@ class Spectrum(DSSObj):
         'like': 6,
     }
 
+
     def _get_NumHarm(self) -> int:
         """
         Number of frequencies in this spectrum. (See CSVFile)

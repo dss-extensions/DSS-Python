@@ -29,6 +29,7 @@ class XYcurve(DSSObj):
         'like': 14,
     }
 
+
     def _get_NPts(self) -> int:
         """
         Max number of points to expect in curve. This could get reset to the actual number of points defined if less than specified.

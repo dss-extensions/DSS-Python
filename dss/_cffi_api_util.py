@@ -516,12 +516,15 @@ class CffiApiUtil(object):
 
         return res
 
-    def get_fcomplex128_array(self, func, *args) -> ComplexArray:
+    def get_fcomplex128_array(self, func, *args) -> Union[ComplexArray, None]:
         # Currently we use the same as API as get_float64_array, may change later
         ptr = self.ffi.new('double**')
         cnt = self.ffi.new('int32_t[4]')
         func(ptr, cnt, *args)
-        res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
+        if cnt[0] == 1: # empty
+            res = None
+        else:
+            res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
         self.lib.DSS_Dispose_PDouble(ptr)
 
         if cnt[3]:

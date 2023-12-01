@@ -82,6 +82,12 @@ class Transformer(DSSObj, CircuitElementMixin, PDElementMixin, TransformerObjMix
         'like': 57,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PDElementMixin.__init__(self)
+       TransformerObjMixin.__init__(self)
+
     def _get_Phases(self) -> int:
         """
         Number of phases this transformer. Default is 3.
@@ -873,6 +879,10 @@ class TransformerBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _obj_cls = Transformer
     _cls_idx = 20
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PDElementBatchMixin.__init__(self)
 
     def _get_Phases(self) -> BatchInt32ArrayProxy:
         """

@@ -63,6 +63,10 @@ class StorageController(DSSObj, CircuitElementMixin):
         'like': 40,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_Element_str(self) -> str:
         """
         Full object name of the circuit element, typically a line or transformer, which the control is monitoring. There is no default; Must be specified.In "Local" control mode, is the name of the load that will be managed by the storage device, which should be installed at the same bus.
@@ -796,6 +800,9 @@ class StorageControllerBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = StorageController
     _cls_idx = 30
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_Element_str(self) -> List[str]:
         """

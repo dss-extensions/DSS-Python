@@ -39,6 +39,11 @@ class Capacitor(DSSObj, CircuitElementMixin, PDElementMixin):
         'like': 21,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       PDElementMixin.__init__(self)
+
     def _get_Bus1(self) -> str:
         """
         Name of first bus of 2-terminal capacitor. Examples:
@@ -365,6 +370,10 @@ class CapacitorBatch(DSSBatch, CircuitElementBatchMixin, PDElementBatchMixin):
     _obj_cls = Capacitor
     _cls_idx = 22
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       PDElementBatchMixin.__init__(self)
 
     def _get_Bus1(self) -> List[str]:
         """

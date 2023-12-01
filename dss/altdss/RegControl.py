@@ -54,6 +54,10 @@ class RegControl(DSSObj, CircuitElementMixin):
         'like': 35,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+
     def _get_Transformer_str(self) -> str:
         """
         Name of Transformer or AutoTrans element to which the RegControl is connected. Do not specify the full object name; "Transformer" or "AutoTrans" is assumed for the object class.  Example:
@@ -589,6 +593,9 @@ class RegControlBatch(DSSBatch, CircuitElementBatchMixin):
     _obj_cls = RegControl
     _cls_idx = 21
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
 
     def _get_Transformer_str(self) -> List[str]:
         """

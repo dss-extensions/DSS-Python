@@ -30,6 +30,7 @@ class WireData(DSSObj):
         'like': 14,
     }
 
+
     def _get_RDC(self) -> float:
         """
         dc Resistance, ohms per unit length (see Runits). Defaults to Rac/1.02 if not specified.

@@ -47,6 +47,12 @@ class EnergyMeter(DSSObj, CircuitElementMixin, EnergyMeterObjMixin, ElementHasRe
         'like': 27,
     }
 
+    def __init__(self, api_util, ptr):
+       DSSObj.__init__(self, api_util, ptr)
+       CircuitElementMixin.__init__(self)
+       EnergyMeterObjMixin.__init__(self)
+       ElementHasRegistersMixin.__init__(self)
+
     def _get_Element_str(self) -> str:
         """
         Name (Full Object name) of element to which the monitor is connected.
@@ -495,6 +501,10 @@ class EnergyMeterBatch(DSSBatch, CircuitElementBatchMixin, EnergyMeterBatchMixin
     _obj_cls = EnergyMeter
     _cls_idx = 48
 
+    def __init__(self, api_util, **kwargs):
+       DSSBatch.__init__(self, api_util, **kwargs)
+       CircuitElementBatchMixin.__init__(self)
+       EnergyMeterBatchMixin.__init__(self)
 
     def _get_Element_str(self) -> List[str]:
         """

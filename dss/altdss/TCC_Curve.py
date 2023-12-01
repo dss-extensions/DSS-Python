@@ -19,6 +19,7 @@ class TCC_Curve(DSSObj):
         'like': 4,
     }
 
+
     def _get_NPts(self) -> int:
         """
         Number of points to expect in time-current arrays.

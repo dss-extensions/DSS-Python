@@ -116,20 +116,20 @@ class EnergyMeterObjMixin:
     '''Accessor for all branches in the meter zone (internal SequenceList), in lexical order'''
     Sequence: CircuitElementBatch
 
-    def __init__(self, api_util):
+    def __init__(self):
         self.ZonePCEs = PCElementBatch(self._lib.Alt_Meter_Get_ZonePCEs, self)
         self.EndElements = CircuitElementBatch(self._lib.Alt_Meter_Get_EndElements, self)
         self.Branches = PDElementBatch(self._lib.Alt_Meter_Get_BranchesInZone, self)
-        self.Loads = LoadBatch(from_func=(self._lib.Alt_Meter_Get_Loads, self))
+        self.Loads = LoadBatch(self._api_util, from_func=(self._lib.Alt_Meter_Get_Loads, self._ptr))
         self.Sequence = CircuitElementBatch(self._lib.Alt_Meter_Get_SequenceList, self)
 
     def TotalCustomers(self) -> int:
         '''Total Number of customers in this zone (downline from the EnergyMeter)'''
         return self._lib.Alt_Meter_Get_TotalCustomers(self._ptr)
 
-    def CountEndElements(self) -> int:
+    def NumEndElements(self) -> int:
         '''Number of zone end elements in the active meter zone.'''
-        return self._lib.Alt_Meter_Get_CountEndElements(self._ptr)
+        return self._lib.Alt_Meter_Get_NumEndElements(self._ptr)
 
     def NumSections(self) -> int:
         '''Number of feeder sections in this meter's zone'''
@@ -178,9 +178,9 @@ class EnergyMeterBatchMixin:
         '''Total Number of customers in this zone (downline from the EnergyMeter)'''
         return self._get_batch_int32_func("Alt_Meter_Get_TotalCustomers")
 
-    def CountEndElements(self) -> Int32Array:
+    def NumEndElements(self) -> Int32Array:
         '''Number of zone end elements in the active meter zone.'''
-        return self._get_batch_int32_func("Alt_Meter_Get_CountEndElements")
+        return self._get_batch_int32_func("Alt_Meter_Get_NumEndElements")
 
     def NumSections(self) -> Int32Array:
         '''Number of feeder sections in the zone of each meter'''

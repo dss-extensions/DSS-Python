@@ -60,6 +60,7 @@ class XfmrCode(DSSObj):
         'like': 40,
     }
 
+
     def _get_Phases(self) -> int:
         """
         Number of phases this transformer. Default is 3.
