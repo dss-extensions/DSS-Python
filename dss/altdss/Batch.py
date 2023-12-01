@@ -77,7 +77,7 @@ class BatchCommon:
         return cnt
     
     def __call__(self):
-        if self._pycls is None:
+        if self._obj_cls is None:
             res = []
             for other_ptr in self._unpack():
                 cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
@@ -85,7 +85,7 @@ class BatchCommon:
                 res.append(pycls(self._api_util, other_ptr))
         else:
             res = [
-                self._pycls(self._api_util, other_ptr)
+                self._obj_cls(self._api_util, other_ptr)
                 for other_ptr in self._unpack()
             ]
 
@@ -556,7 +556,7 @@ class NonUniformBatch(Base, BatchCommon):
         '_parent_ptr',
         '_ptr',
         '_cnt',
-        '_pycls',
+        '_obj_cls',
         '_ffi',
         '_copy_safe',
         '__weakref__',
@@ -571,7 +571,7 @@ class NonUniformBatch(Base, BatchCommon):
         self._ffi = self._api_util.ffi
         self._func = func
         self._parent_ptr = parent._ptr
-        self._pycls = pycls
+        self._obj_cls = pycls
         self._ptr = None
         self._cnt = None
         self._copy_safe = copy_safe
@@ -584,8 +584,8 @@ class NonUniformBatch(Base, BatchCommon):
             self._sync_cls_idx = None
 
     def _dispose_batch(self, batch_ptr):
-        if batch_ptr != self._ffi.NULL:
-            self._lib.Batch_Dispose(batch_ptr)
+        if batch_ptr != self._ffi.NULL and batch_ptr[0] != self._ffi.NULL:
+            self._lib.Batch_Dispose(batch_ptr[0])
 
     def _get_ptr_cnt(self):
         if self._sync_cls_idx:
@@ -596,14 +596,14 @@ class NonUniformBatch(Base, BatchCommon):
         if self._copy_safe and self._cnt is not None:
             return (self._ptr[0], self._cnt[0])
 
-        self._ptr = self._ffi.gc(self._ffi.new('void***'), lambda ptr2: self._dispose_batch(ptr2[0]))
+        self._ptr = self._ffi.gc(self._ffi.new('void***'), self._dispose_batch)
         self._cnt = self._ffi.new('int32_t[4]')
         self._func(self._ptr, self._cnt, self._parent_ptr)
         return (self._ptr[0], self._cnt[0])
 
     def __iter__(self):
         ptr, cnt = self._get_ptr_cnt()
-        if self._pycls is None:
+        if self._obj_cls is None:
             for idx in range(cnt):
                 other_ptr = ptr[idx]
                 cls_idx = self._lib.Obj_GetClassIdx(other_ptr)
@@ -613,7 +613,7 @@ class NonUniformBatch(Base, BatchCommon):
             return
 
         for idx in range(cnt[0]):
-            yield self._pycls(self._api_util, ptr[idx])
+            yield self._obj_cls(self._api_util, ptr[idx])
 
 
 __all__ = ('DSSBatch', 'NonUniformBatch', )
