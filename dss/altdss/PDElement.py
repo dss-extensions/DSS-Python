@@ -97,7 +97,7 @@ class PDElementBatch(CircuitElementBatch, PDElementBatchMixin):
 
     __slots__ = ()
 
-    def __init__(self, func, parent, sync_cls_idx=ExtraClassIDs.PCElements):
+    def __init__(self, func, parent, sync_cls_idx=ExtraClassIDs.PDElements):
         CircuitElementBatch.__init__(self, func, parent, sync_cls_idx=sync_cls_idx)
         PDElementBatchMixin.__init__(self)
 

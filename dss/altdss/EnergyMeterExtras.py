@@ -3,6 +3,7 @@ from .PCElement import PCElementBatch
 from .CircuitElement import CircuitElementBatch
 from .PDElement import PDElementBatch
 from .Load import LoadBatch
+from dss.enums import OCPDevType as OCPDevTypeEnum #TODO: add/import from altdss.enums
 
 class MeterSection:
     '''
@@ -34,8 +35,8 @@ class MeterSection:
     def NumCustomers(self) -> int:
         return self._lib.Alt_MeterSection_NumCustomers(self._meter._ptr, self._idx)
 
-    def OCPDeviceType(self) -> int:
-        return self._lib.Alt_MeterSection_OCPDeviceType(self._meter._ptr, self._idx)
+    def OCPDeviceType(self) -> OCPDevTypeEnum:
+        return OCPDevTypeEnum(self._lib.Alt_MeterSection_OCPDeviceType(self._meter._ptr, self._idx))
 
     def SumBranchFaultRates(self) -> float:
         return self._lib.Alt_MeterSection_SumBranchFaultRates(self._meter._ptr, self._idx)
@@ -51,7 +52,7 @@ class MeterSection:
             k: getattr(self, k)() for k in (
                 'Index',
                 'AvgRepairTime',
-                'FaultRateXRepairHrs',
+                'FaultRateXRepairHours',
                 'NumBranches',
                 'NumCustomers',
                 'OCPDeviceType',
