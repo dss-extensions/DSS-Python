@@ -293,6 +293,9 @@ class Base:
         object.__setattr__(self, key, value)
 
     def _decode_and_free_string(self, s) -> str:
+        if s == self._ffi.NULL:
+            return None
+
         res = self._ffi.string(s).decode(self._api_util.codec)
         self._lib.DSS_Dispose_String(s)
         self._check_for_error()

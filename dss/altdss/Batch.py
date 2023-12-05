@@ -105,6 +105,9 @@ class BatchCommon:
         '''
         s = self._ffi.gc(self._lib.Batch_ToJSON(*self._get_ptr_cnt(), options), self._lib.DSS_Dispose_String)
         self._check_for_error()
+        if s == self._ffi.NULL:
+            return '[]'
+        
         return self._ffi.string(s).decode(self._api_util.codec)
 
 
