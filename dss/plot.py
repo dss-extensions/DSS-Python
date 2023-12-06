@@ -13,7 +13,6 @@ from . import DSS as DSSPrime
 from ._cffi_api_util import CffiApiUtil
 from .IDSS import IDSS
 from .IBus import IBus
-from .IObj import GICLine
 try:
     import numpy as np
     from matplotlib import pyplot as plt
@@ -781,7 +780,6 @@ def get_gic_line_data(DSS: IDSS, bus_coords, single_ph_line_style=1, three_ph_li
     # skip = set()
 
     # GIC lines are not exposed nicely in the classic API, so we'll use the new Obj API
-    gic_line: GICLine
     for gic_line in DSS.Obj.GICLine:
         if not gic_line.enabled:
             continue
