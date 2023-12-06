@@ -405,7 +405,6 @@ class IDSSObj(Base):
             if ptr == self._api_util.ffi.NULL:
                 raise ValueError('Could not find object by name "{}".'.format(name_or_idx))
 
-        print(self._obj_cls)
         return self._obj_cls(self._api_util, ptr)
 
     def __len__(self):
