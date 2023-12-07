@@ -49,6 +49,7 @@ from .IStorages import IStorages
 from .IGICSources import IGICSources
 from typing import List, AnyStr
 from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
+from .enums import DSSJSONFlags
 
 class ICircuit(Base):
     __slots__ = [
@@ -446,3 +447,15 @@ class ICircuit(Base):
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
         self.CheckForError(self._lib.Circuit_Get_ElementLosses_GR(ValuePtr, ValueCount))        
         return self._get_complex128_gr_array()
+
+    def ToJSON(self, options: DSSJSONFlags = 0) -> str:
+        '''
+        Returns data for all objects and basic circuit properties as a JSON-encoded string.
+        The JSON data is organized using 
+
+        The `options` parameter contains bit-flags to toggle specific features.
+        See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
+
+        (API Extension)
+        '''
+        return self._get_string(self.CheckForError(self._lib.Circuit_ToJSON(options)))

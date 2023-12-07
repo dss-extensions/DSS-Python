@@ -40,7 +40,7 @@ class IDSSElement(Base):
         '''Number of Properties for the active DSS object.'''
         return self.CheckForError(self._lib.DSSElement_Get_NumProperties())
 
-    def ToJSON(self, options : DSSJSONFlags = 0) -> str:
+    def ToJSON(self, options: DSSJSONFlags = 0) -> str:
         '''
         Returns the properties of the active DSS object as a JSON-encoded string.
 

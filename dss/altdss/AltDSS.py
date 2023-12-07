@@ -1,7 +1,6 @@
 from typing import Union, List, AnyStr, Optional
 from typing_extensions import Self
 import numpy as np
-from enum import IntEnum
 
 # These are currently reused directly from DSS-Python; this may change later
 from dss.IDSSEvents import IDSSEvents
@@ -11,6 +10,7 @@ from dss.ITopology import ITopology
 from dss.IYMatrix import IYMatrix
 
 from .common import CffiApiUtil
+from dss.enums import DSSJSONFlags
 from .enums import *
 from .Bus import IBuses
 from .CircuitElement import CircuitElementBatch
@@ -271,6 +271,18 @@ class IAltDSS(IObj):
 
     def ClearAll(self):
         self._check_for_error(self._lib.DSS_ClearAll())
+
+    def to_json(self, options: DSSJSONFlags = 0) -> str:
+        '''
+        Returns data for all objects and basic circuit properties as a JSON-encoded string.
+        The JSON data is organized using 
+
+        The `options` parameter contains bit-flags to toggle specific features.
+        See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
+
+        (API Extension)
+        '''
+        return self._get_string(self.CheckForError(self._lib.Circuit_ToJSON(options)))
 
     def NewContext(self) -> Self:
         '''
