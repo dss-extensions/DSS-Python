@@ -347,6 +347,13 @@ class DSSJSONFlags(IntFlag):
     Use lowercase representation for the property names (and other keys) instead of the internal variants.
     """
 
+    IncludeDefaultObjs = 0x00000100
+    """
+    Include default unchanged objects in the exports. 
+    Any default object that has been edited is always exported. Affects whole circuit and batch exports.
+    """
+
+
 class DSSCompatFlags(IntFlag):
     NoSolverFloatChecks = 0x00000001
     """
