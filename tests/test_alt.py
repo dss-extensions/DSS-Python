@@ -6,6 +6,7 @@ except ImportError:
 
 import numpy
 numpy.set_printoptions(linewidth=999)
+import numpy.testing as nptest
 from dss import DSS
 from dss.altdss.CircuitElement import CircuitElementMixin
 from dss.altdss.PDElement import PDElementMixin
@@ -135,15 +136,10 @@ for cname in DSS.Classes:
 
 
     if isinstance(c, LoadShapeObjMixin):
-        print('->' * 20)
-        print(c, c.PMult, c.QMult, c.Hour)
+        mult_f64 = c.PMult
         c.UseFloat32()
-        print(c, c.PMult, c.QMult, c.Hour)
-        print('<-' * 20)
-        print()
-        print()
-        input()
-        # c.UseFloat64()
+        mult_f32 = c.PMult
+        nptest.assert_allclose(mult_f32, mult_f64)
 
 
     if isinstance(c, TransformerObjMixin):

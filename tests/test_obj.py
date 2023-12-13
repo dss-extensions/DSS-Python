@@ -671,9 +671,9 @@ def test_obj_lifetime():
 
     #TODO: test with NonUniformBatch too
 
-    name = load.name
-    names = loads.name
-    names = loads_all.name
+    name = load.Name
+    names = loads.Name
+    names = loads_all.Name
     name = bus.Name
 
     create_ref_ckt13(dss)
@@ -682,13 +682,13 @@ def test_obj_lifetime():
         name = bus.Name
     
     with pytest.raises(TypeError):
-        name = load.name
+        name = load.Name
 
     with pytest.raises(TypeError):
-        names = loads.name
+        names = loads.Name
 
     # This one should work since it gets the list each time if uses it
-    names = loads_all.name
+    names = loads_all.Name
 
 
 if __name__ == '__main__':
