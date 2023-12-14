@@ -8,6 +8,7 @@ Copyright (c) 2018-2022 DSS-Extensions contributors
 from ._cffi_api_util import Base
 from ._types import Float64Array, Int32Array
 from typing import AnyStr
+from .enums import DSSPropertyNameStyle
 
 class ISettings(Base):
     __slots__ = []
@@ -245,3 +246,6 @@ class ISettings(Base):
     def IterateDisabled(self, Value: int):
         self.CheckForError(self._lib.Settings_Set_IterateDisabled(Value))
 
+    def SetPropertyNameStyle(self, value: DSSPropertyNameStyle):
+        '''Switch the property names according'''
+        self._check_for_error(self._lib.Settings_SetPropertyNameStyle(value))

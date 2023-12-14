@@ -8,6 +8,7 @@ Copyright (c) 2018-2022 DSS-Extensions contributors
 from .common import Base
 from .types import Float64Array, Int32Array
 from typing import AnyStr
+from dss.enums import DSSPropertyNameStyle
 
 class ISettings(Base):
     __slots__ = []
@@ -352,3 +353,7 @@ class ISettings(Base):
     def DefaultEditor(self) -> str:
         '''Returns the path name for the default text editor.'''
         return self._get_string(self._check_for_error(self._lib.DSS_Get_DefaultEditor()))
+
+    def SetPropertyNameStyle(self, value: DSSPropertyNameStyle):
+        '''Switch the property names according'''
+        self._check_for_error(self._lib.Settings_SetPropertyNameStyle(value))

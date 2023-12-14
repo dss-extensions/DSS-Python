@@ -18,7 +18,7 @@ if WIN32:
 else:
     import dss
 
-from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags, LoadModels
+from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags, LoadModels, DSSPropertyNameStyle
 import numpy as np
 import pytest
 
@@ -760,6 +760,26 @@ def test_patch_win32com():
         win32com.client.Dispatch("OpenDSSengine.DSS")
         DSS_COM = dss.patch_dss_com(win32com.client.gencache.EnsureDispatch("OpenDSSengine.DSS"))
         test_essentials(DSS_COM)
+
+def test_namingstyle():
+    DSS.ClearAll()
+    DSS('new circuit.test')
+    DSS.ActiveCircuit.Vsources.First
+
+    # check only the first 7 elements
+    modern7 = ['Bus1', 'BasekV', 'pu', 'Angle', 'Frequency', 'Phases', 'MVASC3']
+    lower7 = [x.lower() for x in modern7]
+    legacy7 = ['bus1', 'basekv', 'pu', 'angle', 'frequency', 'phases', 'MVAsc3']
+
+    assert modern7 == DSS.ActiveCircuit.ActiveElement.AllPropertyNames[:7]
+    
+    DSS.ActiveCircuit.Settings.SetPropertyNameStyle(DSSPropertyNameStyle.Legacy)
+    assert legacy7 == DSS.ActiveCircuit.ActiveElement.AllPropertyNames[:7]
+
+    DSS.ActiveCircuit.Settings.SetPropertyNameStyle(DSSPropertyNameStyle.Lowercase)
+    assert lower7 == DSS.ActiveCircuit.ActiveElement.AllPropertyNames[:7]
+
+    DSS.ActiveCircuit.Settings.SetPropertyNameStyle(DSSPropertyNameStyle.Modern)
 
 if __name__ == '__main__':
     # for _ in range(250):

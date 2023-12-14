@@ -423,6 +423,9 @@ class DSSCompatFlags(IntFlag):
 class AltDSSEvent(IntEnum):
     """
     Event codes used by the event callback system
+
+    Legacy events are the events present the classic OpenDSS COM implementation,
+    while the rest are extensions added here.
     """
     Legacy_InitControls = 0
     Legacy_CheckControls = 1
@@ -431,3 +434,26 @@ class AltDSSEvent(IntEnum):
     ReprocessBuses = 4
     BuildSystemY = 5
 
+
+class DSSPropertyNameStyle(IntEnum):
+    """
+    This enum is used in the PropertyNameStyle property to control the naming convention.
+    Currently, this only affects capitalization, i.e., if you software already uses case
+    insensitive string comparisons for the property names, this is not useful. Otherwise,
+    you can use `Legacy` to use the older names.
+    """
+
+    Modern = 0
+    """
+    By default, the modern names are used. The names were reviewed to try to reach a convention across all components.
+    """
+
+    Lowercase = 1
+    """
+    Use all lowercase strings.
+    """
+
+    Legacy = 2
+    """
+    Use the previous capitalization of the property names.
+    """
