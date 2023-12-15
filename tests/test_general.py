@@ -4,6 +4,10 @@
 import sys, os, itertools, threading
 from time import perf_counter
 from math import sqrt, pi
+import numpy as np
+import numpy.testing as npt
+import pytest
+
 try:
     from ._settings import BASE_DIR, ZIP_FN, WIN32
 except ImportError:
@@ -19,9 +23,8 @@ else:
     import dss
 
 from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags, LoadModels, DSSPropertyNameStyle
-import numpy as np
-import pytest
 
+org_dir = os.getcwd()
 
 def setup_function():
     DSS.ClearAll()
@@ -780,6 +783,25 @@ def test_namingstyle():
     assert lower7 == DSS.ActiveCircuit.ActiveElement.AllPropertyNames[:7]
 
     DSS.ActiveCircuit.Settings.SetPropertyNameStyle(DSSPropertyNameStyle.Modern)
+
+
+def test_loadshape_save():
+    DSS.ClearAll()
+    DSS('new circuit.test')
+    DSS.DataPath = org_dir
+    LS = DSS.ActiveCircuit.LoadShapes
+    LS.First
+    pmult = LS.Pmult
+    DSS('loadshape.default.action=dblsave')
+    DSS('loadshape.default.action=sngsave')
+    pmult_dbl = np.fromfile(f'{LS.Name}_P.dbl', dtype=np.float64)
+    pmult_sng = np.fromfile(f'{LS.Name}_P.sng', dtype=np.float32)
+    assert len(pmult_dbl) == LS.Npts
+    os.unlink(f'{LS.Name}_P.dbl')
+    os.unlink(f'{LS.Name}_P.sng')
+    npt.assert_equal(pmult, pmult_dbl)
+    npt.assert_allclose(pmult, pmult_sng)
+
 
 if __name__ == '__main__':
     # for _ in range(250):
