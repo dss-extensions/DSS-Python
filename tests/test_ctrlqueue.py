@@ -18,7 +18,7 @@ def test_ctrlqueue():
 
     if not USE_COM:
         if WIN32:
-            # When running pytest, the faulthandler seems to eager to grab FPC's exceptions, even when handled
+            # When running pytest, the faulthandler seems too eager to grab FPC's exceptions, even when handled
             import faulthandler
             faulthandler.disable()
             from dss import DSS as DSSobj

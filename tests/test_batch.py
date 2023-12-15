@@ -6,7 +6,7 @@ except ImportError:
 # import numpy as np
 import pandas as pd
 if WIN32:
-    # When running pytest, the faulthandler seems to eager to grab FPC's exceptions, even when handled
+    # When running pytest, the faulthandler seems too eager to grab FPC's exceptions, even when handled
     import faulthandler
     faulthandler.disable()
     import dss
