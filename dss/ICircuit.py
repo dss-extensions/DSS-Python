@@ -5,6 +5,8 @@ Copyright (c) 2016-2023 Paulo Meira
 
 Copyright (c) 2018-2023 DSS-Extensions contributors
 '''
+from typing import List, AnyStr, Union
+import json
 from ._cffi_api_util import Base
 
 from .IBus import IBus
@@ -47,7 +49,7 @@ from .IParallel import IParallel
 from .IReduceCkt import IReduceCkt
 from .IStorages import IStorages
 from .IGICSources import IGICSources
-from typing import List, AnyStr
+
 from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 from .enums import DSSJSONFlags
 
@@ -451,11 +453,36 @@ class ICircuit(Base):
     def ToJSON(self, options: DSSJSONFlags = 0) -> str:
         '''
         Returns data for all objects and basic circuit properties as a JSON-encoded string.
-        The JSON data is organized using 
+        
+        The JSON data is organized using the JSON schema proposed at 
+        https://github.com/dss-extensions/AltDSS-Schema
 
         The `options` parameter contains bit-flags to toggle specific features.
-        See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
+        See the enum `DSSJSONFlags` or `Obj_ToJSON` (C-API) for more.
 
         (API Extension)
         '''
         return self._get_string(self.CheckForError(self._lib.Circuit_ToJSON(options)))
+
+    def FromJSON(self, data: Union[AnyStr, dict], options: DSSJSONFlags = 0):
+        '''
+        Replaces the circuit, if any, with the one provided from a JSON-encoded string.
+        If a Python dict is provided, `json.dumps(data)` is applied first.
+
+        The expected layout is defined from the JSON schema proposed at
+        https://github.com/dss-extensions/AltDSS-Schema
+
+        The `options` parameter contains bit-flags to toggle specific features.
+        See the enum `DSSJSONFlags`.
+
+        (API Extension)
+        '''
+        if isinstance(data, dict):
+            data = json.dumps(data).encode()
+        elif not isinstance(data, bytes):
+            data = data.encode()
+
+        self._lib.Circuit_FromJSON(data, options)
+
+        self._check_for_error()
+
