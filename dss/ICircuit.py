@@ -51,7 +51,7 @@ from .IStorages import IStorages
 from .IGICSources import IGICSources
 
 from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
-from .enums import DSSJSONFlags
+from .enums import DSSJSONFlags, DSSSaveFlags
 
 class ICircuit(Base):
     __slots__ = [
@@ -485,4 +485,32 @@ class ICircuit(Base):
         self._lib.Circuit_FromJSON(data, options)
 
         self._check_for_error()
+
+    def Save(self, dirOrFilePath: AnyStr, options: DSSSaveFlags) -> str:
+        '''
+        Equivalent of the "save circuit" DSS command, but allows customization
+        through the `saveFlags` argument, which is a set of bit flags. 
+        See the "DSSSaveFlags" enumeration for available flags:
+
+        - `CalcVoltageBases`: Include the command CalcVoltageBases.
+        - `SetVoltageBases`: Include commands to set the voltage bases individually.
+        - `IncludeOptions`: Include most of the options (from the Set/Get DSS commands).
+        - `IncludeDisabled`: Include disabled circuit elements (and LoadShapes).
+        - `ExcludeDefault`: Exclude default DSS items if they are not modified by the user.
+        - `SingleFile`: Use a single file instead of a folder for output.
+        - `KeepOrder`: Save the circuit elements in the order they were loaded in the active circuit. Guarantees better reproducibility, especially when the system is ill-conditioned. Requires "SingleFile" flag.
+        - `ExcludeMeterZones`: Do not export meter zones (as "feeders") separately. Has no effect when using a single file.
+        - `IsOpen`: Export commands to open terminals of elements.
+        - `ToString`: to the result string. Requires "SingleFile" flag.
+
+        If `SingleFile` is enabled, the first argument (`dirOrFilePath`) is the file path,
+        otherwise it is the folder path. For string output, the argument is not used.
+
+        (API Extension)
+        '''
+        if not isinstance(dirOrFilePath, bytes):
+            dirOrFilePath = dirOrFilePath.encode()
+
+        return self._check_for_error(self._get_string(self._lib.Circuit_Save(dirOrFilePath, options)))
+
 
