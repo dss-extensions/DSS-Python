@@ -57,7 +57,11 @@ class ILoads(Iterable):
 
     @property
     def AllocationFactor(self) -> float:
-        '''Factor for allocating loads by connected xfkva'''
+        '''
+        Factor for allocating loads by connected xfkva
+
+        Original COM help: https://opendss.epri.com/AllocationFactor.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_AllocationFactor())
 
     @AllocationFactor.setter
@@ -66,7 +70,11 @@ class ILoads(Iterable):
 
     @property
     def CVRcurve(self) -> str:
-        '''Name of a loadshape with both Mult and Qmult, for CVR factors as a function of time.'''
+        '''
+        Name of a loadshape with both Mult and Qmult, for CVR factors as a function of time.
+
+        Original COM help: https://opendss.epri.com/CVRcurve.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Loads_Get_CVRcurve()))
 
     @CVRcurve.setter
@@ -78,7 +86,11 @@ class ILoads(Iterable):
 
     @property
     def CVRvars(self) -> float:
-        '''Percent reduction in Q for percent reduction in V. Must be used with dssLoadModelCVR.'''
+        '''
+        Percent reduction in Q for percent reduction in V. Must be used with dssLoadModelCVR.
+
+        Original COM help: https://opendss.epri.com/CVRvars.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_CVRvars())
 
     @CVRvars.setter
@@ -87,7 +99,11 @@ class ILoads(Iterable):
 
     @property
     def CVRwatts(self) -> float:
-        '''Percent reduction in P for percent reduction in V. Must be used with dssLoadModelCVR.'''
+        '''
+        Percent reduction in P for percent reduction in V. Must be used with dssLoadModelCVR.
+
+        Original COM help: https://opendss.epri.com/CVRwatts.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_CVRwatts())
 
     @CVRwatts.setter
@@ -96,7 +112,11 @@ class ILoads(Iterable):
 
     @property
     def Cfactor(self) -> float:
-        '''Factor relates average to peak kw.  Used for allocation with kwh and kwhdays'''
+        '''
+        Factor relates average to peak kw.  Used for allocation with kwh and kwhdays
+
+        Original COM help: https://opendss.epri.com/Cfactor.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_Cfactor())
 
     @Cfactor.setter
@@ -105,6 +125,11 @@ class ILoads(Iterable):
 
     @property
     def Class(self) -> int:
+        '''
+        Code number used to separate loads by class or group. No effect on the solution.
+        
+        Original COM help: https://opendss.epri.com/Class.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_Class_())
 
     @Class.setter
@@ -113,7 +138,11 @@ class ILoads(Iterable):
 
     @property
     def Growth(self) -> str:
-        '''Name of the growthshape curve for yearly load growth factors.'''
+        '''
+        Name of the growthshape curve for yearly load growth factors.
+
+        Original COM help: https://opendss.epri.com/Growth.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Loads_Get_Growth()))
 
     @Growth.setter
@@ -125,7 +154,11 @@ class ILoads(Iterable):
 
     @property
     def IsDelta(self) -> bool:
-        '''Delta loads are connected line-to-line.'''
+        '''
+        Delta loads are connected line-to-line.
+
+        Original COM help: https://opendss.epri.com/IsDelta1.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_IsDelta()) != 0
 
     @IsDelta.setter
@@ -134,7 +167,11 @@ class ILoads(Iterable):
 
     @property
     def Model(self) -> LoadModels:
-        '''The Load Model defines variation of P and Q with voltage.'''
+        '''
+        The Load Model defines variation of P and Q with voltage.
+
+        Original COM help: https://opendss.epri.com/Model1.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_Model())
 
     @Model.setter
@@ -143,7 +180,11 @@ class ILoads(Iterable):
 
     @property
     def NumCust(self) -> int:
-        '''Number of customers in this load, defaults to one.'''
+        '''
+        Number of customers in this load, defaults to one.
+
+        Original COM help: https://opendss.epri.com/NumCust1.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_NumCust())
 
     @NumCust.setter
@@ -152,7 +193,11 @@ class ILoads(Iterable):
 
     @property
     def PF(self) -> float:
-        '''Get or set Power Factor for Active Load. Specify leading PF as negative. Updates kvar based on present value of kW'''
+        '''
+        Get or set Power Factor for Active Load. Specify leading PF as negative. Updates kvar based on present value of kW
+
+        Original COM help: https://opendss.epri.com/PF1.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_PF())
 
     @PF.setter
@@ -161,7 +206,11 @@ class ILoads(Iterable):
 
     @property
     def PctMean(self) -> float:
-        '''Average percent of nominal load in Monte Carlo studies; only if no loadshape defined for this load.'''
+        '''
+        Average percent of nominal load in Monte Carlo studies; only if no loadshape defined for this load.
+
+        Original COM help: https://opendss.epri.com/PctMean.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_PctMean())
 
     @PctMean.setter
@@ -170,7 +219,11 @@ class ILoads(Iterable):
 
     @property
     def PctStdDev(self) -> float:
-        '''Percent standard deviation for Monte Carlo load studies; if there is no loadshape assigned to this load.'''
+        '''
+        Percent standard deviation for Monte Carlo load studies; if there is no loadshape assigned to this load.
+
+        Original COM help: https://opendss.epri.com/PctStdDev.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_PctStdDev())
 
     @PctStdDev.setter
@@ -179,7 +232,11 @@ class ILoads(Iterable):
 
     @property
     def RelWeight(self) -> float:
-        '''Relative Weighting factor for the active LOAD'''
+        '''
+        Relative Weighting factor for the active LOAD
+
+        Original COM help: https://opendss.epri.com/RelWeight.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_RelWeight())
 
     @RelWeight.setter
@@ -188,7 +245,11 @@ class ILoads(Iterable):
 
     @property
     def Rneut(self) -> float:
-        '''Neutral resistance for wye-connected loads.'''
+        '''
+        Neutral resistance for wye-connected loads.
+
+        Original COM help: https://opendss.epri.com/Rneut.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_Rneut())
 
     @Rneut.setter
@@ -197,7 +258,11 @@ class ILoads(Iterable):
 
     @property
     def Spectrum(self) -> str:
-        '''Name of harmonic current spectrrum shape.'''
+        '''
+        Name of harmonic current spectrum shape.
+
+        Original COM help: https://opendss.epri.com/Spectrum.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Loads_Get_Spectrum()))
 
     @Spectrum.setter
@@ -209,7 +274,11 @@ class ILoads(Iterable):
 
     @property
     def Status(self) -> LoadStatus:
-        '''Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).'''
+        '''
+        Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).
+
+        Original COM help: https://opendss.epri.com/Status.html
+        '''
         return LoadStatus(self.CheckForError(self._lib.Loads_Get_Status()))
 
     @Status.setter
@@ -218,7 +287,11 @@ class ILoads(Iterable):
 
     @property
     def Vmaxpu(self) -> float:
-        '''Maximum per-unit voltage to use the load model. Above this, constant Z applies.'''
+        '''
+        Maximum per-unit voltage to use the load model. Above this, constant Z applies.
+
+        Original COM help: https://opendss.epri.com/Vmaxpu1.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_Vmaxpu())
 
     @Vmaxpu.setter
@@ -227,7 +300,11 @@ class ILoads(Iterable):
 
     @property
     def Vminemerg(self) -> float:
-        '''Minimum voltage for unserved energy (UE) evaluation.'''
+        '''
+        Minimum voltage for unserved energy (UE) evaluation.
+
+        Original COM help: https://opendss.epri.com/Vminemerg.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_Vminemerg())
 
     @Vminemerg.setter
@@ -236,7 +313,11 @@ class ILoads(Iterable):
 
     @property
     def Vminnorm(self) -> float:
-        '''Minimum voltage for energy exceeding normal (EEN) evaluations.'''
+        '''
+        Minimum voltage for energy exceeding normal (EEN) evaluations.
+
+        Original COM help: https://opendss.epri.com/Vminnorm.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_Vminnorm())
 
     @Vminnorm.setter
@@ -245,7 +326,11 @@ class ILoads(Iterable):
 
     @property
     def Vminpu(self) -> float:
-        '''Minimum voltage to apply the load model. Below this, constant Z is used.'''
+        '''
+        Minimum voltage to apply the load model. Below this, constant Z is used.
+
+        Original COM help: https://opendss.epri.com/Vminpu1.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_Vminpu())
 
     @Vminpu.setter
@@ -254,7 +339,11 @@ class ILoads(Iterable):
 
     @property
     def Xneut(self) -> float:
-        '''Neutral reactance for wye-connected loads.'''
+        '''
+        Neutral reactance for wye-connected loads.
+
+        Original COM help: https://opendss.epri.com/Xneut.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_Xneut())
 
     @Xneut.setter
@@ -263,7 +352,11 @@ class ILoads(Iterable):
 
     @property
     def Yearly(self) -> str:
-        '''Name of yearly duration loadshape'''
+        '''
+        Name of yearly duration loadshape
+        
+        Original COM help: https://opendss.epri.com/Yearly.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Loads_Get_Yearly()))
 
     @Yearly.setter
@@ -275,7 +368,11 @@ class ILoads(Iterable):
 
     @property
     def ZIPV(self) -> Float64Array:
-        '''Array of 7 doubles with values for ZIPV property of the load object'''
+        '''
+        Array of 7 doubles with values for ZIPV property of the load object
+        
+        Original COM help: https://opendss.epri.com/ZIPV.html
+        '''
         self.CheckForError(self._lib.Loads_Get_ZIPV_GR())
         return self._get_float64_gr_array()
 
@@ -286,7 +383,11 @@ class ILoads(Iterable):
 
     @property
     def daily(self) -> str:
-        '''Name of the loadshape for a daily load profile.'''
+        '''
+        Name of the loadshape for a daily load profile.
+        
+        Original COM help: https://opendss.epri.com/daily.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Loads_Get_daily()))
 
     @daily.setter
@@ -298,7 +399,11 @@ class ILoads(Iterable):
 
     @property
     def duty(self) -> str:
-        '''Name of the loadshape for a duty cycle simulation.'''
+        '''
+        Name of the loadshape for a duty cycle simulation.
+        
+        Original COM help: https://opendss.epri.com/duty.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Loads_Get_duty()))
 
     @duty.setter
@@ -310,7 +415,11 @@ class ILoads(Iterable):
 
     @property
     def kV(self) -> float:
-        '''Set kV rating for active Load. For 2 or more phases set Line-Line kV. Else actual kV across terminals.'''
+        '''
+        kV rating for active Load. For 2 or more phases set Line-Line kV. Else actual kV across terminals.
+
+        Original COM help: https://opendss.epri.com/kV2.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_kV())
 
     @kV.setter
@@ -319,7 +428,11 @@ class ILoads(Iterable):
 
     @property
     def kW(self) -> float:
-        '''Set kW for active Load. Updates kvar based on present PF.'''
+        '''
+        Set kW for active Load. Updates kvar based on present PF.
+
+        Original COM help: https://opendss.epri.com/kW1.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_kW())
 
     @kW.setter
@@ -328,7 +441,11 @@ class ILoads(Iterable):
 
     @property
     def kva(self) -> float:
-        '''Base load kva. Also defined kw and kvar or pf input, or load allocation by kwh or xfkva.'''
+        '''
+        Base load kva. Also defined kw and kvar or pf input, or load allocation by kwh or xfkva.
+        
+        Original COM help: https://opendss.epri.com/kva.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_kva())
 
     @kva.setter
@@ -337,7 +454,10 @@ class ILoads(Iterable):
 
     @property
     def kvar(self) -> float:
-        '''Get/set kvar for active Load. If set, updates PF based on present kW.'''
+        '''Reactive power in kvar for active Load. If set, updates PF based on present kW.
+        
+        Original COM help: https://opendss.epri.com/kvar1.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_kvar())
 
     @kvar.setter
@@ -346,7 +466,11 @@ class ILoads(Iterable):
 
     @property
     def kwh(self) -> float:
-        '''kwh billed for this period. Can be used with Cfactor for load allocation.'''
+        '''
+        kWh billed for this period. Can be used with Cfactor for load allocation.
+
+        Original COM help: https://opendss.epri.com/kwh.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_kwh())
 
     @kwh.setter
@@ -355,7 +479,11 @@ class ILoads(Iterable):
 
     @property
     def kwhdays(self) -> float:
-        '''Length of kwh billing period for average demand calculation. Default 30.'''
+        '''
+        Length of kWh billing period for average demand calculation. Default 30.
+
+        Original COM help: https://opendss.epri.com/kwhdays.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_kwhdays())
 
     @kwhdays.setter
@@ -364,7 +492,11 @@ class ILoads(Iterable):
 
     @property
     def pctSeriesRL(self) -> float:
-        '''Percent of Load that is modeled as series R-L for harmonics studies'''
+        '''
+        Percent of Load that is modeled as series R-L for harmonics studies
+
+        Original COM help: https://opendss.epri.com/pctSeriesRL.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_pctSeriesRL())
 
     @pctSeriesRL.setter
@@ -373,7 +505,11 @@ class ILoads(Iterable):
 
     @property
     def xfkVA(self) -> float:
-        '''Rated service transformer kVA for load allocation, using AllocationFactor. Affects kW, kvar, and pf.'''
+        '''
+        Rated service transformer kVA for load allocation, using AllocationFactor. Affects kW, kvar, and pf.
+
+        Original COM help: https://opendss.epri.com/xfkVA.html
+        '''
         return self.CheckForError(self._lib.Loads_Get_xfkVA())
 
     @xfkVA.setter
@@ -382,7 +518,11 @@ class ILoads(Iterable):
 
     @property
     def Sensor(self) -> str:
-        '''Name of the sensor monitoring this load.'''
+        '''
+        Name of the sensor monitoring this load.
+
+        Original COM help: https://opendss.epri.com/Sensor.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Loads_Get_Sensor()))
 
     # API extensions

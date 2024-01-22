@@ -1,12 +1,13 @@
 '''
 A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
 
-Copyright (c) 2023 Paulo Meira
-Copyright (c) 2023 DSS-Extensions contributors
+Copyright (c) 2023-2024 Paulo Meira
+Copyright (c) 2023-2024 DSS-Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
-from typing import List
+from typing import List #, Union
+# from .enums import StorageStates
 
 class IStorages(Iterable):
     '''Storage objects'''
@@ -37,9 +38,8 @@ class IStorages(Iterable):
     def State(self) -> int:
         '''
         Get/set state: 0=Idling; 1=Discharging; -1=Charging;
-
-        Related enumeration: StorageStates
         '''
+        #TODO: use enum StorageStates
         return self.CheckForError(self._lib.Storages_Get_State())
 
     @State.setter
@@ -48,7 +48,11 @@ class IStorages(Iterable):
 
     @property
     def RegisterNames(self) -> List[str]:
-        '''Array of Names of all Storage energy meter registers'''
+        '''
+        Array of Storage energy meter register names
+        
+        See also the enum `GeneratorRegisters`.
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Storages_Get_RegisterNames))
 
     @property

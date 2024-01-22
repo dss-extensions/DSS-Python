@@ -30,19 +30,35 @@ class IFuses(Iterable):
 
 
     def Close(self):
-        '''Close all phases of the fuse.'''
+        '''
+        Close all phases of the fuse.
+
+        Original COM help: https://opendss.epri.com/Close3.html
+        '''
         self.CheckForError(self._lib.Fuses_Close())
 
     def IsBlown(self) -> bool:
-        '''Current state of the fuses. TRUE if any fuse on any phase is blown. Else FALSE.'''
+        '''
+        Current state of the fuses. TRUE if any fuse on any phase is blown. Else FALSE.
+
+        Original COM help: https://opendss.epri.com/IsBlown.html
+        '''
         return self.CheckForError(self._lib.Fuses_IsBlown()) != 0
 
     def Open(self):
-        '''Manual opening of all phases of the fuse.'''
+        '''
+        Manual opening of all phases of the fuse.
+
+        Original COM help: https://opendss.epri.com/Open2.html
+        '''
         self.CheckForError(self._lib.Fuses_Open())
 
     def Reset(self):
-        '''Reset fuse to normal state.'''
+        '''
+        Reset fuse to normal state.
+
+        Original COM help: https://opendss.epri.com/Reset7.html
+        '''
         self.CheckForError(self._lib.Fuses_Reset())
 
     @property
@@ -50,6 +66,8 @@ class IFuses(Iterable):
         '''
         A fixed delay time in seconds added to the fuse blowing time determined by the TCC curve. Default is 0.
         This represents a fuse clear or other delay.
+
+        Original COM help: https://opendss.epri.com/Delay1.html
         '''
         return self.CheckForError(self._lib.Fuses_Get_Delay())
 
@@ -59,7 +77,11 @@ class IFuses(Iterable):
 
     @property
     def MonitoredObj(self) -> str:
-        '''Full name of the circuit element to which the fuse is connected.'''
+        '''
+        Full name of the circuit element to which the fuse is connected.
+
+        Original COM help: https://opendss.epri.com/MonitoredObj1.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Fuses_Get_MonitoredObj()))
 
     @MonitoredObj.setter
@@ -71,7 +93,11 @@ class IFuses(Iterable):
 
     @property
     def MonitoredTerm(self) -> int:
-        '''Terminal number to which the fuse is connected.'''
+        '''
+        Terminal number to which the fuse is connected.
+
+        Original COM help: https://opendss.epri.com/MonitoredTerm1.html
+        '''
         return self.CheckForError(self._lib.Fuses_Get_MonitoredTerm())
 
     @MonitoredTerm.setter
@@ -80,14 +106,21 @@ class IFuses(Iterable):
 
     @property
     def NumPhases(self) -> int:
-        '''Number of phases, this fuse. '''
+        '''
+        Number of phases, this fuse. 
+
+        Original COM help: https://opendss.epri.com/NumPhases1.html
+        '''
         return self.CheckForError(self._lib.Fuses_Get_NumPhases())
 
     @property
     def RatedCurrent(self) -> float:
         '''
         Multiplier or actual amps for the TCCcurve object. Defaults to 1.0. 
+
         Multiply current values of TCC curve by this to get actual amps.
+
+        Original COM help: https://opendss.epri.com/RatedCurrent.html
         '''
         return self.CheckForError(self._lib.Fuses_Get_RatedCurrent())
 
@@ -100,6 +133,8 @@ class IFuses(Iterable):
         '''
         Full name of the circuit element switch that the fuse controls. 
         Defaults to the MonitoredObj.
+
+        Original COM help: https://opendss.epri.com/SwitchedObj.html
         '''
         return self._get_string(self.CheckForError(self._lib.Fuses_Get_SwitchedObj()))
 
@@ -114,6 +149,8 @@ class IFuses(Iterable):
     def SwitchedTerm(self) -> int:
         '''
         Number of the terminal of the controlled element containing the switch controlled by the fuse.
+
+        Original COM help: https://opendss.epri.com/SwitchedTerm.html
         '''
         return self.CheckForError(self._lib.Fuses_Get_SwitchedTerm())
 
@@ -123,7 +160,11 @@ class IFuses(Iterable):
 
     @property
     def TCCcurve(self) -> str:
-        '''Name of the TCCcurve object that determines fuse blowing.'''
+        '''
+        Name of the TCCcurve object that determines fuse blowing.
+
+        Original COM help: https://opendss.epri.com/TCCcurve.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Fuses_Get_TCCcurve()))
 
     @TCCcurve.setter
@@ -135,7 +176,11 @@ class IFuses(Iterable):
 
     @property
     def State(self) -> List[str]:
-        '''Array of strings indicating the state of each phase of the fuse.'''
+        '''
+        Array of strings indicating the state of each phase of the fuse.
+
+        Original COM help: https://opendss.epri.com/State2.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Fuses_Get_State))
 
     @State.setter
@@ -144,7 +189,11 @@ class IFuses(Iterable):
 
     @property
     def NormalState(self) -> List[str]:
-        '''Array of strings indicating the normal state of each phase of the fuse.'''
+        '''
+        Array of strings indicating the normal state of each phase of the fuse.
+
+        Original COM help: https://opendss.epri.com/NormalState2.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Fuses_Get_NormalState))
 
     @NormalState.setter

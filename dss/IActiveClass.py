@@ -21,17 +21,29 @@ class IActiveClass(Base):
 
     @property
     def ActiveClassName(self) -> str:
-        '''Returns name of active class.'''
+        '''
+        Returns name of active class.
+
+        Original COM help: https://opendss.epri.com/ActiveClassName.html
+        '''
         return self._get_string(self.CheckForError(self._lib.ActiveClass_Get_ActiveClassName()))
 
     @property
     def AllNames(self) -> List[str]:
-        '''Array of strings consisting of all element names in the active class.'''
+        '''
+        Array of strings consisting of all element names in the active class.
+
+        Original COM help: https://opendss.epri.com/AllNames.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.ActiveClass_Get_AllNames))
 
     @property
     def Count(self) -> int:
-        '''Number of elements in Active Class. Same as NumElements Property.'''
+        '''
+        Number of elements in Active Class. Same as NumElements Property.
+
+        Original COM help: https://opendss.epri.com/Count.html
+        '''
         return self.CheckForError(self._lib.ActiveClass_Get_Count())
 
     def __len__(self) -> int:
@@ -45,12 +57,23 @@ class IActiveClass(Base):
 
     @property
     def First(self) -> int:
-        '''Sets first element in the active class to be the active DSS object. If object is a CktElement, ActiveCktELment also points to this element. Returns 0 if none.'''
+        '''
+        Sets first element in the active class to be the active DSS object. 
+        If the object is a CktElement, ActiveCktELement also points to this element. 
+        
+        Returns 0 if none.
+
+        Original COM help: https://opendss.epri.com/First.html
+        '''
         return self.CheckForError(self._lib.ActiveClass_Get_First())
 
     @property
     def Name(self) -> str:
-        '''Name of the Active Element of the Active Class'''
+        '''
+        Name of the Active Element of the Active Class
+
+        Original COM help: https://opendss.epri.com/Name.html
+        '''
         return self._get_string(self.CheckForError(self._lib.ActiveClass_Get_Name()))
 
     @Name.setter
@@ -62,17 +85,32 @@ class IActiveClass(Base):
 
     @property
     def Next(self) -> int:
-        '''Sets next element in active class to be the active DSS object. If object is a CktElement, ActiveCktElement also points to this element.  Returns 0 if no more.'''
+        '''
+        Sets next element in active class to be the active DSS object. 
+        If the object is a CktElement, ActiveCktElement also points to this element.
+        
+        Returns 0 if no more.
+
+        Original COM help: https://opendss.epri.com/Next.html
+        '''
         return self.CheckForError(self._lib.ActiveClass_Get_Next())
 
     @property
     def NumElements(self) -> int:
-        '''Number of elements in this class. Same as Count property.'''
+        '''
+        Number of elements in this class. Same as Count property.
+
+        Original COM help: https://opendss.epri.com/NumElements.html
+        '''
         return self.CheckForError(self._lib.ActiveClass_Get_NumElements())
 
     @property
     def ActiveClassParent(self) -> str:
-        '''Get the name of the parent class of the active class'''
+        '''
+        Get the name of the parent class of the active class
+
+        Original COM help: https://opendss.epri.com/ActiveClassParent.html
+        '''
         return self._get_string(self.CheckForError(self._lib.ActiveClass_Get_ActiveClassParent()))
 
     def ToJSON(self, options: DSSJSONFlags = 0) -> str:

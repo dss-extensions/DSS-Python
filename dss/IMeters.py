@@ -45,39 +45,75 @@ class IMeters(Iterable):
     ]
 
     def CloseAllDIFiles(self):
-        '''Close All Demand Interval Files. Users are required to close the DI files at the end of a run.'''
+        '''
+        Close All Demand Interval Files. Users are required to close the DI files at the end of a run.
+
+        Original COM help: https://opendss.epri.com/CloseAllDIFiles.html
+        '''
         self.CheckForError(self._lib.Meters_CloseAllDIFiles())
 
     def DoReliabilityCalc(self, AssumeRestoration: bool):
-        '''Calculate reliability indices'''
+        '''
+        Calculate reliability indices
+
+        Original COM help: https://opendss.epri.com/DoReliabilityCalc.html
+        '''
         self.CheckForError(self._lib.Meters_DoReliabilityCalc(AssumeRestoration))
 
     def OpenAllDIFiles(self):
-        '''Open Demand Interval (DI) files'''
+        '''
+        Open Demand Interval (DI) files
+
+        Original COM help: https://opendss.epri.com/OpenAllDIFiles.html
+        '''
         self.CheckForError(self._lib.Meters_OpenAllDIFiles())
 
     def Reset(self):
-        '''Resets registers of active meter.'''
+        '''
+        Resets registers of active meter.
+
+        Original COM help: https://opendss.epri.com/Reset2.html
+        '''
         self.CheckForError(self._lib.Meters_Reset())
 
     def ResetAll(self):
-        '''Resets registers of all meter objects.'''
+        '''
+        Resets registers of all meter objects.
+
+        Original COM help: https://opendss.epri.com/ResetAll.html
+        '''
         self.CheckForError(self._lib.Meters_ResetAll())
 
     def Sample(self):
-        '''Forces active Meter to take a sample.'''
+        '''
+        Forces active Meter to take a sample.
+
+        Original COM help: https://opendss.epri.com/Sample1.html
+        '''
         self.CheckForError(self._lib.Meters_Sample())
 
     def SampleAll(self):
-        '''Causes all EnergyMeter objects to take a sample at the present time.'''
+        '''
+        Causes all EnergyMeter objects to take a sample at the present time.
+
+        Original COM help: https://opendss.epri.com/SampleAll.html
+        '''
         self.CheckForError(self._lib.Meters_SampleAll())
 
     def Save(self):
-        '''Saves meter register values.'''
+        '''
+        Saves meter register values.
+
+        Original COM help: https://opendss.epri.com/Save.html
+        '''
         self.CheckForError(self._lib.Meters_Save())
 
     def SaveAll(self):
-        '''Save All EnergyMeter objects'''
+        '''
+        Save All EnergyMeter objects
+
+        Original COM help: https://opendss.epri.com/SaveAll.html
+        '''
         self.CheckForError(self._lib.Meters_SaveAll())
 
     def SetActiveSection(self, SectIdx: int):
@@ -85,17 +121,29 @@ class IMeters(Iterable):
 
     @property
     def AllBranchesInZone(self) -> List[str]:
-        '''Wide string list of all branches in zone of the active EnergyMeter object.'''
+        '''
+        Wide string list of all branches in zone of the active EnergyMeter object.
+
+        Original COM help: https://opendss.epri.com/AllBranchesInZone.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Meters_Get_AllBranchesInZone))
 
     @property
     def AllEndElements(self) -> List[str]:
-        '''Array of names of all zone end elements.'''
+        '''
+        Array of names of all zone end elements.
+
+        Original COM help: https://opendss.epri.com/AllEndElements.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Meters_Get_AllEndElements))
 
     @property
     def AllocFactors(self) -> Float64Array:
-        '''Array of doubles: set the phase allocation factors for the active meter.'''
+        '''
+        Array of doubles: set the phase allocation factors for the active meter.
+
+        Original COM help: https://opendss.epri.com/AllocFactors.html
+        '''
         self.CheckForError(self._lib.Meters_Get_AllocFactors_GR())
         return self._get_float64_gr_array()
 
@@ -106,12 +154,20 @@ class IMeters(Iterable):
 
     @property
     def AvgRepairTime(self) -> float:
-        '''Average Repair time in this section of the meter zone'''
+        '''
+        Average Repair time in this section of the meter zone
+
+        Original COM help: https://opendss.epri.com/AvgRepairTime.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_AvgRepairTime())
 
     @property
     def CalcCurrent(self) -> Float64Array:
-        '''Set the magnitude of the real part of the Calculated Current (normally determined by solution) for the Meter to force some behavior on Load Allocation'''
+        '''
+        Set the magnitude of the real part of the Calculated Current (normally determined by solution) for the Meter to force some behavior on Load Allocation
+
+        Original COM help: https://opendss.epri.com/CalcCurrent.html
+        '''
         self.CheckForError(self._lib.Meters_Get_CalcCurrent_GR())
         return self._get_float64_gr_array()
 
@@ -122,32 +178,56 @@ class IMeters(Iterable):
 
     @property
     def CountBranches(self) -> int:
-        '''Number of branches in Active energymeter zone. (Same as sequencelist size)'''
+        '''
+        Number of branches in Active EnergyMeter zone. (Same as sequence list size)
+
+        Original COM help: https://opendss.epri.com/CountBranches.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_CountBranches())
 
     @property
     def CountEndElements(self) -> int:
-        '''Number of zone end elements in the active meter zone.'''
+        '''
+        Number of zone end elements in the active meter zone.
+
+        Original COM help: https://opendss.epri.com/CountEndElements.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_CountEndElements())
 
     @property
     def CustInterrupts(self) -> float:
-        '''Total customer interruptions for this Meter zone based on reliability calcs.'''
+        '''
+        Total customer interruptions for this Meter zone based on reliability calcs.
+        
+        Original COM help: https://opendss.epri.com/CustInterrupts.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_CustInterrupts())
 
     @property
     def DIFilesAreOpen(self) -> bool:
-        '''Global Flag in the DSS to indicate if Demand Interval (DI) files have been properly opened.'''
+        '''
+        Global Flag in the DSS to indicate if Demand Interval (DI) files have been properly opened.
+        
+        Original COM help: https://opendss.epri.com/DIFilesAreOpen.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_DIFilesAreOpen()) != 0
 
     @property
     def FaultRateXRepairHrs(self) -> float:
-        '''Sum of Fault Rate time Repair Hrs in this section of the meter zone'''
+        '''
+        Sum of Fault Rate time Repair Hrs in this section of the meter zone
+        
+        Original COM help: https://opendss.epri.com/FaultRateXRepairHrs.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_FaultRateXRepairHrs())
 
     @property
     def MeteredElement(self) -> str:
-        '''Set Name of metered element'''
+        '''
+        Name of metered element
+        
+        Original COM help: https://opendss.epri.com/MeteredElement.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Meters_Get_MeteredElement()))
 
     @MeteredElement.setter
@@ -159,7 +239,11 @@ class IMeters(Iterable):
 
     @property
     def MeteredTerminal(self) -> int:
-        '''set Number of Metered Terminal'''
+        '''
+        Number of Metered Terminal
+        
+        Original COM help: https://opendss.epri.com/MeteredTerminal.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_MeteredTerminal())
 
     @MeteredTerminal.setter
@@ -168,27 +252,48 @@ class IMeters(Iterable):
 
     @property
     def NumSectionBranches(self) -> int:
-        '''Number of branches (lines) in this section'''
+        '''
+        Number of branches (lines) in this section
+        
+        Original COM help: https://opendss.epri.com/NumSectionBranches.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_NumSectionBranches())
 
     @property
     def NumSectionCustomers(self) -> int:
-        '''Number of Customers in the active section.'''
+        '''
+        Number of Customers in the active section.
+        
+        Original COM help: https://opendss.epri.com/NumSectionCustomers.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_NumSectionCustomers())
 
     @property
     def NumSections(self) -> int:
-        '''Number of feeder sections in this meter's zone'''
+        '''
+        Number of feeder sections in this meter's zone
+        
+        Original COM help: https://opendss.epri.com/NumSections.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_NumSections())
 
     @property
     def OCPDeviceType(self) -> int:
-        '''Type of OCP device. 1=Fuse; 2=Recloser; 3=Relay'''
+        '''
+        Type of OCP device. 1=Fuse; 2=Recloser; 3=Relay
+        
+        Original COM help: https://opendss.epri.com/OCPDeviceType.html
+        '''
+        #TODO: use enum
         return self.CheckForError(self._lib.Meters_Get_OCPDeviceType())
 
     @property
     def Peakcurrent(self) -> Float64Array:
-        '''Array of doubles to set values of Peak Current property'''
+        '''
+        Array of doubles to set values of Peak Current property
+        
+        Original COM help: https://opendss.epri.com/Peakcurrent.html
+        '''
         self.CheckForError(self._lib.Meters_Get_Peakcurrent_GR())
         return self._get_float64_gr_array()
 
@@ -199,48 +304,89 @@ class IMeters(Iterable):
 
     @property
     def RegisterNames(self) -> List[str]:
-        '''Array of strings containing the names of the registers.'''
+        '''
+        Array of strings containing the names of the registers.
+        
+        See also the enum `EnergyMeterRegisters` for the standard register names.
+        Besides those listed in the enumeration, users may need to check `RegisterNames`
+        in order to find a specific register index at runtime.
+
+        Original COM help: https://opendss.epri.com/RegisterNames1.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Meters_Get_RegisterNames))
 
     @property
     def RegisterValues(self) -> Float64Array:
-        '''Array of all the values contained in the Meter registers for the active Meter.'''
+        '''
+        Array of all the values contained in the Meter registers for the active Meter.
+
+        Original COM help: https://opendss.epri.com/RegisterValues1.html
+        '''
         self.CheckForError(self._lib.Meters_Get_RegisterValues_GR())
         return self._get_float64_gr_array()
 
     @property
     def SAIDI(self) -> float:
-        '''SAIDI for this meter's zone. Execute DoReliabilityCalc first.'''
+        '''
+        SAIDI for this meter's zone. Execute DoReliabilityCalc first.
+
+        Original COM help: https://opendss.epri.com/SAIDI.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_SAIDI())
 
     @property
     def SAIFI(self) -> float:
-        '''Returns SAIFI for this meter's Zone. Execute Reliability Calc method first.'''
+        '''
+        Returns SAIFI for this meter's Zone. Execute Reliability Calc method first.
+
+        Original COM help: https://opendss.epri.com/SAIFI.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_SAIFI())
 
     @property
     def SAIFIKW(self) -> float:
-        '''SAIFI based on kW rather than number of customers. Get after reliability calcs.'''
+        '''
+        SAIFI based on kW rather than number of customers. Get after reliability calcs.
+
+        Original COM help: https://opendss.epri.com/SAIFIKW.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_SAIFIKW())
 
     @property
     def SectSeqIdx(self) -> int:
-        '''SequenceIndex of the branch at the head of this section'''
+        '''
+        SequenceIndex of the branch at the head of this section
+
+        Original COM help: https://opendss.epri.com/SectSeqIdx.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_SectSeqIdx())
 
     @property
     def SectTotalCust(self) -> int:
-        '''Total Customers downline from this section'''
+        '''
+        Total Customers downline from this section
+
+        Original COM help: https://opendss.epri.com/SectTotalCust.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_SectTotalCust())
 
     @property
     def SeqListSize(self) -> int:
-        '''Size of Sequence List'''
+        '''
+        Size of the Sequence List
+
+        Original COM help: https://opendss.epri.com/SeqListSize.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_SeqListSize())
 
     @property
     def SequenceIndex(self) -> int:
-        '''Get/set Index into Meter's SequenceList that contains branch pointers in lexical order. Earlier index guaranteed to be upline from later index. Sets PDelement active.'''
+        '''
+        Get/set Index into Meter's SequenceList that contains branch pointers in lexical order. 
+        Earlier index guaranteed to be upline from later index. Sets PDelement active.
+
+        Original COM help: https://opendss.epri.com/SequenceIndex.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_SequenceIndex())
 
     @SequenceIndex.setter
@@ -249,23 +395,39 @@ class IMeters(Iterable):
 
     @property
     def SumBranchFltRates(self) -> float:
-        '''Sum of the branch fault rates in this section of the meter's zone'''
+        '''
+        Sum of the branch fault rates in this section of the meter's zone
+
+        Original COM help: https://opendss.epri.com/SumBranchFltRates.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_SumBranchFltRates())
 
     @property
     def TotalCustomers(self) -> int:
-        '''Total Number of customers in this zone (downline from the EnergyMeter)'''
+        '''
+        Total Number of customers in this zone (downline from the EnergyMeter)
+
+        Original COM help: https://opendss.epri.com/TotalCustomers.html
+        '''
         return self.CheckForError(self._lib.Meters_Get_TotalCustomers())
 
     @property
     def Totals(self) -> Float64Array:
-        '''Totals of all registers of all meters'''
+        '''
+        Totals of all registers of all meters
+
+        Original COM help: https://opendss.epri.com/Totals.html
+        '''
         self.CheckForError(self._lib.Meters_Get_Totals_GR())
         return self._get_float64_gr_array()
 
     @property
     def ZonePCE(self) -> List[str]:
-        '''Returns the list of all PCE within the area covered by the energy meter'''
+        '''
+        Returns the list of all PCE within the area covered by the energy meter
+        
+        Original COM help: https://opendss.epri.com/ZonePCE.html
+        '''
         result = self.CheckForError(self._get_string_array(self._lib.Meters_Get_ZonePCE))
         if not result:
             result = ['NONE'] #TODO: remove

@@ -93,9 +93,9 @@ class IDSS(Base):
         #: Kept for compatibility. Currently it is an alias to ActiveCircuit.
         self.Circuits = ICircuit(api_util)
         
-        #: The Error interface provides the current error state and messages. In DSS-Python, 
-        #: this is already mapped to Python exceptions, so the user typpically does not need 
-        #: to worry about this.
+        #: The Error interface provides the current error state and messages. In DSS-Python
+        #: and DSS-Extensions in general, this is already mapped to exceptions, so the user
+        #: typically does not need to worry about this.
         self.Error = IError(api_util)
         
         #: Provides access to command
@@ -103,7 +103,7 @@ class IDSS(Base):
 
         # self.NewCircuit = ICircuit(api_util)
 
-        #: Kept for compatibility. Controls the progress dialog/output, if avaiable.
+        #: Kept for compatibility. Controls the progress dialog/output, if available.
         self.DSSProgress = IDSSProgress(api_util)
 
         #: General information about the current active DSS class.
@@ -170,7 +170,11 @@ class IDSS(Base):
         self.CheckForError(self._lib.DSS_ClearAll())
 
     def Reset(self):
-        '''This is a no-op function, does nothing. Left for compatibility.'''
+        '''
+        This is a no-op function, does nothing. Left for compatibility.
+
+        Original COM help: https://opendss.epri.com/Reset1.html
+        '''
         self.CheckForError(self._lib.DSS_Reset())
 
     def SetActiveClass(self, ClassName: AnyStr) -> int:
@@ -184,21 +188,32 @@ class IDSS(Base):
         This is a no-op function, does nothing. Left for compatibility.
         
         Calling `Start` in AltDSS/DSS-Extensions is required but that is already
-        handled automatically, so the users do not need to call it manually.
+        handled automatically, so the users do not need to call it manually,
+        unless using AltDSS/DSS C-API directly without further tools.
 
         On the official OpenDSS, `Start` also does nothing at all in the current 
         versions.
+
+        Original COM help: https://opendss.epri.com/Start.html
         '''
         return self.CheckForError(self._lib.DSS_Start(code)) != 0
 
     @property
     def Classes(self) -> List[str]:
-        '''List of DSS intrinsic classes (names of the classes)'''
+        '''
+        List of DSS intrinsic classes (names of the classes)
+
+        Original COM help: https://opendss.epri.com/Classes1.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.DSS_Get_Classes))
 
     @property
     def DataPath(self) -> str:
-        '''DSS Data File Path.  Default path for reports, etc. from DSS'''
+        '''
+        DSS Data File Path.  Default path for reports, etc. from DSS
+
+        Original COM help: https://opendss.epri.com/DataPath.html
+        '''
         return self._get_string(self.CheckForError(self._lib.DSS_Get_DataPath()))
 
     @DataPath.setter
@@ -210,32 +225,56 @@ class IDSS(Base):
 
     @property
     def DefaultEditor(self) -> str:
-        '''Returns the path name for the default text editor.'''
+        '''
+        Returns the path name for the default text editor.
+
+        Original COM help: https://opendss.epri.com/DefaultEditor.html
+        '''
         return self._get_string(self.CheckForError(self._lib.DSS_Get_DefaultEditor()))
 
     @property
     def NumCircuits(self) -> int:
-        '''Number of Circuits currently defined'''
+        '''
+        Number of Circuits currently defined
+
+        Original COM help: https://opendss.epri.com/NumCircuits.html
+        '''
         return self.CheckForError(self._lib.DSS_Get_NumCircuits())
 
     @property
     def NumClasses(self) -> int:
-        '''Number of DSS intrinsic classes'''
+        '''
+        Number of DSS intrinsic classes
+
+        Original COM help: https://opendss.epri.com/NumClasses.html
+        '''
         return self.CheckForError(self._lib.DSS_Get_NumClasses())
 
     @property
     def NumUserClasses(self) -> int:
-        '''Number of user-defined classes'''
+        '''
+        Number of user-defined classes
+
+        Original COM help: https://opendss.epri.com/NumUserClasses.html
+        '''
         return self.CheckForError(self._lib.DSS_Get_NumUserClasses())
 
     @property
     def UserClasses(self) -> List[str]:
-        '''List of user-defined classes'''
+        '''
+        List of user-defined classes
+
+        Original COM help: https://opendss.epri.com/UserClasses.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.DSS_Get_UserClasses))
 
     @property
     def Version(self) -> str:
-        '''Get version string for the DSS.'''
+        '''
+        Get version string for the DSS.
+
+        Original COM help: https://opendss.epri.com/Version.html
+        '''
 
         if self._version is None:
             from . import __version__ as dss_python_version
@@ -245,7 +284,11 @@ class IDSS(Base):
 
     @property
     def AllowForms(self) -> bool:
-        '''Gets/sets whether text output is allowed'''
+        '''
+        Gets/sets whether text output is allowed (DSS-Extensions) or general forms/windows are shown (official OpenDSS).
+
+        Original COM help: https://opendss.epri.com/AllowForms.html
+        '''
         return self.CheckForError(self._lib.DSS_Get_AllowForms()) != 0
 
     @AllowForms.setter
@@ -270,9 +313,14 @@ class IDSS(Base):
         self.CheckForError(self._lib.DSS_Set_AllowEditor(value))
 
     def ShowPanel(self):
-        warnings.warn('ShowPanel is not implemented.')
+        pass
 
     def NewCircuit(self, name) -> ICircuit:
+        '''
+        Make a new circuit and returns the interface to the active circuit.
+
+        Original COM help: https://opendss.epri.com/NewCircuit.html
+        '''
         if type(name) is not bytes:
             name = name.encode(self._api_util.codec)
 
@@ -324,12 +372,12 @@ class IDSS(Base):
     def AllowDOScmd(self) -> bool:
         '''
         If enabled, the `DOScmd` command is allowed. Otherwise, an error is reported if the user tries to use it.
-        
+
         Defaults to False/0 (disabled state). Users should consider DOScmd deprecated on DSS-Extensions.
-        
+
         This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
         the command.
-        
+
         (API Extension)
         '''
         return self.CheckForError(self._lib.DSS_Get_AllowDOScmd()) != 0
@@ -343,17 +391,18 @@ class IDSS(Base):
         '''
         If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the 
         official OpenDSS COM interface. 
-        
+
         For example, consider the function `Loads_Get_ZIPV`. If there is no active circuit or active load element:
+
         - In the disabled state (COMErrorResults=False), the function will return "[]", an array with 0 elements.
         - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
         be compatible with the return value of the official COM interface.
-        
+
         Defaults to True/1 (enabled state) in the v0.12.x series. This will change to false in future series.
-        
-        This can also be set through the environment variable DSS_CAPI_COM_DEFAULTS. Setting it to 0 disables
+
+        This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 0 disables
         the legacy/COM behavior. The value can be toggled through the API at any time.
-        
+
         (API Extension)
         '''
         return self.CheckForError(self._lib.DSS_Get_COMErrorResults()) != 0
@@ -365,6 +414,7 @@ class IDSS(Base):
     def NewContext(self) -> Self:
         '''
         Creates a new DSS engine context.
+
         A DSS Context encapsulates most of the global state of the original OpenDSS engine,
         allowing the user to create multiple instances in the same process. By creating contexts
         manually, the management of threads and potential issues should be handled by the user.
@@ -441,7 +491,6 @@ class IDSS(Base):
         
         (API Extension)
         '''
-        
         arr_dim = self.CheckForError(self._lib.DSS_Get_EnableArrayDimensions()) != 0
         allow_complex = self._api_util._allow_complex
         return arr_dim and allow_complex

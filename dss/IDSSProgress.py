@@ -19,7 +19,11 @@ class IDSSProgress(Base):
 
     @property
     def Caption(self) -> str:
-        '''(write-only) Caption to appear on the bottom of the DSS Progress form.'''
+        '''
+        (write-only) Caption to appear on the bottom of the DSS Progress form.
+
+        Original COM help: https://opendss.epri.com/Caption.html
+        '''
         raise AttributeError("This property is write-only!")
 
     @Caption.setter
@@ -31,7 +35,11 @@ class IDSSProgress(Base):
 
     @property
     def PctProgress(self) -> int:
-        '''(write-only) Percent progress to indicate [0..100]'''
+        '''
+        (write-only) Percent progress to indicate [0..100]
+
+        Original COM help: https://opendss.epri.com/PctProgress.html
+        '''
         raise AttributeError("This property is write-only!")
 
     @PctProgress.setter

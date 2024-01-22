@@ -42,7 +42,11 @@ class ITransformers(Iterable):
 
     @property
     def IsDelta(self) -> bool:
-        '''Active Winding delta or wye connection?'''
+        '''
+        Active Winding delta or wye connection?
+
+        Original COM help: https://opendss.epri.com/IsDelta3.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_IsDelta()) != 0
 
     @IsDelta.setter
@@ -51,7 +55,11 @@ class ITransformers(Iterable):
 
     @property
     def MaxTap(self) -> float:
-        '''Active Winding maximum tap in per-unit.'''
+        '''
+        Active Winding maximum tap in per-unit.
+
+        Original COM help: https://opendss.epri.com/MaxTap.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_MaxTap())
 
     @MaxTap.setter
@@ -60,7 +68,11 @@ class ITransformers(Iterable):
 
     @property
     def MinTap(self) -> float:
-        '''Active Winding minimum tap in per-unit.'''
+        '''
+        Active Winding minimum tap in per-unit.
+
+        Original COM help: https://opendss.epri.com/MinTap.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_MinTap())
 
     @MinTap.setter
@@ -69,7 +81,11 @@ class ITransformers(Iterable):
 
     @property
     def NumTaps(self) -> int:
-        '''Active Winding number of tap steps betwein MinTap and MaxTap.'''
+        '''
+        Active Winding number of tap steps between MinTap and MaxTap.
+
+        Original COM help: https://opendss.epri.com/NumTaps.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_NumTaps())
 
     @NumTaps.setter
@@ -78,7 +94,11 @@ class ITransformers(Iterable):
 
     @property
     def NumWindings(self) -> int:
-        '''Number of windings on this transformer. Allocates memory; set or change this property first.'''
+        '''
+        Number of windings on this transformer. Allocates memory; set or change this property first.
+
+        Original COM help: https://opendss.epri.com/NumWindings.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_NumWindings())
 
     @NumWindings.setter
@@ -87,7 +107,11 @@ class ITransformers(Iterable):
 
     @property
     def R(self) -> float:
-        '''Active Winding resistance in %'''
+        '''
+        Active Winding resistance in %
+
+        Original COM help: https://opendss.epri.com/R.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_R())
 
     @R.setter
@@ -96,7 +120,11 @@ class ITransformers(Iterable):
 
     @property
     def Rneut(self) -> float:
-        '''Active Winding neutral resistance [ohms] for wye connections. Set less than zero for ungrounded wye.'''
+        '''
+        Active Winding neutral resistance [ohms] for wye connections. Set less than zero for ungrounded wye.
+
+        Original COM help: https://opendss.epri.com/Rneut1.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_Rneut())
 
     @Rneut.setter
@@ -105,7 +133,11 @@ class ITransformers(Iterable):
 
     @property
     def Tap(self) -> float:
-        '''Active Winding tap in per-unit.'''
+        '''
+        Active Winding tap in per-unit.
+
+        Original COM help: https://opendss.epri.com/Tap.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_Tap())
 
     @Tap.setter
@@ -114,7 +146,11 @@ class ITransformers(Iterable):
 
     @property
     def Wdg(self) -> int:
-        '''Active Winding Number from 1..NumWindings. Update this before reading or setting a sequence of winding properties (R, Tap, kV, kVA, etc.)'''
+        '''
+        Active Winding Number from 1..NumWindings. Update this before reading or setting a sequence of winding properties (R, Tap, kV, kVA, etc.)
+
+        Original COM help: https://opendss.epri.com/Wdg.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_Wdg())
 
     @Wdg.setter
@@ -123,7 +159,11 @@ class ITransformers(Iterable):
 
     @property
     def XfmrCode(self) -> str:
-        '''Name of an XfrmCode that supplies electircal parameters for this Transformer.'''
+        '''
+        Name of an XfrmCode that supplies electrical parameters for this Transformer.
+
+        Original COM help: https://opendss.epri.com/XfmrCode1.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Transformers_Get_XfmrCode()))
 
     @XfmrCode.setter
@@ -135,7 +175,11 @@ class ITransformers(Iterable):
 
     @property
     def Xhl(self) -> float:
-        '''Percent reactance between windings 1 and 2, on winding 1 kVA base. Use for 2-winding or 3-winding transformers.'''
+        '''
+        Percent reactance between windings 1 and 2, on winding 1 kVA base. Use for 2-winding or 3-winding transformers.
+
+        Original COM help: https://opendss.epri.com/Xhl.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_Xhl())
 
     @Xhl.setter
@@ -144,7 +188,11 @@ class ITransformers(Iterable):
 
     @property
     def Xht(self) -> float:
-        '''Percent reactance between windigns 1 and 3, on winding 1 kVA base.  Use for 3-winding transformers only.'''
+        '''
+        Percent reactance between windings 1 and 3, on winding 1 kVA base.  Use for 3-winding transformers only.
+
+        Original COM help: https://opendss.epri.com/Xht.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_Xht())
 
     @Xht.setter
@@ -153,7 +201,11 @@ class ITransformers(Iterable):
 
     @property
     def Xlt(self) -> float:
-        '''Percent reactance between windings 2 and 3, on winding 1 kVA base. Use for 3-winding transformers only.'''
+        '''
+        Percent reactance between windings 2 and 3, on winding 1 kVA base. Use for 3-winding transformers only.
+
+        Original COM help: https://opendss.epri.com/Xlt.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_Xlt())
 
     @Xlt.setter
@@ -162,7 +214,11 @@ class ITransformers(Iterable):
 
     @property
     def Xneut(self) -> float:
-        '''Active Winding neutral reactance [ohms] for wye connections.'''
+        '''
+        Active Winding neutral reactance [ohms] for wye connections.
+
+        Original COM help: https://opendss.epri.com/Xneut1.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_Xneut())
 
     @Xneut.setter
@@ -171,7 +227,11 @@ class ITransformers(Iterable):
 
     @property
     def kV(self) -> float:
-        '''Active Winding kV rating.  Phase-phase for 2 or 3 phases, actual winding kV for 1 phase transformer.'''
+        '''
+        Active Winding kV rating.  Phase-phase for 2 or 3 phases, actual winding kV for 1 phase transformer.
+
+        Original COM help: https://opendss.epri.com/kV3.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_kV())
 
     @kV.setter
@@ -180,7 +240,11 @@ class ITransformers(Iterable):
 
     @property
     def kVA(self) -> float:
-        '''Active Winding kVA rating. On winding 1, this also determines normal and emergency current ratings for all windings.'''
+        '''
+        Active Winding kVA rating. On winding 1, this also determines normal and emergency current ratings for all windings.
+
+        Original COM help: https://opendss.epri.com/kva1.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_kVA())
 
     @kVA.setter
@@ -196,6 +260,8 @@ class ITransformers(Iterable):
         
         WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
         in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+
+        Original COM help: https://opendss.epri.com/WdgVoltages.html
         '''
         self.CheckForError(self._lib.Transformers_Get_WdgVoltages_GR())
         return self._get_complex128_gr_array()
@@ -207,6 +273,8 @@ class ITransformers(Iterable):
 
         WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
         in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
+
+        Original COM help: https://opendss.epri.com/WdgCurrents.html
         '''
         self.CheckForError(self._lib.Transformers_Get_WdgCurrents_GR())
         return self._get_complex128_gr_array()
@@ -223,7 +291,11 @@ class ITransformers(Iterable):
 
     @property
     def CoreType(self) -> TransformerCoreType:
-        '''Transformer Core Type: 0=Shell; 1=1ph; 3-3leg; 4=4-Leg; 5=5-leg; 9=Core-1-phase'''
+        '''
+        Transformer Core Type: 0=Shell; 1=1ph; 3-3leg; 4=4-Leg; 5=5-leg; 9=Core-1-phase
+
+        Original COM help: https://opendss.epri.com/CoreType.html
+        '''
         return TransformerCoreType(self.CheckForError(self._lib.Transformers_Get_CoreType()))
 
     @CoreType.setter
@@ -232,7 +304,11 @@ class ITransformers(Iterable):
 
     @property
     def RdcOhms(self) -> float:
-        '''dc Resistance of active winding in ohms for GIC analysis'''
+        '''
+        dc Resistance of active winding in ohms for GIC analysis
+
+        Original COM help: https://opendss.epri.com/RdcOhms.html
+        '''
         return self.CheckForError(self._lib.Transformers_Get_RdcOhms())
 
     @RdcOhms.setter

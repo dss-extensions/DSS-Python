@@ -39,7 +39,11 @@ class IReclosers(Iterable):
 
     @property
     def GroundInst(self) -> float:
-        '''Ground (3I0) instantaneous trip setting - curve multipler or actual amps.'''
+        '''
+        Ground (3I0) instantaneous trip setting - curve multiplier or actual amps.
+
+        Original COM help: https://opendss.epri.com/GroundInst.html
+        '''
         return self.CheckForError(self._lib.Reclosers_Get_GroundInst())
 
     @GroundInst.setter
@@ -48,7 +52,11 @@ class IReclosers(Iterable):
 
     @property
     def GroundTrip(self) -> float:
-        '''Ground (3I0) trip multiplier or actual amps'''
+        '''
+        Ground (3I0) trip multiplier or actual amps
+
+        Original COM help: https://opendss.epri.com/GroundTrip.html
+        '''
         return self.CheckForError(self._lib.Reclosers_Get_GroundTrip())
 
     @GroundTrip.setter
@@ -57,7 +65,11 @@ class IReclosers(Iterable):
 
     @property
     def MonitoredObj(self) -> str:
-        '''Full name of object this Recloser to be monitored.'''
+        '''
+        Full name of object this Recloser to be monitored.
+
+        Original COM help: https://opendss.epri.com/MonitoredObj2.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Reclosers_Get_MonitoredObj()))
 
     @MonitoredObj.setter
@@ -69,7 +81,11 @@ class IReclosers(Iterable):
 
     @property
     def MonitoredTerm(self) -> int:
-        '''Terminal number of Monitored object for the Recloser '''
+        '''
+        Terminal number of Monitored object for the Recloser 
+
+        Original COM help: https://opendss.epri.com/MonitoredTerm2.html
+        '''
         return self.CheckForError(self._lib.Reclosers_Get_MonitoredTerm())
 
     @MonitoredTerm.setter
@@ -78,7 +94,11 @@ class IReclosers(Iterable):
 
     @property
     def NumFast(self) -> int:
-        '''Number of fast shots'''
+        '''
+        Number of fast shots
+
+        Original COM help: https://opendss.epri.com/NumFast.html
+        '''
         return self.CheckForError(self._lib.Reclosers_Get_NumFast())
 
     @NumFast.setter
@@ -87,7 +107,11 @@ class IReclosers(Iterable):
 
     @property
     def PhaseInst(self) -> float:
-        '''Phase instantaneous curve multipler or actual amps'''
+        '''
+        Phase instantaneous curve multiplier or actual amps
+
+        Original COM help: https://opendss.epri.com/PhaseInst.html
+        '''
         return self.CheckForError(self._lib.Reclosers_Get_PhaseInst())
 
     @PhaseInst.setter
@@ -96,7 +120,11 @@ class IReclosers(Iterable):
 
     @property
     def PhaseTrip(self) -> float:
-        '''Phase trip curve multiplier or actual amps'''
+        '''
+        Phase trip curve multiplier or actual amps
+
+        Original COM help: https://opendss.epri.com/PhaseTrip.html
+        '''
         return self.CheckForError(self._lib.Reclosers_Get_PhaseTrip())
 
     @PhaseTrip.setter
@@ -105,13 +133,21 @@ class IReclosers(Iterable):
 
     @property
     def RecloseIntervals(self) -> Float64Array:
-        '''Array of Doubles: reclose intervals, s, between shots.'''
+        '''
+        Array of Doubles: reclose intervals, s, between shots.
+
+        Original COM help: https://opendss.epri.com/RecloseIntervals.html
+        '''
         self.CheckForError(self._lib.Reclosers_Get_RecloseIntervals_GR())
         return self._get_float64_gr_array()
 
     @property
     def Shots(self) -> int:
-        '''Number of shots to lockout (fast + delayed)'''
+        '''
+        Number of shots to lockout (fast + delayed)
+
+        Original COM help: https://opendss.epri.com/Shots.html
+        '''
         return self.CheckForError(self._lib.Reclosers_Get_Shots())
 
     @Shots.setter
@@ -120,7 +156,11 @@ class IReclosers(Iterable):
 
     @property
     def SwitchedObj(self) -> str:
-        '''Full name of the circuit element that is being switched by the Recloser.'''
+        '''
+        Full name of the circuit element that is being switched by the Recloser.
+
+        Original COM help: https://opendss.epri.com/SwitchedObj1.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Reclosers_Get_SwitchedObj()))
 
     @SwitchedObj.setter
@@ -132,7 +172,11 @@ class IReclosers(Iterable):
 
     @property
     def SwitchedTerm(self) -> int:
-        '''Terminal number of the controlled device being switched by the Recloser'''
+        '''
+        Terminal number of the controlled device being switched by the Recloser
+
+        Original COM help: https://opendss.epri.com/SwitchedTerm1.html
+        '''
         return self.CheckForError(self._lib.Reclosers_Get_SwitchedTerm())
 
     @SwitchedTerm.setter
@@ -163,7 +207,11 @@ class IReclosers(Iterable):
 
     @property
     def NormalState(self) -> int:
-        '''Get/set normal state (ActionCodes.Open=1, ActionCodes.Close=2) of the recloser.'''
+        '''
+        Get/set normal state (ActionCodes.Open=1, ActionCodes.Close=2) of the recloser.
+
+        Original COM help: https://opendss.epri.com/NormalState1.html
+        '''
         return self.CheckForError(self._lib.Reclosers_Get_NormalState())
 
     @NormalState.setter

@@ -18,12 +18,20 @@ class IError(Base):
     
     @property
     def Description(self) -> str:
-        '''Description of error for last operation'''
+        '''
+        Description of error for last operation
+
+        Original COM help: https://opendss.epri.com/Description1.html
+        '''
         return self._get_string(self._lib.Error_Get_Description())
 
     @property
     def Number(self) -> int:
-        '''Error Number (returns current value and then resets to zero)'''
+        '''
+        Error Number (returns current value and then resets to zero)
+
+        Original COM help: https://opendss.epri.com/Number.html
+        '''
         return self._lib.Error_Get_Number()
 
     @property
@@ -83,8 +91,8 @@ class IError(Base):
 
         Users can also use the DSS command `Export ErrorLog` to inspect for errors.
 
-        **WARNING:** This is a global setting, affects all DSS instances from DSS-Python 
-        and OpenDSSDirect.py.
+        **WARNING:** This is a global setting, affects all DSS instances from DSS-Python,
+        OpenDSSDirect.py and AltDSS.
 
         (API Extension)
         """

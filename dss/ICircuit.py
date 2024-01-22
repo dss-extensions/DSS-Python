@@ -228,30 +228,81 @@ class ICircuit(Base):
         Base.__init__(self, api_util)
             
     def Capacity(self, Start: float, Increment: float) -> float:
+        '''
+        Compute the maximum load the active circuit can serve in the PRESENT YEAR.
+        
+        This method uses the EnergyMeter objects with the registers set with the 
+        `SET UEREGS= (...)` command for the AutoAdd functions. 
+
+        Returns the metered kW (load + losses - generation) and per unit load multiplier 
+        for the loading level at which something in the system reports an overload or 
+        undervoltage. If no violations, then it returns the metered kW for peak load 
+        for the year (1.0 multiplier). 
+        
+        Aborts and returns 0 if no EnergyMeters.
+
+        Original COM help: https://opendss.epri.com/Capacity1.html
+        '''
         return self.CheckForError(self._lib.Circuit_Capacity(Start, Increment))
 
     def Disable(self, Name: AnyStr):
+        '''
+        Disable a circuit element by name (removes from circuit but leave in database).
+        
+        Original COM help: https://opendss.epri.com/Disable.html
+        '''
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)
 
         self.CheckForError(self._lib.Circuit_Disable(Name))
 
     def Enable(self, Name: AnyStr):
+        '''
+        Enable a circuit element by name
+        
+        Original COM help: https://opendss.epri.com/Enable.html
+        '''
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)
 
         self.CheckForError(self._lib.Circuit_Enable(Name))
 
     def EndOfTimeStepUpdate(self):
+        '''
+        Call `EndOfTimeStepCleanup` in SolutionAlgs (Do cleanup, sample monitors, and increment time).
+
+        Original COM help: https://opendss.epri.com/EndOfTimeStepUpdate.html
+        '''
         self.CheckForError(self._lib.Circuit_EndOfTimeStepUpdate())
 
     def FirstElement(self) -> int:
+        '''
+        Set the first element of active class to be the Active element in the active circuit.
+
+        Returns 0 if none.
+
+        Original COM help: https://opendss.epri.com/FirstElement.html
+        '''
         return self.CheckForError(self._lib.Circuit_FirstElement())
 
     def FirstPCElement(self) -> int:
+        '''
+        Set the first Power Conversion (PC) element to be the active element.
+
+        Returns 0 if none.
+
+        Original COM help: https://opendss.epri.com/FirstPCElement.html
+        '''
         return self.CheckForError(self._lib.Circuit_FirstPCElement())
 
     def FirstPDElement(self) -> int:
+        '''
+        Set the first Power Delivery (PD) element to be the active element.
+
+        Returns 0 if none.
+
+        Original COM help: https://opendss.epri.com/FirstPDElement.html
+        '''
         return self.CheckForError(self._lib.Circuit_FirstPDElement())
 
     def AllNodeDistancesByPhase(self, Phase: int) -> Float64Array:
@@ -274,104 +325,210 @@ class ICircuit(Base):
         return self._get_float64_gr_array()
 
     def NextElement(self) -> int:
+        '''
+        Set the next element of the active class to be the active element in the active circuit.
+        Returns 0 if no more elements..
+
+        Original COM help: https://opendss.epri.com/NextElement.html
+        '''
         return self.CheckForError(self._lib.Circuit_NextElement())
 
     def NextPCElement(self) -> int:
+        '''
+        Get the next Power Conversion (PC) element to be the active element.
+        
+        Original COM help: https://opendss.epri.com/NextPCElement.html
+        '''
         return self.CheckForError(self._lib.Circuit_NextPCElement())
 
     def NextPDElement(self) -> int:
+        '''
+        Get the next Power Delivery (PD) element to be the active element.
+        
+        Original COM help: https://opendss.epri.com/NextPDElement.html
+        '''
         return self.CheckForError(self._lib.Circuit_NextPDElement())
 
     def Sample(self):
+        '''
+        Force all Meters and Monitors to take a sample.
+
+        Original COM help: https://opendss.epri.com/Sample.html
+        '''
         self.CheckForError(self._lib.Circuit_Sample())
 
     def SaveSample(self):
+        '''
+        Force all meters and monitors to save their current buffers.
+
+        Original COM help: https://opendss.epri.com/SaveSample.html
+        '''
         self.CheckForError(self._lib.Circuit_SaveSample())
 
     def SetActiveBus(self, BusName: AnyStr) -> int:
+        '''
+        Sets Active bus by name. 
+        
+        Ignores node list. Returns bus index (zero based) compatible with `AllBusNames` and Buses collection.
+
+        Original COM help: https://opendss.epri.com/SetActiveBus.html
+        '''
         if type(BusName) is not bytes:
             BusName = BusName.encode(self._api_util.codec)
 
         return self.CheckForError(self._lib.Circuit_SetActiveBus(BusName))
 
     def SetActiveBusi(self, BusIndex: int) -> int:
+        '''
+        Set ActiveBus by an integer value. 
+        
+        0-based index compatible with SetActiveBus return value and AllBusNames indexing. 
+        Returns 0 if OK.
+
+        Original COM help: https://opendss.epri.com/SetActiveBusi.html
+        '''
         return self.CheckForError(self._lib.Circuit_SetActiveBusi(BusIndex))
 
     def SetActiveClass(self, ClassName: AnyStr) -> int:
+        '''
+        Set the active class by name. 
+        
+        Use FirstElement, NextElement to iterate through the class. Returns -1 if fails.
+        
+        Original COM help: https://opendss.epri.com/SetActiveClass.html
+        '''
         if type(ClassName) is not bytes:
             ClassName = ClassName.encode(self._api_util.codec)
 
         return self.CheckForError(self._lib.Circuit_SetActiveClass(ClassName))
 
     def SetActiveElement(self, FullName: AnyStr) -> int:
+        '''
+        Set the Active Circuit Element using the full object name (e.g. "generator.g1"). 
+        
+        Returns -1 if not found. Else index to be used in CktElements collection or `AllElementNames`.
+        
+        Original COM help: https://opendss.epri.com/SetActiveElement.html
+        '''
         if type(FullName) is not bytes:
             FullName = FullName.encode(self._api_util.codec)
 
         return self.CheckForError(self._lib.Circuit_SetActiveElement(FullName))
 
     def UpdateStorage(self):
+        '''
+        Force an update to all storage classes. 
+
+        Typically done after a solution. Done automatically in intrinsic solution modes.
+
+        Original COM help: https://opendss.epri.com/UpdateStorage.html
+        '''
         self.CheckForError(self._lib.Circuit_UpdateStorage())
 
     @property
     def AllBusDistances(self) -> Float64Array:
-        '''Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.'''
+        '''
+        Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.
+
+        Original COM help: https://opendss.epri.com/AllBusDistances.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_AllBusDistances_GR())
         return self._get_float64_gr_array()
 
     @property
     def AllBusNames(self) -> List[str]:
-        '''Array of strings containing names of all buses in circuit (see AllNodeNames).'''
+        '''
+        Array of strings containing names of all buses in circuit (see AllNodeNames).
+
+        Original COM help: https://opendss.epri.com/AllBusNames.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllBusNames))
 
     @property
     def AllBusVmag(self) -> Float64Array:
-        '''Array of magnitudes (doubles) of voltages at all buses'''
+        '''
+        Array of magnitudes (doubles) of voltages at all buses
+
+        Original COM help: https://opendss.epri.com/AllBusVmag.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_AllBusVmag_GR())
         return self._get_float64_gr_array()
 
     @property
     def AllBusVmagPu(self) -> Float64Array:
-        '''Double Array of all bus voltages (each node) magnitudes in Per unit'''
+        '''
+        Double Array of all bus voltages (each node) magnitudes in Per unit
+
+        Original COM help: https://opendss.epri.com/AllBusVmagPu.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_AllBusVmagPu_GR())
         return self._get_float64_gr_array()
 
     @property
     def AllBusVolts(self) -> Float64ArrayOrComplexArray:
-        '''Complex array of all bus, node voltages from most recent solution'''
+        '''
+        Complex array of all bus, node voltages from most recent solution
+
+        Original COM help: https://opendss.epri.com/AllBusVolts.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_AllBusVolts_GR())
         return self._get_complex128_gr_array()
 
     @property
     def AllElementLosses(self) -> Float64ArrayOrComplexArray:
-        '''Array of total losses (complex) in each circuit element'''
+        '''
+        Array of total losses (complex) in each circuit element
+
+        Original COM help: https://opendss.epri.com/AllElementLosses.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_AllElementLosses_GR())
         return self._get_complex128_gr_array()
 
     @property
     def AllElementNames(self) -> List[str]:
-        '''Array of strings containing Full Name of all elements.'''
+        '''
+        Array of strings containing Full Name of all elements.
+
+        Original COM help: https://opendss.epri.com/AllElementNames.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllElementNames))
 
     @property
     def AllNodeDistances(self) -> Float64Array:
-        '''Returns an array of distances from parent EnergyMeter for each Node. Corresponds to AllBusVMag sequence.'''
+        '''
+        Returns an array of distances from parent EnergyMeter for each Node. Corresponds to AllBusVMag sequence.
+
+        Original COM help: https://opendss.epri.com/AllNodeDistances.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_AllNodeDistances_GR())
         return self._get_float64_gr_array()
 
     @property
     def AllNodeNames(self) -> List[str]:
-        '''Array of strings containing full name of each node in system in same order as returned by AllBusVolts, etc.'''
+        '''
+        Array of strings containing full name of each node in system in same order as returned by AllBusVolts, etc.
+
+        Original COM help: https://opendss.epri.com/AllNodeNames.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_AllNodeNames))
 
     @property
     def LineLosses(self) -> Float64ArrayOrSimpleComplex:
-        '''Complex total line losses in the circuit'''
+        '''
+        Complex total line losses in the circuit
+
+        Original COM help: https://opendss.epri.com/LineLosses.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_LineLosses_GR())
         return self._get_complex128_gr_simple()
 
     @property
     def Losses(self) -> Float64ArrayOrSimpleComplex:
-        '''Total losses in active circuit, complex number (two-element array of double).'''
+        '''
+        Total losses in active circuit, complex number (two-element array of double).
+
+        Original COM help: https://opendss.epri.com/Losses.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_Losses_GR())
         return self._get_complex128_gr_simple()
 
@@ -382,27 +539,47 @@ class ICircuit(Base):
 
     @property
     def NumBuses(self) -> int:
-        '''Total number of Buses in the circuit.'''
+        '''
+        Total number of Buses in the circuit.
+
+        Original COM help: https://opendss.epri.com/NumBuses.html
+        '''
         return self.CheckForError(self._lib.Circuit_Get_NumBuses())
 
     @property
     def NumCktElements(self) -> int:
-        '''Number of CktElements in the circuit.'''
+        '''
+        Number of CktElements in the circuit.
+
+        Original COM help: https://opendss.epri.com/NumCktElements.html
+        '''
         return self.CheckForError(self._lib.Circuit_Get_NumCktElements())
 
     @property
     def NumNodes(self) -> int:
-        '''Total number of nodes in the circuit.'''
+        '''
+        Total number of nodes in the circuit.
+
+        Original COM help: https://opendss.epri.com/NumNodes1.html
+        '''
         return self.CheckForError(self._lib.Circuit_Get_NumNodes())
 
     @property
     def ParentPDElement(self) -> int:
-        '''Sets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.'''
+        '''
+        Sets Parent PD element, if any, to be the active circuit element and returns index>0; Returns 0 if it fails or not applicable.
+
+        Original COM help: https://opendss.epri.com/ParentPDElement.html
+        '''
         return self.CheckForError(self._lib.Circuit_Get_ParentPDElement())
 
     @property
     def SubstationLosses(self) -> Float64ArrayOrSimpleComplex:
-        '''Complex losses in all transformers designated to substations.'''
+        '''
+        Complex losses in all transformers designated to substations.
+
+        Original COM help: https://opendss.epri.com/SubstationLosses.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_SubstationLosses_GR())
         return self._get_complex128_gr_simple()
 
@@ -412,30 +589,48 @@ class ICircuit(Base):
         (read-only) System Y matrix (after a solution has been performed). 
         This is deprecated as it returns a dense matrix. Only use it for small systems.
         For large-scale systems, prefer YMatrix.GetCompressedYMatrix.
+
+        Original COM help: https://opendss.epri.com/SystemY.html
         '''
         self.CheckForError(self._lib.Circuit_Get_SystemY_GR())
         return self._get_complex128_gr_array()
 
     @property
     def TotalPower(self) -> Float64ArrayOrSimpleComplex:
-        '''Total power (complex), kVA delivered to the circuit'''
+        '''
+        Total power (complex), kVA delivered to the circuit
+
+        Original COM help: https://opendss.epri.com/TotalPower.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_TotalPower_GR())
         return self._get_complex128_gr_simple()
 
     @property
     def YCurrents(self) -> Float64ArrayOrComplexArray:
-        '''Array of doubles containing complex injection currents for the present solution. It is the "I" vector of I=YV'''
+        '''
+        Array of doubles containing complex injection currents for the present solution. It is the "I" vector of I=YV
+
+        Original COM help: https://opendss.epri.com/YCurrents.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_YCurrents_GR())
         return self._get_complex128_gr_array()
 
     @property
     def YNodeOrder(self) -> List[str]:
-        '''Array of strings containing the names of the nodes in the same order as the Y matrix'''
+        '''
+        Array of strings containing the names of the nodes in the same order as the Y matrix
+
+        Original COM help: https://opendss.epri.com/YNodeOrder.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Circuit_Get_YNodeOrder))
 
     @property
     def YNodeVarray(self) -> Float64ArrayOrComplexArray:
-        '''Complex array of actual node voltages in same order as SystemY matrix.'''
+        '''
+        Complex array of actual node voltages in same order as SystemY matrix.
+
+        Original COM help: https://opendss.epri.com/YNodeVarray.html
+        '''
         self.CheckForError(self._lib.Circuit_Get_YNodeVarray_GR())
         return self._get_complex128_gr_array()
 

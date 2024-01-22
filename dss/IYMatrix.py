@@ -14,7 +14,7 @@ class IYMatrix(Base):
     __slots__ = []
 
     def GetCompressedYMatrix(self, factor: bool = True) -> Tuple[ComplexArray, Int32Array, Int32Array]:
-        '''Return as (data, indices, indptr) that can fed into scipy.sparse.csc_matrix'''
+        '''Return as (data, indices, indptr) that can fed into `scipy.sparse.csc_matrix`'''
         
         ffi = self._api_util.ffi
         

@@ -20,16 +20,29 @@ class IDSSProperty(Base):
     
     @property
     def Description(self) -> str:
-        '''Description of the property.'''
+        '''
+        Description of the property.
+
+        Original COM help: https://opendss.epri.com/Description.html
+        '''
         return self._get_string(self.CheckForError(self._lib.DSSProperty_Get_Description()))
 
     @property
     def Name(self) -> str:
-        '''Name of Property'''
+        '''
+        Name of Property
+
+        Original COM help: https://opendss.epri.com/Name6.html
+        '''
         return self._get_string(self.CheckForError(self._lib.DSSProperty_Get_Name()))
 
     @property
     def Val(self) -> str:
+        '''
+        Get/set the value of the active property. The value must be specified as a string.
+
+        Original COM help: https://opendss.epri.com/Val.html
+        '''
         return self._get_string(self.CheckForError(self._lib.DSSProperty_Get_Val()))
 
     @Val.setter

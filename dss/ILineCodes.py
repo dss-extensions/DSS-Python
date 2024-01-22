@@ -34,7 +34,11 @@ class ILineCodes(Iterable):
 
     @property
     def C0(self):
-        '''Zero-sequence capacitance, nF per unit length'''
+        '''
+        Zero-sequence capacitance, nF per unit length
+
+        Original COM help: https://opendss.epri.com/C2.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_C0())
 
     @C0.setter
@@ -43,7 +47,11 @@ class ILineCodes(Iterable):
 
     @property
     def C1(self):
-        '''Positive-sequence capacitance, nF per unit length'''
+        '''
+        Positive-sequence capacitance, nF per unit length
+
+        Original COM help: https://opendss.epri.com/C3.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_C1())
 
     @C1.setter
@@ -52,7 +60,11 @@ class ILineCodes(Iterable):
 
     @property
     def Cmatrix(self) -> Float64Array:
-        '''Capacitance matrix, nF per unit length'''
+        '''
+        Capacitance matrix, nF per unit length
+
+        Original COM help: https://opendss.epri.com/Cmatrix1.html
+        '''
         self.CheckForError(self._lib.LineCodes_Get_Cmatrix_GR())
         return self._get_float64_gr_array()
 
@@ -63,7 +75,11 @@ class ILineCodes(Iterable):
 
     @property
     def EmergAmps(self) -> float:
-        '''Emergency ampere rating'''
+        '''
+        Emergency ampere rating
+
+        Original COM help: https://opendss.epri.com/EmergAmps2.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_EmergAmps())
 
     @EmergAmps.setter
@@ -72,12 +88,20 @@ class ILineCodes(Iterable):
 
     @property
     def IsZ1Z0(self) -> bool:
-        '''Flag denoting whether impedance data were entered in symmetrical components'''
+        '''
+        Flag denoting whether impedance data were entered in symmetrical components
+
+        Original COM help: https://opendss.epri.com/IsZ1Z0.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_IsZ1Z0()) != 0
 
     @property
     def NormAmps(self) -> float:
-        '''Normal Ampere rating'''
+        '''
+        Normal Ampere rating
+
+        Original COM help: https://opendss.epri.com/NormAmps1.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_NormAmps())
 
     @NormAmps.setter
@@ -86,7 +110,11 @@ class ILineCodes(Iterable):
 
     @property
     def Phases(self) -> int:
-        '''Number of Phases'''
+        '''
+        Number of Phases
+
+        Original COM help: https://opendss.epri.com/Phases2.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_Phases())
 
     @Phases.setter
@@ -95,7 +123,11 @@ class ILineCodes(Iterable):
 
     @property
     def R0(self) -> float:
-        '''Zero-Sequence Resistance, ohms per unit length'''
+        '''
+        Zero-Sequence Resistance, ohms per unit length
+
+        Original COM help: https://opendss.epri.com/R2.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_R0())
 
     @R0.setter
@@ -104,7 +136,11 @@ class ILineCodes(Iterable):
 
     @property
     def R1(self) -> float:
-        '''Positive-sequence resistance ohms per unit length'''
+        '''
+        Positive-sequence resistance ohms per unit length
+
+        Original COM help: https://opendss.epri.com/R3.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_R1())
 
     @R1.setter
@@ -113,7 +149,11 @@ class ILineCodes(Iterable):
 
     @property
     def Rmatrix(self) -> Float64Array:
-        '''Resistance matrix, ohms per unit length'''
+        '''
+        Resistance matrix, ohms per unit length
+
+        Original COM help: https://opendss.epri.com/Rmatrix1.html
+        '''
         self.CheckForError(self._lib.LineCodes_Get_Rmatrix_GR())
         return self._get_float64_gr_array()
 
@@ -132,7 +172,11 @@ class ILineCodes(Iterable):
 
     @property
     def X0(self) -> float:
-        '''Zero Sequence Reactance, Ohms per unit length'''
+        '''
+        Zero Sequence Reactance, Ohms per unit length
+
+        Original COM help: https://opendss.epri.com/X2.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_X0())
 
     @X0.setter
@@ -141,7 +185,11 @@ class ILineCodes(Iterable):
 
     @property
     def X1(self) -> float:
-        '''Posiive-sequence reactance, ohms per unit length'''
+        '''
+        Positive-sequence reactance, ohms per unit length
+
+        Original COM help: https://opendss.epri.com/X3.html
+        '''
         return self.CheckForError(self._lib.LineCodes_Get_X1())
 
     @X1.setter
@@ -150,7 +198,11 @@ class ILineCodes(Iterable):
 
     @property
     def Xmatrix(self) -> Float64Array:
-        '''Reactance matrix, ohms per unit length'''
+        '''
+        Reactance matrix, ohms per unit length
+
+        Original COM help: https://opendss.epri.com/Xmatrix1.html
+        '''
         self.CheckForError(self._lib.LineCodes_Get_Xmatrix_GR())
         return self._get_float64_gr_array()
 

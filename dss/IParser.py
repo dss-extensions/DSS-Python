@@ -32,11 +32,20 @@ class IParser(Base):
         return self._get_float64_gr_array()
 
     def ResetDelimiters(self):
+        '''
+        Reset the delimiters to their default values.
+
+        Original COM help: https://opendss.epri.com/ResetDelimiters.html        
+        '''
         self.CheckForError(self._lib.Parser_ResetDelimiters())
 
     @property
     def AutoIncrement(self) -> bool:
-        '''Default is FALSE. If TRUE parser automatically advances to next token after DblValue, IntValue, or StrValue. Simpler when you don't need to check for parameter names.'''
+        '''
+        Default is FALSE. If TRUE, the parser automatically advances to next token after DblValue, IntValue, or StrValue. Simpler when you don't need to check for parameter names.
+
+        Original COM help: https://opendss.epri.com/AutoIncrement.html
+        '''
         return self.CheckForError(self._lib.Parser_Get_AutoIncrement()) != 0
 
     @AutoIncrement.setter
@@ -47,6 +56,8 @@ class IParser(Base):
     def BeginQuote(self) -> str:
         '''
         Get/Set String containing the the characters for Quoting in OpenDSS scripts. Matching pairs defined in EndQuote. Default is "'([{.
+
+        Original COM help: https://opendss.epri.com/BeginQuote.html
         '''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_BeginQuote()))
 
@@ -59,7 +70,11 @@ class IParser(Base):
 
     @property
     def CmdString(self) -> str:
-        '''String to be parsed. Loading this string resets the Parser to the beginning of the line. Then parse off the tokens in sequence.'''
+        '''
+        String to be parsed. Loading this string resets the Parser to the beginning of the line. Then parse off the tokens in sequence.
+
+        Original COM help: https://opendss.epri.com/CmdString.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_CmdString()))
 
     @CmdString.setter
@@ -71,12 +86,20 @@ class IParser(Base):
 
     @property
     def DblValue(self) -> float:
-        '''Return next parameter as a double.'''
+        '''
+        Return next parameter as a double.
+
+        Original COM help: https://opendss.epri.com/DblValue.html
+        '''
         return self.CheckForError(self._lib.Parser_Get_DblValue())
 
     @property
     def Delimiters(self) -> str:
-        '''String defining hard delimiters used to separate token on the command string. Default is , and =. The = separates token name from token value. These override whitesspace to separate tokens.'''
+        '''
+        String defining hard delimiters used to separate token on the command string. Default is , and =. The = separates token name from token value. These override whitespace to separate tokens.
+
+        Original COM help: https://opendss.epri.com/Delimiters.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_Delimiters()))
 
     @Delimiters.setter
@@ -88,7 +111,11 @@ class IParser(Base):
 
     @property
     def EndQuote(self) -> str:
-        '''String containing characters, in order, that match the beginning quote characters in BeginQuote. Default is "')]}'''
+        '''
+        String containing characters, in order, that match the beginning quote characters in BeginQuote. Default is "')]}
+
+        Original COM help: https://opendss.epri.com/EndQuote.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_EndQuote()))
 
     @EndQuote.setter
@@ -100,23 +127,37 @@ class IParser(Base):
 
     @property
     def IntValue(self) -> int:
-        '''Return next parameter as a long integer.'''
+        '''
+        Return next parameter as a long integer.
+
+        Original COM help: https://opendss.epri.com/IntValue.html
+        '''
         return self.CheckForError(self._lib.Parser_Get_IntValue())
 
     @property
     def NextParam(self) -> str:
-        '''Get next token and return tag name (before = sign) if any. See AutoIncrement.'''
+        '''
+        Get next token and return tag name (before = sign) if any. See AutoIncrement.
+
+        Original COM help: https://opendss.epri.com/NextParam.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_NextParam()))
 
     @property
     def StrValue(self) -> str:
-        '''Return next parameter as a string'''
+        '''
+        Return next parameter as a string
+
+        Original COM help: https://opendss.epri.com/StrValue.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_StrValue()))
 
     @property
     def WhiteSpace(self) -> str:
         '''
         Get/set the characters used for White space in the command string.  Default is blank and Tab.
+
+        Original COM help: https://opendss.epri.com/WhiteSpace.html
         '''
         return self._get_string(self.CheckForError(self._lib.Parser_Get_WhiteSpace()))
 

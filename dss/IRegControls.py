@@ -43,7 +43,11 @@ class IRegControls(Iterable):
 
     @property
     def CTPrimary(self) -> float:
-        '''CT primary ampere rating (secondary is 0.2 amperes)'''
+        '''
+        CT primary ampere rating (secondary is 0.2 amperes)
+
+        Original COM help: https://opendss.epri.com/CTPrimary.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_CTPrimary())
 
     @CTPrimary.setter
@@ -52,7 +56,11 @@ class IRegControls(Iterable):
 
     @property
     def Delay(self) -> float:
-        '''Time delay [s] after arming before the first tap change. Control may reset before actually changing taps.'''
+        '''
+        Time delay [s] after arming before the first tap change. Control may reset before actually changing taps.
+
+        Original COM help: https://opendss.epri.com/Delay2.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_Delay())
 
     @Delay.setter
@@ -61,7 +69,11 @@ class IRegControls(Iterable):
 
     @property
     def ForwardBand(self) -> float:
-        '''Regulation bandwidth in forward direciton, centered on Vreg'''
+        '''
+        Regulation bandwidth in forward direction, centered on Vreg
+
+        Original COM help: https://opendss.epri.com/ForwardBand.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_ForwardBand())
 
     @ForwardBand.setter
@@ -70,7 +82,11 @@ class IRegControls(Iterable):
 
     @property
     def ForwardR(self) -> float:
-        '''LDC R setting in Volts'''
+        '''
+        LDC R setting in Volts
+
+        Original COM help: https://opendss.epri.com/ForwardR.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_ForwardR())
 
     @ForwardR.setter
@@ -79,7 +95,11 @@ class IRegControls(Iterable):
 
     @property
     def ForwardVreg(self) -> float:
-        '''Target voltage in the forward direction, on PT secondary base.'''
+        '''
+        Target voltage in the forward direction, on PT secondary base.
+
+        Original COM help: https://opendss.epri.com/ForwardVreg.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_ForwardVreg())
 
     @ForwardVreg.setter
@@ -88,7 +108,11 @@ class IRegControls(Iterable):
 
     @property
     def ForwardX(self) -> float:
-        '''LDC X setting in Volts'''
+        '''
+        LDC X setting in Volts
+
+        Original COM help: https://opendss.epri.com/ForwardX.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_ForwardX())
 
     @ForwardX.setter
@@ -97,7 +121,11 @@ class IRegControls(Iterable):
 
     @property
     def IsInverseTime(self) -> bool:
-        '''Time delay is inversely adjsuted, proportinal to the amount of voltage outside the regulating band.'''
+        '''
+        Time delay is inversely adjusted, proportional to the amount of voltage outside the regulating band.
+
+        Original COM help: https://opendss.epri.com/IsInverseTime.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_IsInverseTime()) != 0
 
     @IsInverseTime.setter
@@ -106,7 +134,11 @@ class IRegControls(Iterable):
 
     @property
     def IsReversible(self) -> bool:
-        '''Regulator can use different settings in the reverse direction.  Usually not applicable to substation transformers.'''
+        '''
+        Regulator can use different settings in the reverse direction.  Usually not applicable to substation transformers.
+
+        Original COM help: https://opendss.epri.com/IsReversible.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_IsReversible()) != 0
 
     @IsReversible.setter
@@ -115,7 +147,11 @@ class IRegControls(Iterable):
 
     @property
     def MaxTapChange(self) -> int:
-        '''Maximum tap change per iteration in STATIC solution mode. 1 is more realistic, 16 is the default for a faster soluiton.'''
+        '''
+        Maximum tap change per iteration in STATIC solution mode. 1 is more realistic, 16 is the default for a faster solution.
+
+        Original COM help: https://opendss.epri.com/MaxTapChange.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_MaxTapChange())
 
     @MaxTapChange.setter
@@ -124,7 +160,11 @@ class IRegControls(Iterable):
 
     @property
     def MonitoredBus(self) -> str:
-        '''Name of a remote regulated bus, in lieu of LDC settings'''
+        '''
+        Name of a remote regulated bus, in lieu of LDC settings
+
+        Original COM help: https://opendss.epri.com/MonitoredBus.html
+        '''
         return self._get_string(self.CheckForError(self._lib.RegControls_Get_MonitoredBus()))
 
     @MonitoredBus.setter
@@ -136,7 +176,11 @@ class IRegControls(Iterable):
 
     @property
     def PTratio(self) -> float:
-        '''PT ratio for voltage control settings'''
+        '''
+        PT ratio for voltage control settings
+
+        Original COM help: https://opendss.epri.com/PTratio1.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_PTratio())
 
     @PTratio.setter
@@ -145,7 +189,11 @@ class IRegControls(Iterable):
 
     @property
     def ReverseBand(self) -> float:
-        '''Bandwidth in reverse direction, centered on reverse Vreg.'''
+        '''
+        Bandwidth in reverse direction, centered on reverse Vreg.
+
+        Original COM help: https://opendss.epri.com/ReverseBand.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_ReverseBand())
 
     @ReverseBand.setter
@@ -154,7 +202,11 @@ class IRegControls(Iterable):
 
     @property
     def ReverseR(self) -> float:
-        '''Reverse LDC R setting in Volts.'''
+        '''
+        Reverse LDC R setting in Volts.
+
+        Original COM help: https://opendss.epri.com/ReverseR.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_ReverseR())
 
     @ReverseR.setter
@@ -163,7 +215,11 @@ class IRegControls(Iterable):
 
     @property
     def ReverseVreg(self) -> float:
-        '''Target voltage in the revese direction, on PT secondary base.'''
+        '''
+        Target voltage in the revese direction, on PT secondary base.
+
+        Original COM help: https://opendss.epri.com/ReverseVreg.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_ReverseVreg())
 
     @ReverseVreg.setter
@@ -172,7 +228,11 @@ class IRegControls(Iterable):
 
     @property
     def ReverseX(self) -> float:
-        '''Reverse LDC X setting in volts.'''
+        '''
+        Reverse LDC X setting in volts.
+
+        Original COM help: https://opendss.epri.com/ReverseX.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_ReverseX())
 
     @ReverseX.setter
@@ -181,7 +241,11 @@ class IRegControls(Iterable):
 
     @property
     def TapDelay(self) -> float:
-        '''Time delay [s] for subsequent tap changes in a set. Control may reset before actually changing taps.'''
+        '''
+        Time delay [s] for subsequent tap changes in a set. Control may reset before actually changing taps.
+
+        Original COM help: https://opendss.epri.com/TapDelay.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_TapDelay())
 
     @TapDelay.setter
@@ -190,7 +254,11 @@ class IRegControls(Iterable):
 
     @property
     def TapNumber(self) -> int:
-        '''Integer number of the tap that the controlled transformer winding is currentliy on.'''
+        '''
+        Integer number of the tap that the controlled transformer winding is currently on.
+
+        Original COM help: https://opendss.epri.com/TapNumber.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_TapNumber())
 
     @TapNumber.setter
@@ -199,7 +267,11 @@ class IRegControls(Iterable):
 
     @property
     def TapWinding(self) -> int:
-        '''Tapped winding number'''
+        '''
+        Tapped winding number
+
+        Original COM help: https://opendss.epri.com/TapWinding.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_TapWinding())
 
     @TapWinding.setter
@@ -208,7 +280,11 @@ class IRegControls(Iterable):
 
     @property
     def Transformer(self) -> str:
-        '''Name of the transformer this regulator controls'''
+        '''
+        Name of the transformer this regulator controls
+
+        Original COM help: https://opendss.epri.com/Transformer.html
+        '''
         return self._get_string(self.CheckForError(self._lib.RegControls_Get_Transformer()))
 
     @Transformer.setter
@@ -220,7 +296,11 @@ class IRegControls(Iterable):
 
     @property
     def VoltageLimit(self) -> float:
-        '''First house voltage limit on PT secondary base.  Setting to 0 disables this function.'''
+        '''
+        First house voltage limit on PT secondary base.  Setting to 0 disables this function.
+
+        Original COM help: https://opendss.epri.com/VoltageLimit.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_VoltageLimit())
 
     @VoltageLimit.setter
@@ -229,7 +309,11 @@ class IRegControls(Iterable):
 
     @property
     def Winding(self) -> int:
-        '''Winding number for PT and CT connections'''
+        '''
+        Winding number for PT and CT connections
+
+        Original COM help: https://opendss.epri.com/Winding.html
+        '''
         return self.CheckForError(self._lib.RegControls_Get_Winding())
 
     @Winding.setter

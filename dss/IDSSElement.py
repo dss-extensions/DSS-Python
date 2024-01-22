@@ -27,17 +27,29 @@ class IDSSElement(Base):
 
     @property
     def AllPropertyNames(self) -> List[str]:
-        '''Array of strings containing the names of all properties for the active DSS object.'''
+        '''
+        Array of strings containing the names of all properties for the active DSS object.
+
+        Original COM help: https://opendss.epri.com/AllPropertyNames1.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.DSSElement_Get_AllPropertyNames))
 
     @property
     def Name(self) -> str:
-        '''Full Name of Active DSS Object (general element or circuit element).'''
+        '''
+        Full Name of Active DSS Object (general element or circuit element).
+
+        Original COM help: https://opendss.epri.com/Name5.html
+        '''
         return self._get_string(self.CheckForError(self._lib.DSSElement_Get_Name()))
 
     @property
     def NumProperties(self) -> int:
-        '''Number of Properties for the active DSS object.'''
+        '''
+        Number of Properties for the active DSS object.
+
+        Original COM help: https://opendss.epri.com/NumProperties1.html
+        '''
         return self.CheckForError(self._lib.DSSElement_Get_NumProperties())
 
     def ToJSON(self, options: DSSJSONFlags = 0) -> str:

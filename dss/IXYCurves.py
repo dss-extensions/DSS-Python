@@ -27,7 +27,11 @@ class IXYCurves(Iterable):
 
     @property
     def Npts(self) -> int:
-        '''Get/Set Number of points in X-Y curve'''
+        '''
+        Get/Set Number of points in X-Y curve
+
+        Original COM help: https://opendss.epri.com/Npts1.html
+        '''
         return self.CheckForError(self._lib.XYCurves_Get_Npts())
 
     @Npts.setter
@@ -36,7 +40,11 @@ class IXYCurves(Iterable):
 
     @property
     def Xarray(self) -> Float64Array:
-        '''Get/set X values as a Array of doubles. Set Npts to max number expected if setting'''
+        '''
+        Get/set X values as a Array of doubles. Set Npts to max number expected if setting
+
+        Original COM help: https://opendss.epri.com/Xarray.html
+        '''
         self.CheckForError(self._lib.XYCurves_Get_Xarray_GR())
         return self._get_float64_gr_array()
 
@@ -47,7 +55,11 @@ class IXYCurves(Iterable):
 
     @property
     def Xscale(self) -> float:
-        '''Factor to scale X values from original curve'''
+        '''
+        Factor to scale X values from original curve
+
+        Original COM help: https://opendss.epri.com/Xscale.html
+        '''
         return self.CheckForError(self._lib.XYCurves_Get_Xscale())
 
     @Xscale.setter
@@ -56,7 +68,11 @@ class IXYCurves(Iterable):
 
     @property
     def Xshift(self) -> float:
-        '''Amount to shift X value from original curve'''
+        '''
+        Amount to shift X value from original curve
+
+        Original COM help: https://opendss.epri.com/Xshift.html
+        '''
         return self.CheckForError(self._lib.XYCurves_Get_Xshift())
 
     @Xshift.setter
@@ -65,7 +81,11 @@ class IXYCurves(Iterable):
 
     @property
     def Yarray(self) -> Float64Array:
-        '''Get/Set Y values in curve; Set Npts to max number expected if setting'''
+        '''
+        Get/Set Y values in curve; Set Npts to max number expected if setting
+
+        Original COM help: https://opendss.epri.com/Yarray.html
+        '''
         self.CheckForError(self._lib.XYCurves_Get_Yarray_GR())
         return self._get_float64_gr_array()
 
@@ -76,7 +96,11 @@ class IXYCurves(Iterable):
 
     @property
     def Yscale(self) -> float:
-        '''Factor to scale Y values from original curve'''
+        '''
+        Factor to scale Y values from original curve
+
+        Original COM help: https://opendss.epri.com/Yscale.html
+        '''
         return self.CheckForError(self._lib.XYCurves_Get_Yscale())
 
     @Yscale.setter
@@ -85,7 +109,11 @@ class IXYCurves(Iterable):
 
     @property
     def Yshift(self) -> float:
-        '''Amount to shift Y value from original curve'''
+        '''
+        Amount to shift Y value from original curve
+
+        Original COM help: https://opendss.epri.com/Yshift.html
+        '''
         return self.CheckForError(self._lib.XYCurves_Get_Yshift())
 
     @Yshift.setter
@@ -94,7 +122,11 @@ class IXYCurves(Iterable):
 
     @property
     def x(self) -> float:
-        '''Set X value or get interpolated value after setting Y'''
+        '''
+        Set X value or get interpolated value after setting Y
+
+        Original COM help: https://opendss.epri.com/x4.html
+        '''
         return self.CheckForError(self._lib.XYCurves_Get_x())
 
     @x.setter
@@ -103,7 +135,11 @@ class IXYCurves(Iterable):
 
     @property
     def y(self) -> float:
-        '''Set Y value or get interpolated Y value after setting X'''
+        '''
+        Set Y value or get interpolated Y value after setting X
+
+        Original COM help: https://opendss.epri.com/y1.html
+        '''
         return self.CheckForError(self._lib.XYCurves_Get_y())
 
     @y.setter

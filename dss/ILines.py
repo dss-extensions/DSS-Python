@@ -54,7 +54,11 @@ class ILines(Iterable):
 
     @property
     def Bus1(self) -> str:
-        '''Name of bus for terminal 1.'''
+        '''
+        Name of bus for terminal 1.
+
+        Original COM help: https://opendss.epri.com/Bus1.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Lines_Get_Bus1()))
 
     @Bus1.setter
@@ -66,7 +70,11 @@ class ILines(Iterable):
 
     @property
     def Bus2(self) -> str:
-        '''Name of bus for terminal 2.'''
+        '''
+        Name of bus for terminal 2.
+
+        Original COM help: https://opendss.epri.com/Bus2.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Lines_Get_Bus2()))
 
     @Bus2.setter
@@ -78,7 +86,11 @@ class ILines(Iterable):
 
     @property
     def C0(self) -> float:
-        '''Zero Sequence capacitance, nanofarads per unit length.'''
+        '''
+        Zero Sequence capacitance, nanofarads per unit length.
+
+        Original COM help: https://opendss.epri.com/C0.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_C0())
 
     @C0.setter
@@ -87,7 +99,11 @@ class ILines(Iterable):
 
     @property
     def C1(self) -> float:
-        '''Positive Sequence capacitance, nanofarads per unit length.'''
+        '''
+        Positive Sequence capacitance, nanofarads per unit length.
+
+        Original COM help: https://opendss.epri.com/C1.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_C1())
 
     @C1.setter
@@ -106,7 +122,11 @@ class ILines(Iterable):
 
     @property
     def EmergAmps(self) -> float:
-        '''Emergency (maximum) ampere rating of Line.'''
+        '''
+        Emergency (maximum) ampere rating of Line.
+
+        Original COM help: https://opendss.epri.com/EmergAmps1.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_EmergAmps())
 
     @EmergAmps.setter
@@ -115,7 +135,11 @@ class ILines(Iterable):
 
     @property
     def Geometry(self) -> str:
-        '''Line geometry code'''
+        '''
+        Line geometry code
+
+        Original COM help: https://opendss.epri.com/Geometry.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Lines_Get_Geometry()))
 
     @Geometry.setter
@@ -127,7 +151,11 @@ class ILines(Iterable):
 
     @property
     def Length(self) -> float:
-        '''Length of line section in units compatible with the LineCode definition.'''
+        '''
+        Length of line section in units compatible with the LineCode definition.
+
+        Original COM help: https://opendss.epri.com/Length.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_Length())
 
     @Length.setter
@@ -136,7 +164,11 @@ class ILines(Iterable):
 
     @property
     def LineCode(self) -> str:
-        '''Name of LineCode object that defines the impedances.'''
+        '''
+        Name of LineCode object that defines the impedances.
+
+        Original COM help: https://opendss.epri.com/LineCode.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Lines_Get_LineCode()))
 
     @LineCode.setter
@@ -148,7 +180,11 @@ class ILines(Iterable):
 
     @property
     def NormAmps(self) -> float:
-        '''Normal ampere rating of Line.'''
+        '''
+        Normal ampere rating of Line.
+
+        Original COM help: https://opendss.epri.com/NormAmps.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_NormAmps())
 
     @NormAmps.setter
@@ -157,17 +193,29 @@ class ILines(Iterable):
 
     @property
     def NumCust(self) -> int:
-        '''Number of customers on this line section.'''
+        '''
+        Number of customers on this line section.
+
+        Original COM help: https://opendss.epri.com/NumCust.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_NumCust())
 
     @property
     def Parent(self) -> int:
-        '''Sets Parent of the active Line to be the active line. Returns 0 if no parent or action fails.'''
+        '''
+        Sets Parent of the active Line to be the active line. Returns 0 if no parent or action fails.
+
+        Original COM help: https://opendss.epri.com/Parent.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_Parent())
 
     @property
     def Phases(self) -> int:
-        '''Number of Phases, this Line element.'''
+        '''
+        Number of Phases, this Line element.
+
+        Original COM help: https://opendss.epri.com/Phases1.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_Phases())
 
     @Phases.setter
@@ -176,7 +224,11 @@ class ILines(Iterable):
 
     @property
     def R0(self) -> float:
-        '''Zero Sequence resistance, ohms per unit length.'''
+        '''
+        Zero Sequence resistance, ohms per unit length.
+
+        Original COM help: https://opendss.epri.com/R0.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_R0())
 
     @R0.setter
@@ -185,7 +237,11 @@ class ILines(Iterable):
 
     @property
     def R1(self) -> float:
-        '''Positive Sequence resistance, ohms per unit length.'''
+        '''
+        Positive Sequence resistance, ohms per unit length.
+
+        Original COM help: https://opendss.epri.com/R1.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_R1())
 
     @R1.setter
@@ -194,7 +250,11 @@ class ILines(Iterable):
 
     @property
     def Rg(self) -> float:
-        '''Earth return resistance value used to compute line impedances at power frequency'''
+        '''
+        Earth return resistance value used to compute line impedances at power frequency
+
+        Original COM help: https://opendss.epri.com/Rg.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_Rg())
 
     @Rg.setter
@@ -203,7 +263,11 @@ class ILines(Iterable):
 
     @property
     def Rho(self) -> float:
-        '''Earth Resistivity, m-ohms'''
+        '''
+        Earth Resistivity, m-ohms
+
+        Original COM help: https://opendss.epri.com/Rho.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_Rho())
 
     @Rho.setter
@@ -212,7 +276,11 @@ class ILines(Iterable):
 
     @property
     def Rmatrix(self) -> Float64Array:
-        '''Resistance matrix (full), ohms per unit length. Array of doubles.'''
+        '''
+        Resistance matrix (full), ohms per unit length. Array of doubles.
+
+        Original COM help: https://opendss.epri.com/Rmatrix.html
+        '''
         self.CheckForError(self._lib.Lines_Get_Rmatrix_GR())
         return self._get_float64_gr_array()
 
@@ -223,7 +291,11 @@ class ILines(Iterable):
 
     @property
     def Spacing(self) -> str:
-        '''Line spacing code'''
+        '''
+        Line spacing code
+
+        Original COM help: https://opendss.epri.com/Spacing.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Lines_Get_Spacing()))
 
     @Spacing.setter
@@ -235,7 +307,11 @@ class ILines(Iterable):
 
     @property
     def TotalCust(self) -> int:
-        '''Total Number of customers served from this line section.'''
+        '''
+        Total Number of customers served from this line section.
+
+        Original COM help: https://opendss.epri.com/TotalCust.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_TotalCust())
 
     @property
@@ -248,7 +324,11 @@ class ILines(Iterable):
 
     @property
     def X0(self) -> float:
-        '''Zero Sequence reactance ohms per unit length.'''
+        '''
+        Zero Sequence reactance ohms per unit length.
+
+        Original COM help: https://opendss.epri.com/X0.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_X0())
 
     @X0.setter
@@ -257,7 +337,11 @@ class ILines(Iterable):
 
     @property
     def X1(self) -> float:
-        '''Positive Sequence reactance, ohms per unit length.'''
+        '''
+        Positive Sequence reactance, ohms per unit length.
+
+        Original COM help: https://opendss.epri.com/X1.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_X1())
 
     @X1.setter
@@ -266,7 +350,11 @@ class ILines(Iterable):
 
     @property
     def Xg(self) -> float:
-        '''Earth return reactance value used to compute line impedances at power frequency'''
+        '''
+        Earth return reactance value used to compute line impedances at power frequency
+
+        Original COM help: https://opendss.epri.com/Xg.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_Xg())
 
     @Xg.setter
@@ -275,7 +363,11 @@ class ILines(Iterable):
 
     @property
     def Xmatrix(self) -> Float64Array:
-        '''Reactance matrix (full), ohms per unit length. Array of doubles.'''
+        '''
+        Reactance matrix (full), ohms per unit length. Array of doubles.
+
+        Original COM help: https://opendss.epri.com/Xmatrix.html
+        '''
         self.CheckForError(self._lib.Lines_Get_Xmatrix_GR())
         return self._get_float64_gr_array()
 
@@ -286,7 +378,11 @@ class ILines(Iterable):
 
     @property
     def Yprim(self) -> Float64ArrayOrComplexArray:
-        '''Yprimitive for the active line object (complex array).'''
+        '''
+        Yprimitive for the active line object (complex array).
+
+        Original COM help: https://opendss.epri.com/Yprim1.html
+        '''
         self.CheckForError(self._lib.Lines_Get_Yprim_GR())
         return self._get_complex128_gr_array()
 
@@ -297,7 +393,11 @@ class ILines(Iterable):
 
     @property
     def SeasonRating(self) -> float:
-        '''Delivers the rating for the current season (in Amps)  if the "SeasonalRatings" option is active'''
+        '''
+        Delivers the rating for the current season (in Amps)  if the "SeasonalRatings" option is active
+
+        Original COM help: https://opendss.epri.com/SeasonRating.html
+        '''
         return self.CheckForError(self._lib.Lines_Get_SeasonRating())
 
     @property

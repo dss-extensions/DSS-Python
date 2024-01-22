@@ -37,12 +37,20 @@ class ICapacitors(Iterable):
 
     @property
     def AvailableSteps(self) -> int:
-        '''Number of Steps available in cap bank to be switched ON.'''
+        '''
+        Number of Steps available in cap bank to be switched ON.
+
+        Original COM help: https://opendss.epri.com/AvailableSteps.html
+        '''
         return self.CheckForError(self._lib.Capacitors_Get_AvailableSteps())
 
     @property
     def IsDelta(self) -> bool:
-        '''Delta connection or wye?'''
+        '''
+        Delta connection or wye?
+
+        Original COM help: https://opendss.epri.com/IsDelta.html
+        '''
         return self.CheckForError(self._lib.Capacitors_Get_IsDelta()) != 0
 
     @IsDelta.setter
@@ -51,7 +59,11 @@ class ICapacitors(Iterable):
 
     @property
     def NumSteps(self) -> int:
-        '''Number of steps (default 1) for distributing and switching the total bank kVAR.'''
+        '''
+        Number of steps (default 1) for distributing and switching the total bank kVAR.
+
+        Original COM help: https://opendss.epri.com/NumSteps.html
+        '''
         return self.CheckForError(self._lib.Capacitors_Get_NumSteps())
 
     @NumSteps.setter
@@ -60,7 +72,11 @@ class ICapacitors(Iterable):
 
     @property
     def States(self) -> Int32Array:
-        '''A array of  integer [0..numsteps-1] indicating state of each step. If the read value is -1 an error has occurred.'''
+        '''
+        An array of integers [0..NumSteps-1] indicating state of each step. If the read value is -1 an error has occurred.
+
+        Original COM help: https://opendss.epri.com/States.html
+        '''
         self.CheckForError(self._lib.Capacitors_Get_States_GR())
         return self._get_int32_gr_array()
 
@@ -71,7 +87,11 @@ class ICapacitors(Iterable):
 
     @property
     def kV(self) -> float:
-        '''Bank kV rating. Use LL for 2 or 3 phases, or actual can rating for 1 phase.'''
+        '''
+        Bank kV rating. Use LL for 2 or 3 phases, or actual can rating for 1 phase.
+
+        Original COM help: https://opendss.epri.com/kV.html
+        '''
         return self.CheckForError(self._lib.Capacitors_Get_kV())
 
     @kV.setter

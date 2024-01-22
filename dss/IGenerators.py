@@ -41,7 +41,11 @@ class IGenerators(Iterable):
 
     @property
     def ForcedON(self) -> bool:
-        '''Indicates whether the generator is forced ON regardles of other dispatch criteria.'''
+        '''
+        Indicates whether the generator is forced ON regardless of other dispatch criteria.
+
+        Original COM help: https://opendss.epri.com/ForcedON.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_ForcedON()) != 0
 
     @ForcedON.setter
@@ -50,7 +54,11 @@ class IGenerators(Iterable):
 
     @property
     def Model(self) -> int:
-        '''Generator Model'''
+        '''
+        Generator Model
+
+        Original COM help: https://opendss.epri.com/Model.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_Model()) #TODO: use enum
 
     @Model.setter
@@ -59,7 +67,11 @@ class IGenerators(Iterable):
 
     @property
     def PF(self) -> float:
-        '''Power factor (pos. = producing vars). Updates kvar based on present kW value.'''
+        '''
+        Power factor (pos. = producing vars). Updates kvar based on present kW value.
+
+        Original COM help: https://opendss.epri.com/PF.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_PF())
 
     @PF.setter
@@ -68,7 +80,11 @@ class IGenerators(Iterable):
 
     @property
     def Phases(self) -> int:
-        '''Number of phases'''
+        '''
+        Number of phases
+
+        Original COM help: https://opendss.epri.com/Phases.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_Phases())
 
     @Phases.setter
@@ -77,18 +93,30 @@ class IGenerators(Iterable):
 
     @property
     def RegisterNames(self) -> List[str]:
-        '''Array of Names of all generator energy meter registers'''
+        '''
+        Array of Names of all generator energy meter registers
+        
+        See also the enum `GeneratorRegisters`.
+        '''
         return self.CheckForError(self._get_string_array(self._lib.Generators_Get_RegisterNames))
 
     @property
     def RegisterValues(self) -> Float64Array:
-        '''Array of valus in generator energy meter registers.'''
+        '''
+        Array of values in generator energy meter registers.
+
+        Original COM help: https://opendss.epri.com/RegisterValues.html
+        '''
         self.CheckForError(self._lib.Generators_Get_RegisterValues_GR())
         return self._get_float64_gr_array()
 
     @property
     def Vmaxpu(self) -> float:
-        '''Vmaxpu for generator model'''
+        '''
+        Vmaxpu for generator model
+
+        Original COM help: https://opendss.epri.com/Vmaxpu.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_Vmaxpu())
 
     @Vmaxpu.setter
@@ -97,7 +125,11 @@ class IGenerators(Iterable):
 
     @property
     def Vminpu(self) -> float:
-        '''Vminpu for Generator model'''
+        '''
+        Vminpu for Generator model
+
+        Original COM help: https://opendss.epri.com/Vminpu.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_Vminpu())
 
     @Vminpu.setter
@@ -106,7 +138,11 @@ class IGenerators(Iterable):
 
     @property
     def kV(self) -> float:
-        '''Voltage base for the active generator, kV'''
+        '''
+        Voltage base for the active generator, kV
+
+        Original COM help: https://opendss.epri.com/kV1.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_kV())
 
     @kV.setter
@@ -115,7 +151,11 @@ class IGenerators(Iterable):
 
     @property
     def kVArated(self) -> float:
-        '''kVA rating of the generator'''
+        '''
+        kVA rating of the generator
+
+        Original COM help: https://opendss.epri.com/kVArated.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_kVArated())
 
     @kVArated.setter
@@ -124,7 +164,11 @@ class IGenerators(Iterable):
 
     @property
     def kW(self) -> float:
-        '''kW output for the active generator. kvar is updated for current power factor.'''
+        '''
+        kW output for the active generator. kvar is updated for current power factor.
+
+        Original COM help: https://opendss.epri.com/kW.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_kW())
 
     @kW.setter
@@ -133,7 +177,11 @@ class IGenerators(Iterable):
 
     @property
     def kvar(self) -> float:
-        '''kvar output for the active generator. Updates power factor based on present kW value.'''
+        '''
+        kvar output for the active generator. Updates power factor based on present kW value.
+
+        Original COM help: https://opendss.epri.com/kvar.html
+        '''
         return self.CheckForError(self._lib.Generators_Get_kvar())
 
     @kvar.setter

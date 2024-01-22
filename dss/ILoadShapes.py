@@ -28,17 +28,23 @@ class ILoadShapes(Iterable):
     ]
 
     def New(self, Name: AnyStr):
+        '''Create a new LoadShape, with default parameters'''
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)
 
         return self.CheckForError(self._lib.LoadShapes_New(Name))
 
     def Normalize(self):
+        '''Normalize the LoadShape data inplace'''
         self.CheckForError(self._lib.LoadShapes_Normalize())
 
     @property
     def HrInterval(self) -> float:
-        '''Fixed interval time value, hours.'''
+        '''
+        Fixed interval time value, in hours.
+
+        Original COM help: https://opendss.epri.com/HrInterval.html
+        '''
         return self.CheckForError(self._lib.LoadShapes_Get_HrInterval())
 
     @HrInterval.setter
@@ -47,7 +53,11 @@ class ILoadShapes(Iterable):
 
     @property
     def MinInterval(self) -> float:
-        '''Fixed Interval time value, in minutes'''
+        '''
+        Fixed Interval time value, in minutes
+
+        Original COM help: https://opendss.epri.com/MinInterval.html
+        '''
         return self.CheckForError(self._lib.LoadShapes_Get_MinInterval())
 
     @MinInterval.setter
@@ -56,7 +66,11 @@ class ILoadShapes(Iterable):
 
     @property
     def Npts(self) -> int:
-        '''Get/set Number of points in active Loadshape.'''
+        '''
+        Get/set Number of points in active Loadshape.
+
+        Original COM help: https://opendss.epri.com/Npts.html
+        '''
         return self.CheckForError(self._lib.LoadShapes_Get_Npts())
 
     @Npts.setter
@@ -65,6 +79,11 @@ class ILoadShapes(Iterable):
 
     @property
     def PBase(self) -> float:
+        '''
+        Base P value for normalization. Default is zero, meaning the peak will be used.
+
+        Original COM help: https://opendss.epri.com/Pbase.html
+        '''
         return self.CheckForError(self._lib.LoadShapes_Get_PBase())
 
     @PBase.setter
@@ -75,7 +94,11 @@ class ILoadShapes(Iterable):
 
     @property
     def Pmult(self) -> Float64Array:
-        '''Array of doubles for the P multiplier in the Loadshape.'''
+        '''
+        Array of doubles for the P multiplier in the Loadshape.
+
+        Original COM help: https://opendss.epri.com/Pmult.html
+        '''
         self.CheckForError(self._lib.LoadShapes_Get_Pmult_GR())
         return self._get_float64_gr_array()
 
@@ -86,7 +109,11 @@ class ILoadShapes(Iterable):
 
     @property
     def QBase(self) -> float:
-        '''Base for normalizing Q curve. If left at zero, the peak value is used.'''
+        '''
+        Base for normalizing Q curve. If left at zero, the peak value is used.
+
+        Original COM help: https://opendss.epri.com/Qbase.html
+        '''
         return self.CheckForError(self._lib.LoadShapes_Get_Qbase())
 
     @QBase.setter
@@ -97,7 +124,11 @@ class ILoadShapes(Iterable):
 
     @property
     def Qmult(self) -> Float64Array:
-        '''Array of doubles containing the Q multipliers.'''
+        '''
+        Array of doubles containing the Q multipliers.
+
+        Original COM help: https://opendss.epri.com/Qmult.html
+        '''
         self.CheckForError(self._lib.LoadShapes_Get_Qmult_GR())
         return self._get_float64_gr_array()
 
@@ -108,7 +139,11 @@ class ILoadShapes(Iterable):
 
     @property
     def TimeArray(self) -> Float64Array:
-        '''Time array in hours correscponding to P and Q multipliers when the Interval=0.'''
+        '''
+        Time array in hours corresponding to P and Q multipliers when the Interval=0.
+
+        Original COM help: https://opendss.epri.com/TimeArray.html
+        '''
         self.CheckForError(self._lib.LoadShapes_Get_TimeArray_GR())
         return self._get_float64_gr_array()
 
@@ -119,7 +154,11 @@ class ILoadShapes(Iterable):
 
     @property
     def UseActual(self) -> bool:
-        '''Boolean flag to let Loads know to use the actual value in the curve rather than use the value as a multiplier.'''
+        '''
+        Boolean flag to let Loads know to use the actual value in the curve rather than use the value as a multiplier.
+
+        Original COM help: https://opendss.epri.com/UseActual.html
+        '''
         return self.CheckForError(self._lib.LoadShapes_Get_UseActual()) != 0
 
     @UseActual.setter
@@ -128,6 +167,11 @@ class ILoadShapes(Iterable):
 
     @property
     def sInterval(self) -> float:
+        '''
+        Fixed interval time value, in seconds.
+
+        Original COM help: https://opendss.epri.com/Sinterval.html
+        '''
         return self.CheckForError(self._lib.LoadShapes_Get_SInterval())
 
     @sInterval.setter

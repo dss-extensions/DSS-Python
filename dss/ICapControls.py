@@ -31,11 +31,20 @@ class ICapControls(Iterable):
     ]
 
     def Reset(self):
+        '''
+        Force a reset of this CapControl.
+
+        Original COM help: https://opendss.epri.com/Reset.html
+        '''
         self.CheckForError(self._lib.CapControls_Reset())
 
     @property
     def CTratio(self) -> float:
-        '''Transducer ratio from pirmary current to control current.'''
+        '''
+        Transducer ratio from primary current to control current.
+
+        Original COM help: https://opendss.epri.com/CTratio.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_CTratio())
 
     @CTratio.setter
@@ -44,7 +53,11 @@ class ICapControls(Iterable):
 
     @property
     def Capacitor(self) -> str:
-        '''Name of the Capacitor that is controlled.'''
+        '''
+        Name of the Capacitor that is controlled.
+
+        Original COM help: https://opendss.epri.com/Capacitor.html
+        '''
         return self._get_string(self.CheckForError(self._lib.CapControls_Get_Capacitor()))
 
     @Capacitor.setter
@@ -56,6 +69,13 @@ class ICapControls(Iterable):
 
     @property
     def DeadTime(self) -> float:
+        '''
+        Dead time after capacitor is turned OFF before it can be turned back ON for the active CapControl.
+
+        Default is 300 sec.
+
+        Original COM help: https://opendss.epri.com/DeadTime.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_DeadTime())
 
     @DeadTime.setter
@@ -64,7 +84,11 @@ class ICapControls(Iterable):
 
     @property
     def Delay(self) -> float:
-        '''Time delay [s] to switch on after arming.  Control may reset before actually switching.'''
+        '''
+        Time delay [s] to switch on after arming.  Control may reset before actually switching.
+
+        Original COM help: https://opendss.epri.com/Delay.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_Delay())
 
     @Delay.setter
@@ -73,7 +97,11 @@ class ICapControls(Iterable):
 
     @property
     def DelayOff(self) -> float:
-        '''Time delay [s] before switching off a step. Control may reset before actually switching.'''
+        '''
+        Time delay [s] before switching off a step. Control may reset before actually switching.
+
+        Original COM help: https://opendss.epri.com/DelayOff.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_DelayOff())
 
     @DelayOff.setter
@@ -82,7 +110,11 @@ class ICapControls(Iterable):
 
     @property
     def Mode(self) -> int:
-        '''Type of automatic controller.'''
+        '''
+        Type of automatic controller.
+
+        Original COM help: https://opendss.epri.com/Mode.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_Mode()) #TODO: use enum
 
     @Mode.setter
@@ -91,7 +123,11 @@ class ICapControls(Iterable):
 
     @property
     def MonitoredObj(self) -> int:
-        '''Full name of the element that PT and CT are connected to.'''
+        '''
+        Full name of the element that PT and CT are connected to.
+
+        Original COM help: https://opendss.epri.com/MonitoredObj.html
+        '''
         return self._get_string(self.CheckForError(self._lib.CapControls_Get_MonitoredObj()))
 
     @MonitoredObj.setter
@@ -103,7 +139,11 @@ class ICapControls(Iterable):
 
     @property
     def MonitoredTerm(self) -> int:
-        '''Terminal number on the element that PT and CT are connected to.'''
+        '''
+        Terminal number on the element that PT and CT are connected to.
+
+        Original COM help: https://opendss.epri.com/MonitoredTerm.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_MonitoredTerm())
 
     @MonitoredTerm.setter
@@ -112,7 +152,11 @@ class ICapControls(Iterable):
 
     @property
     def OFFSetting(self) -> float:
-        '''Threshold to switch off a step. See Mode for units.'''
+        '''
+        Threshold to switch off a step. See Mode for units.
+
+        Original COM help: https://opendss.epri.com/OFFSetting.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_OFFSetting())
 
     @OFFSetting.setter
@@ -121,7 +165,11 @@ class ICapControls(Iterable):
 
     @property
     def ONSetting(self) -> float:
-        '''Threshold to arm or switch on a step.  See Mode for units.'''
+        '''
+        Threshold to arm or switch on a step.  See Mode for units.
+
+        Original COM help: https://opendss.epri.com/ONSetting.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_ONSetting())
 
     @ONSetting.setter
@@ -130,7 +178,11 @@ class ICapControls(Iterable):
 
     @property
     def PTratio(self) -> float:
-        '''Transducer ratio from primary feeder to control voltage.'''
+        '''
+        Transducer ratio from primary feeder to control voltage.
+
+        Original COM help: https://opendss.epri.com/PTratio.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_PTratio())
 
     @PTratio.setter
@@ -139,7 +191,11 @@ class ICapControls(Iterable):
 
     @property
     def UseVoltOverride(self) -> float:
-        '''Enables Vmin and Vmax to override the control Mode'''
+        '''
+        Enables Vmin and Vmax to override the control Mode
+
+        Original COM help: https://opendss.epri.com/UseVoltOverride.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_UseVoltOverride()) != 0
 
     @UseVoltOverride.setter
@@ -148,7 +204,11 @@ class ICapControls(Iterable):
 
     @property
     def Vmax(self) -> float:
-        '''With VoltOverride, swtich off whenever PT voltage exceeds this level.'''
+        '''
+        With VoltOverride, swtich off whenever PT voltage exceeds this level.
+
+        Original COM help: https://opendss.epri.com/Vmax.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_Vmax())
 
     @Vmax.setter
@@ -157,7 +217,11 @@ class ICapControls(Iterable):
 
     @property
     def Vmin(self) -> float:
-        '''With VoltOverride, switch ON whenever PT voltage drops below this level.'''
+        '''
+        With VoltOverride, switch ON whenever PT voltage drops below this level.
+
+        Original COM help: https://opendss.epri.com/Vmin.html
+        '''
         return self.CheckForError(self._lib.CapControls_Get_Vmin())
 
     @Vmin.setter

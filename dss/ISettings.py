@@ -7,8 +7,8 @@ Copyright (c) 2018-2022 DSS-Extensions contributors
 '''
 from ._cffi_api_util import Base
 from ._types import Float64Array, Int32Array
-from typing import AnyStr
-from .enums import DSSPropertyNameStyle
+from typing import AnyStr, Union
+from .enums import DSSPropertyNameStyle, CktModels
 
 class ISettings(Base):
     __slots__ = []
@@ -51,7 +51,11 @@ class ISettings(Base):
 
     @property
     def AutoBusList(self) -> str:
-        '''List of Buses or (File=xxxx) syntax for the AutoAdd solution mode.'''
+        '''
+        List of Buses or (File=xxxx) syntax for the AutoAdd solution mode.
+
+        Original COM help: https://opendss.epri.com/AutoBusList.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Settings_Get_AutoBusList()))
 
     @AutoBusList.setter
@@ -62,17 +66,25 @@ class ISettings(Base):
         self.CheckForError(self._lib.Settings_Set_AutoBusList(Value))
 
     @property
-    def CktModel(self) -> int:
-        '''{dssMultiphase (0) * | dssPositiveSeq (1) } Indicate if the circuit model is positive sequence.'''
-        return self.CheckForError(self._lib.Settings_Get_CktModel())
+    def CktModel(self) -> CktModels:
+        '''
+        Indicate if the circuit model is positive sequence.
+
+        Original COM help: https://opendss.epri.com/CktModel.html
+        '''
+        return self.CheckForError(CktModels(self._lib.Settings_Get_CktModel()))
 
     @CktModel.setter
-    def CktModel(self, Value: int):
+    def CktModel(self, Value: Union[int, CktModels]):
         self.CheckForError(self._lib.Settings_Set_CktModel(Value))
 
     @property
     def ControlTrace(self) -> bool:
-        '''{True | False*} Denotes whether to trace the control actions to a file.'''
+        '''
+        Denotes whether to trace the control actions to a file.
+
+        Original COM help: https://opendss.epri.com/ControlTrace.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_ControlTrace()) != 0
 
     @ControlTrace.setter
@@ -81,7 +93,11 @@ class ISettings(Base):
 
     @property
     def EmergVmaxpu(self) -> float:
-        '''Per Unit maximum voltage for Emergency conditions.'''
+        '''
+        Per Unit maximum voltage for Emergency conditions.
+
+        Original COM help: https://opendss.epri.com/EmergVmaxpu.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_EmergVmaxpu())
 
     @EmergVmaxpu.setter
@@ -90,7 +106,11 @@ class ISettings(Base):
 
     @property
     def EmergVminpu(self) -> float:
-        '''Per Unit minimum voltage for Emergency conditions.'''
+        '''
+        Per Unit minimum voltage for Emergency conditions.
+
+        Original COM help: https://opendss.epri.com/EmergVminpu.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_EmergVminpu())
 
     @EmergVminpu.setter
@@ -99,7 +119,11 @@ class ISettings(Base):
 
     @property
     def LossRegs(self) -> Int32Array:
-        '''Integer array defining which energy meter registers to use for computing losses'''
+        '''
+        Integer array defining which energy meter registers to use for computing losses
+
+        Original COM help: https://opendss.epri.com/LossRegs.html
+        '''
         self.CheckForError(self._lib.Settings_Get_LossRegs_GR())
         return self._get_int32_gr_array()
 
@@ -110,7 +134,11 @@ class ISettings(Base):
 
     @property
     def LossWeight(self) -> float:
-        '''Weighting factor applied to Loss register values.'''
+        '''
+        Weighting factor applied to Loss register values.
+
+        Original COM help: https://opendss.epri.com/LossWeight.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_LossWeight())
 
     @LossWeight.setter
@@ -119,7 +147,11 @@ class ISettings(Base):
 
     @property
     def NormVmaxpu(self) -> float:
-        '''Per Unit maximum voltage for Normal conditions.'''
+        '''
+        Per Unit maximum voltage for Normal conditions.
+
+        Original COM help: https://opendss.epri.com/NormVmaxpu.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_NormVmaxpu())
 
     @NormVmaxpu.setter
@@ -128,7 +160,11 @@ class ISettings(Base):
 
     @property
     def NormVminpu(self) -> float:
-        '''Per Unit minimum voltage for Normal conditions.'''
+        '''
+        Per Unit minimum voltage for Normal conditions.
+
+        Original COM help: https://opendss.epri.com/NormVminpu.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_NormVminpu())
 
     @NormVminpu.setter
@@ -137,7 +173,11 @@ class ISettings(Base):
 
     @property
     def PriceCurve(self) -> str:
-        '''Name of LoadShape object that serves as the source of price signal data for yearly simulations, etc.'''
+        '''
+        Name of LoadShape object that serves as the source of price signal data for yearly simulations, etc.
+
+        Original COM help: https://opendss.epri.com/PriceCurve.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Settings_Get_PriceCurve()))
 
     @PriceCurve.setter
@@ -149,7 +189,11 @@ class ISettings(Base):
 
     @property
     def PriceSignal(self) -> float:
-        '''Price Signal for the Circuit'''
+        '''
+        Price Signal for the Circuit
+
+        Original COM help: https://opendss.epri.com/PriceSignal.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_PriceSignal())
 
     @PriceSignal.setter
@@ -158,7 +202,11 @@ class ISettings(Base):
 
     @property
     def Trapezoidal(self) -> bool:
-        '''Gets value of trapezoidal integration flag in energy meters. Defaults to `False`.'''
+        '''
+        Gets value of trapezoidal integration flag in energy meters. Defaults to `False`.
+
+        Original COM help: https://opendss.epri.com/Trapezoidal.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_Trapezoidal()) != 0
 
     @Trapezoidal.setter
@@ -167,7 +215,11 @@ class ISettings(Base):
 
     @property
     def UEregs(self) -> Int32Array:
-        '''Array of Integers defining energy meter registers to use for computing UE'''
+        '''
+        Array of Integers defining energy meter registers to use for computing UE
+
+        Original COM help: https://opendss.epri.com/UEregs.html
+        '''
         self.CheckForError(self._lib.Settings_Get_UEregs_GR())
         return self._get_int32_gr_array()
 
@@ -178,7 +230,11 @@ class ISettings(Base):
 
     @property
     def UEweight(self) -> float:
-        '''Weighting factor applied to UE register values.'''
+        '''
+        Weighting factor applied to UE register values.
+
+        Original COM help: https://opendss.epri.com/UEweight.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_UEweight())
 
     @UEweight.setter
@@ -187,7 +243,11 @@ class ISettings(Base):
 
     @property
     def VoltageBases(self) -> Float64Array:
-        '''Array of doubles defining the legal voltage bases in kV L-L'''
+        '''
+        Array of doubles defining the legal voltage bases in kV L-L
+
+        Original COM help: https://opendss.epri.com/VoltageBases.html
+        '''
         self.CheckForError(self._lib.Settings_Get_VoltageBases_GR())
         return self._get_float64_gr_array()
 
@@ -198,7 +258,11 @@ class ISettings(Base):
 
     @property
     def ZoneLock(self) -> bool:
-        '''{True | False*}  Locks Zones on energy meters to prevent rebuilding if a circuit change occurs.'''
+        '''
+        Locks Zones on energy meters to prevent rebuilding if a circuit change occurs.
+
+        Original COM help: https://opendss.epri.com/ZoneLock.html
+        '''
         return self.CheckForError(self._lib.Settings_Get_ZoneLock()) != 0
 
     @ZoneLock.setter

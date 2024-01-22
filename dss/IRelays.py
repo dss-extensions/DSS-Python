@@ -25,7 +25,11 @@ class IRelays(Iterable):
 
     @property
     def MonitoredObj(self) -> str:
-        '''Full name of object this Relay is monitoring.'''
+        '''
+        Full name of object this Relay is monitoring.
+
+        Original COM help: https://opendss.epri.com/MonitoredObj3.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Relays_Get_MonitoredObj()))
 
     @MonitoredObj.setter
@@ -37,7 +41,11 @@ class IRelays(Iterable):
 
     @property
     def MonitoredTerm(self) -> int:
-        '''Number of terminal of monitored element that this Relay is monitoring.'''
+        '''
+        Number of terminal of monitored element that this Relay is monitoring.
+
+        Original COM help: https://opendss.epri.com/MonitoredTerm3.html
+        '''
         return self.CheckForError(self._lib.Relays_Get_MonitoredTerm())
 
     @MonitoredTerm.setter
@@ -46,7 +54,11 @@ class IRelays(Iterable):
 
     @property
     def SwitchedObj(self) -> str:
-        '''Full name of element that will be switched when relay trips.'''
+        '''
+        Full name of element that will be switched when relay trips.
+
+        Original COM help: https://opendss.epri.com/SwitchedObj2.html
+        '''
         return self._get_string(self.CheckForError(self._lib.Relays_Get_SwitchedObj()))
 
     @SwitchedObj.setter
@@ -58,7 +70,11 @@ class IRelays(Iterable):
 
     @property
     def SwitchedTerm(self) -> int:
-        '''Terminal number of the switched object that will be opened when the relay trips.'''
+        '''
+        Terminal number of the switched object that will be opened when the relay trips.
+
+        Original COM help: https://opendss.epri.com/SwitchedTerm2.html
+        '''
         return self.CheckForError(self._lib.Relays_Get_SwitchedTerm())
 
     @SwitchedTerm.setter
@@ -66,11 +82,19 @@ class IRelays(Iterable):
         self.CheckForError(self._lib.Relays_Set_SwitchedTerm(Value))
 
     def Open(self):
-        '''Open relay's controlled element and lock out the relay.'''
+        '''
+        Open relay's controlled element and lock out the relay.
+
+        Original COM help: https://opendss.epri.com/Open4.html
+        '''
         self.CheckForError(self._lib.Relays_Open())
 
     def Close(self):
-        '''Close the switched object controlled by the relay. Resets relay to first operation.'''
+        '''
+        Close the switched object controlled by the relay. Resets relay to first operation.
+
+        Original COM help: https://opendss.epri.com/Close5.html
+        '''
         self.CheckForError(self._lib.Relays_Close())
 
     def Reset(self):
@@ -96,7 +120,11 @@ class IRelays(Iterable):
 
     @property
     def NormalState(self) -> int:
-        '''Normal state of relay.'''
+        '''
+        Normal state of relay.
+
+        Original COM help: https://opendss.epri.com/NormalState3.html
+        '''
         return self.CheckForError(self._lib.Relays_Get_NormalState())
 
     @NormalState.setter

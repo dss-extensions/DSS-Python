@@ -37,7 +37,11 @@ class IPVSystems(Iterable):
 
     @property
     def Irradiance(self) -> float:
-        '''Get/set the present value of the Irradiance property in kW/m²'''
+        '''
+        Get/set the present value of the Irradiance property in kW/m²
+
+        Original COM help: https://opendss.epri.com/Irradiance.html
+        '''
         return self.CheckForError(self._lib.PVSystems_Get_Irradiance())
 
     @Irradiance.setter
@@ -46,7 +50,11 @@ class IPVSystems(Iterable):
 
     @property
     def PF(self) -> float:
-        '''Get/set the power factor for the active PVSystem'''
+        '''
+        Get/set the power factor for the active PVSystem
+
+        Original COM help: https://opendss.epri.com/PF2.html
+        '''
         return self.CheckForError(self._lib.PVSystems_Get_PF())
 
     @PF.setter
@@ -55,18 +63,32 @@ class IPVSystems(Iterable):
 
     @property
     def RegisterNames(self) -> List[str]:
-        '''Array of PVSYSTEM energy meter register names'''
+        '''
+        Array of PVSystem energy meter register names
+        
+        See also the enum `GeneratorRegisters`.
+
+        Original COM help: https://opendss.epri.com/RegisterNames2.html
+        '''
         return self.CheckForError(self._get_string_array(self._lib.PVSystems_Get_RegisterNames))
 
     @property
     def RegisterValues(self) -> Float64Array:
-        '''Array of doubles containing values in PVSystem registers.'''
+        '''
+        Array of doubles containing values in PVSystem registers.
+
+        Original COM help: https://opendss.epri.com/RegisterValues2.html
+        '''
         self.CheckForError(self._lib.PVSystems_Get_RegisterValues_GR())
         return self._get_float64_gr_array()
 
     @property
     def kVArated(self) -> float:
-        '''Get/set Rated kVA of the PVSystem'''
+        '''
+        Get/set Rated kVA of the PVSystem
+
+        Original COM help: https://opendss.epri.com/kVArated1.html
+        '''
         return self.CheckForError(self._lib.PVSystems_Get_kVArated())
 
     @kVArated.setter
@@ -75,12 +97,20 @@ class IPVSystems(Iterable):
 
     @property
     def kW(self) -> float:
-        '''Get kW output'''
+        '''
+        Get kW output
+
+        Original COM help: https://opendss.epri.com/kW2.html
+        '''
         return self.CheckForError(self._lib.PVSystems_Get_kW())
 
     @property
     def kvar(self) -> float:
-        '''Get/set kvar output value'''
+        '''
+        Get/set kvar output value
+
+        Original COM help: https://opendss.epri.com/kvar2.html
+        '''
         return self.CheckForError(self._lib.PVSystems_Get_kvar())
 
     @kvar.setter
@@ -208,14 +238,18 @@ class IPVSystems(Iterable):
         '''
         Returns the current irradiance value for the active PVSystem. Use it to 
         know what's the current irradiance value for the PV during a simulation.
+
+        Original COM help: https://opendss.epri.com/IrradianceNow.html
         '''
         return self.CheckForError(self._lib.PVSystems_Get_IrradianceNow())
 
     @property 
     def Pmpp(self) -> float:
         '''
-        Gets/sets the rated max power of the PV array for 1.0 kW/sq-m irradiance 
+        Gets/sets the rated max power of the PV array for 1.0 kW/m² irradiance 
         and a user-selected array temperature of the active PVSystem.
+
+        Original COM help: https://opendss.epri.com/Pmpp.html
         '''
         return self.CheckForError(self._lib.PVSystems_Get_Pmpp())
 
@@ -225,5 +259,9 @@ class IPVSystems(Iterable):
 
     @property
     def Sensor(self) -> str:
-        '''Name of the sensor monitoring this element.'''
+        '''
+        Name of the sensor monitoring this element.
+
+        Original COM help: https://opendss.epri.com/Sensor1.html
+        '''
         return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Sensor()))

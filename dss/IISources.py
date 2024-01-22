@@ -21,7 +21,11 @@ class IISources(Iterable):
 
     @property
     def Amps(self) -> float:
-        '''Magnitude of the ISource in amps'''
+        '''
+        Magnitude of the ISource in amps
+
+        Original COM help: https://opendss.epri.com/Amps.html
+        '''
         return self.CheckForError(self._lib.ISources_Get_Amps())
 
     @Amps.setter
@@ -30,7 +34,11 @@ class IISources(Iterable):
  
     @property
     def AngleDeg(self) -> float:
-        '''Phase angle for ISource, degrees'''
+        '''
+        Phase angle for ISource, degrees
+
+        Original COM help: https://opendss.epri.com/AngleDeg.html
+        '''
         return self.CheckForError(self._lib.ISources_Get_AngleDeg())
 
     @AngleDeg.setter
@@ -39,7 +47,11 @@ class IISources(Iterable):
  
     @property
     def Frequency(self) -> float:
-        '''The present frequency of the ISource, Hz'''
+        '''
+        The present frequency of the ISource, Hz
+
+        Original COM help: https://opendss.epri.com/Frequency.html
+        '''
         return self.CheckForError(self._lib.ISources_Get_Frequency())
 
     @Frequency.setter

@@ -30,7 +30,11 @@ class ISwtControls(Iterable):
 
     @property
     def Action(self) -> int:
-        '''Open or Close the switch. No effect if switch is locked.  However, Reset removes any lock and then closes the switch (shelf state).'''
+        '''
+        Open or Close the switch. No effect if switch is locked.  However, Reset removes any lock and then closes the switch (shelf state).
+
+        Original COM help: https://opendss.epri.com/Action1.html
+        '''
         return self.CheckForError(self._lib.SwtControls_Get_Action())
 
     @Action.setter
@@ -39,7 +43,11 @@ class ISwtControls(Iterable):
 
     @property
     def Delay(self) -> float:
-        '''Time delay [s] betwen arming and opening or closing the switch.  Control may reset before actually operating the switch.'''
+        '''
+        Time delay [s] between arming and opening or closing the switch.  Control may reset before actually operating the switch.
+
+        Original COM help: https://opendss.epri.com/Delay3.html
+        '''
         return self.CheckForError(self._lib.SwtControls_Get_Delay())
 
     @Delay.setter
@@ -48,7 +56,11 @@ class ISwtControls(Iterable):
 
     @property
     def IsLocked(self) -> bool:
-        '''The lock prevents both manual and automatic switch operation.'''
+        '''
+        The lock prevents both manual and automatic switch operation.
+
+        Original COM help: https://opendss.epri.com/IsLocked.html
+        '''
         return self.CheckForError(self._lib.SwtControls_Get_IsLocked()) != 0
 
     @IsLocked.setter
@@ -58,7 +70,7 @@ class ISwtControls(Iterable):
     @property
     def NormalState(self) -> ActionCodes:
         '''
-        Get/set Normal state of switch (see actioncodes) dssActionOpen or dssActionClose
+        Get/set Normal state of switch (see ActionCodes) dssActionOpen or dssActionClose
         '''
         return ActionCodes(self.CheckForError(self._lib.SwtControls_Get_NormalState()))
 
@@ -68,7 +80,11 @@ class ISwtControls(Iterable):
 
     @property
     def State(self) -> int:
-        '''Set it to force the switch to a specified state, otherwise read its present state.'''
+        '''
+        Set it to force the switch to a specified state, otherwise read its present state.
+
+        Original COM help: https://opendss.epri.com/State.html
+        '''
         return self.CheckForError(self._lib.SwtControls_Get_State())
 
     @State.setter
@@ -77,7 +93,11 @@ class ISwtControls(Iterable):
 
     @property
     def SwitchedObj(self) -> str:
-        '''Full name of the switched element.'''
+        '''
+        Full name of the switched element.
+
+        Original COM help: https://opendss.epri.com/SwitchedObj3.html
+        '''
         return self._get_string(self.CheckForError(self._lib.SwtControls_Get_SwitchedObj()))
 
     @SwitchedObj.setter
@@ -89,7 +109,11 @@ class ISwtControls(Iterable):
 
     @property
     def SwitchedTerm(self) -> int:
-        '''Terminal number where the switch is located on the SwitchedObj'''
+        '''
+        Terminal number where the switch is located on the SwitchedObj
+
+        Original COM help: https://opendss.epri.com/SwitchedTerm3.html
+        '''
         return self.CheckForError(self._lib.SwtControls_Get_SwitchedTerm())
 
     @SwitchedTerm.setter

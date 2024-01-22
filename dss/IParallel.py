@@ -9,19 +9,36 @@ from ._cffi_api_util import Base
 from ._types import Int32Array
 
 class IParallel(Base):
-    '''Parallel machine interface'''
+    '''
+    Parallel machine interface
+    
+    On DSS-Extensions, prefer using DSSContexts and native threading capabilities of your programming
+    language, if available.
+    '''
 
     __slots__ = []
 
     def CreateActor(self):
+        '''
+        Create a new actor, if there are still cores available.
+        '''
         self.CheckForError(self._lib.Parallel_CreateActor())
 
     def Wait(self):
+        '''
+        Suspends the host's thread until all the OpenDSS running jobs finish.
+
+        Original COM help: https://opendss.epri.com/Wait.html
+        '''
         self.CheckForError(self._lib.Parallel_Wait())
 
     @property
     def ActiveActor(self) -> int:
-        '''Gets/sets the ID of the Active Actor'''
+        '''
+        Gets/sets the ID of the Active Actor
+
+        Original COM help: https://opendss.epri.com/ActiveActor.html
+        '''
         return self.CheckForError(self._lib.Parallel_Get_ActiveActor())
 
     @ActiveActor.setter
@@ -33,6 +50,8 @@ class IParallel(Base):
         '''
         (read) Sets ON/OFF (1/0) Parallel features of the Engine
         (write) Delivers if the Parallel features of the Engine are Active
+
+        Original COM help: https://opendss.epri.com/ActiveParallel.html
         '''
         return self.CheckForError(self._lib.Parallel_Get_ActiveParallel())  #TODO: use boolean for consistency
 
@@ -42,7 +61,11 @@ class IParallel(Base):
 
     @property
     def ActorCPU(self) -> int:
-        '''Gets/sets the CPU of the Active Actor'''
+        '''
+        Gets/sets the CPU of the Active Actor
+
+        Original COM help: https://opendss.epri.com/ActorCPU.html
+        '''
         return self.CheckForError(self._lib.Parallel_Get_ActorCPU())
 
     @ActorCPU.setter
@@ -51,13 +74,21 @@ class IParallel(Base):
 
     @property
     def ActorProgress(self) -> Int32Array:
-        '''Gets the progress of all existing actors in pct'''
+        '''
+        Gets the progress of all existing actors in pct
+
+        Original COM help: https://opendss.epri.com/ActorProgress.html
+        '''
         self.CheckForError(self._lib.Parallel_Get_ActorProgress_GR())
         return self._get_int32_gr_array()
 
     @property
     def ActorStatus(self) -> Int32Array:
-        '''Gets the status of each actor'''
+        '''
+        Gets the status of each actor
+
+        Original COM help: https://opendss.epri.com/ActorStatus.html
+        '''
         self.CheckForError(self._lib.Parallel_Get_ActorStatus_GR())
         return self._get_int32_gr_array()
 
@@ -66,6 +97,8 @@ class IParallel(Base):
         '''
         (read) Reads the values of the ConcatenateReports option (1=enabled, 0=disabled)
         (write) Enable/Disable (1/0) the ConcatenateReports option for extracting monitors data
+
+        Original COM help: https://opendss.epri.com/ConcatenateReports.html
         '''
         return self.CheckForError(self._lib.Parallel_Get_ConcatenateReports()) #TODO: use boolean for consistency
 
@@ -75,17 +108,29 @@ class IParallel(Base):
 
     @property
     def NumCPUs(self) -> int:
-        '''Delivers the number of CPUs on the current PC'''
+        '''
+        Delivers the number of CPUs on the current PC
+
+        Original COM help: https://opendss.epri.com/NumCPUs.html
+        '''
         return self.CheckForError(self._lib.Parallel_Get_NumCPUs())
 
     @property
     def NumCores(self) -> int:
-        '''Delivers the number of Cores of the local PC'''
+        '''
+        Delivers the number of Cores of the local PC
+
+        Original COM help: https://opendss.epri.com/NumCores.html
+        '''
         return self.CheckForError(self._lib.Parallel_Get_NumCores())
 
     @property
     def NumOfActors(self) -> int:
-        '''Gets the number of Actors created'''
+        '''
+        Gets the number of Actors created
+
+        Original COM help: https://opendss.epri.com/NumOfActors.html
+        '''
         return self.CheckForError(self._lib.Parallel_Get_NumOfActors())
 
 
