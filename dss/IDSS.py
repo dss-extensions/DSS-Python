@@ -23,7 +23,7 @@ from .IYMatrix import IYMatrix
 from .IZIP import IZIP
 
 if TYPE_CHECKING:
-    from .altdss import IAltDSS
+    from altdss import IAltDSS
 
 class IDSS(Base):
     '''
@@ -154,8 +154,7 @@ class IDSS(Base):
         if self._altdss is not None:
             return self._altdss
 
-        #TODO: .altdss -> altdss (remove dot when the package is published
-        from .altdss import IAltDSS
+        from altdss import IAltDSS
         self._altdss = IAltDSS.get_from_context(self._api_util)
         return self._altdss
 

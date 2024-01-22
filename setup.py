@@ -61,7 +61,7 @@ setup(
     author_email="pmeira@ieee.org",
     version=package_version,
     license="BSD",
-    packages=['dss', 'dss.UserModels', 'dss.altdss'],
+    packages=['dss', 'dss.UserModels'],
     ext_package="dss",
     install_requires=["dss_python_backend==0.14.0b1", "numpy>=1.21.0", "typing_extensions>=4.5,<5"],
     extras_require={'plot': ["matplotlib", "scipy"]}, #TODO: test which versions should work
