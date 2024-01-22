@@ -53,6 +53,7 @@ class MonitorObjMixin:
         num_channels = self.NumChannels()
         if index < 1 or index > num_channels:
             raise DSSException(
+                0,
                 'Monitor Channel: Invalid channel index ({}), monitor "{}" has {} channels.'.format(
                 index, self.Name, num_channels
             ))

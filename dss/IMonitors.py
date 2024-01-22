@@ -39,6 +39,7 @@ class IMonitors(Iterable):
         num_channels = self.CheckForError(self._lib.Monitors_Get_NumChannels())
         if Index < 1 or Index > num_channels:
             raise DSSException(
+                0,
                 'Monitors.Channel: Invalid channel index ({}), monitor "{}" has {} channels.'.format(
                 Index, self.Name, num_channels
             ))

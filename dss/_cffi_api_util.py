@@ -5,6 +5,7 @@ import numpy as np
 from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 from typing import Any, AnyStr, Callable, List, Union #, Iterator
 from .enums import AltDSSEvent
+from dss_python_backend.events import get_manager_for_ctx
 
 # UTF8 under testing
 codec = 'UTF8'
@@ -24,6 +25,12 @@ def set_case_insensitive_attributes(use: bool = True, warn: bool = False):
     Note that there is a small overhead for allowing case-insensitive names,
     thus is not recommended to continue using it after migration/adjustments to
     the user code.
+
+    Currently, this also affects the new AltDSS package, allowing users to
+    employ the case-insensitive mechanism to address DSS properties in Python code.
+
+    Since there is a small performance overhead, users are recommended to use this
+    mechanism as a transition before adjusting the code.
     '''
     if use:
         global warn_wrong_case
@@ -303,15 +310,15 @@ class Base:
 
 
 def altdss_python_util_callback(ctx, event_code, step, ptr):
-    # print(ctx, AltDSSEvent(event_code), step, ptr)
-    util = CffiApiUtil._ctx_to_util[ctx]
+    # print(ctx_util.ctx, AltDSSEvent(event_code), step, ptr)
+    ctx_util = CffiApiUtil._ctx_to_util[ctx]
 
     if event_code == AltDSSEvent.ReprocessBuses:
-        util.reprocess_buses_callback(step)
+        ctx_util.reprocess_buses_callback(step)
         return
 
     if event_code == AltDSSEvent.Clear:
-        util.clear_callback(step)
+        ctx_util.clear_callback(step)
         return
 
 
@@ -320,7 +327,6 @@ class CffiApiUtil(object):
     An internal class with various API and DSSContext management functions and structures.
     '''
     _ctx_to_util = {}
-    _altdss_python_util_callback = None
 
     def __init__(self, ffi, lib, ctx=None):
         self.owns_ctx = True
@@ -336,6 +342,9 @@ class CffiApiUtil(object):
         self._is_clearing = False
         if ctx is None:
             self.lib = lib
+            ctx = lib.ctx_Get_Prime()
+            self.ctx = ctx
+            CffiApiUtil._ctx_to_util[ctx] = self
         else:
             self.lib = CtxLib(ctx, ffi, lib)
 
@@ -423,11 +432,11 @@ class CffiApiUtil(object):
 
 
     def register_callbacks(self):
-        if CffiApiUtil._altdss_python_util_callback is None:
-            CffiApiUtil._altdss_python_util_callback = self.ffi.def_extern(name='altdss_python_util_callback')(altdss_python_util_callback)
+        mgr = get_manager_for_ctx(self.ctx)
+        # if multiple calls, the extras are ignored
+        mgr.register_func(AltDSSEvent.Clear, altdss_python_util_callback)
+        mgr.register_func(AltDSSEvent.ReprocessBuses, altdss_python_util_callback)
 
-        self.lib.DSSEvents_RegisterAlt(AltDSSEvent.Clear, self.lib_unpatched.altdss_python_util_callback)
-        self.lib.DSSEvents_RegisterAlt(AltDSSEvent.ReprocessBuses, self.lib_unpatched.altdss_python_util_callback)
 
     # The context will die, no need to do anything else currently.
     def __del__(self):

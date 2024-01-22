@@ -7,8 +7,15 @@ relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_cap
 
 ### 0.14.4 (WIP)
 
-- Add `DSSCompatFlags.ActiveLine`.
-- Convert enum comments to docstrings for better user experience.
+- Enums: 
+    - Move to DSS-Python-Backend to allow easier sharing among all Python packages from DSS-Extensions.
+    - Convert enum comments to docstrings for better user experience.
+    - New `DSSCompatFlags.ActiveLine`.
+    - New `DSSJSONFlags.SkipTimestamp` and `DSSJSONFlags.SkipBuses`
+    - New `DSSSaveFlags` (used in the new function `Circuit.Save`)
+    - New `EnergyMeterRegisters` and `GeneratorRegisters` to simplify handling register indexes from EnergyMeters (`EnergyMeterRegisters`), Generators, PVSystems, and Storage objects (these last three use `GeneratorRegisters`).
+
+- Implement the DSSEvents interface. Note that this is not a popular interface and we haven't seen it used in Python with COM yet. OpenDSS comes with a couple of examples using VBA in Excel though.
 
 ### 0.14.3
 

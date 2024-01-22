@@ -29,8 +29,7 @@ Check [the Releases page](https://github.com/dss-extensions/dss_python/releases)
 
 Most limitations are inherited from `dss_capi`, i.e., these are not implemented:
 
-- `DSSEvents` from `DLL/ImplEvents.pas`: seems too dependent on COM.
-- `DSSProgress` from `DLL/ImplDSSProgress.pas`: would need a reimplementation depending on the target UI (GUI, text, headless, etc.).
+- `DSSProgress` from `DLL/ImplDSSProgress.pas`: would need a reimplementation depending on the target UI (GUI, text, headless, etc.). Part of it can already be handled through the callback mechanisms.
 - OpenDSS-GIS features are not implemented since they're not open-source.
 
 In general, the DLL from `dss_capi` provides more features than both the official Direct DLL and the COM object.
