@@ -63,7 +63,7 @@ setup(
     license="BSD",
     packages=['dss', 'dss.UserModels'],
     ext_package="dss",
-    install_requires=["dss_python_backend==0.14.0b1", "numpy>=1.21.0", "typing_extensions>=4.5,<5"],
+    install_requires=["dss_python_backend==0.14.0b2", "numpy>=1.21.0", "typing_extensions>=4.5,<5"],
     extras_require={'plot': ["matplotlib", "scipy"]}, #TODO: test which versions should work
     tests_require=["scipy", "ruff", "xmldiff", "pandas", "pytest"],
     zip_safe=False,
@@ -75,6 +75,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Development Status :: 5 - Production/Stable',
