@@ -7,6 +7,8 @@ As of 2022, most of the parallel-machine functions of EPRI's OpenDSS have been r
 Besides the parallel-machine mechanisms, DSS-Python also exposes the DSSContext mechanism provided by DSS-Extensions. DSSContexts allow using multiple OpenDSS instances directly, including user-managed multi-threading, without using the internal OpenDSS actors.
 
 Starting April 2023, our CFFI extension modules and DSS C-API binaries moved to `dss_python_backend` and are justed consumed here.
+
+In January 2024, the code based on our new low-level API extensions, Obj and Alt, move to the new package AltDSS-Python (just `altdss` in PyPI and Python).
 '''
 
 import os
@@ -41,6 +43,9 @@ dss: IDSS
 DSS: IDSS
 dss = DSS = DSS_GR #: Same as DSS_GR
 
+try:
+    from ._version import __version__
+except:
+    __version__ = '0.0dev'
 
-__version__ = '0.15.0.dev'
 __all__ = ['dss', 'DSS', 'DSS_GR', 'prime_api_util', 'api_util', 'DSSException', 'patch_dss_com', 'set_case_insensitive_attributes', 'enums', 'Edit']

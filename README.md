@@ -82,14 +82,12 @@ dss_python_backend/
 Open a command prompt in the `dss_python_backend` subfolder and run the build process:
 
 ```
-python setup.py build
-python setup.py install
-cd ..
-cd dss_python
+python -m pip install .
+cd ../dss_python
 python -m pip install .
 ```
 
-If you are familiar with `conda-build`, there is a complete recipe to build DSS C-API, KLUSolve(X) and DSS-Python in the `conda` subfolder.
+~~If you are familiar with `conda-build`, there is a complete recipe to build DSS C-API, KLUSolve(X) and DSS-Python in the `conda` subfolder.~~ (outdated)
 
 Example usage
 =============

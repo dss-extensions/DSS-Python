@@ -10,7 +10,7 @@ export PATH=$CONDA:$CONDA/bin:$CONDA/scripts:$PATH
 source $CONDA/etc/profile.d/conda.sh
 
 # Update the recipe
-DSS_PYTHON_PREPARE_BOA=1 python setup.py
+#DSS_PYTHON_PREPARE_BOA=1 python setup.py
 
 conda config --set always_yes yes --set changeps1 no
 conda config --add channels conda-forge

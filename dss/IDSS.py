@@ -150,11 +150,14 @@ class IDSS(Base):
         #: pure-Python package born from DSS-Python and OpenDSSDirect.py, sharing the
         #: same underlying AltDSS/DSS C-API engine.
         #:
+        #: Note: you need AltDSS-Python (altdss package) installed to use this.
+        #:
         #: (API Extension)
         if self._altdss is not None:
             return self._altdss
 
         from altdss import IAltDSS
+
         self._altdss = IAltDSS.get_from_context(self._api_util)
         return self._altdss
 

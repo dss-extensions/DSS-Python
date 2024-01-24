@@ -1,0 +1,83 @@
+[build-system]
+requires = [
+    "hatchling",
+    "versioningit",
+]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "versioningit"
+
+[tool.versioningit]
+
+[tool.versioningit.write]
+file = "dss/_version.py"
+
+[tool.hatch.build]
+artifacts = [
+    "dss/_version.py", 
+    "dss/messages/*.mo",
+]
+packages = ["dss"]
+
+[project]
+name = "dss-python"
+dynamic = ["version"]
+dependencies = [
+    "dss_python_backend==0.14.0b2",
+    "numpy>=1.21.0",
+    "typing_extensions>=4.5,<5",
+]
+requires-python = ">=3.7"
+authors = [
+  {name = "Paulo Meira", email = "pmeira@ieee.org"},
+  {name = "Dheepak Krishnamurthy", email = "me@kdheepak.com"},
+]
+maintainers = [
+    {name = "Paulo Meira", email = "pmeira@ieee.org"},
+]
+description = "Python bindings and tools based on the DSS C-API project, the alternative OpenDSS implementation from DSS-Extensions.org. API-compatible with the COM version of OpenDSS."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["opendss", "altdss", "electric power systems", "opendssdirect", "powerflow", "short-circuit", ]
+classifiers = [
+    'Intended Audience :: Science/Research',
+    'Intended Audience :: Education',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Programming Language :: Python :: Implementation :: PyPy',
+    'Development Status :: 5 - Production/Stable',
+    'Topic :: Scientific/Engineering',
+    'License :: OSI Approved :: BSD License'
+]
+
+[project.urls]
+Homepage = "https://github.com/dss-extensions/dss_python"
+Documentation = "https://dss-extensions.org/dss_python"
+Repository = "https://github.com/dss-extensions/dss_python.git"
+"Bug Tracker" = "https://github.com/dss-extensions/dss_python/issues"
+Changelog = "https://github.com/dss-extensions/dss_python/blob/main/docs/changelog.md"
+
+[project.optional-dependencies]
+test = [
+    "ruff", 
+    "xmldiff", 
+    "pytest",
+    "scipy",
+    "pandas",
+]
+plot = [
+    "matplotlib",
+    "scipy",
+]
+all = [
+    "matplotlib",
+    "scipy",
+    "opendssdirect",
+    "altdss",
+]
