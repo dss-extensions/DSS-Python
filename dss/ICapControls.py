@@ -6,7 +6,8 @@ Copyright (c) 2016-2023 Paulo Meira
 Copyright (c) 2018-2023 DSS-Extensions contributors
 '''
 from ._cffi_api_util import Iterable
-from typing import AnyStr
+from typing import AnyStr, Union
+from .enums import CapControlModes
 
 class ICapControls(Iterable):
     __slots__ = []
@@ -109,16 +110,16 @@ class ICapControls(Iterable):
         self.CheckForError(self._lib.CapControls_Set_DelayOff(Value))
 
     @property
-    def Mode(self) -> int:
+    def Mode(self) -> CapControlModes:
         '''
         Type of automatic controller.
 
         Original COM help: https://opendss.epri.com/Mode.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_Mode()) #TODO: use enum
+        return CapControlModes(self.CheckForError(self._lib.CapControls_Get_Mode()))
 
     @Mode.setter
-    def Mode(self, Value: int):
+    def Mode(self, Value: Union[CapControlModes, int]):
         self.CheckForError(self._lib.CapControls_Set_Mode(Value))
 
     @property

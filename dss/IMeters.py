@@ -8,6 +8,7 @@ Copyright (c) 2018-2023 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from typing import List, AnyStr
 from ._types import Float64Array
+from .enums import OCPDevType as OCPDevTypeEnum
 
 class IMeters(Iterable):
     __slots__ = []
@@ -278,14 +279,13 @@ class IMeters(Iterable):
         return self.CheckForError(self._lib.Meters_Get_NumSections())
 
     @property
-    def OCPDeviceType(self) -> int:
+    def OCPDeviceType(self) -> OCPDevTypeEnum:
         '''
         Type of OCP device. 1=Fuse; 2=Recloser; 3=Relay
         
         Original COM help: https://opendss.epri.com/OCPDeviceType.html
         '''
-        #TODO: use enum
-        return self.CheckForError(self._lib.Meters_Get_OCPDeviceType())
+        return OCPDevTypeEnum(self.CheckForError(self._lib.Meters_Get_OCPDeviceType()))
 
     @property
     def Peakcurrent(self) -> Float64Array:

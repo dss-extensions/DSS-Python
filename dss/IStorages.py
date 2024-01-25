@@ -6,8 +6,8 @@ Copyright (c) 2023-2024 DSS-Extensions contributors
 '''
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
-from typing import List #, Union
-# from .enums import StorageStates
+from typing import List, Union
+from .enums import StorageStates
 
 class IStorages(Iterable):
     '''Storage objects'''
@@ -35,15 +35,14 @@ class IStorages(Iterable):
         self.CheckForError(self._lib.Storages_Set_puSOC(Value))
 
     @property
-    def State(self) -> int:
+    def State(self) -> StorageStates:
         '''
         Get/set state: 0=Idling; 1=Discharging; -1=Charging;
         '''
-        #TODO: use enum StorageStates
-        return self.CheckForError(self._lib.Storages_Get_State())
+        return StorageStates(self.CheckForError(self._lib.Storages_Get_State()))
 
     @State.setter
-    def State(self, Value: int):
+    def State(self, Value: Union[int, StorageStates]):
         self.CheckForError(self._lib.Storages_Set_State(Value))
 
     @property
