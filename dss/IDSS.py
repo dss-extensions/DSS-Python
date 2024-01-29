@@ -7,7 +7,8 @@ Copyright (c) 2018-2023 DSS-Extensions contributors
 '''
 from __future__ import annotations
 import warnings
-from typing import List, Union, AnyStr, TYPE_CHECKING
+from weakref import WeakKeyDictionary
+from typing import Any, List, Union, AnyStr, TYPE_CHECKING
 from typing_extensions import Self
 from ._cffi_api_util import Base, CffiApiUtil, DSSException
 from .ICircuit import ICircuit
@@ -60,7 +61,7 @@ class IDSS(Base):
         'DefaultEditor',
     ]
 
-    _ctx_to_dss = {}
+    _ctx_to_dss = WeakKeyDictionary()
 
     ActiveCircuit: ICircuit
     Circuits: ICircuit
@@ -76,13 +77,32 @@ class IDSS(Base):
     ZIP: IZIP
     _altdss: IAltDSS
 
+    @classmethod
+    def _get_dss_instance(cls, api_util=None, ctx=None) -> IDSS:
+        '''
+        If there is an existing instance for a DSSContext, returns it.
+        Otherwise, tries to wrap the context into a new DSS-Python API instance.
+        '''
+        if api_util is None:
+            # If none exists, something is probably wrong elsewhere,
+            # so let's allow the IndexError to propagate
+            api_util = CffiApiUtil._ctx_to_util[ctx]
+
+        dss = cls._ctx_to_dss.get(api_util.ctx)
+        if dss is None:
+            dss = cls(api_util)
+
+        return dss
+
     def __init__(self, api_util):
+        '''
+        Wrap a new DSS context with the DSS-Python API.
+        This is not typically used directly. Refer to `IDSS.NewContext` or
+        `IDSS._get_dss_instance`.
+        '''
+
         if api_util.ctx not in IDSS._ctx_to_dss:
             IDSS._ctx_to_dss[api_util.ctx] = self
-
-        if None not in IDSS._ctx_to_dss:
-            # use this as the default instance
-            IDSS._ctx_to_dss[None] = self
 
         self._version = None
         self._altdss = None

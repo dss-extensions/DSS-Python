@@ -1,6 +1,6 @@
 import warnings
 from functools import partial
-from weakref import ref
+from weakref import ref, WeakKeyDictionary
 import numpy as np
 from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 from typing import Any, AnyStr, Callable, List, Union #, Iterator
@@ -326,13 +326,12 @@ class CffiApiUtil(object):
     '''
     An internal class with various API and DSSContext management functions and structures.
     '''
-    _ctx_to_util = {}
+    _ctx_to_util = WeakKeyDictionary()
 
     def __init__(self, ffi, lib, ctx=None):
         self.owns_ctx = True
         self.codec = codec
         self.ctx = ctx
-        CffiApiUtil._ctx_to_util[ctx] = self
         self.ffi = ffi
         self.lib_unpatched = lib
         self._batch_refs = []
@@ -344,9 +343,10 @@ class CffiApiUtil(object):
             self.lib = lib
             ctx = lib.ctx_Get_Prime()
             self.ctx = ctx
-            CffiApiUtil._ctx_to_util[ctx] = self
         else:
             self.lib = CtxLib(ctx, ffi, lib)
+
+        CffiApiUtil._ctx_to_util[ctx] = self
 
         self._allow_complex = False
         self.track_objects = True
@@ -437,11 +437,16 @@ class CffiApiUtil(object):
         mgr.register_func(AltDSSEvent.Clear, altdss_python_util_callback)
         mgr.register_func(AltDSSEvent.ReprocessBuses, altdss_python_util_callback)
 
+    def unregister_callbacks(self):
+        mgr = get_manager_for_ctx(self.ctx)
+        mgr.unregister_func(AltDSSEvent.Clear, altdss_python_util_callback)
+        mgr.unregister_func(AltDSSEvent.ReprocessBuses, altdss_python_util_callback)
 
     # The context will die, no need to do anything else currently.
     def __del__(self):
         self.clear_callback(0)
         self.clear_callback(1)
+        self.unregister_callbacks()
 
     #     self.lib.DSSEvents_UnregisterAlt(AltDSSEvent.Clear, self.lib_unpatched.altdss_python_util_callback)
     #     self.lib.DSSEvents_UnregisterAlt(AltDSSEvent.ReprocessBuses, self.lib_unpatched.altdss_python_util_callback)
@@ -985,4 +990,4 @@ class Iterable(Base):
     @idx.setter
     def idx(self, Value: int):
         self.CheckForError(self._Set_idx(Value))
-        
+

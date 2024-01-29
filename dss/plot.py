@@ -1867,15 +1867,6 @@ def dss_plot(DSS, params):
     return 0
         
 
-
-def _ctx2dss(ctx):
-    DSS = IDSS._ctx_to_dss.get(ctx)
-    if DSS is None:
-        #TODO: maybe warn here?
-        DSS = IDSS._ctx_to_dss.get(None)
-
-    return DSS
-
 # dss_progress_bar = None
 # dss_progress_desc = ''
 
@@ -1952,7 +1943,7 @@ def dss_python_cb_plot(ctx, paramsStr):
     params = json.loads(api_util.ffi.string(paramsStr))
     result = 0
     try:
-        DSS = _ctx2dss(ctx)
+        DSS = IDSS._get_dss_instance(ctx=ctx)
         result = dss_plot(DSS, params)
         if _do_show:
             plt.show()
