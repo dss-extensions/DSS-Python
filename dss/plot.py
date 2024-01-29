@@ -72,12 +72,12 @@ except:
 
 include_3d = '2d' # '2d' (default), '3d' (prefer 3d), 'both'
 
-PROFILE3PH = 9999
-PROFILEALL = 9998
-PROFILEALLPRI = 9997
-PROFILELLALL = 9996
-PROFILELLPRI = 9995
-PROFILELL = 9994 
+PROFILE3PH = -1 # Default
+PROFILEALL = -2 # All
+PROFILEALLPRI = -3 # Primary
+PROFILELL3PH = -4 # LL3Ph
+PROFILELLALL = -5 # LLAll
+PROFILELLPRI = -6 # LLPrimary
 
 (pqVoltage, pqCurrent, pqPower, pqLosses, pqCapacity, pqNone) = range(6)
 
@@ -704,7 +704,7 @@ def dss_profile_plot(DSS, params):
         ax = fig.add_subplot(1, 1, 1)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
-        if PhasesToPlot in (PROFILELL, PROFILELLALL, PROFILELLPRI):
+        if PhasesToPlot in (PROFILELL3PH, PROFILELLALL, PROFILELLPRI):
             ax.set_title('L-L Voltage Profile')
         else:
             ax.set_title('L-N Voltage Profile')
@@ -727,7 +727,7 @@ def dss_profile_plot(DSS, params):
         ax2 = fig2.add_subplot(1, 1, 1, projection='3d')
         ax2.set_xlabel(xlabel)
         ax2.set_ylabel(ylabel)
-        if PhasesToPlot in (PROFILELL, PROFILELLALL, PROFILELLPRI):
+        if PhasesToPlot in (PROFILELL3PH, PROFILELLALL, PROFILELLPRI):
             ax2.set_title('L-L Voltage Profile')
         else:
             ax2.set_title('L-N Voltage Profile')
