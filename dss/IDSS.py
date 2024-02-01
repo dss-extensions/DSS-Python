@@ -24,7 +24,15 @@ from .IYMatrix import IYMatrix
 from .IZIP import IZIP
 
 if TYPE_CHECKING:
-    from altdss import IAltDSS
+    try:
+        from altdss import AltDSS
+    except:
+        AltDSS = None
+
+    try:
+        from opendssdirect.OpenDSSDirect import OpenDSSDirect
+    except:
+        OpenDSSDirect = None
 
 class IDSS(Base):
     '''
@@ -75,10 +83,9 @@ class IDSS(Base):
     DSSim_Coms: IDSSimComs
     YMatrix: IYMatrix
     ZIP: IZIP
-    _altdss: IAltDSS
 
     @classmethod
-    def _get_dss_instance(cls, api_util=None, ctx=None) -> IDSS:
+    def _get_instance(cls: IDSS, api_util: CffiApiUtil = None, ctx=None) -> IDSS:
         '''
         If there is an existing instance for a DSSContext, returns it.
         Otherwise, tries to wrap the context into a new DSS-Python API instance.
@@ -98,14 +105,13 @@ class IDSS(Base):
         '''
         Wrap a new DSS context with the DSS-Python API.
         This is not typically used directly. Refer to `IDSS.NewContext` or
-        `IDSS._get_dss_instance`.
+        `IDSS._get_instance`.
         '''
 
         if api_util.ctx not in IDSS._ctx_to_dss:
             IDSS._ctx_to_dss[api_util.ctx] = self
 
         self._version = None
-        self._altdss = None
 
         #: Provides access to the circuit attributes and objects in general.
         self.ActiveCircuit = ICircuit(api_util)
@@ -161,33 +167,32 @@ class IDSS(Base):
         Base.__init__(self, api_util)    
 
     @property
-    def AltDSS(self) -> IAltDSS:
-        #: Returns an AltDSS API instance, coupled with the current engine/DSSContext.
-        #: For stand-alone AltDSS usage, prefer to use `from altdss import AltDSS`
-        #:
-        #: In a future release, this attribute could be removed to also remove the
-        #: dependency on AltDSS-Python. AltDSS, the Python package, is currently a 
-        #: pure-Python package born from DSS-Python and OpenDSSDirect.py, sharing the
-        #: same underlying AltDSS/DSS C-API engine.
-        #:
-        #: Note: you need AltDSS-Python (altdss package) installed to use this.
-        #:
-        #: (API Extension)
-        if self._altdss is not None:
-            return self._altdss
-
-        from altdss import IAltDSS
-
-        self._altdss = IAltDSS.get_from_context(self._api_util)
-        return self._altdss
-
-    @property
-    def Obj(self) -> IAltDSS:
+    def Obj(self) -> AltDSS:
         """
-        Deprecated: provides access to the AltDSS API; 
+        Deprecated: provides access to the AltDSS API; use `DSS.to_altdss()` instead
+
+        **(API Extension)**
         """
-        warnings.warn("Obj identifier is deprecated; use AltDSS attribute instead, or import AltDSS directly.", DeprecationWarning, stacklevel=2)
-        return self.AltDSS
+        warnings.warn('Obj identifier is deprecated; use the `to_altdss()` method instead, or import AltDSS directly ("from altdss import altdss") when using it stand-alone.', DeprecationWarning, stacklevel=2)
+        return self.to_altdss()
+    
+    def to_altdss(self) -> AltDSS:
+        """
+        Returns an instance of AltDSS for the active DSS Context.
+
+        A compatible AltDSS (`pip install altdss`) is required.
+        """
+        from altdss import AltDSS
+        return AltDSS._get_instance(ctx=self._api_util.ctx, api_util=self._api_util)
+
+    def to_opendssdirect(self) -> OpenDSSDirect:
+        """
+        Returns an instance of OpenDSSDirect.py for the active DSS Context.
+
+        A compatible OpenDSSDirect.py (`pip install OpenDSSDirect.py`) is required.
+        """
+        from opendssdirect.OpenDSSDirect import OpenDSSDirect
+        return OpenDSSDirect._get_instance(ctx=self._api_util.ctx, api_util=self._api_util)
 
     def ClearAll(self):
         self.CheckForError(self._lib.DSS_ClearAll())
@@ -327,7 +332,7 @@ class IDSS(Base):
         If you set to 0 (false), the editor is not executed. Note that other side effects,
         such as the creation of files, are not affected.
 
-        (API Extension)
+        **(API Extension)**
         '''
         return self.CheckForError(self._lib.DSS_Get_AllowEditor()) != 0
 
@@ -361,7 +366,7 @@ class IDSS(Base):
             
         **NOTE**: this property will be removed for v1.0. It is left to avoid breaking the current API too soon.
         
-        (API Extension)
+        **(API Extension)**
         '''
         return self.CheckForError(self._lib.DSS_Get_LegacyModels()) != 0
 
@@ -383,7 +388,7 @@ class IDSS(Base):
         This can also be set through the environment variable DSS_CAPI_ALLOW_CHANGE_DIR. Set it to 0 to
         disallow changing the active working directory.
         
-        (API Extension)
+        **(API Extension)**
         '''
         return self.CheckForError(self._lib.DSS_Get_AllowChangeDir()) != 0
 
@@ -401,7 +406,7 @@ class IDSS(Base):
         This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
         the command.
 
-        (API Extension)
+        **(API Extension)**
         '''
         return self.CheckForError(self._lib.DSS_Get_AllowDOScmd()) != 0
 
@@ -426,7 +431,7 @@ class IDSS(Base):
         This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 0 disables
         the legacy/COM behavior. The value can be toggled through the API at any time.
 
-        (API Extension)
+        **(API Extension)**
         '''
         return self.CheckForError(self._lib.DSS_Get_COMErrorResults()) != 0
 
@@ -442,7 +447,7 @@ class IDSS(Base):
         allowing the user to create multiple instances in the same process. By creating contexts
         manually, the management of threads and potential issues should be handled by the user.
 
-        (API Extension)
+        **(API Extension)**
         '''
         ffi = self._api_util.ffi
         lib = self._api_util.lib_unpatched
@@ -474,7 +479,7 @@ class IDSS(Base):
                 new Load.load1 bus1=a bus2=b
             """)
 
-        (API Extension)
+        **(API Extension)**
         '''
         self.Text.Commands(cmds)
 
@@ -492,7 +497,7 @@ class IDSS(Base):
         Requires matplotlib and SciPy to be installed, hence it is an
         optional feature.
 
-        (API Extension)
+        **(API Extension)**
         '''
         from dss import plot
         return plot
@@ -512,7 +517,7 @@ class IDSS(Base):
 
         *Defaults to **False** for backwards compatibility.*
         
-        (API Extension)
+        **(API Extension)**
         '''
         arr_dim = self.CheckForError(self._lib.DSS_Get_EnableArrayDimensions()) != 0
         allow_complex = self._api_util._allow_complex
@@ -528,20 +533,7 @@ class IDSS(Base):
         '''
         Controls some compatibility flags introduced to toggle some behavior from the official OpenDSS.
 
-        **THESE FLAGS ARE GLOBAL, affecting all DSS engines in the process.**
-
-        The current bit flags are:
-
-        - 0x1 (bit 0): If enabled, don't check for NaNs in the inner solution loop. This can lead to various errors.
-            This flag is useful for legacy applications that don't handle OpenDSS API errors properly. Through the 
-            development of DSS-Extensions, we noticed this is actually a quite common issue.
-        - 0x2 (bit 1): Toggle worse precision for certain aspects of the engine. For example, the sequence-to-phase 
-            (`As2p`) and sequence-to-phase (`Ap2s`) transform matrices. On DSS C-API, we fill the matrix explicitly
-            using higher precision, while numerical inversion of an initially worse precision matrix is used in the 
-            official OpenDSS. We will introduce better precision for other aspects of the engine in the future, 
-            so this flag can be used to toggle the old/bad values where feasible.
-        - 0x4 (bit 2): Toggle some InvControl behavior introduced in OpenDSS 9.6.1.1. It could be a regression 
-            but needs further investigation, so we added this flag in the time being.
+        **THE FLAGS ARE GLOBAL, affecting all DSS engines in the process.**
 
         These flags may change for each version of DSS C-API, but the same value will not be reused. That is,
         when we remove a compatibility flag, it will have no effect but will also not affect anything else
@@ -551,9 +543,9 @@ class IDSS(Base):
         options/flags, it was preferred to add this generic function instead of a separate function per
         flag.
 
-        Related enumeration: DSSCompatFlags
+        See the enumeration `DSSCompatFlags` for available flags, including description.
 
-        (API Extension)
+        **(API Extension)**
         '''
         return self.CheckForError(self._lib.DSS_Get_CompatFlags())
 

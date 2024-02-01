@@ -1943,7 +1943,7 @@ def dss_python_cb_plot(ctx, paramsStr):
     params = json.loads(api_util.ffi.string(paramsStr))
     result = 0
     try:
-        DSS = IDSS._get_dss_instance(ctx=ctx)
+        DSS = IDSS._get_instance(ctx=ctx)
         result = dss_plot(DSS, params)
         if _do_show:
             plt.show()
