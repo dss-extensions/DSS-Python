@@ -161,11 +161,13 @@ class Base:
         '_prepare_complex128_array',
         '_prepare_complex128_simple',
         '_errorPtr',
+        '_frozen_attrs',
     ]
 
     _use_exceptions = True
 
     def __init__(self, api_util, prefer_lists=False):
+        object.__setattr__(self, '_frozen_attrs', False)
         self._lib = api_util.lib
         self._api_util = api_util
         self._get_string = api_util.get_string
@@ -870,6 +872,7 @@ class CffiApiUtil(object):
         ptr = self.ffi.cast('int32_t*', self.ffi.from_buffer(value.data))
         cnt = value.size
         return value, ptr, cnt
+
 
     def prepare_string_array(self, value: List[AnyStr]):
         if value is None:
