@@ -39,7 +39,7 @@ class IRegControls(Iterable):
     ]
 
     def Reset(self):
-        self.CheckForError(self._lib.RegControls_Reset())
+        self._check_for_error(self._lib.RegControls_Reset())
 
     @property
     def CTPrimary(self) -> float:
@@ -48,11 +48,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/CTPrimary.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_CTPrimary())
+        return self._check_for_error(self._lib.RegControls_Get_CTPrimary())
 
     @CTPrimary.setter
     def CTPrimary(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_CTPrimary(Value))
+        self._check_for_error(self._lib.RegControls_Set_CTPrimary(Value))
 
     @property
     def Delay(self) -> float:
@@ -61,11 +61,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Delay2.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_Delay())
+        return self._check_for_error(self._lib.RegControls_Get_Delay())
 
     @Delay.setter
     def Delay(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_Delay(Value))
+        self._check_for_error(self._lib.RegControls_Set_Delay(Value))
 
     @property
     def ForwardBand(self) -> float:
@@ -74,11 +74,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/ForwardBand.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_ForwardBand())
+        return self._check_for_error(self._lib.RegControls_Get_ForwardBand())
 
     @ForwardBand.setter
     def ForwardBand(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_ForwardBand(Value))
+        self._check_for_error(self._lib.RegControls_Set_ForwardBand(Value))
 
     @property
     def ForwardR(self) -> float:
@@ -87,11 +87,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/ForwardR.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_ForwardR())
+        return self._check_for_error(self._lib.RegControls_Get_ForwardR())
 
     @ForwardR.setter
     def ForwardR(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_ForwardR(Value))
+        self._check_for_error(self._lib.RegControls_Set_ForwardR(Value))
 
     @property
     def ForwardVreg(self) -> float:
@@ -100,11 +100,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/ForwardVreg.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_ForwardVreg())
+        return self._check_for_error(self._lib.RegControls_Get_ForwardVreg())
 
     @ForwardVreg.setter
     def ForwardVreg(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_ForwardVreg(Value))
+        self._check_for_error(self._lib.RegControls_Set_ForwardVreg(Value))
 
     @property
     def ForwardX(self) -> float:
@@ -113,11 +113,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/ForwardX.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_ForwardX())
+        return self._check_for_error(self._lib.RegControls_Get_ForwardX())
 
     @ForwardX.setter
     def ForwardX(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_ForwardX(Value))
+        self._check_for_error(self._lib.RegControls_Set_ForwardX(Value))
 
     @property
     def IsInverseTime(self) -> bool:
@@ -126,11 +126,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/IsInverseTime.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_IsInverseTime()) != 0
+        return self._check_for_error(self._lib.RegControls_Get_IsInverseTime()) != 0
 
     @IsInverseTime.setter
     def IsInverseTime(self, Value: bool):
-        self.CheckForError(self._lib.RegControls_Set_IsInverseTime(Value))
+        self._check_for_error(self._lib.RegControls_Set_IsInverseTime(Value))
 
     @property
     def IsReversible(self) -> bool:
@@ -139,11 +139,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/IsReversible.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_IsReversible()) != 0
+        return self._check_for_error(self._lib.RegControls_Get_IsReversible()) != 0
 
     @IsReversible.setter
     def IsReversible(self, Value: bool):
-        self.CheckForError(self._lib.RegControls_Set_IsReversible(Value))
+        self._check_for_error(self._lib.RegControls_Set_IsReversible(Value))
 
     @property
     def MaxTapChange(self) -> int:
@@ -152,11 +152,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/MaxTapChange.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_MaxTapChange())
+        return self._check_for_error(self._lib.RegControls_Get_MaxTapChange())
 
     @MaxTapChange.setter
     def MaxTapChange(self, Value: int):
-        self.CheckForError(self._lib.RegControls_Set_MaxTapChange(Value))
+        self._check_for_error(self._lib.RegControls_Set_MaxTapChange(Value))
 
     @property
     def MonitoredBus(self) -> str:
@@ -165,14 +165,14 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/MonitoredBus.html
         '''
-        return self._get_string(self.CheckForError(self._lib.RegControls_Get_MonitoredBus()))
+        return self._get_string(self._check_for_error(self._lib.RegControls_Get_MonitoredBus()))
 
     @MonitoredBus.setter
     def MonitoredBus(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.RegControls_Set_MonitoredBus(Value))
+        self._check_for_error(self._lib.RegControls_Set_MonitoredBus(Value))
 
     @property
     def PTratio(self) -> float:
@@ -181,11 +181,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/PTratio1.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_PTratio())
+        return self._check_for_error(self._lib.RegControls_Get_PTratio())
 
     @PTratio.setter
     def PTratio(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_PTratio(Value))
+        self._check_for_error(self._lib.RegControls_Set_PTratio(Value))
 
     @property
     def ReverseBand(self) -> float:
@@ -194,11 +194,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/ReverseBand.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_ReverseBand())
+        return self._check_for_error(self._lib.RegControls_Get_ReverseBand())
 
     @ReverseBand.setter
     def ReverseBand(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_ReverseBand(Value))
+        self._check_for_error(self._lib.RegControls_Set_ReverseBand(Value))
 
     @property
     def ReverseR(self) -> float:
@@ -207,11 +207,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/ReverseR.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_ReverseR())
+        return self._check_for_error(self._lib.RegControls_Get_ReverseR())
 
     @ReverseR.setter
     def ReverseR(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_ReverseR(Value))
+        self._check_for_error(self._lib.RegControls_Set_ReverseR(Value))
 
     @property
     def ReverseVreg(self) -> float:
@@ -220,11 +220,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/ReverseVreg.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_ReverseVreg())
+        return self._check_for_error(self._lib.RegControls_Get_ReverseVreg())
 
     @ReverseVreg.setter
     def ReverseVreg(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_ReverseVreg(Value))
+        self._check_for_error(self._lib.RegControls_Set_ReverseVreg(Value))
 
     @property
     def ReverseX(self) -> float:
@@ -233,11 +233,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/ReverseX.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_ReverseX())
+        return self._check_for_error(self._lib.RegControls_Get_ReverseX())
 
     @ReverseX.setter
     def ReverseX(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_ReverseX(Value))
+        self._check_for_error(self._lib.RegControls_Set_ReverseX(Value))
 
     @property
     def TapDelay(self) -> float:
@@ -246,11 +246,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/TapDelay.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_TapDelay())
+        return self._check_for_error(self._lib.RegControls_Get_TapDelay())
 
     @TapDelay.setter
     def TapDelay(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_TapDelay(Value))
+        self._check_for_error(self._lib.RegControls_Set_TapDelay(Value))
 
     @property
     def TapNumber(self) -> int:
@@ -259,11 +259,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/TapNumber.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_TapNumber())
+        return self._check_for_error(self._lib.RegControls_Get_TapNumber())
 
     @TapNumber.setter
     def TapNumber(self, Value: int):
-        self.CheckForError(self._lib.RegControls_Set_TapNumber(Value))
+        self._check_for_error(self._lib.RegControls_Set_TapNumber(Value))
 
     @property
     def TapWinding(self) -> int:
@@ -272,11 +272,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/TapWinding.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_TapWinding())
+        return self._check_for_error(self._lib.RegControls_Get_TapWinding())
 
     @TapWinding.setter
     def TapWinding(self, Value: int):
-        self.CheckForError(self._lib.RegControls_Set_TapWinding(Value))
+        self._check_for_error(self._lib.RegControls_Set_TapWinding(Value))
 
     @property
     def Transformer(self) -> str:
@@ -285,14 +285,14 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Transformer.html
         '''
-        return self._get_string(self.CheckForError(self._lib.RegControls_Get_Transformer()))
+        return self._get_string(self._check_for_error(self._lib.RegControls_Get_Transformer()))
 
     @Transformer.setter
     def Transformer(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.RegControls_Set_Transformer(Value))
+        self._check_for_error(self._lib.RegControls_Set_Transformer(Value))
 
     @property
     def VoltageLimit(self) -> float:
@@ -301,11 +301,11 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/VoltageLimit.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_VoltageLimit())
+        return self._check_for_error(self._lib.RegControls_Get_VoltageLimit())
 
     @VoltageLimit.setter
     def VoltageLimit(self, Value: float):
-        self.CheckForError(self._lib.RegControls_Set_VoltageLimit(Value))
+        self._check_for_error(self._lib.RegControls_Set_VoltageLimit(Value))
 
     @property
     def Winding(self) -> int:
@@ -314,10 +314,10 @@ class IRegControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Winding.html
         '''
-        return self.CheckForError(self._lib.RegControls_Get_Winding())
+        return self._check_for_error(self._lib.RegControls_Get_Winding())
 
     @Winding.setter
     def Winding(self, Value: int):
-        self.CheckForError(self._lib.RegControls_Set_Winding(Value))
+        self._check_for_error(self._lib.RegControls_Set_Winding(Value))
 
 

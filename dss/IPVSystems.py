@@ -42,11 +42,11 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/Irradiance.html
         '''
-        return self.CheckForError(self._lib.PVSystems_Get_Irradiance())
+        return self._check_for_error(self._lib.PVSystems_Get_Irradiance())
 
     @Irradiance.setter
     def Irradiance(self, Value: float):
-        self.CheckForError(self._lib.PVSystems_Set_Irradiance(Value))
+        self._check_for_error(self._lib.PVSystems_Set_Irradiance(Value))
 
     @property
     def PF(self) -> float:
@@ -55,11 +55,11 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/PF2.html
         '''
-        return self.CheckForError(self._lib.PVSystems_Get_PF())
+        return self._check_for_error(self._lib.PVSystems_Get_PF())
 
     @PF.setter
     def PF(self, Value: float):
-        self.CheckForError(self._lib.PVSystems_Set_PF(Value))
+        self._check_for_error(self._lib.PVSystems_Set_PF(Value))
 
     @property
     def RegisterNames(self) -> List[str]:
@@ -70,7 +70,7 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/RegisterNames2.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.PVSystems_Get_RegisterNames))
+        return self._check_for_error(self._get_string_array(self._lib.PVSystems_Get_RegisterNames))
 
     @property
     def RegisterValues(self) -> Float64Array:
@@ -79,7 +79,7 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/RegisterValues2.html
         '''
-        self.CheckForError(self._lib.PVSystems_Get_RegisterValues_GR())
+        self._check_for_error(self._lib.PVSystems_Get_RegisterValues_GR())
         return self._get_float64_gr_array()
 
     @property
@@ -89,11 +89,11 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/kVArated1.html
         '''
-        return self.CheckForError(self._lib.PVSystems_Get_kVArated())
+        return self._check_for_error(self._lib.PVSystems_Get_kVArated())
 
     @kVArated.setter
     def kVArated(self, Value: float):
-        self.CheckForError(self._lib.PVSystems_Set_kVArated(Value))
+        self._check_for_error(self._lib.PVSystems_Set_kVArated(Value))
 
     @property
     def kW(self) -> float:
@@ -102,7 +102,7 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/kW2.html
         '''
-        return self.CheckForError(self._lib.PVSystems_Get_kW())
+        return self._check_for_error(self._lib.PVSystems_Get_kW())
 
     @property
     def kvar(self) -> float:
@@ -111,11 +111,11 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/kvar2.html
         '''
-        return self.CheckForError(self._lib.PVSystems_Get_kvar())
+        return self._check_for_error(self._lib.PVSystems_Get_kvar())
 
     @kvar.setter
     def kvar(self, Value: float):
-        self.CheckForError(self._lib.PVSystems_Set_kvar(Value))
+        self._check_for_error(self._lib.PVSystems_Set_kvar(Value))
 
     @property
     def daily(self) -> str:
@@ -124,16 +124,16 @@ class IPVSystems(Iterable):
         defined as a Loadshape object of 24 hrs, typically. In the default dispatch
         mode, the PVSystem element uses this loadshape to trigger State changes.
         
-        (API Extension)
+        **(API Extension)**
         '''
-        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_daily()))
+        return self._get_string(self._check_for_error(self._lib.PVSystems_Get_daily()))
 
     @daily.setter
     def daily(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.PVSystems_Set_daily(Value))
+        self._check_for_error(self._lib.PVSystems_Set_daily(Value))
 
     @property
     def duty(self) -> str:
@@ -142,16 +142,16 @@ class IPVSystems(Iterable):
         for solar ramp rate studies. Must be previously defined as a Loadshape
         object. Typically would have time intervals of 1-5 seconds.
 
-        (API Extension)
+        **(API Extension)**
         '''
-        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_duty()))
+        return self._get_string(self._check_for_error(self._lib.PVSystems_Get_duty()))
 
     @duty.setter
     def duty(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.PVSystems_Set_duty(Value))
+        self._check_for_error(self._lib.PVSystems_Set_duty(Value))
 
     @property
     def yearly(self) -> str:
@@ -161,16 +161,16 @@ class IPVSystems(Iterable):
         if any, is repeated during Yearly solution modes. In the default dispatch
         mode, the PVSystem element uses this loadshape to trigger State changes.
 
-        (API Extension)
+        **(API Extension)**
         '''
-        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_yearly()))
+        return self._get_string(self._check_for_error(self._lib.PVSystems_Get_yearly()))
 
     @yearly.setter
     def yearly(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.PVSystems_Set_yearly(Value))
+        self._check_for_error(self._lib.PVSystems_Set_yearly(Value))
         
     @property
     def Tdaily(self) -> str:
@@ -180,16 +180,16 @@ class IPVSystems(Iterable):
         TShape to determine the Pmpp from the Pmpp vs T curve. Units must agree
         with the Pmpp vs T curve.
 
-        (API Extension)
+        **(API Extension)**
         '''
-        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Tdaily()))
+        return self._get_string(self._check_for_error(self._lib.PVSystems_Get_Tdaily()))
 
     @Tdaily.setter
     def Tdaily(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.PVSystems_Set_Tdaily(Value))
+        self._check_for_error(self._lib.PVSystems_Set_Tdaily(Value))
 
     @property
     def Tduty(self) -> str:
@@ -202,16 +202,16 @@ class IPVSystems(Iterable):
         model uses this TShape to determine the Pmpp from the Pmpp vs T curve.
         Units must agree with the Pmpp vs T curve.
 
-        (API Extension)
+        **(API Extension)**
         '''
-        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Tduty()))
+        return self._get_string(self._check_for_error(self._lib.PVSystems_Get_Tduty()))
 
     @Tduty.setter
     def Tduty(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.PVSystems_Set_Tduty(Value))
+        self._check_for_error(self._lib.PVSystems_Set_Tduty(Value))
 
     @property
     def Tyearly(self) -> str:
@@ -222,16 +222,16 @@ class IPVSystems(Iterable):
         this TShape to determine the Pmpp from the Pmpp vs T curve. Units must
         agree with the Pmpp vs T curve.
 
-        (API Extension)
+        **(API Extension)**
         '''
-        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Tyearly()))
+        return self._get_string(self._check_for_error(self._lib.PVSystems_Get_Tyearly()))
 
     @Tyearly.setter
     def Tyearly(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.PVSystems_Set_Tyearly(Value))
+        self._check_for_error(self._lib.PVSystems_Set_Tyearly(Value))
 
     @property 
     def IrradianceNow(self) -> float:
@@ -241,7 +241,7 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/IrradianceNow.html
         '''
-        return self.CheckForError(self._lib.PVSystems_Get_IrradianceNow())
+        return self._check_for_error(self._lib.PVSystems_Get_IrradianceNow())
 
     @property 
     def Pmpp(self) -> float:
@@ -251,11 +251,11 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/Pmpp.html
         '''
-        return self.CheckForError(self._lib.PVSystems_Get_Pmpp())
+        return self._check_for_error(self._lib.PVSystems_Get_Pmpp())
 
     @Pmpp.setter
     def Pmpp(self, Value: float):
-        self.CheckForError(self._lib.PVSystems_Set_Pmpp(Value))
+        self._check_for_error(self._lib.PVSystems_Set_Pmpp(Value))
 
     @property
     def Sensor(self) -> str:
@@ -264,4 +264,4 @@ class IPVSystems(Iterable):
 
         Original COM help: https://opendss.epri.com/Sensor1.html
         '''
-        return self._get_string(self.CheckForError(self._lib.PVSystems_Get_Sensor()))
+        return self._get_string(self._check_for_error(self._lib.PVSystems_Get_Sensor()))

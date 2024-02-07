@@ -195,7 +195,7 @@ class IDSS(Base):
         return OpenDSSDirect._get_instance(ctx=self._api_util.ctx, api_util=self._api_util)
 
     def ClearAll(self):
-        self.CheckForError(self._lib.DSS_ClearAll())
+        self._check_for_error(self._lib.DSS_ClearAll())
 
     def Reset(self):
         '''
@@ -203,13 +203,13 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/Reset1.html
         '''
-        self.CheckForError(self._lib.DSS_Reset())
+        self._check_for_error(self._lib.DSS_Reset())
 
     def SetActiveClass(self, ClassName: AnyStr) -> int:
         if type(ClassName) is not bytes:
             ClassName = ClassName.encode(self._api_util.codec)
 
-        return self.CheckForError(self._lib.DSS_SetActiveClass(ClassName))
+        return self._check_for_error(self._lib.DSS_SetActiveClass(ClassName))
 
     def Start(self, code: int) -> bool:
         '''
@@ -224,7 +224,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/Start.html
         '''
-        return self.CheckForError(self._lib.DSS_Start(code)) != 0
+        return self._check_for_error(self._lib.DSS_Start(code)) != 0
 
     @property
     def Classes(self) -> List[str]:
@@ -233,7 +233,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/Classes1.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.DSS_Get_Classes))
+        return self._check_for_error(self._get_string_array(self._lib.DSS_Get_Classes))
 
     @property
     def DataPath(self) -> str:
@@ -242,14 +242,14 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/DataPath.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSS_Get_DataPath()))
+        return self._get_string(self._check_for_error(self._lib.DSS_Get_DataPath()))
 
     @DataPath.setter
     def DataPath(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.DSS_Set_DataPath(Value))
+        self._check_for_error(self._lib.DSS_Set_DataPath(Value))
 
     @property
     def DefaultEditor(self) -> str:
@@ -258,7 +258,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/DefaultEditor.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSS_Get_DefaultEditor()))
+        return self._get_string(self._check_for_error(self._lib.DSS_Get_DefaultEditor()))
 
     @property
     def NumCircuits(self) -> int:
@@ -267,7 +267,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/NumCircuits.html
         '''
-        return self.CheckForError(self._lib.DSS_Get_NumCircuits())
+        return self._check_for_error(self._lib.DSS_Get_NumCircuits())
 
     @property
     def NumClasses(self) -> int:
@@ -276,7 +276,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/NumClasses.html
         '''
-        return self.CheckForError(self._lib.DSS_Get_NumClasses())
+        return self._check_for_error(self._lib.DSS_Get_NumClasses())
 
     @property
     def NumUserClasses(self) -> int:
@@ -285,7 +285,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/NumUserClasses.html
         '''
-        return self.CheckForError(self._lib.DSS_Get_NumUserClasses())
+        return self._check_for_error(self._lib.DSS_Get_NumUserClasses())
 
     @property
     def UserClasses(self) -> List[str]:
@@ -294,7 +294,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/UserClasses.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.DSS_Get_UserClasses))
+        return self._check_for_error(self._get_string_array(self._lib.DSS_Get_UserClasses))
 
     @property
     def Version(self) -> str:
@@ -308,7 +308,7 @@ class IDSS(Base):
             from . import __version__ as dss_python_version
             self._version = dss_python_version
 
-        return self._get_string(self.CheckForError(self._lib.DSS_Get_Version())) + f'\nDSS-Python version: {self._version}'
+        return self._get_string(self._check_for_error(self._lib.DSS_Get_Version())) + f'\nDSS-Python version: {self._version}'
 
     @property
     def AllowForms(self) -> bool:
@@ -317,11 +317,11 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/AllowForms.html
         '''
-        return self.CheckForError(self._lib.DSS_Get_AllowForms()) != 0
+        return self._check_for_error(self._lib.DSS_Get_AllowForms()) != 0
 
     @AllowForms.setter
     def AllowForms(self, value: bool):
-        self.CheckForError(self._lib.DSS_Set_AllowForms(value))
+        self._check_for_error(self._lib.DSS_Set_AllowForms(value))
 
     @property
     def AllowEditor(self) -> bool:
@@ -334,11 +334,11 @@ class IDSS(Base):
 
         **(API Extension)**
         '''
-        return self.CheckForError(self._lib.DSS_Get_AllowEditor()) != 0
+        return self._check_for_error(self._lib.DSS_Get_AllowEditor()) != 0
 
     @AllowEditor.setter
     def AllowEditor(self, value: bool):
-        self.CheckForError(self._lib.DSS_Set_AllowEditor(value))
+        self._check_for_error(self._lib.DSS_Set_AllowEditor(value))
 
     def ShowPanel(self):
         pass
@@ -352,7 +352,7 @@ class IDSS(Base):
         if type(name) is not bytes:
             name = name.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.DSS_NewCircuit(name))
+        self._check_for_error(self._lib.DSS_NewCircuit(name))
 
         return self.ActiveCircuit
 
@@ -368,11 +368,11 @@ class IDSS(Base):
         
         **(API Extension)**
         '''
-        return self.CheckForError(self._lib.DSS_Get_LegacyModels()) != 0
+        return self._check_for_error(self._lib.DSS_Get_LegacyModels()) != 0
 
     @LegacyModels.setter
     def LegacyModels(self, Value: bool):
-        self.CheckForError(self._lib.DSS_Set_LegacyModels(Value))
+        self._check_for_error(self._lib.DSS_Set_LegacyModels(Value))
 
     @property
     def AllowChangeDir(self) -> bool:
@@ -390,11 +390,11 @@ class IDSS(Base):
         
         **(API Extension)**
         '''
-        return self.CheckForError(self._lib.DSS_Get_AllowChangeDir()) != 0
+        return self._check_for_error(self._lib.DSS_Get_AllowChangeDir()) != 0
 
     @AllowChangeDir.setter
     def AllowChangeDir(self, Value: bool):
-        self.CheckForError(self._lib.DSS_Set_AllowChangeDir(Value))
+        self._check_for_error(self._lib.DSS_Set_AllowChangeDir(Value))
 
     @property
     def AllowDOScmd(self) -> bool:
@@ -408,11 +408,11 @@ class IDSS(Base):
 
         **(API Extension)**
         '''
-        return self.CheckForError(self._lib.DSS_Get_AllowDOScmd()) != 0
+        return self._check_for_error(self._lib.DSS_Get_AllowDOScmd()) != 0
 
     @AllowDOScmd.setter
     def AllowDOScmd(self, Value: bool):
-        self.CheckForError(self._lib.DSS_Set_AllowDOScmd(Value))
+        self._check_for_error(self._lib.DSS_Set_AllowDOScmd(Value))
 
     @property
     def COMErrorResults(self) -> bool:
@@ -433,11 +433,11 @@ class IDSS(Base):
 
         **(API Extension)**
         '''
-        return self.CheckForError(self._lib.DSS_Get_COMErrorResults()) != 0
+        return self._check_for_error(self._lib.DSS_Get_COMErrorResults()) != 0
 
     @COMErrorResults.setter
     def COMErrorResults(self, Value: bool):
-        self.CheckForError(self._lib.DSS_Set_COMErrorResults(Value))
+        self._check_for_error(self._lib.DSS_Set_COMErrorResults(Value))
 
     def NewContext(self) -> Self:
         '''
@@ -519,13 +519,13 @@ class IDSS(Base):
         
         **(API Extension)**
         '''
-        arr_dim = self.CheckForError(self._lib.DSS_Get_EnableArrayDimensions()) != 0
+        arr_dim = self._check_for_error(self._lib.DSS_Get_EnableArrayDimensions()) != 0
         allow_complex = self._api_util._allow_complex
         return arr_dim and allow_complex
 
     @AdvancedTypes.setter
     def AdvancedTypes(self, Value: bool):
-        self.CheckForError(self._lib.DSS_Set_EnableArrayDimensions(Value))
+        self._check_for_error(self._lib.DSS_Set_EnableArrayDimensions(Value))
         self._api_util._allow_complex = bool(Value)
 
     @property
@@ -547,8 +547,8 @@ class IDSS(Base):
 
         **(API Extension)**
         '''
-        return self.CheckForError(self._lib.DSS_Get_CompatFlags())
+        return self._check_for_error(self._lib.DSS_Get_CompatFlags())
 
     @CompatFlags.setter
     def CompatFlags(self, Value: int):
-        self.CheckForError(self._lib.DSS_Set_CompatFlags(Value))
+        self._check_for_error(self._lib.DSS_Set_CompatFlags(Value))

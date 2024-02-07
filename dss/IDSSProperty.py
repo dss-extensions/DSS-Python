@@ -25,7 +25,7 @@ class IDSSProperty(Base):
 
         Original COM help: https://opendss.epri.com/Description.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSSProperty_Get_Description()))
+        return self._get_string(self._check_for_error(self._lib.DSSProperty_Get_Description()))
 
     @property
     def Name(self) -> str:
@@ -34,7 +34,7 @@ class IDSSProperty(Base):
 
         Original COM help: https://opendss.epri.com/Name6.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSSProperty_Get_Name()))
+        return self._get_string(self._check_for_error(self._lib.DSSProperty_Get_Name()))
 
     @property
     def Val(self) -> str:
@@ -43,23 +43,23 @@ class IDSSProperty(Base):
 
         Original COM help: https://opendss.epri.com/Val.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSSProperty_Get_Val()))
+        return self._get_string(self._check_for_error(self._lib.DSSProperty_Get_Val()))
 
     @Val.setter
     def Val(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = str(Value).encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.DSSProperty_Set_Val(Value))
+        self._check_for_error(self._lib.DSSProperty_Set_Val(Value))
 
     def __getitem__(self, propname_index: Union[AnyStr, int]) -> Self:
         if isinstance(propname_index, int):
-            self.CheckForError(self._lib.DSSProperty_Set_Index(propname_index))
+            self._check_for_error(self._lib.DSSProperty_Set_Index(propname_index))
         else:
             if type(propname_index) is not bytes:
                 propname_index = propname_index.encode(self._api_util.codec)
 
-            self.CheckForError(self._lib.DSSProperty_Set_Name(propname_index))
+            self._check_for_error(self._lib.DSSProperty_Set_Name(propname_index))
 
         return self
 

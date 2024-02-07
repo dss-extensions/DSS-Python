@@ -21,7 +21,7 @@ class IDSS_Executive(Base):
 
         Original COM help: https://opendss.epri.com/Command.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_Command(i)))
+        return self._get_string(self._check_for_error(self._lib.DSS_Executive_Get_Command(i)))
 
     def CommandHelp(self, i: int) -> str:
         '''
@@ -29,7 +29,7 @@ class IDSS_Executive(Base):
 
         Original COM help: https://opendss.epri.com/CommandHelp.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_CommandHelp(i)))
+        return self._get_string(self._check_for_error(self._lib.DSS_Executive_Get_CommandHelp(i)))
 
     def Option(self, i: int) -> str:
         '''
@@ -37,7 +37,7 @@ class IDSS_Executive(Base):
 
         Original COM help: https://opendss.epri.com/Option.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_Option(i)))
+        return self._get_string(self._check_for_error(self._lib.DSS_Executive_Get_Option(i)))
 
     def OptionHelp(self, i: int) -> str:
         '''
@@ -45,7 +45,7 @@ class IDSS_Executive(Base):
 
         Original COM help: https://opendss.epri.com/OptionHelp.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_OptionHelp(i)))
+        return self._get_string(self._check_for_error(self._lib.DSS_Executive_Get_OptionHelp(i)))
 
     def OptionValue(self, i: int) -> str:
         '''
@@ -53,7 +53,7 @@ class IDSS_Executive(Base):
 
         Original COM help: https://opendss.epri.com/OptionValue.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSS_Executive_Get_OptionValue(i)))
+        return self._get_string(self._check_for_error(self._lib.DSS_Executive_Get_OptionValue(i)))
 
     @property
     def NumCommands(self) -> int:
@@ -62,7 +62,7 @@ class IDSS_Executive(Base):
 
         Original COM help: https://opendss.epri.com/NumCommands.html
         '''
-        return self.CheckForError(self._lib.DSS_Executive_Get_NumCommands())
+        return self._check_for_error(self._lib.DSS_Executive_Get_NumCommands())
 
     @property
     def NumOptions(self) -> int:
@@ -71,5 +71,5 @@ class IDSS_Executive(Base):
 
         Original COM help: https://opendss.epri.com/NumOptions.html
         '''
-        return self.CheckForError(self._lib.DSS_Executive_Get_NumOptions())
+        return self._check_for_error(self._lib.DSS_Executive_Get_NumOptions())
 

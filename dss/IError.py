@@ -39,7 +39,7 @@ class IError(Base):
         '''
         EarlyAbort controls whether all errors halts the DSS script processing (Compile/Redirect), defaults to True.
         
-        (API Extension)
+        **(API Extension)**
         '''
         return self._lib.Error_Get_EarlyAbort() != 0
         
@@ -68,7 +68,7 @@ class IError(Base):
         The current default state is ON. For compatibility, the user can turn it
         off to restore the previous behavior.
         
-        (API Extension)
+        **(API Extension)**
         '''
         return self._lib.Error_Get_ExtendedErrors() != 0
         
@@ -94,7 +94,7 @@ class IError(Base):
         **WARNING:** This is a global setting, affects all DSS instances from DSS-Python,
         OpenDSSDirect.py and AltDSS.
 
-        (API Extension)
+        **(API Extension)**
         """
         return Base._use_exceptions
     

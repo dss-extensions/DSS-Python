@@ -18,17 +18,17 @@ class IParser(Base):
 
     def Matrix(self, ExpectedOrder: int) -> Float64Array:
         '''Use this property to parse a Matrix token in OpenDSS format.  Returns square matrix of order specified. Order same as default Fortran order: column by column.'''
-        self.CheckForError(self._lib.Parser_Get_Matrix_GR(ExpectedOrder))
+        self._check_for_error(self._lib.Parser_Get_Matrix_GR(ExpectedOrder))
         return self._get_float64_gr_array()
 
     def SymMatrix(self, ExpectedOrder: int) -> Float64Array:
         '''Use this property to parse a matrix token specified in lower triangle form. Symmetry is forced.'''
-        self.CheckForError(self._lib.Parser_Get_SymMatrix_GR(ExpectedOrder))
+        self._check_for_error(self._lib.Parser_Get_SymMatrix_GR(ExpectedOrder))
         return self._get_float64_gr_array()
 
     def Vector(self, ExpectedSize: int) -> Float64Array:
         '''Returns token as array of doubles. For parsing quoted array syntax.'''
-        self.CheckForError(self._lib.Parser_Get_Vector_GR(ExpectedSize))
+        self._check_for_error(self._lib.Parser_Get_Vector_GR(ExpectedSize))
         return self._get_float64_gr_array()
 
     def ResetDelimiters(self):
@@ -37,7 +37,7 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/ResetDelimiters.html        
         '''
-        self.CheckForError(self._lib.Parser_ResetDelimiters())
+        self._check_for_error(self._lib.Parser_ResetDelimiters())
 
     @property
     def AutoIncrement(self) -> bool:
@@ -46,11 +46,11 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/AutoIncrement.html
         '''
-        return self.CheckForError(self._lib.Parser_Get_AutoIncrement()) != 0
+        return self._check_for_error(self._lib.Parser_Get_AutoIncrement()) != 0
 
     @AutoIncrement.setter
     def AutoIncrement(self, Value: bool):
-        self.CheckForError(self._lib.Parser_Set_AutoIncrement(Value))
+        self._check_for_error(self._lib.Parser_Set_AutoIncrement(Value))
 
     @property
     def BeginQuote(self) -> str:
@@ -59,14 +59,14 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/BeginQuote.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Parser_Get_BeginQuote()))
+        return self._get_string(self._check_for_error(self._lib.Parser_Get_BeginQuote()))
 
     @BeginQuote.setter
     def BeginQuote(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Parser_Set_BeginQuote(Value))
+        self._check_for_error(self._lib.Parser_Set_BeginQuote(Value))
 
     @property
     def CmdString(self) -> str:
@@ -75,14 +75,14 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/CmdString.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Parser_Get_CmdString()))
+        return self._get_string(self._check_for_error(self._lib.Parser_Get_CmdString()))
 
     @CmdString.setter
     def CmdString(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Parser_Set_CmdString(Value))
+        self._check_for_error(self._lib.Parser_Set_CmdString(Value))
 
     @property
     def DblValue(self) -> float:
@@ -91,7 +91,7 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/DblValue.html
         '''
-        return self.CheckForError(self._lib.Parser_Get_DblValue())
+        return self._check_for_error(self._lib.Parser_Get_DblValue())
 
     @property
     def Delimiters(self) -> str:
@@ -100,14 +100,14 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/Delimiters.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Parser_Get_Delimiters()))
+        return self._get_string(self._check_for_error(self._lib.Parser_Get_Delimiters()))
 
     @Delimiters.setter
     def Delimiters(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Parser_Set_Delimiters(Value))
+        self._check_for_error(self._lib.Parser_Set_Delimiters(Value))
 
     @property
     def EndQuote(self) -> str:
@@ -116,14 +116,14 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/EndQuote.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Parser_Get_EndQuote()))
+        return self._get_string(self._check_for_error(self._lib.Parser_Get_EndQuote()))
 
     @EndQuote.setter
     def EndQuote(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Parser_Set_EndQuote(Value))
+        self._check_for_error(self._lib.Parser_Set_EndQuote(Value))
 
     @property
     def IntValue(self) -> int:
@@ -132,7 +132,7 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/IntValue.html
         '''
-        return self.CheckForError(self._lib.Parser_Get_IntValue())
+        return self._check_for_error(self._lib.Parser_Get_IntValue())
 
     @property
     def NextParam(self) -> str:
@@ -141,7 +141,7 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/NextParam.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Parser_Get_NextParam()))
+        return self._get_string(self._check_for_error(self._lib.Parser_Get_NextParam()))
 
     @property
     def StrValue(self) -> str:
@@ -150,7 +150,7 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/StrValue.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Parser_Get_StrValue()))
+        return self._get_string(self._check_for_error(self._lib.Parser_Get_StrValue()))
 
     @property
     def WhiteSpace(self) -> str:
@@ -159,12 +159,12 @@ class IParser(Base):
 
         Original COM help: https://opendss.epri.com/WhiteSpace.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Parser_Get_WhiteSpace()))
+        return self._get_string(self._check_for_error(self._lib.Parser_Get_WhiteSpace()))
 
     @WhiteSpace.setter
     def WhiteSpace(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Parser_Set_WhiteSpace(Value))
+        self._check_for_error(self._lib.Parser_Set_WhiteSpace(Value))
 

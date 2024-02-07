@@ -37,7 +37,7 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Reset.html
         '''
-        self.CheckForError(self._lib.CapControls_Reset())
+        self._check_for_error(self._lib.CapControls_Reset())
 
     @property
     def CTratio(self) -> float:
@@ -46,11 +46,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/CTratio.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_CTratio())
+        return self._check_for_error(self._lib.CapControls_Get_CTratio())
 
     @CTratio.setter
     def CTratio(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_CTratio(Value))
+        self._check_for_error(self._lib.CapControls_Set_CTratio(Value))
 
     @property
     def Capacitor(self) -> str:
@@ -59,14 +59,14 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Capacitor.html
         '''
-        return self._get_string(self.CheckForError(self._lib.CapControls_Get_Capacitor()))
+        return self._get_string(self._check_for_error(self._lib.CapControls_Get_Capacitor()))
 
     @Capacitor.setter
     def Capacitor(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.CapControls_Set_Capacitor(Value))
+        self._check_for_error(self._lib.CapControls_Set_Capacitor(Value))
 
     @property
     def DeadTime(self) -> float:
@@ -77,11 +77,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/DeadTime.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_DeadTime())
+        return self._check_for_error(self._lib.CapControls_Get_DeadTime())
 
     @DeadTime.setter
     def DeadTime(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_DeadTime(Value))
+        self._check_for_error(self._lib.CapControls_Set_DeadTime(Value))
 
     @property
     def Delay(self) -> float:
@@ -90,11 +90,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Delay.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_Delay())
+        return self._check_for_error(self._lib.CapControls_Get_Delay())
 
     @Delay.setter
     def Delay(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_Delay(Value))
+        self._check_for_error(self._lib.CapControls_Set_Delay(Value))
 
     @property
     def DelayOff(self) -> float:
@@ -103,11 +103,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/DelayOff.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_DelayOff())
+        return self._check_for_error(self._lib.CapControls_Get_DelayOff())
 
     @DelayOff.setter
     def DelayOff(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_DelayOff(Value))
+        self._check_for_error(self._lib.CapControls_Set_DelayOff(Value))
 
     @property
     def Mode(self) -> CapControlModes:
@@ -116,11 +116,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Mode.html
         '''
-        return CapControlModes(self.CheckForError(self._lib.CapControls_Get_Mode()))
+        return CapControlModes(self._check_for_error(self._lib.CapControls_Get_Mode()))
 
     @Mode.setter
     def Mode(self, Value: Union[CapControlModes, int]):
-        self.CheckForError(self._lib.CapControls_Set_Mode(Value))
+        self._check_for_error(self._lib.CapControls_Set_Mode(Value))
 
     @property
     def MonitoredObj(self) -> int:
@@ -129,14 +129,14 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/MonitoredObj.html
         '''
-        return self._get_string(self.CheckForError(self._lib.CapControls_Get_MonitoredObj()))
+        return self._get_string(self._check_for_error(self._lib.CapControls_Get_MonitoredObj()))
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.CapControls_Set_MonitoredObj(Value))
+        self._check_for_error(self._lib.CapControls_Set_MonitoredObj(Value))
 
     @property
     def MonitoredTerm(self) -> int:
@@ -145,11 +145,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/MonitoredTerm.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_MonitoredTerm())
+        return self._check_for_error(self._lib.CapControls_Get_MonitoredTerm())
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value: int):
-        self.CheckForError(self._lib.CapControls_Set_MonitoredTerm(Value))
+        self._check_for_error(self._lib.CapControls_Set_MonitoredTerm(Value))
 
     @property
     def OFFSetting(self) -> float:
@@ -158,11 +158,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/OFFSetting.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_OFFSetting())
+        return self._check_for_error(self._lib.CapControls_Get_OFFSetting())
 
     @OFFSetting.setter
     def OFFSetting(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_OFFSetting(Value))
+        self._check_for_error(self._lib.CapControls_Set_OFFSetting(Value))
 
     @property
     def ONSetting(self) -> float:
@@ -171,11 +171,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/ONSetting.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_ONSetting())
+        return self._check_for_error(self._lib.CapControls_Get_ONSetting())
 
     @ONSetting.setter
     def ONSetting(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_ONSetting(Value))
+        self._check_for_error(self._lib.CapControls_Set_ONSetting(Value))
 
     @property
     def PTratio(self) -> float:
@@ -184,11 +184,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/PTratio.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_PTratio())
+        return self._check_for_error(self._lib.CapControls_Get_PTratio())
 
     @PTratio.setter
     def PTratio(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_PTratio(Value))
+        self._check_for_error(self._lib.CapControls_Set_PTratio(Value))
 
     @property
     def UseVoltOverride(self) -> float:
@@ -197,11 +197,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/UseVoltOverride.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_UseVoltOverride()) != 0
+        return self._check_for_error(self._lib.CapControls_Get_UseVoltOverride()) != 0
 
     @UseVoltOverride.setter
     def UseVoltOverride(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_UseVoltOverride(Value))
+        self._check_for_error(self._lib.CapControls_Set_UseVoltOverride(Value))
 
     @property
     def Vmax(self) -> float:
@@ -210,11 +210,11 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Vmax.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_Vmax())
+        return self._check_for_error(self._lib.CapControls_Get_Vmax())
 
     @Vmax.setter
     def Vmax(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_Vmax(Value))
+        self._check_for_error(self._lib.CapControls_Set_Vmax(Value))
 
     @property
     def Vmin(self) -> float:
@@ -223,8 +223,8 @@ class ICapControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Vmin.html
         '''
-        return self.CheckForError(self._lib.CapControls_Get_Vmin())
+        return self._check_for_error(self._lib.CapControls_Get_Vmin())
 
     @Vmin.setter
     def Vmin(self, Value: float):
-        self.CheckForError(self._lib.CapControls_Set_Vmin(Value))
+        self._check_for_error(self._lib.CapControls_Set_Vmin(Value))

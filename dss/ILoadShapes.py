@@ -32,11 +32,11 @@ class ILoadShapes(Iterable):
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)
 
-        return self.CheckForError(self._lib.LoadShapes_New(Name))
+        return self._check_for_error(self._lib.LoadShapes_New(Name))
 
     def Normalize(self):
         '''Normalize the LoadShape data inplace'''
-        self.CheckForError(self._lib.LoadShapes_Normalize())
+        self._check_for_error(self._lib.LoadShapes_Normalize())
 
     @property
     def HrInterval(self) -> float:
@@ -45,11 +45,11 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/HrInterval.html
         '''
-        return self.CheckForError(self._lib.LoadShapes_Get_HrInterval())
+        return self._check_for_error(self._lib.LoadShapes_Get_HrInterval())
 
     @HrInterval.setter
     def HrInterval(self, Value: float):
-        self.CheckForError(self._lib.LoadShapes_Set_HrInterval(Value))
+        self._check_for_error(self._lib.LoadShapes_Set_HrInterval(Value))
 
     @property
     def MinInterval(self) -> float:
@@ -58,11 +58,11 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/MinInterval.html
         '''
-        return self.CheckForError(self._lib.LoadShapes_Get_MinInterval())
+        return self._check_for_error(self._lib.LoadShapes_Get_MinInterval())
 
     @MinInterval.setter
     def MinInterval(self, Value: float):
-        self.CheckForError(self._lib.LoadShapes_Set_MinInterval(Value))
+        self._check_for_error(self._lib.LoadShapes_Set_MinInterval(Value))
 
     @property
     def Npts(self) -> int:
@@ -71,11 +71,11 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/Npts.html
         '''
-        return self.CheckForError(self._lib.LoadShapes_Get_Npts())
+        return self._check_for_error(self._lib.LoadShapes_Get_Npts())
 
     @Npts.setter
     def Npts(self, Value: int):
-        self.CheckForError(self._lib.LoadShapes_Set_Npts(Value))
+        self._check_for_error(self._lib.LoadShapes_Set_Npts(Value))
 
     @property
     def PBase(self) -> float:
@@ -84,11 +84,11 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/Pbase.html
         '''
-        return self.CheckForError(self._lib.LoadShapes_Get_PBase())
+        return self._check_for_error(self._lib.LoadShapes_Get_PBase())
 
     @PBase.setter
     def PBase(self, Value: float):
-        self.CheckForError(self._lib.LoadShapes_Set_PBase(Value))
+        self._check_for_error(self._lib.LoadShapes_Set_PBase(Value))
 
     Pbase = PBase
 
@@ -99,13 +99,13 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/Pmult.html
         '''
-        self.CheckForError(self._lib.LoadShapes_Get_Pmult_GR())
+        self._check_for_error(self._lib.LoadShapes_Get_Pmult_GR())
         return self._get_float64_gr_array()
 
     @Pmult.setter
     def Pmult(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.LoadShapes_Set_Pmult(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.LoadShapes_Set_Pmult(ValuePtr, ValueCount))
 
     @property
     def QBase(self) -> float:
@@ -114,11 +114,11 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/Qbase.html
         '''
-        return self.CheckForError(self._lib.LoadShapes_Get_Qbase())
+        return self._check_for_error(self._lib.LoadShapes_Get_Qbase())
 
     @QBase.setter
     def QBase(self, Value: float):
-        self.CheckForError(self._lib.LoadShapes_Set_Qbase(Value))
+        self._check_for_error(self._lib.LoadShapes_Set_Qbase(Value))
 
     Qbase = QBase
 
@@ -129,13 +129,13 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/Qmult.html
         '''
-        self.CheckForError(self._lib.LoadShapes_Get_Qmult_GR())
+        self._check_for_error(self._lib.LoadShapes_Get_Qmult_GR())
         return self._get_float64_gr_array()
 
     @Qmult.setter
     def Qmult(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.LoadShapes_Set_Qmult(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.LoadShapes_Set_Qmult(ValuePtr, ValueCount))
 
     @property
     def TimeArray(self) -> Float64Array:
@@ -144,13 +144,13 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/TimeArray.html
         '''
-        self.CheckForError(self._lib.LoadShapes_Get_TimeArray_GR())
+        self._check_for_error(self._lib.LoadShapes_Get_TimeArray_GR())
         return self._get_float64_gr_array()
 
     @TimeArray.setter
     def TimeArray(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.LoadShapes_Set_TimeArray(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.LoadShapes_Set_TimeArray(ValuePtr, ValueCount))
 
     @property
     def UseActual(self) -> bool:
@@ -159,11 +159,11 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/UseActual.html
         '''
-        return self.CheckForError(self._lib.LoadShapes_Get_UseActual()) != 0
+        return self._check_for_error(self._lib.LoadShapes_Get_UseActual()) != 0
 
     @UseActual.setter
     def UseActual(self, Value: bool):
-        self.CheckForError(self._lib.LoadShapes_Set_UseActual(Value))
+        self._check_for_error(self._lib.LoadShapes_Set_UseActual(Value))
 
     @property
     def sInterval(self) -> float:
@@ -172,11 +172,11 @@ class ILoadShapes(Iterable):
 
         Original COM help: https://opendss.epri.com/Sinterval.html
         '''
-        return self.CheckForError(self._lib.LoadShapes_Get_SInterval())
+        return self._check_for_error(self._lib.LoadShapes_Get_SInterval())
 
     @sInterval.setter
     def sInterval(self, Value: float):
-        self.CheckForError(self._lib.LoadShapes_Set_SInterval(Value))
+        self._check_for_error(self._lib.LoadShapes_Set_SInterval(Value))
 
     Sinterval = sInterval
     SInterval = sInterval
@@ -186,15 +186,15 @@ class ILoadShapes(Iterable):
         Converts the current LoadShape data to float32/single precision.
         If there is no data or the data is already represented using float32, nothing is done.
 
-        (API Extension)
+        **(API Extension)**
         '''
-        self.CheckForError(self._lib.LoadShapes_UseFloat32())
+        self._check_for_error(self._lib.LoadShapes_UseFloat32())
 
     def UseFloat64(self):
         '''
         Converts the current LoadShape data to float64/double precision.
         If there is no data or the data is already represented using float64, nothing is done.
         
-        (API Extension)
+        **(API Extension)**
         '''
-        self.CheckForError(self._lib.LoadShapes_UseFloat64())
+        self._check_for_error(self._lib.LoadShapes_UseFloat64())

@@ -51,7 +51,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/CloseAllDIFiles.html
         '''
-        self.CheckForError(self._lib.Meters_CloseAllDIFiles())
+        self._check_for_error(self._lib.Meters_CloseAllDIFiles())
 
     def DoReliabilityCalc(self, AssumeRestoration: bool):
         '''
@@ -59,7 +59,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/DoReliabilityCalc.html
         '''
-        self.CheckForError(self._lib.Meters_DoReliabilityCalc(AssumeRestoration))
+        self._check_for_error(self._lib.Meters_DoReliabilityCalc(AssumeRestoration))
 
     def OpenAllDIFiles(self):
         '''
@@ -67,7 +67,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/OpenAllDIFiles.html
         '''
-        self.CheckForError(self._lib.Meters_OpenAllDIFiles())
+        self._check_for_error(self._lib.Meters_OpenAllDIFiles())
 
     def Reset(self):
         '''
@@ -75,7 +75,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/Reset2.html
         '''
-        self.CheckForError(self._lib.Meters_Reset())
+        self._check_for_error(self._lib.Meters_Reset())
 
     def ResetAll(self):
         '''
@@ -83,7 +83,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/ResetAll.html
         '''
-        self.CheckForError(self._lib.Meters_ResetAll())
+        self._check_for_error(self._lib.Meters_ResetAll())
 
     def Sample(self):
         '''
@@ -91,7 +91,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/Sample1.html
         '''
-        self.CheckForError(self._lib.Meters_Sample())
+        self._check_for_error(self._lib.Meters_Sample())
 
     def SampleAll(self):
         '''
@@ -99,7 +99,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SampleAll.html
         '''
-        self.CheckForError(self._lib.Meters_SampleAll())
+        self._check_for_error(self._lib.Meters_SampleAll())
 
     def Save(self):
         '''
@@ -107,7 +107,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/Save.html
         '''
-        self.CheckForError(self._lib.Meters_Save())
+        self._check_for_error(self._lib.Meters_Save())
 
     def SaveAll(self):
         '''
@@ -115,10 +115,10 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SaveAll.html
         '''
-        self.CheckForError(self._lib.Meters_SaveAll())
+        self._check_for_error(self._lib.Meters_SaveAll())
 
     def SetActiveSection(self, SectIdx: int):
-        self.CheckForError(self._lib.Meters_SetActiveSection(SectIdx))
+        self._check_for_error(self._lib.Meters_SetActiveSection(SectIdx))
 
     @property
     def AllBranchesInZone(self) -> List[str]:
@@ -127,7 +127,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/AllBranchesInZone.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.Meters_Get_AllBranchesInZone))
+        return self._check_for_error(self._get_string_array(self._lib.Meters_Get_AllBranchesInZone))
 
     @property
     def AllEndElements(self) -> List[str]:
@@ -136,7 +136,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/AllEndElements.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.Meters_Get_AllEndElements))
+        return self._check_for_error(self._get_string_array(self._lib.Meters_Get_AllEndElements))
 
     @property
     def AllocFactors(self) -> Float64Array:
@@ -145,13 +145,13 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/AllocFactors.html
         '''
-        self.CheckForError(self._lib.Meters_Get_AllocFactors_GR())
+        self._check_for_error(self._lib.Meters_Get_AllocFactors_GR())
         return self._get_float64_gr_array()
 
     @AllocFactors.setter
     def AllocFactors(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.Meters_Set_AllocFactors(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.Meters_Set_AllocFactors(ValuePtr, ValueCount))
 
     @property
     def AvgRepairTime(self) -> float:
@@ -160,7 +160,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/AvgRepairTime.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_AvgRepairTime())
+        return self._check_for_error(self._lib.Meters_Get_AvgRepairTime())
 
     @property
     def CalcCurrent(self) -> Float64Array:
@@ -169,13 +169,13 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/CalcCurrent.html
         '''
-        self.CheckForError(self._lib.Meters_Get_CalcCurrent_GR())
+        self._check_for_error(self._lib.Meters_Get_CalcCurrent_GR())
         return self._get_float64_gr_array()
 
     @CalcCurrent.setter
     def CalcCurrent(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.Meters_Set_CalcCurrent(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.Meters_Set_CalcCurrent(ValuePtr, ValueCount))
 
     @property
     def CountBranches(self) -> int:
@@ -184,7 +184,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/CountBranches.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_CountBranches())
+        return self._check_for_error(self._lib.Meters_Get_CountBranches())
 
     @property
     def CountEndElements(self) -> int:
@@ -193,7 +193,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/CountEndElements.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_CountEndElements())
+        return self._check_for_error(self._lib.Meters_Get_CountEndElements())
 
     @property
     def CustInterrupts(self) -> float:
@@ -202,7 +202,7 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/CustInterrupts.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_CustInterrupts())
+        return self._check_for_error(self._lib.Meters_Get_CustInterrupts())
 
     @property
     def DIFilesAreOpen(self) -> bool:
@@ -211,7 +211,7 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/DIFilesAreOpen.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_DIFilesAreOpen()) != 0
+        return self._check_for_error(self._lib.Meters_Get_DIFilesAreOpen()) != 0
 
     @property
     def FaultRateXRepairHrs(self) -> float:
@@ -220,7 +220,7 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/FaultRateXRepairHrs.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_FaultRateXRepairHrs())
+        return self._check_for_error(self._lib.Meters_Get_FaultRateXRepairHrs())
 
     @property
     def MeteredElement(self) -> str:
@@ -229,14 +229,14 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/MeteredElement.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Meters_Get_MeteredElement()))
+        return self._get_string(self._check_for_error(self._lib.Meters_Get_MeteredElement()))
 
     @MeteredElement.setter
     def MeteredElement(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Meters_Set_MeteredElement(Value))
+        self._check_for_error(self._lib.Meters_Set_MeteredElement(Value))
 
     @property
     def MeteredTerminal(self) -> int:
@@ -245,11 +245,11 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/MeteredTerminal.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_MeteredTerminal())
+        return self._check_for_error(self._lib.Meters_Get_MeteredTerminal())
 
     @MeteredTerminal.setter
     def MeteredTerminal(self, Value: int):
-        self.CheckForError(self._lib.Meters_Set_MeteredTerminal(Value))
+        self._check_for_error(self._lib.Meters_Set_MeteredTerminal(Value))
 
     @property
     def NumSectionBranches(self) -> int:
@@ -258,7 +258,7 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/NumSectionBranches.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_NumSectionBranches())
+        return self._check_for_error(self._lib.Meters_Get_NumSectionBranches())
 
     @property
     def NumSectionCustomers(self) -> int:
@@ -267,7 +267,7 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/NumSectionCustomers.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_NumSectionCustomers())
+        return self._check_for_error(self._lib.Meters_Get_NumSectionCustomers())
 
     @property
     def NumSections(self) -> int:
@@ -276,7 +276,7 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/NumSections.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_NumSections())
+        return self._check_for_error(self._lib.Meters_Get_NumSections())
 
     @property
     def OCPDeviceType(self) -> OCPDevTypeEnum:
@@ -285,7 +285,7 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/OCPDeviceType.html
         '''
-        return OCPDevTypeEnum(self.CheckForError(self._lib.Meters_Get_OCPDeviceType()))
+        return OCPDevTypeEnum(self._check_for_error(self._lib.Meters_Get_OCPDeviceType()))
 
     @property
     def Peakcurrent(self) -> Float64Array:
@@ -294,13 +294,13 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/Peakcurrent.html
         '''
-        self.CheckForError(self._lib.Meters_Get_Peakcurrent_GR())
+        self._check_for_error(self._lib.Meters_Get_Peakcurrent_GR())
         return self._get_float64_gr_array()
 
     @Peakcurrent.setter
     def Peakcurrent(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.Meters_Set_Peakcurrent(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.Meters_Set_Peakcurrent(ValuePtr, ValueCount))
 
     @property
     def RegisterNames(self) -> List[str]:
@@ -313,7 +313,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/RegisterNames1.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.Meters_Get_RegisterNames))
+        return self._check_for_error(self._get_string_array(self._lib.Meters_Get_RegisterNames))
 
     @property
     def RegisterValues(self) -> Float64Array:
@@ -322,7 +322,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/RegisterValues1.html
         '''
-        self.CheckForError(self._lib.Meters_Get_RegisterValues_GR())
+        self._check_for_error(self._lib.Meters_Get_RegisterValues_GR())
         return self._get_float64_gr_array()
 
     @property
@@ -332,7 +332,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SAIDI.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_SAIDI())
+        return self._check_for_error(self._lib.Meters_Get_SAIDI())
 
     @property
     def SAIFI(self) -> float:
@@ -341,7 +341,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SAIFI.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_SAIFI())
+        return self._check_for_error(self._lib.Meters_Get_SAIFI())
 
     @property
     def SAIFIKW(self) -> float:
@@ -350,7 +350,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SAIFIKW.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_SAIFIKW())
+        return self._check_for_error(self._lib.Meters_Get_SAIFIKW())
 
     @property
     def SectSeqIdx(self) -> int:
@@ -359,7 +359,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SectSeqIdx.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_SectSeqIdx())
+        return self._check_for_error(self._lib.Meters_Get_SectSeqIdx())
 
     @property
     def SectTotalCust(self) -> int:
@@ -368,7 +368,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SectTotalCust.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_SectTotalCust())
+        return self._check_for_error(self._lib.Meters_Get_SectTotalCust())
 
     @property
     def SeqListSize(self) -> int:
@@ -377,7 +377,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SeqListSize.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_SeqListSize())
+        return self._check_for_error(self._lib.Meters_Get_SeqListSize())
 
     @property
     def SequenceIndex(self) -> int:
@@ -387,11 +387,11 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SequenceIndex.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_SequenceIndex())
+        return self._check_for_error(self._lib.Meters_Get_SequenceIndex())
 
     @SequenceIndex.setter
     def SequenceIndex(self, Value: int):
-        self.CheckForError(self._lib.Meters_Set_SequenceIndex(Value))
+        self._check_for_error(self._lib.Meters_Set_SequenceIndex(Value))
 
     @property
     def SumBranchFltRates(self) -> float:
@@ -400,7 +400,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/SumBranchFltRates.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_SumBranchFltRates())
+        return self._check_for_error(self._lib.Meters_Get_SumBranchFltRates())
 
     @property
     def TotalCustomers(self) -> int:
@@ -409,7 +409,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/TotalCustomers.html
         '''
-        return self.CheckForError(self._lib.Meters_Get_TotalCustomers())
+        return self._check_for_error(self._lib.Meters_Get_TotalCustomers())
 
     @property
     def Totals(self) -> Float64Array:
@@ -418,7 +418,7 @@ class IMeters(Iterable):
 
         Original COM help: https://opendss.epri.com/Totals.html
         '''
-        self.CheckForError(self._lib.Meters_Get_Totals_GR())
+        self._check_for_error(self._lib.Meters_Get_Totals_GR())
         return self._get_float64_gr_array()
 
     @property
@@ -428,7 +428,7 @@ class IMeters(Iterable):
         
         Original COM help: https://opendss.epri.com/ZonePCE.html
         '''
-        result = self.CheckForError(self._get_string_array(self._lib.Meters_Get_ZonePCE))
+        result = self._check_for_error(self._get_string_array(self._lib.Meters_Get_ZonePCE))
         if not result:
             result = ['NONE'] #TODO: remove
             

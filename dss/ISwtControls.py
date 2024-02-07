@@ -26,7 +26,7 @@ class ISwtControls(Iterable):
     ]
 
     def Reset(self):
-        self.CheckForError(self._lib.SwtControls_Reset())
+        self._check_for_error(self._lib.SwtControls_Reset())
 
     @property
     def Action(self) -> int:
@@ -35,11 +35,11 @@ class ISwtControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Action1.html
         '''
-        return self.CheckForError(self._lib.SwtControls_Get_Action())
+        return self._check_for_error(self._lib.SwtControls_Get_Action())
 
     @Action.setter
     def Action(self, Value: int):
-        self.CheckForError(self._lib.SwtControls_Set_Action(Value))
+        self._check_for_error(self._lib.SwtControls_Set_Action(Value))
 
     @property
     def Delay(self) -> float:
@@ -48,11 +48,11 @@ class ISwtControls(Iterable):
 
         Original COM help: https://opendss.epri.com/Delay3.html
         '''
-        return self.CheckForError(self._lib.SwtControls_Get_Delay())
+        return self._check_for_error(self._lib.SwtControls_Get_Delay())
 
     @Delay.setter
     def Delay(self, Value: float):
-        self.CheckForError(self._lib.SwtControls_Set_Delay(Value))
+        self._check_for_error(self._lib.SwtControls_Set_Delay(Value))
 
     @property
     def IsLocked(self) -> bool:
@@ -61,22 +61,22 @@ class ISwtControls(Iterable):
 
         Original COM help: https://opendss.epri.com/IsLocked.html
         '''
-        return self.CheckForError(self._lib.SwtControls_Get_IsLocked()) != 0
+        return self._check_for_error(self._lib.SwtControls_Get_IsLocked()) != 0
 
     @IsLocked.setter
     def IsLocked(self, Value: bool):
-        self.CheckForError(self._lib.SwtControls_Set_IsLocked(Value))
+        self._check_for_error(self._lib.SwtControls_Set_IsLocked(Value))
 
     @property
     def NormalState(self) -> ActionCodes:
         '''
         Get/set Normal state of switch (see ActionCodes) dssActionOpen or dssActionClose
         '''
-        return ActionCodes(self.CheckForError(self._lib.SwtControls_Get_NormalState()))
+        return ActionCodes(self._check_for_error(self._lib.SwtControls_Get_NormalState()))
 
     @NormalState.setter
     def NormalState(self, Value: Union[int, ActionCodes]):
-        self.CheckForError(self._lib.SwtControls_Set_NormalState(Value))
+        self._check_for_error(self._lib.SwtControls_Set_NormalState(Value))
 
     @property
     def State(self) -> int:
@@ -85,11 +85,11 @@ class ISwtControls(Iterable):
 
         Original COM help: https://opendss.epri.com/State.html
         '''
-        return self.CheckForError(self._lib.SwtControls_Get_State())
+        return self._check_for_error(self._lib.SwtControls_Get_State())
 
     @State.setter
     def State(self, Value: int):
-        self.CheckForError(self._lib.SwtControls_Set_State(Value))
+        self._check_for_error(self._lib.SwtControls_Set_State(Value))
 
     @property
     def SwitchedObj(self) -> str:
@@ -98,14 +98,14 @@ class ISwtControls(Iterable):
 
         Original COM help: https://opendss.epri.com/SwitchedObj3.html
         '''
-        return self._get_string(self.CheckForError(self._lib.SwtControls_Get_SwitchedObj()))
+        return self._get_string(self._check_for_error(self._lib.SwtControls_Get_SwitchedObj()))
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.SwtControls_Set_SwitchedObj(Value))
+        self._check_for_error(self._lib.SwtControls_Set_SwitchedObj(Value))
 
     @property
     def SwitchedTerm(self) -> int:
@@ -114,9 +114,9 @@ class ISwtControls(Iterable):
 
         Original COM help: https://opendss.epri.com/SwitchedTerm3.html
         '''
-        return self.CheckForError(self._lib.SwtControls_Get_SwitchedTerm())
+        return self._check_for_error(self._lib.SwtControls_Get_SwitchedTerm())
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value: int):
-        self.CheckForError(self._lib.SwtControls_Set_SwitchedTerm(Value))
+        self._check_for_error(self._lib.SwtControls_Set_SwitchedTerm(Value))
 

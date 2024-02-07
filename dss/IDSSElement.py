@@ -32,7 +32,7 @@ class IDSSElement(Base):
 
         Original COM help: https://opendss.epri.com/AllPropertyNames1.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.DSSElement_Get_AllPropertyNames))
+        return self._check_for_error(self._get_string_array(self._lib.DSSElement_Get_AllPropertyNames))
 
     @property
     def Name(self) -> str:
@@ -41,7 +41,7 @@ class IDSSElement(Base):
 
         Original COM help: https://opendss.epri.com/Name5.html
         '''
-        return self._get_string(self.CheckForError(self._lib.DSSElement_Get_Name()))
+        return self._get_string(self._check_for_error(self._lib.DSSElement_Get_Name()))
 
     @property
     def NumProperties(self) -> int:
@@ -50,7 +50,7 @@ class IDSSElement(Base):
 
         Original COM help: https://opendss.epri.com/NumProperties1.html
         '''
-        return self.CheckForError(self._lib.DSSElement_Get_NumProperties())
+        return self._check_for_error(self._lib.DSSElement_Get_NumProperties())
 
     def ToJSON(self, options: DSSJSONFlags = 0) -> str:
         '''
@@ -59,6 +59,6 @@ class IDSSElement(Base):
         The `options` parameter contains bit-flags to toggle specific features.
         See `Obj_ToJSON` (C-API) for more, or `DSSObj.to_json` in Python.
 
-        (API Extension)
+        **(API Extension)**
         '''
-        return self._get_string(self.CheckForError(self._lib.DSSElement_ToJSON(options)))
+        return self._get_string(self._check_for_error(self._lib.DSSElement_ToJSON(options)))

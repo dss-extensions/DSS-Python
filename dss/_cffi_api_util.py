@@ -261,9 +261,6 @@ class Base:
             
         return result
 
-    # for backwards compatibility
-    CheckForError = _check_for_error
-
     def _getattr(self, key):
         if key[0] == '_':
             return object.__getattribute__(self, key)
@@ -924,44 +921,55 @@ class Iterable(Base):
     @property
     def First(self) -> int:
         '''Sets the first object of this type active. Returns 0 if none.'''
-        return self.CheckForError(self._Get_First())
+        return self._check_for_error(self._Get_First())
 
     @property
     def Next(self) -> int:
         '''Sets next object of this type active. Returns 0 if no more.'''
-        return self.CheckForError(self._Get_Next())
+        return self._check_for_error(self._Get_Next())
 
     @property
     def Count(self) -> int:
         '''Number of objects of this type'''
-        return self.CheckForError(self._Get_Count())
+        return self._check_for_error(self._Get_Count())
 
     def __len__(self) -> int:
-        return self.CheckForError(self._Get_Count())
+        return self._check_for_error(self._Get_Count())
 
     def __iter__(self):
-        '''(API Extension)'''
-        idx = self.CheckForError(self._Get_First())
+        '''
+        Get an iterator of the object collection.
+        
+        Note that OpenDSS, via the classic APIs, only allow a single object of a specific type
+        to be activated. That is, you cannot use references of distinct objects and interact
+        with both at the same time, or keep a reference to use later. You need to reactivate
+        the target object or ensure it is the active one.
+
+        For an alternative, consider using our AltDSS-Python package.
+
+        **(API Extension)**
+        '''
+        idx = self._check_for_error(self._Get_First())
         while idx != 0:
             yield self
-            idx = self.CheckForError(self._Get_Next())
+            idx = self._check_for_error(self._Get_Next())
 
     @property
     def AllNames(self) -> List[str]:
         '''Array of all names of this object type'''
-        return self.CheckForError(self._get_string_array(self._Get_AllNames))
+        return self._check_for_error(self._get_string_array(self._Get_AllNames))
 
     @property
     def Name(self) -> str:
         '''Gets the current name or sets the active object of this type by name'''
-        return self._get_string(self.CheckForError(self._Get_Name()))
+        return self._get_string(self._check_for_error(self._Get_Name()))
 
     @Name.setter
     def Name(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self.CheckForError(self._Set_Name(Value)))
+        self._check_for_error(self._check_for_error(self._Set_Name(Value)))
         
     @property
     def idx(self) -> int:
@@ -986,11 +994,11 @@ class Iterable(Base):
         - Vsources
         - XYCurves
 
-        (API Extension) 
+        **(API Extension)** 
         '''
-        return self.CheckForError(self._Get_idx())
+        return self._check_for_error(self._Get_idx())
 
     @idx.setter
     def idx(self, Value: int):
-        self.CheckForError(self._Set_idx(Value))
+        self._check_for_error(self._Set_idx(Value))
 

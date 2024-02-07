@@ -50,7 +50,7 @@ class ILines(Iterable):
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)
 
-        return self.CheckForError(self._lib.Lines_New(Name))
+        return self._check_for_error(self._lib.Lines_New(Name))
 
     @property
     def Bus1(self) -> str:
@@ -59,14 +59,14 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Bus1.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Lines_Get_Bus1()))
+        return self._get_string(self._check_for_error(self._lib.Lines_Get_Bus1()))
 
     @Bus1.setter
     def Bus1(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Lines_Set_Bus1(Value))
+        self._check_for_error(self._lib.Lines_Set_Bus1(Value))
 
     @property
     def Bus2(self) -> str:
@@ -75,14 +75,14 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Bus2.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Lines_Get_Bus2()))
+        return self._get_string(self._check_for_error(self._lib.Lines_Get_Bus2()))
 
     @Bus2.setter
     def Bus2(self, Value):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Lines_Set_Bus2(Value))
+        self._check_for_error(self._lib.Lines_Set_Bus2(Value))
 
     @property
     def C0(self) -> float:
@@ -91,11 +91,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/C0.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_C0())
+        return self._check_for_error(self._lib.Lines_Get_C0())
 
     @C0.setter
     def C0(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_C0(Value))
+        self._check_for_error(self._lib.Lines_Set_C0(Value))
 
     @property
     def C1(self) -> float:
@@ -104,21 +104,21 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/C1.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_C1())
+        return self._check_for_error(self._lib.Lines_Get_C1())
 
     @C1.setter
     def C1(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_C1(Value))
+        self._check_for_error(self._lib.Lines_Set_C1(Value))
 
     @property
     def Cmatrix(self) -> Float64Array:
-        self.CheckForError(self._lib.Lines_Get_Cmatrix_GR())
+        self._check_for_error(self._lib.Lines_Get_Cmatrix_GR())
         return self._get_float64_gr_array()
 
     @Cmatrix.setter
     def Cmatrix(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.Lines_Set_Cmatrix(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.Lines_Set_Cmatrix(ValuePtr, ValueCount))
 
     @property
     def EmergAmps(self) -> float:
@@ -127,11 +127,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/EmergAmps1.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_EmergAmps())
+        return self._check_for_error(self._lib.Lines_Get_EmergAmps())
 
     @EmergAmps.setter
     def EmergAmps(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_EmergAmps(Value))
+        self._check_for_error(self._lib.Lines_Set_EmergAmps(Value))
 
     @property
     def Geometry(self) -> str:
@@ -140,14 +140,14 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Geometry.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Lines_Get_Geometry()))
+        return self._get_string(self._check_for_error(self._lib.Lines_Get_Geometry()))
 
     @Geometry.setter
     def Geometry(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Lines_Set_Geometry(Value))
+        self._check_for_error(self._lib.Lines_Set_Geometry(Value))
 
     @property
     def Length(self) -> float:
@@ -156,11 +156,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Length.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_Length())
+        return self._check_for_error(self._lib.Lines_Get_Length())
 
     @Length.setter
     def Length(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_Length(Value))
+        self._check_for_error(self._lib.Lines_Set_Length(Value))
 
     @property
     def LineCode(self) -> str:
@@ -169,14 +169,14 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/LineCode.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Lines_Get_LineCode()))
+        return self._get_string(self._check_for_error(self._lib.Lines_Get_LineCode()))
 
     @LineCode.setter
     def LineCode(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Lines_Set_LineCode(Value))
+        self._check_for_error(self._lib.Lines_Set_LineCode(Value))
 
     @property
     def NormAmps(self) -> float:
@@ -185,11 +185,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/NormAmps.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_NormAmps())
+        return self._check_for_error(self._lib.Lines_Get_NormAmps())
 
     @NormAmps.setter
     def NormAmps(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_NormAmps(Value))
+        self._check_for_error(self._lib.Lines_Set_NormAmps(Value))
 
     @property
     def NumCust(self) -> int:
@@ -198,7 +198,7 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/NumCust.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_NumCust())
+        return self._check_for_error(self._lib.Lines_Get_NumCust())
 
     @property
     def Parent(self) -> int:
@@ -207,7 +207,7 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Parent.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_Parent())
+        return self._check_for_error(self._lib.Lines_Get_Parent())
 
     @property
     def Phases(self) -> int:
@@ -216,11 +216,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Phases1.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_Phases())
+        return self._check_for_error(self._lib.Lines_Get_Phases())
 
     @Phases.setter
     def Phases(self, Value: int):
-        self.CheckForError(self._lib.Lines_Set_Phases(Value))
+        self._check_for_error(self._lib.Lines_Set_Phases(Value))
 
     @property
     def R0(self) -> float:
@@ -229,11 +229,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/R0.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_R0())
+        return self._check_for_error(self._lib.Lines_Get_R0())
 
     @R0.setter
     def R0(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_R0(Value))
+        self._check_for_error(self._lib.Lines_Set_R0(Value))
 
     @property
     def R1(self) -> float:
@@ -242,11 +242,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/R1.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_R1())
+        return self._check_for_error(self._lib.Lines_Get_R1())
 
     @R1.setter
     def R1(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_R1(Value))
+        self._check_for_error(self._lib.Lines_Set_R1(Value))
 
     @property
     def Rg(self) -> float:
@@ -255,11 +255,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Rg.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_Rg())
+        return self._check_for_error(self._lib.Lines_Get_Rg())
 
     @Rg.setter
     def Rg(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_Rg(Value))
+        self._check_for_error(self._lib.Lines_Set_Rg(Value))
 
     @property
     def Rho(self) -> float:
@@ -268,11 +268,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Rho.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_Rho())
+        return self._check_for_error(self._lib.Lines_Get_Rho())
 
     @Rho.setter
     def Rho(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_Rho(Value))
+        self._check_for_error(self._lib.Lines_Set_Rho(Value))
 
     @property
     def Rmatrix(self) -> Float64Array:
@@ -281,13 +281,13 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Rmatrix.html
         '''
-        self.CheckForError(self._lib.Lines_Get_Rmatrix_GR())
+        self._check_for_error(self._lib.Lines_Get_Rmatrix_GR())
         return self._get_float64_gr_array()
 
     @Rmatrix.setter
     def Rmatrix(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.Lines_Set_Rmatrix(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.Lines_Set_Rmatrix(ValuePtr, ValueCount))
 
     @property
     def Spacing(self) -> str:
@@ -296,14 +296,14 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Spacing.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Lines_Get_Spacing()))
+        return self._get_string(self._check_for_error(self._lib.Lines_Get_Spacing()))
 
     @Spacing.setter
     def Spacing(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Lines_Set_Spacing(Value))
+        self._check_for_error(self._lib.Lines_Set_Spacing(Value))
 
     @property
     def TotalCust(self) -> int:
@@ -312,15 +312,15 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/TotalCust.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_TotalCust())
+        return self._check_for_error(self._lib.Lines_Get_TotalCust())
 
     @property
     def Units(self) -> LineUnits:
-        return LineUnits(self.CheckForError(self._lib.Lines_Get_Units()))
+        return LineUnits(self._check_for_error(self._lib.Lines_Get_Units()))
 
     @Units.setter
     def Units(self, Value: Union[int, LineUnits]):
-        self.CheckForError(self._lib.Lines_Set_Units(Value))
+        self._check_for_error(self._lib.Lines_Set_Units(Value))
 
     @property
     def X0(self) -> float:
@@ -329,11 +329,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/X0.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_X0())
+        return self._check_for_error(self._lib.Lines_Get_X0())
 
     @X0.setter
     def X0(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_X0(Value))
+        self._check_for_error(self._lib.Lines_Set_X0(Value))
 
     @property
     def X1(self) -> float:
@@ -342,11 +342,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/X1.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_X1())
+        return self._check_for_error(self._lib.Lines_Get_X1())
 
     @X1.setter
     def X1(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_X1(Value))
+        self._check_for_error(self._lib.Lines_Set_X1(Value))
 
     @property
     def Xg(self) -> float:
@@ -355,11 +355,11 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Xg.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_Xg())
+        return self._check_for_error(self._lib.Lines_Get_Xg())
 
     @Xg.setter
     def Xg(self, Value: float):
-        self.CheckForError(self._lib.Lines_Set_Xg(Value))
+        self._check_for_error(self._lib.Lines_Set_Xg(Value))
 
     @property
     def Xmatrix(self) -> Float64Array:
@@ -368,13 +368,13 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Xmatrix.html
         '''
-        self.CheckForError(self._lib.Lines_Get_Xmatrix_GR())
+        self._check_for_error(self._lib.Lines_Get_Xmatrix_GR())
         return self._get_float64_gr_array()
 
     @Xmatrix.setter
     def Xmatrix(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.Lines_Set_Xmatrix(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.Lines_Set_Xmatrix(ValuePtr, ValueCount))
 
     @property
     def Yprim(self) -> Float64ArrayOrComplexArray:
@@ -383,13 +383,13 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/Yprim1.html
         '''
-        self.CheckForError(self._lib.Lines_Get_Yprim_GR())
+        self._check_for_error(self._lib.Lines_Get_Yprim_GR())
         return self._get_complex128_gr_array()
 
     @Yprim.setter
     def Yprim(self, Value: Float64ArrayOrComplexArray):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self.CheckForError(self._lib.Lines_Set_Yprim(ValuePtr, ValueCount))
+        self._check_for_error(self._lib.Lines_Set_Yprim(ValuePtr, ValueCount))
 
     @property
     def SeasonRating(self) -> float:
@@ -398,18 +398,18 @@ class ILines(Iterable):
 
         Original COM help: https://opendss.epri.com/SeasonRating.html
         '''
-        return self.CheckForError(self._lib.Lines_Get_SeasonRating())
+        return self._check_for_error(self._lib.Lines_Get_SeasonRating())
 
     @property
     def IsSwitch(self) -> bool:
         '''
         Sets/gets the Line element switch status. Setting it has side-effects to the line parameters.
 
-        (API Extension)
+        **(API Extension)**
         '''
-        return self.CheckForError(self._lib.Lines_Get_IsSwitch()) != 0
+        return self._check_for_error(self._lib.Lines_Get_IsSwitch()) != 0
         
     @IsSwitch.setter
     def IsSwitch(self, Value: bool):
-        self.CheckForError(self._lib.Lines_Set_IsSwitch(Value))
+        self._check_for_error(self._lib.Lines_Set_IsSwitch(Value))
 

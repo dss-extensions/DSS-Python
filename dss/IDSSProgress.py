@@ -12,10 +12,10 @@ class IDSSProgress(Base):
     __slots__ = []
 
     def Close(self):
-        self.CheckForError(self._lib.DSSProgress_Close())
+        self._check_for_error(self._lib.DSSProgress_Close())
 
     def Show(self):
-        self.CheckForError(self._lib.DSSProgress_Show())
+        self._check_for_error(self._lib.DSSProgress_Show())
 
     @property
     def Caption(self) -> str:
@@ -31,7 +31,7 @@ class IDSSProgress(Base):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.DSSProgress_Set_Caption(Value))
+        self._check_for_error(self._lib.DSSProgress_Set_Caption(Value))
 
     @property
     def PctProgress(self) -> int:
@@ -44,6 +44,6 @@ class IDSSProgress(Base):
 
     @PctProgress.setter
     def PctProgress(self, Value: int):
-        self.CheckForError(self._lib.DSSProgress_Set_PctProgress(Value))
+        self._check_for_error(self._lib.DSSProgress_Set_PctProgress(Value))
 
 

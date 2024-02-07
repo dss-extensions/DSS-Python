@@ -35,7 +35,7 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/Close3.html
         '''
-        self.CheckForError(self._lib.Fuses_Close())
+        self._check_for_error(self._lib.Fuses_Close())
 
     def IsBlown(self) -> bool:
         '''
@@ -43,7 +43,7 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/IsBlown.html
         '''
-        return self.CheckForError(self._lib.Fuses_IsBlown()) != 0
+        return self._check_for_error(self._lib.Fuses_IsBlown()) != 0
 
     def Open(self):
         '''
@@ -51,7 +51,7 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/Open2.html
         '''
-        self.CheckForError(self._lib.Fuses_Open())
+        self._check_for_error(self._lib.Fuses_Open())
 
     def Reset(self):
         '''
@@ -59,7 +59,7 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/Reset7.html
         '''
-        self.CheckForError(self._lib.Fuses_Reset())
+        self._check_for_error(self._lib.Fuses_Reset())
 
     @property
     def Delay(self) -> float:
@@ -69,11 +69,11 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/Delay1.html
         '''
-        return self.CheckForError(self._lib.Fuses_Get_Delay())
+        return self._check_for_error(self._lib.Fuses_Get_Delay())
 
     @Delay.setter
     def Delay(self, Value: float):
-        self.CheckForError(self._lib.Fuses_Set_Delay(Value))
+        self._check_for_error(self._lib.Fuses_Set_Delay(Value))
 
     @property
     def MonitoredObj(self) -> str:
@@ -82,14 +82,14 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/MonitoredObj1.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Fuses_Get_MonitoredObj()))
+        return self._get_string(self._check_for_error(self._lib.Fuses_Get_MonitoredObj()))
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Fuses_Set_MonitoredObj(Value))
+        self._check_for_error(self._lib.Fuses_Set_MonitoredObj(Value))
 
     @property
     def MonitoredTerm(self) -> int:
@@ -98,11 +98,11 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/MonitoredTerm1.html
         '''
-        return self.CheckForError(self._lib.Fuses_Get_MonitoredTerm())
+        return self._check_for_error(self._lib.Fuses_Get_MonitoredTerm())
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value: int):
-        self.CheckForError(self._lib.Fuses_Set_MonitoredTerm(Value))
+        self._check_for_error(self._lib.Fuses_Set_MonitoredTerm(Value))
 
     @property
     def NumPhases(self) -> int:
@@ -111,7 +111,7 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/NumPhases1.html
         '''
-        return self.CheckForError(self._lib.Fuses_Get_NumPhases())
+        return self._check_for_error(self._lib.Fuses_Get_NumPhases())
 
     @property
     def RatedCurrent(self) -> float:
@@ -122,11 +122,11 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/RatedCurrent.html
         '''
-        return self.CheckForError(self._lib.Fuses_Get_RatedCurrent())
+        return self._check_for_error(self._lib.Fuses_Get_RatedCurrent())
 
     @RatedCurrent.setter
     def RatedCurrent(self, Value: float):
-        self.CheckForError(self._lib.Fuses_Set_RatedCurrent(Value))
+        self._check_for_error(self._lib.Fuses_Set_RatedCurrent(Value))
 
     @property
     def SwitchedObj(self) -> str:
@@ -136,14 +136,14 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/SwitchedObj.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Fuses_Get_SwitchedObj()))
+        return self._get_string(self._check_for_error(self._lib.Fuses_Get_SwitchedObj()))
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Fuses_Set_SwitchedObj(Value))
+        self._check_for_error(self._lib.Fuses_Set_SwitchedObj(Value))
 
     @property
     def SwitchedTerm(self) -> int:
@@ -152,11 +152,11 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/SwitchedTerm.html
         '''
-        return self.CheckForError(self._lib.Fuses_Get_SwitchedTerm())
+        return self._check_for_error(self._lib.Fuses_Get_SwitchedTerm())
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value: int):
-        self.CheckForError(self._lib.Fuses_Set_SwitchedTerm(Value))
+        self._check_for_error(self._lib.Fuses_Set_SwitchedTerm(Value))
 
     @property
     def TCCcurve(self) -> str:
@@ -165,14 +165,14 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/TCCcurve.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Fuses_Get_TCCcurve()))
+        return self._get_string(self._check_for_error(self._lib.Fuses_Get_TCCcurve()))
 
     @TCCcurve.setter
     def TCCcurve(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Fuses_Set_TCCcurve(Value))
+        self._check_for_error(self._lib.Fuses_Set_TCCcurve(Value))
 
     @property
     def State(self) -> List[str]:
@@ -181,11 +181,11 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/State2.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.Fuses_Get_State))
+        return self._check_for_error(self._get_string_array(self._lib.Fuses_Get_State))
 
     @State.setter
     def State(self, Value: List[AnyStr]):
-        self.CheckForError(self._set_string_array(self._lib.Fuses_Set_State, Value))
+        self._check_for_error(self._set_string_array(self._lib.Fuses_Set_State, Value))
 
     @property
     def NormalState(self) -> List[str]:
@@ -194,8 +194,8 @@ class IFuses(Iterable):
 
         Original COM help: https://opendss.epri.com/NormalState2.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.Fuses_Get_NormalState))
+        return self._check_for_error(self._get_string_array(self._lib.Fuses_Get_NormalState))
 
     @NormalState.setter
     def NormalState(self, Value: List[AnyStr]):
-        self.CheckForError(self._set_string_array(self._lib.Fuses_Set_NormalState, Value))
+        self._check_for_error(self._set_string_array(self._lib.Fuses_Set_NormalState, Value))

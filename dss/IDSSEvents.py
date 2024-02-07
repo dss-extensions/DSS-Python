@@ -180,7 +180,7 @@ class IDSSEvents(Base):
         This is intended to replace usage of `win32com.client.WithEvents()`
         (when previously used with the OpenDSS COM engine).
 
-        (API Extension)
+        **(API Extension)**
         '''
         if not IDSSEvents._has_required_methods(handler_class):
             raise DSSException(0, f'Events: not all event handler methods were found in the provided class ({handler_class}).')
@@ -196,7 +196,7 @@ class IDSSEvents(Base):
         This is intended to replace usage of `comtypes.client.GetEvents()`
         (when previously used with the OpenDSS COM engine).
 
-        (API Extension)
+        **(API Extension)**
         '''
         if not IDSSEvents._has_required_methods(handler_obj):
             raise DSSException(0, f'Events: not all event handler methods were found in the provided object ({handler_obj}).')

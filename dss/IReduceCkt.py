@@ -18,11 +18,11 @@ class IReduceCkt(Base):
 
         Original COM help: https://opendss.epri.com/Zmag.html
         '''
-        return self.CheckForError(self._lib.ReduceCkt_Get_Zmag())
+        return self._check_for_error(self._lib.ReduceCkt_Get_Zmag())
         
     @Zmag.setter
     def Zmag(self, Value: float):
-        self.CheckForError(self._lib.ReduceCkt_Set_Zmag(Value))
+        self._check_for_error(self._lib.ReduceCkt_Set_Zmag(Value))
 
     @property
     def KeepLoad(self) -> bool:
@@ -31,11 +31,11 @@ class IReduceCkt(Base):
 
         Original COM help: https://opendss.epri.com/KeepLoad.html
         '''
-        return self.CheckForError(self._lib.ReduceCkt_Get_KeepLoad()) != 0
+        return self._check_for_error(self._lib.ReduceCkt_Get_KeepLoad()) != 0
         
     @KeepLoad.setter
     def KeepLoad(self, Value: bool):
-        self.CheckForError(self._lib.ReduceCkt_Set_KeepLoad(bool(Value)))
+        self._check_for_error(self._lib.ReduceCkt_Set_KeepLoad(bool(Value)))
 
     @property
     def EditString(self) -> str:
@@ -44,14 +44,14 @@ class IReduceCkt(Base):
 
         Original COM help: https://opendss.epri.com/EditString.html
         '''
-        return self._get_string(self.CheckForError(self._lib.ReduceCkt_Get_EditString()))
+        return self._get_string(self._check_for_error(self._lib.ReduceCkt_Get_EditString()))
         
     @EditString.setter
     def EditString(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
     
-        self.CheckForError(self._lib.ReduceCkt_Set_EditString(Value))
+        self._check_for_error(self._lib.ReduceCkt_Set_EditString(Value))
 
     @property
     def StartPDElement(self) -> str:
@@ -60,14 +60,14 @@ class IReduceCkt(Base):
 
         Original COM help: https://opendss.epri.com/StartPDElement.html
         '''
-        return self._get_string(self.CheckForError(self._lib.ReduceCkt_Get_StartPDElement()))
+        return self._get_string(self._check_for_error(self._lib.ReduceCkt_Get_StartPDElement()))
         
     @StartPDElement.setter
     def StartPDElement(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
             
-        self.CheckForError(self._lib.ReduceCkt_Set_StartPDElement(Value))
+        self._check_for_error(self._lib.ReduceCkt_Set_StartPDElement(Value))
 
     @property
     def EnergyMeter(self) -> str:
@@ -76,14 +76,14 @@ class IReduceCkt(Base):
 
         Original COM help: https://opendss.epri.com/EnergyMeter1.html
         '''
-        return self._get_string(self.CheckForError(self._lib.ReduceCkt_Get_EnergyMeter()))
+        return self._get_string(self._check_for_error(self._lib.ReduceCkt_Get_EnergyMeter()))
     
     @EnergyMeter.setter
     def EnergyMeter(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
     
-        self.CheckForError(self._lib.ReduceCkt_Set_EnergyMeter(Value))
+        self._check_for_error(self._lib.ReduceCkt_Set_EnergyMeter(Value))
 
     def SaveCircuit(self, CktName: AnyStr):
         '''
@@ -93,7 +93,7 @@ class IReduceCkt(Base):
         if type(CktName) is not bytes:
             CktName = CktName.encode(self._api_util.codec)
         
-        self.CheckForError(self._lib.ReduceCkt_SaveCircuit(CktName))
+        self._check_for_error(self._lib.ReduceCkt_SaveCircuit(CktName))
 
     def DoDefault(self):
         '''
@@ -101,7 +101,7 @@ class IReduceCkt(Base):
 
         Original COM help: https://opendss.epri.com/DoDefault.html
         '''
-        self.CheckForError(self._lib.ReduceCkt_DoDefault())
+        self._check_for_error(self._lib.ReduceCkt_DoDefault())
 
     def DoShortLines(self):
         '''
@@ -109,7 +109,7 @@ class IReduceCkt(Base):
 
         Original COM help: https://opendss.epri.com/DoShortLines.html
         '''
-        self.CheckForError(self._lib.ReduceCkt_DoShortLines())
+        self._check_for_error(self._lib.ReduceCkt_DoShortLines())
 
     def DoDangling(self):
         '''
@@ -117,7 +117,7 @@ class IReduceCkt(Base):
 
         Original COM help: https://opendss.epri.com/DoDangling.html
         '''
-        self.CheckForError(self._lib.ReduceCkt_DoDangling())
+        self._check_for_error(self._lib.ReduceCkt_DoDangling())
 
     def DoLoopBreak(self):
         '''
@@ -125,19 +125,19 @@ class IReduceCkt(Base):
         
         Disables one of the Line objects at the head of a loop to force the circuit to be radial.
         '''
-        self.CheckForError(self._lib.ReduceCkt_DoLoopBreak())
+        self._check_for_error(self._lib.ReduceCkt_DoLoopBreak())
     
     def DoParallelLines(self):
         '''
         Merge all parallel lines found in the circuit to facilitate its reduction.
         '''
-        self.CheckForError(self._lib.ReduceCkt_DoParallelLines())
+        self._check_for_error(self._lib.ReduceCkt_DoParallelLines())
     
     def DoSwitches(self):
         '''
         Merge Line objects in which the IsSwitch property is true with the down-line Line object.
         '''
-        self.CheckForError(self._lib.ReduceCkt_DoSwitches())
+        self._check_for_error(self._lib.ReduceCkt_DoSwitches())
     
     def Do1phLaterals(self):
         '''
@@ -145,7 +145,7 @@ class IReduceCkt(Base):
         
         Loads and other shunt elements are moved to the parent 3-phase bus.
         '''
-        self.CheckForError(self._lib.ReduceCkt_Do1phLaterals())
+        self._check_for_error(self._lib.ReduceCkt_Do1phLaterals())
     
     def DoBranchRemove(self):
         '''
@@ -155,4 +155,4 @@ class IReduceCkt(Base):
         If KeepLoad=Y (default), a new Load element is defined and kW, kvar are set to present power flow solution for the first element eliminated. 
         The EditString is applied to each new Load element defined. 
         '''
-        self.CheckForError(self._lib.ReduceCkt_DoBranchRemove())
+        self._check_for_error(self._lib.ReduceCkt_DoBranchRemove())

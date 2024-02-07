@@ -16,6 +16,7 @@ relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_cap
     - New `EnergyMeterRegisters` and `GeneratorRegisters` to simplify handling register indexes from EnergyMeters (`EnergyMeterRegisters`), Generators, PVSystems, and Storage objects (these last three use `GeneratorRegisters`).
 
 - Implement the DSSEvents interface. Note that this is not a popular interface and we haven't seen it used in Python with COM yet. OpenDSS comes with a couple of examples using VBA in Excel though.
+- Drop `CheckForError()`; use `_check_for_error()` instead (same function, but the latter doesn't pollute the public scope).
 
 - Packaging: Migrate build system to `pyproject.toml` and Hatch.
 
@@ -384,7 +385,7 @@ Major changes:
 - Uses `__slots__` to simplify attribute handling.
 - Exposes both the our classic API (e.g. `dss.v7.DSS_IR` for the immediate/direct results) and global result API (e.g. `dss.v7.DSS_GR` for the global result interface). See [DSS C-API's docs](https://github.com/dss-extensions/dss_capi/blob/master/docs/usage.md) for a detailed explanation. We default to the GR interface since it will generally be faster at the cost of a small memory overhead.
 - Although still experimental, the v8/PM module is more stable. If you try it, please give feedback.
-- Error checking is now done for most API writes. That is, if a an OpenDSS error occurs, it should cause a Python exception soon after. Previously, you need to call `CheckForError()` manually to trigger this. This change was introduced after user reports indicated that manually checking for errors is a common behavior.
+- Error checking is now done for most API writes. That is, if a an OpenDSS error occurs, it should cause a Python exception soon after. Previously, you need to call `_check_for_error()` manually to trigger this. This change was introduced after user reports indicated that manually checking for errors is a common behavior.
 - Exposes API extensions for the classes `LineGeometry`, `WireData`, `LineSpacing`, `CNData`, `TSData`, `Reactor`.
 - Makes most DSS classes iterable (including buses), e.g. you can now use:
 

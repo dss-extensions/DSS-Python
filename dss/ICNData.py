@@ -43,147 +43,147 @@ class ICNData(Iterable):
     @property
     def EmergAmps(self) -> float:
         '''Emergency ampere rating'''
-        return self.CheckForError(self._lib.CNData_Get_EmergAmps())
+        return self._check_for_error(self._lib.CNData_Get_EmergAmps())
 
     @EmergAmps.setter
     def EmergAmps(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_EmergAmps(Value))
+        self._check_for_error(self._lib.CNData_Set_EmergAmps(Value))
 
     @property
     def NormAmps(self) -> float:
         '''Normal Ampere rating'''
-        return self.CheckForError(self._lib.CNData_Get_NormAmps())
+        return self._check_for_error(self._lib.CNData_Get_NormAmps())
 
     @NormAmps.setter
     def NormAmps(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_NormAmps(Value))
+        self._check_for_error(self._lib.CNData_Set_NormAmps(Value))
 
     @property
     def Rdc(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_Rdc())
+        return self._check_for_error(self._lib.CNData_Get_Rdc())
 
     @Rdc.setter
     def Rdc(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_Rdc(Value))
+        self._check_for_error(self._lib.CNData_Set_Rdc(Value))
 
     @property
     def Rac(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_Rac())
+        return self._check_for_error(self._lib.CNData_Get_Rac())
 
     @Rac.setter
     def Rac(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_Rac(Value))
+        self._check_for_error(self._lib.CNData_Set_Rac(Value))
 
     @property
     def GMRac(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_GMRac())
+        return self._check_for_error(self._lib.CNData_Get_GMRac())
 
     @GMRac.setter
     def GMRac(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_GMRac(Value))
+        self._check_for_error(self._lib.CNData_Set_GMRac(Value))
 
     @property
     def GMRUnits(self) -> LineUnits:
-        return LineUnits(self.CheckForError(self._lib.CNData_Get_GMRUnits()))
+        return LineUnits(self._check_for_error(self._lib.CNData_Get_GMRUnits()))
 
     @GMRUnits.setter
     def GMRUnits(self, Value: int):
-        self.CheckForError(self._lib.CNData_Set_GMRUnits(Value))
+        self._check_for_error(self._lib.CNData_Set_GMRUnits(Value))
 
     @property
     def Radius(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_Radius())
+        return self._check_for_error(self._lib.CNData_Get_Radius())
 
     @Radius.setter
     def Radius(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_Radius(Value))
+        self._check_for_error(self._lib.CNData_Set_Radius(Value))
 
     @property
     def RadiusUnits(self) -> LineUnits:
-        return LineUnits(self.CheckForError(self._lib.CNData_Get_RadiusUnits()))
+        return LineUnits(self._check_for_error(self._lib.CNData_Get_RadiusUnits()))
 
     @RadiusUnits.setter
     def RadiusUnits(self, Value: Union[int, LineUnits]):
-        self.CheckForError(self._lib.CNData_Set_RadiusUnits(Value))
+        self._check_for_error(self._lib.CNData_Set_RadiusUnits(Value))
 
     @property
     def ResistanceUnits(self) -> LineUnits:
-        return LineUnits(self.CheckForError(self._lib.CNData_Get_ResistanceUnits()))
+        return LineUnits(self._check_for_error(self._lib.CNData_Get_ResistanceUnits()))
 
     @ResistanceUnits.setter
     def ResistanceUnits(self, Value: Union[int, LineUnits]):
-        self.CheckForError(self._lib.CNData_Set_ResistanceUnits(Value))
+        self._check_for_error(self._lib.CNData_Set_ResistanceUnits(Value))
 
     @property
     def Diameter(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_Diameter())
+        return self._check_for_error(self._lib.CNData_Get_Diameter())
 
     @Diameter.setter
     def Diameter(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_Diameter(Value))
+        self._check_for_error(self._lib.CNData_Set_Diameter(Value))
 
     @property
     def EpsR(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_EpsR())
+        return self._check_for_error(self._lib.CNData_Get_EpsR())
 
     @EpsR.setter
     def EpsR(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_EpsR(Value))
+        self._check_for_error(self._lib.CNData_Set_EpsR(Value))
 
     @property
     def InsLayer(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_InsLayer())
+        return self._check_for_error(self._lib.CNData_Get_InsLayer())
 
     @InsLayer.setter
     def InsLayer(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_InsLayer(Value))
+        self._check_for_error(self._lib.CNData_Set_InsLayer(Value))
 
     @property
     def DiaIns(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_DiaIns())
+        return self._check_for_error(self._lib.CNData_Get_DiaIns())
 
     @DiaIns.setter
     def DiaIns(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_DiaIns(Value))
+        self._check_for_error(self._lib.CNData_Set_DiaIns(Value))
 
     @property
     def DiaCable(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_DiaCable())
+        return self._check_for_error(self._lib.CNData_Get_DiaCable())
 
     @DiaCable.setter
     def DiaCable(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_DiaCable(Value))
+        self._check_for_error(self._lib.CNData_Set_DiaCable(Value))
 
     @property
     def k(self) -> int:
-        return self.CheckForError(self._lib.CNData_Get_k())
+        return self._check_for_error(self._lib.CNData_Get_k())
 
     @k.setter
     def k(self, Value: int):
-        self.CheckForError(self._lib.CNData_Set_k(Value))
+        self._check_for_error(self._lib.CNData_Set_k(Value))
 
     @property
     def DiaStrand(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_DiaStrand())
+        return self._check_for_error(self._lib.CNData_Get_DiaStrand())
 
     @DiaStrand.setter
     def DiaStrand(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_DiaStrand(Value))
+        self._check_for_error(self._lib.CNData_Set_DiaStrand(Value))
 
     @property
     def GmrStrand(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_GmrStrand())
+        return self._check_for_error(self._lib.CNData_Get_GmrStrand())
 
     @GmrStrand.setter
     def GmrStrand(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_GmrStrand(Value))
+        self._check_for_error(self._lib.CNData_Set_GmrStrand(Value))
 
     @property
     def RStrand(self) -> float:
-        return self.CheckForError(self._lib.CNData_Get_RStrand())
+        return self._check_for_error(self._lib.CNData_Get_RStrand())
 
     @RStrand.setter
     def RStrand(self, Value: float):
-        self.CheckForError(self._lib.CNData_Set_RStrand(Value))
+        self._check_for_error(self._lib.CNData_Set_RStrand(Value))
 
 

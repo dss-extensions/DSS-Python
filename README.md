@@ -39,7 +39,7 @@ In general, the DLL from `dss_capi` provides more features than both the officia
 
 Besides most of the COM methods, some of the unique DDLL methods are also exposed in adapted forms, namely the methods from `DYMatrix.pas`, especially `GetCompressedYMatrix` (check the source files for more information).
 
-Since no GUI components are used in the FreePascal DLL, we map nearly all OpenDSS errors to Python exceptions, which seems a more natural way of working in Python. You can still manually trigger an error check by calling the function `CheckForError()` from the main module or manually checking the `DSS.Error` interface.
+Since no GUI components are used in the FreePascal DLL, we map nearly all OpenDSS errors to Python exceptions, which seems a more natural way of working in Python. You can still manually trigger an error check by calling the function `_check_for_error()` from the main class or manually checking the `DSS.Error` interface.
 
 ## Installing
 

@@ -28,11 +28,11 @@ class IVsources(Iterable):
 
         Original COM help: https://opendss.epri.com/AngleDeg1.html
         '''
-        return self.CheckForError(self._lib.Vsources_Get_AngleDeg())
+        return self._check_for_error(self._lib.Vsources_Get_AngleDeg())
 
     @AngleDeg.setter
     def AngleDeg(self, Value: float):
-        self.CheckForError(self._lib.Vsources_Set_AngleDeg(Value))
+        self._check_for_error(self._lib.Vsources_Set_AngleDeg(Value))
 
     @property
     def BasekV(self) -> float:
@@ -41,11 +41,11 @@ class IVsources(Iterable):
 
         Original COM help: https://opendss.epri.com/BasekV.html
         '''
-        return self.CheckForError(self._lib.Vsources_Get_BasekV())
+        return self._check_for_error(self._lib.Vsources_Get_BasekV())
 
     @BasekV.setter
     def BasekV(self, Value: float):
-        self.CheckForError(self._lib.Vsources_Set_BasekV(Value))
+        self._check_for_error(self._lib.Vsources_Set_BasekV(Value))
 
     @property
     def Frequency(self) -> float:
@@ -54,11 +54,11 @@ class IVsources(Iterable):
 
         Original COM help: https://opendss.epri.com/Frequency2.html
         '''
-        return self.CheckForError(self._lib.Vsources_Get_Frequency())
+        return self._check_for_error(self._lib.Vsources_Get_Frequency())
 
     @Frequency.setter
     def Frequency(self, Value: float):
-        self.CheckForError(self._lib.Vsources_Set_Frequency(Value))
+        self._check_for_error(self._lib.Vsources_Set_Frequency(Value))
 
     @property
     def Phases(self) -> int:
@@ -67,11 +67,11 @@ class IVsources(Iterable):
 
         Original COM help: https://opendss.epri.com/Phases3.html
         '''
-        return self.CheckForError(self._lib.Vsources_Get_Phases())
+        return self._check_for_error(self._lib.Vsources_Get_Phases())
 
     @Phases.setter
     def Phases(self, Value: int):
-        self.CheckForError(self._lib.Vsources_Set_Phases(Value))
+        self._check_for_error(self._lib.Vsources_Set_Phases(Value))
 
     @property
     def pu(self) -> float:
@@ -80,8 +80,8 @@ class IVsources(Iterable):
 
         Original COM help: https://opendss.epri.com/pu.html
         '''
-        return self.CheckForError(self._lib.Vsources_Get_pu())
+        return self._check_for_error(self._lib.Vsources_Get_pu())
 
     @pu.setter
     def pu(self, Value: float):
-        self.CheckForError(self._lib.Vsources_Set_pu(Value))
+        self._check_for_error(self._lib.Vsources_Set_pu(Value))

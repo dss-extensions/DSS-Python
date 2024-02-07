@@ -22,7 +22,7 @@ class IParallel(Base):
         '''
         Create a new actor, if there are still cores available.
         '''
-        self.CheckForError(self._lib.Parallel_CreateActor())
+        self._check_for_error(self._lib.Parallel_CreateActor())
 
     def Wait(self):
         '''
@@ -30,7 +30,7 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/Wait.html
         '''
-        self.CheckForError(self._lib.Parallel_Wait())
+        self._check_for_error(self._lib.Parallel_Wait())
 
     @property
     def ActiveActor(self) -> int:
@@ -39,11 +39,11 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/ActiveActor.html
         '''
-        return self.CheckForError(self._lib.Parallel_Get_ActiveActor())
+        return self._check_for_error(self._lib.Parallel_Get_ActiveActor())
 
     @ActiveActor.setter
     def ActiveActor(self, Value: int):
-        self.CheckForError(self._lib.Parallel_Set_ActiveActor(Value))
+        self._check_for_error(self._lib.Parallel_Set_ActiveActor(Value))
 
     @property
     def ActiveParallel(self) -> int:
@@ -53,11 +53,11 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/ActiveParallel.html
         '''
-        return self.CheckForError(self._lib.Parallel_Get_ActiveParallel())  #TODO: use boolean for consistency
+        return self._check_for_error(self._lib.Parallel_Get_ActiveParallel())  #TODO: use boolean for consistency
 
     @ActiveParallel.setter
     def ActiveParallel(self, Value: int):
-        self.CheckForError(self._lib.Parallel_Set_ActiveParallel(Value))
+        self._check_for_error(self._lib.Parallel_Set_ActiveParallel(Value))
 
     @property
     def ActorCPU(self) -> int:
@@ -66,11 +66,11 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/ActorCPU.html
         '''
-        return self.CheckForError(self._lib.Parallel_Get_ActorCPU())
+        return self._check_for_error(self._lib.Parallel_Get_ActorCPU())
 
     @ActorCPU.setter
     def ActorCPU(self, Value: int):
-        self.CheckForError(self._lib.Parallel_Set_ActorCPU(Value))
+        self._check_for_error(self._lib.Parallel_Set_ActorCPU(Value))
 
     @property
     def ActorProgress(self) -> Int32Array:
@@ -79,7 +79,7 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/ActorProgress.html
         '''
-        self.CheckForError(self._lib.Parallel_Get_ActorProgress_GR())
+        self._check_for_error(self._lib.Parallel_Get_ActorProgress_GR())
         return self._get_int32_gr_array()
 
     @property
@@ -89,7 +89,7 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/ActorStatus.html
         '''
-        self.CheckForError(self._lib.Parallel_Get_ActorStatus_GR())
+        self._check_for_error(self._lib.Parallel_Get_ActorStatus_GR())
         return self._get_int32_gr_array()
 
     @property
@@ -100,11 +100,11 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/ConcatenateReports.html
         '''
-        return self.CheckForError(self._lib.Parallel_Get_ConcatenateReports()) #TODO: use boolean for consistency
+        return self._check_for_error(self._lib.Parallel_Get_ConcatenateReports()) #TODO: use boolean for consistency
 
     @ConcatenateReports.setter
     def ConcatenateReports(self, Value: int):
-        self.CheckForError(self._lib.Parallel_Set_ConcatenateReports(Value))
+        self._check_for_error(self._lib.Parallel_Set_ConcatenateReports(Value))
 
     @property
     def NumCPUs(self) -> int:
@@ -113,7 +113,7 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/NumCPUs.html
         '''
-        return self.CheckForError(self._lib.Parallel_Get_NumCPUs())
+        return self._check_for_error(self._lib.Parallel_Get_NumCPUs())
 
     @property
     def NumCores(self) -> int:
@@ -122,7 +122,7 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/NumCores.html
         '''
-        return self.CheckForError(self._lib.Parallel_Get_NumCores())
+        return self._check_for_error(self._lib.Parallel_Get_NumCores())
 
     @property
     def NumOfActors(self) -> int:
@@ -131,6 +131,6 @@ class IParallel(Base):
 
         Original COM help: https://opendss.epri.com/NumOfActors.html
         '''
-        return self.CheckForError(self._lib.Parallel_Get_NumOfActors())
+        return self._check_for_error(self._lib.Parallel_Get_NumOfActors())
 
 

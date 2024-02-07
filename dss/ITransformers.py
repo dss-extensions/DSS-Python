@@ -47,11 +47,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/IsDelta3.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_IsDelta()) != 0
+        return self._check_for_error(self._lib.Transformers_Get_IsDelta()) != 0
 
     @IsDelta.setter
     def IsDelta(self, Value: bool):
-        self.CheckForError(self._lib.Transformers_Set_IsDelta(Value))
+        self._check_for_error(self._lib.Transformers_Set_IsDelta(Value))
 
     @property
     def MaxTap(self) -> float:
@@ -60,11 +60,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/MaxTap.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_MaxTap())
+        return self._check_for_error(self._lib.Transformers_Get_MaxTap())
 
     @MaxTap.setter
     def MaxTap(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_MaxTap(Value))
+        self._check_for_error(self._lib.Transformers_Set_MaxTap(Value))
 
     @property
     def MinTap(self) -> float:
@@ -73,11 +73,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/MinTap.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_MinTap())
+        return self._check_for_error(self._lib.Transformers_Get_MinTap())
 
     @MinTap.setter
     def MinTap(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_MinTap(Value))
+        self._check_for_error(self._lib.Transformers_Set_MinTap(Value))
 
     @property
     def NumTaps(self) -> int:
@@ -86,11 +86,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/NumTaps.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_NumTaps())
+        return self._check_for_error(self._lib.Transformers_Get_NumTaps())
 
     @NumTaps.setter
     def NumTaps(self, Value: int):
-        self.CheckForError(self._lib.Transformers_Set_NumTaps(Value))
+        self._check_for_error(self._lib.Transformers_Set_NumTaps(Value))
 
     @property
     def NumWindings(self) -> int:
@@ -99,11 +99,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/NumWindings.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_NumWindings())
+        return self._check_for_error(self._lib.Transformers_Get_NumWindings())
 
     @NumWindings.setter
     def NumWindings(self, Value: int):
-        self.CheckForError(self._lib.Transformers_Set_NumWindings(Value))
+        self._check_for_error(self._lib.Transformers_Set_NumWindings(Value))
 
     @property
     def R(self) -> float:
@@ -112,11 +112,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/R.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_R())
+        return self._check_for_error(self._lib.Transformers_Get_R())
 
     @R.setter
     def R(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_R(Value))
+        self._check_for_error(self._lib.Transformers_Set_R(Value))
 
     @property
     def Rneut(self) -> float:
@@ -125,11 +125,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/Rneut1.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_Rneut())
+        return self._check_for_error(self._lib.Transformers_Get_Rneut())
 
     @Rneut.setter
     def Rneut(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_Rneut(Value))
+        self._check_for_error(self._lib.Transformers_Set_Rneut(Value))
 
     @property
     def Tap(self) -> float:
@@ -138,11 +138,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/Tap.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_Tap())
+        return self._check_for_error(self._lib.Transformers_Get_Tap())
 
     @Tap.setter
     def Tap(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_Tap(Value))
+        self._check_for_error(self._lib.Transformers_Set_Tap(Value))
 
     @property
     def Wdg(self) -> int:
@@ -151,11 +151,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/Wdg.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_Wdg())
+        return self._check_for_error(self._lib.Transformers_Get_Wdg())
 
     @Wdg.setter
     def Wdg(self, Value: int):
-        self.CheckForError(self._lib.Transformers_Set_Wdg(Value))
+        self._check_for_error(self._lib.Transformers_Set_Wdg(Value))
 
     @property
     def XfmrCode(self) -> str:
@@ -164,14 +164,14 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/XfmrCode1.html
         '''
-        return self._get_string(self.CheckForError(self._lib.Transformers_Get_XfmrCode()))
+        return self._get_string(self._check_for_error(self._lib.Transformers_Get_XfmrCode()))
 
     @XfmrCode.setter
     def XfmrCode(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.Transformers_Set_XfmrCode(Value))
+        self._check_for_error(self._lib.Transformers_Set_XfmrCode(Value))
 
     @property
     def Xhl(self) -> float:
@@ -180,11 +180,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/Xhl.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_Xhl())
+        return self._check_for_error(self._lib.Transformers_Get_Xhl())
 
     @Xhl.setter
     def Xhl(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_Xhl(Value))
+        self._check_for_error(self._lib.Transformers_Set_Xhl(Value))
 
     @property
     def Xht(self) -> float:
@@ -193,11 +193,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/Xht.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_Xht())
+        return self._check_for_error(self._lib.Transformers_Get_Xht())
 
     @Xht.setter
     def Xht(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_Xht(Value))
+        self._check_for_error(self._lib.Transformers_Set_Xht(Value))
 
     @property
     def Xlt(self) -> float:
@@ -206,11 +206,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/Xlt.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_Xlt())
+        return self._check_for_error(self._lib.Transformers_Get_Xlt())
 
     @Xlt.setter
     def Xlt(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_Xlt(Value))
+        self._check_for_error(self._lib.Transformers_Set_Xlt(Value))
 
     @property
     def Xneut(self) -> float:
@@ -219,11 +219,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/Xneut1.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_Xneut())
+        return self._check_for_error(self._lib.Transformers_Get_Xneut())
 
     @Xneut.setter
     def Xneut(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_Xneut(Value))
+        self._check_for_error(self._lib.Transformers_Set_Xneut(Value))
 
     @property
     def kV(self) -> float:
@@ -232,11 +232,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/kV3.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_kV())
+        return self._check_for_error(self._lib.Transformers_Get_kV())
 
     @kV.setter
     def kV(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_kV(Value))
+        self._check_for_error(self._lib.Transformers_Set_kV(Value))
 
     @property
     def kVA(self) -> float:
@@ -245,11 +245,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/kva1.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_kVA())
+        return self._check_for_error(self._lib.Transformers_Get_kVA())
 
     @kVA.setter
     def kVA(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_kVA(Value))
+        self._check_for_error(self._lib.Transformers_Set_kVA(Value))
 
     kva = kVA
 
@@ -263,7 +263,7 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/WdgVoltages.html
         '''
-        self.CheckForError(self._lib.Transformers_Get_WdgVoltages_GR())
+        self._check_for_error(self._lib.Transformers_Get_WdgVoltages_GR())
         return self._get_complex128_gr_array()
 
     @property
@@ -276,7 +276,7 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/WdgCurrents.html
         '''
-        self.CheckForError(self._lib.Transformers_Get_WdgCurrents_GR())
+        self._check_for_error(self._lib.Transformers_Get_WdgCurrents_GR())
         return self._get_complex128_gr_array()
 
     @property
@@ -287,7 +287,7 @@ class ITransformers(Iterable):
         WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
         in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
         '''
-        return self._get_string(self.CheckForError(self._lib.Transformers_Get_strWdgCurrents()))
+        return self._get_string(self._check_for_error(self._lib.Transformers_Get_strWdgCurrents()))
 
     @property
     def CoreType(self) -> TransformerCoreType:
@@ -296,11 +296,11 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/CoreType.html
         '''
-        return TransformerCoreType(self.CheckForError(self._lib.Transformers_Get_CoreType()))
+        return TransformerCoreType(self._check_for_error(self._lib.Transformers_Get_CoreType()))
 
     @CoreType.setter
     def CoreType(self, Value: Union[int, TransformerCoreType]):
-        self.CheckForError(self._lib.Transformers_Set_CoreType(Value))
+        self._check_for_error(self._lib.Transformers_Set_CoreType(Value))
 
     @property
     def RdcOhms(self) -> float:
@@ -309,20 +309,20 @@ class ITransformers(Iterable):
 
         Original COM help: https://opendss.epri.com/RdcOhms.html
         '''
-        return self.CheckForError(self._lib.Transformers_Get_RdcOhms())
+        return self._check_for_error(self._lib.Transformers_Get_RdcOhms())
 
     @RdcOhms.setter
     def RdcOhms(self, Value: float):
-        self.CheckForError(self._lib.Transformers_Set_RdcOhms(Value))
+        self._check_for_error(self._lib.Transformers_Set_RdcOhms(Value))
 
     @property
     def LossesByType(self) -> Float64ArrayOrComplexArray:
         '''
         Complex array with the losses by type (total losses, load losses, no-load losses), in VA
         
-        (API Extension)
+        **(API Extension)**
         '''
-        self.CheckForError(self._lib.Transformers_Get_LossesByType_GR())
+        self._check_for_error(self._lib.Transformers_Get_LossesByType_GR())
         return self._get_complex128_gr_array()
 
     @property
@@ -330,7 +330,7 @@ class ITransformers(Iterable):
         '''
         Complex array with the losses by type (total losses, load losses, no-load losses), in VA, concatenated for ALL transformers
         
-        (API Extension)
+        **(API Extension)**
         '''
-        self.CheckForError(self._lib.Transformers_Get_AllLossesByType_GR())
+        self._check_for_error(self._lib.Transformers_Get_AllLossesByType_GR())
         return self._get_complex128_gr_array()

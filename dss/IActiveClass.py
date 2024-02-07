@@ -26,7 +26,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/ActiveClassName.html
         '''
-        return self._get_string(self.CheckForError(self._lib.ActiveClass_Get_ActiveClassName()))
+        return self._get_string(self._check_for_error(self._lib.ActiveClass_Get_ActiveClassName()))
 
     @property
     def AllNames(self) -> List[str]:
@@ -35,7 +35,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/AllNames.html
         '''
-        return self.CheckForError(self._get_string_array(self._lib.ActiveClass_Get_AllNames))
+        return self._check_for_error(self._get_string_array(self._lib.ActiveClass_Get_AllNames))
 
     @property
     def Count(self) -> int:
@@ -44,10 +44,10 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/Count.html
         '''
-        return self.CheckForError(self._lib.ActiveClass_Get_Count())
+        return self._check_for_error(self._lib.ActiveClass_Get_Count())
 
     def __len__(self) -> int:
-        return self.CheckForError(self._lib.ActiveClass_Get_Count())
+        return self._check_for_error(self._lib.ActiveClass_Get_Count())
 
     def __iter__(self):
         n = self.First
@@ -65,7 +65,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/First.html
         '''
-        return self.CheckForError(self._lib.ActiveClass_Get_First())
+        return self._check_for_error(self._lib.ActiveClass_Get_First())
 
     @property
     def Name(self) -> str:
@@ -74,14 +74,14 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/Name.html
         '''
-        return self._get_string(self.CheckForError(self._lib.ActiveClass_Get_Name()))
+        return self._get_string(self._check_for_error(self._lib.ActiveClass_Get_Name()))
 
     @Name.setter
     def Name(self, Value: AnyStr):
         if type(Value) is not bytes:
             Value = Value.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.ActiveClass_Set_Name(Value))
+        self._check_for_error(self._lib.ActiveClass_Set_Name(Value))
 
     @property
     def Next(self) -> int:
@@ -93,7 +93,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/Next.html
         '''
-        return self.CheckForError(self._lib.ActiveClass_Get_Next())
+        return self._check_for_error(self._lib.ActiveClass_Get_Next())
 
     @property
     def NumElements(self) -> int:
@@ -102,7 +102,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/NumElements.html
         '''
-        return self.CheckForError(self._lib.ActiveClass_Get_NumElements())
+        return self._check_for_error(self._lib.ActiveClass_Get_NumElements())
 
     @property
     def ActiveClassParent(self) -> str:
@@ -111,7 +111,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/ActiveClassParent.html
         '''
-        return self._get_string(self.CheckForError(self._lib.ActiveClass_Get_ActiveClassParent()))
+        return self._get_string(self._check_for_error(self._lib.ActiveClass_Get_ActiveClassParent()))
 
     def ToJSON(self, options: DSSJSONFlags = 0) -> str:
         '''
@@ -122,6 +122,6 @@ class IActiveClass(Base):
         
         Additionally, the `ExcludeDisabled` flag can be used to excluded disabled elements from the output.
 
-        (API Extension)
+        **(API Extension)**
         '''
-        return self._get_string(self.CheckForError(self._lib.ActiveClass_ToJSON(options)))
+        return self._get_string(self._check_for_error(self._lib.ActiveClass_ToJSON(options)))

@@ -18,20 +18,20 @@ class IZIP(Base):
         Besides that, the full filenames inside the ZIP must be shorter than 256 characters.
         The limitations should be removed in a future revision.
         
-        (API Extension)
+        **(API Extension)**
         '''
         if type(FileName) is not bytes:
             FileName = FileName.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.ZIP_Open(FileName))
+        self._check_for_error(self._lib.ZIP_Open(FileName))
 
     def Close(self):
         '''
         Closes the current open ZIP file
         
-        (API Extension)
+        **(API Extension)**
         '''
-        self.CheckForError(self._lib.ZIP_Close())
+        self._check_for_error(self._lib.ZIP_Close())
 
     def Redirect(self, FileInZip: AnyStr):
         '''
@@ -40,25 +40,25 @@ class IZIP(Base):
         be present inside the ZIP, using relative paths. The only exceptions are
         memory-mapped files.
 
-        (API Extension)
+        **(API Extension)**
         '''
         if type(FileInZip) is not bytes:
             FileInZip = FileInZip.encode(self._api_util.codec)
 
-        self.CheckForError(self._lib.ZIP_Redirect(FileInZip))
+        self._check_for_error(self._lib.ZIP_Redirect(FileInZip))
 
     def Extract(self, FileName: AnyStr) -> bytes:
         '''
         Extracts the contents of the file "FileName" from the current (open) ZIP file.
         Returns a byte-string.
 
-        (API Extension)
+        **(API Extension)**
         '''
         api_util = self._api_util
         if type(FileName) is not bytes:
             FileName = FileName.encode(api_util.codec)
 
-        self.CheckForError(self._lib.ZIP_Extract_GR(FileName))
+        self._check_for_error(self._lib.ZIP_Extract_GR(FileName))
         ptr, cnt = api_util.gr_int8_pointers
         return bytes(api_util.ffi.buffer(ptr[0], cnt[0]))
 
@@ -70,7 +70,7 @@ class IZIP(Base):
         See https://regex.sorokin.engineer/en/latest/regular_expressions.html for information on 
         the expression syntax and options.
 
-        (API Extension)
+        **(API Extension)**
         '''
         if regexp is None or not regexp:
             regexp = self._api_util.ffi.NULL
@@ -78,18 +78,18 @@ class IZIP(Base):
             if type(regexp) is not bytes:
                 regexp = regexp.encode(self._api_util.codec)
         
-        return self.CheckForError(self._get_string_array(self._lib.ZIP_List, regexp))
+        return self._check_for_error(self._get_string_array(self._lib.ZIP_List, regexp))
 
     def Contains(self, Name: AnyStr) -> bool:
         '''
         Check if the given path name is present in the current ZIP file.
         
-        (API Extension)
+        **(API Extension)**
         '''
         if type(Name) is not bytes:
             Name = Name.encode(self._api_util.codec)
 
-        return self.CheckForError(self._lib.ZIP_Contains(Name)) != 0
+        return self._check_for_error(self._lib.ZIP_Contains(Name)) != 0
 
     def __getitem__(self, FileName) -> bytes:
         return self.Extract(FileName)
