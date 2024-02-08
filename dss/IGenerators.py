@@ -199,7 +199,7 @@ class IGenerators(Iterable):
 
     @daily.setter
     def daily(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Generators_Set_daily(Value))
@@ -215,7 +215,7 @@ class IGenerators(Iterable):
 
     @duty.setter
     def duty(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Generators_Set_duty(Value))
@@ -231,7 +231,7 @@ class IGenerators(Iterable):
 
     @Yearly.setter
     def Yearly(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Generators_Set_Yearly(Value))
@@ -301,7 +301,7 @@ class IGenerators(Iterable):
 
     @Bus1.setter
     def Bus1(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Generators_Set_Bus1(Value))

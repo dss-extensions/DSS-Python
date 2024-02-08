@@ -22,7 +22,7 @@ class IText(Base):
 
     @Command.setter
     def Command(self, Value: str):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Text_Set_Command(Value))
@@ -46,7 +46,7 @@ class IText(Base):
         **(API Extension)**
         '''
         if isinstance(Value, str) or isinstance(Value, bytes):
-            if type(Value) is not bytes:
+            if not isinstance(Value, bytes):
                 Value = Value.encode(self._api_util.codec)
             
             self._check_for_error(self._lib.Text_CommandBlock(Value))

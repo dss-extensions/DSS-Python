@@ -116,7 +116,7 @@ class IReactors(Iterable):
 
     @Bus1.setter
     def Bus1(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Reactors_Set_Bus1(Value))
@@ -131,7 +131,7 @@ class IReactors(Iterable):
 
     @Bus2.setter
     def Bus2(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Reactors_Set_Bus2(Value))
@@ -143,7 +143,7 @@ class IReactors(Iterable):
 
     @LCurve.setter
     def LCurve(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Reactors_Set_LCurve(Value))
@@ -155,7 +155,7 @@ class IReactors(Iterable):
 
     @RCurve.setter
     def RCurve(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Reactors_Set_RCurve(Value))

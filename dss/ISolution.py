@@ -202,7 +202,7 @@ class ISolution(Base):
 
     @DefaultDaily.setter
     def DefaultDaily(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Solution_Set_DefaultDaily(Value))
@@ -218,7 +218,7 @@ class ISolution(Base):
 
     @DefaultYearly.setter
     def DefaultYearly(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Solution_Set_DefaultYearly(Value))
@@ -328,7 +328,7 @@ class ISolution(Base):
 
     @LDCurve.setter
     def LDCurve(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Solution_Set_LDCurve(Value))

@@ -424,7 +424,7 @@ class IBus(Base):
             # bus index is zero based, pass it directly
             self._check_for_error(self._lib.Circuit_SetActiveBusi(index))
         else:
-            if type(index) is not bytes:
+            if not isinstance(index, bytes):
                 index = index.encode(self._api_util.codec)
 
             self._check_for_error(self._lib.Circuit_SetActiveBus(index))

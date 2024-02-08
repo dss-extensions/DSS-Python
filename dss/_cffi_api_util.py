@@ -880,7 +880,7 @@ class CffiApiUtil(object):
         codec = self.codec
         for v in value:
             if v is not None:
-                if type(v) is not bytes:
+                if not isinstance(v, bytes):
                     v = v.encode(codec)
                     value_enc.append(v)
 
@@ -966,7 +966,7 @@ class Iterable(Base):
 
     @Name.setter
     def Name(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._check_for_error(self._Set_Name(Value)))

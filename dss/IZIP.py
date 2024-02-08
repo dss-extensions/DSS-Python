@@ -20,7 +20,7 @@ class IZIP(Base):
         
         **(API Extension)**
         '''
-        if type(FileName) is not bytes:
+        if not isinstance(FileName, bytes):
             FileName = FileName.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.ZIP_Open(FileName))
@@ -42,7 +42,7 @@ class IZIP(Base):
 
         **(API Extension)**
         '''
-        if type(FileInZip) is not bytes:
+        if not isinstance(FileInZip, bytes):
             FileInZip = FileInZip.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.ZIP_Redirect(FileInZip))
@@ -55,7 +55,7 @@ class IZIP(Base):
         **(API Extension)**
         '''
         api_util = self._api_util
-        if type(FileName) is not bytes:
+        if not isinstance(FileName, bytes):
             FileName = FileName.encode(api_util.codec)
 
         self._check_for_error(self._lib.ZIP_Extract_GR(FileName))
@@ -75,7 +75,7 @@ class IZIP(Base):
         if regexp is None or not regexp:
             regexp = self._api_util.ffi.NULL
         else:
-            if type(regexp) is not bytes:
+            if not isinstance(regexp, bytes):
                 regexp = regexp.encode(self._api_util.codec)
         
         return self._check_for_error(self._get_string_array(self._lib.ZIP_List, regexp))
@@ -86,7 +86,7 @@ class IZIP(Base):
         
         **(API Extension)**
         '''
-        if type(Name) is not bytes:
+        if not isinstance(Name, bytes):
             Name = Name.encode(self._api_util.codec)
 
         return self._check_for_error(self._lib.ZIP_Contains(Name)) != 0

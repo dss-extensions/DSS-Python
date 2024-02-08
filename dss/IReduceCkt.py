@@ -48,7 +48,7 @@ class IReduceCkt(Base):
         
     @EditString.setter
     def EditString(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
     
         self._check_for_error(self._lib.ReduceCkt_Set_EditString(Value))
@@ -64,7 +64,7 @@ class IReduceCkt(Base):
         
     @StartPDElement.setter
     def StartPDElement(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
             
         self._check_for_error(self._lib.ReduceCkt_Set_StartPDElement(Value))
@@ -80,7 +80,7 @@ class IReduceCkt(Base):
     
     @EnergyMeter.setter
     def EnergyMeter(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
     
         self._check_for_error(self._lib.ReduceCkt_Set_EnergyMeter(Value))
@@ -90,7 +90,7 @@ class IReduceCkt(Base):
         Save present (reduced) circuit
         Filename is listed in the Text Result interface
         '''
-        if type(CktName) is not bytes:
+        if not isinstance(CktName, bytes):
             CktName = CktName.encode(self._api_util.codec)
         
         self._check_for_error(self._lib.ReduceCkt_SaveCircuit(CktName))

@@ -47,7 +47,7 @@ class IDSSProperty(Base):
 
     @Val.setter
     def Val(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = str(Value).encode(self._api_util.codec)
 
         self._check_for_error(self._lib.DSSProperty_Set_Val(Value))
@@ -56,7 +56,7 @@ class IDSSProperty(Base):
         if isinstance(propname_index, int):
             self._check_for_error(self._lib.DSSProperty_Set_Index(propname_index))
         else:
-            if type(propname_index) is not bytes:
+            if not isinstance(propname_index, bytes):
                 propname_index = propname_index.encode(self._api_util.codec)
 
             self._check_for_error(self._lib.DSSProperty_Set_Name(propname_index))

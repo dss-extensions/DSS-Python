@@ -130,7 +130,7 @@ class IPVSystems(Iterable):
 
     @daily.setter
     def daily(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.PVSystems_Set_daily(Value))
@@ -148,7 +148,7 @@ class IPVSystems(Iterable):
 
     @duty.setter
     def duty(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.PVSystems_Set_duty(Value))
@@ -167,7 +167,7 @@ class IPVSystems(Iterable):
 
     @yearly.setter
     def yearly(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.PVSystems_Set_yearly(Value))
@@ -186,7 +186,7 @@ class IPVSystems(Iterable):
 
     @Tdaily.setter
     def Tdaily(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.PVSystems_Set_Tdaily(Value))
@@ -208,7 +208,7 @@ class IPVSystems(Iterable):
 
     @Tduty.setter
     def Tduty(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.PVSystems_Set_Tduty(Value))
@@ -228,7 +228,7 @@ class IPVSystems(Iterable):
 
     @Tyearly.setter
     def Tyearly(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.PVSystems_Set_Tyearly(Value))

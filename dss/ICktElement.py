@@ -83,7 +83,7 @@ class ICktElement(Base):
 
         Original COM help: https://opendss.epri.com/Variable.html
         '''
-        if type(MyVarName) is not bytes:
+        if not isinstance(MyVarName, bytes):
             MyVarName = MyVarName.encode(self._api_util.codec)
 
         Code = self._api_util.ffi.new('int32_t*')
@@ -228,7 +228,7 @@ class ICktElement(Base):
 
     @DisplayName.setter
     def DisplayName(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.CktElement_Set_DisplayName(Value))
@@ -549,7 +549,7 @@ class ICktElement(Base):
             # index is zero based, pass it directly
             self._check_for_error(self._lib.Circuit_SetCktElementIndex(index))
         else:
-            if type(index) is not bytes:
+            if not isinstance(index, bytes):
                 index = index.encode(self._api_util.codec)
 
             self._check_for_error(self._lib.Circuit_SetCktElementName(index))

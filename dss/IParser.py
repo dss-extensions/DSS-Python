@@ -63,7 +63,7 @@ class IParser(Base):
 
     @BeginQuote.setter
     def BeginQuote(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Parser_Set_BeginQuote(Value))
@@ -79,7 +79,7 @@ class IParser(Base):
 
     @CmdString.setter
     def CmdString(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Parser_Set_CmdString(Value))
@@ -104,7 +104,7 @@ class IParser(Base):
 
     @Delimiters.setter
     def Delimiters(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Parser_Set_Delimiters(Value))
@@ -120,7 +120,7 @@ class IParser(Base):
 
     @EndQuote.setter
     def EndQuote(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Parser_Set_EndQuote(Value))
@@ -163,7 +163,7 @@ class IParser(Base):
 
     @WhiteSpace.setter
     def WhiteSpace(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Parser_Set_WhiteSpace(Value))

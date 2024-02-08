@@ -88,7 +88,7 @@ class ITopology(Base):
 
     @BranchName.setter
     def BranchName(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Topology_Set_BranchName(Value))
@@ -104,7 +104,7 @@ class ITopology(Base):
 
     @BusName.setter
     def BusName(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Topology_Set_BusName(Value))

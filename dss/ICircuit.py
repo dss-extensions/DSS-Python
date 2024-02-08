@@ -251,7 +251,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/Disable.html
         '''
-        if type(Name) is not bytes:
+        if not isinstance(Name, bytes):
             Name = Name.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Circuit_Disable(Name))
@@ -262,7 +262,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/Enable.html
         '''
-        if type(Name) is not bytes:
+        if not isinstance(Name, bytes):
             Name = Name.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Circuit_Enable(Name))
@@ -373,7 +373,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/SetActiveBus.html
         '''
-        if type(BusName) is not bytes:
+        if not isinstance(BusName, bytes):
             BusName = BusName.encode(self._api_util.codec)
 
         return self._check_for_error(self._lib.Circuit_SetActiveBus(BusName))
@@ -397,7 +397,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/SetActiveClass.html
         '''
-        if type(ClassName) is not bytes:
+        if not isinstance(ClassName, bytes):
             ClassName = ClassName.encode(self._api_util.codec)
 
         return self._check_for_error(self._lib.Circuit_SetActiveClass(ClassName))
@@ -410,7 +410,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/SetActiveElement.html
         '''
-        if type(FullName) is not bytes:
+        if not isinstance(FullName, bytes):
             FullName = FullName.encode(self._api_util.codec)
 
         return self._check_for_error(self._lib.Circuit_SetActiveElement(FullName))

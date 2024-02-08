@@ -29,7 +29,7 @@ class ILoadShapes(Iterable):
 
     def New(self, Name: AnyStr):
         '''Create a new LoadShape, with default parameters'''
-        if type(Name) is not bytes:
+        if not isinstance(Name, bytes):
             Name = Name.encode(self._api_util.codec)
 
         return self._check_for_error(self._lib.LoadShapes_New(Name))

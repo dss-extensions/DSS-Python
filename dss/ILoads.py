@@ -79,7 +79,7 @@ class ILoads(Iterable):
 
     @CVRcurve.setter
     def CVRcurve(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Loads_Set_CVRcurve(Value))
@@ -147,7 +147,7 @@ class ILoads(Iterable):
 
     @Growth.setter
     def Growth(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Loads_Set_Growth(Value))
@@ -267,7 +267,7 @@ class ILoads(Iterable):
 
     @Spectrum.setter
     def Spectrum(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Loads_Set_Spectrum(Value))
@@ -361,7 +361,7 @@ class ILoads(Iterable):
 
     @Yearly.setter
     def Yearly(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Loads_Set_Yearly(Value))
@@ -392,7 +392,7 @@ class ILoads(Iterable):
 
     @daily.setter
     def daily(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Loads_Set_daily(Value))
@@ -408,7 +408,7 @@ class ILoads(Iterable):
 
     @duty.setter
     def duty(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Loads_Set_duty(Value))

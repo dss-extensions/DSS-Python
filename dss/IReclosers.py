@@ -74,7 +74,7 @@ class IReclosers(Iterable):
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Reclosers_Set_MonitoredObj(Value))
@@ -165,7 +165,7 @@ class IReclosers(Iterable):
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.Reclosers_Set_SwitchedObj(Value))

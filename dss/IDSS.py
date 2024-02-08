@@ -206,7 +206,7 @@ class IDSS(Base):
         self._check_for_error(self._lib.DSS_Reset())
 
     def SetActiveClass(self, ClassName: AnyStr) -> int:
-        if type(ClassName) is not bytes:
+        if not isinstance(ClassName, bytes):
             ClassName = ClassName.encode(self._api_util.codec)
 
         return self._check_for_error(self._lib.DSS_SetActiveClass(ClassName))
@@ -246,7 +246,7 @@ class IDSS(Base):
 
     @DataPath.setter
     def DataPath(self, Value: AnyStr):
-        if type(Value) is not bytes:
+        if not isinstance(Value, bytes):
             Value = Value.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.DSS_Set_DataPath(Value))
@@ -349,7 +349,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/NewCircuit.html
         '''
-        if type(name) is not bytes:
+        if not isinstance(name, bytes):
             name = name.encode(self._api_util.codec)
 
         self._check_for_error(self._lib.DSS_NewCircuit(name))
