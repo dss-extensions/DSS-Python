@@ -46,16 +46,16 @@ Since no GUI components are used in the FreePascal DLL, we map nearly all OpenDS
 On all major platforms, you can install directly from pip:
 
 ```
-    pip install dss_python
+    pip install dss-python
 ```
 
-Or, if you're using the Anaconda distribution, you can try:
+For a full experience, install the optional dependencies with:
 
 ```
-    conda install -c dss-extensions dss_python
+    pip install dss-python[all]
 ```
 
-Binary wheels are provided for all major platforms (Windows, Linux and MacOS) and many combinations of Python versions (3.5 to 3.10). If you have issues with a specific version, please open an issue about it. Conda packages support at least Python 3.7 to 3.10 (varying according to the release).
+Binary wheels are provided for all major platforms (Windows, Linux and MacOS) and many combinations of Python versions (3.7 to 3.12). If you have issues with a specific version, please open an issue about it.
 
 After a successful installation, you can then import the `dss` module from your Python interpreter.
 
@@ -88,10 +88,15 @@ cd ../dss_python
 python -m pip install .
 ```
 
-~~If you are familiar with `conda-build`, there is a complete recipe to build DSS C-API, KLUSolve(X) and DSS-Python in the `conda` subfolder.~~ (outdated)
 
-Example usage
-=============
+## Documentation
+
+The compiled documentation is hosted at https://dss-extensions.org/dss_python
+
+## Example usage
+
+**Check the documentation for more details.**
+
 
 If you were using `win32com` in code like:
 
@@ -112,7 +117,7 @@ you can replace that fragment with:
 from dss import DSS as dss_engine
 ```
 
-If you need the mixed-cased handling (that is, you were not using early bindings with win32com), add a call to `dss.set_case_insensitive_attributes()`.
+If you need support for arbitrary capitalization (that is, you were not using early bindings with win32com), add a call to `dss.set_case_insensitive_attributes()`.
 
 Assuming you have a DSS script named `master.dss`, you should be able to run it as shown below:
 
@@ -127,32 +132,32 @@ for i in range(len(voltages) // 2):
     print('node %d: %f + j%f' % (i, voltages[2*i], voltages[2*i + 1]))
 ```
 
-Testing
-=======
+## Testing
+
 Since the DLL is built using the Free Pascal compiler, which is not officially supported by EPRI, the results are validated running sample networks provided in the official OpenDSS distribution. The only modifications are done directly by the script, removing interactive features and some other minor issues. Most of the sample files from the official OpenDSS repository are used for validation.
 
 The validation scripts is `tests/validation.py` and requires the same folder structure as the building process. You need `win32com` to run it on Windows.
 
 As of version 0.11, the full validation suite can be run on the three supported platforms. This is possible by saving the official COM DLL output and loading it on macOS and Linux. We hope to fully automate this validation in the future.
 
-Roadmap: docs and interactive features
-======================================
+## Roadmap: docs and interactive features
+
 Besides bug fixes, the main functionality of this library is mostly done. Notable desirable features that may be implemented are:
 
-- More and better documentation. Initial reference at [https://dss-extensions.org/dss_python/](https://dss-extensions.org/dss_python/), watch also https://github.com/dss-extensions/dss-extensions for more.
-- Reports integrated in Python and interactive features on plots. Since most of the plot types from the official OpenDSS are optionally available in DSS-Python 0.14.2, advanced integration and interactive features are planned for a future feature.
+- More examples, especially for the extra features. There is a growing documentation hosted at [https://dss-extensions.org/dss_python/](https://dss-extensions.org/dss_python/); watch also https://github.com/dss-extensions/dss-extensions for more.
+- Reports integrated in Python and interactive features on plots. Since most of the plot types from the official OpenDSS are optionally available since DSS-Python 0.14.2, advanced integration and interactive features are planned for a future feature.
 
 Expect news about these items by version 1.0. 
 
-While the base library (DSS C-API) will go through some API changes before v1.0, those do not affect usage from the Python side.
+While the base library (AltDSS/DSS C-API) will go through some API changes before v1.0, those do not affect usage from the Python side.
 
-Questions?
-==========
+## Questions?
+
 If you have any question, feel free to open a ticket on GitHub (here or at https://github.com/dss-extensions/dss-extensions), or contact directly me through email (pmeira at ieee.org). Please allow me a few days to respond.
 
 
-Credits / Acknowledgment
-========================
+## Credits / Acknowledgments
+
 DSS-Python is based on EPRI's OpenDSS via the [`dss_capi`](http://github.com/dss-extensions/dss_capi/) project, so check its licensing information too.
 
 This project is licensed under the (new) BSD, available in the `LICENSE` file. It's the same license OpenDSS uses (`OPENDSS_LICENSE`). OpenDSS itself uses KLUSolve and SuiteSparse, licensed under the GNU LGPL 2.1.

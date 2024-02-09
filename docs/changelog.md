@@ -3,22 +3,45 @@
 Remember that changes in our alternative OpenDSS engine, currently known as DSS C-API, are always
 relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_capi/) for more information.
 
-## 0.14.x
+## 0.15.x
 
-### 0.14.4 (WIP)
+### 0.15.0
+
+Released on 2024-02-09.
+
+- Upgrade the backend to [**DSS C-API 0.14.0**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.0). **A lot** of changes there, please check the changelog. Includes many small bugfixes, improvements, and ports of a few changes from the official OpenDSS codebase, matching OpenDSS v9.8.0.1.
 
 - Enums:
     - Move to DSS-Python-Backend to allow easier sharing among all Python packages from DSS-Extensions.
     - Convert enum comments to docstrings for better user experience.
     - New `DSSCompatFlags.ActiveLine`.
-    - New `DSSJSONFlags.SkipTimestamp` and `DSSJSONFlags.SkipBuses`
+    - New `DSSJSONFlags.SkipTimestamp`, `DSSJSONFlags.SkipBuses`, `DSSJSONFlags.IncludeDefaultObjs`.
     - New `DSSSaveFlags` (used in the new function `Circuit.Save`)
     - New `EnergyMeterRegisters` and `GeneratorRegisters` to simplify handling register indexes from EnergyMeters (`EnergyMeterRegisters`), Generators, PVSystems, and Storage objects (these last three use `GeneratorRegisters`).
-
-- Implement the DSSEvents interface. Note that this is not a popular interface and we haven't seen it used in Python with COM yet. OpenDSS comes with a couple of examples using VBA in Excel though.
-- Drop `CheckForError()`; use `_check_for_error()` instead (same function, but the latter doesn't pollute the public scope).
+    - Use enums in a few more methods.
 
 - Packaging: Migrate build system to `pyproject.toml` and Hatch.
+- Implement the DSSEvents interface. Note that this is not a popular interface and we haven't seen it used in Python with COM yet. OpenDSS comes with a couple of examples using VBA in Excel though.
+- Drop `CheckForError()`; use `_check_for_error()` instead (same function, but the latter doesn't pollute the public scope).
+- Expose `Circuit.Save()` function
+- Expose `Circuit.FromJSON()` function
+- Move `DSS.Obj` to the new [AltDSS-Python package](https://github.com/dss-extensions/AltDSS-Python) (`pip install altdss`, `from altdss import altdss`).
+    - **Breaking change**: the main object classes previously used indices starting at 1, but it seemed unnatural in Python and when used with the rest of the API, so they now behave as normal batches and start at 0. Affects both the `find()` method and the brackets (e.g. `altdss.Load[0]`) syntax.
+    - **Lots** of new features.
+- Use weakrefs to avoid accidentally extending the lifetime of DSSContexts.
+- Update documentation framework (Sphinx) to use Markdown, based on MyST and autodoc2.
+
+## 0.14.x
+
+### 0.14.4
+
+Released on 2023-06-27.
+
+- Upgrade the backend to [**DSS C-API 0.13.4**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.4). Includes a bugfix to CapControl, some more error handling, DSSEvents backend functions. This matches the changes in OpenDSS v9.6.1.3, plus our custom changes as usual.
+- Use better DSSContext pointer to IDSS mapping.
+- Plotting: handle empty monitors better, ignore invalid channels.
+- Documentation updated.
+
 
 ### 0.14.3
 
@@ -137,9 +160,9 @@ Released on 2023-03-28.
 
 Note that a couple of SVN changes were ignored on purpose since they introduced potential issues, while many other changes and bug-fixes did not affect the DSS C-API version since our implementation is quite different in some places.
 
+## 0.12.x
 
-
-## 0.12.1
+### 0.12.1
 
 Released on 2022-07-16.
 
@@ -147,7 +170,7 @@ Released on 2022-07-16.
 - Include the missing property descriptions from 0.12.0
 - Use DSS C-API v0.12.1 for some incremental fixes
 
-## 0.12.0
+### 0.12.0
 
 Released on 2022-07-14.
 
@@ -161,7 +184,7 @@ Released on 2022-07-14.
 - Due to some changes ported from the official OpenDSS since 0.10.7, some results may change, especially for circuits that used miles as length units. The same is observed across the official OpenDSS releases.
 
 
-### DSS C-API 0.12.0 changes
+#### DSS C-API 0.12.0 changes
 
 **Includes porting of most official OpenDSS features up to revision 3460.** Check the OpenDSS SVN commits for details.
 
@@ -217,8 +240,9 @@ This version still maintains basic compatibility with the 0.10.x series of relea
 
 Due to the high number of IO changes, we recommend checking the performance before and after the upgrade to ensure your use case is not affected negatively, especially if your application relies heavily on OpenDSS text output. If issues are found, please do report.
 
+## 0.10.x
 
-## 0.10.7
+### 0.10.7
 
 Released on 2020-12-29.
 
@@ -244,7 +268,7 @@ DSS C-API 0.10.7 changes:
     - "Fixing bug found when calculating voltage bases with large amount of numbers (large array)."
 
 
-## 0.10.6
+### 0.10.6
 
 Released on 2020-08-01.
 
@@ -288,7 +312,7 @@ DSS C-API 0.10.6 changes:
     - `PVsystem2`, `Storage2`, `InvControl2`, `StorageController2` updated and renamed.
 
 
-## 0.10.5
+### 0.10.5
 
 Released on 2020-03-03. This is a maintenance release.
 
@@ -312,7 +336,7 @@ DSS C-API 0.10.5 changes:
     - `Bus_Get_puVLL` and `Bus_Get_VLL` — see revision 2836 (official SVN). Included an extra fix in DSS C-API to avoid some corner cases.
     - Other small bug fixes like the Full Carson fix — see https://sourceforge.net/p/electricdss/discussion/861976/thread/2de01d0cdb/ and revision 2805 (official SVN)
 
-## 0.10.4
+### 0.10.4
 
 Released on 2019-11-16. This is a maintenance release.
 
@@ -327,7 +351,7 @@ DSS C-API 0.10.4 changes include:
 - This version should be fully compatible with 0.10.3.
 - Fixes issue with long paths on Linux, potentially other platforms too.
 
-## 0.10.3
+### 0.10.3
 
 Released on 2019-05-22. This is the last release to provide pre-built binaries for Python 3.4.
 
@@ -347,7 +371,7 @@ Released on 2019-05-22. This is the last release to provide pre-built binaries f
     - `Lines.IsSwitch`
     - `Transformers.LossesByType` and `Transformers.AllLossesByType`
 
-## 0.10.2
+### 0.10.2
 
 Released on 2019-02-28.
 
@@ -358,7 +382,7 @@ Released on 2019-02-28.
 - `LoadShapes` are faster due to [changes from DSS C-API](https://github.com/dss-extensions/dss_capi/blob/master/docs/changelog.md#version-0102)
 
 
-## 0.10.1
+### 0.10.1
 
 Released on 2019-02-17.
 
@@ -373,7 +397,7 @@ Major changes:
 - Fix for `ActiveCircuit.ActiveCktElement.Variable` and `ActiveCircuit.ActiveCktElement.Variablei`: now returns a tuple of `(value, errorcode)`, compatible with COM.
 - New `DSS.Error.EarlyAbort`: controls whether all errors halts the DSS script processing (Compile/Redirect), defaults to True.
 
-## 0.10.0
+### 0.10.0
 
 Released on 2018-11-17.
 
@@ -410,7 +434,40 @@ for b in com.ActiveCircuit.ActiveBus:
     print(b.Name, b.x, b.y)
 ```
 
-## Mixed-cased handling
+## 0.9.x
 
-If you were using `set_case_insensitive_attributes` (previously `use_com_compat`) to allow mixed-cased attributes, it should work better than before. You may now use `set_case_insensitive_attributes(warn=True)` to warn when you use an attribute that wouldn't exist without calling `set_case_insensitive_attributes`. The intention is that the user should run their code to get a list of warnings, fix it, and then remove `set_case_insensitive_attributes` since it does have a small performance impact.
+Sorry, we didn't track the changes at the time. Check the Git logs below plus the related changes under DSS C-API.
 
+### 0.9.8
+
+https://github.com/dss-extensions/dss_python/compare/0.9.7...0.9.8
+
+### 0.9.7
+
+https://github.com/dss-extensions/dss_python/compare/0.9.6...0.9.7
+
+### 0.9.6
+
+https://github.com/dss-extensions/dss_python/compare/0.9.5...0.9.6
+
+### 0.9.5
+
+https://github.com/dss-extensions/dss_python/compare/0.9.4...0.9.5
+
+### 0.9.4
+
+https://github.com/dss-extensions/dss_python/compare/0.9.3...0.9.4
+
+### 0.9.3
+
+https://github.com/dss-extensions/dss_python/compare/0.9.2...0.9.3
+
+### 0.9.2
+
+https://github.com/dss-extensions/dss_python/compare/0.9.1...0.9.2
+
+### 0.9.1
+
+Released on 2018-02-08.
+
+First public release!

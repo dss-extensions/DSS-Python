@@ -1,13 +1,10 @@
-'''
-A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-
-Copyright (c) 2016-2022 Paulo Meira
-
-Copyright (c) 2018-2022 DSS-Extensions contributors
-'''
+# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+# Copyright (c) 2016-2024 Paulo Meira
+# Copyright (c) 2018-2024 DSS-Extensions contributors
+from __future__ import annotations
 from ._cffi_api_util import Base
 from .enums import DSSJSONFlags
-from typing import AnyStr, List
+from typing import AnyStr, List, Iterator
 
 class IActiveClass(Base):
     __slots__ = []
@@ -49,7 +46,7 @@ class IActiveClass(Base):
     def __len__(self) -> int:
         return self._check_for_error(self._lib.ActiveClass_Get_Count())
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[IActiveClass]:
         n = self.First
         while n:
             yield self

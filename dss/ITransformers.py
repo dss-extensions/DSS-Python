@@ -1,10 +1,6 @@
-'''
-A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-
-Copyright (c) 2016-2023 Paulo Meira
-
-Copyright (c) 2018-2023 DSS-Extensions contributors
-'''
+# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+# Copyright (c) 2016-2024 Paulo Meira
+# Copyright (c) 2018-2024 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from ._types import Float64ArrayOrComplexArray
 from typing import AnyStr, Union
@@ -258,7 +254,7 @@ class ITransformers(Iterable):
         '''
         Complex array of voltages for active winding
         
-        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
+        **WARNING:** If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
         in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
 
         Original COM help: https://opendss.epri.com/WdgVoltages.html
@@ -271,7 +267,7 @@ class ITransformers(Iterable):
         '''
         All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)
 
-        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
+        **WARNING:** If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
         in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
 
         Original COM help: https://opendss.epri.com/WdgCurrents.html
@@ -284,7 +280,7 @@ class ITransformers(Iterable):
         '''
         All winding currents in CSV string form like the WdgCurrents property
 
-        WARNING: If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
+        **WARNING:** If the transformer has open terminal(s), results may be wrong, i.e. avoid using this
         in those situations. For more information, see https://github.com/dss-extensions/dss-extensions/issues/24
         '''
         return self._get_string(self._check_for_error(self._lib.Transformers_Get_strWdgCurrents()))

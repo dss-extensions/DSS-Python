@@ -1,15 +1,10 @@
-'''
-A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-
-Copyright (c) 2016-2023 Paulo Meira
-
-Copyright (c) 2018-2023 DSS-Extensions contributors
-'''
+# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+# Copyright (c) 2016-2024 Paulo Meira
+# Copyright (c) 2018-2024 DSS-Extensions contributors
 from __future__ import annotations
 import warnings
 from weakref import WeakKeyDictionary
 from typing import Any, List, Union, AnyStr, TYPE_CHECKING
-from typing_extensions import Self
 from ._cffi_api_util import Base, CffiApiUtil, DSSException
 from .ICircuit import ICircuit
 from .IError import IError
@@ -155,13 +150,13 @@ class IDSS(Base):
         #: The original OpenDSSDirect.DLL had some `YMatrix_*` functions, but we 
         #: add a lot more here.
         #: 
-        #: (API Extension)
+        #: **(API Extension)**
         self.YMatrix = IYMatrix(api_util)
         
         #: The ZIP interface provides functions to open compressed ZIP packages
         #: and run scripts inside the ZIP, without creating extra files on disk.
         #: 
-        #: (API Extension)
+        #: **(API Extension)**
         self.ZIP = IZIP(api_util)
 
         Base.__init__(self, api_util)    
@@ -439,7 +434,7 @@ class IDSS(Base):
     def COMErrorResults(self, Value: bool):
         self._check_for_error(self._lib.DSS_Set_COMErrorResults(Value))
 
-    def NewContext(self) -> Self:
+    def NewContext(self) -> IDSS:
         '''
         Creates a new DSS engine context.
 

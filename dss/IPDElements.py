@@ -1,12 +1,9 @@
-'''
-A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-
-Copyright (c) 2016-2023 Paulo Meira
-
-Copyright (c) 2018-2023 DSS-Extensions contributors
-'''
+# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+# Copyright (c) 2016-2024 Paulo Meira
+# Copyright (c) 2018-2024 DSS-Extensions contributors
+from __future__ import annotations
 from ._cffi_api_util import Base
-from typing import List, AnyStr
+from typing import List, AnyStr, Iterator
 from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray
 
 class IPDElements(Base):
@@ -188,7 +185,7 @@ class IPDElements(Base):
     def pctPermanent(self, Value: float):
         self._check_for_error(self._lib.PDElements_Set_pctPermanent(Value))
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[IPDElements]:
         idx = self.First
         while idx != 0:
             yield self

@@ -1,9 +1,10 @@
+from __future__ import annotations
 import warnings
 from functools import partial
 from weakref import ref, WeakKeyDictionary
 import numpy as np
 from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
-from typing import Any, AnyStr, Callable, List, Union #, Iterator
+from typing import Any, AnyStr, Callable, List, Union, Iterator
 from .enums import AltDSSEvent
 from dss_python_backend.events import get_manager_for_ctx
 
@@ -26,8 +27,14 @@ def set_case_insensitive_attributes(use: bool = True, warn: bool = False):
     thus is not recommended to continue using it after migration/adjustments to
     the user code.
 
-    Currently, this also affects the new AltDSS package, allowing users to
-    employ the case-insensitive mechanism to address DSS properties in Python code.
+    Currently, this also affects all Python packages from DSS-Extensions:
+    
+    - DSS-Python (`dss` package): done to allow easier migration from COM.
+    
+    - OpenDSSDirect.py (`opendssdirect` package): mostly done by accident due to the same base classes.
+
+    - AltDSS-Python (`altdss` package): done to allow users to employ the 
+      case-insensitive mechanism to address DSS properties in Python code.
 
     Since there is a small performance overhead, users are recommended to use this
     mechanism as a transition before adjusting the code.
@@ -936,7 +943,7 @@ class Iterable(Base):
     def __len__(self) -> int:
         return self._check_for_error(self._Get_Count())
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Iterable]:
         '''
         Get an iterator of the object collection.
         

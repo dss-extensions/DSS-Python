@@ -1,13 +1,9 @@
-'''
-A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-
-Copyright (c) 2016-2023 Paulo Meira
-
-Copyright (c) 2018-2023 DSS-Extensions contributors
-'''
+# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+# Copyright (c) 2016-2024 Paulo Meira
+# Copyright (c) 2018-2024 DSS-Extensions contributors
+from __future__ import annotations
 from ._cffi_api_util import Base
 from typing import AnyStr, Union
-from typing_extensions import Self
 
 class IDSSProperty(Base):
     __slots__ = []
@@ -52,7 +48,7 @@ class IDSSProperty(Base):
 
         self._check_for_error(self._lib.DSSProperty_Set_Val(Value))
 
-    def __getitem__(self, propname_index: Union[AnyStr, int]) -> Self:
+    def __getitem__(self, propname_index: Union[AnyStr, int]) -> IDSSProperty:
         if isinstance(propname_index, int):
             self._check_for_error(self._lib.DSSProperty_Set_Index(propname_index))
         else:
@@ -63,6 +59,6 @@ class IDSSProperty(Base):
 
         return self
 
-    def __call__(self, propname_index) -> Self:
+    def __call__(self, propname_index) -> IDSSProperty:
         return self.__getitem__(propname_index)
 

@@ -127,3 +127,7 @@ dss/messages/*
 *.dbl
 *.sng
 *.pdb
+
+docs/apidocs
+tests/result*.zip
+tmp/

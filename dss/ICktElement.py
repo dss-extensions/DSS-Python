@@ -1,14 +1,11 @@
-'''
-A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-
-Copyright (c) 2016-2023 Paulo Meira
-
-Copyright (c) 2018-2023 DSS-Extensions contributors
-'''
+# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+# Copyright (c) 2016-2024 Paulo Meira
+# Copyright (c) 2018-2024 DSS-Extensions contributors
+from __future__ import annotations
 from ._cffi_api_util import Base
 from .IDSSProperty import IDSSProperty
 from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
-from typing import List, AnyStr, Tuple
+from typing import List, AnyStr, Tuple, Iterator
 from .enums import OCPDevType as OCPDevTypeEnum
 
 class ICktElement(Base):
@@ -539,12 +536,12 @@ class ICktElement(Base):
         self._lib.CktElement_Get_NodeRef_GR()
         return self._get_int32_gr_array()
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[ICktElement]:
         for index in range(self._check_for_error(self._lib.Circuit_Get_NumCktElements())):
             self._check_for_error(self._lib.Circuit_SetCktElementIndex(index))
             yield self
 
-    def __getitem__(self, index):
+    def __getitem__(self, index) -> ICktElement:
         if isinstance(index, int):
             # index is zero based, pass it directly
             self._check_for_error(self._lib.Circuit_SetCktElementIndex(index))
@@ -556,6 +553,6 @@ class ICktElement(Base):
             
         return self
 
-    def __call__(self, index):
+    def __call__(self, index) -> ICktElement:
         return self.__getitem__(index)
 

@@ -1,8 +1,6 @@
-'''
-A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-
-Copyright (c) 2019-2023 Paulo Meira
-'''
+# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+# Copyright (c) 2019-2024 Paulo Meira
+# Copyright (c) 2019-2024 DSS-Extensions contributors
 from ._cffi_api_util import Base
 from typing import AnyStr
 

@@ -1,14 +1,12 @@
-'''DSS-Python provides a compatibility layer for DSS_CAPI that mimics the official OpenDSS COM interface, with various extensions and quality-of-life tweaks.
-
-``dss`` is the main package for DSS-Python. DSS-Python is a compatibility layer for the DSS C-API library that mimics the official OpenDSS COM interface, with many extensions and a few limitations.
+'''``dss`` is the main package for DSS-Python. DSS-Python is a compatibility layer for the DSS C-API library that mimics the official OpenDSS COM interface, with many extensions and a few limitations.
 
 This module used to provide instances for the OpenDSS Version 7 implementation. 
 As of 2022, most of the parallel-machine functions of EPRI's OpenDSS have been reimplemented using a different approach. Therefore the PM functions are available in the instances of this module too.
 Besides the parallel-machine mechanisms, DSS-Python also exposes the DSSContext mechanism provided by DSS-Extensions. DSSContexts allow using multiple OpenDSS instances directly, including user-managed multi-threading, without using the internal OpenDSS actors.
 
-Starting April 2023, our CFFI extension modules and DSS C-API binaries moved to `dss_python_backend` and are justed consumed here.
+Starting on April 2023, our CFFI extension modules and DSS C-API binaries moved to `dss_python_backend` and are just consumed here.
 
-In January 2024, the code based on our new low-level API extensions, Obj and Alt, move to the new package AltDSS-Python (just `altdss` in PyPI and Python).
+In January 2024, the code based on our new low-level API extensions, Obj and Alt, move to the new package [AltDSS-Python](https://dss-extensions.org/AltDSS-Python/) (`altdss` on PyPI and in Python).
 '''
 
 import os

@@ -1,14 +1,10 @@
-'''
-A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-
-Copyright (c) 2016-2023 Paulo Meira
-
-Copyright (c) 2018-2023 DSS-Extensions contributors
-'''
+# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+# Copyright (c) 2016-2024 Paulo Meira
+# Copyright (c) 2018-2024 DSS-Extensions contributors
+from __future__ import annotations
 from ._cffi_api_util import Base
 from ._types import Float64Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex, Int32Array
-from typing import List, Union
-from typing_extensions import Self
+from typing import List, Union, Iterator
 
 class IBus(Base):
     __slots__ = []
@@ -419,7 +415,7 @@ class IBus(Base):
 
         return result
 
-    def __getitem__(self, index: Union[int, str]) -> Self:
+    def __getitem__(self, index: Union[int, str]) -> IBus:
         if isinstance(index, int):
             # bus index is zero based, pass it directly
             self._check_for_error(self._lib.Circuit_SetActiveBusi(index))
@@ -431,15 +427,15 @@ class IBus(Base):
 
         return self
 
-    def __call__(self, index: Union[int, str]) -> Self:
+    def __call__(self, index: Union[int, str]) -> IBus:
         return self.__getitem__(index)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[IBus]:
         n = self._check_for_error(self._lib.Circuit_SetActiveBusi(0))
         while n == 0:
             yield self
             n = self._check_for_error(self._lib.Bus_Get_Next())
 
-    def __len__(self):
+    def __len__(self) -> int:
         '''Total number of Buses in the circuit.'''
         return self._check_for_error(self._lib.Circuit_Get_NumBuses())

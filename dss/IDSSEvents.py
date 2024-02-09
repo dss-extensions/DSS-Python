@@ -1,9 +1,6 @@
-'''
-A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-
-Copyright (c) 2016-2024 Paulo Meira
-Copyright (c) 2018-2024 DSS-Extensions contributors
-'''
+# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
+# Copyright (c) 2016-2024 Paulo Meira
+# Copyright (c) 2018-2024 DSS-Extensions contributors
 from ._cffi_api_util import Base, DSSException
 from .enums import AltDSSEvent
 from dss_python_backend.events import get_manager_for_ctx
