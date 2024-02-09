@@ -148,6 +148,9 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
         if 'TotalPowers' in ckt_elem_columns:
             ckt_elem_columns.remove('TotalPowers')
 
+        if 'IsIsolated' in ckt_elem_columns:
+            ckt_elem_columns.remove('IsIsolated')
+
         if COM_VLL_BROKEN and 'Coorddefined' in fields:
             fields.remove('puVLL')
             fields.remove('VLL')
@@ -186,7 +189,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     for _ in items:
         record = {}
         for field in fields:
-            printv('>', field)
+            # printv('>', field)
             try:
                 record[field] = adjust_to_json(dss_cls, field)
             except StopIteration:
@@ -200,7 +203,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
             if dss_cls.NumSections > 0:
                 dss_cls.SetActiveSection(1)
                 for field in meter_section_fields:
-                    printv('>', field)
+                    # printv('>', field)
                     try:
                         record[field] = adjust_to_json(dss_cls, field)
                     except StopIteration:
@@ -211,7 +214,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
             # also dump the circuit element info
             ckt_record = {}
             for field in ckt_elem_columns:
-                printv('>', field)
+                # printv('>', field)
                 ckt_record[field] = adjust_to_json(ckt_elem, field)
 
             record['ActiveCktElement'] = ckt_record
@@ -227,11 +230,11 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     if is_ckt_element and not metadata_record:
         if records:
             for field in ckt_elem_columns_meta:
-                printv('>', field)
+                # printv('>', field)
                 metadata_record[field] = adjust_to_json(ckt_elem, field)
 
         for field in ckt_iter_columns_meta:
-            printv('>', field)
+            # printv('>', field)
             metadata_record[field] = adjust_to_json(dss_cls, field)
 
         if 'Meters' in type(dss_cls).__name__:
@@ -337,7 +340,7 @@ if __name__ == '__main__':
 
     if SAVE_DSSX_OUTPUT:
         from dss import DSS, DSSCompatFlags
-        DSS.CompatFlags = DSSCompatFlags.InvControl9611
+        DSS.CompatFlags = 0 # DSSCompatFlags.InvControl9611
         print("Using DSS-Extensions:", DSS.Version)
         match = re.match('DSS C-API Library version ([^ ]+) revision.* ([0-9]+);.*', DSS.Version)
         dssx_ver, dssx_timestamp = match.groups()
