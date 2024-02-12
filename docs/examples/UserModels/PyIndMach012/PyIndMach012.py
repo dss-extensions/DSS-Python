@@ -11,9 +11,9 @@ Original code by EPRI, licensed under the 3-clause BSD. See OPENDSS_LICENSE.
 This sample code doesn't interact with the main OpenDSS interface directly,
 it only uses the user-model interface. Thus, it is compatible with the official OpenDSS
 distribution as well as DSS-Python. Note that OpenDSS version 7 has a bug on 64-bit 
-system and user-models most likely won't run via COM.
+systems and user-models most likely won't run via COM.
 
-Recent version of OpenDSS 8 also present a bug when handling the edition of 
+Recent version of OpenDSS 8 also present a bug when handling the editing of 
 user-model parameters after the creation of the generator. You can, of course,
 edit the data in Python if you desire.
 
