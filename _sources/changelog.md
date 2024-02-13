@@ -5,6 +5,12 @@ relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_cap
 
 ## 0.15.x
 
+### 0.15.1
+
+Released on 2024-02-12.
+
+- Fix installation with `pip install dss-python[all]`.
+
 ### 0.15.0
 
 Released on 2024-02-09.
