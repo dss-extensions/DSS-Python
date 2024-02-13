@@ -20,7 +20,7 @@ For alternatives for other programming languages, including in MATLAB, C++, C#/.
 flowchart TD
     C["AltDSS engine/DSS C-API\n(libdss_capi)"] --> P["DSS-Python: Backend"]
     P --- DSSPY["DSS-Python\n(dss package)"]
-    P --- ODDPY["<a href='https://dss-extensions.org/opendssdirect.py'>OpenDSSDirect.py\n(opendssdirect package)</a>"]
+    P --- ODDPY["<a href='https://dss-extensions.org/OpenDSSDirect.py'>OpenDSSDirect.py\n(opendssdirect package)</a>"]
     P --- ALTDSSPY["<a href='https://dss-extensions.org/AltDSS-Python/'>AltDSS-Python\n(altdss package)</a>"]
 ```
 
