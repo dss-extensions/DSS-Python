@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>DSS-Python &#8212; DSS-Python 0.15.0+d20240213 documentation</title>
+    <title>DSS-Python &#8212; DSS-Python 0.15.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="_static/documentation_options.js?v=cf06574e"></script>
+    <script src="_static/documentation_options.js?v=c98a3daa"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -140,8 +140,8 @@
       
     
     
-    <img src="_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0+d20240213 documentation - Home"/>
-    <script>document.write(`<img src="_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0+d20240213 documentation - Home"/>`);</script>
+    <img src="_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.1 documentation - Home"/>
+    <script>document.write(`<img src="_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -422,7 +422,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="dss-python">
 <h1>DSS-Python<a class="headerlink" href="#dss-python" title="Link to this heading">#</a></h1>
 <p><a class="reference external" href="https://pypi.org/project/dss-python/"><img alt="PyPI" src="https://img.shields.io/pypi/v/dss_python" /></a> <a class="reference external" href="https://pypi.org/project/dss-python/"><img alt="PyPI Download stats" src="https://img.shields.io/pypi/dw/dss-python" /></a> <img alt="Supports Linux" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black"> <img alt="Supports macOS" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white"> <img alt="Supports Microsoft Windows" src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white"></p>
-<p>DSS-Python uses CFFI and NumPy to expose the OpenDSS engine, as implemented in our alternative engine (AltDSS) through the <a class="reference external" href="https://github.com/dss-extensions/dss_capi">AltDSS/DSS C-API</a> library. OpenDSS is an open-source electric power distribution system simulator.</p>
+<p>DSS-Python uses CFFI and NumPy to expose the OpenDSS engine, as implemented in our alternative engine (AltDSS) through the <a class="reference external" href="https://github.com/dss-extensions/dss_capi">AltDSS/DSS C-API</a> library. OpenDSS is an open-source electric power distribution system simulator <a class="reference external" href="https://sourceforge.net/p/electricdss/">distributed by EPRI</a>.</p>
 <p>This package is available for Windows, Linux and macOS, including Intel and ARM processes, both 32 and 64-bit. As such, it enables OpenDSS to run in many environments the official implementation cannot, from a Raspberry Pi to a HPC cluster, and cloud environments like Google Colab (some of our notebooks examples are ready-to-run on Colab).</p>
 <p>DSS-Python is part of DSS-Extensions, a larger effort to port the original OpenDSS to support more platforms (OSs, processor architectures), programming languages, and extend both the OpenDSS engine and API, represented in the AltDSS engine:</p>
 <p align="center">
@@ -437,7 +437,7 @@ document.write(`
     P --- ODDPY[&quot;&lt;a href='https://dss-extensions.org/opendssdirect.py'&gt;OpenDSSDirect.py\n(opendssdirect package)&lt;/a&gt;&quot;]
     P --- ALTDSSPY[&quot;&lt;a href='https://dss-extensions.org/AltDSS-Python/'&gt;AltDSS-Python\n(altdss package)&lt;/a&gt;&quot;]
         </div></center>
-<p>DSS-Python is one of three Python projects under DSS-Extensions. See <a class="reference external" href="https://dss-extensions.org/python_apis.html">DSS-Extensions — OpenDSS: Overview of Python APIs</a> for a brief comparison between these and the official COM API. Both OpenDSSDirect.py and DSS-Python expose the classic OpenDSS API (closer to the COM implementation), including most of its limitations. For an alternative API which exposes all OpenDSS objects, batch operations, and a more intuitive API, check <a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a>. If required, users can mix all three packages in the same project to access some of their unique features.</p>
+<p>DSS-Python is one of three Python projects under DSS-Extensions. See <a class="reference external" href="https://dss-extensions.org/python_apis.html">DSS-Extensions — OpenDSS: Overview of Python APIs</a> for a brief comparison between these and the official COM API. Both OpenDSSDirect.py and DSS-Python expose the classic OpenDSS API (closer to the COM implementation). For an alternative API which exposes all OpenDSS objects, batch operations, and a more intuitive API, check <a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a>. If required, users can mix all three packages in the same project to access some of their unique features.</p>
 <section id="brief-introduction">
 <h2>Brief introduction<a class="headerlink" href="#brief-introduction" title="Link to this heading">#</a></h2>
 <p>Install it with <code class="docutils literal notranslate"><span class="pre">pip</span></code> (or <code class="docutils literal notranslate"><span class="pre">pip3</span></code> depending on your environment, or even <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span></code>), e.g.:</p>

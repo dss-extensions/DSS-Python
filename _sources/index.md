@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/dss_python)](https://pypi.org/project/dss-python/) [![PyPI Download stats](https://img.shields.io/pypi/dw/dss-python)](https://pypi.org/project/dss-python/) <img alt="Supports Linux" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black"> <img alt="Supports macOS" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white"> <img alt="Supports Microsoft Windows" src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white">
 
-DSS-Python uses CFFI and NumPy to expose the OpenDSS engine, as implemented in our alternative engine (AltDSS) through the [AltDSS/DSS C-API](https://github.com/dss-extensions/dss_capi) library. OpenDSS is an open-source electric power distribution system simulator. 
+DSS-Python uses CFFI and NumPy to expose the OpenDSS engine, as implemented in our alternative engine (AltDSS) through the [AltDSS/DSS C-API](https://github.com/dss-extensions/dss_capi) library. OpenDSS is an open-source electric power distribution system simulator [distributed by EPRI](https://sourceforge.net/p/electricdss/). 
 
 This package is available for Windows, Linux and macOS, including Intel and ARM processes, both 32 and 64-bit. As such, it enables OpenDSS to run in many environments the official implementation cannot, from a Raspberry Pi to a HPC cluster, and cloud environments like Google Colab (some of our notebooks examples are ready-to-run on Colab).
 
@@ -26,7 +26,7 @@ flowchart TD
 
 </center>
 
-DSS-Python is one of three Python projects under DSS-Extensions. See [DSS-Extensions — OpenDSS: Overview of Python APIs](https://dss-extensions.org/python_apis.html) for a brief comparison between these and the official COM API. Both OpenDSSDirect.py and DSS-Python expose the classic OpenDSS API (closer to the COM implementation), including most of its limitations. For an alternative API which exposes all OpenDSS objects, batch operations, and a more intuitive API, check [AltDSS-Python](https://dss-extensions.org/AltDSS-Python/). If required, users can mix all three packages in the same project to access some of their unique features.
+DSS-Python is one of three Python projects under DSS-Extensions. See [DSS-Extensions — OpenDSS: Overview of Python APIs](https://dss-extensions.org/python_apis.html) for a brief comparison between these and the official COM API. Both OpenDSSDirect.py and DSS-Python expose the classic OpenDSS API (closer to the COM implementation). For an alternative API which exposes all OpenDSS objects, batch operations, and a more intuitive API, check [AltDSS-Python](https://dss-extensions.org/AltDSS-Python/). If required, users can mix all three packages in the same project to access some of their unique features.
 
 
 ## Brief introduction

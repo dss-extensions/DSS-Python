@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Multiple DSS engines, multithreading vs. multiprocessing &#8212; DSS-Python 0.15.0+d20240213 documentation</title>
+    <title>Multiple DSS engines, multithreading vs. multiprocessing &#8212; DSS-Python 0.15.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=cf06574e"></script>
+    <script src="../_static/documentation_options.js?v=c98a3daa"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -137,8 +137,8 @@
       
     
     
-    <img src="../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0+d20240213 documentation - Home"/>
-    <script>document.write(`<img src="../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0+d20240213 documentation - Home"/>`);</script>
+    <img src="../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.1 documentation - Home"/>
+    <script>document.write(`<img src="../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -416,7 +416,7 @@ document.write(`
 <p><em>Parallel OpenDSS/AltDSS engines in the same process</em></p>
 <!-- TODO: update link to the website when ready -->
 <p><a class="reference external" href="https://github.com/dss-extensions/dss-extensions/blob/main/docs/multithreading.md">General recommendations apply</a>, like using a good memory allocator on Linux.</p>
-<p>For a similar example using OpenDSSDirect.py (the <code class="docutils literal notranslate"><span class="pre">_run</span></code> function is what changes): <a class="reference external" href="https://dss-extensions.org/opendssdirect.py/notebooks/Multithreading.html">https://dss-extensions.org/opendssdirect.py/notebooks/Multithreading.html</a></p>
+<p>For a similar example using OpenDSSDirect.py (the <code class="docutils literal notranslate"><span class="pre">_run</span></code> function is what changes): <a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py/notebooks/Multithreading">https://dss-extensions.org/OpenDSSDirect.py/notebooks/Multithreading</a></p>
 <p>If you need to create multiple, independent OpenDSS engines, <a class="reference external" href="https://dss-extensions.org/dss_python/apidocs/dss/dss.IDSS.html#dss.IDSS.IDSS.NewContext">DSS.NewContext()</a> can be used.
 This was introduced in DSS-Python 0.12.0, after a lot of work in the underlying DSS C-API engine. This feature is also unique to DSS-Extensions.</p>
 <p>Although multi-threading in Python is not great due to the the GIL (Global Interpreter Lock), it is important to note that DSS-Python releases when API calls are made, i.e. multiple Python threads that spend most time in power flow solutions should still be performant.</p>
@@ -585,7 +585,7 @@ other programming languages:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done in 0.641 s with 25 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done in 0.644 s with 25 threads
 </pre></div>
 </div>
 </div>
@@ -610,7 +610,7 @@ other programming languages:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done in 4.166 s sequentially
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done in 4.009 s sequentially
 </pre></div>
 </div>
 </div>
@@ -676,7 +676,7 @@ other programming languages:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done in 0.882 s using 25 processes
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done in 0.675 s using 25 processes
 </pre></div>
 </div>
 </div>
@@ -700,7 +700,7 @@ other programming languages:</p>
 <h2><code class="docutils literal notranslate"><span class="pre">Parallel</span></code>/PM implementation<a class="headerlink" href="#parallel-pm-implementation" title="Link to this heading">#</a></h2>
 <p>The DSS-Extensions implementation of the OpenDSS engine does include support for the parallel-machine (PM) concepts of the official implementation. The internals are completely different, and in fact result in a wider range of scenarios where it could be used when compared to the official version. Although useful in other use-cases like running through COM in Excel/VBA or MATLAB, using thread and multiple DSS engines explicitly provide more control. Sometimes threading is not ideal and using multiprocessing is preferred anyway, so there is little space where the PM alternative would be recommended with DSS-Python.</p>
 <p>For the <code class="docutils literal notranslate"><span class="pre">Parallel</span></code> interface and the parallel-machine commands from OpenDSS, check <a class="reference external" href="https://opendss.epri.com/OpenDSSParallelProcessingSuite.html">the official documentation</a>, and the <a class="reference external" href="https://dss-extensions/apidocs/dss/dss.IParallel.html#dss.IParallel.IParallel">API docs for the interface</a> in DSS-Python.</p>
-<p>Currently, DSS-Extensions do not implement the diakoptics methods anymore. Due to limitations found in the past, the methods were disabled and will be reenabled after the developers on DSS-Extensions have an opportunity to address those.</p>
+<p>Currently, DSS-Extensions do not implement the diakoptics methods anymore. The methods were disabled and will be reenabled after the developers on DSS-Extensions have an opportunity to address it.</p>
 </section>
 <section id="future-expectations">
 <h2>Future expectations<a class="headerlink" href="#future-expectations" title="Link to this heading">#</a></h2>
