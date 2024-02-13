@@ -78,7 +78,7 @@ plot = [
 all = [
     "matplotlib",
     "scipy",
-    "opendssdirect",
+    "opendssdirect-py[extras]",
     "altdss",
     "pandas",
 ]
