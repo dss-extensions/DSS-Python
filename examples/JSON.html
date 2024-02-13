@@ -1,0 +1,3130 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>DSS-Extensions — JSON exports &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/JSON';</script>
+    <link rel="icon" href="../_static/dssx.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PyIndMach012: an example of user-model using DSS-Python" href="UserModels/PyIndMach012/README.html" />
+    <link rel="prev" title="Integrated plotting in Python" href="Plotting.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Plotting.html">Plotting</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../apidocs/index.html">dss package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../apidocs/dss/dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/examples/JSON.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>DSS-Extensions — JSON exports</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How it works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#future-expectations">Future expectations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#export-option-flags">Export option flags</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-opendssdirect-py">Using OpenDSSDirect.py</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-obj-and-batch-apis">Using the Obj and Batch APIs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#line-and-linegeometry-special-cases-for-conductors"><code class="docutils literal notranslate"><span class="pre">Line</span></code> and <code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code>: special cases for conductors</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dss-extensions-json-exports">
+<h1>DSS-Extensions — JSON exports<a class="headerlink" href="#dss-extensions-json-exports" title="Link to this heading">#</a></h1>
+<p><em>Updated for DSS C-API version 0.13.2</em></p>
+<p>You can open and then run this notebook on Google Colab for a quick overview if you don’t want to set up a local environment: <strong><a class="reference external" href="https://colab.research.google.com/github/dss-extensions/dss_python/blob/master/docs/examples/JSON.ipynb">Open in Colab</a></strong>.</p>
+<p><strong>Preparation</strong></p>
+<p>To rerun this notebook:</p>
+<ul class="simple">
+<li><p>Install Python; we recommend using <a class="reference external" href="https://github.com/conda-forge/miniforge/#miniforge">miniforge from conda-forge</a> – after installation, either create a dedicated environment or make sure the basics are installed (<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">jupyterlab</span> <span class="pre">pandas</span></code>)</p></li>
+<li><p>Install the DSS-Extensions (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">dss-python[plot]</span> <span class="pre">opendssdirect.py</span></code>)</p></li>
+<li><p>Download the example files:</p>
+<ul>
+<li><p>If you have Git installed (recommended), you can run the following cell.</p></li>
+<li><p>Otherwise, download <a class="github reference external" href="https://github.com/dss-extensions/electricdss-tst/archive/refs/heads/master.zip">dss-extensions/electricdss-tst</a> and extract the <code class="docutils literal notranslate"><span class="pre">electricdss-tst-master</span></code> folder in the same path as this notebook. Rename it to <code class="docutils literal notranslate"><span class="pre">electricdss-tst</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>--depth<span class="o">=</span><span class="m">1</span><span class="w"> </span>-q<span class="w"> </span>https://github.com/dss-extensions/electricdss-tst
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: destination path &#39;electricdss-tst&#39; already exists and is not an empty directory.
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you are running under Google Colab, running the following cell should install the packages.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">subprocess</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;COLAB_RELEASE_TAG&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s1">&#39;pip install dss-python[plot] opendssdirect.py[extras] pandas==2&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p><em>Although this is a Python notebook and uses DSS-Python, the same functions and behavior described here apply to all DSS-Extensions, even if they use different API layouts: OpenDSSDirect.py, OpenDSSDirect.jl, DSS Sharp, DSS MATLAB.</em></p>
+<p>Our alternative OpenDSS engine used in DSS-Extensions, implemented in the DSS C-API library, extends the API to provide some JSON export functions since version 0.12.0. Provided some constraints, most classes and properties could be exported as JSON, but a few properties didn’t work correctly even with these contraints. <strong>Warning: This feature is an API Extension and is not available in the official OpenDSS.</strong></p>
+<p>Note that manually creating JSON through the classic DSS API (as implemented in the official COM DLL API) is possible but cumbersome, requiring manually tracking and converting strings to the types and several other details. We expect the DSS C-API implementation, being shared across all DSS-Extensions, can achieve better performance and remove this extra processing work.</p>
+<p>We will use Pandas to show tables more easily in this document, but it is not required for exporting. In the near future, we plan to release integrated dataframe support for using with Pandas and similar workloads in Python and other languages.</p>
+<p>For general interactive use of DSS objects, the work-in-progress <a class="reference external" href="https://dss-extensions.org/dss_python/obj.html">Obj and Batch APIs (working names)</a> provides more direct manipulation of objects. Some initial examples are available on DSS-Python’s tests: <a class="reference external" href="https://github.com/dss-extensions/dss_python/blob/master/tests/test_obj.py">test_obj.py</a>, <a class="reference external" href="https://github.com/dss-extensions/dss_python/blob/master/tests/test_batch.py">test_batch.py</a>. This new API will later be published as a separate module.</p>
+<p>We invite users to provide feedback, including feature requests, to better guide future development. The Discussions or Issues features here are good places to give us feedback: <a class="github reference external" href="https://github.com/dss-extensions/dss-extensions">dss-extensions/dss-extensions</a></p>
+<p><em>See also: <a class="reference external" href="https://dss-extensions.org/python_apis.html">DSS-Extensions — OpenDSS: Overview of Python APIs</a></em></p>
+<section id="how-it-works">
+<h3>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h3>
+<p>The DSS engine maintains an order of each property of each object when they are created and populated. Our DSS engine walks through this list and export each of the properties, applying disambiguation and some other transforms. For exporting a whole class, the results for each object are collected in a JSON array.</p>
+<p>Some redundant properties are skipped, exporting the primary value when possible instead.</p>
+<p>For classes related to transformers and <code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code>, there are a few auxiliary properties in DSS (<code class="docutils literal notranslate"><span class="pre">wdg</span></code> and <code class="docutils literal notranslate"><span class="pre">cond</span></code>) that are used to iterate the substructures and fill/read the values. On the JSON export, this properties are skipped, and the values that usually refer to the substructure are represented as arrays, effectively returning the values for all substructures. For example, transformers have the <code class="docutils literal notranslate"><span class="pre">kVA</span></code> property, which in the DSS language and general property usage refer to the <code class="docutils literal notranslate"><span class="pre">kVA</span></code> of the active winding of a certain transformer. In our JSON export, <code class="docutils literal notranslate"><span class="pre">kVA</span></code> is an array of all <code class="docutils literal notranslate"><span class="pre">kVA</span></code> values of the windings. For this example, <code class="docutils literal notranslate"><span class="pre">kVA</span></code> is turned into the <code class="docutils literal notranslate"><span class="pre">kVAs</span></code> property, but some properties do not have array-style options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Transformer</span></code> and <code class="docutils literal notranslate"><span class="pre">XfmrCode</span></code>: <code class="docutils literal notranslate"><span class="pre">MaxTap</span></code>, <code class="docutils literal notranslate"><span class="pre">MinTap</span></code>, <code class="docutils literal notranslate"><span class="pre">RdcOhms</span></code>, <code class="docutils literal notranslate"><span class="pre">NumTaps</span></code>, <code class="docutils literal notranslate"><span class="pre">Rneut</span></code>, <code class="docutils literal notranslate"><span class="pre">Xneut</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AutoTrans</span></code>: <code class="docutils literal notranslate"><span class="pre">MaxTap</span></code>, <code class="docutils literal notranslate"><span class="pre">MinTap</span></code>, <code class="docutils literal notranslate"><span class="pre">RdcOhms</span></code>, <code class="docutils literal notranslate"><span class="pre">NumTaps</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code>: <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">h</span></code> (note that these are already arrays in <code class="docutils literal notranslate"><span class="pre">LineSpacing</span></code> in the DSS language)</p></li>
+</ul>
+<p>All these are consequently exported as arrays (lists) in the JSON document.</p>
+<p>Only native JSON types are used. Complex numbers are represented as pairs of floating-point numbers.</p>
+<p>The redundant properties at marked <code class="docutils literal notranslate"><span class="pre">Redundant</span> <span class="pre">with</span></code> in <a class="reference external" href="https://dss-extensions.org/dss_properties.html">DSS-Extensions: OpenDSS Commands and Properties</a>.</p>
+<p>See a special note about <code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code> and <code class="docutils literal notranslate"><span class="pre">Line</span></code> at the end of this document.</p>
+</section>
+<section id="future-expectations">
+<h3>Future expectations<a class="headerlink" href="#future-expectations" title="Link to this heading">#</a></h3>
+<p>Although the basics of the JSON export feature are done, we may still adjust some aspects for better user experience and uniformity. We do not want to distance the output too far from the official OpenDSS format, but introducing a few extra properties (especially for Lines and Transformers) may lessen some concerns of usability.</p>
+<p><strong>Naming convention:</strong></p>
+<ul class="simple">
+<li><p>As expected for the internal property names, the JSON exports and Obj/Batch APIs will be updated to match the new internal names. Only the case of the characters will change since that doesn’t affect OpenDSS (OpenDSS is mostly case insensitive). For example <code class="docutils literal notranslate"><span class="pre">nconds</span></code> may be updated to <code class="docutils literal notranslate"><span class="pre">NConds</span></code> without negative effects. Since we already have an option to export lower-case names, users could use that if they do not want to worry about this specific change in the future.</p></li>
+<li><p>Since OpenDSS have some properties which are invalid as identifiers on the most popular programming languages, we may add an option to transform the related keys. For example, <code class="docutils literal notranslate"><span class="pre">%LoadLoss</span></code> could be replaced with <code class="docutils literal notranslate"><span class="pre">pctLoadLoss</span></code>, as already done to implement the Obj/Batch APIs in Python and C++. This is not a priority.</p></li>
+</ul>
+<p><strong>Alternative layouts:</strong></p>
+<ul class="simple">
+<li><p>For transformers and related objects, we may provide an option to output and input windings as a list of objects. For lines and related, conductor position objects could be used.</p></li>
+<li><p>For array outputs, when the arrays represent matrices, add an option to use array of arrays (<code class="docutils literal notranslate"><span class="pre">[[1,2],</span> <span class="pre">[3,4]]</span></code>) instead of plain arrays (<code class="docutils literal notranslate"><span class="pre">[1,2,3,4]</span></code>).</p></li>
+</ul>
+<p><strong>Export and import:</strong> Currently, only exporting is supported due to the various ways some classes can be populated, optional fields/properties, and so on.<br />
+There are plan to provide a more restricted alternative for importing from various formats to allow easier validation. If the data is uniform, roundtrip as dataframes (export JSON and reimporting it later as dataframes) through <code class="docutils literal notranslate"><span class="pre">batch_new(df=df)</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">dss.Obj.Line.batch_new(df=df_lines)</span></code>.</p>
+<p><strong>GeoJSON:</strong> GeoJSON export of the whole circuit, including buses, is expected in a future version. We didn’t want to add too much complexity before confirming the output is correct and reasonable.</p>
+</section>
+</section>
+<section id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h2>
+<p>In the classic API, the active element or a whole active class can be exported.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">dss</span>
+
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;redirect electricdss-tst/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select a load</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Loads</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">&#39;670a&#39;</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveDSSElement</span><span class="o">.</span><span class="n">Name</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Load.670a&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveDSSElement</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;{&quot;Name&quot;:&quot;670a&quot;,&quot;Bus1&quot;:&quot;670.1&quot;,&quot;Phases&quot;:1,&quot;Conn&quot;:&quot;wye&quot;,&quot;Model&quot;:1,&quot;kV&quot;:2.3999999999999999E+000,&quot;kW&quot;:1.7000000000000000E+001,&quot;kvar&quot;:1.0000000000000000E+001}&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>For inspection or post-processing, we could load the JSON string in Python for better formatting:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveDSSElement</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Name&#39;: &#39;670a&#39;,
+ &#39;Bus1&#39;: &#39;670.1&#39;,
+ &#39;Phases&#39;: 1,
+ &#39;Conn&#39;: &#39;wye&#39;,
+ &#39;Model&#39;: 1,
+ &#39;kV&#39;: 2.4,
+ &#39;kW&#39;: 17.0,
+ &#39;kvar&#39;: 10.0}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;Load&#39;</span><span class="p">)</span>
+<span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;Name&#39;: &#39;671&#39;,
+  &#39;Bus1&#39;: &#39;671.1.2.3&#39;,
+  &#39;Phases&#39;: 3,
+  &#39;Conn&#39;: &#39;delta&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 4.16,
+  &#39;kW&#39;: 1155.0,
+  &#39;kvar&#39;: 660.0},
+ {&#39;Name&#39;: &#39;634a&#39;,
+  &#39;Bus1&#39;: &#39;634.1&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 0.277,
+  &#39;kW&#39;: 160.0,
+  &#39;kvar&#39;: 110.0},
+ {&#39;Name&#39;: &#39;634b&#39;,
+  &#39;Bus1&#39;: &#39;634.2&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 0.277,
+  &#39;kW&#39;: 120.0,
+  &#39;kvar&#39;: 90.0},
+ {&#39;Name&#39;: &#39;634c&#39;,
+  &#39;Bus1&#39;: &#39;634.3&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 0.277,
+  &#39;kW&#39;: 120.0,
+  &#39;kvar&#39;: 90.0},
+ {&#39;Name&#39;: &#39;645&#39;,
+  &#39;Bus1&#39;: &#39;645.2&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 2.4,
+  &#39;kW&#39;: 170.0,
+  &#39;kvar&#39;: 125.0},
+ {&#39;Name&#39;: &#39;646&#39;,
+  &#39;Bus1&#39;: &#39;646.2.3&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;delta&#39;,
+  &#39;Model&#39;: 2,
+  &#39;kV&#39;: 4.16,
+  &#39;kW&#39;: 230.0,
+  &#39;kvar&#39;: 132.0},
+ {&#39;Name&#39;: &#39;692&#39;,
+  &#39;Bus1&#39;: &#39;692.3.1&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;delta&#39;,
+  &#39;Model&#39;: 5,
+  &#39;kV&#39;: 4.16,
+  &#39;kW&#39;: 170.0,
+  &#39;kvar&#39;: 151.0},
+ {&#39;Name&#39;: &#39;675a&#39;,
+  &#39;Bus1&#39;: &#39;675.1&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 2.4,
+  &#39;kW&#39;: 485.0,
+  &#39;kvar&#39;: 190.0},
+ {&#39;Name&#39;: &#39;675b&#39;,
+  &#39;Bus1&#39;: &#39;675.2&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 2.4,
+  &#39;kW&#39;: 68.0,
+  &#39;kvar&#39;: 60.0},
+ {&#39;Name&#39;: &#39;675c&#39;,
+  &#39;Bus1&#39;: &#39;675.3&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 2.4,
+  &#39;kW&#39;: 290.0,
+  &#39;kvar&#39;: 212.0},
+ {&#39;Name&#39;: &#39;611&#39;,
+  &#39;Bus1&#39;: &#39;611.3&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 5,
+  &#39;kV&#39;: 2.4,
+  &#39;kW&#39;: 170.0,
+  &#39;kvar&#39;: 80.0},
+ {&#39;Name&#39;: &#39;652&#39;,
+  &#39;Bus1&#39;: &#39;652.1&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 2,
+  &#39;kV&#39;: 2.4,
+  &#39;kW&#39;: 128.0,
+  &#39;kvar&#39;: 86.0},
+ {&#39;Name&#39;: &#39;670a&#39;,
+  &#39;Bus1&#39;: &#39;670.1&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 2.4,
+  &#39;kW&#39;: 17.0,
+  &#39;kvar&#39;: 10.0},
+ {&#39;Name&#39;: &#39;670b&#39;,
+  &#39;Bus1&#39;: &#39;670.2&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 2.4,
+  &#39;kW&#39;: 66.0,
+  &#39;kvar&#39;: 38.0},
+ {&#39;Name&#39;: &#39;670c&#39;,
+  &#39;Bus1&#39;: &#39;670.3&#39;,
+  &#39;Phases&#39;: 1,
+  &#39;Conn&#39;: &#39;wye&#39;,
+  &#39;Model&#39;: 1,
+  &#39;kV&#39;: 2.4,
+  &#39;kW&#39;: 117.0,
+  &#39;kvar&#39;: 68.0}]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Or we could load into a dataframe. Some classes fit dataframes well, some not so much.</p>
+<p>Users should be aware that the order of properties can change the final result for some classes. Transformers and lines use indexed structures that don’t fit the tabular format by default.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Bus1</th>
+      <th>Phases</th>
+      <th>Conn</th>
+      <th>Model</th>
+      <th>kV</th>
+      <th>kW</th>
+      <th>kvar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>671</td>
+      <td>671.1.2.3</td>
+      <td>3</td>
+      <td>delta</td>
+      <td>1</td>
+      <td>4.160</td>
+      <td>1155.0</td>
+      <td>660.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>634a</td>
+      <td>634.1</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>0.277</td>
+      <td>160.0</td>
+      <td>110.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>634b</td>
+      <td>634.2</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>0.277</td>
+      <td>120.0</td>
+      <td>90.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>634c</td>
+      <td>634.3</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>0.277</td>
+      <td>120.0</td>
+      <td>90.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>645</td>
+      <td>645.2</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>2.400</td>
+      <td>170.0</td>
+      <td>125.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>646</td>
+      <td>646.2.3</td>
+      <td>1</td>
+      <td>delta</td>
+      <td>2</td>
+      <td>4.160</td>
+      <td>230.0</td>
+      <td>132.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>692</td>
+      <td>692.3.1</td>
+      <td>1</td>
+      <td>delta</td>
+      <td>5</td>
+      <td>4.160</td>
+      <td>170.0</td>
+      <td>151.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>675a</td>
+      <td>675.1</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>2.400</td>
+      <td>485.0</td>
+      <td>190.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>675b</td>
+      <td>675.2</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>2.400</td>
+      <td>68.0</td>
+      <td>60.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>675c</td>
+      <td>675.3</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>2.400</td>
+      <td>290.0</td>
+      <td>212.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>611</td>
+      <td>611.3</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>5</td>
+      <td>2.400</td>
+      <td>170.0</td>
+      <td>80.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>652</td>
+      <td>652.1</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>2</td>
+      <td>2.400</td>
+      <td>128.0</td>
+      <td>86.0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>670a</td>
+      <td>670.1</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>2.400</td>
+      <td>17.0</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>670b</td>
+      <td>670.2</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>2.400</td>
+      <td>66.0</td>
+      <td>38.0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>670c</td>
+      <td>670.3</td>
+      <td>1</td>
+      <td>wye</td>
+      <td>1</td>
+      <td>2.400</td>
+      <td>117.0</td>
+      <td>68.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;Transformer&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Phases</th>
+      <th>X12</th>
+      <th>Bus</th>
+      <th>Conn</th>
+      <th>kV</th>
+      <th>kVA</th>
+      <th>pctR</th>
+      <th>Bank</th>
+      <th>pctLoadLoss</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>sub</td>
+      <td>3</td>
+      <td>0.008</td>
+      <td>[sourcebus, 650]</td>
+      <td>[delta, wye]</td>
+      <td>[114.99999999999999, 4.16]</td>
+      <td>[5000.0, 5000.0]</td>
+      <td>[0.0005, 0.0005]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>reg1</td>
+      <td>1</td>
+      <td>0.010</td>
+      <td>[650.1, rg60.1]</td>
+      <td>NaN</td>
+      <td>[2.399999999999999, 2.399999999999999]</td>
+      <td>[1666.0, 1666.0]</td>
+      <td>NaN</td>
+      <td>reg1</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>reg2</td>
+      <td>1</td>
+      <td>0.010</td>
+      <td>[650.2, rg60.2]</td>
+      <td>NaN</td>
+      <td>[2.399999999999999, 2.399999999999999]</td>
+      <td>[1666.0, 1666.0]</td>
+      <td>NaN</td>
+      <td>reg1</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>reg3</td>
+      <td>1</td>
+      <td>0.010</td>
+      <td>[650.3, rg60.3]</td>
+      <td>NaN</td>
+      <td>[2.399999999999999, 2.399999999999999]</td>
+      <td>[1666.0, 1666.0]</td>
+      <td>NaN</td>
+      <td>reg1</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>xfm1</td>
+      <td>3</td>
+      <td>2.000</td>
+      <td>[633, 634]</td>
+      <td>[wye, wye]</td>
+      <td>[4.16, 0.4799999999999999]</td>
+      <td>[500.0, 500.0]</td>
+      <td>[0.55, 0.55]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>This NaN values above should be the empty/non-filled properties. For example, check the JSON for <code class="docutils literal notranslate"><span class="pre">reg1</span></code> directly:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Transformers</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">&#39;reg1&#39;</span>
+<span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveDSSElement</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Name&#39;: &#39;reg1&#39;,
+ &#39;Phases&#39;: 1,
+ &#39;Bank&#39;: &#39;reg1&#39;,
+ &#39;X12&#39;: 0.01,
+ &#39;kVA&#39;: [1666.0, 1666.0],
+ &#39;Bus&#39;: [&#39;650.1&#39;, &#39;rg60.1&#39;],
+ &#39;kV&#39;: [2.4, 2.4],
+ &#39;pctLoadLoss&#39;: 0.01}
+</pre></div>
+</div>
+</div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">reg1</span></code>, the properties <code class="docutils literal notranslate"><span class="pre">windings</span></code>, <code class="docutils literal notranslate"><span class="pre">conn</span></code> and <code class="docutils literal notranslate"><span class="pre">%R</span></code> were not provided. The order of the properties in this previous cell output are in the same order as the original DSS script.<br />
+We can check how the properties were used in the input file for comparison:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;electricdss-tst/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ckt_file</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">text_line</span> <span class="ow">in</span> <span class="n">ckt_file</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;transformer.reg1&#39;</span> <span class="ow">in</span> <span class="n">text_line</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="c1"># Found the transformer</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">text_line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            
+            <span class="c1">#...but need to check for the MORE command:</span>
+            <span class="n">text_line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">ckt_file</span><span class="p">)</span>
+            <span class="k">while</span> <span class="n">text_line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">text_line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">text_line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">ckt_file</span><span class="p">)</span>
+
+            <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>New Transformer.Reg1 phases=1 bank=reg1 XHL=0.01 kVAs=[1666 1666]
+~ Buses=[650.1 RG60.1] kVs=[2.4  2.4] %LoadLoss=0.01
+</pre></div>
+</div>
+</div>
+</div>
+<p>From this, note that <code class="docutils literal notranslate"><span class="pre">Buses</span></code> was reported in the <code class="docutils literal notranslate"><span class="pre">bus</span></code> field as an array, as well as <code class="docutils literal notranslate"><span class="pre">kVAs</span></code> and <code class="docutils literal notranslate"><span class="pre">kVs</span></code> were exported as a <code class="docutils literal notranslate"><span class="pre">kVA</span></code> and <code class="docutils literal notranslate"><span class="pre">kV</span></code> arrays, respectively. This is done by disambiguation process.</p>
+<p>As a sidenote, the dataframe can be a little better with Pandas 2.0+, using NA instead of NaN (which forces converting integers to floats):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(),</span> <span class="n">dtype_backend</span><span class="o">=</span><span class="s1">&#39;pyarrow&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Phases</th>
+      <th>X12</th>
+      <th>Bus</th>
+      <th>Conn</th>
+      <th>kV</th>
+      <th>kVA</th>
+      <th>pctR</th>
+      <th>Bank</th>
+      <th>pctLoadLoss</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>sub</td>
+      <td>3</td>
+      <td>0.008</td>
+      <td>[sourcebus, 650]</td>
+      <td>[delta, wye]</td>
+      <td>[114.99999999999999, 4.16]</td>
+      <td>[5000.0, 5000.0]</td>
+      <td>[0.0005, 0.0005]</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>reg1</td>
+      <td>1</td>
+      <td>0.010</td>
+      <td>[650.1, rg60.1]</td>
+      <td>NaN</td>
+      <td>[2.399999999999999, 2.399999999999999]</td>
+      <td>[1666.0, 1666.0]</td>
+      <td>NaN</td>
+      <td>reg1</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>reg2</td>
+      <td>1</td>
+      <td>0.010</td>
+      <td>[650.2, rg60.2]</td>
+      <td>NaN</td>
+      <td>[2.399999999999999, 2.399999999999999]</td>
+      <td>[1666.0, 1666.0]</td>
+      <td>NaN</td>
+      <td>reg1</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>reg3</td>
+      <td>1</td>
+      <td>0.010</td>
+      <td>[650.3, rg60.3]</td>
+      <td>NaN</td>
+      <td>[2.399999999999999, 2.399999999999999]</td>
+      <td>[1666.0, 1666.0]</td>
+      <td>NaN</td>
+      <td>reg1</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>xfm1</td>
+      <td>3</td>
+      <td>2.000</td>
+      <td>[633, 634]</td>
+      <td>[wye, wye]</td>
+      <td>[4.16, 0.4799999999999999]</td>
+      <td>[500.0, 500.0]</td>
+      <td>[0.55, 0.55]</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="export-option-flags">
+<h2>Export option flags<a class="headerlink" href="#export-option-flags" title="Link to this heading">#</a></h2>
+<p>Some flags are currently implemented to adjust the output:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Full</span></code>: Exports all properties, even if not filled by the user. This can be useful for debugging or just checking some default properties.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EnumAsInt</span></code>: Try to use integer representation for enums. Note that the integer values may be specific to a version of the engine — that is, don’t use the integer values for long-term storage. The integer values may be useful to avoid the work of converting the strings to integer on user code and so on. The enums should be available in the DSS.Obj classes, and are exported from the <code class="docutils literal notranslate"><span class="pre">DSS_ExtractSchema</span></code> low-level function.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SkipRedundant</span></code>: Avoid outputting redundant properties.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FullNames</span></code>: Prefer listing object full names, including the class name, even where it is not required.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Pretty</span></code>: Pretty-format the output (as much as the default implementation of fpjson in Free Pascal allows). The output is a bit more readable without requiring loading the JSON.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ExcludeDisabled</span></code>: When exporting a whole class, skip disabled elements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SkipDSSClass</span></code>: By default, a JSON field “DSSClass” is added with the name of the DSS class for each element. This may not always be required or useful, so we can skip it sometimes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LowercaseKeys</span></code>: Use all lowercase keys instead of the internal variants for all keys. “DSSClass” is also converted to “dssclass”.</p></li>
+</ul>
+<p>These are bit flags, so you have to bitwise-or them together when multiple flags are used.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">DSSJSONFlags</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">??</span> DSSJSONFlags
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s print the <code class="docutils literal notranslate"><span class="pre">Pretty</span></code>, <code class="docutils literal notranslate"><span class="pre">LowercaseKeys</span></code> and <code class="docutils literal notranslate"><span class="pre">Full</span></code> outputs with for <code class="docutils literal notranslate"><span class="pre">reg1</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Transformers</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">&#39;reg1&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveDSSElement</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&quot;Name&quot;:&quot;reg1&quot;,&quot;Phases&quot;:1,&quot;Bank&quot;:&quot;reg1&quot;,&quot;X12&quot;:1.0000000000000000E-002,&quot;kVA&quot;:[1.6660000000000000E+003,1.6660000000000000E+003],&quot;Bus&quot;:[&quot;650.1&quot;,&quot;rg60.1&quot;],&quot;kV&quot;:[2.3999999999999999E+000,2.3999999999999999E+000],&quot;pctLoadLoss&quot;:1.0000000000000000E-002}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Transformers</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">&#39;reg1&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveDSSElement</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">Pretty</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{
+  &quot;Name&quot; : &quot;reg1&quot;,
+  &quot;Phases&quot; : 1,
+  &quot;Bank&quot; : &quot;reg1&quot;,
+  &quot;X12&quot; : 1.0000000000000000E-002,
+  &quot;kVA&quot; : [
+    1.6660000000000000E+003,
+    1.6660000000000000E+003
+  ],
+  &quot;Bus&quot; : [
+    &quot;650.1&quot;,
+    &quot;rg60.1&quot;
+  ],
+  &quot;kV&quot; : [
+    2.3999999999999999E+000,
+    2.3999999999999999E+000
+  ],
+  &quot;pctLoadLoss&quot; : 1.0000000000000000E-002
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Transformers</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">&#39;reg1&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveDSSElement</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">LowercaseKeys</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&quot;Name&quot;:&quot;reg1&quot;,&quot;phases&quot;:1,&quot;bank&quot;:&quot;reg1&quot;,&quot;x12&quot;:1.0000000000000000E-002,&quot;kva&quot;:[1.6660000000000000E+003,1.6660000000000000E+003],&quot;bus&quot;:[&quot;650.1&quot;,&quot;rg60.1&quot;],&quot;kv&quot;:[2.3999999999999999E+000,2.3999999999999999E+000],&quot;%loadloss&quot;:1.0000000000000000E-002}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Transformers</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">&#39;reg1&#39;</span>
+<span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveDSSElement</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">Full</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Name&#39;: &#39;reg1&#39;,
+ &#39;Phases&#39;: 1,
+ &#39;Bus&#39;: [&#39;650.1&#39;, &#39;rg60.1&#39;],
+ &#39;Conn&#39;: [&#39;wye&#39;, &#39;wye&#39;],
+ &#39;kV&#39;: [2.4, 2.4],
+ &#39;kVA&#39;: [1666.0, 1666.0],
+ &#39;Tap&#39;: [1.0, 1.05625],
+ &#39;pctR&#39;: [0.005, 0.005],
+ &#39;RNeut&#39;: [-1.0, -1.0],
+ &#39;XNeut&#39;: [0.0, 0.0],
+ &#39;Buses&#39;: [&#39;650.1&#39;, &#39;rg60.1&#39;],
+ &#39;Conns&#39;: [&#39;wye&#39;, &#39;wye&#39;],
+ &#39;kVs&#39;: [2.4, 2.4],
+ &#39;kVAs&#39;: [1666.0, 1666.0],
+ &#39;Taps&#39;: [1.0, 1.05625],
+ &#39;XHL&#39;: 0.01,
+ &#39;XHT&#39;: 35.0,
+ &#39;XLT&#39;: 30.0,
+ &#39;XSCArray&#39;: [0.01],
+ &#39;Thermal&#39;: 2.0,
+ &#39;n&#39;: 0.8,
+ &#39;m&#39;: 0.8,
+ &#39;FLRise&#39;: 65.0,
+ &#39;HSRise&#39;: 15.0,
+ &#39;pctLoadLoss&#39;: 0.01,
+ &#39;pctNoLoadLoss&#39;: 0.0,
+ &#39;NormHkVA&#39;: 1832.6,
+ &#39;EmergHkVA&#39;: 2499.0,
+ &#39;Sub&#39;: False,
+ &#39;MaxTap&#39;: [1.1, 1.1],
+ &#39;MinTap&#39;: [0.9, 0.9],
+ &#39;NumTaps&#39;: [32, 32],
+ &#39;SubName&#39;: &#39;&#39;,
+ &#39;pctIMag&#39;: 0.0,
+ &#39;ppm_Antifloat&#39;: 1.0,
+ &#39;pctRs&#39;: [0.005, 0.005],
+ &#39;Bank&#39;: &#39;reg1&#39;,
+ &#39;XfmrCode&#39;: None,
+ &#39;XRConst&#39;: False,
+ &#39;X12&#39;: 0.01,
+ &#39;X13&#39;: 35.0,
+ &#39;X23&#39;: 30.0,
+ &#39;LeadLag&#39;: &#39;Lag&#39;,
+ &#39;WdgCurrents&#39;: &#39;594.2557, (-28.695), 562.6086, (151.31), &#39;,
+ &#39;Core&#39;: &#39;shell&#39;,
+ &#39;RDCOhms&#39;: [0.0001469387755102041, 0.0001469387755102041],
+ &#39;Ratings&#39;: [1100.0],
+ &#39;FaultRate&#39;: 0.007,
+ &#39;pctPerm&#39;: 0.0,
+ &#39;Repair&#39;: 0.0,
+ &#39;BaseFreq&#39;: 60.0,
+ &#39;Enabled&#39;: True,
+ &#39;Like&#39;: &#39;&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;Transformer&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">SkipDSSClass</span> <span class="o">|</span> <span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">EnumAsInt</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>DSSClass</th>
+      <th>Name</th>
+      <th>Phases</th>
+      <th>X12</th>
+      <th>Bus</th>
+      <th>Conn</th>
+      <th>kV</th>
+      <th>kVA</th>
+      <th>pctR</th>
+      <th>Bank</th>
+      <th>pctLoadLoss</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Transformer</td>
+      <td>sub</td>
+      <td>3</td>
+      <td>0.008</td>
+      <td>[sourcebus, 650]</td>
+      <td>[1, 0]</td>
+      <td>[114.99999999999999, 4.16]</td>
+      <td>[5000.0, 5000.0]</td>
+      <td>[0.0005, 0.0005]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Transformer</td>
+      <td>reg1</td>
+      <td>1</td>
+      <td>0.010</td>
+      <td>[650.1, rg60.1]</td>
+      <td>NaN</td>
+      <td>[2.399999999999999, 2.399999999999999]</td>
+      <td>[1666.0, 1666.0]</td>
+      <td>NaN</td>
+      <td>reg1</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Transformer</td>
+      <td>reg2</td>
+      <td>1</td>
+      <td>0.010</td>
+      <td>[650.2, rg60.2]</td>
+      <td>NaN</td>
+      <td>[2.399999999999999, 2.399999999999999]</td>
+      <td>[1666.0, 1666.0]</td>
+      <td>NaN</td>
+      <td>reg1</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Transformer</td>
+      <td>reg3</td>
+      <td>1</td>
+      <td>0.010</td>
+      <td>[650.3, rg60.3]</td>
+      <td>NaN</td>
+      <td>[2.399999999999999, 2.399999999999999]</td>
+      <td>[1666.0, 1666.0]</td>
+      <td>NaN</td>
+      <td>reg1</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Transformer</td>
+      <td>xfm1</td>
+      <td>3</td>
+      <td>2.000</td>
+      <td>[633, 634]</td>
+      <td>[0, 0]</td>
+      <td>[4.16, 0.4799999999999999]</td>
+      <td>[500.0, 500.0]</td>
+      <td>[0.55, 0.55]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;Line&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">SkipDSSClass</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>DSSClass</th>
+      <th>Name</th>
+      <th>Phases</th>
+      <th>Bus1</th>
+      <th>Bus2</th>
+      <th>LineCode</th>
+      <th>Ratings</th>
+      <th>NormAmps</th>
+      <th>EmergAmps</th>
+      <th>Length</th>
+      <th>Units</th>
+      <th>Switch</th>
+      <th>R1</th>
+      <th>R0</th>
+      <th>X1</th>
+      <th>X0</th>
+      <th>C1</th>
+      <th>C0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Line</td>
+      <td>650632</td>
+      <td>3</td>
+      <td>rg60.1.2.3</td>
+      <td>632.1.2.3</td>
+      <td>mtx601</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>2000.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Line</td>
+      <td>632670</td>
+      <td>3</td>
+      <td>632.1.2.3</td>
+      <td>670.1.2.3</td>
+      <td>mtx601</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>667.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Line</td>
+      <td>670671</td>
+      <td>3</td>
+      <td>670.1.2.3</td>
+      <td>671.1.2.3</td>
+      <td>mtx601</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>1333.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Line</td>
+      <td>671680</td>
+      <td>3</td>
+      <td>671.1.2.3</td>
+      <td>680.1.2.3</td>
+      <td>mtx601</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>1000.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Line</td>
+      <td>632633</td>
+      <td>3</td>
+      <td>632.1.2.3</td>
+      <td>633.1.2.3</td>
+      <td>mtx602</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>500.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Line</td>
+      <td>632645</td>
+      <td>2</td>
+      <td>632.3.2</td>
+      <td>645.3.2</td>
+      <td>mtx603</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>500.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Line</td>
+      <td>645646</td>
+      <td>2</td>
+      <td>645.3.2</td>
+      <td>646.3.2</td>
+      <td>mtx603</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>300.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Line</td>
+      <td>692675</td>
+      <td>3</td>
+      <td>692.1.2.3</td>
+      <td>675.1.2.3</td>
+      <td>mtx606</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>500.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Line</td>
+      <td>671684</td>
+      <td>2</td>
+      <td>671.1.3</td>
+      <td>684.1.3</td>
+      <td>mtx604</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>300.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Line</td>
+      <td>684611</td>
+      <td>1</td>
+      <td>684.3</td>
+      <td>611.3</td>
+      <td>mtx605</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>300.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Line</td>
+      <td>684652</td>
+      <td>1</td>
+      <td>684.1</td>
+      <td>652.1</td>
+      <td>mtx607</td>
+      <td>[400.0]</td>
+      <td>400.0</td>
+      <td>600.0</td>
+      <td>800.000</td>
+      <td>ft</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Line</td>
+      <td>671692</td>
+      <td>3</td>
+      <td>671</td>
+      <td>692</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.001</td>
+      <td>none</td>
+      <td>1.0</td>
+      <td>0.0001</td>
+      <td>0.0001</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;LineCode&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">SkipDSSClass</span><span class="p">))</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>DSSClass</th>
+      <td>LineCode</td>
+      <td>LineCode</td>
+      <td>LineCode</td>
+      <td>LineCode</td>
+      <td>LineCode</td>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>NPhases</th>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>BaseFreq</th>
+      <td>60.0</td>
+      <td>60.0</td>
+      <td>60.0</td>
+      <td>60.0</td>
+      <td>60.0</td>
+    </tr>
+    <tr>
+      <th>RMatrix</th>
+      <td>[[0.086666667, 0.029545455, 0.0290719699999999...</td>
+      <td>[[0.088371212, 0.02992424, 0.029545455], [0.02...</td>
+      <td>[[0.087405303, 0.029071969999999992, 0.0299242...</td>
+      <td>[[0.087405303, 0.029924242000000004, 0.0290719...</td>
+      <td>[[0.088371212, 0.029545455, 0.0299242420000000...</td>
+    </tr>
+    <tr>
+      <th>XMatrix</th>
+      <td>[[0.20416666700000002, 0.095018939, 0.07289772...</td>
+      <td>[[0.19852272700000004, 0.080227273, 0.09501893...</td>
+      <td>[[0.201723485, 0.07289772699999998, 0.08022727...</td>
+      <td>[[0.201723485, 0.080227273, 0.0728977269999999...</td>
+      <td>[[0.19852272700000004, 0.095018939, 0.08022727...</td>
+    </tr>
+    <tr>
+      <th>CMatrix</th>
+      <td>[[2.851710071999999, -0.920293787, -0.35075556...</td>
+      <td>[[3.004631862, -0.5850112530000001, -0.9202937...</td>
+      <td>[[2.71134756, -0.350755566, -0.585011253000000...</td>
+      <td>[[2.71134756, -0.5850112530000001, -0.35075556...</td>
+      <td>[[3.004631862, -0.920293787, -0.58501125300000...</td>
+    </tr>
+    <tr>
+      <th>Units</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;LineCode&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">SkipDSSClass</span> <span class="o">|</span> <span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">SkipRedundant</span> <span class="o">|</span> <span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">Full</span><span class="p">))</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>DSSClass</th>
+      <td>LineCode</td>
+      <td>LineCode</td>
+      <td>LineCode</td>
+      <td>LineCode</td>
+      <td>LineCode</td>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>NPhases</th>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>R1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>X1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>R0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>X0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>C1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>C0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Units</th>
+      <td>none</td>
+      <td>none</td>
+      <td>none</td>
+      <td>none</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>RMatrix</th>
+      <td>[[0.086666667, 0.029545455, 0.0290719699999999...</td>
+      <td>[[0.088371212, 0.02992424, 0.029545455], [0.02...</td>
+      <td>[[0.087405303, 0.029071969999999992, 0.0299242...</td>
+      <td>[[0.087405303, 0.029924242000000004, 0.0290719...</td>
+      <td>[[0.088371212, 0.029545455, 0.0299242420000000...</td>
+    </tr>
+    <tr>
+      <th>XMatrix</th>
+      <td>[[0.20416666700000002, 0.095018939, 0.07289772...</td>
+      <td>[[0.19852272700000004, 0.080227273, 0.09501893...</td>
+      <td>[[0.201723485, 0.07289772699999998, 0.08022727...</td>
+      <td>[[0.201723485, 0.080227273, 0.0728977269999999...</td>
+      <td>[[0.19852272700000004, 0.095018939, 0.08022727...</td>
+    </tr>
+    <tr>
+      <th>CMatrix</th>
+      <td>[[2.851710071999999, -0.920293787, -0.35075556...</td>
+      <td>[[3.004631862, -0.5850112530000001, -0.9202937...</td>
+      <td>[[2.71134756, -0.350755566, -0.585011253000000...</td>
+      <td>[[2.71134756, -0.5850112530000001, -0.35075556...</td>
+      <td>[[3.004631862, -0.920293787, -0.58501125300000...</td>
+    </tr>
+    <tr>
+      <th>BaseFreq</th>
+      <td>60</td>
+      <td>60</td>
+      <td>60</td>
+      <td>60</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>NormAmps</th>
+      <td>400</td>
+      <td>400</td>
+      <td>400</td>
+      <td>400</td>
+      <td>400</td>
+    </tr>
+    <tr>
+      <th>EmergAmps</th>
+      <td>600</td>
+      <td>600</td>
+      <td>600</td>
+      <td>600</td>
+      <td>600</td>
+    </tr>
+    <tr>
+      <th>FaultRate</th>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <th>PctPerm</th>
+      <td>20</td>
+      <td>20</td>
+      <td>20</td>
+      <td>20</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>Repair</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Kron</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>Rg</th>
+      <td>0.01805</td>
+      <td>0.01805</td>
+      <td>0.01805</td>
+      <td>0.01805</td>
+      <td>0.01805</td>
+    </tr>
+    <tr>
+      <th>Xg</th>
+      <td>0.155081</td>
+      <td>0.155081</td>
+      <td>0.155081</td>
+      <td>0.155081</td>
+      <td>0.155081</td>
+    </tr>
+    <tr>
+      <th>rho</th>
+      <td>100</td>
+      <td>100</td>
+      <td>100</td>
+      <td>100</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>Neutral</th>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Ratings</th>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+    </tr>
+    <tr>
+      <th>LineType</th>
+      <td>oh</td>
+      <td>oh</td>
+      <td>oh</td>
+      <td>oh</td>
+      <td>oh</td>
+    </tr>
+    <tr>
+      <th>Like</th>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="using-opendssdirect-py">
+<h2>Using OpenDSSDirect.py<a class="headerlink" href="#using-opendssdirect-py" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">opendssdirect</span> <span class="kn">import</span> <span class="n">dss</span> <span class="k">as</span> <span class="n">odd</span>
+
+<span class="n">odd</span><span class="o">.</span><span class="n">Basic</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;Capacitor&#39;</span><span class="p">)</span>
+<span class="n">odd</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;[{&quot;Name&quot;:&quot;cap1&quot;,&quot;Bus1&quot;:&quot;675&quot;,&quot;Phases&quot;:3,&quot;kvar&quot;:[6.0000000000000000E+002],&quot;kV&quot;:4.1600000000000001E+000},{&quot;Name&quot;:&quot;cap2&quot;,&quot;Bus1&quot;:&quot;611.3&quot;,&quot;Phases&quot;:1,&quot;kvar&quot;:[1.0000000000000000E+002],&quot;kV&quot;:2.3999999999999999E+000}]&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">odd</span><span class="o">.</span><span class="n">Loads</span><span class="o">.</span><span class="n">First</span><span class="p">()</span>
+<span class="n">odd</span><span class="o">.</span><span class="n">Element</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;{&quot;Name&quot;:&quot;671&quot;,&quot;Bus1&quot;:&quot;671.1.2.3&quot;,&quot;Phases&quot;:3,&quot;Conn&quot;:&quot;delta&quot;,&quot;Model&quot;:1,&quot;kV&quot;:4.1600000000000001E+000,&quot;kW&quot;:1.1550000000000000E+003,&quot;kvar&quot;:6.6000000000000000E+002}&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">odd</span><span class="o">.</span><span class="n">Element</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">Full</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Name&#39;: &#39;671&#39;,
+ &#39;Phases&#39;: 3,
+ &#39;Bus1&#39;: &#39;671.1.2.3&#39;,
+ &#39;kV&#39;: 4.16,
+ &#39;kW&#39;: 1155.0,
+ &#39;PF&#39;: 0.8682431421244591,
+ &#39;Model&#39;: 1,
+ &#39;Yearly&#39;: None,
+ &#39;Daily&#39;: None,
+ &#39;Duty&#39;: None,
+ &#39;Growth&#39;: None,
+ &#39;Conn&#39;: &#39;delta&#39;,
+ &#39;kvar&#39;: 660.0,
+ &#39;RNeut&#39;: -1.0,
+ &#39;XNeut&#39;: 0.0,
+ &#39;Status&#39;: &#39;Variable&#39;,
+ &#39;Class&#39;: 1,
+ &#39;VMinpu&#39;: 0.95,
+ &#39;VMaxpu&#39;: 1.05,
+ &#39;VMinNorm&#39;: 0.0,
+ &#39;VMinEmerg&#39;: 0.0,
+ &#39;XfkVA&#39;: 0.0,
+ &#39;AllocationFactor&#39;: 0.5,
+ &#39;kVA&#39;: 1330.2725284692608,
+ &#39;pctMean&#39;: 50.0,
+ &#39;pctStdDev&#39;: 10.0,
+ &#39;CVRWatts&#39;: 1.0,
+ &#39;CVRVars&#39;: 2.0,
+ &#39;kWh&#39;: 0.0,
+ &#39;kWhDays&#39;: 30.0,
+ &#39;CFactor&#39;: 4.0,
+ &#39;CVRCurve&#39;: None,
+ &#39;NumCust&#39;: 1,
+ &#39;ZIPV&#39;: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+ &#39;pctSeriesRL&#39;: 50.0,
+ &#39;RelWeight&#39;: 1.0,
+ &#39;VLowpu&#39;: 0.5,
+ &#39;puXHarm&#39;: 0.0,
+ &#39;XRHarm&#39;: 6.0,
+ &#39;Spectrum&#39;: &#39;defaultload&#39;,
+ &#39;BaseFreq&#39;: 60.0,
+ &#39;Enabled&#39;: True,
+ &#39;Like&#39;: &#39;&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="using-the-obj-and-batch-apis">
+<h2>Using the Obj and Batch APIs<a class="headerlink" href="#using-the-obj-and-batch-apis" title="Link to this heading">#</a></h2>
+<p>Both simple objects and batch collections have the <code class="docutils literal notranslate"><span class="pre">to_json()</span></code> method. The same option flags are accepted.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Load</span> <span class="o">=</span> <span class="n">dss</span><span class="o">.</span><span class="n">Obj</span><span class="o">.</span><span class="n">Load</span>
+<span class="n">Load</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_26675/120103453.py:1: DeprecationWarning: Obj identifier is deprecated; use the `to_altdss()` method instead, or import AltDSS directly (&quot;from altdss import altdss&quot;) when using it stand-alone.
+  Load = dss.Obj.Load
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;{&quot;Name&quot;:&quot;634a&quot;,&quot;Bus1&quot;:&quot;634.1&quot;,&quot;Phases&quot;:1,&quot;Conn&quot;:&quot;wye&quot;,&quot;Model&quot;:1,&quot;kV&quot;:2.7700000000000002E-001,&quot;kW&quot;:1.6000000000000000E+002,&quot;kvar&quot;:1.1000000000000000E+002}&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>For the following cell, a batch of loads that use delta connections are selected and then exported to JSON.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dss.IObj</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Load</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">conn</span><span class="o">=</span><span class="n">Connection</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">Pretty</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">27</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">dss.IObj</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="nb">print</span><span class="p">(</span><span class="n">Load</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">conn</span><span class="o">=</span><span class="n">Connection</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">Pretty</span><span class="p">))</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;dss.IObj&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="line-and-linegeometry-special-cases-for-conductors">
+<h2><code class="docutils literal notranslate"><span class="pre">Line</span></code> and <code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code>: special cases for conductors<a class="headerlink" href="#line-and-linegeometry-special-cases-for-conductors" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code> objects present some difficulties even in the official OpenDSS in DSS scripts, when using <code class="docutils literal notranslate"><span class="pre">save</span> <span class="pre">circuit</span></code>.<br />
+To workaround it, we expose all conductors in the <code class="docutils literal notranslate"><span class="pre">wire</span></code> property, and leave <code class="docutils literal notranslate"><span class="pre">wires</span></code> as the original <code class="docutils literal notranslate"><span class="pre">wires</span></code> array. That is, we can interpret <code class="docutils literal notranslate"><span class="pre">wire</span></code> in the JSON output as the full array of <strong>conductors</strong>. The class names are included, so there is no ambiguity of what it actually contains.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">Line</span></code>, <code class="docutils literal notranslate"><span class="pre">cncables</span></code> and <code class="docutils literal notranslate"><span class="pre">tscables</span></code> are suppressed, and we use <code class="docutils literal notranslate"><span class="pre">wires</span></code> for all data instead.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">AllowEditor</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;redirect ./electricdss-tst/Test/IEEE13_Assets.dss&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;WireData&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>NormAmps</th>
+      <th>Radius</th>
+      <th>GMRAC</th>
+      <th>RDC</th>
+      <th>RUnits</th>
+      <th>RadUnits</th>
+      <th>GMRUnits</th>
+      <th>RAC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>acsr_556_5</td>
+      <td>730.0</td>
+      <td>0.4635</td>
+      <td>0.37320</td>
+      <td>0.035227</td>
+      <td>kft</td>
+      <td>in</td>
+      <td>in</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>acsr_4/0</td>
+      <td>340.0</td>
+      <td>0.2815</td>
+      <td>0.09768</td>
+      <td>0.112121</td>
+      <td>kft</td>
+      <td>in</td>
+      <td>in</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>acsr_1/0</td>
+      <td>230.0</td>
+      <td>0.1990</td>
+      <td>0.05352</td>
+      <td>0.212121</td>
+      <td>kft</td>
+      <td>in</td>
+      <td>in</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>cu_1/0</td>
+      <td>100.0</td>
+      <td>0.1840</td>
+      <td>0.13356</td>
+      <td>NaN</td>
+      <td>mi</td>
+      <td>in</td>
+      <td>in</td>
+      <td>0.607</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;LineSpacing&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>NPhases</th>
+      <th>Units</th>
+      <th>X</th>
+      <th>H</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>500</td>
+      <td>3</td>
+      <td>ft</td>
+      <td>[-4.0, -1.0, 3.0, 0.0]</td>
+      <td>[28.0, 28.0, 28.0, 24.0]</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>505</td>
+      <td>2</td>
+      <td>ft</td>
+      <td>[-4.0, 3.0, 0.0]</td>
+      <td>[28.0, 28.0, 24.0]</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>510</td>
+      <td>1</td>
+      <td>ft</td>
+      <td>[0.5, 0.0]</td>
+      <td>[29.0, 24.0]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;LineGeometry&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_colwidth&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(),</span> <span class="n">dtype_backend</span><span class="o">=</span><span class="s1">&#39;pyarrow&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>NConds</th>
+      <th>NPhases</th>
+      <th>Reduce</th>
+      <th>Spacing</th>
+      <th>Conductors</th>
+      <th>X</th>
+      <th>H</th>
+      <th>Units</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>601</td>
+      <td>4</td>
+      <td>3</td>
+      <td>True</td>
+      <td>500</td>
+      <td>[WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_4/0]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>602</td>
+      <td>4</td>
+      <td>3</td>
+      <td>True</td>
+      <td>500</td>
+      <td>[WireData.acsr_4/0, WireData.acsr_4/0, WireData.acsr_4/0, WireData.acsr_4/0]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>603</td>
+      <td>3</td>
+      <td>2</td>
+      <td>True</td>
+      <td>505</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>604</td>
+      <td>3</td>
+      <td>2</td>
+      <td>True</td>
+      <td>505</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>605</td>
+      <td>2</td>
+      <td>1</td>
+      <td>True</td>
+      <td>510</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>606</td>
+      <td>3</td>
+      <td>3</td>
+      <td>True</td>
+      <td>&lt;NA&gt;</td>
+      <td>[CNData.cn_250, CNData.cn_250, CNData.cn_250]</td>
+      <td>[-0.5, 0.0, 0.5]</td>
+      <td>[-4.0, -4.0, -4.0]</td>
+      <td>[ft, ft, ft]</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>607</td>
+      <td>2</td>
+      <td>1</td>
+      <td>True</td>
+      <td>&lt;NA&gt;</td>
+      <td>[TSData.ts_1/0, WireData.cu_1/0]</td>
+      <td>[0.0, 0.25]</td>
+      <td>[-4.0, -4.0]</td>
+      <td>[ft, ft]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Since some of the LineGeometry objects above use LineSpacing objects to fill <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">h</span></code>, we would need to inspect the data from the LineSpacing objects to get all the info.<br />
+In this case, using <code class="docutils literal notranslate"><span class="pre">DSSJSONFlags.Full</span></code> can help. Notice in the next cell output that all LineGeometry have <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">h</span></code> filled.<br />
+Manually inspecting the properties through the classic DSS property API or our new Obj API would also return the correct values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">Full</span> <span class="o">|</span> <span class="n">DSSJSONFlags</span><span class="o">.</span><span class="n">FullNames</span><span class="p">),</span> <span class="n">dtype_backend</span><span class="o">=</span><span class="s1">&#39;pyarrow&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>NConds</th>
+      <th>NPhases</th>
+      <th>Wire</th>
+      <th>X</th>
+      <th>H</th>
+      <th>Units</th>
+      <th>NormAmps</th>
+      <th>EmergAmps</th>
+      <th>Reduce</th>
+      <th>Spacing</th>
+      <th>Conductors</th>
+      <th>Ratings</th>
+      <th>LineType</th>
+      <th>Like</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>601</td>
+      <td>4</td>
+      <td>3</td>
+      <td>[WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_4/0]</td>
+      <td>[-4.0, -1.0, 3.0, 0.0]</td>
+      <td>[28.0, 28.0, 28.0, 24.0]</td>
+      <td>[ft, ft, ft, ft]</td>
+      <td>730.0</td>
+      <td>1095.0</td>
+      <td>True</td>
+      <td>LineSpacing.500</td>
+      <td>[WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_4/0]</td>
+      <td>[0.0]</td>
+      <td>oh</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>602</td>
+      <td>4</td>
+      <td>3</td>
+      <td>[WireData.acsr_4/0, WireData.acsr_4/0, WireData.acsr_4/0, WireData.acsr_4/0]</td>
+      <td>[-4.0, -1.0, 3.0, 0.0]</td>
+      <td>[28.0, 28.0, 28.0, 24.0]</td>
+      <td>[ft, ft, ft, ft]</td>
+      <td>340.0</td>
+      <td>510.0</td>
+      <td>True</td>
+      <td>LineSpacing.500</td>
+      <td>[WireData.acsr_4/0, WireData.acsr_4/0, WireData.acsr_4/0, WireData.acsr_4/0]</td>
+      <td>[0.0]</td>
+      <td>oh</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>603</td>
+      <td>3</td>
+      <td>2</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[-4.0, 3.0, 0.0]</td>
+      <td>[28.0, 28.0, 24.0]</td>
+      <td>[ft, ft, ft]</td>
+      <td>230.0</td>
+      <td>345.0</td>
+      <td>True</td>
+      <td>LineSpacing.505</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[0.0]</td>
+      <td>oh</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>604</td>
+      <td>3</td>
+      <td>2</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[-4.0, 3.0, 0.0]</td>
+      <td>[28.0, 28.0, 24.0]</td>
+      <td>[ft, ft, ft]</td>
+      <td>230.0</td>
+      <td>345.0</td>
+      <td>True</td>
+      <td>LineSpacing.505</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[0.0]</td>
+      <td>oh</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>605</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[0.5, 0.0]</td>
+      <td>[29.0, 24.0]</td>
+      <td>[ft, ft]</td>
+      <td>230.0</td>
+      <td>345.0</td>
+      <td>True</td>
+      <td>LineSpacing.510</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[0.0]</td>
+      <td>oh</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>606</td>
+      <td>3</td>
+      <td>3</td>
+      <td>[CNData.cn_250, CNData.cn_250, CNData.cn_250]</td>
+      <td>[-0.5, 0.0, 0.5]</td>
+      <td>[-4.0, -4.0, -4.0]</td>
+      <td>[ft, ft, ft]</td>
+      <td>260.0</td>
+      <td>390.0</td>
+      <td>True</td>
+      <td>&lt;NA&gt;</td>
+      <td>[CNData.cn_250, CNData.cn_250, CNData.cn_250]</td>
+      <td>[0.0]</td>
+      <td>oh</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>607</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[TSData.ts_1/0, WireData.cu_1/0]</td>
+      <td>[0.0, 0.25]</td>
+      <td>[-4.0, -4.0]</td>
+      <td>[ft, ft]</td>
+      <td>165.0</td>
+      <td>247.5</td>
+      <td>True</td>
+      <td>&lt;NA&gt;</td>
+      <td>[TSData.ts_1/0, WireData.cu_1/0]</td>
+      <td>[0.0]</td>
+      <td>oh</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Lines</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">&#39;684611&#39;</span>
+<span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveDSSElement</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Name&#39;: &#39;684611&#39;,
+ &#39;Phases&#39;: 1,
+ &#39;Bus1&#39;: &#39;684.3&#39;,
+ &#39;Bus2&#39;: &#39;611.3&#39;,
+ &#39;Spacing&#39;: &#39;510&#39;,
+ &#39;Conductors&#39;: [&#39;WireData.acsr_1/0&#39;, &#39;WireData.acsr_1/0&#39;],
+ &#39;Length&#39;: 300.0,
+ &#39;Units&#39;: &#39;ft&#39;,
+ &#39;Ratings&#39;: [400.0],
+ &#39;NormAmps&#39;: 230.0,
+ &#39;EmergAmps&#39;: 345.0}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;redirect electricdss-tst/Test/IEEE13_LineAndCableSpacing.dss&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">SetActiveClass</span><span class="p">(</span><span class="s1">&#39;Line&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveClass</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(),</span> <span class="n">dtype_backend</span><span class="o">=</span><span class="s1">&#39;pyarrow&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>10</th>
+      <th>11</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Name</th>
+      <td>650632</td>
+      <td>632670</td>
+      <td>670671</td>
+      <td>671680</td>
+      <td>632633</td>
+      <td>632645</td>
+      <td>645646</td>
+      <td>671684</td>
+      <td>684611</td>
+      <td>692675</td>
+      <td>684652</td>
+      <td>671692</td>
+    </tr>
+    <tr>
+      <th>Bus1</th>
+      <td>rg60.1.2.3</td>
+      <td>632.1.2.3</td>
+      <td>670.1.2.3</td>
+      <td>671.1.2.3</td>
+      <td>632.1.2.3</td>
+      <td>632.3.2</td>
+      <td>645.3.2</td>
+      <td>671.1.3</td>
+      <td>684.3</td>
+      <td>692.1.2.3</td>
+      <td>684.1</td>
+      <td>671</td>
+    </tr>
+    <tr>
+      <th>Bus2</th>
+      <td>632.1.2.3</td>
+      <td>670.1.2.3</td>
+      <td>671.1.2.3</td>
+      <td>680.1.2.3</td>
+      <td>633.1.2.3</td>
+      <td>645.3.2</td>
+      <td>646.3.2</td>
+      <td>684.1.3</td>
+      <td>611.3</td>
+      <td>675.1.2.3</td>
+      <td>652.1</td>
+      <td>692</td>
+    </tr>
+    <tr>
+      <th>Spacing</th>
+      <td>500</td>
+      <td>500</td>
+      <td>500</td>
+      <td>500</td>
+      <td>500</td>
+      <td>505</td>
+      <td>505</td>
+      <td>505</td>
+      <td>510</td>
+      <td>515</td>
+      <td>520</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+    <tr>
+      <th>Conductors</th>
+      <td>[WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_4/0]</td>
+      <td>[WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_4/0]</td>
+      <td>[WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_4/0]</td>
+      <td>[WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_556_5, WireData.acsr_4/0]</td>
+      <td>[WireData.acsr_4/0, WireData.acsr_4/0, WireData.acsr_4/0, WireData.acsr_4/0]</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[WireData.acsr_1/0, WireData.acsr_1/0]</td>
+      <td>[CNData.cn_250, CNData.cn_250, CNData.cn_250]</td>
+      <td>[TSData.ts_1/0, WireData.cu_1/0]</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Length</th>
+      <td>2000.0</td>
+      <td>667.0</td>
+      <td>1333.0</td>
+      <td>1000.0</td>
+      <td>500.0</td>
+      <td>500.0</td>
+      <td>300.0</td>
+      <td>300.0</td>
+      <td>300.0</td>
+      <td>500.0</td>
+      <td>800.0</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <th>Units</th>
+      <td>ft</td>
+      <td>ft</td>
+      <td>ft</td>
+      <td>ft</td>
+      <td>ft</td>
+      <td>ft</td>
+      <td>ft</td>
+      <td>ft</td>
+      <td>ft</td>
+      <td>ft</td>
+      <td>ft</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <th>Ratings</th>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>[400.0]</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>NormAmps</th>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>260</td>
+      <td>165</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+    <tr>
+      <th>EmergAmps</th>
+      <td>-1.0</td>
+      <td>-1.0</td>
+      <td>-1.0</td>
+      <td>-1.0</td>
+      <td>-1.0</td>
+      <td>-1.0</td>
+      <td>-1.0</td>
+      <td>-1.0</td>
+      <td>-1.0</td>
+      <td>390.0</td>
+      <td>247.5</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+    <tr>
+      <th>Phases</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Switch</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>R1</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>0.0001</td>
+    </tr>
+    <tr>
+      <th>R0</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>0.0001</td>
+    </tr>
+    <tr>
+      <th>X1</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>X0</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>C1</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>C0</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Plotting.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Integrated plotting in Python</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="UserModels/PyIndMach012/README.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">PyIndMach012: an example of user-model using DSS-Python</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How it works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#future-expectations">Future expectations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#export-option-flags">Export option flags</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-opendssdirect-py">Using OpenDSSDirect.py</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-obj-and-batch-apis">Using the Obj and Batch APIs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#line-and-linegeometry-special-cases-for-conductors"><code class="docutils literal notranslate"><span class="pre">Line</span></code> and <code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code>: special cases for conductors</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

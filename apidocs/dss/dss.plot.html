@@ -1,0 +1,1096 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>dss.plot &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'apidocs/dss/dss.plot';</script>
+    <link rel="icon" href="../../_static/dssx.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="dss.patch_dss_com" href="dss.patch_dss_com.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">dss package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/apidocs/dss/dss.plot.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>dss.plot</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.Colors"><code class="docutils literal notranslate"><span class="pre">Colors</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_20"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_20</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_21"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_21</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_22"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_22</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_23"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_23</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_37"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_37</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_38"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_38</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.LINES_STYLE_CODE"><code class="docutils literal notranslate"><span class="pre">LINES_STYLE_CODE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.MARKER_MAP"><code class="docutils literal notranslate"><span class="pre">MARKER_MAP</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.MARKER_SEQ"><code class="docutils literal notranslate"><span class="pre">MARKER_SEQ</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILE3PH"><code class="docutils literal notranslate"><span class="pre">PROFILE3PH</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILEALL"><code class="docutils literal notranslate"><span class="pre">PROFILEALL</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILEALLPRI"><code class="docutils literal notranslate"><span class="pre">PROFILEALLPRI</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILELL3PH"><code class="docutils literal notranslate"><span class="pre">PROFILELL3PH</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILELLALL"><code class="docutils literal notranslate"><span class="pre">PROFILELLALL</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILELLPRI"><code class="docutils literal notranslate"><span class="pre">PROFILELLPRI</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.ToggleAdvancedTypes"><code class="docutils literal notranslate"><span class="pre">ToggleAdvancedTypes</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.ToggleAdvancedTypes.__enter__"><code class="docutils literal notranslate"><span class="pre">ToggleAdvancedTypes.__enter__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.ToggleAdvancedTypes.__exit__"><code class="docutils literal notranslate"><span class="pre">ToggleAdvancedTypes.__exit__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.ToggleAdvancedTypes.__init__"><code class="docutils literal notranslate"><span class="pre">ToggleAdvancedTypes.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.disable"><code class="docutils literal notranslate"><span class="pre">disable()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_circuit_plot"><code class="docutils literal notranslate"><span class="pre">dss_circuit_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_comparecases_plot"><code class="docutils literal notranslate"><span class="pre">dss_comparecases_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_daisy_plot"><code class="docutils literal notranslate"><span class="pre">dss_daisy_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_di_plot"><code class="docutils literal notranslate"><span class="pre">dss_di_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_general_data_plot"><code class="docutils literal notranslate"><span class="pre">dss_general_data_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_loadshape_plot"><code class="docutils literal notranslate"><span class="pre">dss_loadshape_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_matrix_plot"><code class="docutils literal notranslate"><span class="pre">dss_matrix_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_monitor_plot"><code class="docutils literal notranslate"><span class="pre">dss_monitor_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_plot"><code class="docutils literal notranslate"><span class="pre">dss_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_plot_funcs"><code class="docutils literal notranslate"><span class="pre">dss_plot_funcs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_priceshape_plot"><code class="docutils literal notranslate"><span class="pre">dss_priceshape_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_profile_plot"><code class="docutils literal notranslate"><span class="pre">dss_profile_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_python_cb_plot"><code class="docutils literal notranslate"><span class="pre">dss_python_cb_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_python_cb_write"><code class="docutils literal notranslate"><span class="pre">dss_python_cb_write()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_scatter_plot"><code class="docutils literal notranslate"><span class="pre">dss_scatter_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_tshape_plot"><code class="docutils literal notranslate"><span class="pre">dss_tshape_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_visualize_plot"><code class="docutils literal notranslate"><span class="pre">dss_visualize_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_yearly_curve_plot"><code class="docutils literal notranslate"><span class="pre">dss_yearly_curve_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_zone_plot"><code class="docutils literal notranslate"><span class="pre">dss_zone_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.enable"><code class="docutils literal notranslate"><span class="pre">enable()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.get_branch_data"><code class="docutils literal notranslate"><span class="pre">get_branch_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.get_gic_line_data"><code class="docutils literal notranslate"><span class="pre">get_gic_line_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.get_marker_dict"><code class="docutils literal notranslate"><span class="pre">get_marker_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.get_point_data"><code class="docutils literal notranslate"><span class="pre">get_point_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.include_3d"><code class="docutils literal notranslate"><span class="pre">include_3d</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.node_re"><code class="docutils literal notranslate"><span class="pre">node_re</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.nodot"><code class="docutils literal notranslate"><span class="pre">nodot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.quantity_str"><code class="docutils literal notranslate"><span class="pre">quantity_str</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.remove_nodes"><code class="docutils literal notranslate"><span class="pre">remove_nodes()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.sizes"><code class="docutils literal notranslate"><span class="pre">sizes</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.str_to_pq"><code class="docutils literal notranslate"><span class="pre">str_to_pq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.unquote"><code class="docutils literal notranslate"><span class="pre">unquote()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="module-dss.plot">
+<span id="dss-plot"></span><h1><a class="reference internal" href="#module-dss.plot" title="dss.plot"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a><a class="headerlink" href="#module-dss.plot" title="Link to this heading">#</a></h1>
+<p>This module provides a <strong>work-in-progress</strong> implementation of the original OpenDSS plots
+using the new features from DSS C-API v0.12+ and common Python modules such as matplotlib.</p>
+<p>This is not a complete implementation and there are known limitations, but should suffice
+for many use-cases. We’d like to add another backend later.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table table-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.ToggleAdvancedTypes" title="dss.plot.ToggleAdvancedTypes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ToggleAdvancedTypes</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table table-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.disable" title="dss.plot.disable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">disable</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.dss_circuit_plot" title="dss.plot.dss_circuit_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_circuit_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_comparecases_plot" title="dss.plot.dss_comparecases_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_comparecases_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.dss_daisy_plot" title="dss.plot.dss_daisy_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_daisy_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_di_plot" title="dss.plot.dss_di_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_di_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.dss_general_data_plot" title="dss.plot.dss_general_data_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_general_data_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_loadshape_plot" title="dss.plot.dss_loadshape_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_loadshape_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.dss_matrix_plot" title="dss.plot.dss_matrix_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_matrix_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_monitor_plot" title="dss.plot.dss_monitor_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_monitor_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.dss_plot" title="dss.plot.dss_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_priceshape_plot" title="dss.plot.dss_priceshape_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_priceshape_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.dss_profile_plot" title="dss.plot.dss_profile_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_profile_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_python_cb_plot" title="dss.plot.dss_python_cb_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_python_cb_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.dss_python_cb_write" title="dss.plot.dss_python_cb_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_python_cb_write</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_scatter_plot" title="dss.plot.dss_scatter_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_scatter_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.dss_tshape_plot" title="dss.plot.dss_tshape_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_tshape_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_visualize_plot" title="dss.plot.dss_visualize_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_visualize_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.dss_yearly_curve_plot" title="dss.plot.dss_yearly_curve_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_yearly_curve_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_zone_plot" title="dss.plot.dss_zone_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_zone_plot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.enable" title="dss.plot.enable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enable</span></code></a></p></td>
+<td><p>Enables the plotting subsystem from DSS-Extensions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.get_branch_data" title="dss.plot.get_branch_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_branch_data</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.get_gic_line_data" title="dss.plot.get_gic_line_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_gic_line_data</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.get_marker_dict" title="dss.plot.get_marker_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_marker_dict</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.get_point_data" title="dss.plot.get_point_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_point_data</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.nodot" title="dss.plot.nodot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodot</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.remove_nodes" title="dss.plot.remove_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_nodes</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.unquote" title="dss.plot.unquote"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unquote</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table table-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.Colors" title="dss.plot.Colors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Colors</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.DSS_MARKER_20" title="dss.plot.DSS_MARKER_20"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSS_MARKER_20</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.DSS_MARKER_21" title="dss.plot.DSS_MARKER_21"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSS_MARKER_21</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.DSS_MARKER_22" title="dss.plot.DSS_MARKER_22"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSS_MARKER_22</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.DSS_MARKER_23" title="dss.plot.DSS_MARKER_23"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSS_MARKER_23</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.DSS_MARKER_37" title="dss.plot.DSS_MARKER_37"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSS_MARKER_37</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.DSS_MARKER_38" title="dss.plot.DSS_MARKER_38"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSS_MARKER_38</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.LINES_STYLE_CODE" title="dss.plot.LINES_STYLE_CODE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LINES_STYLE_CODE</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.MARKER_MAP" title="dss.plot.MARKER_MAP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MARKER_MAP</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.MARKER_SEQ" title="dss.plot.MARKER_SEQ"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MARKER_SEQ</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.PROFILE3PH" title="dss.plot.PROFILE3PH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROFILE3PH</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.PROFILEALL" title="dss.plot.PROFILEALL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROFILEALL</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.PROFILEALLPRI" title="dss.plot.PROFILEALLPRI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROFILEALLPRI</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.PROFILELL3PH" title="dss.plot.PROFILELL3PH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROFILELL3PH</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.PROFILELLALL" title="dss.plot.PROFILELLALL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROFILELLALL</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.PROFILELLPRI" title="dss.plot.PROFILELLPRI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROFILELLPRI</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.dss_plot_funcs" title="dss.plot.dss_plot_funcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss_plot_funcs</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.include_3d" title="dss.plot.include_3d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">include_3d</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.node_re" title="dss.plot.node_re"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_re</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.quantity_str" title="dss.plot.quantity_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quantity_str</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.plot.sizes" title="dss.plot.sizes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sizes</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dss.plot.str_to_pq" title="dss.plot.str_to_pq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str_to_pq</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.Colors">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">Colors</span></span><a class="headerlink" href="#dss.plot.Colors" title="Link to this definition">#</a></dt>
+<dd><p>[‘#000000’, ‘#FF0000’, ‘#0000FF’, ‘#FF00FF’, ‘#008000’, ‘#80FF00’, ‘#FF8040’, ‘#DADE21’, ‘#B56AFF’, …</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.DSS_MARKER_20">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">DSS_MARKER_20</span></span><a class="headerlink" href="#dss.plot.DSS_MARKER_20" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.DSS_MARKER_21">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">DSS_MARKER_21</span></span><a class="headerlink" href="#dss.plot.DSS_MARKER_21" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.DSS_MARKER_22">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">DSS_MARKER_22</span></span><a class="headerlink" href="#dss.plot.DSS_MARKER_22" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.DSS_MARKER_23">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">DSS_MARKER_23</span></span><a class="headerlink" href="#dss.plot.DSS_MARKER_23" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.DSS_MARKER_37">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">DSS_MARKER_37</span></span><a class="headerlink" href="#dss.plot.DSS_MARKER_37" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.DSS_MARKER_38">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">DSS_MARKER_38</span></span><a class="headerlink" href="#dss.plot.DSS_MARKER_38" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.LINES_STYLE_CODE">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">LINES_STYLE_CODE</span></span><a class="headerlink" href="#dss.plot.LINES_STYLE_CODE" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.MARKER_MAP">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">MARKER_MAP</span></span><a class="headerlink" href="#dss.plot.MARKER_MAP" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.MARKER_SEQ">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">MARKER_SEQ</span></span><a class="headerlink" href="#dss.plot.MARKER_SEQ" title="Link to this definition">#</a></dt>
+<dd><p>(5, 15, 2, 8, 26, 36, 39, 19, 18)</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.PROFILE3PH">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">PROFILE3PH</span></span><a class="headerlink" href="#dss.plot.PROFILE3PH" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.PROFILEALL">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">PROFILEALL</span></span><a class="headerlink" href="#dss.plot.PROFILEALL" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.PROFILEALLPRI">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">PROFILEALLPRI</span></span><a class="headerlink" href="#dss.plot.PROFILEALLPRI" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.PROFILELL3PH">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">PROFILELL3PH</span></span><a class="headerlink" href="#dss.plot.PROFILELL3PH" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.PROFILELLALL">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">PROFILELLALL</span></span><a class="headerlink" href="#dss.plot.PROFILELLALL" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.PROFILELLPRI">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">PROFILELLPRI</span></span><a class="headerlink" href="#dss.plot.PROFILELLPRI" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dss.plot.ToggleAdvancedTypes">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">ToggleAdvancedTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.ToggleAdvancedTypes" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dss.plot.ToggleAdvancedTypes.__enter__">
+<span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.ToggleAdvancedTypes.__enter__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.plot.ToggleAdvancedTypes.__exit__">
+<span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_tb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.ToggleAdvancedTypes.__exit__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.plot.ToggleAdvancedTypes.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.ToggleAdvancedTypes.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.disable">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.disable" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_circuit_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_circuit_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is3d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_circuit_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_comparecases_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_comparecases_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_comparecases_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_daisy_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_daisy_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_daisy_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_di_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_di_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_di_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_general_data_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_general_data_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_general_data_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_loadshape_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_loadshape_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_loadshape_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_matrix_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_matrix_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_matrix_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_monitor_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_monitor_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_monitor_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.dss_plot_funcs">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_plot_funcs</span></span><a class="headerlink" href="#dss.plot.dss_plot_funcs" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_priceshape_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_priceshape_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_priceshape_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_profile_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_profile_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_profile_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_python_cb_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_python_cb_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramsStr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_python_cb_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_python_cb_write">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_python_cb_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_subtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_python_cb_write" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_scatter_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_scatter_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_scatter_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_tshape_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_tshape_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_tshape_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_visualize_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_visualize_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_visualize_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_yearly_curve_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_yearly_curve_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_yearly_curve_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.dss_zone_plot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">dss_zone_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.dss_zone_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.enable">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plot3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot2d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.enable" title="Link to this definition">#</a></dt>
+<dd><p>Enables the plotting subsystem from DSS-Extensions.</p>
+<p>Set plot3d to <code class="docutils literal notranslate"><span class="pre">True</span></code> to try to reproduce some of the plots from the
+alternative OpenDSS Visualization Tool / OpenDSS Viewer addition
+to OpenDSS.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">show</span></code> to control whether this backend should call <code class="docutils literal notranslate"><span class="pre">pyplot.show()</span></code>
+or leave that to the system or the user. If the user plans to customize
+the figure, it is better to set <code class="docutils literal notranslate"><span class="pre">show=False</span></code> in order to preserve the
+figures, since <code class="docutils literal notranslate"><span class="pre">pyplot.show()</span></code> discards them.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.get_branch_data">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">get_branch_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bus_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">pqNone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_switches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idxs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_ph_line_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">three_ph_line_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.get_branch_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.get_gic_line_data">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">get_gic_line_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bus_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_ph_line_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">three_ph_line_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.get_gic_line_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.get_marker_dict">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">get_marker_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dss_code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.get_marker_dict" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.get_point_data">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">get_point_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSS</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bus_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.get_point_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.include_3d">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">include_3d</span></span><a class="headerlink" href="#dss.plot.include_3d" title="Link to this definition">#</a></dt>
+<dd><p>‘2d’</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.node_re">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">node_re</span></span><a class="headerlink" href="#dss.plot.node_re" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.nodot">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">nodot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.nodot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.quantity_str">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">quantity_str</span></span><a class="headerlink" href="#dss.plot.quantity_str" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.remove_nodes">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">remove_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bus</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.remove_nodes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.sizes">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">sizes</span></span><a class="headerlink" href="#dss.plot.sizes" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="dss.plot.str_to_pq">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">str_to_pq</span></span><a class="headerlink" href="#dss.plot.str_to_pq" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dss.plot.unquote">
+<span class="sig-prename descclassname"><span class="pre">dss.plot.</span></span><span class="sig-name descname"><span class="pre">unquote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.plot.unquote" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dss.patch_dss_com.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.Colors"><code class="docutils literal notranslate"><span class="pre">Colors</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_20"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_20</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_21"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_21</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_22"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_22</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_23"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_23</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_37"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_37</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.DSS_MARKER_38"><code class="docutils literal notranslate"><span class="pre">DSS_MARKER_38</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.LINES_STYLE_CODE"><code class="docutils literal notranslate"><span class="pre">LINES_STYLE_CODE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.MARKER_MAP"><code class="docutils literal notranslate"><span class="pre">MARKER_MAP</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.MARKER_SEQ"><code class="docutils literal notranslate"><span class="pre">MARKER_SEQ</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILE3PH"><code class="docutils literal notranslate"><span class="pre">PROFILE3PH</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILEALL"><code class="docutils literal notranslate"><span class="pre">PROFILEALL</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILEALLPRI"><code class="docutils literal notranslate"><span class="pre">PROFILEALLPRI</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILELL3PH"><code class="docutils literal notranslate"><span class="pre">PROFILELL3PH</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILELLALL"><code class="docutils literal notranslate"><span class="pre">PROFILELLALL</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.PROFILELLPRI"><code class="docutils literal notranslate"><span class="pre">PROFILELLPRI</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.ToggleAdvancedTypes"><code class="docutils literal notranslate"><span class="pre">ToggleAdvancedTypes</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.ToggleAdvancedTypes.__enter__"><code class="docutils literal notranslate"><span class="pre">ToggleAdvancedTypes.__enter__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.ToggleAdvancedTypes.__exit__"><code class="docutils literal notranslate"><span class="pre">ToggleAdvancedTypes.__exit__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.ToggleAdvancedTypes.__init__"><code class="docutils literal notranslate"><span class="pre">ToggleAdvancedTypes.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.disable"><code class="docutils literal notranslate"><span class="pre">disable()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_circuit_plot"><code class="docutils literal notranslate"><span class="pre">dss_circuit_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_comparecases_plot"><code class="docutils literal notranslate"><span class="pre">dss_comparecases_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_daisy_plot"><code class="docutils literal notranslate"><span class="pre">dss_daisy_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_di_plot"><code class="docutils literal notranslate"><span class="pre">dss_di_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_general_data_plot"><code class="docutils literal notranslate"><span class="pre">dss_general_data_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_loadshape_plot"><code class="docutils literal notranslate"><span class="pre">dss_loadshape_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_matrix_plot"><code class="docutils literal notranslate"><span class="pre">dss_matrix_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_monitor_plot"><code class="docutils literal notranslate"><span class="pre">dss_monitor_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_plot"><code class="docutils literal notranslate"><span class="pre">dss_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_plot_funcs"><code class="docutils literal notranslate"><span class="pre">dss_plot_funcs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_priceshape_plot"><code class="docutils literal notranslate"><span class="pre">dss_priceshape_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_profile_plot"><code class="docutils literal notranslate"><span class="pre">dss_profile_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_python_cb_plot"><code class="docutils literal notranslate"><span class="pre">dss_python_cb_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_python_cb_write"><code class="docutils literal notranslate"><span class="pre">dss_python_cb_write()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_scatter_plot"><code class="docutils literal notranslate"><span class="pre">dss_scatter_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_tshape_plot"><code class="docutils literal notranslate"><span class="pre">dss_tshape_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_visualize_plot"><code class="docutils literal notranslate"><span class="pre">dss_visualize_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_yearly_curve_plot"><code class="docutils literal notranslate"><span class="pre">dss_yearly_curve_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.dss_zone_plot"><code class="docutils literal notranslate"><span class="pre">dss_zone_plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.enable"><code class="docutils literal notranslate"><span class="pre">enable()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.get_branch_data"><code class="docutils literal notranslate"><span class="pre">get_branch_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.get_gic_line_data"><code class="docutils literal notranslate"><span class="pre">get_gic_line_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.get_marker_dict"><code class="docutils literal notranslate"><span class="pre">get_marker_dict()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.get_point_data"><code class="docutils literal notranslate"><span class="pre">get_point_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.include_3d"><code class="docutils literal notranslate"><span class="pre">include_3d</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.node_re"><code class="docutils literal notranslate"><span class="pre">node_re</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.nodot"><code class="docutils literal notranslate"><span class="pre">nodot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.quantity_str"><code class="docutils literal notranslate"><span class="pre">quantity_str</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.remove_nodes"><code class="docutils literal notranslate"><span class="pre">remove_nodes()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.sizes"><code class="docutils literal notranslate"><span class="pre">sizes</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.str_to_pq"><code class="docutils literal notranslate"><span class="pre">str_to_pq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.plot.unquote"><code class="docutils literal notranslate"><span class="pre">unquote()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

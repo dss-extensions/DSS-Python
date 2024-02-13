@@ -1,0 +1,963 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>dss.ILoads &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'apidocs/dss/dss.ILoads';</script>
+    <link rel="icon" href="../../_static/dssx.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="dss.IMeters" href="dss.IMeters.html" />
+    <link rel="prev" title="dss.ILoadShapes" href="dss.ILoadShapes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">dss package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/apidocs/dss/dss.ILoads.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>dss.ILoads</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads"><code class="docutils literal notranslate"><span class="pre">ILoads</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.AllNames"><code class="docutils literal notranslate"><span class="pre">ILoads.AllNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.AllocationFactor"><code class="docutils literal notranslate"><span class="pre">ILoads.AllocationFactor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.CVRcurve"><code class="docutils literal notranslate"><span class="pre">ILoads.CVRcurve</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.CVRvars"><code class="docutils literal notranslate"><span class="pre">ILoads.CVRvars</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.CVRwatts"><code class="docutils literal notranslate"><span class="pre">ILoads.CVRwatts</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Cfactor"><code class="docutils literal notranslate"><span class="pre">ILoads.Cfactor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Class"><code class="docutils literal notranslate"><span class="pre">ILoads.Class</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Count"><code class="docutils literal notranslate"><span class="pre">ILoads.Count</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.First"><code class="docutils literal notranslate"><span class="pre">ILoads.First</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Growth"><code class="docutils literal notranslate"><span class="pre">ILoads.Growth</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.IsDelta"><code class="docutils literal notranslate"><span class="pre">ILoads.IsDelta</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Model"><code class="docutils literal notranslate"><span class="pre">ILoads.Model</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Name"><code class="docutils literal notranslate"><span class="pre">ILoads.Name</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Next"><code class="docutils literal notranslate"><span class="pre">ILoads.Next</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.NumCust"><code class="docutils literal notranslate"><span class="pre">ILoads.NumCust</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.PF"><code class="docutils literal notranslate"><span class="pre">ILoads.PF</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.PctMean"><code class="docutils literal notranslate"><span class="pre">ILoads.PctMean</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.PctStdDev"><code class="docutils literal notranslate"><span class="pre">ILoads.PctStdDev</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Phases"><code class="docutils literal notranslate"><span class="pre">ILoads.Phases</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.RelWeight"><code class="docutils literal notranslate"><span class="pre">ILoads.RelWeight</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Rneut"><code class="docutils literal notranslate"><span class="pre">ILoads.Rneut</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Sensor"><code class="docutils literal notranslate"><span class="pre">ILoads.Sensor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Spectrum"><code class="docutils literal notranslate"><span class="pre">ILoads.Spectrum</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Status"><code class="docutils literal notranslate"><span class="pre">ILoads.Status</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Vmaxpu"><code class="docutils literal notranslate"><span class="pre">ILoads.Vmaxpu</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Vminemerg"><code class="docutils literal notranslate"><span class="pre">ILoads.Vminemerg</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Vminnorm"><code class="docutils literal notranslate"><span class="pre">ILoads.Vminnorm</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Vminpu"><code class="docutils literal notranslate"><span class="pre">ILoads.Vminpu</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Xneut"><code class="docutils literal notranslate"><span class="pre">ILoads.Xneut</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Yearly"><code class="docutils literal notranslate"><span class="pre">ILoads.Yearly</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.ZIPV"><code class="docutils literal notranslate"><span class="pre">ILoads.ZIPV</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.__init__"><code class="docutils literal notranslate"><span class="pre">ILoads.__init__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.__iter__"><code class="docutils literal notranslate"><span class="pre">ILoads.__iter__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.__len__"><code class="docutils literal notranslate"><span class="pre">ILoads.__len__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.daily"><code class="docutils literal notranslate"><span class="pre">ILoads.daily</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.duty"><code class="docutils literal notranslate"><span class="pre">ILoads.duty</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.idx"><code class="docutils literal notranslate"><span class="pre">ILoads.idx</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kV"><code class="docutils literal notranslate"><span class="pre">ILoads.kV</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kW"><code class="docutils literal notranslate"><span class="pre">ILoads.kW</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kva"><code class="docutils literal notranslate"><span class="pre">ILoads.kva</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kvar"><code class="docutils literal notranslate"><span class="pre">ILoads.kvar</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kwh"><code class="docutils literal notranslate"><span class="pre">ILoads.kwh</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kwhdays"><code class="docutils literal notranslate"><span class="pre">ILoads.kwhdays</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.pctSeriesRL"><code class="docutils literal notranslate"><span class="pre">ILoads.pctSeriesRL</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.xfkVA"><code class="docutils literal notranslate"><span class="pre">ILoads.xfkVA</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="module-dss.ILoads">
+<span id="dss-iloads"></span><h1><a class="reference internal" href="#module-dss.ILoads" title="dss.ILoads"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a><a class="headerlink" href="#module-dss.ILoads" title="Link to this heading">#</a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table table-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.ILoads.ILoads" title="dss.ILoads.ILoads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ILoads</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dss.ILoads.</span></span><span class="sig-name descname"><span class="pre">ILoads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ILoads.ILoads" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="dss._cffi_api_util.html#dss._cffi_api_util.Iterable" title="dss._cffi_api_util.Iterable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss._cffi_api_util.Iterable</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.AllNames">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllNames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.ILoads.ILoads.AllNames" title="Link to this definition">#</a></dt>
+<dd><p>Array of all names of this object type</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.AllocationFactor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllocationFactor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.AllocationFactor" title="Link to this definition">#</a></dt>
+<dd><p>Factor for allocating loads by connected xfkva</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllocationFactor.html">https://opendss.epri.com/AllocationFactor.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.CVRcurve">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CVRcurve</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ILoads.ILoads.CVRcurve" title="Link to this definition">#</a></dt>
+<dd><p>Name of a loadshape with both Mult and Qmult, for CVR factors as a function of time.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/CVRcurve.html">https://opendss.epri.com/CVRcurve.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.CVRvars">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CVRvars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.CVRvars" title="Link to this definition">#</a></dt>
+<dd><p>Percent reduction in Q for percent reduction in V. Must be used with dssLoadModelCVR.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/CVRvars.html">https://opendss.epri.com/CVRvars.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.CVRwatts">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CVRwatts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.CVRwatts" title="Link to this definition">#</a></dt>
+<dd><p>Percent reduction in P for percent reduction in V. Must be used with dssLoadModelCVR.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/CVRwatts.html">https://opendss.epri.com/CVRwatts.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Cfactor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cfactor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Cfactor" title="Link to this definition">#</a></dt>
+<dd><p>Factor relates average to peak kw.  Used for allocation with kwh and kwhdays</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Cfactor.html">https://opendss.epri.com/Cfactor.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Class" title="Link to this definition">#</a></dt>
+<dd><p>Code number used to separate loads by class or group. No effect on the solution.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Class.html">https://opendss.epri.com/Class.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Count" title="Link to this definition">#</a></dt>
+<dd><p>Number of objects of this type</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.First">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">First</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ILoads.ILoads.First" title="Link to this definition">#</a></dt>
+<dd><p>Sets the first object of this type active. Returns 0 if none.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Growth">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Growth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Growth" title="Link to this definition">#</a></dt>
+<dd><p>Name of the growthshape curve for yearly load growth factors.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Growth.html">https://opendss.epri.com/Growth.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.IsDelta">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IsDelta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.ILoads.ILoads.IsDelta" title="Link to this definition">#</a></dt>
+<dd><p>Delta loads are connected line-to-line.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/IsDelta1.html">https://opendss.epri.com/IsDelta1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Model">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss.enums.LoadModels</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Model" title="Link to this definition">#</a></dt>
+<dd><p>The Load Model defines variation of P and Q with voltage.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Model1.html">https://opendss.epri.com/Model1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Name" title="Link to this definition">#</a></dt>
+<dd><p>Gets the current name or sets the active object of this type by name</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Next">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Next</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Next" title="Link to this definition">#</a></dt>
+<dd><p>Sets next object of this type active. Returns 0 if no more.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.NumCust">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumCust</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ILoads.ILoads.NumCust" title="Link to this definition">#</a></dt>
+<dd><p>Number of customers in this load, defaults to one.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumCust1.html">https://opendss.epri.com/NumCust1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.PF">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PF</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.PF" title="Link to this definition">#</a></dt>
+<dd><p>Get or set Power Factor for Active Load. Specify leading PF as negative. Updates kvar based on present value of kW</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/PF1.html">https://opendss.epri.com/PF1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.PctMean">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PctMean</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.PctMean" title="Link to this definition">#</a></dt>
+<dd><p>Average percent of nominal load in Monte Carlo studies; only if no loadshape defined for this load.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/PctMean.html">https://opendss.epri.com/PctMean.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.PctStdDev">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PctStdDev</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.PctStdDev" title="Link to this definition">#</a></dt>
+<dd><p>Percent standard deviation for Monte Carlo load studies; if there is no loadshape assigned to this load.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/PctStdDev.html">https://opendss.epri.com/PctStdDev.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Phases">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Phases</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Phases" title="Link to this definition">#</a></dt>
+<dd><p>Number of phases</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.RelWeight">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RelWeight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.RelWeight" title="Link to this definition">#</a></dt>
+<dd><p>Relative Weighting factor for the active LOAD</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/RelWeight.html">https://opendss.epri.com/RelWeight.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Rneut">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Rneut</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Rneut" title="Link to this definition">#</a></dt>
+<dd><p>Neutral resistance for wye-connected loads.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Rneut.html">https://opendss.epri.com/Rneut.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Sensor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Sensor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Sensor" title="Link to this definition">#</a></dt>
+<dd><p>Name of the sensor monitoring this load.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Sensor.html">https://opendss.epri.com/Sensor.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Spectrum">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Spectrum</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Spectrum" title="Link to this definition">#</a></dt>
+<dd><p>Name of harmonic current spectrum shape.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Spectrum.html">https://opendss.epri.com/Spectrum.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss.enums.LoadStatus</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Status" title="Link to this definition">#</a></dt>
+<dd><p>Response to load multipliers: Fixed (growth only), Exempt (no LD curve), Variable (all).</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Status.html">https://opendss.epri.com/Status.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Vmaxpu">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Vmaxpu</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Vmaxpu" title="Link to this definition">#</a></dt>
+<dd><p>Maximum per-unit voltage to use the load model. Above this, constant Z applies.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Vmaxpu1.html">https://opendss.epri.com/Vmaxpu1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Vminemerg">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Vminemerg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Vminemerg" title="Link to this definition">#</a></dt>
+<dd><p>Minimum voltage for unserved energy (UE) evaluation.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Vminemerg.html">https://opendss.epri.com/Vminemerg.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Vminnorm">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Vminnorm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Vminnorm" title="Link to this definition">#</a></dt>
+<dd><p>Minimum voltage for energy exceeding normal (EEN) evaluations.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Vminnorm.html">https://opendss.epri.com/Vminnorm.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Vminpu">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Vminpu</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Vminpu" title="Link to this definition">#</a></dt>
+<dd><p>Minimum voltage to apply the load model. Below this, constant Z is used.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Vminpu1.html">https://opendss.epri.com/Vminpu1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Xneut">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Xneut</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Xneut" title="Link to this definition">#</a></dt>
+<dd><p>Neutral reactance for wye-connected loads.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Xneut.html">https://opendss.epri.com/Xneut.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.Yearly">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Yearly</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ILoads.ILoads.Yearly" title="Link to this definition">#</a></dt>
+<dd><p>Name of yearly duration loadshape</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Yearly.html">https://opendss.epri.com/Yearly.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.ZIPV">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ZIPV</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.ILoads.ILoads.ZIPV" title="Link to this definition">#</a></dt>
+<dd><p>Array of 7 doubles with values for ZIPV property of the load object</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ZIPV.html">https://opendss.epri.com/ZIPV.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ILoads.ILoads.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="dss._cffi_api_util.html#dss._cffi_api_util.Iterable" title="dss._cffi_api_util.Iterable"><span class="pre">dss._cffi_api_util.Iterable</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dss.ILoads.ILoads.__iter__" title="Link to this definition">#</a></dt>
+<dd><p>Get an iterator of the object collection.</p>
+<p>Note that OpenDSS, via the classic APIs, only allow a single object of a specific type
+to be activated. That is, you cannot use references of distinct objects and interact
+with both at the same time, or keep a reference to use later. You need to reactivate
+the target object or ensure it is the active one.</p>
+<p>For an alternative, consider using our AltDSS-Python package.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ILoads.ILoads.__len__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.daily">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">daily</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ILoads.ILoads.daily" title="Link to this definition">#</a></dt>
+<dd><p>Name of the loadshape for a daily load profile.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/daily.html">https://opendss.epri.com/daily.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.duty">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">duty</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ILoads.ILoads.duty" title="Link to this definition">#</a></dt>
+<dd><p>Name of the loadshape for a duty cycle simulation.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/duty.html">https://opendss.epri.com/duty.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ILoads.ILoads.idx" title="Link to this definition">#</a></dt>
+<dd><p>Gets the current index or sets the active object of this type by index</p>
+<p>While the official API included this for some classes, this is an
+API Extension for:</p>
+<ul class="simple">
+<li><p>Capacitors</p></li>
+<li><p>CapControls</p></li>
+<li><p>ISources</p></li>
+<li><p>LineCodes</p></li>
+<li><p>Lines</p></li>
+<li><p>LoadShapes</p></li>
+<li><p>Meters</p></li>
+<li><p>Monitors</p></li>
+<li><p>RegControls</p></li>
+<li><p>Sensors</p></li>
+<li><p>SwtControls</p></li>
+<li><p>Transformers</p></li>
+<li><p>Vsources</p></li>
+<li><p>XYCurves</p></li>
+</ul>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.kV">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kV</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.kV" title="Link to this definition">#</a></dt>
+<dd><p>kV rating for active Load. For 2 or more phases set Line-Line kV. Else actual kV across terminals.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/kV2.html">https://opendss.epri.com/kV2.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.kW">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kW</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.kW" title="Link to this definition">#</a></dt>
+<dd><p>Set kW for active Load. Updates kvar based on present PF.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/kW1.html">https://opendss.epri.com/kW1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.kva">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kva</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.kva" title="Link to this definition">#</a></dt>
+<dd><p>Base load kva. Also defined kw and kvar or pf input, or load allocation by kwh or xfkva.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/kva.html">https://opendss.epri.com/kva.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.kvar">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kvar</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.kvar" title="Link to this definition">#</a></dt>
+<dd><p>Reactive power in kvar for active Load. If set, updates PF based on present kW.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/kvar1.html">https://opendss.epri.com/kvar1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.kwh">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kwh</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.kwh" title="Link to this definition">#</a></dt>
+<dd><p>kWh billed for this period. Can be used with Cfactor for load allocation.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/kwh.html">https://opendss.epri.com/kwh.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.kwhdays">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kwhdays</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.kwhdays" title="Link to this definition">#</a></dt>
+<dd><p>Length of kWh billing period for average demand calculation. Default 30.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/kwhdays.html">https://opendss.epri.com/kwhdays.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.pctSeriesRL">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pctSeriesRL</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.pctSeriesRL" title="Link to this definition">#</a></dt>
+<dd><p>Percent of Load that is modeled as series R-L for harmonics studies</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/pctSeriesRL.html">https://opendss.epri.com/pctSeriesRL.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ILoads.ILoads.xfkVA">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xfkVA</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ILoads.ILoads.xfkVA" title="Link to this definition">#</a></dt>
+<dd><p>Rated service transformer kVA for load allocation, using AllocationFactor. Affects kW, kvar, and pf.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/xfkVA.html">https://opendss.epri.com/xfkVA.html</a></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dss.ILoadShapes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dss.IMeters.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads"><code class="docutils literal notranslate"><span class="pre">ILoads</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.AllNames"><code class="docutils literal notranslate"><span class="pre">ILoads.AllNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.AllocationFactor"><code class="docutils literal notranslate"><span class="pre">ILoads.AllocationFactor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.CVRcurve"><code class="docutils literal notranslate"><span class="pre">ILoads.CVRcurve</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.CVRvars"><code class="docutils literal notranslate"><span class="pre">ILoads.CVRvars</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.CVRwatts"><code class="docutils literal notranslate"><span class="pre">ILoads.CVRwatts</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Cfactor"><code class="docutils literal notranslate"><span class="pre">ILoads.Cfactor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Class"><code class="docutils literal notranslate"><span class="pre">ILoads.Class</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Count"><code class="docutils literal notranslate"><span class="pre">ILoads.Count</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.First"><code class="docutils literal notranslate"><span class="pre">ILoads.First</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Growth"><code class="docutils literal notranslate"><span class="pre">ILoads.Growth</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.IsDelta"><code class="docutils literal notranslate"><span class="pre">ILoads.IsDelta</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Model"><code class="docutils literal notranslate"><span class="pre">ILoads.Model</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Name"><code class="docutils literal notranslate"><span class="pre">ILoads.Name</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Next"><code class="docutils literal notranslate"><span class="pre">ILoads.Next</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.NumCust"><code class="docutils literal notranslate"><span class="pre">ILoads.NumCust</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.PF"><code class="docutils literal notranslate"><span class="pre">ILoads.PF</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.PctMean"><code class="docutils literal notranslate"><span class="pre">ILoads.PctMean</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.PctStdDev"><code class="docutils literal notranslate"><span class="pre">ILoads.PctStdDev</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Phases"><code class="docutils literal notranslate"><span class="pre">ILoads.Phases</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.RelWeight"><code class="docutils literal notranslate"><span class="pre">ILoads.RelWeight</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Rneut"><code class="docutils literal notranslate"><span class="pre">ILoads.Rneut</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Sensor"><code class="docutils literal notranslate"><span class="pre">ILoads.Sensor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Spectrum"><code class="docutils literal notranslate"><span class="pre">ILoads.Spectrum</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Status"><code class="docutils literal notranslate"><span class="pre">ILoads.Status</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Vmaxpu"><code class="docutils literal notranslate"><span class="pre">ILoads.Vmaxpu</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Vminemerg"><code class="docutils literal notranslate"><span class="pre">ILoads.Vminemerg</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Vminnorm"><code class="docutils literal notranslate"><span class="pre">ILoads.Vminnorm</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Vminpu"><code class="docutils literal notranslate"><span class="pre">ILoads.Vminpu</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Xneut"><code class="docutils literal notranslate"><span class="pre">ILoads.Xneut</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.Yearly"><code class="docutils literal notranslate"><span class="pre">ILoads.Yearly</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.ZIPV"><code class="docutils literal notranslate"><span class="pre">ILoads.ZIPV</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.__init__"><code class="docutils literal notranslate"><span class="pre">ILoads.__init__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.__iter__"><code class="docutils literal notranslate"><span class="pre">ILoads.__iter__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.__len__"><code class="docutils literal notranslate"><span class="pre">ILoads.__len__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.daily"><code class="docutils literal notranslate"><span class="pre">ILoads.daily</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.duty"><code class="docutils literal notranslate"><span class="pre">ILoads.duty</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.idx"><code class="docutils literal notranslate"><span class="pre">ILoads.idx</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kV"><code class="docutils literal notranslate"><span class="pre">ILoads.kV</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kW"><code class="docutils literal notranslate"><span class="pre">ILoads.kW</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kva"><code class="docutils literal notranslate"><span class="pre">ILoads.kva</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kvar"><code class="docutils literal notranslate"><span class="pre">ILoads.kvar</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kwh"><code class="docutils literal notranslate"><span class="pre">ILoads.kwh</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.kwhdays"><code class="docutils literal notranslate"><span class="pre">ILoads.kwhdays</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.pctSeriesRL"><code class="docutils literal notranslate"><span class="pre">ILoads.pctSeriesRL</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ILoads.ILoads.xfkVA"><code class="docutils literal notranslate"><span class="pre">ILoads.xfkVA</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

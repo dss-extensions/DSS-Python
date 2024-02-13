@@ -1,0 +1,1094 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>PyIndMach012: an example of user-model using DSS-Python &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/UserModels/PyIndMach012/README';</script>
+    <link rel="icon" href="../../../_static/dssx.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Multiple DSS engines, multithreading vs. multiprocessing" href="../../Multithreading.html" />
+    <link rel="prev" title="DSS-Extensions — JSON exports" href="../../JSON.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../apidocs/index.html">dss package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../apidocs/dss/dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidocs/dss/dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/examples/UserModels/PyIndMach012/README.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>PyIndMach012: an example of user-model using DSS-Python</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-model-class">The model class</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opendss-setup">OpenDSS setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-model">Using the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-and-saving-the-outputs">Running and saving the outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-various-output-channels">Plotting the various output channels</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="pyindmach012-an-example-of-user-model-using-dss-python">
+<h1>PyIndMach012: an example of user-model using DSS-Python<a class="headerlink" href="#pyindmach012-an-example-of-user-model-using-dss-python" title="Link to this heading">#</a></h1>
+<p>This example runs a modified example from the OpenDSS distribution for the induction machine model with a sample PyIndMach012 implementation, written in Python, and the original, built-in IndMach012.</p>
+<p>Check the <code class="docutils literal notranslate"><span class="pre">PyIndMach012.py</span></code> file for more comments. Comparing it to <a class="reference external" href="https://github.com/dss-extensions/dss_capi/blob/master/src/PCElements/IndMach012.pas">the Pascal code for IndMach012</a> can be useful to understand some of the inner workings of OpenDSS.</p>
+<p>The user-model code in DSS-Python was supposed to grow other features, but the effort hasn’t been continued for many reasons. The code for generator user-models has been stable for many releases. We believe it can be used to develop new ideas before committing the final model in a traditional DLL user-model.</p>
+<p>The outputs for this notebook should be listed below, but you can also open and then run this notebook on Google Colab for a quick overview if you don’t want to set up a local environment: <strong><a class="reference external" href="https://colab.research.google.com/github/dss-extensions/dss_python/blob/master/docs/examples/UserModels/PyIndMach012/README.ipynb">Open in Colab</a></strong>. The next cell installs DSS-Python and dependencies, and downloads the extra files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">subprocess</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;COLAB_RELEASE_TAG&quot;</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">urllib.request</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s1">&#39;pip install dss-python[plot]&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/dss-extensions/dss_python/master/docs/examples/UserModels/PyIndMach012/PyIndMach012.py&quot;</span><span class="p">,</span> <span class="s2">&quot;PyIndMach012.py&quot;</span><span class="p">)</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/dss-extensions/dss_python/master/docs/examples/UserModels/PyIndMach012/master.dss&quot;</span><span class="p">,</span> <span class="s2">&quot;master.dss&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">dss.UserModels</span> <span class="kn">import</span> <span class="n">GenUserModel</span> <span class="c1"># used to get the DLL path</span>
+<span class="kn">import</span> <span class="nn">PyIndMach012</span> <span class="c1"># we need to import the model so it gets registered</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="the-model-class">
+<h2>The model class<a class="headerlink" href="#the-model-class" title="Link to this heading">#</a></h2>
+<p>Run <code class="docutils literal notranslate"><span class="pre">??PyIndMach012</span></code> to see the code of the class, or open <code class="docutils literal notranslate"><span class="pre">PyIndMach012.py</span></code> in an editor.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;PyIndMach012.py&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&#39;&#39;
+A `dss_python` User-Model implementation of the IndMach012 Generator model from OpenDSS.
+
+Based on the following files from the official OpenDSS source code:
+- Source/PCElements/IndMach012.pas
+- Source/IndMach012a/IndMach012Model.pas
+
+This Python version was written by Paulo Meira. 
+Original code by EPRI, licensed under the 3-clause BSD. See OPENDSS_LICENSE.
+
+This sample code doesn&#39;t interact with the main OpenDSS interface directly,
+it only uses the user-model interface. Thus, it is compatible with the official OpenDSS
+distribution as well as DSS-Python. Note that OpenDSS version 7 has a bug on 64-bit 
+systems and user-models most likely won&#39;t run via COM.
+
+Recent version of OpenDSS 8 also present a bug when handling the editing of 
+user-model parameters after the creation of the generator. You can, of course,
+edit the data in Python if you desire.
+
+&#39;&#39;&#39;
+from dss.UserModels import GenUserModel
+from dss.enums import SolveModes
+import numpy as np
+
+# This is the user-model we&#39;ll use as a base
+Base = GenUserModel.Base
+
+# Symmetrical component transformation matrices
+a = np.exp(1j * 2 * np.pi/3)
+aa = np.exp(1j * 4 * np.pi/3)
+
+Ap2s = np.array([
+    [1, 1, 1], 
+    [1, a, aa],
+    [1, aa, a]
+]) / 3.0
+
+As2p = np.array([
+    [1, 1, 1], 
+    [1, aa, a],
+    [1, a, aa]
+])
+
+
+@GenUserModel.register # The class needs to be registered
+class PyIndMach012(Base):
+    &#39;&#39;&#39;
+    A Python User-Model implementation of the IndMach012 Generator model for OpenDSS 
+    &#39;&#39;&#39;
+    def __init__(self, gen, dyn, callbacks):
+        &#39;&#39;&#39;
+        Initialize the model object instance
+        Note: OpenDSS calls `Init` from the UserModel DLL later,
+              which calls our `init_state_vars`
+        &#39;&#39;&#39;
+    
+        Base.__init__(self, gen, dyn, callbacks)
+        
+        # You can list the DSS model inputs and default values like this.
+        # The UserModel wrapper will create attributes in the instance with
+        # the default values and update them later when the UserModel
+        # `Edit` function is called.
+        self.add_inputs(
+            (&#39;H&#39;, 0.02),
+            (&#39;D&#39;, 0.02),
+            (&#39;puRs&#39;, 0.0053),
+            (&#39;puXs&#39;, 0.106),
+            (&#39;puRr&#39;, 0.007),
+            (&#39;puXr&#39;, 0.12),
+            (&#39;puXm&#39;, 4.0),
+            (&#39;slip&#39;, 0.007),
+            (&#39;MaxSlip&#39;, 0.1),
+            (&#39;slipOption&#39;, &#39;variable&#39;)
+        )
+        
+        # The outputs can be any variable or Python property, i.e. it can be an 
+        # input, state variable, property, etc., as long as it is available in
+        # the model class
+        self.add_outputs(
+            &#39;Slip&#39;, # The current slip (`slip` is the DSS input param)
+            
+            # There don&#39;t need to be in the output (they&#39;re constant) but are listed 
+            # in IndMach012.pas -- most likely to debug
+            &#39;puRs&#39;,
+            &#39;puXs&#39;,
+            &#39;puRr&#39;,
+            &#39;puXr&#39;,
+            &#39;puXm&#39;,
+            &#39;MaxSlip&#39;,
+            
+            # complex variables like these are exported as their absolute values
+            &#39;Is1&#39;, 
+            &#39;Is2&#39;,
+            &#39;Ir1&#39;,
+            &#39;Ir2&#39;,
+            
+            # Some properties to mimic the Pascal version
+            &#39;E1_pu&#39;,
+            &#39;StatorLosses&#39;,
+            &#39;RotorLosses&#39;,
+            &#39;ShaftPower_hp&#39;,
+            &#39;PowerFactor&#39;,
+            &#39;Efficiency_pct&#39;
+        )
+        
+        # These are the state variables. DSS-Python will automatically
+        # setup auxiliary variables such as dE1_dt, dE1_dtn, E1n used in
+        # the solution process
+        self.add_state_vars(
+            &#39;E1&#39;, &#39;E2&#39;
+        )
+        
+        # For some advanced usage, we need some CFFI code.
+        # We plan to add a simple wrapper to the callback interface.
+        # While writing this, I noticed that there were some changes in 
+        # OpenDSS version 8 that introduce an extra ActorID parameter in 
+        # many of the callback functions. This means that we cannot write
+        # a user-model that is compatible with both versions. 
+        # An issue ticket was created to track this at:
+        # 
+        # self.char_buffer = self.ffi.new(&#39;char[1024]&#39;)
+        # self.callbacks.GetActiveElementName(self.char_buffer, 1024)
+        # self.element_name = self.ffi.string(self.char_buffer)#.decode(&#39;ascii&#39;)
+        
+        # This one is used for the Power property, left as an example
+        # self.double_buffer = self.ffi.new(&#39;double[2]&#39;)
+
+        # Update other variables that depend on the input parameters
+        self.update()
+
+
+    def init_state_vars(self, Vabc, Iabc):
+        &#39;&#39;&#39;
+        Initialize state variables (dynamics mode), equivalent to
+        TIndMach012Obj.InitStateVars
+        &#39;&#39;&#39;
+
+        V012 = np.dot(Ap2s, Vabc)
+        I012 = np.dot(Ap2s, Iabc)
+        
+        # The following is done in TIndMach012Obj.InitModel:
+        # Compute Voltage behind transient reactance and set derivatives to zero
+        self.E1 = V012[1] - I012[1] * self.Zsp
+        self.dE1dt = 0
+        self.E2 = V012[2] - I012[2] * self.Zsp
+        self.dE2dt = 0
+
+        # Copy the current state to the previous state
+        self.copy_state()
+        
+        # Initial rotor speed
+        self.gen.Speed = -self.S1 * self.gen.w0
+        self.gen.dSpeed = 0
+        self.gen.Theta = np.angle(self.E1) # overwrite Theta
+        self.gen.dTheta = 0
+
+
+    def integrate(self):
+        &#39;&#39;&#39;
+        Equivalent to TIndMach012Obj.Integrate
+        &#39;&#39;&#39;
+        if self.dyn.IterationFlag == 0: 
+            # First iteration of new time step, copy the previous state
+            # to be used in the integration process
+            self.copy_state()
+        
+        # Some copies to reduce `self.` spam
+        gen = self.gen
+        w0 = gen.w0
+        S1, S2 = self.S1, self.S2
+        E1, E2 = self.E1, self.E2
+        Is1, Is2 = self.Is1, self.Is2
+        T0p = self.T0p
+        Xopen, Xp = self.Xopen, self.Xp
+        
+        # Derivative of E
+        self.dE1_dt = (1j * -w0 * S1 * E1) - ((E1 - 1j * (Xopen - Xp) * Is1) / T0p)
+        self.dE2_dt = (1j * -w0 * S2 * E2) - ((E2 - 1j * (Xopen - Xp) * Is2) / T0p)
+        
+        # Trapezoidal Integration
+        Base.integrate(self)
+            
+        
+    def update(self): 
+        &#39;&#39;&#39;
+        Propagate changes from the input parameters to the model.
+        
+        Equivalent to part of TIndMach012Obj.RecalcElementData
+        &#39;&#39;&#39;
+        
+        gen = self.gen
+        
+        self._set_local_slip(self.slip)
+        
+        # make generator speed agree
+        gen.Speed = -self.S1 * self.gen.w0
+        self.gen.dSpeed = 0.0
+    
+        self.fixed_slip = (self.slipOption) and (self.slipOption[0].upper() == &#39;F&#39;)
+        self.first_iteration = True
+
+        ZBase = 1000.0 * (gen.kVGeneratorBase**2 / gen.kVArating)
+        
+        Rs = self.puRs * ZBase
+        Xs = self.puXs * ZBase
+        Rr = self.puRr * ZBase
+        Xr = self.puXr * ZBase
+        Xm = self.puXm * ZBase
+        
+        self.Zs = complex(Rs, Xs)
+        self.Zm = complex(0, Xm)
+        self.Zr = complex(Rr, Xr)
+        
+        self.Xopen = Xs + Xm
+        self.Xp  = Xs + (Xr * Xm) / (Xr + Xm)
+        self.Zsp = complex(Rs, self.Xp)
+        self.T0p = (Xr + Xm) / (gen.w0 * Rr)
+        # self.Zrsc = self.Zr + (self.Zs * self.Zm) / (self.Zs + selfg.Zm)
+        
+        # Init dSdP based on rated slip and rated voltage
+        self.V1 = complex(gen.kVGeneratorBase * 1000.0/np.sqrt(3))
+        if self.S1 != 0:
+            self.Is1, self.Ir1 = self._pfmodel_current(self.V1, self.S1)
+        
+        self.dSdP = self.S1/(self.V1 * np.conjugate(self.Is1)).real
+        
+        self.Is1 = complex(0)
+        self.V1 = complex(0)
+        self.Is2 = complex(0)
+        self.V2 = complex(0)
+
+
+    def calc(self, Vabc, Iabc):
+        &#39;&#39;&#39;
+        Calculate the new model state. Vabc is used as an
+        input, while Iabc is the ouput used in OpenDSS.
+        &#39;&#39;&#39;
+        
+        # The next version of DSS-Python should have an option to 
+        # provide the values in 012 space to simplify the model code
+        V012 = np.dot(Ap2s, Vabc)
+        I012 = np.dot(Ap2s, Iabc)
+        
+        if self.dyn.SolutionMode == SolveModes.Dynamic:
+            self.calc_dynamic(V012, I012)
+        else:
+            self.calc_power_flow(V012, I012)
+
+        Iabc[:] = iabc = np.dot(As2p, I012)
+        
+        # We can get the current total power here, or we can use 
+        # the power property below 
+        self.Power = sum(np.asarray(Vabc) * iabc.conj())
+
+
+    # @property
+    # def Power(self):
+        # &#39;&#39;&#39;
+        # This is an example of callback usage, returning the power of the 
+        # element. Note that we don&#39;t really need this here since we can 
+        # calculate the power in the calc function.
+        # &#39;&#39;&#39;
+        # cmd = b&#39;select %s&#39; % (self.element_name)
+        # self.callbacks.DoDSSCommand(cmd, len(cmd) + 1)
+        # self.callbacks.GetActiveElementPower(1, self.double_buffer)
+        # return complex(self.double_buffer[0], self.double_buffer[1])
+
+
+    def calc_dynamic(self, V012, I012):
+        &#39;&#39;&#39;Equivalent to TIndMach012Obj.CalcDynamic&#39;&#39;&#39;
+        
+        # In dynamics mode, slip is allowed to vary
+        
+        # Copy some values to local variables
+        V1, V2 = self.V1, self.V2 = V012[1], V012[2]
+        E1, E2 = self.E1, self.E2
+        Zsp, Zm = self.Zsp, self.Zm
+        
+        # Gets slip from shaft speed
+        self._set_local_slip(-self.gen.Speed / self.gen.w0)
+        
+        # The stator and rotor currents from the Pascal code are 
+        # computed in TIndMach012Obj.Get_DynamicModelCurrent
+
+        # Stator current
+        self.Is1 = (V1 - E1) / self.Zsp
+        self.Is2 = (V2 - E2) / self.Zsp
+
+        # Rotor current
+        self.Ir1 = self.Is1 - (V1 - self.Is1 * Zsp) / Zm
+        self.Ir2 = self.Is2 - (V2 - self.Is2 * Zsp) / Zm        
+        
+        I012[:] = complex(0.0, 0.0), self.Is1, self.Is2
+        
+
+    def calc_power_flow(self, V012, I012):
+        &#39;&#39;&#39;Equivalent to TIndMach012Obj.CalcPFlow&#39;&#39;&#39;
+        
+        self.V1, self.V2 = V012[1], V012[2]
+        
+        if self.first_iteration:
+            # Initialize Is1
+            self.Is1, self.Ir1 = self._pfmodel_current(self.V1, self.S1)
+
+
+        # If fixed slip option set, then use the value set by the user
+        if not self.fixed_slip:
+            P_Error = self.gen.PNominalPerPhase - (self.V1 * self.Is1.conjugate()).real
+            
+            # make new guess at slip
+            self._set_local_slip(self.S1 + self.dSdP * P_Error)
+
+        
+        self.Is1, self.Ir1 = self._pfmodel_current(self.V1, self.S1)
+        self.Is2, self.Ir2 = self._pfmodel_current(self.V2, self.S2)
+        
+        I012[:] = complex(0.0, 0.0), self.Is1, self.Is2
+
+        
+    def _pfmodel_current(self, V, s, show=False):
+        &#39;&#39;&#39;Equivalent to TIndMach012Obj.Get_PFlowModelCurrent&#39;&#39;&#39;
+    
+        if s != 0.0:
+            RL = self.Zr.real * (1 - s) / s
+        else:
+            RL = self.Zr.real * 1.0e6
+            
+        Zrotor = RL + self.Zr
+        Zmotor = self.Zs + (Zrotor * self.Zm) / (Zrotor + self.Zm)
+        Istator = V / Zmotor
+        Irotor = Istator - (V - self.Zs * Istator) / self.Zm
+        
+        return Istator, Irotor
+
+
+    def _set_local_slip(self, value):
+        &#39;&#39;&#39;Equivalent to TIndMach012Obj.set_Localslip&#39;&#39;&#39;
+        
+        self.S1 = value
+        if self.dyn.SolutionMode != SolveModes.Dynamic:
+            # Put limits on the slip unless dynamics
+            if abs(self.S1) &gt; self.MaxSlip:
+                self.S1 = np.sign(self.S1) * self.MaxSlip    
+            
+        self.S2 = 2 - self.S1
+
+    
+    # The following are properties to emulate the model outputs from 
+    # the Pascal version of built-in IndMach012 
+    
+    @property
+    def E1_pu(self):
+        return np.sqrt(3) * abs(self.E1) / (1000 * self.gen.kVGeneratorBase)
+
+    @property
+    def Slip(self):
+        return self.S1
+
+    @property
+    def RotorLosses(self):
+        Ir1, Ir2, Zr = self.Ir1, self.Ir2, self.Zr
+        return 3 * (Ir1.real**2 + Ir1.imag**2 + Ir2.real**2 + Ir2.imag**2) * Zr.real
+        
+    @property
+    def StatorLosses(self):
+        Is1, Is2, Zs = self.Is1, self.Is2, self.Zs
+        return 3 * (Is1.real**2 + Is1.imag**2 + Is2.real**2 + Is2.imag**2) * Zs.real
+    
+    @property
+    def PowerFactor(self):
+        power = self.Power
+        return np.sign(power.imag) * power.real / abs(power)
+        
+    @property
+    def Efficiency_pct(self):
+        power = self.Power
+        return np.clip((1 - (self.StatorLosses + self.RotorLosses) / power.real) * 100, 0, 100)
+        
+    @property
+    def ShaftPower_hp(self):
+        Ir1, Ir2, Zr, S1, S2 = self.Ir1, self.Ir2, self.Zr, self.S1, self.S2
+        return (3.0/746) * (abs(Ir1)**2 * (1 - S1) / S1 + abs(Ir2)**2 * (1 - S2)/S2) * Zr.real
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="opendss-setup">
+<h2>OpenDSS setup<a class="headerlink" href="#opendss-setup" title="Link to this heading">#</a></h2>
+<p>For this example, we can use either COM or DSS-Python (DSS C-API).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">original_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> <span class="c1"># same the original working directory since the COM module messes with it</span>
+<span class="n">USE_COM</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># toggle this value to run with DSS C-API or COM</span>
+<span class="k">if</span> <span class="n">USE_COM</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">patch_dss_com</span>
+    <span class="kn">import</span> <span class="nn">comtypes.client</span>
+    <span class="n">DSS</span> <span class="o">=</span> <span class="n">patch_dss_com</span><span class="p">(</span><span class="n">comtypes</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">CreateObject</span><span class="p">(</span><span class="s1">&#39;OpenDSSengine.DSS&#39;</span><span class="p">))</span>
+    <span class="n">DSS</span><span class="o">.</span><span class="n">DataPath</span> <span class="o">=</span> <span class="n">original_dir</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">original_dir</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">DSS</span>
+    
+<span class="n">DSS</span><span class="o">.</span><span class="n">Version</span>    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;DSS C-API Library version 0.14.0 revision 04941400a091677da98b033a3b682480f2584693 based on OpenDSS SVN 3723 [FPC 3.2.2] (64-bit build) MVMULT INCREMENTAL_Y CONTEXT_API PM 20240209141429; License Status: Open \nDSS-Python version: 0.15.0&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span> <span class="o">=</span> <span class="n">DSS</span><span class="o">.</span><span class="n">Text</span>
+<span class="n">Monitors</span> <span class="o">=</span> <span class="n">DSS</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Monitors</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="using-the-model">
+<h2>Using the model<a class="headerlink" href="#using-the-model" title="Link to this heading">#</a></h2>
+<p>To use a Python model for generators:</p>
+<ul class="simple">
+<li><p>the model class needs to be registered in advance</p></li>
+<li><p>create a generator with <code class="docutils literal notranslate"><span class="pre">model=6</span></code></p>
+<ul>
+<li><p>pass a <code class="docutils literal notranslate"><span class="pre">usermodel=&quot;{dll_path}&quot;</span></code> as in the following DSS command in the <code class="docutils literal notranslate"><span class="pre">run</span></code> function</p></li>
+<li><p>pass a <code class="docutils literal notranslate"><span class="pre">&quot;pymodel=MODELNAME&quot;</span></code> parameter in the userdata property, where MODELNAME is the name of the model class in Python</p></li>
+</ul>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">pymodel</span><span class="p">):</span>
+    <span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;redirect &quot;master.dss&quot;&#39;</span>
+
+    <span class="k">if</span> <span class="n">pymodel</span><span class="p">:</span>
+        <span class="c1"># This uses our custom user-model in Python</span>
+        <span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;New &quot;Generator.Motor1&quot; bus1=Bg2 kW=1200 conn=delta kVA=1500.000 H=6 model=6 kv=0.48 D=0 usermodel=&quot;</span><span class="si">{dll_path}</span><span class="s1">&quot; userdata=(pymodel=PyIndMach012 purs=0.048 puxs=0.075 purr=0.018 puxr=0.12 puxm=3.8 slip=0.02 SlipOption=variableslip)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">dll_path</span><span class="o">=</span><span class="n">GenUserModel</span><span class="o">.</span><span class="n">dll_path</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;New &quot;Monitor.mfr2&quot; element=Generator.Motor1 terminal=1 mode=3&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># This uses the built-in model for comparison</span>
+        <span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;New &quot;IndMach012.Motor1&quot; bus1=Bg2 kW=1200 conn=delta kVA=1500.000 H=6 purs=0.048 puxs=0.075 purr=0.018 puxr=0.12 puxm=3.8 slip=0.02 SlipOption=variableslip kv=0.48&#39;</span>
+        <span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;New &quot;Monitor.mfr2&quot; element=IndMach012.Motor1 terminal=1 mode=3&#39;</span>
+        
+    <span class="c1"># This will run a power-flow solution</span>
+    <span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;Solve&#39;</span>
+    
+    <span class="c1"># This will toggle to the dynamics mode</span>
+    <span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;Set mode=dynamics number=1 h=0.000166667&#39;</span>
+    
+    <span class="c1"># And finally run 5000 steps for the dynamic simulation</span>
+    <span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Solve number=5000&#39;</span>
+   
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># There are the channels from the Pascal/built-in IndMach012</span>
+<span class="n">channels_pas</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span> <span class="s1">&#39;Theta (deg)&#39;</span><span class="p">,</span> <span class="s1">&#39;E1&#39;</span><span class="p">,</span> <span class="s1">&#39;dSpeed (deg/sec)&#39;</span><span class="p">,</span> <span class="s1">&#39;dTheta (deg)&#39;</span><span class="p">,</span> <span class="s1">&#39;Slip&#39;</span><span class="p">,</span> <span class="s1">&#39;Is1&#39;</span><span class="p">,</span> <span class="s1">&#39;Is2&#39;</span><span class="p">,</span> <span class="s1">&#39;Ir1&#39;</span><span class="p">,</span> <span class="s1">&#39;Ir2&#39;</span><span class="p">,</span> <span class="s1">&#39;Stator Losses&#39;</span><span class="p">,</span> <span class="s1">&#39;Rotor Losses&#39;</span><span class="p">,</span> <span class="s1">&#39;Shaft Power (hp)&#39;</span><span class="p">,</span> <span class="s1">&#39;Power Factor&#39;</span><span class="p">,</span> <span class="s1">&#39;Efficiency (%)&#39;</span><span class="p">)</span>
+
+<span class="c1"># There are the channels from the Python module -- we define part of these and part come from the generator model itself</span>
+<span class="n">channels_py</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span> <span class="s1">&#39;Theta (Deg)&#39;</span><span class="p">,</span> <span class="s1">&#39;E1_pu&#39;</span><span class="p">,</span> <span class="s1">&#39;dSpeed (Deg/sec)&#39;</span><span class="p">,</span> <span class="s1">&#39;dTheta (Deg)&#39;</span><span class="p">,</span> <span class="s1">&#39;Slip&#39;</span><span class="p">,</span> <span class="s1">&#39;Is1&#39;</span><span class="p">,</span> <span class="s1">&#39;Is2&#39;</span><span class="p">,</span> <span class="s1">&#39;Ir1&#39;</span><span class="p">,</span> <span class="s1">&#39;Ir2&#39;</span><span class="p">,</span> <span class="s1">&#39;StatorLosses&#39;</span><span class="p">,</span> <span class="s1">&#39;RotorLosses&#39;</span><span class="p">,</span> <span class="s1">&#39;ShaftPower_hp&#39;</span><span class="p">,</span> <span class="s1">&#39;PowerFactor&#39;</span><span class="p">,</span> <span class="s1">&#39;Efficiency_pct&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="running-and-saving-the-outputs">
+<h2>Running and saving the outputs<a class="headerlink" href="#running-and-saving-the-outputs" title="Link to this heading">#</a></h2>
+<p>Let’s run the Pascal/built-in version of IndMach012 and our custom Python version for comparison:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">Monitors</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">&#39;mfr2&#39;</span>
+<span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Monitors</span><span class="o">.</span><span class="n">Header</span><span class="p">]</span>
+<span class="n">outputs_pas</span> <span class="o">=</span> <span class="p">{</span><span class="n">channel</span><span class="p">:</span> <span class="n">Monitors</span><span class="o">.</span><span class="n">Channel</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">channels_pas</span><span class="p">}</span>
+
+<span class="n">run</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Monitors</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">&#39;mfr2&#39;</span>
+<span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Monitors</span><span class="o">.</span><span class="n">Header</span><span class="p">]</span>
+<span class="n">outputs_py</span> <span class="o">=</span> <span class="p">{</span><span class="n">channel</span><span class="p">:</span> <span class="n">Monitors</span><span class="o">.</span><span class="n">Channel</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">channels_py</span><span class="p">}</span>
+
+<span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5000</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.000166667</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">/</span> <span class="mf">0.000166667</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plotting-the-various-output-channels">
+<h2>Plotting the various output channels<a class="headerlink" href="#plotting-the-various-output-channels" title="Link to this heading">#</a></h2>
+<p>The example circuit applies a fault at 0.3 s, isolating the machine at 0.4s (check <code class="docutils literal notranslate"><span class="pre">master.dss</span></code> for more details).</p>
+<p>As we can see from the figures below, the outputs match very closely. After the induction machine is isolated, the efficiency and power factor values can misbehave as the power goes to zero, seem especially in the Pascal version.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ch_pas</span><span class="p">,</span> <span class="n">ch_py</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">channels_pas</span><span class="p">,</span> <span class="n">channels_py</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">outputs_pas</span><span class="p">[</span><span class="n">ch_pas</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;IndMach012&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">outputs_py</span><span class="p">[</span><span class="n">ch_py</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PyIndMach012&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fault occurs&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Relays operate&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ch_pas</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">ch_pas</span> <span class="o">==</span> <span class="s1">&#39;Efficiency (%)&#39;</span><span class="p">:</span>
+        <span class="c1"># Limit efficiency to 0-100</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/a52b979f0d804e2154d10d3b9a5614c925216236ce5bf518fbe686189badf61d.png" src="../../../_images/a52b979f0d804e2154d10d3b9a5614c925216236ce5bf518fbe686189badf61d.png" />
+<img alt="../../../_images/0498ae03627e8da9e655aceb360182a792b1f6bb63ade494360efd471dd1d1c7.png" src="../../../_images/0498ae03627e8da9e655aceb360182a792b1f6bb63ade494360efd471dd1d1c7.png" />
+<img alt="../../../_images/db4fea2a7d973e13ef4425c8f3c910f124c09c058c8f1e140947edc600c48f2a.png" src="../../../_images/db4fea2a7d973e13ef4425c8f3c910f124c09c058c8f1e140947edc600c48f2a.png" />
+<img alt="../../../_images/418a7e11136efd748b7047ad06d5e533a2edc7a2faead41a10f6fd3446700eec.png" src="../../../_images/418a7e11136efd748b7047ad06d5e533a2edc7a2faead41a10f6fd3446700eec.png" />
+<img alt="../../../_images/ddc6909928eb99fcfead81e8245be2828a6cc152993771d6c84a8b331eec277b.png" src="../../../_images/ddc6909928eb99fcfead81e8245be2828a6cc152993771d6c84a8b331eec277b.png" />
+<img alt="../../../_images/d8382970f5cbb0d0f432117f011734eeaa9946e13bb44fc436d555c69f4dc4cd.png" src="../../../_images/d8382970f5cbb0d0f432117f011734eeaa9946e13bb44fc436d555c69f4dc4cd.png" />
+<img alt="../../../_images/c1c43dc54703f4bd5986fbe05967eac0dd66fe5803db47895e41156014748a8d.png" src="../../../_images/c1c43dc54703f4bd5986fbe05967eac0dd66fe5803db47895e41156014748a8d.png" />
+<img alt="../../../_images/59d2f7235e139744fd6b3aeba95268be023422abd6cf18053e40ab602695130b.png" src="../../../_images/59d2f7235e139744fd6b3aeba95268be023422abd6cf18053e40ab602695130b.png" />
+<img alt="../../../_images/da5354b522f0fe97faa4f408d9a43057e5cbc2f2f0299236427e0f86335d0b61.png" src="../../../_images/da5354b522f0fe97faa4f408d9a43057e5cbc2f2f0299236427e0f86335d0b61.png" />
+<img alt="../../../_images/921a9b59cf27062a4e7561151f9a53d2395c83b0094c24cffd165cd300bc34ef.png" src="../../../_images/921a9b59cf27062a4e7561151f9a53d2395c83b0094c24cffd165cd300bc34ef.png" />
+<img alt="../../../_images/b8073d8f3d220be92553893870edb118dd55d8305afa4d2fe3b31041c1090e7b.png" src="../../../_images/b8073d8f3d220be92553893870edb118dd55d8305afa4d2fe3b31041c1090e7b.png" />
+<img alt="../../../_images/b7940f2971985a0202c9bb402701c8373316874a3c29bd8444d79b7db2cfa3ec.png" src="../../../_images/b7940f2971985a0202c9bb402701c8373316874a3c29bd8444d79b7db2cfa3ec.png" />
+<img alt="../../../_images/15b45056e1a2e8d91f34da15ea367d7252cfa590f5ced8346ec653e2d60ac693.png" src="../../../_images/15b45056e1a2e8d91f34da15ea367d7252cfa590f5ced8346ec653e2d60ac693.png" />
+<img alt="../../../_images/76f8ec6414ee623e289e8470f3c80a14d3aab26caadab92026843c48ef7ff880.png" src="../../../_images/76f8ec6414ee623e289e8470f3c80a14d3aab26caadab92026843c48ef7ff880.png" />
+<img alt="../../../_images/06299b9317fac3cd6cd3716c22653cb7be2d2a2ac1c11a6776d825632c0777b9.png" src="../../../_images/06299b9317fac3cd6cd3716c22653cb7be2d2a2ac1c11a6776d825632c0777b9.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../../JSON.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">DSS-Extensions — JSON exports</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../Multithreading.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Multiple DSS engines, multithreading vs. multiprocessing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-model-class">The model class</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opendss-setup">OpenDSS setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-model">Using the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-and-saving-the-outputs">Running and saving the outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-various-output-channels">Plotting the various output channels</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

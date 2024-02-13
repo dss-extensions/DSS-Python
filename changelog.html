@@ -1,0 +1,1117 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>DSS-Python changelog &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'changelog';</script>
+    <link rel="icon" href="_static/dssx.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Integrated plotting in Python" href="examples/Plotting.html" />
+    <link rel="prev" title="Getting Started" href="examples/GettingStarted.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="examples/Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/index.html">dss package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="apidocs/dss/dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/changelog.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>DSS-Python changelog</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#x">0.15.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">0.15.0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">0.14.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">0.14.4</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">0.14.3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">0.14.2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">0.14.1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">0.14.0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">0.13.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">0.13.1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">0.13.0</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss-c-api-0-13-0-changes">DSS C-API 0.13.0 changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">0.12.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">0.12.1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">0.12.0</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss-c-api-0-12-0-changes">DSS C-API 0.12.0 changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">0.10.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">0.10.7</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">0.10.6</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">0.10.5</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">0.10.4</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">0.10.3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">0.10.2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">0.10.1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">0.10.0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">0.9.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">0.9.8</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">0.9.7</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">0.9.6</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">0.9.5</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">0.9.4</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">0.9.3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">0.9.2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">0.9.1</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dss-python-changelog">
+<h1>DSS-Python changelog<a class="headerlink" href="#dss-python-changelog" title="Link to this heading">#</a></h1>
+<p>Remember that changes in our alternative OpenDSS engine, currently known as DSS C-API, are always
+relevant. See <a class="reference external" href="https://github.com/dss-extensions/dss_capi/">DSS C-API’s repository</a> for more information.</p>
+<section id="x">
+<h2>0.15.x<a class="headerlink" href="#x" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h3>0.15.0<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>Released on 2024-02-09.</p>
+<ul class="simple">
+<li><p>Upgrade the backend to <a class="reference external" href="https://github.com/dss-extensions/dss_capi/releases/tag/0.14.0"><strong>DSS C-API 0.14.0</strong></a>. <strong>A lot</strong> of changes there, please check the changelog. Includes many small bugfixes, improvements, and ports of a few changes from the official OpenDSS codebase, matching OpenDSS v9.8.0.1.</p></li>
+<li><p>Enums:</p>
+<ul>
+<li><p>Move to DSS-Python-Backend to allow easier sharing among all Python packages from DSS-Extensions.</p></li>
+<li><p>Convert enum comments to docstrings for better user experience.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">DSSCompatFlags.ActiveLine</span></code>.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">DSSJSONFlags.SkipTimestamp</span></code>, <code class="docutils literal notranslate"><span class="pre">DSSJSONFlags.SkipBuses</span></code>, <code class="docutils literal notranslate"><span class="pre">DSSJSONFlags.IncludeDefaultObjs</span></code>.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">DSSSaveFlags</span></code> (used in the new function <code class="docutils literal notranslate"><span class="pre">Circuit.Save</span></code>)</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">EnergyMeterRegisters</span></code> and <code class="docutils literal notranslate"><span class="pre">GeneratorRegisters</span></code> to simplify handling register indexes from EnergyMeters (<code class="docutils literal notranslate"><span class="pre">EnergyMeterRegisters</span></code>), Generators, PVSystems, and Storage objects (these last three use <code class="docutils literal notranslate"><span class="pre">GeneratorRegisters</span></code>).</p></li>
+<li><p>Use enums in a few more methods.</p></li>
+</ul>
+</li>
+<li><p>Packaging: Migrate build system to <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and Hatch.</p></li>
+<li><p>Implement the DSSEvents interface. Note that this is not a popular interface and we haven’t seen it used in Python with COM yet. OpenDSS comes with a couple of examples using VBA in Excel though.</p></li>
+<li><p>Drop <code class="docutils literal notranslate"><span class="pre">CheckForError()</span></code>; use <code class="docutils literal notranslate"><span class="pre">_check_for_error()</span></code> instead (same function, but the latter doesn’t pollute the public scope).</p></li>
+<li><p>Expose <code class="docutils literal notranslate"><span class="pre">Circuit.Save()</span></code> function</p></li>
+<li><p>Expose <code class="docutils literal notranslate"><span class="pre">Circuit.FromJSON()</span></code> function</p></li>
+<li><p>Move <code class="docutils literal notranslate"><span class="pre">DSS.Obj</span></code> to the new <a class="reference external" href="https://github.com/dss-extensions/AltDSS-Python">AltDSS-Python package</a> (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">altdss</span></code>, <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">altdss</span> <span class="pre">import</span> <span class="pre">altdss</span></code>).</p>
+<ul>
+<li><p><strong>Breaking change</strong>: the main object classes previously used indices starting at 1, but it seemed unnatural in Python and when used with the rest of the API, so they now behave as normal batches and start at 0. Affects both the <code class="docutils literal notranslate"><span class="pre">find()</span></code> method and the brackets (e.g. <code class="docutils literal notranslate"><span class="pre">altdss.Load[0]</span></code>) syntax.</p></li>
+<li><p><strong>Lots</strong> of new features.</p></li>
+</ul>
+</li>
+<li><p>Use weakrefs to avoid accidentally extending the lifetime of DSSContexts.</p></li>
+<li><p>Update documentation framework (Sphinx) to use Markdown, based on MyST and autodoc2.</p></li>
+</ul>
+</section>
+</section>
+<section id="id2">
+<h2>0.14.x<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>0.14.4<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>Released on 2023-06-27.</p>
+<ul class="simple">
+<li><p>Upgrade the backend to <a class="reference external" href="https://github.com/dss-extensions/dss_capi/releases/tag/0.13.4"><strong>DSS C-API 0.13.4</strong></a>. Includes a bugfix to CapControl, some more error handling, DSSEvents backend functions. This matches the changes in OpenDSS v9.6.1.3, plus our custom changes as usual.</p></li>
+<li><p>Use better DSSContext pointer to IDSS mapping.</p></li>
+<li><p>Plotting: handle empty monitors better, ignore invalid channels.</p></li>
+<li><p>Documentation updated.</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>0.14.3<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>Released on 2023-06-12.</p>
+<ul class="simple">
+<li><p>Upgrade the backend to <a class="reference external" href="https://github.com/dss-extensions/dss_capi/releases/tag/0.13.3"><strong>DSS C-API 0.13.3</strong></a>. Includes important fixes to some OpenDSS components affected by bugs for several years. This matches the changes in OpenDSS v9.6.1.2, plus our custom changes as usual.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">DSS.Error.UseExceptions</span></code> to allow disabling the automatic mapping of error numbers to Python exceptions. When disabling, users take full responsibility to actually check for errors through the <code class="docutils literal notranslate"><span class="pre">DSS.Error</span></code> interface.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">DSSCompatFlags.SaveCalcVoltageBases</span></code>.</p></li>
+<li><p>Transformers: add a warning in the docstrings of <code class="docutils literal notranslate"><span class="pre">WdgCurrents</span></code>, <code class="docutils literal notranslate"><span class="pre">WdgVoltages</span></code> (these don’t work well when the transformer has open terminals).</p></li>
+<li><p>Plotting: handle GICLines in circuit plots.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>0.14.2<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>Released on 2023-05-25.</p>
+<ul class="simple">
+<li><p>Append DSS-Python’s version in <code class="docutils literal notranslate"><span class="pre">DSS.Version</span></code>.</p></li>
+<li><p>Complement and fix most plot types, leaving only a couple of plots without implementation. An example notebook will be added later.</p></li>
+<li><p>Upgrade the backend to DSS C-API v0.13.2.</p></li>
+<li><p>Fix some batch property setters, namely when the values are lists of lists, lists of arrays, or 2-d arrays.</p></li>
+<li><p>Update Obj and Batch to include newer DSS properties.</p></li>
+<li><p>Add JSON option <code class="docutils literal notranslate"><span class="pre">SkipDSSClass</span></code>.</p></li>
+<li><p>Coupled with the backend changes, the JSON output should be more well-behaved for Transformer and Line variations.</p></li>
+</ul>
+</section>
+<section id="id6">
+<h3>0.14.1<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>Released on 2023-04-13.</p>
+<ul class="simple">
+<li><p>Fix issue with newer NumPy versions with YMatrix (<code class="docutils literal notranslate"><span class="pre">GetCompressedYMatrix</span></code>), after the removal of <code class="docutils literal notranslate"><span class="pre">numpy.complex</span></code>.</p></li>
+<li><p>Use some mode enums.</p></li>
+</ul>
+</section>
+<section id="id7">
+<h3>0.14.0<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<p>Released on 2023-04-03.</p>
+<p>Same as version 0.13.1, except that the organization of the module has changed to facilitate fast iteration of the Python side of the code.</p>
+<p>We introduced the new package <code class="docutils literal notranslate"><span class="pre">dss_python_backend</span></code> that will contain all native libs and CFFI bindings from this point on. This leaves DSS-Python itself as a pure Python package, which is much easier to package and distribute.</p>
+</section>
+</section>
+<section id="id8">
+<h2>0.13.x<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<section id="id9">
+<h3>0.13.1<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<p>Released on 2023-04-02.</p>
+<ul class="simple">
+<li><p>Engine updated to <a class="reference external" href="https://github.com/dss-extensions/dss_capi/releases/tag/0.13.1"><strong>DSS C-API 0.13.1</strong></a>. Contains tiny changes to address potential issues with a few PVSystem properties (which passed undetected by our tests).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DSS.AdvancedTypes</span></code>: fix <code class="docutils literal notranslate"><span class="pre">Lines.Yprim</span></code> and <code class="docutils literal notranslate"><span class="pre">PDElements.AllCurrentsMagAng</span></code> when <code class="docutils literal notranslate"><span class="pre">AdvancedTypes</span></code> is enabled.</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>0.13.0<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<p>Released on 2023-03-28.</p>
+<ul class="simple">
+<li><p>Engine updated to <a class="reference external" href="https://github.com/dss-extensions/dss_capi/releases/tag/0.13.0"><strong>DSS C-API 0.13.0</strong></a>, which is very compatible with OpenDSS 9.6.1.1 (plus some official SVN commits up to rev 3595, plus our own changes.</p></li>
+<li><p><strong>New test suite,</strong> which runs many more files and validates more of the API. We now use <code class="docutils literal notranslate"><span class="pre">pytest</span></code> for some more complex tests, while the numeric validation is done with the new <code class="docutils literal notranslate"><span class="pre">compare_outputs.py</span></code>.</p></li>
+<li><p><strong>New <code class="docutils literal notranslate"><span class="pre">DSS.AdvancedTypes</span></code>:</strong> toggle matrix shapes and complex numbers in many of the properties and functions of the API. This is disabled by default.</p></li>
+<li><p><strong>New <code class="docutils literal notranslate"><span class="pre">DSS.CompatFlags</span></code>:</strong> to address some concerns about compatibility, we added a few toggles to toggle behavior that matches the official OpenDSS more closely. This flags will be refined in later releases.</p></li>
+<li><p>Drop deprecated IR classes and a few undocumented functions.</p></li>
+<li><p>Use <strong>more enums</strong> throughout the code, which helps both readability and documentation. Some enums were complemented.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DSS.AdvancedTypes</span></code></strong> toggle: enabling <code class="docutils literal notranslate"><span class="pre">AdvancedTypes</span></code> allows using <strong>array/matrix shapes and complex numbers</strong> as results from properties/functions in the API.</p></li>
+<li><p><strong>Plotting</strong>: Implement several plot types. Only a few issues need to be addressed to consider the plotting system complete!</p></li>
+<li><p><strong>Notebook integration</strong>: Initial prototype available. It is enabled automatically when <code class="docutils literal notranslate"><span class="pre">DSS.Plotting.enable()</span></code> is run in a notebook, providing integration with some DSS messages and outputs.</p>
+<ul>
+<li><p>It also registers the <strong><code class="docutils literal notranslate"><span class="pre">%%dss</span></code> cell magic</strong>. Use it in a cell to run DSS-language code directly. We found it useful for exploration and learning.</p></li>
+</ul>
+</li>
+<li><p>Updated <code class="docutils literal notranslate"><span class="pre">patch_dss_com</span></code> to patch a few more classes.</p></li>
+<li><p>Drop Python 3.6 support, include 3.11 officially in the tests.</p></li>
+<li><p><strong>DSSContext disposal:</strong> use CFFI to track the disposal of the contexts instead of manually tracking. This could remove memory leaks if you application creates too many DSSContexts (which is not recommended).</p></li>
+<li><p><strong>DSS.Obj:</strong> remove some redundant properties, fix several issues. While it’s not complete yet (some known limitations), you can see the tests for a few examples of how to create circuits without .DSS scripts/files in <a class="reference external" href="https://github.com/dss-extensions/dss_python/blob/master/tests/test_obj.py">tests/test_obj.py</a> and <a class="reference external" href="https://github.com/dss-extensions/dss_python/blob/master/tests/test_batch.py">tests/test_batch.py</a> — the first creates each object explicitly, while the second uses batch operations to fill properties from arrays and lists.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code> as a dependency to address Python typing needs in the main API code and the new Obj API.</p></li>
+<li><p>Docs: mark more properties as “<strong>(API Extension)</strong>”.</p></li>
+<li><p>Internal code refactoring and clean-up.</p></li>
+</ul>
+<section id="dss-c-api-0-13-0-changes">
+<h4>DSS C-API 0.13.0 changes<a class="headerlink" href="#dss-c-api-0-13-0-changes" title="Link to this heading">#</a></h4>
+<p><a class="reference external" href="https://github.com/dss-extensions/dss_capi/"><strong>check its repo for more info</strong></a></p>
+<ul class="simple">
+<li><p>Clean-up several files to ease the transition from Pascal to C++; more enum usage, remove redundant internal properties, rename some class members, etc. Some final steps still remain (that work is done in private branches).</p></li>
+<li><p>Fixes a couple of minor memory leaks.</p></li>
+<li><p>Removed our old <em>Legacy Models</em> mechanism. Right now, the API functions still exist, but will have no effect when setting and will throw an error. For a future version, the functions will be removed. This toggle was introduced in 2020, some time after the removal of the legacy models in the official OpenDSS. We believe users had enough time to fully migrate and the extra maintenance burden is not justified anymore.</p></li>
+<li><p>Transition some deprecated and buggy properties to throw specific errors, instead of generic messages. Issue: <a class="github reference external" href="https://github.com/dss-extensions/dss_capi/issues/118">dss-extensions/dss_capi#118</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Export</span></code> command: When the user provides a filename, use it as-is, otherwise could be an invalid path in case-sensitive file systems (e.g. Linux, most likely).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Dump</span></code> and <code class="docutils literal notranslate"><span class="pre">Save</span></code> commands: in some cases, our internal “hybrid enums” were not being converted correctly for dumps. A few classes had incomplete dump implementations since v0.12.0; some strings needed to be escaped for correct output.</p></li>
+<li><p>CtrlQueue: adjust string formatting of items; although this doesn’t affect the numeric results, the strings from the queue had some truncated numbers.</p></li>
+<li><p>Property system: For compatibility with the official version, allow autoresizing some arrays when given conflicting number of elements through the text interface or scripts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Like</span></code> property: Although not recommended and <a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/861977/thread/8b59d21eb6/?limit=25#b57c/f668">deprecated in the official OpenDSS</a>, the sequence of properties filled in the original copy is also copied. If you use <code class="docutils literal notranslate"><span class="pre">Like</span></code>, remember to check if the copy actually worked since some classes are known to not copy every property correctly.</p></li>
+<li><p>Plotting and UI: The engine side plotting callback system is now complete. There are fixes for <code class="docutils literal notranslate"><span class="pre">DaisyPlot</span></code> and <code class="docutils literal notranslate"><span class="pre">GeneralDataPlot</span></code>, especially multi-platform handling. Changed how some properties are exposed in the JSON interchange to the callbacks. Implement argument handling and callback dispatch for <code class="docutils literal notranslate"><span class="pre">DI_Plot</span></code>, <code class="docutils literal notranslate"><span class="pre">CompareCases</span></code> and <code class="docutils literal notranslate"><span class="pre">YearlyCurves</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">New</span></code> commands: Fix potential issue with null pointers and duplicate names when <code class="docutils literal notranslate"><span class="pre">DuplicatesAllowed=False</span></code>.</p></li>
+<li><p>EnergyMeter: Fix error message when the metered element is not a PDElement.</p></li>
+<li><p>CIMXML export: Fix issues present since v0.12.0; reported in <a class="github reference external" href="https://github.com/dss-extensions/OpenDSSDirect.py/issues/121">dss-extensions/OpenDSSDirect.py#121</a></p></li>
+<li><p>Parser: properly error out when given excessive number of elements for matrices; implemented due to the report in <a class="github reference external" href="https://github.com/dss-extensions/OpenDSSDirect.py/issues/122">dss-extensions/OpenDSSDirect.py#122</a></p></li>
+<li><p>Port most changes from the official OpenDSS up to SVN revision 3595 (OpenDSS v9.6.1.1 + a couple of CIMXML updates); check <a class="reference external" href="https://sourceforge.net/p/electricdss/code/3595/tree/trunk/Version8/README.txt">OpenDSS v9.6.1.1 README.txt</a> for some complementary info to the list below.</p>
+<ul>
+<li><p>Relay, UPFC, UPFCControl changes ported.</p></li>
+<li><p>CIMXML exports: Various updates.</p></li>
+<li><p>RegControl: More log and debug trace entries.</p></li>
+<li><p>LoadMult: Set <code class="docutils literal notranslate"><span class="pre">SystemYChanged</span></code> when changing <code class="docutils literal notranslate"><span class="pre">LoadMult</span></code> <strong>through a DSS script or DSS command</strong> (doesn’t affect <code class="docutils literal notranslate"><span class="pre">Solution_Set_LoadMult</span></code>)</p></li>
+<li><p>Port PVSystem, Storage, InvControl, and StorageController changes, including the new grid-forming mode (GFM). For DSS-Extensions, we added a new class InvBasedPCE to avoid some redundancy and make things clearer.</p></li>
+<li><p>Port DynamicExp and related functionality. In our implementation, we also add a new class DynEqPCE to avoid some redundant code (could still be improved). the Generator and the new InvBasePCE derive from this new DynEqPCE. <strong>Note</strong>: the <code class="docutils literal notranslate"><span class="pre">DynamicEq</span></code> functionality from the upstream still seems incomplete and some things are not fully implemented or maybe buggy, so we only ported now to remove the burden of porting this down the line. If you find issues, feel free to report here on DSS-Extensions, but we recommended checking first with the official OpenDSS — if the issue is also found in the official version, prefer to report in the official OpenDSS forum first so everyone gets the fixes and our implementation doesn’t diverge too much.</p></li>
+<li><p>CktElement/API: add a few new functions related to state variables.</p></li>
+<li><p>Circuit, Line: port the <code class="docutils literal notranslate"><span class="pre">LongLineCorrection</span></code> flag now that it seems to be fixed upstream. Note that we didn’t publish releases with the previous buggy version from the upstream OpenDSS (that applied the long-line correction for everything).</p></li>
+<li><p>LineSpacing: port side-effect from upstream; changing <code class="docutils literal notranslate"><span class="pre">nconds</span></code> now reallocates and doesn’t leak previously allocated memory. Not a common operation, so it’s not very relevant.</p></li>
+<li><p>CktElement: port code for handling losses in AutoTrans</p></li>
+</ul>
+</li>
+<li><p>Other API updates:</p>
+<ul>
+<li><p>DSSContext API: allow <code class="docutils literal notranslate"><span class="pre">null</span></code> pointer for the prime/default instance. This should ease the transition. Issue: <a class="github reference external" href="https://github.com/dss-extensions/dss_capi/issues/119">dss-extensions/dss_capi#119</a></p></li>
+<li><p>Error API: add <code class="docutils literal notranslate"><span class="pre">Error_Set_Description</span></code> to allow easier setting an error message from callbacks (this is for advanced usage)</p></li>
+<li><p>Batch and Obj API:</p>
+<ul>
+<li><p>For a couple of fast-path operations, add checks for edit state, automatically issuing <code class="docutils literal notranslate"><span class="pre">BeginEdit</span></code> and <code class="docutils literal notranslate"><span class="pre">EndEdit</span></code> for the objects in the batch.</p></li>
+<li><p>Allow passing strings (object names) instead of pointers for object references</p></li>
+<li><p>Automatically add new elements to the current DSSContext (since we have not yet published a manipulation API)</p></li>
+<li><p>For symmetric matrices, if the user passes only the triangle, follow the same convention as the Text interface. Includes specific fix for (parts of) complex matrices (like the R or X matrices when internally Z is stored). If the user provides full matrices, the previous behavior was correct, no changes required.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Fuses_Reset</span></code>: fix C header (remove extra/unused parameter)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Fuses_Get_State</span></code> and <code class="docutils literal notranslate"><span class="pre">Fuses_Get_NormalState</span></code>: add missing string copy. Sometimes this could cause memory corruption.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Bus_Get_ZSC012Matrix</span></code>: check for nulls</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Bus_Get_AllPCEatBus</span></code>, <code class="docutils literal notranslate"><span class="pre">Bus_Get_AllPDEatBus</span></code>: faster implementations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Meters_Get_CountBranches</span></code>: reimplemented</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Monitors_Get_dblHour</span></code>: For harmonics solution, return empty array. Previously, it was returning a large array instead of a single element (<code class="docutils literal notranslate"><span class="pre">[0]</span></code>) array. A small issue adjusted for compatibility with the official COM API results.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Reactors_Set_Bus1</span></code>: Match the side-effects of the property API for two-terminal reactors.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">DSS_Set_CompatFlags</span></code>/<code class="docutils literal notranslate"><span class="pre">DSS_Get_CompatFlags</span></code> function pair: introduced to address some current and potential future concerns about compatibility of results with the official OpenDSS. See the API docs for more info.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">DSS_Set_EnableArrayDimensions</span></code>/<code class="docutils literal notranslate"><span class="pre">DSS_Get_EnableArrayDimensions</span></code>: for Array results in the API, implement optional matrix sizes; when setting <code class="docutils literal notranslate"><span class="pre">DSS_Set_EnableArrayDimensions(true)</span></code>, the array size pointer will be filled with two extra elements to represent the matrix size (if the data is a matrix instead of a plain vector). For complex number, the dimensions are filled in relation to complex elements instead of double/float64 elements even though we currently reuse the double/float64 array interface. Issue: <a class="github reference external" href="https://github.com/dss-extensions/dss_capi/issues/113">dss-extensions/dss_capi#113</a></p></li>
+</ul>
+</li>
+</ul>
+<p>Note that a couple of SVN changes were ignored on purpose since they introduced potential issues, while many other changes and bug-fixes did not affect the DSS C-API version since our implementation is quite different in some places.</p>
+</section>
+</section>
+</section>
+<section id="id11">
+<h2>0.12.x<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<section id="id12">
+<h3>0.12.1<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
+<p>Released on 2022-07-16.</p>
+<ul class="simple">
+<li><p>Expose <code class="docutils literal notranslate"><span class="pre">Storages</span></code> in Python</p></li>
+<li><p>Include the missing property descriptions from 0.12.0</p></li>
+<li><p>Use DSS C-API v0.12.1 for some incremental fixes</p></li>
+</ul>
+</section>
+<section id="id13">
+<h3>0.12.0<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<p>Released on 2022-07-14.</p>
+<ul class="simple">
+<li><p>Removed CmathLib: not useful in Python or most programming languages targeted by DSS-Extensions.</p></li>
+<li><p>Allow creating multiple DSS engine instances via <code class="docutils literal notranslate"><span class="pre">DSS.NewContext()</span></code>.</p></li>
+<li><p>Reenabled Parallel interface and PM functions (actors and so on), based on a new implementation.</p></li>
+<li><p>Enable incremental Y matrix options — controlled by <code class="docutils literal notranslate"><span class="pre">DSS.YMatrix.SolverOptions</span></code>, options listed in <code class="docutils literal notranslate"><span class="pre">SparseSolverOptions</span></code>.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">ToJSON</span></code> functions to dump object properties (power flow state is not included at the moment)</p></li>
+<li><p>Initial implementation of the new <code class="docutils literal notranslate"><span class="pre">DSS.Obj</span></code> API for direct DSS object and uniform batch manipulation, covering all DSS classes implemented in DSS C-API. The shape of this API may change for the next releases. At the moment it is intended for advanced users. For example, if you get an object handle from the engine and load a new circuit, the handle is invalid and you should not access it anymore (otherwise, crashes are expected).</p></li>
+<li><p>Initial (work-in-progress) implementation of plotting functions. This will also be finished and polished in following releases.</p></li>
+<li><p>Due to some changes ported from the official OpenDSS since 0.10.7, some results may change, especially for circuits that used miles as length units. The same is observed across the official OpenDSS releases.</p></li>
+</ul>
+<section id="dss-c-api-0-12-0-changes">
+<h4>DSS C-API 0.12.0 changes<a class="headerlink" href="#dss-c-api-0-12-0-changes" title="Link to this heading">#</a></h4>
+<p><strong>Includes porting of most official OpenDSS features up to revision 3460.</strong> Check the OpenDSS SVN commits for details.</p>
+<p>Since version 0.11 accumulated too many changes for too long (nearly 2 years), making it hard to keep two parallel but increasingly distinct codebases, version 0.12 is a stepping stone to the next big version (planned as 0.13) that will contain all of the 0.11 changes. As such, only some of the 0.11 features are included. The previous 0.10.8 changes are also included here.</p>
+<p>This version still maintains basic compatibility with the 0.10.x series of releases, but there are many important changes. Version 0.13 will break API and ABI compatibility since function signatures and datatypes will be extensively adjusted. Still, if you use DSS C-API through one of the projects from DSS-Extensions, we expect that your code will require few or no changes.</p>
+<ul>
+<li><p>The binary releases now use Free Pascal 3.2.2.</p></li>
+<li><p>The library name was changed from <code class="docutils literal notranslate"><span class="pre">dss_capi_v7</span></code> to <code class="docutils literal notranslate"><span class="pre">dss_capi</span></code>. The codebase was cleaned up and reorganized.</p></li>
+<li><p>The code was finally unified, merging remaining features from OpenDSS v8+ (with few exceptions). Most of the DSS PM commands and functions were enabled. To achieve this, most of the global variables from the OpenDSS engine were encapsulated in a new class, a DSS Context class. Multi-threaded features are based on DSSContexts, both the original OpenDSS PM features and new extensions.</p></li>
+<li><p>Using DSS Contexts, user threads are now possible.</p></li>
+<li><p>Initial ARM64/AARCH64 support added. ARM32 building scripts were also added. Support includes Apple M1 support, including parallel/multi-threading features.</p></li>
+<li><p>Finally use KLUSolveX (our KLUSolve fork, rewritten and extended), enabling incremental Y updates for transformers and capacitor banks. <strong>Documentation including usage notes and limitations still not written.</strong> This was planned for version v0.13, but moved back to v0.12 to enable ARM32 (armv7l) support and better results in ARM64 (aarch64).</p></li>
+<li><p>Experimental callbacks for plotting and message output. Expect initial support in Python soon after DSS C-API v0.12 is released.</p></li>
+<li><p>Introduce <code class="docutils literal notranslate"><span class="pre">AllowChangeDir</span></code> mechanism: defaults to enabled state for backwards compatibility. When disabled, the engine will not change the current working directory in any situation. This is exposed through a new pair of functions <code class="docutils literal notranslate"><span class="pre">DSS_Set_AllowChangeDir</span></code> and <code class="docutils literal notranslate"><span class="pre">DSS_Get_AllowChangeDir</span></code>, besides the environment variable <code class="docutils literal notranslate"><span class="pre">DSS_CAPI_ALLOW_CHANGE_DIR</span></code>.</p></li>
+<li><p>New setting to toggle <code class="docutils literal notranslate"><span class="pre">DOScmd</span></code> command. Can be controlled through the environment variable <code class="docutils literal notranslate"><span class="pre">DSS_CAPI_ALLOW_DOSCMD</span></code> or functions <code class="docutils literal notranslate"><span class="pre">DSS_Get_AllowDOScmd</span></code>/<code class="docutils literal notranslate"><span class="pre">DSS_Set_AllowDOScmd</span></code>.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">OutputDirectory</span></code> more. <code class="docutils literal notranslate"><span class="pre">OutputDirectory</span></code> is set to the current <code class="docutils literal notranslate"><span class="pre">DataPath</span></code> if <code class="docutils literal notranslate"><span class="pre">DataPath</span></code> is writable. If not, it’s set to a general location (<code class="docutils literal notranslate"><span class="pre">%LOCALAPPDATA%/dss-extensions</span></code> and <code class="docutils literal notranslate"><span class="pre">/tmp/dss-extensions</span></code> since this release). This should make life easier for a user running files from a read-only location. Note that this is only an issue when running a <code class="docutils literal notranslate"><span class="pre">compile</span></code> command. If the user only uses <code class="docutils literal notranslate"><span class="pre">redirect</span></code> commands, the <code class="docutils literal notranslate"><span class="pre">DataPath</span></code> and <code class="docutils literal notranslate"><span class="pre">OutputDirectory</span></code> are left empty, meaning the files are written to the current working directory (CWD), which the user can control through the programming language driving DSS C-API. Note that the official OpenDSS COM behavior is different, since it loads the <code class="docutils literal notranslate"><span class="pre">DataPath</span></code> saved in the registry and modifies the CWD accordingly when OpenDSS is initialized.</p></li>
+<li><p>File IO rewritten to drop deprecated Pascal functions and features. This removes some limitations related to long paths due to the legacy implementation being limited to 255 chars.</p></li>
+<li><p>Reworked <code class="docutils literal notranslate"><span class="pre">TPowerTerminal</span></code> to achieve better memory layout. This makes simulations running <code class="docutils literal notranslate"><span class="pre">LoadsTerminalCheck=false</span></code> and <code class="docutils literal notranslate"><span class="pre">LoadsTerminalCheck=true</span></code> closer in performance, yet disabling the check is still faster.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">TFPHashList</span></code> where possible (replacing the custom, original THashList implementation from OpenDSS).</p></li>
+<li><p>New LoadShape functions and internals:</p>
+<ul class="simple">
+<li><p>Port memory-mapped files from the official OpenDSS, used when <code class="docutils literal notranslate"><span class="pre">MemoryMapping=Yes</span></code> from a DSS script while creating a LoadShape object.</p></li>
+<li><p>Release the <code class="docutils literal notranslate"><span class="pre">LoadShape_Set_Points</span></code> function, which can be used for faster LoadShape input, memory-mapping externally, shared memory, chunked input, etc.</p></li>
+</ul>
+</li>
+<li><p>Some new functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Circuit_Get_ElementLosses</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CktElement_Get_NodeRef</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DSS_Get_COMErrorResults</span></code>/<code class="docutils literal notranslate"><span class="pre">DSS_Set_COMErrorResults</span></code>: New compatibility setting for error/empty result. If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the official OpenDSS COM interface.</p>
+<p>For example, consider the function Loads_Get_ZIPV. If there is no active circuit or active load element:</p>
+<ul class="simple">
+<li><p>In the disabled state (COMErrorResults=False), the function will return “[]”, an array with 0 elements.</p></li>
+<li><p>In the enabled state (COMErrorResults=True), the function will return “[0.0]” instead. This should be compatible with the return value of the official COM interface.</p></li>
+</ul>
+<p>Defaults to True/1 (enabled state) in the v0.12.x series. This will change to false in future series.</p>
+<p>This can also be set through the environment variable DSS_CAPI_COM_DEFAULTS. Setting it to 0 disables
+the legacy/COM behavior. The value can be toggled through the API at any time.</p>
+</li>
+<li><p>Drop function aliases: previously deprecated function aliases (<code class="docutils literal notranslate"><span class="pre">LoadShapes_Set_Sinterval</span></code> and <code class="docutils literal notranslate"><span class="pre">LoadShapes_Get_sInterval</span></code>) were removed to simplify the build process. Use <code class="docutils literal notranslate"><span class="pre">LoadShapes_Set_SInterval</span></code> and <code class="docutils literal notranslate"><span class="pre">LoadShapes_Get_SInterval</span></code> instead.</p></li>
+<li><p>Monitor headers: From the official OpenDSS, since May 2021, the monitor binary stream doesn’t include the header anymore. When porting the change to DSS-Extensions, we took the opportunity to rewrite the related code, simplifying it. As such, the implementation in DSS-Extensions deviates from the official one. Extra blank chars are not included, and fields should be more consistent. As a recommendation, if your code needs to be compatible with both implementations, trimming the fields should be enough.</p></li>
+<li><p>Error messages: most messages are now more specific and, if running a DSS script from files, include the file names and line numbers.</p></li>
+<li><p>Spectrum: To reduce overhead during object edits, now required to exist before the object that uses it. This is consistent with most of the other types in OpenDSS.</p></li>
+<li><p>New object and batch APIs for direct manipulation of DSS objects and batches of objects</p></li>
+<li><p>New experimental API for loading scripts/data from ZIP files</p></li>
+<li><p>New convenience functions to bulk load commands from the API</p></li>
+<li><p>User-models: headers updated, and removed support for user-models in <code class="docutils literal notranslate"><span class="pre">LegacyModels</span></code> mode. <code class="docutils literal notranslate"><span class="pre">LegacyModels</span></code> will be removed in v0.13.</p></li>
+<li><p>New functions to export the DSS properties of objects as JSON-encoded strings</p></li>
+<li><p>The C headers for our library were updated to include the <code class="docutils literal notranslate"><span class="pre">const</span></code> modifier for various of the parameters. A few function declarations were fixed.</p></li>
+<li><p>Initial batch of i18n changes.</p></li>
+</ul>
+<p>Due to the high number of IO changes, we recommend checking the performance before and after the upgrade to ensure your use case is not affected negatively, especially if your application relies heavily on OpenDSS text output. If issues are found, please do report.</p>
+</section>
+</section>
+</section>
+<section id="id14">
+<h2>0.10.x<a class="headerlink" href="#id14" title="Link to this heading">#</a></h2>
+<section id="id15">
+<h3>0.10.7<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<p>Released on 2020-12-29.</p>
+<ul class="simple">
+<li><p>Maintenance release.</p></li>
+<li><p>Updated to DSS C-API 0.10.7, which includes most changes up to OpenDSS v9.1.3.4.</p></li>
+<li><p>Includes an important bug fix related to the <code class="docutils literal notranslate"><span class="pre">CapRadius</span></code> DSS property. If your DSS scripts included the pattern <code class="docutils literal notranslate"><span class="pre">GMRac=...</span> <span class="pre">rad=...</span></code> or <code class="docutils literal notranslate"><span class="pre">GMRac=...</span> <span class="pre">diam=...</span></code> (in this order and without specifying <code class="docutils literal notranslate"><span class="pre">CapRadius</span></code>), you should upgrade and re-evaluate the results.</p></li>
+<li><p>New API properties ported from the official COM interface: <code class="docutils literal notranslate"><span class="pre">Bus.AllPCEatBus</span></code>, <code class="docutils literal notranslate"><span class="pre">Bus.AllPDEatBus</span></code>, <code class="docutils literal notranslate"><span class="pre">CktElement.TotalPowers</span></code>, <code class="docutils literal notranslate"><span class="pre">Meters.ZonePCE</span></code></p></li>
+</ul>
+<p>DSS C-API 0.10.7 changes:</p>
+<ul class="simple">
+<li><p>Simple maintenance release, which includes most changes up to OpenDSS v9.1.3.4 (revision 2963).</p></li>
+<li><p>Includes an important bug fix related to the <code class="docutils literal notranslate"><span class="pre">CapRadius</span></code> DSS property. If your DSS scripts included the pattern <code class="docutils literal notranslate"><span class="pre">GMRac=...</span> <span class="pre">rad=...</span></code> or <code class="docutils literal notranslate"><span class="pre">GMRac=...</span> <span class="pre">diam=...</span></code> (in this order and without specifying <code class="docutils literal notranslate"><span class="pre">CapRadius</span></code>), you should upgrade and re-evaluate the results.</p></li>
+<li><p>This version should be fully API compatible with 0.10.3+.</p></li>
+<li><p>A reference document listing the DSS commands and properties for all DSS elements is now available at <a class="github reference external" href="https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/dss_properties.md">dss-extensions/dss_capi</a></p></li>
+<li><p>New functions API ported from the official OpenDSS include: <code class="docutils literal notranslate"><span class="pre">Bus_Get_AllPCEatBus</span></code>, <code class="docutils literal notranslate"><span class="pre">Bus_Get_AllPDEatBus</span></code>, <code class="docutils literal notranslate"><span class="pre">CktElement_Get_TotalPowers</span></code>, <code class="docutils literal notranslate"><span class="pre">Meters_Get_ZonePCE</span></code>.</p></li>
+<li><p>The changes ported from the official OpenDSS include the following (check the repository for more details):</p>
+<ul>
+<li><p>“Adds LineType property to LineCode and LineGeometry objects.”</p></li>
+<li><p>“Correcting bug found in storage device when operating in idling mode. It was preventing the solution of other test feeders (IEEE 9500)”</p></li>
+<li><p>“Enabling fuel option for generator, fixing bug found in TotalPower command.”</p></li>
+<li><p>“Adding kvar compensation calculation for normalizing reactive power at feeder head. v 9.1.2.4”</p></li>
+<li><p>“Adding: - Line type variable to line definition. - AllPCEatBus and AllPDEatBus commands to the executive command set. - AllPCEatBus and AllPDEatBus commands to bus interface in COM/DLL. (…)”</p></li>
+<li><p>“Adding capability to energy meter for getting the list of all PCE (shunt) within a zone. Interface “AllPCEatZone” for COM/DLL created.”</p></li>
+<li><p>“Fixing bug found when calculating voltage bases with large amount of numbers (large array).”</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id16">
+<h3>0.10.6<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
+<p>Released on 2020-08-01.</p>
+<ul class="simple">
+<li><p>Updated to DSS C-API 0.10.6, which includes most changes up to OpenDSS v9.0.0.3.</p></li>
+<li><p>Debug builds of DSS C-API are now included. See the <a class="reference external" href="https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/debug.md">Debugging</a> document.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">DSS.LegacyModels</span></code>: allow using the legacy/deprecated models for <code class="docutils literal notranslate"><span class="pre">PVsystem</span></code>, <code class="docutils literal notranslate"><span class="pre">Storage</span></code>, <code class="docutils literal notranslate"><span class="pre">InvControl</span></code>, and <code class="docutils literal notranslate"><span class="pre">StorageController</span></code>.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">DSS.Error.ExtendedErrors</span></code>: controls if the new extended error messages are used.</p></li>
+<li><p>Many new properties and functions in <code class="docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.PDElements</span></code>.</p></li>
+<li><p>Now most of the low-level API calls are checked, mapping the errors from the <code class="docutils literal notranslate"><span class="pre">DSS.Error</span></code> interface to Python exceptions more frequently.</p></li>
+</ul>
+<p>DSS C-API 0.10.6 changes:</p>
+<ul class="simple">
+<li><p>This version should be fully API compatible with 0.10.3+. The behavior of some functions changed with the new extensions. Especially, empty strings are explicitly return as nulls instead of “\0”. This conforms to the behavior already seen in arrays of strings.</p></li>
+<li><p>The binary releases now use Free Pascal 3.2.0. We observed the solution process is around 6% faster, and results are even closer to the official OpenDSS.</p></li>
+<li><p>The releases now include both the optimized/default binary and a non-optimized/debug version. See the <a class="reference external" href="https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/debug.md">Debugging</a> document for more.</p></li>
+<li><p>Extended API validation and <strong>Extended Errors</strong> mechanism:</p>
+<ul>
+<li><p>The whole API was reviewed to add basic checks for active circuit and element access.</p></li>
+<li><p>By default, invalid accesses now result in errors reported through the Error interface. This can be disabled to achieve the previous behavior, more compatible with the official COM implementation — that is, ignore the error, just return a default/invalid value and assume the user has handled it.</p></li>
+<li><p>The mechanism can be toggled by API functions <code class="docutils literal notranslate"><span class="pre">DSS_Set_ExtendedErrors</span></code> and <code class="docutils literal notranslate"><span class="pre">DSS_Get_ExtendedErrors</span></code>, or environment variable <code class="docutils literal notranslate"><span class="pre">DSS_CAPI_EXTENDED_ERRORS=0</span></code> to disable (defaults to enabled state).</p></li>
+</ul>
+</li>
+<li><p>New <strong>Legacy Models</strong> mechanism:</p>
+<ul>
+<li><p>OpenDSS 9.0+ dropped the old <code class="docutils literal notranslate"><span class="pre">PVsystem</span></code>, <code class="docutils literal notranslate"><span class="pre">Storage</span></code>, <code class="docutils literal notranslate"><span class="pre">InvControl</span></code>, and <code class="docutils literal notranslate"><span class="pre">StorageController</span></code> models, replacing with the new versions previously known as <code class="docutils literal notranslate"><span class="pre">PVsystem2</span></code>, <code class="docutils literal notranslate"><span class="pre">Storage2</span></code>, <code class="docutils literal notranslate"><span class="pre">InvControl2</span></code> and <code class="docutils literal notranslate"><span class="pre">StorageController2</span></code>.</p></li>
+<li><p>The behavior and parameters from the new models are different — they are better, more complete and versatile models. Check the official OpenDSS docs and examples for further information.</p></li>
+<li><p>The implementation of the new models in DSS C-API was validated successfully with all test cases available. As such, we mirror the decision to make them the default models.</p></li>
+<li><p>As an extension, we implemented the Legacy Models option. By toggling it, a <code class="docutils literal notranslate"><span class="pre">clear</span></code> command will be issued and the alternative models will be loaded. This should allow users to migrate to the new version but, if something that used to work with the old models stopped working somehow, the user can toggle the old models. The idea is to keep reproducibility of results while we keep updating the engine and the API.</p></li>
+<li><p>Since EPRI dropped/deprecated the old models, we might drop them too, in a future release. Please open an issue on GitHub or send a message if those old models are important to you.</p></li>
+<li><p>The mechanism can be controlled by API functions <code class="docutils literal notranslate"><span class="pre">DSS_Set_LegacyModels</span></code> and <code class="docutils literal notranslate"><span class="pre">DSS_Get_LegacyModels</span></code>, or environment variable <code class="docutils literal notranslate"><span class="pre">DSS_CAPI_LEGACY_MODELS=1</span></code> to enable (defaults to disabled state).</p></li>
+</ul>
+</li>
+<li><p>WireData API: expose the <code class="docutils literal notranslate"><span class="pre">CapRadius</span></code> property as a new pair of functions.</p></li>
+<li><p>PDElements API: extended with many batch functions exposing equivalents to some CSV reports: <code class="docutils literal notranslate"><span class="pre">AllNames</span></code>, <code class="docutils literal notranslate"><span class="pre">AllMaxCurrents</span></code>, <code class="docutils literal notranslate"><span class="pre">AllPctNorm</span></code>, <code class="docutils literal notranslate"><span class="pre">AllPctEmerg</span></code>, <code class="docutils literal notranslate"><span class="pre">AllCurrents</span></code>, <code class="docutils literal notranslate"><span class="pre">AllCurrentsMagAng</span></code>, <code class="docutils literal notranslate"><span class="pre">AllCplxSeqCurrents</span></code>, <code class="docutils literal notranslate"><span class="pre">AllSeqCurrents</span></code>, <code class="docutils literal notranslate"><span class="pre">AllPowers</span></code>, <code class="docutils literal notranslate"><span class="pre">AllSeqPowers</span></code>, <code class="docutils literal notranslate"><span class="pre">AllNumPhases</span></code>, <code class="docutils literal notranslate"><span class="pre">AllNumConductors</span></code>, <code class="docutils literal notranslate"><span class="pre">AllNumTerminals</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CktElement_Get_SeqPowers</span></code>: fix issue for positive sequence circuits (wrong results could corrupt memory).</p></li>
+<li><p>Many API functions were optimized to avoid unnecessary allocations and copies.</p></li>
+<li><p>Some bugs found in DSS C-API and also reported upstream (already fixed in SVN):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">CapRadius</span></code> DSS property: if the radius was initialized using <code class="docutils literal notranslate"><span class="pre">GMRac</span></code>, <code class="docutils literal notranslate"><span class="pre">CapRadius</span></code> was left uninitialized, resulting in invalid/NaN values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Sensors</span></code> API: some functions edited capacitors instead of sensors.</p></li>
+</ul>
+</li>
+<li><p>Updated to the official OpenDSS revision 2903, corresponding to versions 9.0.0+. Changes include:</p>
+<ul>
+<li><p>ExportCIMXML: updated.</p></li>
+<li><p>Relay: Fix in <code class="docutils literal notranslate"><span class="pre">GetPropertyValue</span></code>.</p></li>
+<li><p>Line: In <code class="docutils literal notranslate"><span class="pre">DumpProperties</span></code> and <code class="docutils literal notranslate"><span class="pre">MakePosSequence</span></code>, the length is handled differently for lines with <code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code> or <code class="docutils literal notranslate"><span class="pre">LineSpacing</span></code>.</p></li>
+<li><p>Bus API: new <code class="docutils literal notranslate"><span class="pre">LineList</span></code>, <code class="docutils literal notranslate"><span class="pre">LoadList</span></code> functions.</p></li>
+<li><p>Lines API: SeasonRating now returns NormAmps if there’s no SeasonSignal.</p></li>
+<li><p>New command DSS <code class="docutils literal notranslate"><span class="pre">Zsc012</span></code>: “Returns symmetrical component short circuit impedances Z0, Z1, and Z2 for the ACTIVE 3-PHASE BUS. Determined from Zsc matrix.”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PVsystem2</span></code>, <code class="docutils literal notranslate"><span class="pre">Storage2</span></code>, <code class="docutils literal notranslate"><span class="pre">InvControl2</span></code>, <code class="docutils literal notranslate"><span class="pre">StorageController2</span></code> updated and renamed.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id17">
+<h3>0.10.5<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
+<p>Released on 2020-03-03. This is a maintenance release.</p>
+<ul class="simple">
+<li><p>Updated to DSS C-API 0.10.5, which includes most changes up to OpenDSS v8.6.7.1. Includes new properties and new experimental components (under testing).</p></li>
+<li><p>New properties exposed: <code class="docutils literal notranslate"><span class="pre">ActiveClass.ActiveClassParent</span></code>, <code class="docutils literal notranslate"><span class="pre">PVSystems.Pmpp</span></code>, <code class="docutils literal notranslate"><span class="pre">PVSystems.IrradianceNow</span></code>.</p></li>
+<li><p>For the time being, <code class="docutils literal notranslate"><span class="pre">dss.v8</span></code> doesn’t use the parallel-machine version anymore. This will be addressed in a future release, most likely in the 0.11.x series coming in the following months.</p></li>
+</ul>
+<p>DSS C-API 0.10.5 changes:</p>
+<ul class="simple">
+<li><p>Disable builds and distribution of v8-only variation — the extra/missing parallel-machine will be completely merged in a mixed (v7+v8) codebase in the coming months.</p></li>
+<li><p>This version should be fully API compatible with 0.10.3+.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Bus</span></code> and <code class="docutils literal notranslate"><span class="pre">CktElement</span></code> API functions reworked with some more checks.</p></li>
+<li><p>Updated up to revision 2837 of the official OpenDSS code:</p>
+<ul>
+<li><p>Ported changes from SVN (v7 and v8) into DSS C-API v7 variation (v8 was left untouched).</p></li>
+<li><p>4 new API level functions (<code class="docutils literal notranslate"><span class="pre">ActiveClass_Get_ActiveClassParent</span></code>, <code class="docutils literal notranslate"><span class="pre">PVSystems_Get_Pmpp</span></code>, <code class="docutils literal notranslate"><span class="pre">PVSystems_Set_Pmpp</span></code>, <code class="docutils literal notranslate"><span class="pre">PVSystems_Get_IrradianceNow</span></code>)</p></li>
+<li><p>4 new components: <code class="docutils literal notranslate"><span class="pre">PVsystem2</span></code>, <code class="docutils literal notranslate"><span class="pre">Storage2</span></code>, <code class="docutils literal notranslate"><span class="pre">InvControl2</span></code>, <code class="docutils literal notranslate"><span class="pre">StorageController2</span></code> — <em>added for early testing, no dedicated API functions yet</em>. At the moment, please consider them experimental features subject to change.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CIM100</span></code>: several changes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ExpControl</span></code>: new <code class="docutils literal notranslate"><span class="pre">Tresponse</span></code> property</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ConductorData</span></code>, <code class="docutils literal notranslate"><span class="pre">LineConstants</span></code>, <code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code>: new <code class="docutils literal notranslate"><span class="pre">Capradius</span></code> property</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XfmrCode</span></code>, <code class="docutils literal notranslate"><span class="pre">Transformer</span></code>: new Seasons and Ratings properties</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Bus_Get_puVLL</span></code> and <code class="docutils literal notranslate"><span class="pre">Bus_Get_VLL</span></code> — see revision 2836 (official SVN). Included an extra fix in DSS C-API to avoid some corner cases.</p></li>
+<li><p>Other small bug fixes like the Full Carson fix — see <a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/861976/thread/2de01d0cdb/">https://sourceforge.net/p/electricdss/discussion/861976/thread/2de01d0cdb/</a> and revision 2805 (official SVN)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id18">
+<h3>0.10.4<a class="headerlink" href="#id18" title="Link to this heading">#</a></h3>
+<p>Released on 2019-11-16. This is a maintenance release.</p>
+<ul class="simple">
+<li><p>Updated to DSS C-API 0.10.4.</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">dss.enums.YMatrixModes</span></code></p></li>
+<li><p>Make <code class="docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.CktElements</span></code> iterable (e.g. <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">element</span> <span class="pre">in</span> <span class="pre">DSS.ActiveCircuit.CktElements:</span> <span class="pre">...</span></code>);</p></li>
+</ul>
+<p>DSS C-API 0.10.4 changes include:</p>
+<ul class="simple">
+<li><p>Updated up to revision 2761 of the official OpenDSS code. The changes affect at least the following components: CIMXML export, <code class="docutils literal notranslate"><span class="pre">Capacitor</span></code>, <code class="docutils literal notranslate"><span class="pre">InvControl</span></code>, <code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code>, <code class="docutils literal notranslate"><span class="pre">PVsystem</span></code>, <code class="docutils literal notranslate"><span class="pre">StorageController</span></code>, <code class="docutils literal notranslate"><span class="pre">Storage</span></code>, <code class="docutils literal notranslate"><span class="pre">Vsource</span></code>, <code class="docutils literal notranslate"><span class="pre">VCCS</span></code>.</p></li>
+<li><p>This version should be fully compatible with 0.10.3.</p></li>
+<li><p>Fixes issue with long paths on Linux, potentially other platforms too.</p></li>
+</ul>
+</section>
+<section id="id19">
+<h3>0.10.3<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
+<p>Released on 2019-05-22. This is the last release to provide pre-built binaries for Python 3.4.</p>
+<ul class="simple">
+<li><p>Includes fix for issue with the line parameters on Linux and macOS due to memory-address aliasing issues.</p></li>
+<li><p>Prebuilt binaries for DSS C-API and KLUSolve are used instead of rebuilding everything from source.</p></li>
+<li><p>Prebuilt packages (wheels) for 32-bit Linux are now available.</p></li>
+<li><p>Development artifacts are now included in the distribution package. This enables advanced usage and easier integration with compiled languages (examples pending, please open an issue if you’d like to know more).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ReduceCkt</span></code> ported from COM: new circuit reduction methods available in <code class="docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.ReduceCkt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Lines</span></code>: ported from COM, new seasonal ratings mechanism that allows changing the current rating through the simulation</p></li>
+<li><p>Optimization and extended error-checking in many properties</p></li>
+<li><p>Includes new <code class="docutils literal notranslate"><span class="pre">Settings.LoadsTerminalCheck</span></code>: on static scenarios (no open terminals for loads) to toggle the costly checks for open terminals. If set to false, it can save around 25% of simulation time, depending on the circuit characteristics.</p></li>
+<li><p>All components now can be accessed by index (<code class="docutils literal notranslate"><span class="pre">idx</span></code> property)</p></li>
+<li><p>All components now have faster <code class="docutils literal notranslate"><span class="pre">Name</span></code> iteration</p></li>
+<li><p>Ported to v7/default interface: the DSS commands <code class="docutils literal notranslate"><span class="pre">CalcIncMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">CalcIncMatrix_O</span></code>, <code class="docutils literal notranslate"><span class="pre">Refine_BusLevels</span></code>, <code class="docutils literal notranslate"><span class="pre">CalcLaplacian</span></code>, and related export options: <code class="docutils literal notranslate"><span class="pre">IncMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">IncMatrixRows</span></code>, <code class="docutils literal notranslate"><span class="pre">IncMatrixCols</span></code>, <code class="docutils literal notranslate"><span class="pre">BusLevels</span></code>, <code class="docutils literal notranslate"><span class="pre">Laplacian</span></code>, <code class="docutils literal notranslate"><span class="pre">ZLL</span></code>, <code class="docutils literal notranslate"><span class="pre">ZCC</span></code>, <code class="docutils literal notranslate"><span class="pre">Contours</span></code>, <code class="docutils literal notranslate"><span class="pre">Y4</span></code>. Also includes related Python-level properties.</p></li>
+<li><p>Some other new properties:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">CktElement.IsIsolated</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Lines.IsSwitch</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Transformers.LossesByType</span></code> and <code class="docutils literal notranslate"><span class="pre">Transformers.AllLossesByType</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id20">
+<h3>0.10.2<a class="headerlink" href="#id20" title="Link to this heading">#</a></h3>
+<p>Released on 2019-02-28.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CtrlQueue</span></code>: Add the missing function <code class="docutils literal notranslate"><span class="pre">Push</span></code>. See <a class="reference external" href="https://github.com/dss-extensions/electricdss-tst/blob/master/Test/CtrlQueueTest.py">CtrlQueueTest.py</a> for an example ported from the Excel VBA example.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">DSS.AllowEditor</span></code>: this new property controls if the external editor is called on DSS commands like <code class="docutils literal notranslate"><span class="pre">Show</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, the editor is not called, but other side effects should not be affected (e.g. files can be created).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">enum34</span></code> module was added as a dependency for Python &lt; 3.5.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Options</span></code> enumeration was split into several new enumerations (<code class="docutils literal notranslate"><span class="pre">AutoAddTypes</span></code>, <code class="docutils literal notranslate"><span class="pre">CktModels</span></code>, <code class="docutils literal notranslate"><span class="pre">ControlModes</span></code>, <code class="docutils literal notranslate"><span class="pre">SolutionLoadModels</span></code>, <code class="docutils literal notranslate"><span class="pre">SolutionAlgorithms</span></code>, <code class="docutils literal notranslate"><span class="pre">RandomModes</span></code>). It is now marked as deprecated for future removal.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LoadShapes</span></code> are faster due to <a class="reference external" href="https://github.com/dss-extensions/dss_capi/blob/master/docs/changelog.md#version-0102">changes from DSS C-API</a></p></li>
+</ul>
+</section>
+<section id="id21">
+<h3>0.10.1<a class="headerlink" href="#id21" title="Link to this heading">#</a></h3>
+<p>Released on 2019-02-17.</p>
+<p>This is a minor DSS-Python release that contains lots of changes from DSS C-API. See also the <a class="reference external" href="https://github.com/dss-extensions/dss_capi/blob/ed2a6b322a5e102ba61c6565e5e0eb23247b9221/docs/changelog.md#version-0101">changes from DSS C-API</a> for details, including changes from the official OpenDSS code since 0.10.0.</p>
+<p>DSS-Python has recently moved from <a class="github reference external" href="https://github.com/PMeira/dss_python/">PMeira/dss_python</a> to the new <a class="reference external" href="https://dss-extensions.org/">https://dss-extensions.org/</a> and <a class="github reference external" href="https://github.com/dss-extensions/dss_python/">dss-extensions/dss_python</a></p>
+<p>Major changes:</p>
+<ul class="simple">
+<li><p>More and faster error-checking! Python exception will be raised for more errors and with a lower overhead.</p></li>
+<li><p>Fix for <code class="docutils literal notranslate"><span class="pre">YMatrix.getI</span></code> and <code class="docutils literal notranslate"><span class="pre">YMatrix.getV</span></code> (ported from OpenDSSDirect.py)</p></li>
+<li><p>Fix for <code class="docutils literal notranslate"><span class="pre">ActiveCircuit.ActiveCktElement.Variable</span></code> and <code class="docutils literal notranslate"><span class="pre">ActiveCircuit.ActiveCktElement.Variablei</span></code>: now returns a tuple of <code class="docutils literal notranslate"><span class="pre">(value,</span> <span class="pre">errorcode)</span></code>, compatible with COM.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">DSS.Error.EarlyAbort</span></code>: controls whether all errors halts the DSS script processing (Compile/Redirect), defaults to True.</p></li>
+</ul>
+</section>
+<section id="id22">
+<h3>0.10.0<a class="headerlink" href="#id22" title="Link to this heading">#</a></h3>
+<p>Released on 2018-11-17.</p>
+<p>Major changes:</p>
+<ul class="simple">
+<li><p>The creation of the binary modules has been automated using Travis-CI and AppVeyor. We expect that this will allow us to release more often, bringing new features sooner.</p></li>
+<li><p>Integrates many fixes from the upstream OpenDSS and changes specific to DSS C-API.</p></li>
+<li><p>Reorganizes and reuses the code across DSS versions (v7 and v8)</p></li>
+<li><p>Uses <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> to simplify attribute handling.</p></li>
+<li><p>Exposes both the our classic API (e.g. <code class="docutils literal notranslate"><span class="pre">dss.v7.DSS_IR</span></code> for the immediate/direct results) and global result API (e.g. <code class="docutils literal notranslate"><span class="pre">dss.v7.DSS_GR</span></code> for the global result interface). See <a class="reference external" href="https://github.com/dss-extensions/dss_capi/blob/master/docs/usage.md">DSS C-API’s docs</a> for a detailed explanation. We default to the GR interface since it will generally be faster at the cost of a small memory overhead.</p></li>
+<li><p>Although still experimental, the v8/PM module is more stable. If you try it, please give feedback.</p></li>
+<li><p>Error checking is now done for most API writes. That is, if a an OpenDSS error occurs, it should cause a Python exception soon after. Previously, you need to call <code class="docutils literal notranslate"><span class="pre">_check_for_error()</span></code> manually to trigger this. This change was introduced after user reports indicated that manually checking for errors is a common behavior.</p></li>
+<li><p>Exposes API extensions for the classes <code class="docutils literal notranslate"><span class="pre">LineGeometry</span></code>, <code class="docutils literal notranslate"><span class="pre">WireData</span></code>, <code class="docutils literal notranslate"><span class="pre">LineSpacing</span></code>, <code class="docutils literal notranslate"><span class="pre">CNData</span></code>, <code class="docutils literal notranslate"><span class="pre">TSData</span></code>, <code class="docutils literal notranslate"><span class="pre">Reactor</span></code>.</p></li>
+<li><p>Makes most DSS classes iterable (including buses), e.g. you can now use:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">DSS</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Loads</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Adds a COM patching function (<code class="docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code>) — that is, extend the COM instance with iterators like above and some other few functions to make it easier to exchange between COM and DSS-Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">import</span> <span class="nn">win32com.client</span><span class="o">,</span> <span class="nn">dss</span>
+<span class="n">com</span> <span class="o">=</span> <span class="n">dss</span><span class="o">.</span><span class="n">patch_dss_com</span><span class="p">(</span><span class="n">win32com</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">gencache</span><span class="o">.</span><span class="n">EnsureDispatch</span><span class="p">(</span><span class="s2">&quot;OpenDSSEngine.DSS&quot;</span><span class="p">))</span>
+
+<span class="c1"># ...compile a circuit, etc.</span>
+
+<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">com</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Loads</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">l</span><span class="o">.</span><span class="n">kva</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">com</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">ActiveBus</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id23">
+<h2>0.9.x<a class="headerlink" href="#id23" title="Link to this heading">#</a></h2>
+<p>Sorry, we didn’t track the changes at the time. Check the Git logs below plus the related changes under DSS C-API.</p>
+<section id="id24">
+<h3>0.9.8<a class="headerlink" href="#id24" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://github.com/dss-extensions/dss_python/compare/0.9.7...0.9.8">https://github.com/dss-extensions/dss_python/compare/0.9.7…0.9.8</a></p>
+</section>
+<section id="id25">
+<h3>0.9.7<a class="headerlink" href="#id25" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://github.com/dss-extensions/dss_python/compare/0.9.6...0.9.7">https://github.com/dss-extensions/dss_python/compare/0.9.6…0.9.7</a></p>
+</section>
+<section id="id26">
+<h3>0.9.6<a class="headerlink" href="#id26" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://github.com/dss-extensions/dss_python/compare/0.9.5...0.9.6">https://github.com/dss-extensions/dss_python/compare/0.9.5…0.9.6</a></p>
+</section>
+<section id="id27">
+<h3>0.9.5<a class="headerlink" href="#id27" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://github.com/dss-extensions/dss_python/compare/0.9.4...0.9.5">https://github.com/dss-extensions/dss_python/compare/0.9.4…0.9.5</a></p>
+</section>
+<section id="id28">
+<h3>0.9.4<a class="headerlink" href="#id28" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://github.com/dss-extensions/dss_python/compare/0.9.3...0.9.4">https://github.com/dss-extensions/dss_python/compare/0.9.3…0.9.4</a></p>
+</section>
+<section id="id29">
+<h3>0.9.3<a class="headerlink" href="#id29" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://github.com/dss-extensions/dss_python/compare/0.9.2...0.9.3">https://github.com/dss-extensions/dss_python/compare/0.9.2…0.9.3</a></p>
+</section>
+<section id="id30">
+<h3>0.9.2<a class="headerlink" href="#id30" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://github.com/dss-extensions/dss_python/compare/0.9.1...0.9.2">https://github.com/dss-extensions/dss_python/compare/0.9.1…0.9.2</a></p>
+</section>
+<section id="id31">
+<h3>0.9.1<a class="headerlink" href="#id31" title="Link to this heading">#</a></h3>
+<p>Released on 2018-02-08.</p>
+<p>First public release!</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="examples/GettingStarted.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Getting Started</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="examples/Plotting.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Integrated plotting in Python</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#x">0.15.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">0.15.0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">0.14.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">0.14.4</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">0.14.3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">0.14.2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">0.14.1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">0.14.0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">0.13.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">0.13.1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">0.13.0</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss-c-api-0-13-0-changes">DSS C-API 0.13.0 changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">0.12.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">0.12.1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">0.12.0</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss-c-api-0-12-0-changes">DSS C-API 0.12.0 changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">0.10.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">0.10.7</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">0.10.6</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">0.10.5</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">0.10.4</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">0.10.3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">0.10.2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">0.10.1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">0.10.0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">0.9.x</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">0.9.8</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">0.9.7</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">0.9.6</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">0.9.5</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">0.9.4</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">0.9.3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">0.9.2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">0.9.1</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

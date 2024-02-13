@@ -1,0 +1,1092 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>dss.ISolution &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'apidocs/dss/dss.ISolution';</script>
+    <link rel="icon" href="../../_static/dssx.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="dss.IStorages" href="dss.IStorages.html" />
+    <link rel="prev" title="dss.ISettings" href="dss.ISettings.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">dss package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/apidocs/dss/dss.ISolution.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>dss.ISolution</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution"><code class="docutils literal notranslate"><span class="pre">ISolution</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.AddType"><code class="docutils literal notranslate"><span class="pre">ISolution.AddType</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Algorithm"><code class="docutils literal notranslate"><span class="pre">ISolution.Algorithm</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.BuildYMatrix"><code class="docutils literal notranslate"><span class="pre">ISolution.BuildYMatrix()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.BusLevels"><code class="docutils literal notranslate"><span class="pre">ISolution.BusLevels</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Capkvar"><code class="docutils literal notranslate"><span class="pre">ISolution.Capkvar</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.CheckControls"><code class="docutils literal notranslate"><span class="pre">ISolution.CheckControls()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.CheckFaultStatus"><code class="docutils literal notranslate"><span class="pre">ISolution.CheckFaultStatus()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Cleanup"><code class="docutils literal notranslate"><span class="pre">ISolution.Cleanup()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.ControlActionsDone"><code class="docutils literal notranslate"><span class="pre">ISolution.ControlActionsDone</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.ControlIterations"><code class="docutils literal notranslate"><span class="pre">ISolution.ControlIterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.ControlMode"><code class="docutils literal notranslate"><span class="pre">ISolution.ControlMode</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Converged"><code class="docutils literal notranslate"><span class="pre">ISolution.Converged</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.DefaultDaily"><code class="docutils literal notranslate"><span class="pre">ISolution.DefaultDaily</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.DefaultYearly"><code class="docutils literal notranslate"><span class="pre">ISolution.DefaultYearly</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.DoControlActions"><code class="docutils literal notranslate"><span class="pre">ISolution.DoControlActions()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.EventLog"><code class="docutils literal notranslate"><span class="pre">ISolution.EventLog</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.FinishTimeStep"><code class="docutils literal notranslate"><span class="pre">ISolution.FinishTimeStep()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Frequency"><code class="docutils literal notranslate"><span class="pre">ISolution.Frequency</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.GenMult"><code class="docutils literal notranslate"><span class="pre">ISolution.GenMult</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.GenPF"><code class="docutils literal notranslate"><span class="pre">ISolution.GenPF</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.GenkW"><code class="docutils literal notranslate"><span class="pre">ISolution.GenkW</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Hour"><code class="docutils literal notranslate"><span class="pre">ISolution.Hour</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.IncMatrix"><code class="docutils literal notranslate"><span class="pre">ISolution.IncMatrix</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.IncMatrixCols"><code class="docutils literal notranslate"><span class="pre">ISolution.IncMatrixCols</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.IncMatrixRows"><code class="docutils literal notranslate"><span class="pre">ISolution.IncMatrixRows</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.InitSnap"><code class="docutils literal notranslate"><span class="pre">ISolution.InitSnap()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.IntervalHrs"><code class="docutils literal notranslate"><span class="pre">ISolution.IntervalHrs</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Iterations"><code class="docutils literal notranslate"><span class="pre">ISolution.Iterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.LDCurve"><code class="docutils literal notranslate"><span class="pre">ISolution.LDCurve</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Laplacian"><code class="docutils literal notranslate"><span class="pre">ISolution.Laplacian</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.LoadModel"><code class="docutils literal notranslate"><span class="pre">ISolution.LoadModel</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.LoadMult"><code class="docutils literal notranslate"><span class="pre">ISolution.LoadMult</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.MaxControlIterations"><code class="docutils literal notranslate"><span class="pre">ISolution.MaxControlIterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.MaxIterations"><code class="docutils literal notranslate"><span class="pre">ISolution.MaxIterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.MinIterations"><code class="docutils literal notranslate"><span class="pre">ISolution.MinIterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Mode"><code class="docutils literal notranslate"><span class="pre">ISolution.Mode</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.ModeID"><code class="docutils literal notranslate"><span class="pre">ISolution.ModeID</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.MostIterationsDone"><code class="docutils literal notranslate"><span class="pre">ISolution.MostIterationsDone</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Number"><code class="docutils literal notranslate"><span class="pre">ISolution.Number</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Process_Time"><code class="docutils literal notranslate"><span class="pre">ISolution.Process_Time</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Random"><code class="docutils literal notranslate"><span class="pre">ISolution.Random</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SampleControlDevices"><code class="docutils literal notranslate"><span class="pre">ISolution.SampleControlDevices()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Sample_DoControlActions"><code class="docutils literal notranslate"><span class="pre">ISolution.Sample_DoControlActions()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Seconds"><code class="docutils literal notranslate"><span class="pre">ISolution.Seconds</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Solve"><code class="docutils literal notranslate"><span class="pre">ISolution.Solve()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolveAll"><code class="docutils literal notranslate"><span class="pre">ISolution.SolveAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolveDirect"><code class="docutils literal notranslate"><span class="pre">ISolution.SolveDirect()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolveNoControl"><code class="docutils literal notranslate"><span class="pre">ISolution.SolveNoControl()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolvePflow"><code class="docutils literal notranslate"><span class="pre">ISolution.SolvePflow()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolvePlusControl"><code class="docutils literal notranslate"><span class="pre">ISolution.SolvePlusControl()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolveSnap"><code class="docutils literal notranslate"><span class="pre">ISolution.SolveSnap()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.StepSize"><code class="docutils literal notranslate"><span class="pre">ISolution.StepSize</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.StepsizeHr"><code class="docutils literal notranslate"><span class="pre">ISolution.StepsizeHr</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.StepsizeMin"><code class="docutils literal notranslate"><span class="pre">ISolution.StepsizeMin</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SystemYChanged"><code class="docutils literal notranslate"><span class="pre">ISolution.SystemYChanged</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Time_of_Step"><code class="docutils literal notranslate"><span class="pre">ISolution.Time_of_Step</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Tolerance"><code class="docutils literal notranslate"><span class="pre">ISolution.Tolerance</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Total_Time"><code class="docutils literal notranslate"><span class="pre">ISolution.Total_Time</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Totaliterations"><code class="docutils literal notranslate"><span class="pre">ISolution.Totaliterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Year"><code class="docutils literal notranslate"><span class="pre">ISolution.Year</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.__init__"><code class="docutils literal notranslate"><span class="pre">ISolution.__init__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.dblHour"><code class="docutils literal notranslate"><span class="pre">ISolution.dblHour</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.pctGrowth"><code class="docutils literal notranslate"><span class="pre">ISolution.pctGrowth</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="module-dss.ISolution">
+<span id="dss-isolution"></span><h1><a class="reference internal" href="#module-dss.ISolution" title="dss.ISolution"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a><a class="headerlink" href="#module-dss.ISolution" title="Link to this heading">#</a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table table-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.ISolution.ISolution" title="dss.ISolution.ISolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ISolution</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dss.ISolution.</span></span><span class="sig-name descname"><span class="pre">ISolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefer_lists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="dss._cffi_api_util.html#dss._cffi_api_util.Base" title="dss._cffi_api_util.Base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss._cffi_api_util.Base</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.AddType">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AddType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.AddType" title="Link to this definition">#</a></dt>
+<dd><p>Type of device to add in AutoAdd Mode: {dssGen (Default) | dssCap}</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AddType.html">https://opendss.epri.com/AddType.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Algorithm">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Algorithm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss.enums.SolutionAlgorithms</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Algorithm" title="Link to this definition">#</a></dt>
+<dd><p>Base Solution algorithm</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Algorithm.html">https://opendss.epri.com/Algorithm.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.BuildYMatrix">
+<span class="sig-name descname"><span class="pre">BuildYMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">BuildOption</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AllocateVI</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.BuildYMatrix" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.BusLevels">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BusLevels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Int32Array</span></em><a class="headerlink" href="#dss.ISolution.ISolution.BusLevels" title="Link to this definition">#</a></dt>
+<dd><p>Bus levels for all the buses in the model.</p>
+<p>The bus levels are calculated after calculating the incidence branch-to-node (B2N)
+matrix and they represent the distance from the buses to a reference that goes from
+the feeder head to the farthest bus in the model. The bus level index matches with
+the bus list obtained with the circuit interface.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/BusLevels.html">https://opendss.epri.com/BusLevels.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Capkvar">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Capkvar</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Capkvar" title="Link to this definition">#</a></dt>
+<dd><p>Capacitor kvar for adding capacitors in AutoAdd mode</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Capkvar.html">https://opendss.epri.com/Capkvar.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.CheckControls">
+<span class="sig-name descname"><span class="pre">CheckControls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.CheckControls" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.CheckFaultStatus">
+<span class="sig-name descname"><span class="pre">CheckFaultStatus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.CheckFaultStatus" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Cleanup">
+<span class="sig-name descname"><span class="pre">Cleanup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.Cleanup" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.ControlActionsDone">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ControlActionsDone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.ISolution.ISolution.ControlActionsDone" title="Link to this definition">#</a></dt>
+<dd><p>Flag indicating the control actions are done.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ControlActionsDone.html">https://opendss.epri.com/ControlActionsDone.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.ControlIterations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ControlIterations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.ControlIterations" title="Link to this definition">#</a></dt>
+<dd><p>Value of the control iteration counter</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ControlIterations.html">https://opendss.epri.com/ControlIterations.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.ControlMode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ControlMode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss.enums.ControlModes</span></em><a class="headerlink" href="#dss.ISolution.ISolution.ControlMode" title="Link to this definition">#</a></dt>
+<dd><p>Modes for control devices</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ControlMode.html">https://opendss.epri.com/ControlMode.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Converged">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Converged</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Converged" title="Link to this definition">#</a></dt>
+<dd><p>Flag to indicate whether the circuit solution converged</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Converged.html">https://opendss.epri.com/Converged.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.DefaultDaily">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DefaultDaily</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ISolution.ISolution.DefaultDaily" title="Link to this definition">#</a></dt>
+<dd><p>Default daily load shape (defaults to “Default”)</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/DefaultDaily.html">https://opendss.epri.com/DefaultDaily.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.DefaultYearly">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DefaultYearly</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ISolution.ISolution.DefaultYearly" title="Link to this definition">#</a></dt>
+<dd><p>Default Yearly load shape (defaults to “Default”)</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/DefaultYearly.html">https://opendss.epri.com/DefaultYearly.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.DoControlActions">
+<span class="sig-name descname"><span class="pre">DoControlActions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.DoControlActions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.EventLog">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EventLog</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.ISolution.ISolution.EventLog" title="Link to this definition">#</a></dt>
+<dd><p>Array of strings containing the Event Log</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/EventLog.html">https://opendss.epri.com/EventLog.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.FinishTimeStep">
+<span class="sig-name descname"><span class="pre">FinishTimeStep</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.FinishTimeStep" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Frequency</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Frequency" title="Link to this definition">#</a></dt>
+<dd><p>Set the Frequency for next solution</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Frequency1.html">https://opendss.epri.com/Frequency1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.GenMult">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GenMult</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.GenMult" title="Link to this definition">#</a></dt>
+<dd><p>Default Multiplier applied to generators (like LoadMult)</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/GenMult.html">https://opendss.epri.com/GenMult.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.GenPF">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GenPF</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.GenPF" title="Link to this definition">#</a></dt>
+<dd><p>PF for generators in AutoAdd mode</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/GenPF.html">https://opendss.epri.com/GenPF.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.GenkW">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GenkW</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.GenkW" title="Link to this definition">#</a></dt>
+<dd><p>Generator kW for AutoAdd mode</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/GenkW.html">https://opendss.epri.com/GenkW.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Hour">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Hour</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Hour" title="Link to this definition">#</a></dt>
+<dd><p>Set Hour for time series solutions.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Hour.html">https://opendss.epri.com/Hour.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.IncMatrix">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IncMatrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Int32Array</span></em><a class="headerlink" href="#dss.ISolution.ISolution.IncMatrix" title="Link to this definition">#</a></dt>
+<dd><p>Incidence branch-to-node (B2N) matrix calculated for the model as a vector of integers.</p>
+<p>The vector represents a sparse matrix (non-zero values are the only ones delivered) and
+can be interpreted as follows: The first element is the row number, the second one is
+the column and the third is the value, this way, by dividing the number of elements
+in the array by 3 the user can obtain the number of rows in case of wanting to sort
+the vector values within a matrix.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/IncMatrix.html">https://opendss.epri.com/IncMatrix.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.IncMatrixCols">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IncMatrixCols</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.ISolution.ISolution.IncMatrixCols" title="Link to this definition">#</a></dt>
+<dd><p>Names of the columns of the branch-to-node (B2N) matrix.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/IncMatrixCols.html">https://opendss.epri.com/IncMatrixCols.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.IncMatrixRows">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IncMatrixRows</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.ISolution.ISolution.IncMatrixRows" title="Link to this definition">#</a></dt>
+<dd><p>Names of the rows of the branch-to-node (B2N) matrix.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/IncMatrixRows.html">https://opendss.epri.com/IncMatrixRows.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.InitSnap">
+<span class="sig-name descname"><span class="pre">InitSnap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.InitSnap" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.IntervalHrs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IntervalHrs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.IntervalHrs" title="Link to this definition">#</a></dt>
+<dd><p>Get/Set the Solution.IntervalHrs variable used for devices that integrate / custom solution algorithms</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Iterations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Iterations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Iterations" title="Link to this definition">#</a></dt>
+<dd><p>Number of iterations taken for last solution. (Same as Totaliterations)</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Iterations.html">https://opendss.epri.com/Iterations.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.LDCurve">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LDCurve</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ISolution.ISolution.LDCurve" title="Link to this definition">#</a></dt>
+<dd><p>Load-Duration Curve name for LD modes</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/LDCurve.html">https://opendss.epri.com/LDCurve.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Laplacian">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Laplacian</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Int32Array</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Laplacian" title="Link to this definition">#</a></dt>
+<dd><p>Laplacian matrix calculated in OpenDSS based on the latest branch-to-node (B2N) matrix.</p>
+<p>The vector represents a sparse matrix (non-zero values are the only ones delivered) and
+can be interpreted as follows: The first element is the row number, the second one is
+the column and the third is the value, this way, by dividing the number of elements
+in the array by 3 the user can obtain the number of rows in case of wanting to sort
+the vector values within a matrix. The tables for the columns and rows are the same
+as the columns for the B2N columns (square matrix).</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Laplacian.html">https://opendss.epri.com/Laplacian.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.LoadModel">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LoadModel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.LoadModel" title="Link to this definition">#</a></dt>
+<dd><p>Load Model: {dssPowerFlow (default) | dssAdmittance}</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/LoadModel.html">https://opendss.epri.com/LoadModel.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.LoadMult">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LoadMult</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.LoadMult" title="Link to this definition">#</a></dt>
+<dd><p>Default load multiplier applied to all non-fixed loads</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/LoadMult.html">https://opendss.epri.com/LoadMult.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.MaxControlIterations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MaxControlIterations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.MaxControlIterations" title="Link to this definition">#</a></dt>
+<dd><p>Maximum allowable control iterations</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/MaxControlIterations.html">https://opendss.epri.com/MaxControlIterations.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.MaxIterations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MaxIterations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.MaxIterations" title="Link to this definition">#</a></dt>
+<dd><p>Max allowable iterations.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/MaxIterations.html">https://opendss.epri.com/MaxIterations.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.MinIterations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MinIterations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.MinIterations" title="Link to this definition">#</a></dt>
+<dd><p>Minimum number of iterations required for a power flow solution.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/MinIterations.html">https://opendss.epri.com/MinIterations.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss.enums.SolveModes</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Mode" title="Link to this definition">#</a></dt>
+<dd><p>Set present solution mode</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Mode2.html">https://opendss.epri.com/Mode2.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.ModeID">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ModeID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ISolution.ISolution.ModeID" title="Link to this definition">#</a></dt>
+<dd><p>ID (text) of the present solution mode</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ModeID.html">https://opendss.epri.com/ModeID.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.MostIterationsDone">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MostIterationsDone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.MostIterationsDone" title="Link to this definition">#</a></dt>
+<dd><p>Max number of iterations required to converge at any control iteration of the most recent solution.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/MostIterationsDone.html">https://opendss.epri.com/MostIterationsDone.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Number">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Number</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Number" title="Link to this definition">#</a></dt>
+<dd><p>Number of solutions to perform for Monte Carlo and time series simulations</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Number1.html">https://opendss.epri.com/Number1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Process_Time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Process_Time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Process_Time" title="Link to this definition">#</a></dt>
+<dd><p>Gets the time required to perform the latest solution (Read only)</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Process_Time.html">https://opendss.epri.com/Process_Time.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Random">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Random</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Random" title="Link to this definition">#</a></dt>
+<dd><p>Randomization mode for random variables “Gaussian” or “Uniform”</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Random.html">https://opendss.epri.com/Random.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.SampleControlDevices">
+<span class="sig-name descname"><span class="pre">SampleControlDevices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.SampleControlDevices" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Sample_DoControlActions">
+<span class="sig-name descname"><span class="pre">Sample_DoControlActions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.Sample_DoControlActions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Seconds">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Seconds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Seconds" title="Link to this definition">#</a></dt>
+<dd><p>Seconds from top of the hour.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Seconds.html">https://opendss.epri.com/Seconds.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Solve">
+<span class="sig-name descname"><span class="pre">Solve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.Solve" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.SolveAll">
+<span class="sig-name descname"><span class="pre">SolveAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.SolveAll" title="Link to this definition">#</a></dt>
+<dd><p>Solves all the circuits (Actors) loaded into memory by the user.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SolveAll.html">https://opendss.epri.com/SolveAll.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.SolveDirect">
+<span class="sig-name descname"><span class="pre">SolveDirect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.SolveDirect" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.SolveNoControl">
+<span class="sig-name descname"><span class="pre">SolveNoControl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.SolveNoControl" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.SolvePflow">
+<span class="sig-name descname"><span class="pre">SolvePflow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.SolvePflow" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.SolvePlusControl">
+<span class="sig-name descname"><span class="pre">SolvePlusControl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.SolvePlusControl" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.SolveSnap">
+<span class="sig-name descname"><span class="pre">SolveSnap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.SolveSnap" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.StepSize">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StepSize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.StepSize" title="Link to this definition">#</a></dt>
+<dd><p>Time step size in sec</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/StepSize.html">https://opendss.epri.com/StepSize.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.StepsizeHr">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StepsizeHr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.StepsizeHr" title="Link to this definition">#</a></dt>
+<dd><p>(write-only) Set Stepsize in Hr</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.StepsizeMin">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StepsizeMin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.StepsizeMin" title="Link to this definition">#</a></dt>
+<dd><p>(write-only) Set Stepsize in minutes</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.SystemYChanged">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SystemYChanged</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.ISolution.ISolution.SystemYChanged" title="Link to this definition">#</a></dt>
+<dd><p>Flag that indicates if elements of the System Y have been changed by recent activity.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SystemYChanged.html">https://opendss.epri.com/SystemYChanged.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Time_of_Step">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Time_of_Step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Time_of_Step" title="Link to this definition">#</a></dt>
+<dd><p>Get the solution process time + sample time for time step</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Time_of_Step.html">https://opendss.epri.com/Time_of_Step.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Tolerance">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tolerance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Tolerance" title="Link to this definition">#</a></dt>
+<dd><p>Solution convergence tolerance.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Tolerance.html">https://opendss.epri.com/Tolerance.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Total_Time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Total_Time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Total_Time" title="Link to this definition">#</a></dt>
+<dd><p>Gets/sets the accumulated time of the simulation</p>
+<p>This accumulator has to be reset manually.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Total_Time.html">https://opendss.epri.com/Total_Time.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Totaliterations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Totaliterations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Totaliterations" title="Link to this definition">#</a></dt>
+<dd><p>Total iterations including control iterations for most recent solution.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Totaliterations.html">https://opendss.epri.com/Totaliterations.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.Year">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Year</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ISolution.ISolution.Year" title="Link to this definition">#</a></dt>
+<dd><p>Set year for planning studies</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Year.html">https://opendss.epri.com/Year.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefer_lists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ISolution.ISolution.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.dblHour">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dblHour</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.dblHour" title="Link to this definition">#</a></dt>
+<dd><p>Hour as a double, including fractional part</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/dblHour1.html">https://opendss.epri.com/dblHour1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ISolution.ISolution.pctGrowth">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pctGrowth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.ISolution.ISolution.pctGrowth" title="Link to this definition">#</a></dt>
+<dd><p>Percent default  annual load growth rate</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/pctGrowth.html">https://opendss.epri.com/pctGrowth.html</a></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dss.ISettings.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dss.IStorages.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution"><code class="docutils literal notranslate"><span class="pre">ISolution</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.AddType"><code class="docutils literal notranslate"><span class="pre">ISolution.AddType</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Algorithm"><code class="docutils literal notranslate"><span class="pre">ISolution.Algorithm</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.BuildYMatrix"><code class="docutils literal notranslate"><span class="pre">ISolution.BuildYMatrix()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.BusLevels"><code class="docutils literal notranslate"><span class="pre">ISolution.BusLevels</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Capkvar"><code class="docutils literal notranslate"><span class="pre">ISolution.Capkvar</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.CheckControls"><code class="docutils literal notranslate"><span class="pre">ISolution.CheckControls()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.CheckFaultStatus"><code class="docutils literal notranslate"><span class="pre">ISolution.CheckFaultStatus()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Cleanup"><code class="docutils literal notranslate"><span class="pre">ISolution.Cleanup()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.ControlActionsDone"><code class="docutils literal notranslate"><span class="pre">ISolution.ControlActionsDone</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.ControlIterations"><code class="docutils literal notranslate"><span class="pre">ISolution.ControlIterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.ControlMode"><code class="docutils literal notranslate"><span class="pre">ISolution.ControlMode</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Converged"><code class="docutils literal notranslate"><span class="pre">ISolution.Converged</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.DefaultDaily"><code class="docutils literal notranslate"><span class="pre">ISolution.DefaultDaily</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.DefaultYearly"><code class="docutils literal notranslate"><span class="pre">ISolution.DefaultYearly</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.DoControlActions"><code class="docutils literal notranslate"><span class="pre">ISolution.DoControlActions()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.EventLog"><code class="docutils literal notranslate"><span class="pre">ISolution.EventLog</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.FinishTimeStep"><code class="docutils literal notranslate"><span class="pre">ISolution.FinishTimeStep()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Frequency"><code class="docutils literal notranslate"><span class="pre">ISolution.Frequency</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.GenMult"><code class="docutils literal notranslate"><span class="pre">ISolution.GenMult</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.GenPF"><code class="docutils literal notranslate"><span class="pre">ISolution.GenPF</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.GenkW"><code class="docutils literal notranslate"><span class="pre">ISolution.GenkW</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Hour"><code class="docutils literal notranslate"><span class="pre">ISolution.Hour</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.IncMatrix"><code class="docutils literal notranslate"><span class="pre">ISolution.IncMatrix</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.IncMatrixCols"><code class="docutils literal notranslate"><span class="pre">ISolution.IncMatrixCols</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.IncMatrixRows"><code class="docutils literal notranslate"><span class="pre">ISolution.IncMatrixRows</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.InitSnap"><code class="docutils literal notranslate"><span class="pre">ISolution.InitSnap()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.IntervalHrs"><code class="docutils literal notranslate"><span class="pre">ISolution.IntervalHrs</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Iterations"><code class="docutils literal notranslate"><span class="pre">ISolution.Iterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.LDCurve"><code class="docutils literal notranslate"><span class="pre">ISolution.LDCurve</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Laplacian"><code class="docutils literal notranslate"><span class="pre">ISolution.Laplacian</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.LoadModel"><code class="docutils literal notranslate"><span class="pre">ISolution.LoadModel</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.LoadMult"><code class="docutils literal notranslate"><span class="pre">ISolution.LoadMult</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.MaxControlIterations"><code class="docutils literal notranslate"><span class="pre">ISolution.MaxControlIterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.MaxIterations"><code class="docutils literal notranslate"><span class="pre">ISolution.MaxIterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.MinIterations"><code class="docutils literal notranslate"><span class="pre">ISolution.MinIterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Mode"><code class="docutils literal notranslate"><span class="pre">ISolution.Mode</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.ModeID"><code class="docutils literal notranslate"><span class="pre">ISolution.ModeID</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.MostIterationsDone"><code class="docutils literal notranslate"><span class="pre">ISolution.MostIterationsDone</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Number"><code class="docutils literal notranslate"><span class="pre">ISolution.Number</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Process_Time"><code class="docutils literal notranslate"><span class="pre">ISolution.Process_Time</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Random"><code class="docutils literal notranslate"><span class="pre">ISolution.Random</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SampleControlDevices"><code class="docutils literal notranslate"><span class="pre">ISolution.SampleControlDevices()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Sample_DoControlActions"><code class="docutils literal notranslate"><span class="pre">ISolution.Sample_DoControlActions()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Seconds"><code class="docutils literal notranslate"><span class="pre">ISolution.Seconds</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Solve"><code class="docutils literal notranslate"><span class="pre">ISolution.Solve()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolveAll"><code class="docutils literal notranslate"><span class="pre">ISolution.SolveAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolveDirect"><code class="docutils literal notranslate"><span class="pre">ISolution.SolveDirect()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolveNoControl"><code class="docutils literal notranslate"><span class="pre">ISolution.SolveNoControl()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolvePflow"><code class="docutils literal notranslate"><span class="pre">ISolution.SolvePflow()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolvePlusControl"><code class="docutils literal notranslate"><span class="pre">ISolution.SolvePlusControl()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SolveSnap"><code class="docutils literal notranslate"><span class="pre">ISolution.SolveSnap()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.StepSize"><code class="docutils literal notranslate"><span class="pre">ISolution.StepSize</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.StepsizeHr"><code class="docutils literal notranslate"><span class="pre">ISolution.StepsizeHr</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.StepsizeMin"><code class="docutils literal notranslate"><span class="pre">ISolution.StepsizeMin</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.SystemYChanged"><code class="docutils literal notranslate"><span class="pre">ISolution.SystemYChanged</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Time_of_Step"><code class="docutils literal notranslate"><span class="pre">ISolution.Time_of_Step</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Tolerance"><code class="docutils literal notranslate"><span class="pre">ISolution.Tolerance</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Total_Time"><code class="docutils literal notranslate"><span class="pre">ISolution.Total_Time</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Totaliterations"><code class="docutils literal notranslate"><span class="pre">ISolution.Totaliterations</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.Year"><code class="docutils literal notranslate"><span class="pre">ISolution.Year</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.__init__"><code class="docutils literal notranslate"><span class="pre">ISolution.__init__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.dblHour"><code class="docutils literal notranslate"><span class="pre">ISolution.dblHour</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ISolution.ISolution.pctGrowth"><code class="docutils literal notranslate"><span class="pre">ISolution.pctGrowth</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

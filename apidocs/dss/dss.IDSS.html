@@ -1,0 +1,975 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>dss.IDSS &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'apidocs/dss/dss.IDSS';</script>
+    <link rel="icon" href="../../_static/dssx.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="dss.IDSSElement" href="dss.IDSSElement.html" />
+    <link rel="prev" title="dss.ICtrlQueue" href="dss.ICtrlQueue.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">dss package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/apidocs/dss/dss.IDSS.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>dss.IDSS</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS"><code class="docutils literal notranslate"><span class="pre">IDSS</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ActiveCircuit"><code class="docutils literal notranslate"><span class="pre">IDSS.ActiveCircuit</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ActiveClass"><code class="docutils literal notranslate"><span class="pre">IDSS.ActiveClass</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AdvancedTypes"><code class="docutils literal notranslate"><span class="pre">IDSS.AdvancedTypes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AllowChangeDir"><code class="docutils literal notranslate"><span class="pre">IDSS.AllowChangeDir</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AllowDOScmd"><code class="docutils literal notranslate"><span class="pre">IDSS.AllowDOScmd</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AllowEditor"><code class="docutils literal notranslate"><span class="pre">IDSS.AllowEditor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AllowForms"><code class="docutils literal notranslate"><span class="pre">IDSS.AllowForms</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.COMErrorResults"><code class="docutils literal notranslate"><span class="pre">IDSS.COMErrorResults</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Circuits"><code class="docutils literal notranslate"><span class="pre">IDSS.Circuits</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Classes"><code class="docutils literal notranslate"><span class="pre">IDSS.Classes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ClearAll"><code class="docutils literal notranslate"><span class="pre">IDSS.ClearAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.CompatFlags"><code class="docutils literal notranslate"><span class="pre">IDSS.CompatFlags</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.DSSProgress"><code class="docutils literal notranslate"><span class="pre">IDSS.DSSProgress</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.DSSim_Coms"><code class="docutils literal notranslate"><span class="pre">IDSS.DSSim_Coms</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.DataPath"><code class="docutils literal notranslate"><span class="pre">IDSS.DataPath</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.DefaultEditor"><code class="docutils literal notranslate"><span class="pre">IDSS.DefaultEditor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Error"><code class="docutils literal notranslate"><span class="pre">IDSS.Error</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Events"><code class="docutils literal notranslate"><span class="pre">IDSS.Events</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Executive"><code class="docutils literal notranslate"><span class="pre">IDSS.Executive</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.LegacyModels"><code class="docutils literal notranslate"><span class="pre">IDSS.LegacyModels</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NewCircuit"><code class="docutils literal notranslate"><span class="pre">IDSS.NewCircuit()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NewContext"><code class="docutils literal notranslate"><span class="pre">IDSS.NewContext()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NumCircuits"><code class="docutils literal notranslate"><span class="pre">IDSS.NumCircuits</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NumClasses"><code class="docutils literal notranslate"><span class="pre">IDSS.NumClasses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NumUserClasses"><code class="docutils literal notranslate"><span class="pre">IDSS.NumUserClasses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Obj"><code class="docutils literal notranslate"><span class="pre">IDSS.Obj</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Parser"><code class="docutils literal notranslate"><span class="pre">IDSS.Parser</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Plotting"><code class="docutils literal notranslate"><span class="pre">IDSS.Plotting</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Reset"><code class="docutils literal notranslate"><span class="pre">IDSS.Reset()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.SetActiveClass"><code class="docutils literal notranslate"><span class="pre">IDSS.SetActiveClass()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ShowPanel"><code class="docutils literal notranslate"><span class="pre">IDSS.ShowPanel()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Start"><code class="docutils literal notranslate"><span class="pre">IDSS.Start()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Text"><code class="docutils literal notranslate"><span class="pre">IDSS.Text</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.UserClasses"><code class="docutils literal notranslate"><span class="pre">IDSS.UserClasses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Version"><code class="docutils literal notranslate"><span class="pre">IDSS.Version</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.YMatrix"><code class="docutils literal notranslate"><span class="pre">IDSS.YMatrix</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ZIP"><code class="docutils literal notranslate"><span class="pre">IDSS.ZIP</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.__call__"><code class="docutils literal notranslate"><span class="pre">IDSS.__call__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.__init__"><code class="docutils literal notranslate"><span class="pre">IDSS.__init__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.to_altdss"><code class="docutils literal notranslate"><span class="pre">IDSS.to_altdss()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.to_opendssdirect"><code class="docutils literal notranslate"><span class="pre">IDSS.to_opendssdirect()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="module-dss.IDSS">
+<span id="dss-idss"></span><h1><a class="reference internal" href="#module-dss.IDSS" title="dss.IDSS"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a><a class="headerlink" href="#module-dss.IDSS" title="Link to this heading">#</a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table table-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IDSS</span></code></a></p></td>
+<td><p>Main OpenDSS interface. Organizes the subclasses trying to mimic the <code class="docutils literal notranslate"><span class="pre">OpenDSSengine.DSS</span></code> object
+as seen from <code class="docutils literal notranslate"><span class="pre">win32com.client</span></code> or <code class="docutils literal notranslate"><span class="pre">comtypes.client</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dss.IDSS.</span></span><span class="sig-name descname"><span class="pre">IDSS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IDSS.IDSS" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="dss._cffi_api_util.html#dss._cffi_api_util.Base" title="dss._cffi_api_util.Base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss._cffi_api_util.Base</span></code></a></p>
+<p>Main OpenDSS interface. Organizes the subclasses trying to mimic the <code class="docutils literal notranslate"><span class="pre">OpenDSSengine.DSS</span></code> object
+as seen from <code class="docutils literal notranslate"><span class="pre">win32com.client</span></code> or <code class="docutils literal notranslate"><span class="pre">comtypes.client</span></code>.</p>
+<p>This main class also includes some global settings. See more settings in <code class="docutils literal notranslate"><span class="pre">ActiveCircuit.Settings</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.ActiveCircuit">
+<span class="sig-name descname"><span class="pre">ActiveCircuit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ICircuit.html#dss.ICircuit.ICircuit" title="dss.ICircuit.ICircuit"><span class="pre">dss.ICircuit.ICircuit</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.ActiveCircuit" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.ActiveClass">
+<span class="sig-name descname"><span class="pre">ActiveClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IActiveClass.html#dss.IActiveClass.IActiveClass" title="dss.IActiveClass.IActiveClass"><span class="pre">dss.IActiveClass.IActiveClass</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.ActiveClass" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.AdvancedTypes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AdvancedTypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.IDSS.IDSS.AdvancedTypes" title="Link to this definition">#</a></dt>
+<dd><p>When enabled, there are <strong>two side-effects</strong>:</p>
+<ul class="simple">
+<li><p><strong>Per DSS Context:</strong> Complex arrays and complex numbers can be returned and consumed by the Python API.</p></li>
+<li><p><strong>Global effect:</strong> The low-level API provides matrix dimensions when available (<code class="docutils literal notranslate"><span class="pre">EnableArrayDimensions</span></code> is enabled).</p></li>
+</ul>
+<p>As a result, for example, <code class="docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.ActiveCktElement.Yprim</span></code> is returned as a complex matrix instead
+of a plain array.</p>
+<p>When disabled, the legacy plain arrays are used and complex numbers cannot be consumed by the Python API.</p>
+<p><em>Defaults to <strong>False</strong> for backwards compatibility.</em></p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.AllowChangeDir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllowChangeDir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.IDSS.IDSS.AllowChangeDir" title="Link to this definition">#</a></dt>
+<dd><p>If disabled, the engine will not change the active working directory during execution. E.g. a “compile”
+command will not “chdir” to the file path.</p>
+<p>If you have issues with long paths, enabling this might help in some scenarios.</p>
+<p>Defaults to True (allow changes, backwards compatible) in the 0.10.x versions of DSS C-API.
+This might change to False in future versions.</p>
+<p>This can also be set through the environment variable DSS_CAPI_ALLOW_CHANGE_DIR. Set it to 0 to
+disallow changing the active working directory.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.AllowDOScmd">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllowDOScmd</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.IDSS.IDSS.AllowDOScmd" title="Link to this definition">#</a></dt>
+<dd><p>If enabled, the <code class="docutils literal notranslate"><span class="pre">DOScmd</span></code> command is allowed. Otherwise, an error is reported if the user tries to use it.</p>
+<p>Defaults to False/0 (disabled state). Users should consider DOScmd deprecated on DSS-Extensions.</p>
+<p>This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
+the command.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.AllowEditor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllowEditor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.IDSS.IDSS.AllowEditor" title="Link to this definition">#</a></dt>
+<dd><p>Gets/sets whether running the external editor for “Show” is allowed</p>
+<p>AllowEditor controls whether the external editor is used in commands like “Show”.
+If you set to 0 (false), the editor is not executed. Note that other side effects,
+such as the creation of files, are not affected.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.AllowForms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllowForms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.IDSS.IDSS.AllowForms" title="Link to this definition">#</a></dt>
+<dd><p>Gets/sets whether text output is allowed (DSS-Extensions) or general forms/windows are shown (official OpenDSS).</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllowForms.html">https://opendss.epri.com/AllowForms.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.COMErrorResults">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">COMErrorResults</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.IDSS.IDSS.COMErrorResults" title="Link to this definition">#</a></dt>
+<dd><p>If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the
+official OpenDSS COM interface.</p>
+<p>For example, consider the function <code class="docutils literal notranslate"><span class="pre">Loads_Get_ZIPV</span></code>. If there is no active circuit or active load element:</p>
+<ul class="simple">
+<li><p>In the disabled state (COMErrorResults=False), the function will return “[]”, an array with 0 elements.</p></li>
+<li><p>In the enabled state (COMErrorResults=True), the function will return “[0.0]” instead. This should
+be compatible with the return value of the official COM interface.</p></li>
+</ul>
+<p>Defaults to True/1 (enabled state) in the v0.12.x series. This will change to false in future series.</p>
+<p>This can also be set through the environment variable <code class="docutils literal notranslate"><span class="pre">DSS_CAPI_COM_DEFAULTS</span></code>. Setting it to 0 disables
+the legacy/COM behavior. The value can be toggled through the API at any time.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Circuits">
+<span class="sig-name descname"><span class="pre">Circuits</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ICircuit.html#dss.ICircuit.ICircuit" title="dss.ICircuit.ICircuit"><span class="pre">dss.ICircuit.ICircuit</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.Circuits" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Classes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Classes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.IDSS.IDSS.Classes" title="Link to this definition">#</a></dt>
+<dd><p>List of DSS intrinsic classes (names of the classes)</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Classes1.html">https://opendss.epri.com/Classes1.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.ClearAll">
+<span class="sig-name descname"><span class="pre">ClearAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IDSS.IDSS.ClearAll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.CompatFlags">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CompatFlags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IDSS.IDSS.CompatFlags" title="Link to this definition">#</a></dt>
+<dd><p>Controls some compatibility flags introduced to toggle some behavior from the official OpenDSS.</p>
+<p><strong>THE FLAGS ARE GLOBAL, affecting all DSS engines in the process.</strong></p>
+<p>These flags may change for each version of DSS C-API, but the same value will not be reused. That is,
+when we remove a compatibility flag, it will have no effect but will also not affect anything else
+besides raising an error if the user tries to toggle a flag that was available in a previous version.</p>
+<p>We expect to keep a very limited number of flags. Since the flags are more transient than the other
+options/flags, it was preferred to add this generic function instead of a separate function per
+flag.</p>
+<p>See the enumeration <code class="docutils literal notranslate"><span class="pre">DSSCompatFlags</span></code> for available flags, including description.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.DSSProgress">
+<span class="sig-name descname"><span class="pre">DSSProgress</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IDSSProgress.html#dss.IDSSProgress.IDSSProgress" title="dss.IDSSProgress.IDSSProgress"><span class="pre">dss.IDSSProgress.IDSSProgress</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.DSSProgress" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.DSSim_Coms">
+<span class="sig-name descname"><span class="pre">DSSim_Coms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IDSSimComs.html#dss.IDSSimComs.IDSSimComs" title="dss.IDSSimComs.IDSSimComs"><span class="pre">dss.IDSSimComs.IDSSimComs</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.DSSim_Coms" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.DataPath">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataPath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.IDSS.IDSS.DataPath" title="Link to this definition">#</a></dt>
+<dd><p>DSS Data File Path.  Default path for reports, etc. from DSS</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/DataPath.html">https://opendss.epri.com/DataPath.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.DefaultEditor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DefaultEditor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.IDSS.IDSS.DefaultEditor" title="Link to this definition">#</a></dt>
+<dd><p>Returns the path name for the default text editor.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/DefaultEditor.html">https://opendss.epri.com/DefaultEditor.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Error">
+<span class="sig-name descname"><span class="pre">Error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IError.html#dss.IError.IError" title="dss.IError.IError"><span class="pre">dss.IError.IError</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.Error" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Events">
+<span class="sig-name descname"><span class="pre">Events</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IDSSEvents.html#dss.IDSSEvents.IDSSEvents" title="dss.IDSSEvents.IDSSEvents"><span class="pre">dss.IDSSEvents.IDSSEvents</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.Events" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Executive">
+<span class="sig-name descname"><span class="pre">Executive</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IDSS_Executive.html#dss.IDSS_Executive.IDSS_Executive" title="dss.IDSS_Executive.IDSS_Executive"><span class="pre">dss.IDSS_Executive.IDSS_Executive</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.Executive" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.LegacyModels">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LegacyModels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.IDSS.IDSS.LegacyModels" title="Link to this definition">#</a></dt>
+<dd><p>LegacyModels was a flag used to toggle legacy (pre-2019) models for PVSystem, InvControl, Storage and
+StorageControl.
+In the official OpenDSS version 9.0, the old models were removed. They were temporarily present here
+but were also removed in DSS C-API v0.13.0.</p>
+<p><strong>NOTE</strong>: this property will be removed for v1.0. It is left to avoid breaking the current API too soon.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.NewCircuit">
+<span class="sig-name descname"><span class="pre">NewCircuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="dss.ICircuit.html#dss.ICircuit.ICircuit" title="dss.ICircuit.ICircuit"><span class="pre">dss.ICircuit.ICircuit</span></a></span></span><a class="headerlink" href="#dss.IDSS.IDSS.NewCircuit" title="Link to this definition">#</a></dt>
+<dd><p>Make a new circuit and returns the interface to the active circuit.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NewCircuit.html">https://opendss.epri.com/NewCircuit.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.NewContext">
+<span class="sig-name descname"><span class="pre">NewContext</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><span class="pre">dss.IDSS.IDSS</span></a></span></span><a class="headerlink" href="#dss.IDSS.IDSS.NewContext" title="Link to this definition">#</a></dt>
+<dd><p>Creates a new DSS engine context.</p>
+<p>A DSS Context encapsulates most of the global state of the original OpenDSS engine,
+allowing the user to create multiple instances in the same process. By creating contexts
+manually, the management of threads and potential issues should be handled by the user.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.NumCircuits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumCircuits</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IDSS.IDSS.NumCircuits" title="Link to this definition">#</a></dt>
+<dd><p>Number of Circuits currently defined</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumCircuits.html">https://opendss.epri.com/NumCircuits.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.NumClasses">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumClasses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IDSS.IDSS.NumClasses" title="Link to this definition">#</a></dt>
+<dd><p>Number of DSS intrinsic classes</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumClasses.html">https://opendss.epri.com/NumClasses.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.NumUserClasses">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumUserClasses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IDSS.IDSS.NumUserClasses" title="Link to this definition">#</a></dt>
+<dd><p>Number of user-defined classes</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumUserClasses.html">https://opendss.epri.com/NumUserClasses.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Obj">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Obj</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">altdss.AltDSS</span></em><a class="headerlink" href="#dss.IDSS.IDSS.Obj" title="Link to this definition">#</a></dt>
+<dd><p>Deprecated: provides access to the AltDSS API; use <code class="docutils literal notranslate"><span class="pre">DSS.to_altdss()</span></code> instead</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Parser">
+<span class="sig-name descname"><span class="pre">Parser</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IParser.html#dss.IParser.IParser" title="dss.IParser.IParser"><span class="pre">dss.IParser.IParser</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.Parser" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Plotting">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Plotting</span></span><a class="headerlink" href="#dss.IDSS.IDSS.Plotting" title="Link to this definition">#</a></dt>
+<dd><p>Shortcut for the plotting module. This property is equivalent to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">plot</span>
+<span class="k">return</span> <span class="n">plot</span>
+</pre></div>
+</div>
+<p>Gives access to the <code class="docutils literal notranslate"><span class="pre">enable()</span></code> and <code class="docutils literal notranslate"><span class="pre">disable()</span></code> functions.
+Requires matplotlib and SciPy to be installed, hence it is an
+optional feature.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Reset">
+<span class="sig-name descname"><span class="pre">Reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IDSS.IDSS.Reset" title="Link to this definition">#</a></dt>
+<dd><p>This is a no-op function, does nothing. Left for compatibility.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Reset1.html">https://opendss.epri.com/Reset1.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.SetActiveClass">
+<span class="sig-name descname"><span class="pre">SetActiveClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ClassName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.IDSS.IDSS.SetActiveClass" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.ShowPanel">
+<span class="sig-name descname"><span class="pre">ShowPanel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IDSS.IDSS.ShowPanel" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Start">
+<span class="sig-name descname"><span class="pre">Start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#dss.IDSS.IDSS.Start" title="Link to this definition">#</a></dt>
+<dd><p>This is a no-op function, does nothing. Left for compatibility.</p>
+<p>Calling <code class="docutils literal notranslate"><span class="pre">Start</span></code> in AltDSS/DSS-Extensions is required but that is already
+handled automatically, so the users do not need to call it manually,
+unless using AltDSS/DSS C-API directly without further tools.</p>
+<p>On the official OpenDSS, <code class="docutils literal notranslate"><span class="pre">Start</span></code> also does nothing at all in the current
+versions.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Start.html">https://opendss.epri.com/Start.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Text">
+<span class="sig-name descname"><span class="pre">Text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IText.html#dss.IText.IText" title="dss.IText.IText"><span class="pre">dss.IText.IText</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.Text" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.UserClasses">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UserClasses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.IDSS.IDSS.UserClasses" title="Link to this definition">#</a></dt>
+<dd><p>List of user-defined classes</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/UserClasses.html">https://opendss.epri.com/UserClasses.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.Version">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.IDSS.IDSS.Version" title="Link to this definition">#</a></dt>
+<dd><p>Get version string for the DSS.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Version.html">https://opendss.epri.com/Version.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.YMatrix">
+<span class="sig-name descname"><span class="pre">YMatrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IYMatrix.html#dss.IYMatrix.IYMatrix" title="dss.IYMatrix.IYMatrix"><span class="pre">dss.IYMatrix.IYMatrix</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.YMatrix" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.ZIP">
+<span class="sig-name descname"><span class="pre">ZIP</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IZIP.html#dss.IZIP.IZIP" title="dss.IZIP.IZIP"><span class="pre">dss.IZIP.IZIP</span></a></em><a class="headerlink" href="#dss.IDSS.IDSS.ZIP" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IDSS.IDSS.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Shortcut to pass text commands.</p>
+<p>Pass either a single string (with either one or multiples commands, separated by new lines),
+or a list of strings.</p>
+<p>Examples:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># single command
+DSS(&quot;new Circuit.test&quot;) 
+
+# list of commands
+DSS([&quot;new Circuit.test&quot;, &quot;new Line.line1 bus1=a bus2=b&quot;])
+
+# block of commands in a big string
+DSS(&quot;&quot;&quot;
+    clear
+    new Circuit.test
+    new Line.line1 bus1=a bus2=b
+    new Load.load1 bus1=a bus2=b
+&quot;&quot;&quot;)
+</pre></div>
+</div>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IDSS.IDSS.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Wrap a new DSS context with the DSS-Python API.
+This is not typically used directly. Refer to <code class="docutils literal notranslate"><span class="pre">IDSS.NewContext</span></code> or
+<code class="docutils literal notranslate"><span class="pre">IDSS._get_instance</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.to_altdss">
+<span class="sig-name descname"><span class="pre">to_altdss</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">altdss.AltDSS</span></span></span><a class="headerlink" href="#dss.IDSS.IDSS.to_altdss" title="Link to this definition">#</a></dt>
+<dd><p>Returns an instance of AltDSS for the active DSS Context.</p>
+<p>A compatible AltDSS (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">altdss</span></code>) is required.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IDSS.IDSS.to_opendssdirect">
+<span class="sig-name descname"><span class="pre">to_opendssdirect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">opendssdirect.OpenDSSDirect.OpenDSSDirect</span></span></span><a class="headerlink" href="#dss.IDSS.IDSS.to_opendssdirect" title="Link to this definition">#</a></dt>
+<dd><p>Returns an instance of OpenDSSDirect.py for the active DSS Context.</p>
+<p>A compatible OpenDSSDirect.py (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">OpenDSSDirect.py</span></code>) is required.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dss.ICtrlQueue.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dss.IDSSElement.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS"><code class="docutils literal notranslate"><span class="pre">IDSS</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ActiveCircuit"><code class="docutils literal notranslate"><span class="pre">IDSS.ActiveCircuit</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ActiveClass"><code class="docutils literal notranslate"><span class="pre">IDSS.ActiveClass</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AdvancedTypes"><code class="docutils literal notranslate"><span class="pre">IDSS.AdvancedTypes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AllowChangeDir"><code class="docutils literal notranslate"><span class="pre">IDSS.AllowChangeDir</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AllowDOScmd"><code class="docutils literal notranslate"><span class="pre">IDSS.AllowDOScmd</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AllowEditor"><code class="docutils literal notranslate"><span class="pre">IDSS.AllowEditor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.AllowForms"><code class="docutils literal notranslate"><span class="pre">IDSS.AllowForms</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.COMErrorResults"><code class="docutils literal notranslate"><span class="pre">IDSS.COMErrorResults</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Circuits"><code class="docutils literal notranslate"><span class="pre">IDSS.Circuits</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Classes"><code class="docutils literal notranslate"><span class="pre">IDSS.Classes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ClearAll"><code class="docutils literal notranslate"><span class="pre">IDSS.ClearAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.CompatFlags"><code class="docutils literal notranslate"><span class="pre">IDSS.CompatFlags</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.DSSProgress"><code class="docutils literal notranslate"><span class="pre">IDSS.DSSProgress</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.DSSim_Coms"><code class="docutils literal notranslate"><span class="pre">IDSS.DSSim_Coms</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.DataPath"><code class="docutils literal notranslate"><span class="pre">IDSS.DataPath</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.DefaultEditor"><code class="docutils literal notranslate"><span class="pre">IDSS.DefaultEditor</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Error"><code class="docutils literal notranslate"><span class="pre">IDSS.Error</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Events"><code class="docutils literal notranslate"><span class="pre">IDSS.Events</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Executive"><code class="docutils literal notranslate"><span class="pre">IDSS.Executive</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.LegacyModels"><code class="docutils literal notranslate"><span class="pre">IDSS.LegacyModels</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NewCircuit"><code class="docutils literal notranslate"><span class="pre">IDSS.NewCircuit()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NewContext"><code class="docutils literal notranslate"><span class="pre">IDSS.NewContext()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NumCircuits"><code class="docutils literal notranslate"><span class="pre">IDSS.NumCircuits</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NumClasses"><code class="docutils literal notranslate"><span class="pre">IDSS.NumClasses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.NumUserClasses"><code class="docutils literal notranslate"><span class="pre">IDSS.NumUserClasses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Obj"><code class="docutils literal notranslate"><span class="pre">IDSS.Obj</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Parser"><code class="docutils literal notranslate"><span class="pre">IDSS.Parser</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Plotting"><code class="docutils literal notranslate"><span class="pre">IDSS.Plotting</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Reset"><code class="docutils literal notranslate"><span class="pre">IDSS.Reset()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.SetActiveClass"><code class="docutils literal notranslate"><span class="pre">IDSS.SetActiveClass()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ShowPanel"><code class="docutils literal notranslate"><span class="pre">IDSS.ShowPanel()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Start"><code class="docutils literal notranslate"><span class="pre">IDSS.Start()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Text"><code class="docutils literal notranslate"><span class="pre">IDSS.Text</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.UserClasses"><code class="docutils literal notranslate"><span class="pre">IDSS.UserClasses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.Version"><code class="docutils literal notranslate"><span class="pre">IDSS.Version</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.YMatrix"><code class="docutils literal notranslate"><span class="pre">IDSS.YMatrix</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.ZIP"><code class="docutils literal notranslate"><span class="pre">IDSS.ZIP</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.__call__"><code class="docutils literal notranslate"><span class="pre">IDSS.__call__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.__init__"><code class="docutils literal notranslate"><span class="pre">IDSS.__init__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.to_altdss"><code class="docutils literal notranslate"><span class="pre">IDSS.to_altdss()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IDSS.IDSS.to_opendssdirect"><code class="docutils literal notranslate"><span class="pre">IDSS.to_opendssdirect()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

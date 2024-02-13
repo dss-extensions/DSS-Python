@@ -1,0 +1,1501 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Integrated plotting in Python &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/Plotting';</script>
+    <link rel="icon" href="../_static/dssx.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DSS-Extensions — JSON exports" href="JSON.html" />
+    <link rel="prev" title="DSS-Python changelog" href="../changelog.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../apidocs/index.html">dss package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../apidocs/dss/dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidocs/dss/dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/examples/Plotting.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Integrated plotting in Python</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enabling-and-using-the-plotting-features">Enabling and using the plotting features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-using-only-dss-python">Example using only DSS-Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-using-opendssdirect-py">Example using OpenDSSDirect.py</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-ipython-integration-and-more">Jupyter, IPython integration and more</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#future-development">Future development</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-gallery">Example gallery</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-command"><code class="docutils literal notranslate"><span class="pre">Visualize</span></code> command</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#circuit-plots">Circuit plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#voltage-profile">Voltage profile</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-general-objects">Plotting general objects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#di-plot-and-yearlycurvescommands"><code class="docutils literal notranslate"><span class="pre">DI_plot</span></code> and <code class="docutils literal notranslate"><span class="pre">YearlyCurves</span></code>commands</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meter-zone-plot">Meter <code class="docutils literal notranslate"><span class="pre">Zone</span></code> plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-plots">Matrix plots</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-plots">3D plots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-integration-text-csv-file-outputs">Notebook integration: text/CSV file outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#following-epri-dpv-doe-tutorial-pdf">Following <code class="docutils literal notranslate"><span class="pre">epri_dpv\DOE</span> <span class="pre">Tutorial.pdf</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-ieee123-sample-script">Running the IEEE123 sample script</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-the-outputs">Saving the outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-the-figures">Customizing the figures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-matplotlib-styles">Applying matplotlib styles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-using-matplotlibs-api">Customizing using matplotlib’s API</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="integrated-plotting-in-python">
+<h1>Integrated plotting in Python<a class="headerlink" href="#integrated-plotting-in-python" title="Link to this heading">#</a></h1>
+<p><em>Last major update: May, 2023</em><br />
+<em>Original author: Paulo Meira</em></p>
+<p><strong>Due to the high number of images, this notebook is stored in the Git repository without outputs.</strong></p>
+<p>You can open and then run this notebook on Google Colab for a quick overview if you don’t want to set up a local environment: <strong><a class="reference external" href="https://colab.research.google.com/github/dss-extensions/dss_python/blob/master/docs/examples/Plotting.ipynb">Open in Colab</a></strong>.</p>
+<p><strong>General preparation</strong></p>
+<ul class="simple">
+<li><p>Install Python; we recommend using <a class="reference external" href="https://github.com/conda-forge/miniforge/#miniforge">miniforge from conda-forge</a> – after installation, either create a dedicated environment or make sure the basics are installed (<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">jupyterlab</span> <span class="pre">matplotlib-base</span> <span class="pre">ipympl</span> <span class="pre">scienceplots</span> <span class="pre">pandas</span></code>)</p></li>
+<li><p>Install the DSS-Extensions (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">dss-python[plot]</span> <span class="pre">opendssdirect.py</span></code>)</p></li>
+<li><p>Run the following cells to download the sample DSS scripts</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>--depth<span class="o">=</span><span class="m">1</span><span class="w"> </span>-q<span class="w"> </span>https://github.com/dss-extensions/electricdss-tst
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: destination path &#39;electricdss-tst&#39; already exists and is not an empty directory.
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you are running under Google Colab, running the following cell should install the packages.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">subprocess</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;COLAB_RELEASE_TAG&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s1">&#39;pip install dss-python[plot] opendssdirect.py[extras] ipympl scienceplots&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the sample circuits and test cases </span>
+<span class="kn">from</span> <span class="nn">dss.examples</span> <span class="kn">import</span> <span class="n">download_repo_snapshot</span>
+<span class="n">IEEE13_PATH</span> <span class="o">=</span> <span class="n">download_repo_snapshot</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">repo_name</span><span class="o">=</span><span class="s1">&#39;electricdss-tst&#39;</span><span class="p">,</span> <span class="n">use_version</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">/</span> <span class="s1">&#39;Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss&#39;</span>
+
+<span class="k">assert</span> <span class="n">IEEE13_PATH</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Examples downloaded. IEEE13 file path:&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">IEEE13_PATH</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Examples downloaded. IEEE13 file path: /tmp/dss/dss_python/docs/examples/electricdss-tst/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss
+</pre></div>
+</div>
+</div>
+</div>
+<p>If the download of the sample fails, and if you have Git installed, try manually running inside the same folder this notebook is located:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--depth<span class="o">=</span><span class="m">1</span><span class="w"> </span>-q<span class="w"> </span>https://github.com/dss-extensions/electricdss-tst
+</pre></div>
+</div>
+<p>Otherwise, download <a class="github reference external" href="https://github.com/dss-extensions/electricdss-tst/archive/refs/heads/master.zip">dss-extensions/electricdss-tst</a> and extract the <code class="docutils literal notranslate"><span class="pre">electricdss-tst-master</span></code> folder in the same path as this notebook. Rename it to <code class="docutils literal notranslate"><span class="pre">electricdss-tst</span></code>.</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>DSS-Python and OpenDSSDirect.py can use the plotting extension to enable the plot commands as seen in the official OpenDSS through our <strong>alternative implementation</strong> (currently known as DSS C-API).</p>
+<p>The goal of this feature is to achieve similar results, but there is no intention of achieving pixel-perfect results, for various reasons.</p>
+<p>The implementation does not reuse the concept of creation <a class="reference external" href="https://sourceforge.net/p/electricdss/code/3706/tree/trunk/Version8/Distrib/Doc/Partial%20Key%20to%20DSV%20files.pdf"><code class="docutils literal notranslate"><span class="pre">.dsv</span></code> files on disk</a>, since we avoid creating files when possible. Still, for compatibility, some features do require creating other files.</p>
+<p>As seen in this notebook, many of the official OpenDSS examples work as-is, so you can further explore the OpenDSS documentation and examples for more.</p>
+<p>This plotting implementation was motivated by a few points:</p>
+<ul class="simple">
+<li><p>Provide a better (and more complete) experience for users of DSS outside of Windows, especially Linux and macOS users, but also online environments such as Google Colaboratory and JupyterHub installations.</p></li>
+<li><p>Allow running and reusing archived OpenDSS scripts as-is. This includes some of the official OpenDSS material from EPRI, archived code repositories and datasets from users in general (e.g. results from MSc and PhD works, papers).</p></li>
+<li><p>Allow easier customization of plots. This is a commonly requested feature.</p></li>
+</ul>
+<p><strong>Known issues and limitations:</strong></p>
+<ul class="simple">
+<li><p>The sizing of the markers may differ from the DSSView.exe; we will probably need a mapping function to address this.</p></li>
+<li><p>Custom interactive/inspection is not implemented yet.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot</span> <span class="pre">evolution</span></code> and <code class="docutils literal notranslate"><span class="pre">plot</span> <span class="pre">energymeter</span></code> are not implemented. The command <code class="docutils literal notranslate"><span class="pre">di_plot</span></code>, which is implemented, already covers some similar functionality as <code class="docutils literal notranslate"><span class="pre">plot</span> <span class="pre">energymeter</span></code>.</p></li>
+</ul>
+<p>See also “Future development” below.</p>
+</section>
+<section id="enabling-and-using-the-plotting-features">
+<h2>Enabling and using the plotting features<a class="headerlink" href="#enabling-and-using-the-plotting-features" title="Link to this heading">#</a></h2>
+<p>To enable plotting, as of the May 2023, matplotlib and SciPy are required. If you don’t have them installed, you can install DSS-Python with the optional features using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>dss-python<span class="o">[</span>plot<span class="o">]</span>
+</pre></div>
+</div>
+<p>Note that you may prefer to install the third-party packages through conda/mamba if you are using a conda environment.</p>
+<p>Importing the plotting module (either <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">dss.plot</span></code> or indirectly through the property <code class="docutils literal notranslate"><span class="pre">Plotting</span></code>) and enabling the features result in some side-effects.</p>
+<ul class="simple">
+<li><p>Importing will register an IPython magic and some integration functions for file outputs.</p></li>
+<li><p>Importing will set <code class="docutils literal notranslate"><span class="pre">AllowChangeDir</span></code> to false.</p></li>
+<li><p>When plotting is enabled, <code class="docutils literal notranslate"><span class="pre">AllowForms</span></code> is set to true.</p></li>
+</ul>
+<p>There are two equivalent ways to enable plotting. The first is importing the submodule and calling the <code class="docutils literal notranslate"><span class="pre">enable()</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">plot</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The second is calling enable from a DSS instance (from DSS-Python):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">dss</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>After enabling the features, a user can plot from the DSS-Python API, OpenDSSDirect.py API, or using the Jupyter cell magic. General matplotlib configuration applies; for example, custom figure sizes and fonts set in <code class="docutils literal notranslate"><span class="pre">matplotlibrc</span></code> are respected. Users can also add custom matplotlib items to complement the charts (see at the end of the Example Gallery).</p>
+<p>As a reminder, before enabling plots, all <code class="docutils literal notranslate"><span class="pre">plot</span> <span class="pre">...</span></code> commands from DSS scripts are ignored under DSS-Extensions.</p>
+<p>There are a few optional arguments to the <code class="docutils literal notranslate"><span class="pre">enable</span></code> function that will be explored in the examples in this notebook:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">?</span> dss.Plotting.enable
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, if you need to disable the plotting system, there is a <code class="docutils literal notranslate"><span class="pre">disable()</span></code> function available.</p>
+<section id="example-using-only-dss-python">
+<h3>Example using only DSS-Python<a class="headerlink" href="#example-using-only-dss-python" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">dss</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;redirect ./electricdss-tst/Version8/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss&#39;</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Solution</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot circuit powers&#39;</span>
+
+<span class="c1"># The shorthand version would also work fine</span>
+<span class="c1"># dss(&#39;plot circuit powers&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/52bab6427c1821d102ce3fbffa7d1f0165cdb62b51dc97fb43f5104ca0d67bef.png" src="../_images/52bab6427c1821d102ce3fbffa7d1f0165cdb62b51dc97fb43f5104ca0d67bef.png" />
+</div>
+</div>
+</section>
+<section id="example-using-opendssdirect-py">
+<h3>Example using OpenDSSDirect.py<a class="headerlink" href="#example-using-opendssdirect-py" title="Link to this heading">#</a></h3>
+<p>Remember that OpenDSSDirect.py shares the same backend as DSS-Python, so whenever you install OpenDSSDirect.py, you also install DSS-Python.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dss.plot</span>
+<span class="kn">import</span> <span class="nn">opendssdirect</span> <span class="k">as</span> <span class="nn">odd</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+<span class="n">odd</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span><span class="p">(</span><span class="s1">&#39;redirect ./electricdss-tst/Version8/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss&#39;</span><span class="p">)</span>
+<span class="n">odd</span><span class="o">.</span><span class="n">Solution</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+<span class="n">odd</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span><span class="p">(</span><span class="s1">&#39;plot circuit powers&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/52bab6427c1821d102ce3fbffa7d1f0165cdb62b51dc97fb43f5104ca0d67bef.png" src="../_images/52bab6427c1821d102ce3fbffa7d1f0165cdb62b51dc97fb43f5104ca0d67bef.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="jupyter-ipython-integration-and-more">
+<h2>Jupyter, IPython integration and more<a class="headerlink" href="#jupyter-ipython-integration-and-more" title="Link to this heading">#</a></h2>
+<p>Importing our plotting module on a IPython environment tries to register the <code class="docutils literal notranslate"><span class="pre">%%dss</span></code> cell magic. This was tested specifically for JupyterLab, but most of it works fine with Google Colaboratory.</p>
+<p>With the cell magic, users can write DSS code directly. Unfortunately, the syntax highlighting is not yet specific to the DSS language.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+
+redirect somefile.dss
+</pre></div>
+</div>
+<p>IDEs such as Spyder should work but the text file output is not integrated (yet?). You can use <code class="docutils literal notranslate"><span class="pre">%%dss</span></code> in the IPython console inside Spyder, for example, and plots will be added to the “Plots” pane.
+Visual Studio Code is also a great environment for notebooks.</p>
+<p>Since we use matplotlib, users can optionally configure the plotting backend to use SVG (vector files) instead of PNG bitmaps:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;svg&#39;
+</pre></div>
+</div>
+<p>Or increase the output resolution for high DPI displays:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+</pre></div>
+</div>
+<p><em>Sidenote: “Retina” is the marketing term used by Apple for high DPI displays. High DPI displays are in no way exclusive to Apple hardware, <strong>you can use this toggle for any 4K screen</strong>, etc.</em></p>
+<p>To adjust sizes, panning and so on, one of the interactive matplotlib backends could be useful. See for example [<code class="docutils literal notranslate"><span class="pre">ipympl</span></code>] at <a class="reference external" href="https://matplotlib.org/ipympl/">https://matplotlib.org/ipympl/</a>. Note that for local Jupyter installations, using a desktop backend usually works fine too, e.g. <code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">tk</span></code> or <code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">qt</span></code> works on Linux if the dependencies are installed.</p>
+</section>
+<section id="future-development">
+<h2>Future development<a class="headerlink" href="#future-development" title="Link to this heading">#</a></h2>
+<p>Initially, only a matplotlib backend is implemented. The matplotlib package was targeted due to its popularity, versatility and quantility of the results.</p>
+<p>There are plans to provide alternative plotting backends someday. For example, Plotly, Bokeh and eCharts are some candidates. A Python level API will also be exposed.</p>
+<p>We hope to implement syntax highlighting too. This will be investigated for JupyterLab 4.0. A Jupyter kernel for running pure DSS scripts could be developed to go along.</p>
+<p>As the features mature, some of them may move to the package “AltDSS” (work-in-progress), which will provide a modern interface to our alternative DSS engine and also some niceties for the official OpenDSS engine.</p>
+<p>Besides a few missing plots, some of the implementation ones can be polished in a future release, either by default or by toggling an option. Colormaps and colorbars are one example we should use instead of the manual colormapping in general data plots, etc.</p>
+<p>Reading a plot from <code class="docutils literal notranslate"><span class="pre">.dsv</span></code> files created by the official OpenDSS could also be added. Using our full plotting backend with the official OpenDSS is not possible, but we could expose an user-friendly API to reuse our code with the official COM implementation.</p>
+</section>
+<section id="example-gallery">
+<h2>Example gallery<a class="headerlink" href="#example-gallery" title="Link to this heading">#</a></h2>
+<p>Let’s first enable and check the versions:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">dss</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">Version</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DSS C-API Library version 0.14.0 revision 04941400a091677da98b033a3b682480f2584693 based on OpenDSS SVN 3723 [FPC 3.2.2] (64-bit build) MVMULT INCREMENTAL_Y CONTEXT_API PM 20240209141429; License Status: Open 
+DSS-Python version: 0.15.0
+</pre></div>
+</div>
+</div>
+</div>
+<section id="visualize-command">
+<h3><code class="docutils literal notranslate"><span class="pre">Visualize</span></code> command<a class="headerlink" href="#visualize-command" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load and solve the IEEE13 test case</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;redirect electricdss-tst/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss&#39;</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Solution</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+visualize powers Transformer.xfm1
+visualize currents Transformer.xfm1
+visualize voltages Transformer.xfm1
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5ba123a66f3e0ae3eabe605513e8981cb723abce8bb8263c283bc8e06e02b449.png" src="../_images/5ba123a66f3e0ae3eabe605513e8981cb723abce8bb8263c283bc8e06e02b449.png" />
+<img alt="../_images/7652e0bbdecb54faeff46fe5e13f5550a65d7641e6fc313d193d4f9e7a5e9abe.png" src="../_images/7652e0bbdecb54faeff46fe5e13f5550a65d7641e6fc313d193d4f9e7a5e9abe.png" />
+<img alt="../_images/0aa60c8df8d526a98ee708f6c5ba0bed553863ae6870c4e175df35c556c15a2f.png" src="../_images/0aa60c8df8d526a98ee708f6c5ba0bed553863ae6870c4e175df35c556c15a2f.png" />
+</div>
+</div>
+</section>
+<section id="circuit-plots">
+<h3>Circuit plots<a class="headerlink" href="#circuit-plots" title="Link to this heading">#</a></h3>
+<p>Circuit plots have many variations and can be customized to add markers for the different elements and buses.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+plot circuit labels=y
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a450ebe70783a77101a283781880f66b99347bc5fd54a0aa75ddb3e0628d8d69.png" src="../_images/a450ebe70783a77101a283781880f66b99347bc5fd54a0aa75ddb3e0628d8d69.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+redirect electricdss-tst/Version8/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss
+set loadmult=1.5
+solve
+plot circuit voltage dots=n labels=n
+rotate -90
+plot circuit voltage dots=y labels=n
+set marktransformers=y
+plot circuit voltage dots=n labels=n
+set marktransformers=n
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5455f94a6385dde0f818dc475e981056471e816d7411717eb7cec3157c18c06f.png" src="../_images/5455f94a6385dde0f818dc475e981056471e816d7411717eb7cec3157c18c06f.png" />
+<img alt="../_images/84821c650d70e3c699cf47c3b5e587522e91a3fa5b1249d1c352fa817368ab58.png" src="../_images/84821c650d70e3c699cf47c3b5e587522e91a3fa5b1249d1c352fa817368ab58.png" />
+<img alt="../_images/6996ff3fda5848ef5d6b97adae85d3661e4d9c597c301456e3cf839f6c036f12.png" src="../_images/6996ff3fda5848ef5d6b97adae85d3661e4d9c597c301456e3cf839f6c036f12.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+Plot Circuit Losses 1phlinestyle=1 3phlinestyle=1 max=30
+Plot Circuit Losses 1phlinestyle=2 3phlinestyle=1 max=100 c1=$0a0a0a
+Plot Circuit Currents
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e7ac397a330424e3e2c1325b8fe3738edb54d3752370bff6633302bdd426e472.png" src="../_images/e7ac397a330424e3e2c1325b8fe3738edb54d3752370bff6633302bdd426e472.png" />
+<img alt="../_images/723b71d2d83303d2b1a79f629f4085c0d10493599c4c521251a761cc25d68545.png" src="../_images/723b71d2d83303d2b1a79f629f4085c0d10493599c4c521251a761cc25d68545.png" />
+<img alt="../_images/49677375033f95838d233618d322b1c3cca6d3f6eb1b1ffd31893641d0812df4.png" src="../_images/49677375033f95838d233618d322b1c3cca6d3f6eb1b1ffd31893641d0812df4.png" />
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">plot</span> <span class="pre">scatter</span></code> is one of the plot styles that would require OpenDSS Viewer:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+plot scatter
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4d6abe69a441633ef9171a10fee199ac900d14dc18647462fbd56a0420e12dfe.png" src="../_images/4d6abe69a441633ef9171a10fee199ac900d14dc18647462fbd56a0420e12dfe.png" />
+</div>
+</div>
+</section>
+<section id="voltage-profile">
+<h3>Voltage profile<a class="headerlink" href="#voltage-profile" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+redirect electricdss-tst/Version8/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss
+solve
+plot profile
+set loadmult=1.5
+solve
+plot profile
+plot profile phases=all
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f4f300335337e1fd3fdbde460bbefcca56f59adb3a0072989b129e4b7f5c31a7.png" src="../_images/f4f300335337e1fd3fdbde460bbefcca56f59adb3a0072989b129e4b7f5c31a7.png" />
+<img alt="../_images/c388533cc86bc07dc9d914ee09e4161d49c5082258f9915d2d4a1853f6ac6347.png" src="../_images/c388533cc86bc07dc9d914ee09e4161d49c5082258f9915d2d4a1853f6ac6347.png" />
+<img alt="../_images/2cc06b4ab8005ce2b2f8ff1e3d4694282b92ecfce717bc3dc59c7b213e9aae1d.png" src="../_images/2cc06b4ab8005ce2b2f8ff1e3d4694282b92ecfce717bc3dc59c7b213e9aae1d.png" />
+</div>
+</div>
+</section>
+<section id="plotting-general-objects">
+<h3>Plotting general objects<a class="headerlink" href="#plotting-general-objects" title="Link to this heading">#</a></h3>
+<p>Monitors, Loadshapes, TShapes, and PriceShapes can be plotted.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+plot loadshape object=commercial_sm c1=red
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/de1af7485d23260913012b1193b9565091d0186db2be44396ffa21c895143438.png" src="../_images/de1af7485d23260913012b1193b9565091d0186db2be44396ffa21c895143438.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+new monitor.montest element=line.mdv201_connector
+batchedit load..* daily=commercial_sm
+solve mode=daily
+plot monitor object=montest
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4d052511bfd95b4e56bf4e06eaef05cb7cd2f48cbcda8cd735e675b3aed2c322.png" src="../_images/4d052511bfd95b4e56bf4e06eaef05cb7cd2f48cbcda8cd735e675b3aed2c322.png" />
+</div>
+</div>
+</section>
+<section id="di-plot-and-yearlycurvescommands">
+<h3><code class="docutils literal notranslate"><span class="pre">DI_plot</span></code> and <code class="docutils literal notranslate"><span class="pre">YearlyCurves</span></code>commands<a class="headerlink" href="#di-plot-and-yearlycurvescommands" title="Link to this heading">#</a></h3>
+<p>Note: some of these plot commands don’t seem to work with modern versions of the official OpenDSS.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s disable plotting to suppress some of the output from the original script (Run_YearlySym.dss)</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">AllowEditor</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+
+// the original script already runs a scenario
+redirect electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/Run_YearlySim.dss
+
+// we need a second scenario to compare later
+Set CaseName=another
+batchedit load..*  yearly=default
+set mode=yearly number=720
+Set Year=1
+solve
+closedi
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+di_plot case=16Nov2011 registers=(9, 11) peak=y meter=DI_Totals
+di_plot case=16Nov2011 registers=(9, 11) peak=n meter=DI_Totals
+di_plot case=another registers=(9, 11) peak=n meter=DI_Totals
+YearlyCurves cases=(16Nov2011, another) registers=(9, 11) meter=Totals
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b39b4a769ebf316150789e14c7548aee724c61b26b7753cd68c8f62d06430ae7.png" src="../_images/b39b4a769ebf316150789e14c7548aee724c61b26b7753cd68c8f62d06430ae7.png" />
+<img alt="../_images/9d905307a28357bb0fa1336e5e51758dac9b1257166145e63a950c8613ccdc16.png" src="../_images/9d905307a28357bb0fa1336e5e51758dac9b1257166145e63a950c8613ccdc16.png" />
+<img alt="../_images/7a50d738e7d47195de7cb80371a49db4ffddf223b77b4914fbf2bd314b8ae12d.png" src="../_images/7a50d738e7d47195de7cb80371a49db4ffddf223b77b4914fbf2bd314b8ae12d.png" />
+<img alt="../_images/38bae003dc8f352315e1daf1691335a91e26410576ab1c4603872110a58b8f4c.png" src="../_images/38bae003dc8f352315e1daf1691335a91e26410576ab1c4603872110a58b8f4c.png" />
+</div>
+</div>
+</section>
+<section id="meter-zone-plot">
+<h3>Meter <code class="docutils literal notranslate"><span class="pre">Zone</span></code> plot<a class="headerlink" href="#meter-zone-plot" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+Plot type=zone object=feeder quantity=power max=2000
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d5d7b6705b64a1326d2acbecaa69cda124625c03847fb0f689d80a5ec3871ec1.png" src="../_images/d5d7b6705b64a1326d2acbecaa69cda124625c03847fb0f689d80a5ec3871ec1.png" />
+</div>
+</div>
+</section>
+<section id="matrix-plots">
+<h3>Matrix plots<a class="headerlink" href="#matrix-plots" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+calcincmatrix
+plot matrix incidence
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d88cc94b3a3b6e1fb6a038b1cb3277d93e0a09258251a26e59a2347c2445a611.png" src="../_images/d88cc94b3a3b6e1fb6a038b1cb3277d93e0a09258251a26e59a2347c2445a611.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+calclaplacian
+plot matrix laplacian
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0b1c4ac43071228b48bdbb570c659ef69524455c426c1d26bab56b71a64b65f0.png" src="../_images/0b1c4ac43071228b48bdbb570c659ef69524455c426c1d26bab56b71a64b65f0.png" />
+</div>
+</div>
+<p>If you wish to plot the Y matrix directly, you can use the sparse version and matplotlib’s <code class="docutils literal notranslate"><span class="pre">spy</span></code>. For another alternative, see <a class="github reference external" href="https://github.com/nschloe/betterspy">nschloe/betterspy</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csc_matrix</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">csc_matrix</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">YMatrix</span><span class="o">.</span><span class="n">GetCompressedYMatrix</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7f494479f210&gt;
+</pre></div>
+</div>
+<img alt="../_images/928e7e57b29cc9b6f9e39262b4720058acfb962ee4bb5e5ef5d2b9ff45bd2c2d.png" src="../_images/928e7e57b29cc9b6f9e39262b4720058acfb962ee4bb5e5ef5d2b9ff45bd2c2d.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="d-plots">
+<h2>3D plots<a class="headerlink" href="#d-plots" title="Link to this heading">#</a></h2>
+<p>Some plots also have 3D implementations similar to the ones available in OpenDSS Viewer (previously known as “OpenDSS Visualization Tool”).</p>
+<p>You can enable both 2D and 3D plots where available:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">plot3d</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot2d</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot profile&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/57469681ab9f4371b5051d1f0a29cce1e1eda8543d18d1272ba01a4b39fef93f.png" src="../_images/57469681ab9f4371b5051d1f0a29cce1e1eda8543d18d1272ba01a4b39fef93f.png" />
+<img alt="../_images/b9156fe58207e10df7169a92c0112c70f2e31bed02e6e2ab00a3e7c267230c08.png" src="../_images/b9156fe58207e10df7169a92c0112c70f2e31bed02e6e2ab00a3e7c267230c08.png" />
+</div>
+</div>
+<p>Or just the 3D plots:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">plot3d</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot2d</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+plot profile
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b9156fe58207e10df7169a92c0112c70f2e31bed02e6e2ab00a3e7c267230c08.png" src="../_images/b9156fe58207e10df7169a92c0112c70f2e31bed02e6e2ab00a3e7c267230c08.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+calcincmatrix
+plot matrix incidence
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4bfd5d9f4946fea0b8709d40582e8d0e82f26aaeb99d5f17402ad8d6e0318051.png" src="../_images/4bfd5d9f4946fea0b8709d40582e8d0e82f26aaeb99d5f17402ad8d6e0318051.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+calclaplacian
+plot matrix laplacian
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/685a519cd7922c11622a93f942d12ae4c6449fd2a60f5666ce4d3b287025bbf9.png" src="../_images/685a519cd7922c11622a93f942d12ae4c6449fd2a60f5666ce4d3b287025bbf9.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+plot scatter
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a16facdc77f4662efb1c31d6eb612ac260b8352a227e11ca4c95e871b86165bb.png" src="../_images/a16facdc77f4662efb1c31d6eb612ac260b8352a227e11ca4c95e871b86165bb.png" />
+</div>
+</div>
+</section>
+<section id="notebook-integration-text-csv-file-outputs">
+<h2>Notebook integration: text/CSV file outputs<a class="headerlink" href="#notebook-integration-text-csv-file-outputs" title="Link to this heading">#</a></h2>
+<p>Text outputs that would normally open in the editor are linked in the notebook instead. This allows the user to run a long script and then inspect the outputs more easily.</p>
+<p>We usually recommend using the <code class="docutils literal notranslate"><span class="pre">export</span></code> command instead of the <code class="docutils literal notranslate"><span class="pre">show</span></code> command since JupyterLab includes a CSV viewer. Disabling <code class="docutils literal notranslate"><span class="pre">AllowEditor</span></code> silences this output message on the notebook.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">AllowEditor</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+redirect electricdss-tst/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss
+set showexport=true
+export voltages
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><b>File output</b> ("/tmp/dss/dss_python/docs/examples/electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/IEEE13Nodeckt_EXP_VOLTAGES.csv"):&nbsp;<a href='electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/IEEE13Nodeckt_EXP_VOLTAGES.csv' target='_blank'>electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/IEEE13Nodeckt_EXP_VOLTAGES.csv</a><br></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">AllowEditor</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+export voltages
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="following-epri-dpv-doe-tutorial-pdf">
+<h2>Following <code class="docutils literal notranslate"><span class="pre">epri_dpv\DOE</span> <span class="pre">Tutorial.pdf</span></code><a class="headerlink" href="#following-epri-dpv-doe-tutorial-pdf" title="Link to this heading">#</a></h2>
+<p>For context, see <a class="reference external" href="https://sourceforge.net/p/electricdss/code/HEAD/tree/trunk/Version8/Distrib/EPRITestCircuits/epri_dpv/DOE%20Tutorial.pdf?format=raw"><code class="docutils literal notranslate"><span class="pre">EPRITestCircuits\epri_dpv\DOE</span> <span class="pre">Tutorial.pdf</span></code></a>.</p>
+<p>Note that some outputs changed since the original files are from 2013 and there have been changes on OpenDSS defaults and in the PVSystem model (the DSS files may have been updated too). The results presented here match the current OpenDSS release.</p>
+<p>Used here:</p>
+<ul class="simple">
+<li><p>circuit plots</p></li>
+<li><p>voltage profile plots</p></li>
+<li><p>daisy plot</p></li>
+<li><p>general data plot</p></li>
+<li><p>monitor plot</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">dss</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+cd electricdss-tst/Version8/Distrib/EPRITestCircuits/epri_dpv/J1/
+redirect &quot;Master_noPV.dss&quot;
+solve
+</pre></div>
+</div>
+</div>
+</div>
+<p>Plot Circuit Power flow</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+set markercode=24
+set markregulators=yes
+plot circuit power 1ph=3
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/fc3d60e31c696b584af837d661f1e0a7ff998e03277923e0fc733af71248a483.png" src="../_images/fc3d60e31c696b584af837d661f1e0a7ff998e03277923e0fc733af71248a483.png" />
+</div>
+</div>
+<p>Plot voltages</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+set emergvminpu=1.0
+set normvminpu=1.035
+plot circuit voltage
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/928c30415fdedff7d2021858e9c58c6cc3a4d28fe92e304fceb9227b36d0d5e6.png" src="../_images/928c30415fdedff7d2021858e9c58c6cc3a4d28fe92e304fceb9227b36d0d5e6.png" />
+</div>
+</div>
+<p>Plot profile</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+set normvminpu=0.95
+plot profile phases = primary
+plot profile phases = all
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a482a74d9414887853414b52bd76c6200631302f78be016cc14da876d1ce7049.png" src="../_images/a482a74d9414887853414b52bd76c6200631302f78be016cc14da876d1ce7049.png" />
+<img alt="../_images/05096d063123d59902d089623e1e2b580a4940fc3eb755dd63c472c3c21659cc.png" src="../_images/05096d063123d59902d089623e1e2b580a4940fc3eb755dd63c472c3c21659cc.png" />
+</div>
+</div>
+<p>Minimum load case (approximate)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+set emergvminpu=1.0
+set normvminpu=1.035
+set loadmult=.1
+solve
+plot profile phases = all
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/6705a1d5c69b110898eeb5db0209e09789b17635809ebcd8ddae95b309dad71c.png" src="../_images/6705a1d5c69b110898eeb5db0209e09789b17635809ebcd8ddae95b309dad71c.png" />
+</div>
+</div>
+<p>Add PV to Circuit Model</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+clear
+redirect Master_noPV.dss
+solve
+
+Redirect ExistingPV.dss
+Set DaisySize=2.5
+set markregulators=yes
+plot daisy power max=2000 dots=y buslist=(file=PVbuses.txt)
+
+solve
+plot profile phases=all
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d522f73455fa1dc27a06d40797a4167ff5c89a51e5b7c11e97f0363aa6e2e504.png" src="../_images/d522f73455fa1dc27a06d40797a4167ff5c89a51e5b7c11e97f0363aa6e2e504.png" />
+<img alt="../_images/6a63fa40e39b455bce6c987a96e4e5d5ddfb6377eeb1de97cac814fa152df5ea.png" src="../_images/6a63fa40e39b455bce6c987a96e4e5d5ddfb6377eeb1de97cac814fa152df5ea.png" />
+</div>
+</div>
+<p>Compare saved voltages to current case solved</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+redirect &quot;Master_noPV.dss&quot;
+solve
+save voltages
+Redirect ExistingPV.dss
+
+! Disable all controls
+set controlmode=off
+solve
+plot profile phases=all
+
+vdiff ! creates voltage difference file
+set markercode=24 nodewidth=2.5
+
+! Plot difference in voltage between no-PV and with-PV cases
+plot general quantity=1 max=3.5 min=0.0 C1=$0000FFFF C2=$000000FF dots=y labels=n object=electricdss-tst/Version8/Distrib/EPRITestCircuits/epri_dpv/J1/J1_VDIFF.txt
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/152dd7df323e8c0f26f4f52353037c8898ab7e8a5722ed03fcfc65876be6ef91.png" src="../_images/152dd7df323e8c0f26f4f52353037c8898ab7e8a5722ed03fcfc65876be6ef91.png" />
+<img alt="../_images/40b3b639d13c11c072c816d220e049bfb12ec519c5daf62a2b65c67a37cdc5da.png" src="../_images/40b3b639d13c11c072c816d220e049bfb12ec519c5daf62a2b65c67a37cdc5da.png" />
+</div>
+</div>
+<p>Run time series analysis</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+compile Master_noPV.dss
+Redirect ExistingPV.dss
+solve
+
+new loadshape.mypv npts=1800 sinterval=1 csvfile=StrwPlns1sec30min.csv
+new monitor.PVSite4VI element=PVSystem.3P_ExistingSite4 terminal=1 mode=0
+new monitor.PVSite4PQ element=Line.Site4_PV terminal=2 mode=65 ppolar=no
+
+! Assign same PV curve to all PV systems (single curve used for demo only)
+batchedit pvsystem..* daily=mypv
+
+solve mode=daily stepsize=1s number=1800
+
+batchedit pvsystem..* pf=-0.98
+
+! Plotting
+plot monitor object=pvsite4vi channels=(1 )
+plot monitor object=pvsite4pq channels=(1 )
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/48027e3cb2cbd22cc29201533e8abb35c19b1c8d6adc991daa807de9d39bcc0c.png" src="../_images/48027e3cb2cbd22cc29201533e8abb35c19b1c8d6adc991daa807de9d39bcc0c.png" />
+<img alt="../_images/d019102656bbb826fcf38990ae74e534ab244db9a72718f32d79247d4cdc242c.png" src="../_images/d019102656bbb826fcf38990ae74e534ab244db9a72718f32d79247d4cdc242c.png" />
+</div>
+</div>
+<p>Restore the current dir in the DSS engine</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+cd ../../../../../..
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="running-the-ieee123-sample-script">
+<h2>Running the IEEE123 sample script<a class="headerlink" href="#running-the-ieee123-sample-script" title="Link to this heading">#</a></h2>
+<p>This is one of the OpenDSS sample scripts. We invite users to run the same files on the official OpenDSS to compare and validate the output here.
+For file outputs, note that if the circuit or casename are not changed, the previous files are overwritten (just like in the official OpenDSS).
+We could modify the script to address that, but let’s focus on the plots for now. A future release may handle reports better.</p>
+<p>If you wish to inspect the scripts, uncomment the contents of the following cell:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># from pathlib import Path</span>
+<span class="c1"># print(Path(&#39;./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/Run_IEEE123Bus.DSS&#39;).read_text())</span>
+<span class="c1"># print(Path(&#39;./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/CircuitPlottingScripts.dss&#39;).read_text())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">dss</span>
+redirect ./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/Run_IEEE123Bus.DSS
+redirect ./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/CircuitPlottingScripts.dss
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/480470e4a7fece115946e19b2909adef721a0826a36990ee87735ab9acdd6a4c.png" src="../_images/480470e4a7fece115946e19b2909adef721a0826a36990ee87735ab9acdd6a4c.png" />
+<img alt="../_images/d3f9eec0fc6847cb38a580d73afee4ef333d6cc5b2a0e6073131fd0f3e39709b.png" src="../_images/d3f9eec0fc6847cb38a580d73afee4ef333d6cc5b2a0e6073131fd0f3e39709b.png" />
+<img alt="../_images/4319da8cee025f2e1bbd042e6fb2a045fa74f6bf35ecb1d4d9ab7fe0987d886d.png" src="../_images/4319da8cee025f2e1bbd042e6fb2a045fa74f6bf35ecb1d4d9ab7fe0987d886d.png" />
+<img alt="../_images/4d7a12ff2db82b27ba0818d7b913c1b7a0f023d519082062c381878952122658.png" src="../_images/4d7a12ff2db82b27ba0818d7b913c1b7a0f023d519082062c381878952122658.png" />
+<img alt="../_images/ca4713d2c7c9188e7218c970e79b2f12ce5372d4599b090f20f84d7c25ef4f75.png" src="../_images/ca4713d2c7c9188e7218c970e79b2f12ce5372d4599b090f20f84d7c25ef4f75.png" />
+<img alt="../_images/f3b0a0f0fb2af4eec8e9b7f9acc2ed7f9c0071f163b2584d29d7033856f8cde1.png" src="../_images/f3b0a0f0fb2af4eec8e9b7f9acc2ed7f9c0071f163b2584d29d7033856f8cde1.png" />
+<img alt="../_images/7682be5fabe1b16070eaf0c6e154ef20e8ed4107a851e2a5dbbf865364115c70.png" src="../_images/7682be5fabe1b16070eaf0c6e154ef20e8ed4107a851e2a5dbbf865364115c70.png" />
+<img alt="../_images/8aaca61bfbcb4aa98a2724b98cc078b8212db35ee216628a1f786d6af42a8ee5.png" src="../_images/8aaca61bfbcb4aa98a2724b98cc078b8212db35ee216628a1f786d6af42a8ee5.png" />
+</div>
+</div>
+</section>
+<section id="saving-the-outputs">
+<h2>Saving the outputs<a class="headerlink" href="#saving-the-outputs" title="Link to this heading">#</a></h2>
+<p>Currently we don’t provide a way to autosave the outputs, especially since a notebook already comprises the basics of that functionality.</p>
+<p>If you think autosaving to separate files would be good for users in general, please voice your opinion by opening an issue at <a class="github reference external" href="https://github.com/dss-extensions/dss_python">dss-extensions/dss_python</a></p>
+<p>On a notebook, to manually save, you can disable the auto-show option. This will keep the figures open so you can interact with them before discarding the results. You will note that the figures are still automatically shown, but the output order may change (that’s why we don’t use <code class="docutils literal notranslate"><span class="pre">show=False</span></code> as a default).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot circuit&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;circuit.svg&#39;</span><span class="p">)</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/90428da7ef98fbc600ec6398fa42bbef17cd8bb6081584863ba8dcf773f0815e.png" src="../_images/90428da7ef98fbc600ec6398fa42bbef17cd8bb6081584863ba8dcf773f0815e.png" />
+</div>
+</div>
+</section>
+<section id="customizing-the-figures">
+<h2>Customizing the figures<a class="headerlink" href="#customizing-the-figures" title="Link to this heading">#</a></h2>
+<p>The output can be customized in many ways:</p>
+<ul class="simple">
+<li><p>Exporting to third-party software (e.g. use Inkscape to complement SVG files)</p></li>
+<li><p>Through the DSS commands: enabling and choosing markers, colors, etc.</p></li>
+<li><p>Through matplotlib’s general options: see <a class="reference external" href="https://matplotlib.org/stable/tutorials/introductory/customizing.html">https://matplotlib.org/stable/tutorials/introductory/customizing.html</a> – you can set default fonts, sizes, and various other aspects of the figures.</p></li>
+<li><p>Through matplotlib’s API: adding custom elements to the intermediate output</p></li>
+</ul>
+<section id="applying-matplotlib-styles">
+<h3>Applying matplotlib styles<a class="headerlink" href="#applying-matplotlib-styles" title="Link to this heading">#</a></h3>
+<p>Here’s a short example of using different matplotlib styles. See also <a class="reference external" href="https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html">https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">dss</span>
+
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;redirect electricdss-tst/Version8/Distrib/EPRITestCircuits/ckt5/Run_ckt5.dss&#39;</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Solution</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">context</span><span class="p">(</span><span class="s1">&#39;dark_background&#39;</span><span class="p">):</span>
+    <span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot circuit c1=lime&#39;</span>
+    
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">context</span><span class="p">(</span><span class="s1">&#39;Solarize_Light2&#39;</span><span class="p">):</span>
+    <span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot circuit c1=red&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/029fadefc958d596b03adb94855c149da1d40afc1b343b7947740231c2a8339c.png" src="../_images/029fadefc958d596b03adb94855c149da1d40afc1b343b7947740231c2a8339c.png" />
+<img alt="../_images/6c4e932af713a1f9c2c06c89c79a453526415e56b1b03b39aed0c8392b452554.png" src="../_images/6c4e932af713a1f9c2c06c89c79a453526415e56b1b03b39aed0c8392b452554.png" />
+</div>
+</div>
+<p>For more styles, install SciencePlots (available through conda or pip): <a class="github reference external" href="https://github.com/garrettj403/SciencePlots">garrettj403/SciencePlots</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">scienceplots</span>
+    <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">context</span><span class="p">(</span><span class="s1">&#39;science&#39;</span><span class="p">):</span>
+        <span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot circuit c1=red&#39;</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="c1"># let&#39;s ignore if the user didn´t install SciencePlots</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="customizing-using-matplotlibs-api">
+<h3>Customizing using matplotlib’s API<a class="headerlink" href="#customizing-using-matplotlibs-api" title="Link to this heading">#</a></h3>
+<p>As in the previous example for saving the figure, we will disable auto-show so we can interact with the figures, and then add some extra elements.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">dss</span>
+
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># We&#39;ll use the EPRI ckt5 test circuit here</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;redirect electricdss-tst/Version8/Distrib/EPRITestCircuits/ckt5/Run_ckt5.dss&#39;</span>
+
+<span class="c1"># Select a bus</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;820&#39;</span>
+<span class="n">bus</span> <span class="o">=</span> <span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Buses</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">bus</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">bus</span><span class="o">.</span><span class="n">y</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Selected bus:&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected bus: 820
+</pre></div>
+</div>
+</div>
+</div>
+<p>As a reminder, if you just need to add a marker quickly, you could just use a simple bus marker:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;ClearBusMarkers&#39;</span> <span class="c1"># remove the previous marker</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;AddBusMarker Bus=</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> code=24 color=red size=5&#39;</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot circuit c1=$555555&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2babd21f2a031d8f1d4aa15a615c61dc91f0613ead1ef00c6d76252627aeefdf.png" src="../_images/2babd21f2a031d8f1d4aa15a615c61dc91f0613ead1ef00c6d76252627aeefdf.png" />
+</div>
+</div>
+<p>Alternatively, let’s customize the output to add a marker and some tiny histograms.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;ClearBusMarkers&#39;</span> <span class="c1"># remove the previous marker</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot circuit c1=$555555&#39;</span>
+        
+<span class="c1"># Point to the select bus</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something here</span><span class="se">\n</span><span class="s2">(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span>  <span class="n">y</span><span class="p">),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">4000</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">fc</span><span class="o">=</span><span class="s1">&#39;lightblue&#39;</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;larger&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkred&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># Show grid, hide the axis (spines and labels)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelleft</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Change the title and remove labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;CKT5 plot: customized through matplotlib&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add a few voltage histograms, one per phase</span>
+<span class="k">for</span> <span class="n">ph</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">inset_axes</span><span class="p">([</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.7</span> <span class="o">-</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="p">(</span><span class="n">ph</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;lightgray&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">AllNodeVmagPUByPhase</span><span class="p">(</span><span class="n">ph</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelleft</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Settings</span><span class="o">.</span><span class="n">NormVmaxpu</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Settings</span><span class="o">.</span><span class="n">NormVminpu</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Settings</span><span class="o">.</span><span class="n">EmergVminpu</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Settings</span><span class="o">.</span><span class="n">EmergVmaxpu</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">ph_name</span> <span class="o">=</span> <span class="s1">&#39;ABC&#39;</span><span class="p">[</span><span class="n">ph</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Phase </span><span class="si">{</span><span class="n">ph_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/edb115b59c21fedc0e58c832422104785866847e88faa7cdf93ad99d50630ca2.png" src="../_images/edb115b59c21fedc0e58c832422104785866847e88faa7cdf93ad99d50630ca2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Toggle auto-showing back</span>
+<span class="n">dss</span><span class="o">.</span><span class="n">Plotting</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../changelog.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">DSS-Python changelog</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="JSON.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">DSS-Extensions — JSON exports</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enabling-and-using-the-plotting-features">Enabling and using the plotting features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-using-only-dss-python">Example using only DSS-Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-using-opendssdirect-py">Example using OpenDSSDirect.py</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-ipython-integration-and-more">Jupyter, IPython integration and more</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#future-development">Future development</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-gallery">Example gallery</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-command"><code class="docutils literal notranslate"><span class="pre">Visualize</span></code> command</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#circuit-plots">Circuit plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#voltage-profile">Voltage profile</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-general-objects">Plotting general objects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#di-plot-and-yearlycurvescommands"><code class="docutils literal notranslate"><span class="pre">DI_plot</span></code> and <code class="docutils literal notranslate"><span class="pre">YearlyCurves</span></code>commands</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meter-zone-plot">Meter <code class="docutils literal notranslate"><span class="pre">Zone</span></code> plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-plots">Matrix plots</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-plots">3D plots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-integration-text-csv-file-outputs">Notebook integration: text/CSV file outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#following-epri-dpv-doe-tutorial-pdf">Following <code class="docutils literal notranslate"><span class="pre">epri_dpv\DOE</span> <span class="pre">Tutorial.pdf</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-ieee123-sample-script">Running the IEEE123 sample script</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-the-outputs">Saving the outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-the-figures">Customizing the figures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-matplotlib-styles">Applying matplotlib styles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-using-matplotlibs-api">Customizing using matplotlib’s API</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1001 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>dss.IMeters &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'apidocs/dss/dss.IMeters';</script>
+    <link rel="icon" href="../../_static/dssx.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="dss.IMonitors" href="dss.IMonitors.html" />
+    <link rel="prev" title="dss.ILoads" href="dss.ILoads.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">dss package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/apidocs/dss/dss.IMeters.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>dss.IMeters</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters"><code class="docutils literal notranslate"><span class="pre">IMeters</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AllBranchesInZone"><code class="docutils literal notranslate"><span class="pre">IMeters.AllBranchesInZone</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AllEndElements"><code class="docutils literal notranslate"><span class="pre">IMeters.AllEndElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AllNames"><code class="docutils literal notranslate"><span class="pre">IMeters.AllNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AllocFactors"><code class="docutils literal notranslate"><span class="pre">IMeters.AllocFactors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AvgRepairTime"><code class="docutils literal notranslate"><span class="pre">IMeters.AvgRepairTime</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CalcCurrent"><code class="docutils literal notranslate"><span class="pre">IMeters.CalcCurrent</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CloseAllDIFiles"><code class="docutils literal notranslate"><span class="pre">IMeters.CloseAllDIFiles()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Count"><code class="docutils literal notranslate"><span class="pre">IMeters.Count</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CountBranches"><code class="docutils literal notranslate"><span class="pre">IMeters.CountBranches</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CountEndElements"><code class="docutils literal notranslate"><span class="pre">IMeters.CountEndElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CustInterrupts"><code class="docutils literal notranslate"><span class="pre">IMeters.CustInterrupts</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.DIFilesAreOpen"><code class="docutils literal notranslate"><span class="pre">IMeters.DIFilesAreOpen</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.DoReliabilityCalc"><code class="docutils literal notranslate"><span class="pre">IMeters.DoReliabilityCalc()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.FaultRateXRepairHrs"><code class="docutils literal notranslate"><span class="pre">IMeters.FaultRateXRepairHrs</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.First"><code class="docutils literal notranslate"><span class="pre">IMeters.First</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.MeteredElement"><code class="docutils literal notranslate"><span class="pre">IMeters.MeteredElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.MeteredTerminal"><code class="docutils literal notranslate"><span class="pre">IMeters.MeteredTerminal</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Name"><code class="docutils literal notranslate"><span class="pre">IMeters.Name</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Next"><code class="docutils literal notranslate"><span class="pre">IMeters.Next</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.NumSectionBranches"><code class="docutils literal notranslate"><span class="pre">IMeters.NumSectionBranches</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.NumSectionCustomers"><code class="docutils literal notranslate"><span class="pre">IMeters.NumSectionCustomers</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.NumSections"><code class="docutils literal notranslate"><span class="pre">IMeters.NumSections</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.OCPDeviceType"><code class="docutils literal notranslate"><span class="pre">IMeters.OCPDeviceType</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.OpenAllDIFiles"><code class="docutils literal notranslate"><span class="pre">IMeters.OpenAllDIFiles()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Peakcurrent"><code class="docutils literal notranslate"><span class="pre">IMeters.Peakcurrent</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.RegisterNames"><code class="docutils literal notranslate"><span class="pre">IMeters.RegisterNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.RegisterValues"><code class="docutils literal notranslate"><span class="pre">IMeters.RegisterValues</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Reset"><code class="docutils literal notranslate"><span class="pre">IMeters.Reset()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.ResetAll"><code class="docutils literal notranslate"><span class="pre">IMeters.ResetAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SAIDI"><code class="docutils literal notranslate"><span class="pre">IMeters.SAIDI</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SAIFI"><code class="docutils literal notranslate"><span class="pre">IMeters.SAIFI</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SAIFIKW"><code class="docutils literal notranslate"><span class="pre">IMeters.SAIFIKW</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Sample"><code class="docutils literal notranslate"><span class="pre">IMeters.Sample()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SampleAll"><code class="docutils literal notranslate"><span class="pre">IMeters.SampleAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Save"><code class="docutils literal notranslate"><span class="pre">IMeters.Save()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SaveAll"><code class="docutils literal notranslate"><span class="pre">IMeters.SaveAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SectSeqIdx"><code class="docutils literal notranslate"><span class="pre">IMeters.SectSeqIdx</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SectTotalCust"><code class="docutils literal notranslate"><span class="pre">IMeters.SectTotalCust</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SeqListSize"><code class="docutils literal notranslate"><span class="pre">IMeters.SeqListSize</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SequenceIndex"><code class="docutils literal notranslate"><span class="pre">IMeters.SequenceIndex</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SetActiveSection"><code class="docutils literal notranslate"><span class="pre">IMeters.SetActiveSection()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SumBranchFltRates"><code class="docutils literal notranslate"><span class="pre">IMeters.SumBranchFltRates</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.TotalCustomers"><code class="docutils literal notranslate"><span class="pre">IMeters.TotalCustomers</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Totals"><code class="docutils literal notranslate"><span class="pre">IMeters.Totals</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.ZonePCE"><code class="docutils literal notranslate"><span class="pre">IMeters.ZonePCE</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.__init__"><code class="docutils literal notranslate"><span class="pre">IMeters.__init__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.__iter__"><code class="docutils literal notranslate"><span class="pre">IMeters.__iter__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.__len__"><code class="docutils literal notranslate"><span class="pre">IMeters.__len__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.idx"><code class="docutils literal notranslate"><span class="pre">IMeters.idx</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="module-dss.IMeters">
+<span id="dss-imeters"></span><h1><a class="reference internal" href="#module-dss.IMeters" title="dss.IMeters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a><a class="headerlink" href="#module-dss.IMeters" title="Link to this heading">#</a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table table-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.IMeters.IMeters" title="dss.IMeters.IMeters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IMeters</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dss.IMeters.</span></span><span class="sig-name descname"><span class="pre">IMeters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="dss._cffi_api_util.html#dss._cffi_api_util.Iterable" title="dss._cffi_api_util.Iterable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss._cffi_api_util.Iterable</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.AllBranchesInZone">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllBranchesInZone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.IMeters.IMeters.AllBranchesInZone" title="Link to this definition">#</a></dt>
+<dd><p>Wide string list of all branches in zone of the active EnergyMeter object.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllBranchesInZone.html">https://opendss.epri.com/AllBranchesInZone.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.AllEndElements">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllEndElements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.IMeters.IMeters.AllEndElements" title="Link to this definition">#</a></dt>
+<dd><p>Array of names of all zone end elements.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllEndElements.html">https://opendss.epri.com/AllEndElements.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.AllNames">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllNames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.IMeters.IMeters.AllNames" title="Link to this definition">#</a></dt>
+<dd><p>Array of all names of this object type</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.AllocFactors">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllocFactors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.IMeters.IMeters.AllocFactors" title="Link to this definition">#</a></dt>
+<dd><p>Array of doubles: set the phase allocation factors for the active meter.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllocFactors.html">https://opendss.epri.com/AllocFactors.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.AvgRepairTime">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AvgRepairTime</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IMeters.IMeters.AvgRepairTime" title="Link to this definition">#</a></dt>
+<dd><p>Average Repair time in this section of the meter zone</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AvgRepairTime.html">https://opendss.epri.com/AvgRepairTime.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.CalcCurrent">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CalcCurrent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.IMeters.IMeters.CalcCurrent" title="Link to this definition">#</a></dt>
+<dd><p>Set the magnitude of the real part of the Calculated Current (normally determined by solution) for the Meter to force some behavior on Load Allocation</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/CalcCurrent.html">https://opendss.epri.com/CalcCurrent.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.CloseAllDIFiles">
+<span class="sig-name descname"><span class="pre">CloseAllDIFiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.CloseAllDIFiles" title="Link to this definition">#</a></dt>
+<dd><p>Close All Demand Interval Files. Users are required to close the DI files at the end of a run.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/CloseAllDIFiles.html">https://opendss.epri.com/CloseAllDIFiles.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.Count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.Count" title="Link to this definition">#</a></dt>
+<dd><p>Number of objects of this type</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.CountBranches">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CountBranches</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.CountBranches" title="Link to this definition">#</a></dt>
+<dd><p>Number of branches in Active EnergyMeter zone. (Same as sequence list size)</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/CountBranches.html">https://opendss.epri.com/CountBranches.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.CountEndElements">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CountEndElements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.CountEndElements" title="Link to this definition">#</a></dt>
+<dd><p>Number of zone end elements in the active meter zone.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/CountEndElements.html">https://opendss.epri.com/CountEndElements.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.CustInterrupts">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CustInterrupts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IMeters.IMeters.CustInterrupts" title="Link to this definition">#</a></dt>
+<dd><p>Total customer interruptions for this Meter zone based on reliability calcs.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/CustInterrupts.html">https://opendss.epri.com/CustInterrupts.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.DIFilesAreOpen">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DIFilesAreOpen</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.IMeters.IMeters.DIFilesAreOpen" title="Link to this definition">#</a></dt>
+<dd><p>Global Flag in the DSS to indicate if Demand Interval (DI) files have been properly opened.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/DIFilesAreOpen.html">https://opendss.epri.com/DIFilesAreOpen.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.DoReliabilityCalc">
+<span class="sig-name descname"><span class="pre">DoReliabilityCalc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">AssumeRestoration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.DoReliabilityCalc" title="Link to this definition">#</a></dt>
+<dd><p>Calculate reliability indices</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/DoReliabilityCalc.html">https://opendss.epri.com/DoReliabilityCalc.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.FaultRateXRepairHrs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FaultRateXRepairHrs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IMeters.IMeters.FaultRateXRepairHrs" title="Link to this definition">#</a></dt>
+<dd><p>Sum of Fault Rate time Repair Hrs in this section of the meter zone</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/FaultRateXRepairHrs.html">https://opendss.epri.com/FaultRateXRepairHrs.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.First">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">First</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.First" title="Link to this definition">#</a></dt>
+<dd><p>Sets the first object of this type active. Returns 0 if none.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.MeteredElement">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MeteredElement</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.IMeters.IMeters.MeteredElement" title="Link to this definition">#</a></dt>
+<dd><p>Name of metered element</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/MeteredElement.html">https://opendss.epri.com/MeteredElement.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.MeteredTerminal">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MeteredTerminal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.MeteredTerminal" title="Link to this definition">#</a></dt>
+<dd><p>Number of Metered Terminal</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/MeteredTerminal.html">https://opendss.epri.com/MeteredTerminal.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.Name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.IMeters.IMeters.Name" title="Link to this definition">#</a></dt>
+<dd><p>Gets the current name or sets the active object of this type by name</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.Next">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Next</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.Next" title="Link to this definition">#</a></dt>
+<dd><p>Sets next object of this type active. Returns 0 if no more.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.NumSectionBranches">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumSectionBranches</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.NumSectionBranches" title="Link to this definition">#</a></dt>
+<dd><p>Number of branches (lines) in this section</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumSectionBranches.html">https://opendss.epri.com/NumSectionBranches.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.NumSectionCustomers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumSectionCustomers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.NumSectionCustomers" title="Link to this definition">#</a></dt>
+<dd><p>Number of Customers in the active section.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumSectionCustomers.html">https://opendss.epri.com/NumSectionCustomers.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.NumSections">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumSections</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.NumSections" title="Link to this definition">#</a></dt>
+<dd><p>Number of feeder sections in this meter’s zone</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumSections.html">https://opendss.epri.com/NumSections.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.OCPDeviceType">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OCPDeviceType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss.enums.OCPDevType</span></em><a class="headerlink" href="#dss.IMeters.IMeters.OCPDeviceType" title="Link to this definition">#</a></dt>
+<dd><p>Type of OCP device. 1=Fuse; 2=Recloser; 3=Relay</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/OCPDeviceType.html">https://opendss.epri.com/OCPDeviceType.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.OpenAllDIFiles">
+<span class="sig-name descname"><span class="pre">OpenAllDIFiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.OpenAllDIFiles" title="Link to this definition">#</a></dt>
+<dd><p>Open Demand Interval (DI) files</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/OpenAllDIFiles.html">https://opendss.epri.com/OpenAllDIFiles.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.Peakcurrent">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Peakcurrent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.IMeters.IMeters.Peakcurrent" title="Link to this definition">#</a></dt>
+<dd><p>Array of doubles to set values of Peak Current property</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Peakcurrent.html">https://opendss.epri.com/Peakcurrent.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.RegisterNames">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RegisterNames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.IMeters.IMeters.RegisterNames" title="Link to this definition">#</a></dt>
+<dd><p>Array of strings containing the names of the registers.</p>
+<p>See also the enum <code class="docutils literal notranslate"><span class="pre">EnergyMeterRegisters</span></code> for the standard register names.
+Besides those listed in the enumeration, users may need to check <code class="docutils literal notranslate"><span class="pre">RegisterNames</span></code>
+in order to find a specific register index at runtime.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/RegisterNames1.html">https://opendss.epri.com/RegisterNames1.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.RegisterValues">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RegisterValues</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.IMeters.IMeters.RegisterValues" title="Link to this definition">#</a></dt>
+<dd><p>Array of all the values contained in the Meter registers for the active Meter.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/RegisterValues1.html">https://opendss.epri.com/RegisterValues1.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.Reset">
+<span class="sig-name descname"><span class="pre">Reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.Reset" title="Link to this definition">#</a></dt>
+<dd><p>Resets registers of active meter.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Reset2.html">https://opendss.epri.com/Reset2.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.ResetAll">
+<span class="sig-name descname"><span class="pre">ResetAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.ResetAll" title="Link to this definition">#</a></dt>
+<dd><p>Resets registers of all meter objects.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ResetAll.html">https://opendss.epri.com/ResetAll.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SAIDI">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SAIDI</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IMeters.IMeters.SAIDI" title="Link to this definition">#</a></dt>
+<dd><p>SAIDI for this meter’s zone. Execute DoReliabilityCalc first.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SAIDI.html">https://opendss.epri.com/SAIDI.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SAIFI">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SAIFI</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IMeters.IMeters.SAIFI" title="Link to this definition">#</a></dt>
+<dd><p>Returns SAIFI for this meter’s Zone. Execute Reliability Calc method first.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SAIFI.html">https://opendss.epri.com/SAIFI.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SAIFIKW">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SAIFIKW</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IMeters.IMeters.SAIFIKW" title="Link to this definition">#</a></dt>
+<dd><p>SAIFI based on kW rather than number of customers. Get after reliability calcs.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SAIFIKW.html">https://opendss.epri.com/SAIFIKW.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.Sample">
+<span class="sig-name descname"><span class="pre">Sample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.Sample" title="Link to this definition">#</a></dt>
+<dd><p>Forces active Meter to take a sample.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Sample1.html">https://opendss.epri.com/Sample1.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SampleAll">
+<span class="sig-name descname"><span class="pre">SampleAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.SampleAll" title="Link to this definition">#</a></dt>
+<dd><p>Causes all EnergyMeter objects to take a sample at the present time.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SampleAll.html">https://opendss.epri.com/SampleAll.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.Save">
+<span class="sig-name descname"><span class="pre">Save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.Save" title="Link to this definition">#</a></dt>
+<dd><p>Saves meter register values.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Save.html">https://opendss.epri.com/Save.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SaveAll">
+<span class="sig-name descname"><span class="pre">SaveAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.SaveAll" title="Link to this definition">#</a></dt>
+<dd><p>Save All EnergyMeter objects</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SaveAll.html">https://opendss.epri.com/SaveAll.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SectSeqIdx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SectSeqIdx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.SectSeqIdx" title="Link to this definition">#</a></dt>
+<dd><p>SequenceIndex of the branch at the head of this section</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SectSeqIdx.html">https://opendss.epri.com/SectSeqIdx.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SectTotalCust">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SectTotalCust</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.SectTotalCust" title="Link to this definition">#</a></dt>
+<dd><p>Total Customers downline from this section</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SectTotalCust.html">https://opendss.epri.com/SectTotalCust.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SeqListSize">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SeqListSize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.SeqListSize" title="Link to this definition">#</a></dt>
+<dd><p>Size of the Sequence List</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SeqListSize.html">https://opendss.epri.com/SeqListSize.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SequenceIndex">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SequenceIndex</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.SequenceIndex" title="Link to this definition">#</a></dt>
+<dd><p>Get/set Index into Meter’s SequenceList that contains branch pointers in lexical order.
+Earlier index guaranteed to be upline from later index. Sets PDelement active.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SequenceIndex.html">https://opendss.epri.com/SequenceIndex.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SetActiveSection">
+<span class="sig-name descname"><span class="pre">SetActiveSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SectIdx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.SetActiveSection" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.SumBranchFltRates">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SumBranchFltRates</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IMeters.IMeters.SumBranchFltRates" title="Link to this definition">#</a></dt>
+<dd><p>Sum of the branch fault rates in this section of the meter’s zone</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SumBranchFltRates.html">https://opendss.epri.com/SumBranchFltRates.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.TotalCustomers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TotalCustomers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.TotalCustomers" title="Link to this definition">#</a></dt>
+<dd><p>Total Number of customers in this zone (downline from the EnergyMeter)</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/TotalCustomers.html">https://opendss.epri.com/TotalCustomers.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.Totals">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Totals</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.IMeters.IMeters.Totals" title="Link to this definition">#</a></dt>
+<dd><p>Totals of all registers of all meters</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Totals.html">https://opendss.epri.com/Totals.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.ZonePCE">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ZonePCE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.IMeters.IMeters.ZonePCE" title="Link to this definition">#</a></dt>
+<dd><p>Returns the list of all PCE within the area covered by the energy meter</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ZonePCE.html">https://opendss.epri.com/ZonePCE.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IMeters.IMeters.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="dss._cffi_api_util.html#dss._cffi_api_util.Iterable" title="dss._cffi_api_util.Iterable"><span class="pre">dss._cffi_api_util.Iterable</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dss.IMeters.IMeters.__iter__" title="Link to this definition">#</a></dt>
+<dd><p>Get an iterator of the object collection.</p>
+<p>Note that OpenDSS, via the classic APIs, only allow a single object of a specific type
+to be activated. That is, you cannot use references of distinct objects and interact
+with both at the same time, or keep a reference to use later. You need to reactivate
+the target object or ensure it is the active one.</p>
+<p>For an alternative, consider using our AltDSS-Python package.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.IMeters.IMeters.__len__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.IMeters.IMeters.idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IMeters.IMeters.idx" title="Link to this definition">#</a></dt>
+<dd><p>Gets the current index or sets the active object of this type by index</p>
+<p>While the official API included this for some classes, this is an
+API Extension for:</p>
+<ul class="simple">
+<li><p>Capacitors</p></li>
+<li><p>CapControls</p></li>
+<li><p>ISources</p></li>
+<li><p>LineCodes</p></li>
+<li><p>Lines</p></li>
+<li><p>LoadShapes</p></li>
+<li><p>Meters</p></li>
+<li><p>Monitors</p></li>
+<li><p>RegControls</p></li>
+<li><p>Sensors</p></li>
+<li><p>SwtControls</p></li>
+<li><p>Transformers</p></li>
+<li><p>Vsources</p></li>
+<li><p>XYCurves</p></li>
+</ul>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dss.ILoads.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dss.IMonitors.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters"><code class="docutils literal notranslate"><span class="pre">IMeters</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AllBranchesInZone"><code class="docutils literal notranslate"><span class="pre">IMeters.AllBranchesInZone</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AllEndElements"><code class="docutils literal notranslate"><span class="pre">IMeters.AllEndElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AllNames"><code class="docutils literal notranslate"><span class="pre">IMeters.AllNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AllocFactors"><code class="docutils literal notranslate"><span class="pre">IMeters.AllocFactors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.AvgRepairTime"><code class="docutils literal notranslate"><span class="pre">IMeters.AvgRepairTime</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CalcCurrent"><code class="docutils literal notranslate"><span class="pre">IMeters.CalcCurrent</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CloseAllDIFiles"><code class="docutils literal notranslate"><span class="pre">IMeters.CloseAllDIFiles()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Count"><code class="docutils literal notranslate"><span class="pre">IMeters.Count</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CountBranches"><code class="docutils literal notranslate"><span class="pre">IMeters.CountBranches</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CountEndElements"><code class="docutils literal notranslate"><span class="pre">IMeters.CountEndElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.CustInterrupts"><code class="docutils literal notranslate"><span class="pre">IMeters.CustInterrupts</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.DIFilesAreOpen"><code class="docutils literal notranslate"><span class="pre">IMeters.DIFilesAreOpen</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.DoReliabilityCalc"><code class="docutils literal notranslate"><span class="pre">IMeters.DoReliabilityCalc()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.FaultRateXRepairHrs"><code class="docutils literal notranslate"><span class="pre">IMeters.FaultRateXRepairHrs</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.First"><code class="docutils literal notranslate"><span class="pre">IMeters.First</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.MeteredElement"><code class="docutils literal notranslate"><span class="pre">IMeters.MeteredElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.MeteredTerminal"><code class="docutils literal notranslate"><span class="pre">IMeters.MeteredTerminal</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Name"><code class="docutils literal notranslate"><span class="pre">IMeters.Name</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Next"><code class="docutils literal notranslate"><span class="pre">IMeters.Next</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.NumSectionBranches"><code class="docutils literal notranslate"><span class="pre">IMeters.NumSectionBranches</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.NumSectionCustomers"><code class="docutils literal notranslate"><span class="pre">IMeters.NumSectionCustomers</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.NumSections"><code class="docutils literal notranslate"><span class="pre">IMeters.NumSections</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.OCPDeviceType"><code class="docutils literal notranslate"><span class="pre">IMeters.OCPDeviceType</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.OpenAllDIFiles"><code class="docutils literal notranslate"><span class="pre">IMeters.OpenAllDIFiles()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Peakcurrent"><code class="docutils literal notranslate"><span class="pre">IMeters.Peakcurrent</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.RegisterNames"><code class="docutils literal notranslate"><span class="pre">IMeters.RegisterNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.RegisterValues"><code class="docutils literal notranslate"><span class="pre">IMeters.RegisterValues</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Reset"><code class="docutils literal notranslate"><span class="pre">IMeters.Reset()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.ResetAll"><code class="docutils literal notranslate"><span class="pre">IMeters.ResetAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SAIDI"><code class="docutils literal notranslate"><span class="pre">IMeters.SAIDI</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SAIFI"><code class="docutils literal notranslate"><span class="pre">IMeters.SAIFI</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SAIFIKW"><code class="docutils literal notranslate"><span class="pre">IMeters.SAIFIKW</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Sample"><code class="docutils literal notranslate"><span class="pre">IMeters.Sample()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SampleAll"><code class="docutils literal notranslate"><span class="pre">IMeters.SampleAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Save"><code class="docutils literal notranslate"><span class="pre">IMeters.Save()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SaveAll"><code class="docutils literal notranslate"><span class="pre">IMeters.SaveAll()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SectSeqIdx"><code class="docutils literal notranslate"><span class="pre">IMeters.SectSeqIdx</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SectTotalCust"><code class="docutils literal notranslate"><span class="pre">IMeters.SectTotalCust</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SeqListSize"><code class="docutils literal notranslate"><span class="pre">IMeters.SeqListSize</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SequenceIndex"><code class="docutils literal notranslate"><span class="pre">IMeters.SequenceIndex</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SetActiveSection"><code class="docutils literal notranslate"><span class="pre">IMeters.SetActiveSection()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.SumBranchFltRates"><code class="docutils literal notranslate"><span class="pre">IMeters.SumBranchFltRates</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.TotalCustomers"><code class="docutils literal notranslate"><span class="pre">IMeters.TotalCustomers</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.Totals"><code class="docutils literal notranslate"><span class="pre">IMeters.Totals</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.ZonePCE"><code class="docutils literal notranslate"><span class="pre">IMeters.ZonePCE</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.__init__"><code class="docutils literal notranslate"><span class="pre">IMeters.__init__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.__iter__"><code class="docutils literal notranslate"><span class="pre">IMeters.__iter__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.__len__"><code class="docutils literal notranslate"><span class="pre">IMeters.__len__()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.IMeters.IMeters.idx"><code class="docutils literal notranslate"><span class="pre">IMeters.idx</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

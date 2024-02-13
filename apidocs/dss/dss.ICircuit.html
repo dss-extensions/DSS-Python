@@ -1,0 +1,1366 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>dss.ICircuit &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'apidocs/dss/dss.ICircuit';</script>
+    <link rel="icon" href="../../_static/dssx.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="dss.ICktElement" href="dss.ICktElement.html" />
+    <link rel="prev" title="dss.ICapacitors" href="dss.ICapacitors.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">dss package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/apidocs/dss/dss.ICircuit.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>dss.ICircuit</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit"><code class="docutils literal notranslate"><span class="pre">ICircuit</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveBus"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveBus</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveCktElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveCktElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveClass"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveClass</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveDSSElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveDSSElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusDistances"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusDistances</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusNames"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusVmag"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusVmag</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusVmagPu"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusVmagPu</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusVolts"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusVolts</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllElementLosses"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllElementLosses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllElementNames"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllElementNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeDistances"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeDistances</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeDistancesByPhase"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeDistancesByPhase()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeNames"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeNamesByPhase"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeNamesByPhase()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeVmagByPhase"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeVmagByPhase()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeVmagPUByPhase"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeVmagPUByPhase()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Buses"><code class="docutils literal notranslate"><span class="pre">ICircuit.Buses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.CNData"><code class="docutils literal notranslate"><span class="pre">ICircuit.CNData</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.CapControls"><code class="docutils literal notranslate"><span class="pre">ICircuit.CapControls</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Capacitors"><code class="docutils literal notranslate"><span class="pre">ICircuit.Capacitors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Capacity"><code class="docutils literal notranslate"><span class="pre">ICircuit.Capacity()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.CktElements"><code class="docutils literal notranslate"><span class="pre">ICircuit.CktElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.CtrlQueue"><code class="docutils literal notranslate"><span class="pre">ICircuit.CtrlQueue</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.DSSim_Coms"><code class="docutils literal notranslate"><span class="pre">ICircuit.DSSim_Coms</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Disable"><code class="docutils literal notranslate"><span class="pre">ICircuit.Disable()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ElementLosses"><code class="docutils literal notranslate"><span class="pre">ICircuit.ElementLosses()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Enable"><code class="docutils literal notranslate"><span class="pre">ICircuit.Enable()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.EndOfTimeStepUpdate"><code class="docutils literal notranslate"><span class="pre">ICircuit.EndOfTimeStepUpdate()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.FirstElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.FirstElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.FirstPCElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.FirstPCElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.FirstPDElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.FirstPDElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.FromJSON"><code class="docutils literal notranslate"><span class="pre">ICircuit.FromJSON()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Fuses"><code class="docutils literal notranslate"><span class="pre">ICircuit.Fuses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.GICSources"><code class="docutils literal notranslate"><span class="pre">ICircuit.GICSources</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Generators"><code class="docutils literal notranslate"><span class="pre">ICircuit.Generators</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ISources"><code class="docutils literal notranslate"><span class="pre">ICircuit.ISources</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Isources"><code class="docutils literal notranslate"><span class="pre">ICircuit.Isources</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LineCodes"><code class="docutils literal notranslate"><span class="pre">ICircuit.LineCodes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LineGeometries"><code class="docutils literal notranslate"><span class="pre">ICircuit.LineGeometries</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LineLosses"><code class="docutils literal notranslate"><span class="pre">ICircuit.LineLosses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LineSpacings"><code class="docutils literal notranslate"><span class="pre">ICircuit.LineSpacings</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Lines"><code class="docutils literal notranslate"><span class="pre">ICircuit.Lines</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LoadShapes"><code class="docutils literal notranslate"><span class="pre">ICircuit.LoadShapes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Loads"><code class="docutils literal notranslate"><span class="pre">ICircuit.Loads</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Losses"><code class="docutils literal notranslate"><span class="pre">ICircuit.Losses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Meters"><code class="docutils literal notranslate"><span class="pre">ICircuit.Meters</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Monitors"><code class="docutils literal notranslate"><span class="pre">ICircuit.Monitors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Name"><code class="docutils literal notranslate"><span class="pre">ICircuit.Name</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NextElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.NextElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NextPCElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.NextPCElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NextPDElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.NextPDElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NumBuses"><code class="docutils literal notranslate"><span class="pre">ICircuit.NumBuses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NumCktElements"><code class="docutils literal notranslate"><span class="pre">ICircuit.NumCktElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NumNodes"><code class="docutils literal notranslate"><span class="pre">ICircuit.NumNodes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.PDElements"><code class="docutils literal notranslate"><span class="pre">ICircuit.PDElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.PVSystems"><code class="docutils literal notranslate"><span class="pre">ICircuit.PVSystems</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Parallel"><code class="docutils literal notranslate"><span class="pre">ICircuit.Parallel</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ParentPDElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.ParentPDElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Reactors"><code class="docutils literal notranslate"><span class="pre">ICircuit.Reactors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Reclosers"><code class="docutils literal notranslate"><span class="pre">ICircuit.Reclosers</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ReduceCkt"><code class="docutils literal notranslate"><span class="pre">ICircuit.ReduceCkt</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.RegControls"><code class="docutils literal notranslate"><span class="pre">ICircuit.RegControls</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Relays"><code class="docutils literal notranslate"><span class="pre">ICircuit.Relays</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Sample"><code class="docutils literal notranslate"><span class="pre">ICircuit.Sample()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Save"><code class="docutils literal notranslate"><span class="pre">ICircuit.Save()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SaveSample"><code class="docutils literal notranslate"><span class="pre">ICircuit.SaveSample()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Sensors"><code class="docutils literal notranslate"><span class="pre">ICircuit.Sensors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SetActiveBus"><code class="docutils literal notranslate"><span class="pre">ICircuit.SetActiveBus()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SetActiveBusi"><code class="docutils literal notranslate"><span class="pre">ICircuit.SetActiveBusi()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SetActiveClass"><code class="docutils literal notranslate"><span class="pre">ICircuit.SetActiveClass()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SetActiveElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.SetActiveElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Settings"><code class="docutils literal notranslate"><span class="pre">ICircuit.Settings</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Solution"><code class="docutils literal notranslate"><span class="pre">ICircuit.Solution</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Storages"><code class="docutils literal notranslate"><span class="pre">ICircuit.Storages</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SubstationLosses"><code class="docutils literal notranslate"><span class="pre">ICircuit.SubstationLosses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SwtControls"><code class="docutils literal notranslate"><span class="pre">ICircuit.SwtControls</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SystemY"><code class="docutils literal notranslate"><span class="pre">ICircuit.SystemY</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.TSData"><code class="docutils literal notranslate"><span class="pre">ICircuit.TSData</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ToJSON"><code class="docutils literal notranslate"><span class="pre">ICircuit.ToJSON()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Topology"><code class="docutils literal notranslate"><span class="pre">ICircuit.Topology</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.TotalPower"><code class="docutils literal notranslate"><span class="pre">ICircuit.TotalPower</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Transformers"><code class="docutils literal notranslate"><span class="pre">ICircuit.Transformers</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.UpdateStorage"><code class="docutils literal notranslate"><span class="pre">ICircuit.UpdateStorage()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Vsources"><code class="docutils literal notranslate"><span class="pre">ICircuit.Vsources</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.WireData"><code class="docutils literal notranslate"><span class="pre">ICircuit.WireData</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.XYCurves"><code class="docutils literal notranslate"><span class="pre">ICircuit.XYCurves</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.YCurrents"><code class="docutils literal notranslate"><span class="pre">ICircuit.YCurrents</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.YNodeOrder"><code class="docutils literal notranslate"><span class="pre">ICircuit.YNodeOrder</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.YNodeVarray"><code class="docutils literal notranslate"><span class="pre">ICircuit.YNodeVarray</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.__init__"><code class="docutils literal notranslate"><span class="pre">ICircuit.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="module-dss.ICircuit">
+<span id="dss-icircuit"></span><h1><a class="reference internal" href="#module-dss.ICircuit" title="dss.ICircuit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a><a class="headerlink" href="#module-dss.ICircuit" title="Link to this heading">#</a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table table-left">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dss.ICircuit.ICircuit" title="dss.ICircuit.ICircuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ICircuit</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dss.ICircuit.</span></span><span class="sig-name descname"><span class="pre">ICircuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ICircuit.ICircuit" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="dss._cffi_api_util.html#dss._cffi_api_util.Base" title="dss._cffi_api_util.Base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss._cffi_api_util.Base</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ActiveBus">
+<span class="sig-name descname"><span class="pre">ActiveBus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IBus.html#dss.IBus.IBus" title="dss.IBus.IBus"><span class="pre">dss.IBus.IBus</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.ActiveBus" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ActiveCktElement">
+<span class="sig-name descname"><span class="pre">ActiveCktElement</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ICktElement.html#dss.ICktElement.ICktElement" title="dss.ICktElement.ICktElement"><span class="pre">dss.ICktElement.ICktElement</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.ActiveCktElement" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ActiveClass">
+<span class="sig-name descname"><span class="pre">ActiveClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IActiveClass.html#dss.IActiveClass.IActiveClass" title="dss.IActiveClass.IActiveClass"><span class="pre">dss.IActiveClass.IActiveClass</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.ActiveClass" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ActiveDSSElement">
+<span class="sig-name descname"><span class="pre">ActiveDSSElement</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IDSSElement.html#dss.IDSSElement.IDSSElement" title="dss.IDSSElement.IDSSElement"><span class="pre">dss.IDSSElement.IDSSElement</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.ActiveDSSElement" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ActiveElement">
+<span class="sig-name descname"><span class="pre">ActiveElement</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ICktElement.html#dss.ICktElement.ICktElement" title="dss.ICktElement.ICktElement"><span class="pre">dss.ICktElement.ICktElement</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.ActiveElement" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllBusDistances">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllBusDistances</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.AllBusDistances" title="Link to this definition">#</a></dt>
+<dd><p>Returns distance from each bus to parent EnergyMeter. Corresponds to sequence in AllBusNames.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllBusDistances.html">https://opendss.epri.com/AllBusDistances.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllBusNames">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllBusNames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.AllBusNames" title="Link to this definition">#</a></dt>
+<dd><p>Array of strings containing names of all buses in circuit (see AllNodeNames).</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllBusNames.html">https://opendss.epri.com/AllBusNames.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllBusVmag">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllBusVmag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.AllBusVmag" title="Link to this definition">#</a></dt>
+<dd><p>Array of magnitudes (doubles) of voltages at all buses</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllBusVmag.html">https://opendss.epri.com/AllBusVmag.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllBusVmagPu">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllBusVmagPu</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.AllBusVmagPu" title="Link to this definition">#</a></dt>
+<dd><p>Double Array of all bus voltages (each node) magnitudes in Per unit</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllBusVmagPu.html">https://opendss.epri.com/AllBusVmagPu.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllBusVolts">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllBusVolts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.AllBusVolts" title="Link to this definition">#</a></dt>
+<dd><p>Complex array of all bus, node voltages from most recent solution</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllBusVolts.html">https://opendss.epri.com/AllBusVolts.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllElementLosses">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllElementLosses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.AllElementLosses" title="Link to this definition">#</a></dt>
+<dd><p>Array of total losses (complex) in each circuit element</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllElementLosses.html">https://opendss.epri.com/AllElementLosses.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllElementNames">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllElementNames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.AllElementNames" title="Link to this definition">#</a></dt>
+<dd><p>Array of strings containing Full Name of all elements.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllElementNames.html">https://opendss.epri.com/AllElementNames.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllNodeDistances">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllNodeDistances</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64Array</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.AllNodeDistances" title="Link to this definition">#</a></dt>
+<dd><p>Returns an array of distances from parent EnergyMeter for each Node. Corresponds to AllBusVMag sequence.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllNodeDistances.html">https://opendss.epri.com/AllNodeDistances.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllNodeDistancesByPhase">
+<span class="sig-name descname"><span class="pre">AllNodeDistancesByPhase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dss._types.Float64Array</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.AllNodeDistancesByPhase" title="Link to this definition">#</a></dt>
+<dd><p>Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllNodeNames">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AllNodeNames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.AllNodeNames" title="Link to this definition">#</a></dt>
+<dd><p>Array of strings containing full name of each node in system in same order as returned by AllBusVolts, etc.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/AllNodeNames.html">https://opendss.epri.com/AllNodeNames.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllNodeNamesByPhase">
+<span class="sig-name descname"><span class="pre">AllNodeNamesByPhase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.AllNodeNamesByPhase" title="Link to this definition">#</a></dt>
+<dd><p>Return array of strings of the node names for the By Phase criteria. Sequence corresponds to other ByPhase properties.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllNodeVmagByPhase">
+<span class="sig-name descname"><span class="pre">AllNodeVmagByPhase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dss._types.Float64Array</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.AllNodeVmagByPhase" title="Link to this definition">#</a></dt>
+<dd><p>Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.AllNodeVmagPUByPhase">
+<span class="sig-name descname"><span class="pre">AllNodeVmagPUByPhase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dss._types.Float64Array</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.AllNodeVmagPUByPhase" title="Link to this definition">#</a></dt>
+<dd><p>Returns array of per unit voltage magnitudes for each node by phase</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Buses">
+<span class="sig-name descname"><span class="pre">Buses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IBus.html#dss.IBus.IBus" title="dss.IBus.IBus"><span class="pre">dss.IBus.IBus</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Buses" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.CNData">
+<span class="sig-name descname"><span class="pre">CNData</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ICNData.html#dss.ICNData.ICNData" title="dss.ICNData.ICNData"><span class="pre">dss.ICNData.ICNData</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.CNData" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.CapControls">
+<span class="sig-name descname"><span class="pre">CapControls</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ICapControls.html#dss.ICapControls.ICapControls" title="dss.ICapControls.ICapControls"><span class="pre">dss.ICapControls.ICapControls</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.CapControls" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Capacitors">
+<span class="sig-name descname"><span class="pre">Capacitors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ICapacitors.html#dss.ICapacitors.ICapacitors" title="dss.ICapacitors.ICapacitors"><span class="pre">dss.ICapacitors.ICapacitors</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Capacitors" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Capacity">
+<span class="sig-name descname"><span class="pre">Capacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Increment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.Capacity" title="Link to this definition">#</a></dt>
+<dd><p>Compute the maximum load the active circuit can serve in the PRESENT YEAR.</p>
+<p>This method uses the EnergyMeter objects with the registers set with the
+<code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">UEREGS=</span> <span class="pre">(...)</span></code> command for the AutoAdd functions.</p>
+<p>Returns the metered kW (load + losses - generation) and per unit load multiplier
+for the loading level at which something in the system reports an overload or
+undervoltage. If no violations, then it returns the metered kW for peak load
+for the year (1.0 multiplier).</p>
+<p>Aborts and returns 0 if no EnergyMeters.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Capacity1.html">https://opendss.epri.com/Capacity1.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.CktElements">
+<span class="sig-name descname"><span class="pre">CktElements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ICktElement.html#dss.ICktElement.ICktElement" title="dss.ICktElement.ICktElement"><span class="pre">dss.ICktElement.ICktElement</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.CktElements" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.CtrlQueue">
+<span class="sig-name descname"><span class="pre">CtrlQueue</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ICtrlQueue.html#dss.ICtrlQueue.ICtrlQueue" title="dss.ICtrlQueue.ICtrlQueue"><span class="pre">dss.ICtrlQueue.ICtrlQueue</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.CtrlQueue" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.DSSim_Coms">
+<span class="sig-name descname"><span class="pre">DSSim_Coms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IDSSimComs.html#dss.IDSSimComs.IDSSimComs" title="dss.IDSSimComs.IDSSimComs"><span class="pre">dss.IDSSimComs.IDSSimComs</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.DSSim_Coms" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Disable">
+<span class="sig-name descname"><span class="pre">Disable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ICircuit.ICircuit.Disable" title="Link to this definition">#</a></dt>
+<dd><p>Disable a circuit element by name (removes from circuit but leave in database).</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Disable.html">https://opendss.epri.com/Disable.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ElementLosses">
+<span class="sig-name descname"><span class="pre">ElementLosses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dss._types.Int32Array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dss._types.Float64ArrayOrComplexArray</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.ElementLosses" title="Link to this definition">#</a></dt>
+<dd><p>Array of total losses (complex) in a selection of elements.
+Use the element indices (starting at 1) as parameter.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Enable">
+<span class="sig-name descname"><span class="pre">Enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ICircuit.ICircuit.Enable" title="Link to this definition">#</a></dt>
+<dd><p>Enable a circuit element by name</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Enable.html">https://opendss.epri.com/Enable.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.EndOfTimeStepUpdate">
+<span class="sig-name descname"><span class="pre">EndOfTimeStepUpdate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ICircuit.ICircuit.EndOfTimeStepUpdate" title="Link to this definition">#</a></dt>
+<dd><p>Call <code class="docutils literal notranslate"><span class="pre">EndOfTimeStepCleanup</span></code> in SolutionAlgs (Do cleanup, sample monitors, and increment time).</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/EndOfTimeStepUpdate.html">https://opendss.epri.com/EndOfTimeStepUpdate.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.FirstElement">
+<span class="sig-name descname"><span class="pre">FirstElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.FirstElement" title="Link to this definition">#</a></dt>
+<dd><p>Set the first element of active class to be the Active element in the active circuit.</p>
+<p>Returns 0 if none.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/FirstElement.html">https://opendss.epri.com/FirstElement.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.FirstPCElement">
+<span class="sig-name descname"><span class="pre">FirstPCElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.FirstPCElement" title="Link to this definition">#</a></dt>
+<dd><p>Set the first Power Conversion (PC) element to be the active element.</p>
+<p>Returns 0 if none.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/FirstPCElement.html">https://opendss.epri.com/FirstPCElement.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.FirstPDElement">
+<span class="sig-name descname"><span class="pre">FirstPDElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.FirstPDElement" title="Link to this definition">#</a></dt>
+<dd><p>Set the first Power Delivery (PD) element to be the active element.</p>
+<p>Returns 0 if none.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/FirstPDElement.html">https://opendss.epri.com/FirstPDElement.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.FromJSON">
+<span class="sig-name descname"><span class="pre">FromJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dss.enums.DSSJSONFlags</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ICircuit.ICircuit.FromJSON" title="Link to this definition">#</a></dt>
+<dd><p>Replaces the circuit, if any, with the one provided from a JSON-encoded string.
+If a Python dict is provided, <code class="docutils literal notranslate"><span class="pre">json.dumps(data)</span></code> is applied first.</p>
+<p>The expected layout is defined from the JSON schema proposed at
+<a class="github reference external" href="https://github.com/dss-extensions/AltDSS-Schema">dss-extensions/AltDSS-Schema</a></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">options</span></code> parameter contains bit-flags to toggle specific features.
+See the enum <code class="docutils literal notranslate"><span class="pre">DSSJSONFlags</span></code>.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Fuses">
+<span class="sig-name descname"><span class="pre">Fuses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IFuses.html#dss.IFuses.IFuses" title="dss.IFuses.IFuses"><span class="pre">dss.IFuses.IFuses</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Fuses" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.GICSources">
+<span class="sig-name descname"><span class="pre">GICSources</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IGICSources.html#dss.IGICSources.IGICSources" title="dss.IGICSources.IGICSources"><span class="pre">dss.IGICSources.IGICSources</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.GICSources" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Generators">
+<span class="sig-name descname"><span class="pre">Generators</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IGenerators.html#dss.IGenerators.IGenerators" title="dss.IGenerators.IGenerators"><span class="pre">dss.IGenerators.IGenerators</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Generators" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ISources">
+<span class="sig-name descname"><span class="pre">ISources</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IISources.html#dss.IISources.IISources" title="dss.IISources.IISources"><span class="pre">dss.IISources.IISources</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.ISources" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Isources">
+<span class="sig-name descname"><span class="pre">Isources</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IISources.html#dss.IISources.IISources" title="dss.IISources.IISources"><span class="pre">dss.IISources.IISources</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Isources" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.LineCodes">
+<span class="sig-name descname"><span class="pre">LineCodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ILineCodes.html#dss.ILineCodes.ILineCodes" title="dss.ILineCodes.ILineCodes"><span class="pre">dss.ILineCodes.ILineCodes</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.LineCodes" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.LineGeometries">
+<span class="sig-name descname"><span class="pre">LineGeometries</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ILineGeometries.html#dss.ILineGeometries.ILineGeometries" title="dss.ILineGeometries.ILineGeometries"><span class="pre">dss.ILineGeometries.ILineGeometries</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.LineGeometries" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.LineLosses">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LineLosses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrSimpleComplex</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.LineLosses" title="Link to this definition">#</a></dt>
+<dd><p>Complex total line losses in the circuit</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/LineLosses.html">https://opendss.epri.com/LineLosses.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.LineSpacings">
+<span class="sig-name descname"><span class="pre">LineSpacings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ILineSpacings.html#dss.ILineSpacings.ILineSpacings" title="dss.ILineSpacings.ILineSpacings"><span class="pre">dss.ILineSpacings.ILineSpacings</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.LineSpacings" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Lines">
+<span class="sig-name descname"><span class="pre">Lines</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ILines.html#dss.ILines.ILines" title="dss.ILines.ILines"><span class="pre">dss.ILines.ILines</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Lines" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.LoadShapes">
+<span class="sig-name descname"><span class="pre">LoadShapes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ILoadShapes.html#dss.ILoadShapes.ILoadShapes" title="dss.ILoadShapes.ILoadShapes"><span class="pre">dss.ILoadShapes.ILoadShapes</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.LoadShapes" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Loads">
+<span class="sig-name descname"><span class="pre">Loads</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ILoads.html#dss.ILoads.ILoads" title="dss.ILoads.ILoads"><span class="pre">dss.ILoads.ILoads</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Loads" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Losses">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Losses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrSimpleComplex</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Losses" title="Link to this definition">#</a></dt>
+<dd><p>Total losses in active circuit, complex number (two-element array of double).</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Losses.html">https://opendss.epri.com/Losses.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Meters">
+<span class="sig-name descname"><span class="pre">Meters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IMeters.html#dss.IMeters.IMeters" title="dss.IMeters.IMeters"><span class="pre">dss.IMeters.IMeters</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Meters" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Monitors">
+<span class="sig-name descname"><span class="pre">Monitors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IMonitors.html#dss.IMonitors.IMonitors" title="dss.IMonitors.IMonitors"><span class="pre">dss.IMonitors.IMonitors</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Monitors" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Name" title="Link to this definition">#</a></dt>
+<dd><p>Name of the active circuit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.NextElement">
+<span class="sig-name descname"><span class="pre">NextElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.NextElement" title="Link to this definition">#</a></dt>
+<dd><p>Set the next element of the active class to be the active element in the active circuit.
+Returns 0 if no more elements..</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NextElement.html">https://opendss.epri.com/NextElement.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.NextPCElement">
+<span class="sig-name descname"><span class="pre">NextPCElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.NextPCElement" title="Link to this definition">#</a></dt>
+<dd><p>Get the next Power Conversion (PC) element to be the active element.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NextPCElement.html">https://opendss.epri.com/NextPCElement.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.NextPDElement">
+<span class="sig-name descname"><span class="pre">NextPDElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.NextPDElement" title="Link to this definition">#</a></dt>
+<dd><p>Get the next Power Delivery (PD) element to be the active element.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NextPDElement.html">https://opendss.epri.com/NextPDElement.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.NumBuses">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumBuses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.NumBuses" title="Link to this definition">#</a></dt>
+<dd><p>Total number of Buses in the circuit.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumBuses.html">https://opendss.epri.com/NumBuses.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.NumCktElements">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumCktElements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.NumCktElements" title="Link to this definition">#</a></dt>
+<dd><p>Number of CktElements in the circuit.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumCktElements.html">https://opendss.epri.com/NumCktElements.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.NumNodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumNodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.NumNodes" title="Link to this definition">#</a></dt>
+<dd><p>Total number of nodes in the circuit.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumNodes1.html">https://opendss.epri.com/NumNodes1.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.PDElements">
+<span class="sig-name descname"><span class="pre">PDElements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IPDElements.html#dss.IPDElements.IPDElements" title="dss.IPDElements.IPDElements"><span class="pre">dss.IPDElements.IPDElements</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.PDElements" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.PVSystems">
+<span class="sig-name descname"><span class="pre">PVSystems</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IPVSystems.html#dss.IPVSystems.IPVSystems" title="dss.IPVSystems.IPVSystems"><span class="pre">dss.IPVSystems.IPVSystems</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.PVSystems" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Parallel">
+<span class="sig-name descname"><span class="pre">Parallel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IParallel.html#dss.IParallel.IParallel" title="dss.IParallel.IParallel"><span class="pre">dss.IParallel.IParallel</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Parallel" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ParentPDElement">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ParentPDElement</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.ParentPDElement" title="Link to this definition">#</a></dt>
+<dd><p>Sets Parent PD element, if any, to be the active circuit element and returns index&gt;0; Returns 0 if it fails or not applicable.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ParentPDElement.html">https://opendss.epri.com/ParentPDElement.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Reactors">
+<span class="sig-name descname"><span class="pre">Reactors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IReactors.html#dss.IReactors.IReactors" title="dss.IReactors.IReactors"><span class="pre">dss.IReactors.IReactors</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Reactors" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Reclosers">
+<span class="sig-name descname"><span class="pre">Reclosers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IReclosers.html#dss.IReclosers.IReclosers" title="dss.IReclosers.IReclosers"><span class="pre">dss.IReclosers.IReclosers</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Reclosers" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ReduceCkt">
+<span class="sig-name descname"><span class="pre">ReduceCkt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IReduceCkt.html#dss.IReduceCkt.IReduceCkt" title="dss.IReduceCkt.IReduceCkt"><span class="pre">dss.IReduceCkt.IReduceCkt</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.ReduceCkt" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.RegControls">
+<span class="sig-name descname"><span class="pre">RegControls</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IRegControls.html#dss.IRegControls.IRegControls" title="dss.IRegControls.IRegControls"><span class="pre">dss.IRegControls.IRegControls</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.RegControls" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Relays">
+<span class="sig-name descname"><span class="pre">Relays</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IRelays.html#dss.IRelays.IRelays" title="dss.IRelays.IRelays"><span class="pre">dss.IRelays.IRelays</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Relays" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Sample">
+<span class="sig-name descname"><span class="pre">Sample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ICircuit.ICircuit.Sample" title="Link to this definition">#</a></dt>
+<dd><p>Force all Meters and Monitors to take a sample.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Sample.html">https://opendss.epri.com/Sample.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Save">
+<span class="sig-name descname"><span class="pre">Save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirOrFilePath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyStr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dss.enums.DSSSaveFlags</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.Save" title="Link to this definition">#</a></dt>
+<dd><p>Equivalent of the “save circuit” DSS command, but allows customization
+through the <code class="docutils literal notranslate"><span class="pre">saveFlags</span></code> argument, which is a set of bit flags.
+See the “DSSSaveFlags” enumeration for available flags:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CalcVoltageBases</span></code>: Include the command CalcVoltageBases.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SetVoltageBases</span></code>: Include commands to set the voltage bases individually.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IncludeOptions</span></code>: Include most of the options (from the Set/Get DSS commands).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IncludeDisabled</span></code>: Include disabled circuit elements (and LoadShapes).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ExcludeDefault</span></code>: Exclude default DSS items if they are not modified by the user.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SingleFile</span></code>: Use a single file instead of a folder for output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">KeepOrder</span></code>: Save the circuit elements in the order they were loaded in the active circuit. Guarantees better reproducibility, especially when the system is ill-conditioned. Requires “SingleFile” flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ExcludeMeterZones</span></code>: Do not export meter zones (as “feeders”) separately. Has no effect when using a single file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IsOpen</span></code>: Export commands to open terminals of elements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ToString</span></code>: to the result string. Requires “SingleFile” flag.</p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">SingleFile</span></code> is enabled, the first argument (<code class="docutils literal notranslate"><span class="pre">dirOrFilePath</span></code>) is the file path,
+otherwise it is the folder path. For string output, the argument is not used.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.SaveSample">
+<span class="sig-name descname"><span class="pre">SaveSample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ICircuit.ICircuit.SaveSample" title="Link to this definition">#</a></dt>
+<dd><p>Force all meters and monitors to save their current buffers.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SaveSample.html">https://opendss.epri.com/SaveSample.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Sensors">
+<span class="sig-name descname"><span class="pre">Sensors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ISensors.html#dss.ISensors.ISensors" title="dss.ISensors.ISensors"><span class="pre">dss.ISensors.ISensors</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Sensors" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.SetActiveBus">
+<span class="sig-name descname"><span class="pre">SetActiveBus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">BusName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.SetActiveBus" title="Link to this definition">#</a></dt>
+<dd><p>Sets Active bus by name.</p>
+<p>Ignores node list. Returns bus index (zero based) compatible with <code class="docutils literal notranslate"><span class="pre">AllBusNames</span></code> and Buses collection.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SetActiveBus.html">https://opendss.epri.com/SetActiveBus.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.SetActiveBusi">
+<span class="sig-name descname"><span class="pre">SetActiveBusi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">BusIndex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.SetActiveBusi" title="Link to this definition">#</a></dt>
+<dd><p>Set ActiveBus by an integer value.</p>
+<p>0-based index compatible with SetActiveBus return value and AllBusNames indexing.
+Returns 0 if OK.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SetActiveBusi.html">https://opendss.epri.com/SetActiveBusi.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.SetActiveClass">
+<span class="sig-name descname"><span class="pre">SetActiveClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ClassName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.SetActiveClass" title="Link to this definition">#</a></dt>
+<dd><p>Set the active class by name.</p>
+<p>Use FirstElement, NextElement to iterate through the class. Returns -1 if fails.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SetActiveClass.html">https://opendss.epri.com/SetActiveClass.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.SetActiveElement">
+<span class="sig-name descname"><span class="pre">SetActiveElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FullName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.SetActiveElement" title="Link to this definition">#</a></dt>
+<dd><p>Set the Active Circuit Element using the full object name (e.g. “generator.g1”).</p>
+<p>Returns -1 if not found. Else index to be used in CktElements collection or <code class="docutils literal notranslate"><span class="pre">AllElementNames</span></code>.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SetActiveElement.html">https://opendss.epri.com/SetActiveElement.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Settings">
+<span class="sig-name descname"><span class="pre">Settings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ISettings.html#dss.ISettings.ISettings" title="dss.ISettings.ISettings"><span class="pre">dss.ISettings.ISettings</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Settings" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Solution">
+<span class="sig-name descname"><span class="pre">Solution</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ISolution.html#dss.ISolution.ISolution" title="dss.ISolution.ISolution"><span class="pre">dss.ISolution.ISolution</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Solution" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Storages">
+<span class="sig-name descname"><span class="pre">Storages</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IStorages.html#dss.IStorages.IStorages" title="dss.IStorages.IStorages"><span class="pre">dss.IStorages.IStorages</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Storages" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.SubstationLosses">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SubstationLosses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrSimpleComplex</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.SubstationLosses" title="Link to this definition">#</a></dt>
+<dd><p>Complex losses in all transformers designated to substations.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SubstationLosses.html">https://opendss.epri.com/SubstationLosses.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.SwtControls">
+<span class="sig-name descname"><span class="pre">SwtControls</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ISwtControls.html#dss.ISwtControls.ISwtControls" title="dss.ISwtControls.ISwtControls"><span class="pre">dss.ISwtControls.ISwtControls</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.SwtControls" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.SystemY">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SystemY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.SystemY" title="Link to this definition">#</a></dt>
+<dd><p>(read-only) System Y matrix (after a solution has been performed).
+This is deprecated as it returns a dense matrix. Only use it for small systems.
+For large-scale systems, prefer YMatrix.GetCompressedYMatrix.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SystemY.html">https://opendss.epri.com/SystemY.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.TSData">
+<span class="sig-name descname"><span class="pre">TSData</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ITSData.html#dss.ITSData.ITSData" title="dss.ITSData.ITSData"><span class="pre">dss.ITSData.ITSData</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.TSData" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.ToJSON">
+<span class="sig-name descname"><span class="pre">ToJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dss.enums.DSSJSONFlags</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#dss.ICircuit.ICircuit.ToJSON" title="Link to this definition">#</a></dt>
+<dd><p>Returns data for all objects and basic circuit properties as a JSON-encoded string.</p>
+<p>The JSON data is organized using the JSON schema proposed at
+<a class="github reference external" href="https://github.com/dss-extensions/AltDSS-Schema">dss-extensions/AltDSS-Schema</a></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">options</span></code> parameter contains bit-flags to toggle specific features.
+See the enum <code class="docutils literal notranslate"><span class="pre">DSSJSONFlags</span></code> or <code class="docutils literal notranslate"><span class="pre">Obj_ToJSON</span></code> (C-API) for more.</p>
+<p><strong>(API Extension)</strong></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Topology">
+<span class="sig-name descname"><span class="pre">Topology</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ITopology.html#dss.ITopology.ITopology" title="dss.ITopology.ITopology"><span class="pre">dss.ITopology.ITopology</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Topology" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.TotalPower">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TotalPower</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrSimpleComplex</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.TotalPower" title="Link to this definition">#</a></dt>
+<dd><p>Total power (complex), kVA delivered to the circuit</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/TotalPower.html">https://opendss.epri.com/TotalPower.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Transformers">
+<span class="sig-name descname"><span class="pre">Transformers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.ITransformers.html#dss.ITransformers.ITransformers" title="dss.ITransformers.ITransformers"><span class="pre">dss.ITransformers.ITransformers</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Transformers" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.UpdateStorage">
+<span class="sig-name descname"><span class="pre">UpdateStorage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.ICircuit.ICircuit.UpdateStorage" title="Link to this definition">#</a></dt>
+<dd><p>Force an update to all storage classes.</p>
+<p>Typically done after a solution. Done automatically in intrinsic solution modes.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/UpdateStorage.html">https://opendss.epri.com/UpdateStorage.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.Vsources">
+<span class="sig-name descname"><span class="pre">Vsources</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IVsources.html#dss.IVsources.IVsources" title="dss.IVsources.IVsources"><span class="pre">dss.IVsources.IVsources</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.Vsources" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.WireData">
+<span class="sig-name descname"><span class="pre">WireData</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IWireData.html#dss.IWireData.IWireData" title="dss.IWireData.IWireData"><span class="pre">dss.IWireData.IWireData</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.WireData" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.XYCurves">
+<span class="sig-name descname"><span class="pre">XYCurves</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="dss.IXYCurves.html#dss.IXYCurves.IXYCurves" title="dss.IXYCurves.IXYCurves"><span class="pre">dss.IXYCurves.IXYCurves</span></a></em><a class="headerlink" href="#dss.ICircuit.ICircuit.XYCurves" title="Link to this definition">#</a></dt>
+<dd><p>None</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.YCurrents">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">YCurrents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.YCurrents" title="Link to this definition">#</a></dt>
+<dd><p>Array of doubles containing complex injection currents for the present solution. It is the “I” vector of I=YV</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/YCurrents.html">https://opendss.epri.com/YCurrents.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.YNodeOrder">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">YNodeOrder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.YNodeOrder" title="Link to this definition">#</a></dt>
+<dd><p>Array of strings containing the names of the nodes in the same order as the Y matrix</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/YNodeOrder.html">https://opendss.epri.com/YNodeOrder.html</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.YNodeVarray">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">YNodeVarray</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.ICircuit.ICircuit.YNodeVarray" title="Link to this definition">#</a></dt>
+<dd><p>Complex array of actual node voltages in same order as SystemY matrix.</p>
+<p>Original COM help: <a class="reference external" href="https://opendss.epri.com/YNodeVarray.html">https://opendss.epri.com/YNodeVarray.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dss.ICircuit.ICircuit.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.ICircuit.ICircuit.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dss.ICapacitors.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dss.ICktElement.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit"><code class="docutils literal notranslate"><span class="pre">ICircuit</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveBus"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveBus</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveCktElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveCktElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveClass"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveClass</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveDSSElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveDSSElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ActiveElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.ActiveElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusDistances"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusDistances</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusNames"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusVmag"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusVmag</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusVmagPu"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusVmagPu</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllBusVolts"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllBusVolts</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllElementLosses"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllElementLosses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllElementNames"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllElementNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeDistances"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeDistances</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeDistancesByPhase"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeDistancesByPhase()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeNames"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeNames</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeNamesByPhase"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeNamesByPhase()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeVmagByPhase"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeVmagByPhase()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.AllNodeVmagPUByPhase"><code class="docutils literal notranslate"><span class="pre">ICircuit.AllNodeVmagPUByPhase()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Buses"><code class="docutils literal notranslate"><span class="pre">ICircuit.Buses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.CNData"><code class="docutils literal notranslate"><span class="pre">ICircuit.CNData</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.CapControls"><code class="docutils literal notranslate"><span class="pre">ICircuit.CapControls</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Capacitors"><code class="docutils literal notranslate"><span class="pre">ICircuit.Capacitors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Capacity"><code class="docutils literal notranslate"><span class="pre">ICircuit.Capacity()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.CktElements"><code class="docutils literal notranslate"><span class="pre">ICircuit.CktElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.CtrlQueue"><code class="docutils literal notranslate"><span class="pre">ICircuit.CtrlQueue</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.DSSim_Coms"><code class="docutils literal notranslate"><span class="pre">ICircuit.DSSim_Coms</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Disable"><code class="docutils literal notranslate"><span class="pre">ICircuit.Disable()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ElementLosses"><code class="docutils literal notranslate"><span class="pre">ICircuit.ElementLosses()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Enable"><code class="docutils literal notranslate"><span class="pre">ICircuit.Enable()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.EndOfTimeStepUpdate"><code class="docutils literal notranslate"><span class="pre">ICircuit.EndOfTimeStepUpdate()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.FirstElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.FirstElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.FirstPCElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.FirstPCElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.FirstPDElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.FirstPDElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.FromJSON"><code class="docutils literal notranslate"><span class="pre">ICircuit.FromJSON()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Fuses"><code class="docutils literal notranslate"><span class="pre">ICircuit.Fuses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.GICSources"><code class="docutils literal notranslate"><span class="pre">ICircuit.GICSources</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Generators"><code class="docutils literal notranslate"><span class="pre">ICircuit.Generators</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ISources"><code class="docutils literal notranslate"><span class="pre">ICircuit.ISources</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Isources"><code class="docutils literal notranslate"><span class="pre">ICircuit.Isources</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LineCodes"><code class="docutils literal notranslate"><span class="pre">ICircuit.LineCodes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LineGeometries"><code class="docutils literal notranslate"><span class="pre">ICircuit.LineGeometries</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LineLosses"><code class="docutils literal notranslate"><span class="pre">ICircuit.LineLosses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LineSpacings"><code class="docutils literal notranslate"><span class="pre">ICircuit.LineSpacings</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Lines"><code class="docutils literal notranslate"><span class="pre">ICircuit.Lines</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.LoadShapes"><code class="docutils literal notranslate"><span class="pre">ICircuit.LoadShapes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Loads"><code class="docutils literal notranslate"><span class="pre">ICircuit.Loads</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Losses"><code class="docutils literal notranslate"><span class="pre">ICircuit.Losses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Meters"><code class="docutils literal notranslate"><span class="pre">ICircuit.Meters</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Monitors"><code class="docutils literal notranslate"><span class="pre">ICircuit.Monitors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Name"><code class="docutils literal notranslate"><span class="pre">ICircuit.Name</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NextElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.NextElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NextPCElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.NextPCElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NextPDElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.NextPDElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NumBuses"><code class="docutils literal notranslate"><span class="pre">ICircuit.NumBuses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NumCktElements"><code class="docutils literal notranslate"><span class="pre">ICircuit.NumCktElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.NumNodes"><code class="docutils literal notranslate"><span class="pre">ICircuit.NumNodes</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.PDElements"><code class="docutils literal notranslate"><span class="pre">ICircuit.PDElements</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.PVSystems"><code class="docutils literal notranslate"><span class="pre">ICircuit.PVSystems</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Parallel"><code class="docutils literal notranslate"><span class="pre">ICircuit.Parallel</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ParentPDElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.ParentPDElement</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Reactors"><code class="docutils literal notranslate"><span class="pre">ICircuit.Reactors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Reclosers"><code class="docutils literal notranslate"><span class="pre">ICircuit.Reclosers</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ReduceCkt"><code class="docutils literal notranslate"><span class="pre">ICircuit.ReduceCkt</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.RegControls"><code class="docutils literal notranslate"><span class="pre">ICircuit.RegControls</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Relays"><code class="docutils literal notranslate"><span class="pre">ICircuit.Relays</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Sample"><code class="docutils literal notranslate"><span class="pre">ICircuit.Sample()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Save"><code class="docutils literal notranslate"><span class="pre">ICircuit.Save()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SaveSample"><code class="docutils literal notranslate"><span class="pre">ICircuit.SaveSample()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Sensors"><code class="docutils literal notranslate"><span class="pre">ICircuit.Sensors</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SetActiveBus"><code class="docutils literal notranslate"><span class="pre">ICircuit.SetActiveBus()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SetActiveBusi"><code class="docutils literal notranslate"><span class="pre">ICircuit.SetActiveBusi()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SetActiveClass"><code class="docutils literal notranslate"><span class="pre">ICircuit.SetActiveClass()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SetActiveElement"><code class="docutils literal notranslate"><span class="pre">ICircuit.SetActiveElement()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Settings"><code class="docutils literal notranslate"><span class="pre">ICircuit.Settings</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Solution"><code class="docutils literal notranslate"><span class="pre">ICircuit.Solution</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Storages"><code class="docutils literal notranslate"><span class="pre">ICircuit.Storages</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SubstationLosses"><code class="docutils literal notranslate"><span class="pre">ICircuit.SubstationLosses</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SwtControls"><code class="docutils literal notranslate"><span class="pre">ICircuit.SwtControls</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.SystemY"><code class="docutils literal notranslate"><span class="pre">ICircuit.SystemY</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.TSData"><code class="docutils literal notranslate"><span class="pre">ICircuit.TSData</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.ToJSON"><code class="docutils literal notranslate"><span class="pre">ICircuit.ToJSON()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Topology"><code class="docutils literal notranslate"><span class="pre">ICircuit.Topology</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.TotalPower"><code class="docutils literal notranslate"><span class="pre">ICircuit.TotalPower</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Transformers"><code class="docutils literal notranslate"><span class="pre">ICircuit.Transformers</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.UpdateStorage"><code class="docutils literal notranslate"><span class="pre">ICircuit.UpdateStorage()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.Vsources"><code class="docutils literal notranslate"><span class="pre">ICircuit.Vsources</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.WireData"><code class="docutils literal notranslate"><span class="pre">ICircuit.WireData</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.XYCurves"><code class="docutils literal notranslate"><span class="pre">ICircuit.XYCurves</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.YCurrents"><code class="docutils literal notranslate"><span class="pre">ICircuit.YCurrents</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.YNodeOrder"><code class="docutils literal notranslate"><span class="pre">ICircuit.YNodeOrder</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.YNodeVarray"><code class="docutils literal notranslate"><span class="pre">ICircuit.YNodeVarray</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dss.ICircuit.ICircuit.__init__"><code class="docutils literal notranslate"><span class="pre">ICircuit.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

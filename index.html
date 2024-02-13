@@ -1,0 +1,719 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>DSS-Python &#8212; DSS-Python 0.15.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=7276bfb7"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <link rel="icon" href="_static/dssx.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="examples/GettingStarted.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.0 documentation - Home"/>
+    <script>document.write(`<img src="_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.0 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="examples/Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="enumerations.html">dss.enums</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/index.html">dss package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="apidocs/dss/dss.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IActiveClass.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IActiveClass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IBus.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICNData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICNData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICapControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICapacitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICapacitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICircuit.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICircuit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICktElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICktElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ICtrlQueue.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ICtrlQueue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSS.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSElement.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSElement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSEvents.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSEvents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSProgress.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSProperty.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSProperty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSS_Executive.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSS_Executive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IDSSimComs.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IDSSimComs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IError.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IFuses.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IFuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IGICSources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGICSources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IGenerators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IGenerators</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IISources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IISources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILineCodes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineCodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILineGeometries.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineGeometries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILineSpacings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILineSpacings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILines.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILoadShapes.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoadShapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ILoads.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ILoads</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IMeters.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMeters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IMonitors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IMonitors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IPDElements.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPDElements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IPVSystems.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IPVSystems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IParallel.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParallel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IParser.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IReactors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReactors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IReclosers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReclosers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IReduceCkt.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IReduceCkt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IRegControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRegControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IRelays.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IRelays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ISensors.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ISettings.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISettings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ISolution.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISolution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IStorages.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IStorages</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ISwtControls.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ISwtControls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ITSData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITSData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IText.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ITopology.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.ITransformers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.ITransformers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IVsources.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IVsources</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IWireData.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IWireData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IXYCurves.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IXYCurves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IYMatrix.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IYMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.IZIP.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.IZIP</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.enums.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.enums</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.examples.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.examples</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.patch_dss_com.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.patch_dss_com</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/dss/dss.plot.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dss.plot</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/dss_python">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.python.org/pypi/OpenDSSDirect.py/">Package on PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/dss-extensions/electricdss-tst">Test/example circuits</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py">OpenDSSDirect.py</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/orgs/dss-extensions/discussions">DSS-Extensions Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sourceforge.net/p/electricdss/discussion/">OpenDSS forum</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">OpenDSS documentation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>DSS-Python</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">DSS-Python</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brief-introduction">Brief introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-features-and-limitations">Missing features and limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-features">Extra features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dss-instance">The DSS instance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-and-notebook-integration">Plotting and notebook integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dss-python">
+<h1>DSS-Python<a class="headerlink" href="#dss-python" title="Link to this heading">#</a></h1>
+<p><a class="reference external" href="https://pypi.org/project/dss-python/"><img alt="PyPI" src="https://img.shields.io/pypi/v/dss_python" /></a> <a class="reference external" href="https://pypi.org/project/dss-python/"><img alt="PyPI Download stats" src="https://img.shields.io/pypi/dw/dss-python" /></a> <img alt="Supports Linux" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black"> <img alt="Supports macOS" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white"> <img alt="Supports Microsoft Windows" src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white"></p>
+<p>DSS-Python uses CFFI and NumPy to expose the OpenDSS engine, as implemented in our alternative engine (AltDSS) through the <a class="reference external" href="https://github.com/dss-extensions/dss_capi">AltDSS/DSS C-API</a> library. OpenDSS is an open-source electric power distribution system simulator.</p>
+<p>This package is available for Windows, Linux and macOS, including Intel and ARM processes, both 32 and 64-bit. As such, it enables OpenDSS to run in many environments the official implementation cannot, from a Raspberry Pi to a HPC cluster, and cloud environments like Google Colab (some of our notebooks examples are ready-to-run on Colab).</p>
+<p>DSS-Python is part of DSS-Extensions, a larger effort to port the original OpenDSS to support more platforms (OSs, processor architectures), programming languages, and extend both the OpenDSS engine and API, represented in the AltDSS engine:</p>
+<p align="center">
+    <img alt="Overview of related projects" src="https://github.com/dss-extensions/dss-extensions/blob/main/images/repomap.png?raw=true">
+</p>
+<p>For alternatives for other programming languages, including in MATLAB, C++, C#/.NET, Rust and Go, please check <a class="reference external" href="https://dss-extensions.org/">https://dss-extensions.org/</a> and our hub repository at <a class="reference external" href="https://github.com/dss-extensions/dss-extensions">dss-extensions/dss-extensions</a> for more documentation, discussions and the <a class="reference external" href="https://github.com/dss-extensions/dss-extensions#faq">FAQ</a>.</p>
+<center>
+<div class="mermaid">
+            flowchart TD
+    C[&quot;AltDSS engine/DSS C-API\n(libdss_capi)&quot;] --&gt; P[&quot;DSS-Python: Backend&quot;]
+    P --- DSSPY[&quot;DSS-Python\n(dss package)&quot;]
+    P --- ODDPY[&quot;&lt;a href='https://dss-extensions.org/opendssdirect.py'&gt;OpenDSSDirect.py\n(opendssdirect package)&lt;/a&gt;&quot;]
+    P --- ALTDSSPY[&quot;&lt;a href='https://dss-extensions.org/AltDSS-Python/'&gt;AltDSS-Python\n(altdss package)&lt;/a&gt;&quot;]
+        </div></center>
+<p>DSS-Python is one of three Python projects under DSS-Extensions. See <a class="reference external" href="https://dss-extensions.org/python_apis.html">DSS-Extensions — OpenDSS: Overview of Python APIs</a> for a brief comparison between these and the official COM API. Both OpenDSSDirect.py and DSS-Python expose the classic OpenDSS API (closer to the COM implementation), including most of its limitations. For an alternative API which exposes all OpenDSS objects, batch operations, and a more intuitive API, check <a class="reference external" href="https://dss-extensions.org/AltDSS-Python/">AltDSS-Python</a>. If required, users can mix all three packages in the same project to access some of their unique features.</p>
+<section id="brief-introduction">
+<h2>Brief introduction<a class="headerlink" href="#brief-introduction" title="Link to this heading">#</a></h2>
+<p>Install it with <code class="docutils literal notranslate"><span class="pre">pip</span></code> (or <code class="docutils literal notranslate"><span class="pre">pip3</span></code> depending on your environment, or even <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span></code>), e.g.:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dss-python
+</pre></div>
+</div>
+<p>To enable all the features available, which require more modules, use the <code class="docutils literal notranslate"><span class="pre">all</span></code> variation:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dss-python<span class="o">[</span>all<span class="o">]</span>
+</pre></div>
+</div>
+<p>In this documentation, since many features from DSS-Python are not available in the official version, we mark the extra features as “<strong>(API Extension)</strong>”. As such, the documentation could be somewhat useful for OpenDSS users stuck with the COM version. As a reminder, we provide <code class="docutils literal notranslate"><span class="pre">patch_dss_com</span></code> to introduce some of the quality-of-life features such as Python iterators and more to an <code class="docutils literal notranslate"><span class="pre">OpenDSSengine.DSS</span></code> COM object, in an effort to provide compatibility when users are either migrating, validating results or just need to provide support for both the official engine and the DSS-Extensions version. “<strong>(API Extension)</strong>” is used to mark whole classes, as seen below, or individual extra properties and functions. Not all extensions are marked, so be sure to check when in doubt.</p>
+<p>Independent of which OpenDSS implementation you use, it is good practice to list the specific implementation begin used (e.g. from EPRI or from DSS-Extensions). At the moment we do not generate DOIs for our packages, but users can always cite a specific version on PyPI, e.g. <a class="reference external" href="https://pypi.org/project/dss-python/0.12.1/">https://pypi.org/project/dss-python/0.12.1/</a></p>
+<p>Check <a class="reference external" href="http://dss-extensions.org">http://dss-extensions.org</a> and <a class="github reference external" href="https://github.com/dss-extensions/dss-extensions">dss-extensions/dss-extensions</a> for links to more documentation and examples. Besides our own documentation, the official OpenDSS documentation is extensive and covers various topics.</p>
+<p>We recommend looking especially in the following resources:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://opendss.epri.com/opendss_documentation.html">https://opendss.epri.com/opendss_documentation.html</a></p></li>
+<li><p><a class="reference external" href="https://sourceforge.net/p/electricdss/code/3706/tree/trunk/Version8/Distrib/Doc/">https://sourceforge.net/p/electricdss/code/3706/tree/trunk/Version8/Distrib/Doc/</a> (old version of the above, with separate PDFs, etc.)</p></li>
+</ul>
+<p>See also <a class="reference external" href="https://dss-extensions.org/OpenDSSDirect.py/">https://dss-extensions.org/OpenDSSDirect.py/</a> for a package that uses function-style getters and setters,
+instead of Python properties, but reusing the base of this package. Most concepts presented here are shared and
+we avoid duplicating the effort. We envision a joint documentation site in the future. A new package called <a class="reference external" href="https://dss-extensions.org/AltDSS-Python"><strong>Alt</strong>DSS-Python</a> is being developed to address the limitations of both DSS-Python and OpenDSSDirect.py using an original approach.</p>
+</section>
+<section id="missing-features-and-limitations">
+<h2>Missing features and limitations<a class="headerlink" href="#missing-features-and-limitations" title="Link to this heading">#</a></h2>
+<p>Most limitations are inherited from <code class="docutils literal notranslate"><span class="pre">dss_capi</span></code>, i.e., these are not implemented:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DSSProgress</span></code> from <code class="docutils literal notranslate"><span class="pre">DLL/ImplDSSProgress.pas</span></code>: would need a reimplementation depending on the target UI (GUI, text, headless, etc.). Can be achieved with the current API.</p></li>
+<li><p>OpenDSS-GIS features are not implemented since they’re not open-source (nor free/openly available).</p></li>
+</ul>
+<p>Previous missing features, such as support for most <code class="docutils literal notranslate"><span class="pre">plot</span></code> commands and the “Events” interface, have been implemented.</p>
+</section>
+<section id="extra-features">
+<h2>Extra features<a class="headerlink" href="#extra-features" title="Link to this heading">#</a></h2>
+<p>In general, the <code class="docutils literal notranslate"><span class="pre">dss_capi</span></code> library from DSS-Extensions provides more features than both the official Direct DLL and the COM object.</p>
+<p>Besides most of the methods available in the OpenDSS COM DLL, some of the unique DDLL methods are also exposed in adapted forms, namely the methods from <code class="docutils literal notranslate"><span class="pre">DYMatrix.pas</span></code>, especially <code class="docutils literal notranslate"><span class="pre">GetCompressedYMatrix</span></code> (check the source files for more information).</p>
+<p>While OpenDSS relies on windows/forms to report errors, or require the user to check the <code class="docutils literal notranslate"><span class="pre">Error</span></code> interface manually, most DSS-Extensions do that automatically for the majority of the API calls. We also introduce extended error messages, more thorough error checking in the Pascal code, and even some basic tracebacks for the .DSS script handling. All the changes combined should result in a more comfortable and fluid experience for the Python user.</p>
+<p><strong>TO BE EXPANDED</strong></p>
+</section>
+<section id="the-dss-instance">
+<h2>The DSS instance<a class="headerlink" href="#the-dss-instance" title="Link to this heading">#</a></h2>
+<p>Although there are many classes and modules in DSS-Python, the main usage is typically
+through the default DSS instance, and that is the most interest aspect for most users.</p>
+<p>DSS-Python tries to be a drop-in replacement for the official OpenDSS COM implementation, within reasonable limits.
+There are two main Python packages that allow instantiating COM objects, <code class="docutils literal notranslate"><span class="pre">win32com</span></code> and <code class="docutils literal notranslate"><span class="pre">comtypes</span></code>.</p>
+<p>For a quick look into some Python APIs (COM, DSS-Python, OpenDSSDirect.py) for the OpenDSS (official or our alternative
+implementation), see <a class="reference external" href="https://dss-extensions.org/python_apis.html">DSS-Extensions — OpenDSS: Overview of Python APIs</a>.</p>
+<p>Usually, your code would contain the instantiation of the objects such as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="kn">import</span> <span class="nn">win32com.client</span> 
+   <span class="n">DSS</span> <span class="o">=</span> <span class="n">win32com</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">gencache</span><span class="o">.</span><span class="n">EnsureDispatch</span><span class="p">(</span><span class="s2">&quot;OpenDSSEngine.DSS&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or maybe:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="kn">import</span> <span class="nn">win32com.client</span> 
+   <span class="n">DSS</span> <span class="o">=</span> <span class="n">win32com</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Dispatch</span><span class="p">(</span><span class="s2">&quot;OpenDSSEngine.DSS&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or with <code class="docutils literal notranslate"><span class="pre">comtypes</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="kn">import</span> <span class="nn">comtypes.client</span>
+   <span class="n">DSS</span> <span class="o">=</span> <span class="n">comtypes</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">CreateObject</span><span class="p">(</span><span class="s2">&quot;OpenDSSEngine.DSS&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Either way, to use DSS-Python and effectively migrate from the official OpenDSS COM interface, you can replace that fragment with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">DSS</span>
+</pre></div>
+</div>
+<p>If the code didn’t depend on very specific details like lists vs tuples vs NumPy arrays, it should be compatible. Note that even replacing <code class="docutils literal notranslate"><span class="pre">win32com</span></code> with <code class="docutils literal notranslate"><span class="pre">comtypes</span></code> already introduces small inconsistencies. These, though, should not matter much in Python.</p>
+<p>For a quick overview of DSS-Python, the main DSS class is organized as follows. Click through <a class="reference internal" href="apidocs/dss/dss.IDSS.html#dss.IDSS.IDSS" title="dss.IDSS.IDSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS</span></code></a> to browse and discover other properties and methods, including many of the extensions we’ve been adding in the past several years.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="apidocs/dss/dss.IParser.html#dss.IParser.IParser" title="dss.IParser.IParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.Parser</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IDSSEvents.html#dss.IDSSEvents.IDSSEvents" title="dss.IDSSEvents.IDSSEvents"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.Events</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IText.html#dss.IText.IText" title="dss.IText.IText"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.Text</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IYMatrix.html#dss.IYMatrix.IYMatrix" title="dss.IYMatrix.IYMatrix"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.YMatrix</span></code></a> <strong>(API Extension)</strong></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IZIP.html#dss.IZIP.IZIP" title="dss.IZIP.IZIP"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ZIP</span></code></a> <strong>(API Extension)</strong></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ICircuit.html#dss.ICircuit.ICircuit" title="dss.ICircuit.ICircuit"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit</span></code></a>:</p>
+<ul>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IBus.html#dss.IBus.IBus" title="dss.IBus.IBus"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.ActiveBus</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ICktElement.html#dss.ICktElement.ICktElement" title="dss.ICktElement.ICktElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.ActiveCktElement</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IActiveClass.html#dss.IActiveClass.IActiveClass" title="dss.IActiveClass.IActiveClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.ActiveClass</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IDSSElement.html#dss.IDSSElement.IDSSElement" title="dss.IDSSElement.IDSSElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.ActiveDSSElement</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ICktElement.html#dss.ICktElement.ICktElement" title="dss.ICktElement.ICktElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.ActiveElement</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IBus.html#dss.IBus.IBus" title="dss.IBus.IBus"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Buses</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ICapacitors.html#dss.ICapacitors.ICapacitors" title="dss.ICapacitors.ICapacitors"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Capacitors</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ICapControls.html#dss.ICapControls.ICapControls" title="dss.ICapControls.ICapControls"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.CapControls</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ICNData.html#dss.ICNData.ICNData" title="dss.ICNData.ICNData"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.CNData</span></code></a> <strong>(API Extension)</strong></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ICtrlQueue.html#dss.ICtrlQueue.ICtrlQueue" title="dss.ICtrlQueue.ICtrlQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.CtrlQueue</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IDSSimComs.html#dss.IDSSimComs.IDSSimComs" title="dss.IDSSimComs.IDSSimComs"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.DSSim_Coms</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IFuses.html#dss.IFuses.IFuses" title="dss.IFuses.IFuses"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Fuses</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IGenerators.html#dss.IGenerators.IGenerators" title="dss.IGenerators.IGenerators"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Generators</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IGICSources.html#dss.IGICSources.IGICSources" title="dss.IGICSources.IGICSources"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.GICSources</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IISources.html#dss.IISources.IISources" title="dss.IISources.IISources"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.ISources</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ILineCodes.html#dss.ILineCodes.ILineCodes" title="dss.ILineCodes.ILineCodes"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.LineCodes</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ILineGeometries.html#dss.ILineGeometries.ILineGeometries" title="dss.ILineGeometries.ILineGeometries"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.LineGeometries</span></code></a> <strong>(API Extension)</strong></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ILines.html#dss.ILines.ILines" title="dss.ILines.ILines"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Lines</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ILineSpacings.html#dss.ILineSpacings.ILineSpacings" title="dss.ILineSpacings.ILineSpacings"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.LineSpacings</span></code></a> <strong>(API Extension)</strong></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ILoads.html#dss.ILoads.ILoads" title="dss.ILoads.ILoads"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Loads</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ILoadShapes.html#dss.ILoadShapes.ILoadShapes" title="dss.ILoadShapes.ILoadShapes"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.LoadShapes</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IMeters.html#dss.IMeters.IMeters" title="dss.IMeters.IMeters"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Meters</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IMonitors.html#dss.IMonitors.IMonitors" title="dss.IMonitors.IMonitors"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Monitors</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IParallel.html#dss.IParallel.IParallel" title="dss.IParallel.IParallel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Parallel</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IPDElements.html#dss.IPDElements.IPDElements" title="dss.IPDElements.IPDElements"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.PDElements</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IPVSystems.html#dss.IPVSystems.IPVSystems" title="dss.IPVSystems.IPVSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.PVSystems</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IReactors.html#dss.IReactors.IReactors" title="dss.IReactors.IReactors"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Reactors</span></code></a> <strong>(API Extension)</strong></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IReclosers.html#dss.IReclosers.IReclosers" title="dss.IReclosers.IReclosers"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Reclosers</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IReduceCkt.html#dss.IReduceCkt.IReduceCkt" title="dss.IReduceCkt.IReduceCkt"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.ReduceCkt</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IRegControls.html#dss.IRegControls.IRegControls" title="dss.IRegControls.IRegControls"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.RegControls</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IRelays.html#dss.IRelays.IRelays" title="dss.IRelays.IRelays"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Relays</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ISensors.html#dss.ISensors.ISensors" title="dss.ISensors.ISensors"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Sensors</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ISettings.html#dss.ISettings.ISettings" title="dss.ISettings.ISettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Settings</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ISolution.html#dss.ISolution.ISolution" title="dss.ISolution.ISolution"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Solution</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IStorages.html#dss.IStorages.IStorages" title="dss.IStorages.IStorages"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Storages</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ISwtControls.html#dss.ISwtControls.ISwtControls" title="dss.ISwtControls.ISwtControls"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.SwtControls</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ITopology.html#dss.ITopology.ITopology" title="dss.ITopology.ITopology"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Topology</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ITransformers.html#dss.ITransformers.ITransformers" title="dss.ITransformers.ITransformers"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Transformers</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.ITSData.html#dss.ITSData.ITSData" title="dss.ITSData.ITSData"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.TSData</span></code></a> <strong>(API Extension)</strong></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IVsources.html#dss.IVsources.IVsources" title="dss.IVsources.IVsources"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.Vsources</span></code></a></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IWireData.html#dss.IWireData.IWireData" title="dss.IWireData.IWireData"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.WireData</span></code></a> <strong>(API Extension)</strong></p></li>
+<li><p><a class="reference internal" href="apidocs/dss/dss.IXYCurves.html#dss.IXYCurves.IXYCurves" title="dss.IXYCurves.IXYCurves"><code class="xref py py-class docutils literal notranslate"><span class="pre">DSS.ActiveCircuit.XYCurves</span></code></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="plotting-and-notebook-integration">
+<h2>Plotting and notebook integration<a class="headerlink" href="#plotting-and-notebook-integration" title="Link to this heading">#</a></h2>
+<p>Initial plotting support was added in DSS-Python v0.12.1, and an almost complete implementation is available since
+v0.14.2. There are some features lacking in comparison to the official implementation (as of June 2023), especially
+interactive inspection.</p>
+<p>To enable:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="kn">from</span> <span class="nn">dss</span> <span class="kn">import</span> <span class="n">dss</span><span class="p">,</span> <span class="n">plot</span>
+   <span class="n">plot</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After that, running the plot commands from the text interface or compile/redirect scripts will try to use matplotlib to
+reproduce most of the plot options from the official OpenDSS.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;compile some_circuit/Master.dss&#39;</span>
+   <span class="n">dss</span><span class="o">.</span><span class="n">ActiveCircuit</span><span class="o">.</span><span class="n">Solution</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+   <span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot profile&#39;</span>
+</pre></div>
+</div>
+<p>As a reminder, after activating, this can be used with <code class="docutils literal notranslate"><span class="pre">OpenDSSDirect.py</span> <span class="pre">&lt;https://dss-extensions.org/OpenDSSDirect.py/&gt;</span></code> too.</p>
+<p>A notebook with an example gallery of various plot commands and how to customized the matplotlib output is available: ()[examples/Plotting].</p>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
+<p>The documentation pages are organized as follows.</p>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DSS-Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/Plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/JSON.html">JSON export/import (WIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/UserModels/PyIndMach012/README.html">User-models (PyIndMach012)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Multithreading.html">Multiple DSS engines, multithreading vs. multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enumerations.html">dss.enums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apidocs/index.html">dss package</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="examples/GettingStarted.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Getting Started</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">DSS-Python</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brief-introduction">Brief introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-features-and-limitations">Missing features and limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-features">Extra features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dss-instance">The DSS instance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-and-notebook-integration">Plotting and notebook integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
