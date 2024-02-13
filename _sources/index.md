@@ -234,8 +234,8 @@ dss package <apidocs/index.rst>
 :maxdepth: 1
 :hidden:
 :caption: External links
-GitHub repository <https://github.com/dss-extensions/dss_python>
-Package on PyPI <https://pypi.python.org/pypi/OpenDSSDirect.py/>
+GitHub repository <https://github.com/dss-extensions/DSS-Python>
+Package on PyPI <https://pypi.python.org/pypi/dss-python/>
 Test/example circuits <https://github.com/dss-extensions/electricdss-tst>
 DSS-Extensions/FAQ <https://github.com/dss-extensions/dss-extensions#faq>
 OpenDSSDirect.py <https://dss-extensions.org/OpenDSSDirect.py>
