@@ -221,7 +221,6 @@ Plotting <examples/Plotting>
 JSON export/import (WIP) <examples/JSON>
 User-models (PyIndMach012) <examples/UserModels/PyIndMach012/README>
 examples/Multithreading
-Changelog <changelog>
 ```
 
 ```{toctree}
