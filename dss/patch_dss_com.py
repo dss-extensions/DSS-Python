@@ -93,6 +93,9 @@ def patch_dss_com(obj):
     type(obj.ActiveCircuit.ActiveBus).__iter__ = custom_bus_iter
     type(obj.ActiveCircuit.ActiveBus).__len__ = custom_bus_len
     type(obj.ActiveCircuit.ActiveBus)._columns = IBus._columns
+    type(obj.ActiveCircuit.Buses).__iter__ = custom_bus_iter
+    type(obj.ActiveCircuit.Buses).__len__ = custom_bus_len
+    type(obj.ActiveCircuit.Buses)._columns = IBus._columns
 
     def add_dunders(cls):
         cls.__iter__ = custom_iter
