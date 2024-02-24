@@ -83,6 +83,18 @@ def patch_dss_com(obj):
         return obj.ActiveCircuit.NumBuses
 
    
+    def custom_dss_call(self, cmds):
+        if '\n' in cmds:
+            for cmd in cmds.split('\n'):
+                self.Text.Command = cmd
+
+            return
+        
+        self.Text.Command = cmds
+
+    # Callable DSS
+    type(obj).__call__ = custom_dss_call
+
     # Monitors AsMatrix
     type(obj.ActiveCircuit.Monitors).AsMatrix = Monitors_AsMatrix
     

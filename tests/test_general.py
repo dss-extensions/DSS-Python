@@ -625,6 +625,22 @@ def test_essentials(DSS: IDSS = DSS):
     for expected, b in zip(['sourcebus', '1', '2', '3'], DSS.ActiveCircuit.ActiveBus):
         assert expected == b.Name
 
+    DSS.ClearAll()
+    DSS('''
+        clear
+        new circuit.test789
+        new line.line1 bus=1 bus2=2
+        new line.line2 bus=2 bus2=3
+    ''')
+    assert DSS.ActiveCircuit.Name == 'test789'
+    assert len(DSS.ActiveCircuit.ActiveBus) == 0
+    DSS('MakeBusList')
+    assert len(DSS.ActiveCircuit.Buses) == 4
+    for expected, b in zip(['sourcebus', '1', '2', '3'], DSS.ActiveCircuit.Buses):
+        assert expected == b.Name
+
+
+
 def test_exception_control(DSS: IDSS = DSS):
     # Default behavior
     assert DSS.Error.UseExceptions
