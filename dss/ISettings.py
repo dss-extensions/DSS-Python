@@ -307,5 +307,13 @@ class ISettings(Base):
         self._check_for_error(self._lib.Settings_Set_IterateDisabled(Value))
 
     def SetPropertyNameStyle(self, value: DSSPropertyNameStyle):
-        '''Switch the property names according'''
+        '''
+        Switch the property names according to the target style.
+
+        Use this method for compatibility with code that doesn't consider that
+        OpenDSS is case insensitive. Check the enumeration for more:
+        [DSSPropertyNameStyle](#dss_python_backend.enums.DSSPropertyNameStyle)
+
+        **(API Extension)**
+        '''
         self._check_for_error(self._lib.Settings_SetPropertyNameStyle(value))
