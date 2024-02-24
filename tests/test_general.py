@@ -803,6 +803,23 @@ def test_loadshape_save():
     npt.assert_allclose(pmult, pmult_sng)
 
 
+def test_line_parent_compat():
+    from dss import DSSCompatFlags
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    DSS.Text.Command = 'new energymeter.m1 element=transformer.sub'
+    DSS.Text.Command = 'solve mode=snap'
+    DSS.CompatFlags = DSSCompatFlags.ActiveLine
+    Lines = DSS.ActiveCircuit.Lines
+    res_compat = Lines.First, Lines.Next, Lines.Name, Lines.Next, Lines.Name, Lines.Parent, Lines.Name, Lines.Parent, Lines.Name
+    DSS.CompatFlags = 0
+    res_no_compat = Lines.First, Lines.Next, Lines.Name, Lines.Next, Lines.Name, Lines.Parent, Lines.Name, Lines.Parent, Lines.Name
+
+    assert res_no_compat == (1, 2, '632670', 3, '670671', 2, '632670', 1, '650632')
+
+    # The indices returned in compat mode are "wrong", to match the official DSS implementation
+    assert res_compat[3:2:] == res_no_compat[3:2:]
+
+
 if __name__ == '__main__':
     # for _ in range(250):
     #     test_pm_threads()
