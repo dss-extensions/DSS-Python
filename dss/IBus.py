@@ -74,7 +74,7 @@ class IBus(Base):
     @property
     def CplxSeqVoltages(self) -> Float64ArrayOrComplexArray:
         '''
-        Complex Double array of Sequence Voltages (0, 1, 2) at this Bus.
+        Complex array of Sequence Voltages (0, 1, 2) at this Bus.
 
         Original COM help: https://opendss.epri.com/CplxSeqVoltages.html
         '''
@@ -86,6 +86,8 @@ class IBus(Base):
         '''
         Accumulated customer outage durations
 
+        *Requires a previous call to `RelCalc` command*
+
         Original COM help: https://opendss.epri.com/Cust_Duration.html
         '''
         return self._check_for_error(self._lib.Bus_Get_Cust_Duration())
@@ -95,6 +97,8 @@ class IBus(Base):
         '''
         Annual number of customer-interruptions from this bus
 
+        *Requires a previous call to `RelCalc` command*
+
         Original COM help: https://opendss.epri.com/Cust_Interrupts.html
         '''
         return self._check_for_error(self._lib.Bus_Get_Cust_Interrupts())
@@ -102,7 +106,9 @@ class IBus(Base):
     @property
     def Distance(self) -> float:
         '''
-        Distance from energymeter (if non-zero)
+        Distance from EnergyMeter (if non-zero)
+
+        *Requires an energy meter with an updated zone.*
 
         Original COM help: https://opendss.epri.com/Distance.html
         '''
@@ -111,7 +117,9 @@ class IBus(Base):
     @property
     def Int_Duration(self) -> float:
         '''
-        Average interruption duration, hr.
+        Average interruption duration, hours.
+
+        *Requires a previous call to `RelCalc` command*
 
         Original COM help: https://opendss.epri.com/Int_Duration.html
         '''
@@ -121,6 +129,8 @@ class IBus(Base):
     def Isc(self) -> Float64ArrayOrComplexArray:
         '''
         Short circuit currents at bus; Complex Array.
+
+        *Requires a previous solution in `FaultStudy` mode.*
 
         Original COM help: https://opendss.epri.com/Isc.html
         '''
@@ -132,6 +142,8 @@ class IBus(Base):
         '''
         Accumulated failure rate downstream from this bus; faults per year
 
+        *Requires a previous call to `RelCalc` command*
+
         Original COM help: https://opendss.epri.com/Lambda.html
         '''
         return self._check_for_error(self._lib.Bus_Get_Lambda())
@@ -141,6 +153,8 @@ class IBus(Base):
         '''
         Total numbers of customers served downline from this bus
 
+        *Requires a previous call to `RelCalc` command*
+
         Original COM help: https://opendss.epri.com/N_Customers.html
         '''
         return self._check_for_error(self._lib.Bus_Get_N_Customers())
@@ -149,6 +163,8 @@ class IBus(Base):
     def N_interrupts(self) -> float:
         '''
         Number of interruptions this bus per year
+
+        *Requires a previous call to `RelCalc` command*
 
         Original COM help: https://opendss.epri.com/N_interrupts.html
         '''
@@ -187,6 +203,8 @@ class IBus(Base):
         '''
         Integer ID of the feeder section in which this bus is located.
 
+        *Requires a previous call to `RelCalc` command*
+
         Original COM help: https://opendss.epri.com/SectionID.html
         '''
         return self._check_for_error(self._lib.Bus_Get_SectionID())
@@ -205,6 +223,8 @@ class IBus(Base):
     def TotalMiles(self) -> float:
         '''
         Total length of line downline from this bus, in miles. For recloser siting algorithm.
+
+        *Requires a previous call to `RelCalc` command*
 
         Original COM help: https://opendss.epri.com/TotalMiles.html
         '''
@@ -235,6 +255,8 @@ class IBus(Base):
         '''
         Open circuit voltage; Complex array.
 
+        *Requires a previous solution in `FaultStudy` mode.*
+
         Original COM help: https://opendss.epri.com/Voc.html
         '''
         self._check_for_error(self._lib.Bus_Get_Voc_GR())
@@ -255,6 +277,8 @@ class IBus(Base):
         '''
         Complex array of Ysc matrix at bus. Column by column.
 
+        *Requires a previous solution in `FaultStudy` mode or a call to `ZSCRefresh`.*
+
         Original COM help: https://opendss.epri.com/YscMatrix.html
         '''
         self._check_for_error(self._lib.Bus_Get_YscMatrix_GR())
@@ -264,6 +288,8 @@ class IBus(Base):
     def Zsc0(self) -> Float64ArrayOrSimpleComplex:
         '''
         Complex Zero-Sequence short circuit impedance at bus.
+
+        *Requires a previous solution in `FaultStudy` mode or a call to `ZSCRefresh`.*
 
         Original COM help: https://opendss.epri.com/Zsc0.html
         '''
@@ -275,6 +301,8 @@ class IBus(Base):
         '''
         Complex Positive-Sequence short circuit impedance at bus.
 
+        *Requires a previous solution in `FaultStudy` mode or a call to `ZSCRefresh`.*
+
         Original COM help: https://opendss.epri.com/Zsc1.html
         '''
         self._check_for_error(self._lib.Bus_Get_Zsc1_GR())
@@ -284,6 +312,8 @@ class IBus(Base):
     def ZscMatrix(self) -> Float64ArrayOrComplexArray:
         '''
         Complex array of Zsc matrix at bus. Column by column.
+
+        *Requires a previous solution in `FaultStudy` mode or a call to `ZSCRefresh`.*
 
         Original COM help: https://opendss.epri.com/ZscMatrix.html
         '''
@@ -335,6 +365,8 @@ class IBus(Base):
         Array of doubles (complex) containing the complete 012 Zsc matrix. 
         Only available after Zsc is computed, either through the "ZscRefresh" command, or running a "FaultStudy" solution.
         Only available for buses with 3 nodes.
+
+        *Requires a previous solution in `FaultStudy` mode or a call to `ZSCRefresh`.*
 
         Original COM help: https://opendss.epri.com/ZSC012Matrix.html
         '''

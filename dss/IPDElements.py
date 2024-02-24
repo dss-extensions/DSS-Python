@@ -30,6 +30,8 @@ class IPDElements(Base):
         '''
         Accumulated failure rate for this branch on downline
 
+        *Requires a previous call to `RelCalc` command*
+
         Original COM help: https://opendss.epri.com/AccumulatedL.html
         '''
         return self._check_for_error(self._lib.PDElements_Get_AccumulatedL())
@@ -71,6 +73,8 @@ class IPDElements(Base):
         '''
         (read-only) Number of the terminal of active PD element that is on the "from" 
         side. This is set after the meter zone is determined.
+
+        *Requires an energy meter with an updated zone.*
         '''
         return self._check_for_error(self._lib.PDElements_Get_FromTerminal())
 
@@ -87,6 +91,8 @@ class IPDElements(Base):
     def Lambda(self) -> float:
         '''
         Failure rate for this branch. Faults per year including length of line.
+
+        *Requires a previous call to `RelCalc` command*
 
         Original COM help: https://opendss.epri.com/Lambda1.html
         '''
@@ -120,6 +126,8 @@ class IPDElements(Base):
         '''
         Number of customers, this branch
 
+        *Requires an energy meter with an updated zone.*
+
         Original COM help: https://opendss.epri.com/Numcustomers.html
         '''
         return self._check_for_error(self._lib.PDElements_Get_Numcustomers())
@@ -129,6 +137,8 @@ class IPDElements(Base):
         '''
         (read-only) Sets the parent PD element to be the active circuit element.
         Returns 0 if no more elements upline.
+
+        *Requires an energy meter with an updated zone.*
         '''
         return self._check_for_error(self._lib.PDElements_Get_ParentPDElement())
 
@@ -150,6 +160,8 @@ class IPDElements(Base):
         '''
         Integer ID of the feeder section that this PDElement branch is part of
 
+        *Requires a previous call to `RelCalc` command*
+
         Original COM help: https://opendss.epri.com/SectionID1.html
         '''
         return self._check_for_error(self._lib.PDElements_Get_SectionID())
@@ -159,6 +171,8 @@ class IPDElements(Base):
         '''
         Total miles of line from this element to the end of the zone. For recloser siting algorithm.
 
+        *Requires a previous call to `RelCalc` command*
+
         Original COM help: https://opendss.epri.com/TotalMiles1.html
         '''
         return self._check_for_error(self._lib.PDElements_Get_TotalMiles())
@@ -167,6 +181,8 @@ class IPDElements(Base):
     def Totalcustomers(self) -> int:
         '''
         Total number of customers from this branch to the end of the zone
+
+        *Requires a circuit with an energy meter with an updated zone.*
 
         Original COM help: https://opendss.epri.com/TotalCustomers1.html
         '''

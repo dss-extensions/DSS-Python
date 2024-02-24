@@ -192,6 +192,8 @@ class ILines(Iterable):
         '''
         Number of customers on this line section.
 
+        *Requires an energy meter with an updated zone.*
+
         Original COM help: https://opendss.epri.com/NumCust.html
         '''
         return self._check_for_error(self._lib.Lines_Get_NumCust())
@@ -200,6 +202,8 @@ class ILines(Iterable):
     def Parent(self) -> int:
         '''
         Sets Parent of the active Line to be the active line. Returns 0 if no parent or action fails.
+
+        *Requires an energy meter with an updated zone.*
 
         Original COM help: https://opendss.epri.com/Parent.html
         '''

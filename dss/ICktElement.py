@@ -261,6 +261,8 @@ class ICktElement(Base):
         '''
         Name of the Energy Meter this element is assigned to.
 
+        *Requires an energy meter with an updated zone.*
+
         Original COM help: https://opendss.epri.com/EnergyMeter.html
         '''
         return self._get_string(self._check_for_error(self._lib.CktElement_Get_EnergyMeter()))
