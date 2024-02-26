@@ -248,7 +248,7 @@
 ````{py:data} DSS_MARKER_20
 :canonical: dss.plot.DSS_MARKER_20
 :value: >
-   None
+   'Path(...)'
 
 ```{autodoc2-docstring} dss.plot.DSS_MARKER_20
 ```
@@ -258,7 +258,7 @@
 ````{py:data} DSS_MARKER_21
 :canonical: dss.plot.DSS_MARKER_21
 :value: >
-   None
+   'Path(...)'
 
 ```{autodoc2-docstring} dss.plot.DSS_MARKER_21
 ```
@@ -268,7 +268,7 @@
 ````{py:data} DSS_MARKER_22
 :canonical: dss.plot.DSS_MARKER_22
 :value: >
-   None
+   'Path(...)'
 
 ```{autodoc2-docstring} dss.plot.DSS_MARKER_22
 ```
@@ -278,7 +278,7 @@
 ````{py:data} DSS_MARKER_23
 :canonical: dss.plot.DSS_MARKER_23
 :value: >
-   None
+   'Path(...)'
 
 ```{autodoc2-docstring} dss.plot.DSS_MARKER_23
 ```
@@ -288,7 +288,7 @@
 ````{py:data} DSS_MARKER_37
 :canonical: dss.plot.DSS_MARKER_37
 :value: >
-   None
+   'Path(...)'
 
 ```{autodoc2-docstring} dss.plot.DSS_MARKER_37
 ```
@@ -298,7 +298,7 @@
 ````{py:data} DSS_MARKER_38
 :canonical: dss.plot.DSS_MARKER_38
 :value: >
-   None
+   'Path(...)'
 
 ```{autodoc2-docstring} dss.plot.DSS_MARKER_38
 ```
@@ -618,7 +618,7 @@
 ````{py:data} node_re
 :canonical: dss.plot.node_re
 :value: >
-   None
+   'compile(...)'
 
 ```{autodoc2-docstring} dss.plot.node_re
 ```

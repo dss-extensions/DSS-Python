@@ -6,9 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Integrated plotting in Python &#8212; DSS-Python 0.15.1 documentation</title>
+    <title>Integrated plotting in Python &#8212; DSS-Python 0.15.3 documentation</title>
   
   
   
@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
@@ -38,7 +38,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=c98a3daa"></script>
+    <script src="../_static/documentation_options.js?v=65023fd1"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -137,8 +137,8 @@
       
     
     
-    <img src="../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.1 documentation - Home"/>
-    <script>document.write(`<img src="../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.1 documentation - Home"/>`);</script>
+    <img src="../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.3 documentation - Home"/>
+    <script>document.write(`<img src="../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.3 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -417,6 +417,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-the-outputs">Saving the outputs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-the-figures">Customizing the figures</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-matplotlib-styles">Applying matplotlib styles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adjusting-specific-elements">Adjusting specific elements</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-using-matplotlibs-api">Customizing using matplotlib’s API</a></li>
 </ul>
 </li>
@@ -566,7 +567,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/52bab6427c1821d102ce3fbffa7d1f0165cdb62b51dc97fb43f5104ca0d67bef.png" src="../_images/52bab6427c1821d102ce3fbffa7d1f0165cdb62b51dc97fb43f5104ca0d67bef.png" />
+<img alt="../_images/fe31482afa726e76b5e165d06fc01194197915a5e52f9fcb1e438dbbee581400.png" src="../_images/fe31482afa726e76b5e165d06fc01194197915a5e52f9fcb1e438dbbee581400.png" />
 </div>
 </div>
 </section>
@@ -585,7 +586,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/52bab6427c1821d102ce3fbffa7d1f0165cdb62b51dc97fb43f5104ca0d67bef.png" src="../_images/52bab6427c1821d102ce3fbffa7d1f0165cdb62b51dc97fb43f5104ca0d67bef.png" />
+<img alt="../_images/fe31482afa726e76b5e165d06fc01194197915a5e52f9fcb1e438dbbee581400.png" src="../_images/fe31482afa726e76b5e165d06fc01194197915a5e52f9fcb1e438dbbee581400.png" />
 </div>
 </div>
 </section>
@@ -633,8 +634,8 @@ Visual Studio Code is also a great environment for notebooks.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DSS C-API Library version 0.14.0 revision 04941400a091677da98b033a3b682480f2584693 based on OpenDSS SVN 3723 [FPC 3.2.2] (64-bit build) MVMULT INCREMENTAL_Y CONTEXT_API PM 20240209141429; License Status: Open 
-DSS-Python version: 0.15.1
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DSS C-API Library version 0.14.2 revision 9fcf7ace747fdf21329b9c59fd07a89cc7b50849 based on OpenDSS SVN 3723 [FPC 3.2.2] (64-bit build) MVMULT INCREMENTAL_Y CONTEXT_API PM 20240226091209; License Status: Open 
+DSS-Python version: 0.15.3
 </pre></div>
 </div>
 </div>
@@ -660,9 +661,9 @@ visualize voltages Transformer.xfm1
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5ba123a66f3e0ae3eabe605513e8981cb723abce8bb8263c283bc8e06e02b449.png" src="../_images/5ba123a66f3e0ae3eabe605513e8981cb723abce8bb8263c283bc8e06e02b449.png" />
-<img alt="../_images/7652e0bbdecb54faeff46fe5e13f5550a65d7641e6fc313d193d4f9e7a5e9abe.png" src="../_images/7652e0bbdecb54faeff46fe5e13f5550a65d7641e6fc313d193d4f9e7a5e9abe.png" />
-<img alt="../_images/0aa60c8df8d526a98ee708f6c5ba0bed553863ae6870c4e175df35c556c15a2f.png" src="../_images/0aa60c8df8d526a98ee708f6c5ba0bed553863ae6870c4e175df35c556c15a2f.png" />
+<img alt="../_images/986918272f36dc4806488e7bb36c667db5def0671f104c7ba3d6bccc557cfa7c.png" src="../_images/986918272f36dc4806488e7bb36c667db5def0671f104c7ba3d6bccc557cfa7c.png" />
+<img alt="../_images/d6dc93c12033337629cb084307046a7e7573ff7fd6da22352a6810378c0f7237.png" src="../_images/d6dc93c12033337629cb084307046a7e7573ff7fd6da22352a6810378c0f7237.png" />
+<img alt="../_images/a2e1c86b7177c8307d2ecc0aedf46c59f054755749253b8e26f19ee240fcd078.png" src="../_images/a2e1c86b7177c8307d2ecc0aedf46c59f054755749253b8e26f19ee240fcd078.png" />
 </div>
 </div>
 </section>
@@ -677,7 +678,7 @@ plot circuit labels=y
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a450ebe70783a77101a283781880f66b99347bc5fd54a0aa75ddb3e0628d8d69.png" src="../_images/a450ebe70783a77101a283781880f66b99347bc5fd54a0aa75ddb3e0628d8d69.png" />
+<img alt="../_images/2ad9a340692ee930b50f6185777d56b10488e0368f70d558c4c7ca4822aed0c6.png" src="../_images/2ad9a340692ee930b50f6185777d56b10488e0368f70d558c4c7ca4822aed0c6.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -696,9 +697,9 @@ set marktransformers=n
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5455f94a6385dde0f818dc475e981056471e816d7411717eb7cec3157c18c06f.png" src="../_images/5455f94a6385dde0f818dc475e981056471e816d7411717eb7cec3157c18c06f.png" />
-<img alt="../_images/84821c650d70e3c699cf47c3b5e587522e91a3fa5b1249d1c352fa817368ab58.png" src="../_images/84821c650d70e3c699cf47c3b5e587522e91a3fa5b1249d1c352fa817368ab58.png" />
-<img alt="../_images/6996ff3fda5848ef5d6b97adae85d3661e4d9c597c301456e3cf839f6c036f12.png" src="../_images/6996ff3fda5848ef5d6b97adae85d3661e4d9c597c301456e3cf839f6c036f12.png" />
+<img alt="../_images/915b38a35b6f7fab28650be0f09e6a0c82aca9c043901fc045541b70b672fd1c.png" src="../_images/915b38a35b6f7fab28650be0f09e6a0c82aca9c043901fc045541b70b672fd1c.png" />
+<img alt="../_images/54c1255393bc0b8c730c8c52b442a71171388f9583480b45de38c6aecf55c01d.png" src="../_images/54c1255393bc0b8c730c8c52b442a71171388f9583480b45de38c6aecf55c01d.png" />
+<img alt="../_images/c16ce084aa57f50d03a776bdcb5f758391cae3f11b85f1a388561a425aec921b.png" src="../_images/c16ce084aa57f50d03a776bdcb5f758391cae3f11b85f1a388561a425aec921b.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -711,9 +712,9 @@ Plot Circuit Currents
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e7ac397a330424e3e2c1325b8fe3738edb54d3752370bff6633302bdd426e472.png" src="../_images/e7ac397a330424e3e2c1325b8fe3738edb54d3752370bff6633302bdd426e472.png" />
-<img alt="../_images/723b71d2d83303d2b1a79f629f4085c0d10493599c4c521251a761cc25d68545.png" src="../_images/723b71d2d83303d2b1a79f629f4085c0d10493599c4c521251a761cc25d68545.png" />
-<img alt="../_images/49677375033f95838d233618d322b1c3cca6d3f6eb1b1ffd31893641d0812df4.png" src="../_images/49677375033f95838d233618d322b1c3cca6d3f6eb1b1ffd31893641d0812df4.png" />
+<img alt="../_images/08316224dbcc1cb965f33959922397a0c8ff90c0a445a2a7bfc092eb32836787.png" src="../_images/08316224dbcc1cb965f33959922397a0c8ff90c0a445a2a7bfc092eb32836787.png" />
+<img alt="../_images/d43afa6aa6c215048b0af87a4c82767b8598db2723ba815864bafccfedb20a55.png" src="../_images/d43afa6aa6c215048b0af87a4c82767b8598db2723ba815864bafccfedb20a55.png" />
+<img alt="../_images/9f7950163fdacaacd852893c59c30719a0d577b0381cdd0a857e18463d63bd07.png" src="../_images/9f7950163fdacaacd852893c59c30719a0d577b0381cdd0a857e18463d63bd07.png" />
 </div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">plot</span> <span class="pre">scatter</span></code> is one of the plot styles that would require OpenDSS Viewer:</p>
@@ -725,7 +726,7 @@ plot scatter
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/4d6abe69a441633ef9171a10fee199ac900d14dc18647462fbd56a0420e12dfe.png" src="../_images/4d6abe69a441633ef9171a10fee199ac900d14dc18647462fbd56a0420e12dfe.png" />
+<img alt="../_images/eb5aaa4b4b29ea49a585080ff9adb5e700d24a2ed59ccbf2f8d6935ebba56ff7.png" src="../_images/eb5aaa4b4b29ea49a585080ff9adb5e700d24a2ed59ccbf2f8d6935ebba56ff7.png" />
 </div>
 </div>
 </section>
@@ -745,9 +746,9 @@ plot profile phases=all
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f4f300335337e1fd3fdbde460bbefcca56f59adb3a0072989b129e4b7f5c31a7.png" src="../_images/f4f300335337e1fd3fdbde460bbefcca56f59adb3a0072989b129e4b7f5c31a7.png" />
-<img alt="../_images/c388533cc86bc07dc9d914ee09e4161d49c5082258f9915d2d4a1853f6ac6347.png" src="../_images/c388533cc86bc07dc9d914ee09e4161d49c5082258f9915d2d4a1853f6ac6347.png" />
-<img alt="../_images/2cc06b4ab8005ce2b2f8ff1e3d4694282b92ecfce717bc3dc59c7b213e9aae1d.png" src="../_images/2cc06b4ab8005ce2b2f8ff1e3d4694282b92ecfce717bc3dc59c7b213e9aae1d.png" />
+<img alt="../_images/68cf0b7f85ac670748a09ab9892f2c7a7ab8d70fe8fb6d5b16b40d24da28156a.png" src="../_images/68cf0b7f85ac670748a09ab9892f2c7a7ab8d70fe8fb6d5b16b40d24da28156a.png" />
+<img alt="../_images/85cee0445927329215366ae8c673fb88c9fdf2aa434ab272cbf2e6cf96c588da.png" src="../_images/85cee0445927329215366ae8c673fb88c9fdf2aa434ab272cbf2e6cf96c588da.png" />
+<img alt="../_images/4ab33493d66d9ccb5f2ea2d05d6d84c0577cad983d430a5c4e6cf8dbfdbadb59.png" src="../_images/4ab33493d66d9ccb5f2ea2d05d6d84c0577cad983d430a5c4e6cf8dbfdbadb59.png" />
 </div>
 </div>
 </section>
@@ -762,7 +763,7 @@ plot loadshape object=commercial_sm c1=red
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/de1af7485d23260913012b1193b9565091d0186db2be44396ffa21c895143438.png" src="../_images/de1af7485d23260913012b1193b9565091d0186db2be44396ffa21c895143438.png" />
+<img alt="../_images/e11c01a45fd325ebe7371884fd158475ee5665bf3ffffcf38bca094505709702.png" src="../_images/e11c01a45fd325ebe7371884fd158475ee5665bf3ffffcf38bca094505709702.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -776,7 +777,7 @@ plot monitor object=montest
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/4d052511bfd95b4e56bf4e06eaef05cb7cd2f48cbcda8cd735e675b3aed2c322.png" src="../_images/4d052511bfd95b4e56bf4e06eaef05cb7cd2f48cbcda8cd735e675b3aed2c322.png" />
+<img alt="../_images/db53950245aa3a83c6b26044dec91b766783cd5f80b0a2155d6d55f05370ae89.png" src="../_images/db53950245aa3a83c6b26044dec91b766783cd5f80b0a2155d6d55f05370ae89.png" />
 </div>
 </div>
 </section>
@@ -828,10 +829,10 @@ YearlyCurves cases=(16Nov2011, another) registers=(9, 11) meter=Totals
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/b39b4a769ebf316150789e14c7548aee724c61b26b7753cd68c8f62d06430ae7.png" src="../_images/b39b4a769ebf316150789e14c7548aee724c61b26b7753cd68c8f62d06430ae7.png" />
-<img alt="../_images/9d905307a28357bb0fa1336e5e51758dac9b1257166145e63a950c8613ccdc16.png" src="../_images/9d905307a28357bb0fa1336e5e51758dac9b1257166145e63a950c8613ccdc16.png" />
-<img alt="../_images/7a50d738e7d47195de7cb80371a49db4ffddf223b77b4914fbf2bd314b8ae12d.png" src="../_images/7a50d738e7d47195de7cb80371a49db4ffddf223b77b4914fbf2bd314b8ae12d.png" />
-<img alt="../_images/38bae003dc8f352315e1daf1691335a91e26410576ab1c4603872110a58b8f4c.png" src="../_images/38bae003dc8f352315e1daf1691335a91e26410576ab1c4603872110a58b8f4c.png" />
+<img alt="../_images/c31ae6aae4f61e5100b4deb42a1bb2dba1fbf679961e6d68af5513b68da92f90.png" src="../_images/c31ae6aae4f61e5100b4deb42a1bb2dba1fbf679961e6d68af5513b68da92f90.png" />
+<img alt="../_images/3e5666825ef319650c36d55dd52fac4d2075b68cfaafe743a3974fed3b2e2ad1.png" src="../_images/3e5666825ef319650c36d55dd52fac4d2075b68cfaafe743a3974fed3b2e2ad1.png" />
+<img alt="../_images/bdefd46a189e02495c270a97879383374bcd697d8ca1332cc82af750a20c0756.png" src="../_images/bdefd46a189e02495c270a97879383374bcd697d8ca1332cc82af750a20c0756.png" />
+<img alt="../_images/086a5ecf66319d9685d358e56a82cf3ff2fa9e794732c8874dbba9a878bc657d.png" src="../_images/086a5ecf66319d9685d358e56a82cf3ff2fa9e794732c8874dbba9a878bc657d.png" />
 </div>
 </div>
 </section>
@@ -845,7 +846,7 @@ Plot type=zone object=feeder quantity=power max=2000
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d5d7b6705b64a1326d2acbecaa69cda124625c03847fb0f689d80a5ec3871ec1.png" src="../_images/d5d7b6705b64a1326d2acbecaa69cda124625c03847fb0f689d80a5ec3871ec1.png" />
+<img alt="../_images/d0313d371acf3fbf7cedaab2f487dd9a870d3e9556e3f54db5ad320c6c95b748.png" src="../_images/d0313d371acf3fbf7cedaab2f487dd9a870d3e9556e3f54db5ad320c6c95b748.png" />
 </div>
 </div>
 </section>
@@ -860,7 +861,7 @@ plot matrix incidence
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d88cc94b3a3b6e1fb6a038b1cb3277d93e0a09258251a26e59a2347c2445a611.png" src="../_images/d88cc94b3a3b6e1fb6a038b1cb3277d93e0a09258251a26e59a2347c2445a611.png" />
+<img alt="../_images/1f857400237ce7ef2cb163b041e1d6bb5c4782945ada5d226d6bf697b2fd6949.png" src="../_images/1f857400237ce7ef2cb163b041e1d6bb5c4782945ada5d226d6bf697b2fd6949.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -872,7 +873,7 @@ plot matrix laplacian
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/0b1c4ac43071228b48bdbb570c659ef69524455c426c1d26bab56b71a64b65f0.png" src="../_images/0b1c4ac43071228b48bdbb570c659ef69524455c426c1d26bab56b71a64b65f0.png" />
+<img alt="../_images/a16f8da20045a9bd740ae401ec887ac322508cb7475c4129fafb540a9c243ffa.png" src="../_images/a16f8da20045a9bd740ae401ec887ac322508cb7475c4129fafb540a9c243ffa.png" />
 </div>
 </div>
 <p>If you wish to plot the Y matrix directly, you can use the sparse version and matplotlib’s <code class="docutils literal notranslate"><span class="pre">spy</span></code>. For another alternative, see <a class="github reference external" href="https://github.com/nschloe/betterspy">nschloe/betterspy</a></p>
@@ -886,10 +887,10 @@ plot matrix laplacian
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7f94241ae7d0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7f47e54e0e90&gt;
 </pre></div>
 </div>
-<img alt="../_images/928e7e57b29cc9b6f9e39262b4720058acfb962ee4bb5e5ef5d2b9ff45bd2c2d.png" src="../_images/928e7e57b29cc9b6f9e39262b4720058acfb962ee4bb5e5ef5d2b9ff45bd2c2d.png" />
+<img alt="../_images/7380014bf2bc218eabdc1fd72c7e980b367bab26458e9a2cd8139b008fe605d0.png" src="../_images/7380014bf2bc218eabdc1fd72c7e980b367bab26458e9a2cd8139b008fe605d0.png" />
 </div>
 </div>
 </section>
@@ -906,8 +907,8 @@ plot matrix laplacian
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/57469681ab9f4371b5051d1f0a29cce1e1eda8543d18d1272ba01a4b39fef93f.png" src="../_images/57469681ab9f4371b5051d1f0a29cce1e1eda8543d18d1272ba01a4b39fef93f.png" />
-<img alt="../_images/b9156fe58207e10df7169a92c0112c70f2e31bed02e6e2ab00a3e7c267230c08.png" src="../_images/b9156fe58207e10df7169a92c0112c70f2e31bed02e6e2ab00a3e7c267230c08.png" />
+<img alt="../_images/44df115ce9e33f1576c43bc963ce39a0dd0f8ba8e9a711892b9be30f5e5d4791.png" src="../_images/44df115ce9e33f1576c43bc963ce39a0dd0f8ba8e9a711892b9be30f5e5d4791.png" />
+<img alt="../_images/353a91604b719908757ab1225d8ab302aab80002d2abbe16de4368ee2ba504d7.png" src="../_images/353a91604b719908757ab1225d8ab302aab80002d2abbe16de4368ee2ba504d7.png" />
 </div>
 </div>
 <p>Or just the 3D plots:</p>
@@ -926,7 +927,7 @@ plot profile
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/b9156fe58207e10df7169a92c0112c70f2e31bed02e6e2ab00a3e7c267230c08.png" src="../_images/b9156fe58207e10df7169a92c0112c70f2e31bed02e6e2ab00a3e7c267230c08.png" />
+<img alt="../_images/353a91604b719908757ab1225d8ab302aab80002d2abbe16de4368ee2ba504d7.png" src="../_images/353a91604b719908757ab1225d8ab302aab80002d2abbe16de4368ee2ba504d7.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -938,7 +939,7 @@ plot matrix incidence
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/4bfd5d9f4946fea0b8709d40582e8d0e82f26aaeb99d5f17402ad8d6e0318051.png" src="../_images/4bfd5d9f4946fea0b8709d40582e8d0e82f26aaeb99d5f17402ad8d6e0318051.png" />
+<img alt="../_images/7cdbce65d59fa486c20d0b2729577c7c7070986634101e33b12e437e0c1b66a7.png" src="../_images/7cdbce65d59fa486c20d0b2729577c7c7070986634101e33b12e437e0c1b66a7.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -950,7 +951,7 @@ plot matrix laplacian
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/685a519cd7922c11622a93f942d12ae4c6449fd2a60f5666ce4d3b287025bbf9.png" src="../_images/685a519cd7922c11622a93f942d12ae4c6449fd2a60f5666ce4d3b287025bbf9.png" />
+<img alt="../_images/96a0184faa6ee2507ca9930a6c50aa1b13f5cee0642b2f4bab7b3de73dfd5d36.png" src="../_images/96a0184faa6ee2507ca9930a6c50aa1b13f5cee0642b2f4bab7b3de73dfd5d36.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -961,7 +962,7 @@ plot scatter
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a16facdc77f4662efb1c31d6eb612ac260b8352a227e11ca4c95e871b86165bb.png" src="../_images/a16facdc77f4662efb1c31d6eb612ac260b8352a227e11ca4c95e871b86165bb.png" />
+<img alt="../_images/3b273a0e0c9b0537a54de03f4a11ed12dc45e506f16eb01694649d3517b7138a.png" src="../_images/3b273a0e0c9b0537a54de03f4a11ed12dc45e506f16eb01694649d3517b7138a.png" />
 </div>
 </div>
 </section>
@@ -1045,7 +1046,7 @@ plot circuit power 1ph=3
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/fc3d60e31c696b584af837d661f1e0a7ff998e03277923e0fc733af71248a483.png" src="../_images/fc3d60e31c696b584af837d661f1e0a7ff998e03277923e0fc733af71248a483.png" />
+<img alt="../_images/f73f8f28b3cf22c8fd7c96d6b94c26053940e548de467124ca95d7b666c2b879.png" src="../_images/f73f8f28b3cf22c8fd7c96d6b94c26053940e548de467124ca95d7b666c2b879.png" />
 </div>
 </div>
 <p>Plot voltages</p>
@@ -1059,7 +1060,7 @@ plot circuit voltage
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/928c30415fdedff7d2021858e9c58c6cc3a4d28fe92e304fceb9227b36d0d5e6.png" src="../_images/928c30415fdedff7d2021858e9c58c6cc3a4d28fe92e304fceb9227b36d0d5e6.png" />
+<img alt="../_images/b4b9d8161c4ade0b8af7369590da8b2c37bc12f945909b5b5cc47c26318ea0d9.png" src="../_images/b4b9d8161c4ade0b8af7369590da8b2c37bc12f945909b5b5cc47c26318ea0d9.png" />
 </div>
 </div>
 <p>Plot profile</p>
@@ -1073,8 +1074,8 @@ plot profile phases = all
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a482a74d9414887853414b52bd76c6200631302f78be016cc14da876d1ce7049.png" src="../_images/a482a74d9414887853414b52bd76c6200631302f78be016cc14da876d1ce7049.png" />
-<img alt="../_images/05096d063123d59902d089623e1e2b580a4940fc3eb755dd63c472c3c21659cc.png" src="../_images/05096d063123d59902d089623e1e2b580a4940fc3eb755dd63c472c3c21659cc.png" />
+<img alt="../_images/41db9563c61505f0cb1ae102cbe2a839ad064413ea52f554f958a205ec63c255.png" src="../_images/41db9563c61505f0cb1ae102cbe2a839ad064413ea52f554f958a205ec63c255.png" />
+<img alt="../_images/3974e436e25550a958bf6d52b6aff7cca20a2159b913eb9f4322068cf57a756f.png" src="../_images/3974e436e25550a958bf6d52b6aff7cca20a2159b913eb9f4322068cf57a756f.png" />
 </div>
 </div>
 <p>Minimum load case (approximate)</p>
@@ -1090,7 +1091,7 @@ plot profile phases = all
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/6705a1d5c69b110898eeb5db0209e09789b17635809ebcd8ddae95b309dad71c.png" src="../_images/6705a1d5c69b110898eeb5db0209e09789b17635809ebcd8ddae95b309dad71c.png" />
+<img alt="../_images/33281af49e83025fe333a0831575d598611026ea72588bf285ee65b2a78b566b.png" src="../_images/33281af49e83025fe333a0831575d598611026ea72588bf285ee65b2a78b566b.png" />
 </div>
 </div>
 <p>Add PV to Circuit Model</p>
@@ -1112,8 +1113,8 @@ plot profile phases=all
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d522f73455fa1dc27a06d40797a4167ff5c89a51e5b7c11e97f0363aa6e2e504.png" src="../_images/d522f73455fa1dc27a06d40797a4167ff5c89a51e5b7c11e97f0363aa6e2e504.png" />
-<img alt="../_images/6a63fa40e39b455bce6c987a96e4e5d5ddfb6377eeb1de97cac814fa152df5ea.png" src="../_images/6a63fa40e39b455bce6c987a96e4e5d5ddfb6377eeb1de97cac814fa152df5ea.png" />
+<img alt="../_images/7d3b617ddb0a7a3a98d4d664abac5eb9e0f827e1125e5ce3842fc09ccf203cca.png" src="../_images/7d3b617ddb0a7a3a98d4d664abac5eb9e0f827e1125e5ce3842fc09ccf203cca.png" />
+<img alt="../_images/ac12429255a4d4850e68f89bbc26afae849af2362e81e99a03dd5576d820be7a.png" src="../_images/ac12429255a4d4850e68f89bbc26afae849af2362e81e99a03dd5576d820be7a.png" />
 </div>
 </div>
 <p>Compare saved voltages to current case solved</p>
@@ -1139,8 +1140,8 @@ plot general quantity=1 max=3.5 min=0.0 C1=$0000FFFF C2=$000000FF dots=y labels=
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/152dd7df323e8c0f26f4f52353037c8898ab7e8a5722ed03fcfc65876be6ef91.png" src="../_images/152dd7df323e8c0f26f4f52353037c8898ab7e8a5722ed03fcfc65876be6ef91.png" />
-<img alt="../_images/40b3b639d13c11c072c816d220e049bfb12ec519c5daf62a2b65c67a37cdc5da.png" src="../_images/40b3b639d13c11c072c816d220e049bfb12ec519c5daf62a2b65c67a37cdc5da.png" />
+<img alt="../_images/bd36df438b53ea8d30708965fec5913f952395b869addcbaec5132f128ad80cb.png" src="../_images/bd36df438b53ea8d30708965fec5913f952395b869addcbaec5132f128ad80cb.png" />
+<img alt="../_images/d1d0dbca97d051bb45ae8aadc0701aaa967120975bc8b2dd6e9dd36baa442b88.png" src="../_images/d1d0dbca97d051bb45ae8aadc0701aaa967120975bc8b2dd6e9dd36baa442b88.png" />
 </div>
 </div>
 <p>Run time series analysis</p>
@@ -1169,8 +1170,8 @@ plot monitor object=pvsite4pq channels=(1 )
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/48027e3cb2cbd22cc29201533e8abb35c19b1c8d6adc991daa807de9d39bcc0c.png" src="../_images/48027e3cb2cbd22cc29201533e8abb35c19b1c8d6adc991daa807de9d39bcc0c.png" />
-<img alt="../_images/d019102656bbb826fcf38990ae74e534ab244db9a72718f32d79247d4cdc242c.png" src="../_images/d019102656bbb826fcf38990ae74e534ab244db9a72718f32d79247d4cdc242c.png" />
+<img alt="../_images/2fea04dffb1023243e7261b60c6379e7c507010b4f6993dcf2f7713c38608960.png" src="../_images/2fea04dffb1023243e7261b60c6379e7c507010b4f6993dcf2f7713c38608960.png" />
+<img alt="../_images/e81a3b4e4d27bff158046c186d3ce03d306a32e4eb6cf5a9534e56f2db53cf2e.png" src="../_images/e81a3b4e4d27bff158046c186d3ce03d306a32e4eb6cf5a9534e56f2db53cf2e.png" />
 </div>
 </div>
 <p>Restore the current dir in the DSS engine</p>
@@ -1207,14 +1208,14 @@ redirect ./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/CircuitPlotting
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/480470e4a7fece115946e19b2909adef721a0826a36990ee87735ab9acdd6a4c.png" src="../_images/480470e4a7fece115946e19b2909adef721a0826a36990ee87735ab9acdd6a4c.png" />
-<img alt="../_images/d3f9eec0fc6847cb38a580d73afee4ef333d6cc5b2a0e6073131fd0f3e39709b.png" src="../_images/d3f9eec0fc6847cb38a580d73afee4ef333d6cc5b2a0e6073131fd0f3e39709b.png" />
-<img alt="../_images/4319da8cee025f2e1bbd042e6fb2a045fa74f6bf35ecb1d4d9ab7fe0987d886d.png" src="../_images/4319da8cee025f2e1bbd042e6fb2a045fa74f6bf35ecb1d4d9ab7fe0987d886d.png" />
-<img alt="../_images/4d7a12ff2db82b27ba0818d7b913c1b7a0f023d519082062c381878952122658.png" src="../_images/4d7a12ff2db82b27ba0818d7b913c1b7a0f023d519082062c381878952122658.png" />
-<img alt="../_images/ca4713d2c7c9188e7218c970e79b2f12ce5372d4599b090f20f84d7c25ef4f75.png" src="../_images/ca4713d2c7c9188e7218c970e79b2f12ce5372d4599b090f20f84d7c25ef4f75.png" />
-<img alt="../_images/f3b0a0f0fb2af4eec8e9b7f9acc2ed7f9c0071f163b2584d29d7033856f8cde1.png" src="../_images/f3b0a0f0fb2af4eec8e9b7f9acc2ed7f9c0071f163b2584d29d7033856f8cde1.png" />
-<img alt="../_images/7682be5fabe1b16070eaf0c6e154ef20e8ed4107a851e2a5dbbf865364115c70.png" src="../_images/7682be5fabe1b16070eaf0c6e154ef20e8ed4107a851e2a5dbbf865364115c70.png" />
-<img alt="../_images/8aaca61bfbcb4aa98a2724b98cc078b8212db35ee216628a1f786d6af42a8ee5.png" src="../_images/8aaca61bfbcb4aa98a2724b98cc078b8212db35ee216628a1f786d6af42a8ee5.png" />
+<img alt="../_images/32adeb0f34a4ed4f77de99745bbf0e01598a53d1b7d9f6fea78b62994a2147c3.png" src="../_images/32adeb0f34a4ed4f77de99745bbf0e01598a53d1b7d9f6fea78b62994a2147c3.png" />
+<img alt="../_images/a03b4cdbf5b90454472487924ba56a2c8bd3740db7e844d39cc09427d3f02c2e.png" src="../_images/a03b4cdbf5b90454472487924ba56a2c8bd3740db7e844d39cc09427d3f02c2e.png" />
+<img alt="../_images/8614362ec445f395103c06ddaeca23fb164208abee71b04df0fa1c4e92c4a551.png" src="../_images/8614362ec445f395103c06ddaeca23fb164208abee71b04df0fa1c4e92c4a551.png" />
+<img alt="../_images/20c579745a812ecde1fdb618e0e559e80417c4c660c99474966a054e34552bd2.png" src="../_images/20c579745a812ecde1fdb618e0e559e80417c4c660c99474966a054e34552bd2.png" />
+<img alt="../_images/94a04d7dd7ddf0170660360fe063747f0ff6447a44a44b5823c8045b7c181509.png" src="../_images/94a04d7dd7ddf0170660360fe063747f0ff6447a44a44b5823c8045b7c181509.png" />
+<img alt="../_images/75e7bc5ceaea04021f9859b3d855555ab58ac16858e016bb5f33abe2e606018a.png" src="../_images/75e7bc5ceaea04021f9859b3d855555ab58ac16858e016bb5f33abe2e606018a.png" />
+<img alt="../_images/47b4aab252a0d71404ad3eec2f4e385ded4690405fa614275d91e25b7063ae3b.png" src="../_images/47b4aab252a0d71404ad3eec2f4e385ded4690405fa614275d91e25b7063ae3b.png" />
+<img alt="../_images/6ea84dd5ecb00014d76759406547cec998734160dba7ca9e7fa28cc59acc860d.png" src="../_images/6ea84dd5ecb00014d76759406547cec998734160dba7ca9e7fa28cc59acc860d.png" />
 </div>
 </div>
 </section>
@@ -1235,7 +1236,7 @@ redirect ./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/CircuitPlotting
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/90428da7ef98fbc600ec6398fa42bbef17cd8bb6081584863ba8dcf773f0815e.png" src="../_images/90428da7ef98fbc600ec6398fa42bbef17cd8bb6081584863ba8dcf773f0815e.png" />
+<img alt="../_images/ad948e08c12cb41b59c04c72bc65e4f4c54b11abfd5c49712c428f7229aaeb7c.png" src="../_images/ad948e08c12cb41b59c04c72bc65e4f4c54b11abfd5c49712c428f7229aaeb7c.png" />
 </div>
 </div>
 </section>
@@ -1269,8 +1270,8 @@ redirect ./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/CircuitPlotting
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/029fadefc958d596b03adb94855c149da1d40afc1b343b7947740231c2a8339c.png" src="../_images/029fadefc958d596b03adb94855c149da1d40afc1b343b7947740231c2a8339c.png" />
-<img alt="../_images/6c4e932af713a1f9c2c06c89c79a453526415e56b1b03b39aed0c8392b452554.png" src="../_images/6c4e932af713a1f9c2c06c89c79a453526415e56b1b03b39aed0c8392b452554.png" />
+<img alt="../_images/b39173ebae84a5f36bcc541f92ba48d4e5e5594525ff9f4911793643c08e50de.png" src="../_images/b39173ebae84a5f36bcc541f92ba48d4e5e5594525ff9f4911793643c08e50de.png" />
+<img alt="../_images/ceba628a4484aadcfb261e7a6dcc56a8a0c134d656381cf806968a3728c509a5.png" src="../_images/ceba628a4484aadcfb261e7a6dcc56a8a0c134d656381cf806968a3728c509a5.png" />
 </div>
 </div>
 <p>For more styles, install SciencePlots (available through conda or pip): <a class="github reference external" href="https://github.com/garrettj403/SciencePlots">garrettj403/SciencePlots</a></p>
@@ -1278,13 +1279,40 @@ redirect ./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/CircuitPlotting
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">scienceplots</span>
-    <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">context</span><span class="p">(</span><span class="s1">&#39;science&#39;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">context</span><span class="p">([</span><span class="s1">&#39;science&#39;</span><span class="p">,</span> <span class="s1">&#39;no-latex&#39;</span><span class="p">]):</span> <span class="c1"># if you have LaTeX installed, remove &#39;no-latex&#39;</span>
         <span class="n">dss</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">Command</span> <span class="o">=</span> <span class="s1">&#39;plot circuit c1=red&#39;</span>
 <span class="k">except</span><span class="p">:</span>
     <span class="c1"># let&#39;s ignore if the user didn´t install SciencePlots</span>
     <span class="k">pass</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0ae2dcd99c808f66e4eea4e396880f5aa041892d4097fa1ac9faf1601db3355b.png" src="../_images/0ae2dcd99c808f66e4eea4e396880f5aa041892d4097fa1ac9faf1601db3355b.png" />
+</div>
+</div>
+</section>
+<section id="adjusting-specific-elements">
+<h3>Adjusting specific elements<a class="headerlink" href="#adjusting-specific-elements" title="Link to this heading">#</a></h3>
+<p>If using a style is not desired, users can adjust specific elements. <a class="reference external" href="https://matplotlib.org/stable/api/matplotlib_configuration_api.html#matplotlib.rc_context"><code class="docutils literal notranslate"><span class="pre">rc_context</span></code></a> is a way to control the elements temporarily, while <a class="reference external" href="https://matplotlib.org/stable/api/matplotlib_configuration_api.html#matplotlib.rcParams"><code class="docutils literal notranslate"><span class="pre">rcParams</span></code></a> allow changing the params for the current session.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rc_context</span>
+
+<span class="k">with</span> <span class="n">rc_context</span><span class="p">({</span>
+    <span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s1">&#39;font.family&#39;</span><span class="p">:</span> <span class="s1">&#39;Serif&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;font.weight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;scatter.marker&#39;</span><span class="p">:</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;lines.markersize&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">&#39;image.cmap&#39;</span><span class="p">:</span> <span class="s1">&#39;rainbow&#39;</span><span class="p">,</span>
+<span class="p">}):</span>
+    <span class="n">dss</span><span class="p">(</span><span class="s1">&#39;plot scatter&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/32e54c82de04017deabb8191cb39473f8d31775f91d7cb2d3f5a4a001857ece1.png" src="../_images/32e54c82de04017deabb8191cb39473f8d31775f91d7cb2d3f5a4a001857ece1.png" />
 </div>
 </div>
 </section>
@@ -1325,7 +1353,7 @@ redirect ./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/CircuitPlotting
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2babd21f2a031d8f1d4aa15a615c61dc91f0613ead1ef00c6d76252627aeefdf.png" src="../_images/2babd21f2a031d8f1d4aa15a615c61dc91f0613ead1ef00c6d76252627aeefdf.png" />
+<img alt="../_images/faf057df979b86f7df3cbfb3ca323187db45d2fd73ac143b0cafe23b6f80e986.png" src="../_images/faf057df979b86f7df3cbfb3ca323187db45d2fd73ac143b0cafe23b6f80e986.png" />
 </div>
 </div>
 <p>Alternatively, let’s customize the output to add a marker and some tiny histograms.</p>
@@ -1363,7 +1391,7 @@ redirect ./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/CircuitPlotting
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/edb115b59c21fedc0e58c832422104785866847e88faa7cdf93ad99d50630ca2.png" src="../_images/edb115b59c21fedc0e58c832422104785866847e88faa7cdf93ad99d50630ca2.png" />
+<img alt="../_images/c8a2163e169b3fe8a3d9a0f673f5dc28a0e974c31cdb28550f8e68a74e41d82f.png" src="../_images/c8a2163e169b3fe8a3d9a0f673f5dc28a0e974c31cdb28550f8e68a74e41d82f.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1448,6 +1476,7 @@ redirect ./electricdss-tst/Version8/Distrib/IEEETestCases/123Bus/CircuitPlotting
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-the-outputs">Saving the outputs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-the-figures">Customizing the figures</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-matplotlib-styles">Applying matplotlib styles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adjusting-specific-elements">Adjusting specific elements</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-using-matplotlibs-api">Customizing using matplotlib’s API</a></li>
 </ul>
 </li>

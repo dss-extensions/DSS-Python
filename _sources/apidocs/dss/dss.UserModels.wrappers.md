@@ -250,7 +250,7 @@ Bases: {py:obj}`dss.UserModels.wrappers.CommonWrapper`
 ````{py:data} GenUserModel
 :canonical: dss.UserModels.wrappers.GenUserModel
 :value: >
-   None
+   'GenUserModelWrapper(...)'
 
 ```{autodoc2-docstring} dss.UserModels.wrappers.GenUserModel
 ```

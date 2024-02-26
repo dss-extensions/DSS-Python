@@ -837,7 +837,7 @@ Bases: {py:obj}`dss._cffi_api_util.Base`
 ````{py:data} interface_classes
 :canonical: dss._cffi_api_util.interface_classes
 :value: >
-   None
+   'set(...)'
 
 ```{autodoc2-docstring} dss._cffi_api_util.interface_classes
 ```

@@ -6,9 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>dss.IBus &#8212; DSS-Python 0.15.1 documentation</title>
+    <title>dss.IBus &#8212; DSS-Python 0.15.3 documentation</title>
   
   
   
@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
@@ -38,7 +38,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../../_static/documentation_options.js?v=c98a3daa"></script>
+    <script src="../../_static/documentation_options.js?v=65023fd1"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -137,8 +137,8 @@
       
     
     
-    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.1 documentation - Home"/>
-    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.1 documentation - Home"/>`);</script>
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.3 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.3 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -499,7 +499,7 @@ document.write(`
 <dl class="py property">
 <dt class="sig sig-object py" id="dss.IBus.IBus.CplxSeqVoltages">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CplxSeqVoltages</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.IBus.IBus.CplxSeqVoltages" title="Link to this definition">#</a></dt>
-<dd><p>Complex Double array of Sequence Voltages (0, 1, 2) at this Bus.</p>
+<dd><p>Complex array of Sequence Voltages (0, 1, 2) at this Bus.</p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/CplxSeqVoltages.html">https://opendss.epri.com/CplxSeqVoltages.html</a></p>
 </dd></dl>
 
@@ -507,6 +507,7 @@ document.write(`
 <dt class="sig sig-object py" id="dss.IBus.IBus.Cust_Duration">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cust_Duration</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IBus.IBus.Cust_Duration" title="Link to this definition">#</a></dt>
 <dd><p>Accumulated customer outage durations</p>
+<p><em>Requires a previous call to <code class="docutils literal notranslate"><span class="pre">RelCalc</span></code> command</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Cust_Duration.html">https://opendss.epri.com/Cust_Duration.html</a></p>
 </dd></dl>
 
@@ -514,13 +515,15 @@ document.write(`
 <dt class="sig sig-object py" id="dss.IBus.IBus.Cust_Interrupts">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cust_Interrupts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IBus.IBus.Cust_Interrupts" title="Link to this definition">#</a></dt>
 <dd><p>Annual number of customer-interruptions from this bus</p>
+<p><em>Requires a previous call to <code class="docutils literal notranslate"><span class="pre">RelCalc</span></code> command</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Cust_Interrupts.html">https://opendss.epri.com/Cust_Interrupts.html</a></p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="dss.IBus.IBus.Distance">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Distance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IBus.IBus.Distance" title="Link to this definition">#</a></dt>
-<dd><p>Distance from energymeter (if non-zero)</p>
+<dd><p>Distance from EnergyMeter (if non-zero)</p>
+<p><em>Requires an energy meter with an updated zone.</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Distance.html">https://opendss.epri.com/Distance.html</a></p>
 </dd></dl>
 
@@ -535,7 +538,8 @@ it to the node list for the bus.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="dss.IBus.IBus.Int_Duration">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Int_Duration</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IBus.IBus.Int_Duration" title="Link to this definition">#</a></dt>
-<dd><p>Average interruption duration, hr.</p>
+<dd><p>Average interruption duration, hours.</p>
+<p><em>Requires a previous call to <code class="docutils literal notranslate"><span class="pre">RelCalc</span></code> command</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Int_Duration.html">https://opendss.epri.com/Int_Duration.html</a></p>
 </dd></dl>
 
@@ -543,6 +547,7 @@ it to the node list for the bus.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.Isc">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Isc</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.IBus.IBus.Isc" title="Link to this definition">#</a></dt>
 <dd><p>Short circuit currents at bus; Complex Array.</p>
+<p><em>Requires a previous solution in <code class="docutils literal notranslate"><span class="pre">FaultStudy</span></code> mode.</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Isc.html">https://opendss.epri.com/Isc.html</a></p>
 </dd></dl>
 
@@ -550,6 +555,7 @@ it to the node list for the bus.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.Lambda">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Lambda</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IBus.IBus.Lambda" title="Link to this definition">#</a></dt>
 <dd><p>Accumulated failure rate downstream from this bus; faults per year</p>
+<p><em>Requires a previous call to <code class="docutils literal notranslate"><span class="pre">RelCalc</span></code> command</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Lambda.html">https://opendss.epri.com/Lambda.html</a></p>
 </dd></dl>
 
@@ -571,6 +577,7 @@ it to the node list for the bus.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.N_Customers">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">N_Customers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IBus.IBus.N_Customers" title="Link to this definition">#</a></dt>
 <dd><p>Total numbers of customers served downline from this bus</p>
+<p><em>Requires a previous call to <code class="docutils literal notranslate"><span class="pre">RelCalc</span></code> command</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/N_Customers.html">https://opendss.epri.com/N_Customers.html</a></p>
 </dd></dl>
 
@@ -578,6 +585,7 @@ it to the node list for the bus.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.N_interrupts">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">N_interrupts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IBus.IBus.N_interrupts" title="Link to this definition">#</a></dt>
 <dd><p>Number of interruptions this bus per year</p>
+<p><em>Requires a previous call to <code class="docutils literal notranslate"><span class="pre">RelCalc</span></code> command</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/N_interrupts.html">https://opendss.epri.com/N_interrupts.html</a></p>
 </dd></dl>
 
@@ -606,6 +614,7 @@ it to the node list for the bus.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.SectionID">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SectionID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.IBus.IBus.SectionID" title="Link to this definition">#</a></dt>
 <dd><p>Integer ID of the feeder section in which this bus is located.</p>
+<p><em>Requires a previous call to <code class="docutils literal notranslate"><span class="pre">RelCalc</span></code> command</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/SectionID.html">https://opendss.epri.com/SectionID.html</a></p>
 </dd></dl>
 
@@ -620,6 +629,7 @@ it to the node list for the bus.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.TotalMiles">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TotalMiles</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#dss.IBus.IBus.TotalMiles" title="Link to this definition">#</a></dt>
 <dd><p>Total length of line downline from this bus, in miles. For recloser siting algorithm.</p>
+<p><em>Requires a previous call to <code class="docutils literal notranslate"><span class="pre">RelCalc</span></code> command</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/TotalMiles.html">https://opendss.epri.com/TotalMiles.html</a></p>
 </dd></dl>
 
@@ -641,6 +651,7 @@ it to the node list for the bus.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.Voc">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Voc</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.IBus.IBus.Voc" title="Link to this definition">#</a></dt>
 <dd><p>Open circuit voltage; Complex array.</p>
+<p><em>Requires a previous solution in <code class="docutils literal notranslate"><span class="pre">FaultStudy</span></code> mode.</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Voc.html">https://opendss.epri.com/Voc.html</a></p>
 </dd></dl>
 
@@ -655,6 +666,7 @@ it to the node list for the bus.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.YscMatrix">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">YscMatrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.IBus.IBus.YscMatrix" title="Link to this definition">#</a></dt>
 <dd><p>Complex array of Ysc matrix at bus. Column by column.</p>
+<p><em>Requires a previous solution in <code class="docutils literal notranslate"><span class="pre">FaultStudy</span></code> mode or a call to <code class="docutils literal notranslate"><span class="pre">ZSCRefresh</span></code>.</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/YscMatrix.html">https://opendss.epri.com/YscMatrix.html</a></p>
 </dd></dl>
 
@@ -664,6 +676,7 @@ it to the node list for the bus.</p>
 <dd><p>Array of doubles (complex) containing the complete 012 Zsc matrix.
 Only available after Zsc is computed, either through the “ZscRefresh” command, or running a “FaultStudy” solution.
 Only available for buses with 3 nodes.</p>
+<p><em>Requires a previous solution in <code class="docutils literal notranslate"><span class="pre">FaultStudy</span></code> mode or a call to <code class="docutils literal notranslate"><span class="pre">ZSCRefresh</span></code>.</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ZSC012Matrix.html">https://opendss.epri.com/ZSC012Matrix.html</a></p>
 </dd></dl>
 
@@ -671,6 +684,7 @@ Only available for buses with 3 nodes.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.Zsc0">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Zsc0</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrSimpleComplex</span></em><a class="headerlink" href="#dss.IBus.IBus.Zsc0" title="Link to this definition">#</a></dt>
 <dd><p>Complex Zero-Sequence short circuit impedance at bus.</p>
+<p><em>Requires a previous solution in <code class="docutils literal notranslate"><span class="pre">FaultStudy</span></code> mode or a call to <code class="docutils literal notranslate"><span class="pre">ZSCRefresh</span></code>.</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Zsc0.html">https://opendss.epri.com/Zsc0.html</a></p>
 </dd></dl>
 
@@ -678,6 +692,7 @@ Only available for buses with 3 nodes.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.Zsc1">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Zsc1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrSimpleComplex</span></em><a class="headerlink" href="#dss.IBus.IBus.Zsc1" title="Link to this definition">#</a></dt>
 <dd><p>Complex Positive-Sequence short circuit impedance at bus.</p>
+<p><em>Requires a previous solution in <code class="docutils literal notranslate"><span class="pre">FaultStudy</span></code> mode or a call to <code class="docutils literal notranslate"><span class="pre">ZSCRefresh</span></code>.</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Zsc1.html">https://opendss.epri.com/Zsc1.html</a></p>
 </dd></dl>
 
@@ -685,6 +700,7 @@ Only available for buses with 3 nodes.</p>
 <dt class="sig sig-object py" id="dss.IBus.IBus.ZscMatrix">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ZscMatrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Float64ArrayOrComplexArray</span></em><a class="headerlink" href="#dss.IBus.IBus.ZscMatrix" title="Link to this definition">#</a></dt>
 <dd><p>Complex array of Zsc matrix at bus. Column by column.</p>
+<p><em>Requires a previous solution in <code class="docutils literal notranslate"><span class="pre">FaultStudy</span></code> mode or a call to <code class="docutils literal notranslate"><span class="pre">ZSCRefresh</span></code>.</em></p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/ZscMatrix.html">https://opendss.epri.com/ZscMatrix.html</a></p>
 </dd></dl>
 

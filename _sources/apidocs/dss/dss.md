@@ -90,10 +90,6 @@ dss.plot
   - ```{autodoc2-docstring} dss.DssException
     :summary:
     ```
-* - {py:obj}`api_util <dss.api_util>`
-  - ```{autodoc2-docstring} dss.api_util
-    :summary:
-    ```
 * - {py:obj}`dss <dss.dss>`
   - ```{autodoc2-docstring} dss.dss
     :summary:
@@ -130,17 +126,6 @@ dss.plot
    None
 
 ```{autodoc2-docstring} dss.DssException
-```
-
-````
-
-````{py:data} api_util
-:canonical: dss.api_util
-:type: dss._cffi_api_util.CffiApiUtil
-:value: >
-   None
-
-```{autodoc2-docstring} dss.api_util
 ```
 
 ````

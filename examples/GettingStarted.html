@@ -6,9 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Getting Started &#8212; DSS-Python 0.15.1 documentation</title>
+    <title>Getting Started &#8212; DSS-Python 0.15.3 documentation</title>
   
   
   
@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
@@ -38,7 +38,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=c98a3daa"></script>
+    <script src="../_static/documentation_options.js?v=65023fd1"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -137,8 +137,8 @@
       
     
     
-    <img src="../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.1 documentation - Home"/>
-    <script>document.write(`<img src="../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.1 documentation - Home"/>`);</script>
+    <img src="../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.3 documentation - Home"/>
+    <script>document.write(`<img src="../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.3 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -673,7 +673,7 @@ We have 15 loads in this circuit
 233.9310344827586
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_24044/1763084407.py:5: UserWarning: Wrong capitalization for attribute (getter) IDSS.ActiveCircuit: activecircuit
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_10864/1763084407.py:5: UserWarning: Wrong capitalization for attribute (getter) IDSS.ActiveCircuit: activecircuit
   print(dss.activecircuit.Loads.kW) # this produces a warning
 </pre></div>
 </div>
@@ -821,7 +821,7 @@ We have 15 loads in this circuit
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/7ffc8d2ae68c4256dfe5d8b2f3ecd050cbfd56c31f34f034fb61aa924c3855b3.png" src="../_images/7ffc8d2ae68c4256dfe5d8b2f3ecd050cbfd56c31f34f034fb61aa924c3855b3.png" />
+<img alt="../_images/7bfd8f1442f231cafc86125bba71529cbb47c29e1a8cada8627ee04d66cdf8a8.png" src="../_images/7bfd8f1442f231cafc86125bba71529cbb47c29e1a8cada8627ee04d66cdf8a8.png" />
 </div>
 </div>
 <p>This enables the cell magic function and other enhancements. There is still a lot of room for improvement here.</p>
@@ -833,7 +833,7 @@ visualize voltages element=transformer.sub
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5dd33f3622c50e21a9f51e175df3606466a3571dc898ec9b65a87de8d6fe7242.png" src="../_images/5dd33f3622c50e21a9f51e175df3606466a3571dc898ec9b65a87de8d6fe7242.png" />
+<img alt="../_images/237cc9ce3d5892ad75c7aae4e74512ada5a29904a3e85baaeca18f809fcb1e0f.png" src="../_images/237cc9ce3d5892ad75c7aae4e74512ada5a29904a3e85baaeca18f809fcb1e0f.png" />
 </div>
 </div>
 </section>
@@ -876,6 +876,10 @@ visualize voltages element=transformer.sub
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_10864/3042529327.py:3: FutureWarning: Passing literal json to &#39;read_json&#39; is deprecated and will be removed in a future version. To read from a literal string, wrap it in a &#39;StringIO&#39; object.
+  df = pd.read_json(dss.ActiveCircuit.ActiveClass.ToJSON(), dtype_backend=&#39;pyarrow&#39;)
+</pre></div>
+</div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Name      string[pyarrow]
 Bus1      string[pyarrow]
 Phases     int64[pyarrow]
@@ -932,7 +936,7 @@ dtype: object
       <td>3</td>
       <td>delta</td>
       <td>1</td>
-      <td>4.160</td>
+      <td>4.16</td>
       <td>1155.0</td>
       <td>660.0</td>
     </tr>
@@ -976,7 +980,7 @@ dtype: object
       <td>1</td>
       <td>wye</td>
       <td>1</td>
-      <td>2.400</td>
+      <td>2.4</td>
       <td>170.0</td>
       <td>125.0</td>
     </tr>
@@ -987,7 +991,7 @@ dtype: object
       <td>1</td>
       <td>delta</td>
       <td>2</td>
-      <td>4.160</td>
+      <td>4.16</td>
       <td>230.0</td>
       <td>132.0</td>
     </tr>
@@ -998,7 +1002,7 @@ dtype: object
       <td>1</td>
       <td>delta</td>
       <td>5</td>
-      <td>4.160</td>
+      <td>4.16</td>
       <td>170.0</td>
       <td>151.0</td>
     </tr>
@@ -1009,7 +1013,7 @@ dtype: object
       <td>1</td>
       <td>wye</td>
       <td>1</td>
-      <td>2.400</td>
+      <td>2.4</td>
       <td>485.0</td>
       <td>190.0</td>
     </tr>
@@ -1020,7 +1024,7 @@ dtype: object
       <td>1</td>
       <td>wye</td>
       <td>1</td>
-      <td>2.400</td>
+      <td>2.4</td>
       <td>68.0</td>
       <td>60.0</td>
     </tr>
@@ -1031,7 +1035,7 @@ dtype: object
       <td>1</td>
       <td>wye</td>
       <td>1</td>
-      <td>2.400</td>
+      <td>2.4</td>
       <td>290.0</td>
       <td>212.0</td>
     </tr>
@@ -1042,7 +1046,7 @@ dtype: object
       <td>1</td>
       <td>wye</td>
       <td>5</td>
-      <td>2.400</td>
+      <td>2.4</td>
       <td>170.0</td>
       <td>80.0</td>
     </tr>
@@ -1053,7 +1057,7 @@ dtype: object
       <td>1</td>
       <td>wye</td>
       <td>2</td>
-      <td>2.400</td>
+      <td>2.4</td>
       <td>128.0</td>
       <td>86.0</td>
     </tr>
@@ -1064,7 +1068,7 @@ dtype: object
       <td>1</td>
       <td>wye</td>
       <td>1</td>
-      <td>2.400</td>
+      <td>2.4</td>
       <td>17.0</td>
       <td>10.0</td>
     </tr>
@@ -1075,7 +1079,7 @@ dtype: object
       <td>1</td>
       <td>wye</td>
       <td>1</td>
-      <td>2.400</td>
+      <td>2.4</td>
       <td>66.0</td>
       <td>38.0</td>
     </tr>
@@ -1086,7 +1090,7 @@ dtype: object
       <td>1</td>
       <td>wye</td>
       <td>1</td>
-      <td>2.400</td>
+      <td>2.4</td>
       <td>117.0</td>
       <td>68.0</td>
     </tr>
@@ -1118,12 +1122,12 @@ dtype: object
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DSS C-API Library version 0.14.0 revision 04941400a091677da98b033a3b682480f2584693 based on OpenDSS SVN 3723 [FPC 3.2.2] (64-bit build) MVMULT INCREMENTAL_Y CONTEXT_API PM 20240209141429; License Status: Open 
-DSS-Python version: 0.15.1
-OpenDSSDirect.py version: 0.9.0.post3+g81daed3
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DSS C-API Library version 0.14.2 revision 9fcf7ace747fdf21329b9c59fd07a89cc7b50849 based on OpenDSS SVN 3723 [FPC 3.2.2] (64-bit build) MVMULT INCREMENTAL_Y CONTEXT_API PM 20240226091209; License Status: Open 
+DSS-Python version: 0.15.3
+OpenDSSDirect.py version: 0.9.1
 
-DSS C-API Library version 0.14.0 revision 04941400a091677da98b033a3b682480f2584693 based on OpenDSS SVN 3723 [FPC 3.2.2] (64-bit build) MVMULT INCREMENTAL_Y CONTEXT_API PM 20240209141429; License Status: Open 
-AltDSS-Python version: 0.1.0
+DSS C-API Library version 0.14.2 revision 9fcf7ace747fdf21329b9c59fd07a89cc7b50849 based on OpenDSS SVN 3723 [FPC 3.2.2] (64-bit build) MVMULT INCREMENTAL_Y CONTEXT_API PM 20240226091209; License Status: Open 
+AltDSS-Python version: 0.2.0
 </pre></div>
 </div>
 </div>
