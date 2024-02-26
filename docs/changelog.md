@@ -7,10 +7,11 @@ relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_cap
 
 ### 0.15.3
 
-Released on 2024-02-23.
+Released on 2024-02-26.
 
 - Upgrade the backend to [**DSS C-API 0.14.2**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.2). There are a couple of minor fixes, including for `Lines.Parent`.
 - `patch_dss_com`: Allow the DSS instance to be callable for better compatibility with our DSS engine. Note that this won't have performance benefits nor handles complex scripts.
+- Fix Bus callback integration with AltDSS-Python. The relevant code should be moved there later.
 
 ### 0.15.2
 

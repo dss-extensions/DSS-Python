@@ -360,22 +360,42 @@ class CffiApiUtil(object):
         self.register_callbacks()
 
 
+    def _check_for_error(self, result=None):
+        """
+        Checks for a DSS engine error (on the default configuration).
+
+        By default, raises an exception if any error is detected, otherwise returns the `result` parameter.
+        
+        If the user disabled exceptions, any error is simply ignored. Note that, in this case, manually
+        calling this function would have no purpose/effects.
+
+        Note that, **in the future**, we may try showing a popup form like the official OpenDSS does on Windows
+        if AllowForms is True. This behavior is not very portable though and not adequate for automated scripts.
+        """
+        if self._errorPtr[0] and Base._use_exceptions:
+            error_num = self._errorPtr[0]
+            self._errorPtr[0] = 0
+            raise DSSException(error_num, self.get_string(self.lib.Error_Get_Description()))
+            
+        return result
+
+
     def reprocess_buses_callback(self, step: int):
         '''
         Used internally to remap buses to Python objects after the bus list is built.
         '''
         if self._is_clearing:
             return
-        
+
         if step == 0:
             # Drop dead references
             self._bus_refs = [b for b in self._bus_refs if b() is not None]
 
             # Create a name to object dict, dropping the weakref wrapper
-            self._bus_ref_to_name = {
-                b(): b().name
+            self._bus_ref_to_name = [
+                (b(), b().Name)
                 for b in self._bus_refs
-            }
+            ]
             return
 
         if step != 1:
@@ -383,8 +403,8 @@ class CffiApiUtil(object):
         
         # Now try to remap the objects; on exception, just invalidate everything
         try:
-            ptrs = self._lib.Alt_Bus_GetListPtr()
-            names = self._check_for_error(self._get_string_array(self._lib.Circuit_Get_AllBusNames))
+            ptrs = self.lib.Alt_Bus_GetListPtr()
+            names = self._check_for_error(self.get_string_array(self.lib.Circuit_Get_AllBusNames))
         except:
             for bus_ref in self._bus_refs:
                 bus_ref()._invalidate_ptr()
@@ -393,6 +413,14 @@ class CffiApiUtil(object):
             return
 
         self._bus_refs.clear()
+
+        if len(names) == 0:
+            # No buses to rebind, invalidate all
+            for old_bus, _ in self._bus_ref_to_name:
+                old_bus._invalidate_ptr()
+
+            return
+
         name_to_new_ptr = {name: ptrs[idx] for idx, name in enumerate(names)}
         for old_bus, old_name in self._bus_ref_to_name:
             new_ptr = name_to_new_ptr.get(old_name)
@@ -496,6 +524,9 @@ class CffiApiUtil(object):
 
         # also keep a casted version for complex floats
         self.gr_cfloat64_pointers = (self.ffi.cast('double _Complex**', tmp_float64_pointers[0][0]), tmp_float64_pointers[1][0])
+
+        self._errorPtr = self.lib.Error_Get_NumberPtr()
+
 
     def clear_buffers(self):
         self.lib.DSS_DisposeGRData()

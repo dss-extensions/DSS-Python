@@ -23,15 +23,13 @@ from .enums import *
 
 DssException = DSSException
 
-# Bind to the FFI module instance for OpenDSS-v7
-api_util: CffiApiUtil = CffiApiUtil(ffi, lib) #: API utility functions and low-level access to the classic API
-
 if not hasattr(lib, 'ctx_New'):
     # Module was built without the context API
+    api_util: CffiApiUtil = CffiApiUtil(ffi, lib) #: API utility functions and low-level access to the classic API
     prime_api_util = None
     DSS_GR: IDSS = IDSS(api_util) #: GR (Global Result) interface
 else:
-    prime_api_util = CffiApiUtil(ffi, lib, lib.ctx_Get_Prime()) #: API utility functions and low-level access for DSSContext API
+    api_util = prime_api_util = CffiApiUtil(ffi, lib, lib.ctx_Get_Prime()) #: API utility functions and low-level access for DSSContext API
     DSS_GR: IDSS = IDSS(prime_api_util) #: GR (Global Result) interface using the new DSSContext API
     
 DSS_IR: IDSS = DSS_GR #: IR was removed in DSS-Python v0.13.x, we'll keep mapping it to DSS_GR for this version
