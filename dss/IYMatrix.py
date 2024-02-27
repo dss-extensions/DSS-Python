@@ -7,6 +7,15 @@ from ._types import Int32Array, ComplexArray
 from typing import Tuple, List
 
 class IYMatrix(Base):
+    '''
+    YMatrix provides access to some lower-level solution aspects.
+
+    Part of this class is ported from the original OpenDSSDirect.DLL back in 2017, but 
+    part is new. Since this is not exposed in the official COM API, it is marked as an extension.
+
+    (**API Extension**)
+    '''
+    
     __slots__ = []
 
     def GetCompressedYMatrix(self, factor: bool = True) -> Tuple[ComplexArray, Int32Array, Int32Array]:

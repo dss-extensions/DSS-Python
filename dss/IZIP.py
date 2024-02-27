@@ -4,6 +4,17 @@ from ._cffi_api_util import Base
 from typing import AnyStr, Optional, List
 
 class IZIP(Base):
+    '''
+    ZIP allows controlling the ZIP-compressed file functions from AltDSS/DSS C-API.
+
+    It allows opening a ZIP file, and loading circuits directly from it, without requiring extracting the contents to files before reading.
+    
+    The implementation provides a specialization which allows more efficient access if the ZIP file is open and reused for many circuits. 
+    Doing so reduces the overhead of the initial opening and indexing of the file contents.
+
+    (**API Extension**)
+    '''
+
     __slots__ = []
 
     _columns = []
