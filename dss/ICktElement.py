@@ -270,7 +270,7 @@ class ICktElement(Base):
     @property
     def GUID(self) -> str:
         '''
-        globally unique identifier for this object
+        GUID/UUID for this object.
 
         Original COM help: https://opendss.epri.com/GUID.html
         '''
@@ -279,7 +279,7 @@ class ICktElement(Base):
     @property
     def Handle(self) -> int:
         '''
-        Pointer to this object
+        Index of this element into the circuit's element list.
 
         Original COM help: https://opendss.epri.com/Handle.html
         '''
@@ -297,7 +297,7 @@ class ICktElement(Base):
     @property
     def HasSwitchControl(self) -> bool:
         '''
-        This element has a SwtControl attached.
+        True if this element has a SwtControl attached.
 
         Original COM help: https://opendss.epri.com/HasSwitchControl.html
         '''
@@ -306,7 +306,7 @@ class ICktElement(Base):
     @property
     def HasVoltControl(self) -> bool:
         '''
-        This element has a CapControl or RegControl attached.
+        True if this element has a CapControl or RegControl attached.
 
         Original COM help: https://opendss.epri.com/HasVoltControl.html
         '''
@@ -335,6 +335,8 @@ class ICktElement(Base):
     def NodeOrder(self) -> Int32Array:
         '''
         Array of integer containing the node numbers (representing phases, for example) for each conductor of each terminal. 
+
+        Be sure to run a solution to initialize the values after the circuit is created or modified.
 
         Original COM help: https://opendss.epri.com/NodeOrder.html
         '''
@@ -394,7 +396,7 @@ class ICktElement(Base):
     @property
     def NumTerminals(self) -> int:
         '''
-        Number of Terminals this Circuit Element
+        Number of terminals in this Circuit Element
 
         Original COM help: https://opendss.epri.com/NumTerminals.html
         '''
@@ -533,6 +535,8 @@ class ICktElement(Base):
         '''
         Array of integers, a copy of the internal NodeRef of the CktElement.
         
+        Be sure to run a solution to initialize the values after the circuit is created or modified.
+
         **(API Extension)**
         '''
         self._lib.CktElement_Get_NodeRef_GR()
