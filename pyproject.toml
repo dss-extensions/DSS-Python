@@ -24,7 +24,7 @@ packages = ["dss"]
 name = "dss-python"
 dynamic = ["version"]
 dependencies = [
-    "dss_python_backend==0.14.2",
+    "dss_python_backend==0.14.3",
     "numpy>=1.21.0",
     "typing_extensions>=4.5,<5",
 ]
@@ -36,7 +36,7 @@ authors = [
 maintainers = [
     {name = "Paulo Meira", email = "pmeira@ieee.org"},
 ]
-description = "Python bindings and tools based on the DSS C-API project, the alternative OpenDSS implementation from DSS-Extensions.org. API-compatible with the COM version of OpenDSS."
+description = "Python interface (bindings and tools) for OpenDSS. Based on the AltDSS/DSS C-API project, the alternative OpenDSS implementation from DSS-Extensions.org. Multiplatform, API-compatible/drop-in replacement for the COM version of OpenDSS."
 readme = "README.md"
 license = {file = "LICENSE"}
 keywords = ["opendss", "altdss", "electric power systems", "opendssdirect", "powerflow", "short-circuit", ]
@@ -57,11 +57,11 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/dss-extensions/dss_python"
-Documentation = "https://dss-extensions.org/dss_python"
-Repository = "https://github.com/dss-extensions/dss_python.git"
-"Bug Tracker" = "https://github.com/dss-extensions/dss_python/issues"
-Changelog = "https://github.com/dss-extensions/dss_python/blob/main/docs/changelog.md"
+Homepage = "https://github.com/dss-extensions/DSS-Python"
+Documentation = "https://dss-extensions.org/DSS-Python"
+Repository = "https://github.com/dss-extensions/DSS-Python.git"
+"Bug Tracker" = "https://github.com/dss-extensions/DSS-Python/issues"
+Changelog = "https://github.com/dss-extensions/DSS-Python/blob/main/docs/changelog.md"
 
 [project.optional-dependencies]
 test = [
