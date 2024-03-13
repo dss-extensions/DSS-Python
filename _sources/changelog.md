@@ -5,11 +5,17 @@ relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_cap
 
 ## 0.15.x
 
+### 0.15.4
+
+Released on 2024-03-13.
+
+- Upgrade the backend to [**AltDSS/DSS C-API 0.14.3**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.3). There are few fixes that affect DSS-Python.
+
 ### 0.15.3
 
 Released on 2024-02-26.
 
-- Upgrade the backend to [**DSS C-API 0.14.2**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.2). There are a couple of minor fixes, including for `Lines.Parent`.
+- Upgrade the backend to [**AltDSS/DSS C-API 0.14.2**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.2). There are a couple of minor fixes, including for `Lines.Parent`.
 - `patch_dss_com`: Allow the DSS instance to be callable for better compatibility with our DSS engine. Note that this won't have performance benefits nor handles complex scripts.
 - Fix Bus callback integration with AltDSS-Python. The relevant code should be moved there later.
 
@@ -17,7 +23,7 @@ Released on 2024-02-26.
 
 Released on 2024-02-16.
 
-- Upgrade the backend to [**DSS C-API 0.14.1**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.1). Mostly for AltDSS-Python as it shouldn't affect the DSS-Python or OpenDSSDirect.py's classic API.
+- Upgrade the backend to [**AltDSS/DSS C-API 0.14.1**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.1). Mostly for AltDSS-Python as it shouldn't affect the DSS-Python or OpenDSSDirect.py's classic API.
 
 ### 0.15.1
 
@@ -29,7 +35,7 @@ Released on 2024-02-12.
 
 Released on 2024-02-09.
 
-- Upgrade the backend to [**DSS C-API 0.14.0**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.0). **A lot** of changes there, please check the changelog. Includes many small bugfixes, improvements, and ports of a few changes from the official OpenDSS codebase, matching OpenDSS v9.8.0.1.
+- Upgrade the backend to [**AltDSS/DSS C-API 0.14.0**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.0). **A lot** of changes there, please check the changelog. Includes many small bugfixes, improvements, and ports of a few changes from the official OpenDSS codebase, matching OpenDSS v9.8.0.1.
 
 - Enums:
     - Move to DSS-Python-Backend to allow easier sharing among all Python packages from DSS-Extensions.
@@ -57,7 +63,7 @@ Released on 2024-02-09.
 
 Released on 2023-06-27.
 
-- Upgrade the backend to [**DSS C-API 0.13.4**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.4). Includes a bugfix to CapControl, some more error handling, DSSEvents backend functions. This matches the changes in OpenDSS v9.6.1.3, plus our custom changes as usual.
+- Upgrade the backend to [**AltDSS/DSS C-API 0.13.4**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.4). Includes a bugfix to CapControl, some more error handling, DSSEvents backend functions. This matches the changes in OpenDSS v9.6.1.3, plus our custom changes as usual.
 - Use better DSSContext pointer to IDSS mapping.
 - Plotting: handle empty monitors better, ignore invalid channels.
 - Documentation updated.
@@ -67,7 +73,7 @@ Released on 2023-06-27.
 
 Released on 2023-06-12.
 
-- Upgrade the backend to [**DSS C-API 0.13.3**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.3). Includes important fixes to some OpenDSS components affected by bugs for several years. This matches the changes in OpenDSS v9.6.1.2, plus our custom changes as usual.
+- Upgrade the backend to [**AltDSS/DSS C-API 0.13.3**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.3). Includes important fixes to some OpenDSS components affected by bugs for several years. This matches the changes in OpenDSS v9.6.1.2, plus our custom changes as usual.
 - Add `DSS.Error.UseExceptions` to allow disabling the automatic mapping of error numbers to Python exceptions. When disabling, users take full responsibility to actually check for errors through the `DSS.Error` interface.
 - Add `DSSCompatFlags.SaveCalcVoltageBases`.
 - Transformers: add a warning in the docstrings of `WdgCurrents`, `WdgVoltages` (these don't work well when the transformer has open terminals).
@@ -106,7 +112,7 @@ We introduced the new package `dss_python_backend` that will contain all native 
 
 Released on 2023-04-02.
 
-- Engine updated to [**DSS C-API 0.13.1**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.1). Contains tiny changes to address potential issues with a few PVSystem properties (which passed undetected by our tests).
+- Engine updated to [**AltDSS/DSS C-API 0.13.1**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.1). Contains tiny changes to address potential issues with a few PVSystem properties (which passed undetected by our tests).
 - `DSS.AdvancedTypes`: fix `Lines.Yprim` and `PDElements.AllCurrentsMagAng` when `AdvancedTypes` is enabled.
 
 ### 0.13.0

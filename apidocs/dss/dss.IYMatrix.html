@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>dss.IYMatrix &#8212; DSS-Python 0.15.3 documentation</title>
+    <title>dss.IYMatrix &#8212; DSS-Python 0.15.4 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../../_static/documentation_options.js?v=65023fd1"></script>
+    <script src="../../_static/documentation_options.js?v=f017bd00"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -137,8 +137,8 @@
       
     
     
-    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.3 documentation - Home"/>
-    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.3 documentation - Home"/>`);</script>
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.4 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.4 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -443,7 +443,7 @@ document.write(`
 <table class="autosummary longtable table table-left">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#dss.IYMatrix.IYMatrix" title="dss.IYMatrix.IYMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IYMatrix</span></code></a></p></td>
-<td></td>
+<td><p>YMatrix provides access to some lower-level solution aspects.</p></td>
 </tr>
 </tbody>
 </table>
@@ -454,6 +454,10 @@ document.write(`
 <dt class="sig sig-object py" id="dss.IYMatrix.IYMatrix">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dss.IYMatrix.</span></span><span class="sig-name descname"><span class="pre">IYMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefer_lists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IYMatrix.IYMatrix" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="dss._cffi_api_util.html#dss._cffi_api_util.Base" title="dss._cffi_api_util.Base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss._cffi_api_util.Base</span></code></a></p>
+<p>YMatrix provides access to some lower-level solution aspects.</p>
+<p>Part of this class is ported from the original OpenDSSDirect.DLL back in 2017, but
+part is new. Since this is not exposed in the official COM API, it is marked as an extension.</p>
+<p>(<strong>API Extension</strong>)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dss.IYMatrix.IYMatrix.AddInAuxCurrents">
 <span class="sig-name descname"><span class="pre">AddInAuxCurrents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IYMatrix.IYMatrix.AddInAuxCurrents" title="Link to this definition">#</a></dt>

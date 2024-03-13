@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>dss.IZIP &#8212; DSS-Python 0.15.3 documentation</title>
+    <title>dss.IZIP &#8212; DSS-Python 0.15.4 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../../_static/documentation_options.js?v=65023fd1"></script>
+    <script src="../../_static/documentation_options.js?v=f017bd00"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -137,8 +137,8 @@
       
     
     
-    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.3 documentation - Home"/>
-    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.3 documentation - Home"/>`);</script>
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.4 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.4 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -431,7 +431,7 @@ document.write(`
 <table class="autosummary longtable table table-left">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#dss.IZIP.IZIP" title="dss.IZIP.IZIP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IZIP</span></code></a></p></td>
-<td></td>
+<td><p>ZIP allows controlling the ZIP-compressed file functions from AltDSS/DSS C-API.</p></td>
 </tr>
 </tbody>
 </table>
@@ -442,6 +442,11 @@ document.write(`
 <dt class="sig sig-object py" id="dss.IZIP.IZIP">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dss.IZIP.</span></span><span class="sig-name descname"><span class="pre">IZIP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_util</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefer_lists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dss.IZIP.IZIP" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="dss._cffi_api_util.html#dss._cffi_api_util.Base" title="dss._cffi_api_util.Base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dss._cffi_api_util.Base</span></code></a></p>
+<p>ZIP allows controlling the ZIP-compressed file functions from AltDSS/DSS C-API.</p>
+<p>It allows opening a ZIP file, and loading circuits directly from it, without requiring extracting the contents to files before reading.</p>
+<p>The implementation provides a specialization which allows more efficient access if the ZIP file is open and reused for many circuits.
+Doing so reduces the overhead of the initial opening and indexing of the file contents.</p>
+<p>(<strong>API Extension</strong>)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dss.IZIP.IZIP.Close">
 <span class="sig-name descname"><span class="pre">Close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dss.IZIP.IZIP.Close" title="Link to this definition">#</a></dt>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>dss.ICktElement &#8212; DSS-Python 0.15.3 documentation</title>
+    <title>dss.ICktElement &#8212; DSS-Python 0.15.4 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../../_static/documentation_options.js?v=65023fd1"></script>
+    <script src="../../_static/documentation_options.js?v=f017bd00"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -137,8 +137,8 @@
       
     
     
-    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.3 documentation - Home"/>
-    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.3 documentation - Home"/>`);</script>
+    <img src="../../_static/dss-python.svg" class="logo__image only-light" alt="DSS-Python 0.15.4 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/dss-python-dark.svg" class="logo__image only-dark" alt="DSS-Python 0.15.4 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -591,14 +591,14 @@ Valid only for PCElements.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="dss.ICktElement.ICktElement.GUID">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GUID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dss.ICktElement.ICktElement.GUID" title="Link to this definition">#</a></dt>
-<dd><p>globally unique identifier for this object</p>
+<dd><p>GUID/UUID for this object.</p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/GUID.html">https://opendss.epri.com/GUID.html</a></p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="dss.ICktElement.ICktElement.Handle">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ICktElement.ICktElement.Handle" title="Link to this definition">#</a></dt>
-<dd><p>Pointer to this object</p>
+<dd><p>Index of this element into the circuit’s element list.</p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/Handle.html">https://opendss.epri.com/Handle.html</a></p>
 </dd></dl>
 
@@ -612,14 +612,14 @@ Valid only for PCElements.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="dss.ICktElement.ICktElement.HasSwitchControl">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HasSwitchControl</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.ICktElement.ICktElement.HasSwitchControl" title="Link to this definition">#</a></dt>
-<dd><p>This element has a SwtControl attached.</p>
+<dd><p>True if this element has a SwtControl attached.</p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/HasSwitchControl.html">https://opendss.epri.com/HasSwitchControl.html</a></p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="dss.ICktElement.ICktElement.HasVoltControl">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HasVoltControl</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#dss.ICktElement.ICktElement.HasVoltControl" title="Link to this definition">#</a></dt>
-<dd><p>This element has a CapControl or RegControl attached.</p>
+<dd><p>True if this element has a CapControl or RegControl attached.</p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/HasVoltControl.html">https://opendss.epri.com/HasVoltControl.html</a></p>
 </dd></dl>
 
@@ -654,6 +654,7 @@ Note that this only fetches the current value. See also the Topology interface.<
 <dt class="sig sig-object py" id="dss.ICktElement.ICktElement.NodeOrder">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NodeOrder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Int32Array</span></em><a class="headerlink" href="#dss.ICktElement.ICktElement.NodeOrder" title="Link to this definition">#</a></dt>
 <dd><p>Array of integer containing the node numbers (representing phases, for example) for each conductor of each terminal.</p>
+<p>Be sure to run a solution to initialize the values after the circuit is created or modified.</p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NodeOrder.html">https://opendss.epri.com/NodeOrder.html</a></p>
 </dd></dl>
 
@@ -661,6 +662,7 @@ Note that this only fetches the current value. See also the Topology interface.<
 <dt class="sig sig-object py" id="dss.ICktElement.ICktElement.NodeRef">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NodeRef</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dss._types.Int32Array</span></em><a class="headerlink" href="#dss.ICktElement.ICktElement.NodeRef" title="Link to this definition">#</a></dt>
 <dd><p>Array of integers, a copy of the internal NodeRef of the CktElement.</p>
+<p>Be sure to run a solution to initialize the values after the circuit is created or modified.</p>
 <p><strong>(API Extension)</strong></p>
 </dd></dl>
 
@@ -703,7 +705,7 @@ Use to determine valid range for index into Controller array.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="dss.ICktElement.ICktElement.NumTerminals">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NumTerminals</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#dss.ICktElement.ICktElement.NumTerminals" title="Link to this definition">#</a></dt>
-<dd><p>Number of Terminals this Circuit Element</p>
+<dd><p>Number of terminals in this Circuit Element</p>
 <p>Original COM help: <a class="reference external" href="https://opendss.epri.com/NumTerminals.html">https://opendss.epri.com/NumTerminals.html</a></p>
 </dd></dl>
 

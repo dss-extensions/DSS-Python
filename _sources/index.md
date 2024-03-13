@@ -1,6 +1,6 @@
 # DSS-Python
 
-[![PyPI](https://img.shields.io/pypi/v/dss_python)](https://pypi.org/project/dss-python/) [![PyPI Download stats](https://img.shields.io/pypi/dw/dss-python)](https://pypi.org/project/dss-python/) <img alt="Supports Linux" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black"> <img alt="Supports macOS" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white"> <img alt="Supports Microsoft Windows" src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white">
+[![PyPI](https://img.shields.io/pypi/v/dss_python)](https://pypi.org/project/dss-python/) [![PyPI Download stats](https://static.pepy.tech/badge/dss-python/month)](https://pepy.tech/project/dss-python) <img alt="Supports Linux" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black"> <img alt="Supports macOS" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white"> <img alt="Supports Microsoft Windows" src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white">
 
 DSS-Python uses CFFI and NumPy to expose the OpenDSS engine, as implemented in our alternative engine (AltDSS) through the [AltDSS/DSS C-API](https://github.com/dss-extensions/dss_capi) library. OpenDSS is an open-source electric power distribution system simulator [distributed by EPRI](https://sourceforge.net/p/electricdss/). 
 
