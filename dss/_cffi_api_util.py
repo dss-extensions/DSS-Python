@@ -97,7 +97,7 @@ class CtxLib:
         # First, process all `ctx_*`` functions
         for name, value in vars(lib).items():
             is_ctx = name.startswith('ctx_')
-            if not is_ctx and (not name.startswith('Batch_Create')):
+            if not is_ctx and not name.startswith(('Batch_Create', 'Batch_Filter', )):
                 continue
 
             # Keep the basic management functions alone
