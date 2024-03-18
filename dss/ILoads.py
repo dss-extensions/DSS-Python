@@ -168,7 +168,7 @@ class ILoads(Iterable):
 
         Original COM help: https://opendss.epri.com/Model1.html
         '''
-        return self._check_for_error(self._lib.Loads_Get_Model())
+        return self._check_for_error(LoadModels(self._lib.Loads_Get_Model()))
 
     @Model.setter
     def Model(self, Value: Union[int, LoadModels]):
@@ -450,7 +450,8 @@ class ILoads(Iterable):
 
     @property
     def kvar(self) -> float:
-        '''Reactive power in kvar for active Load. If set, updates PF based on present kW.
+        '''
+        Reactive power in kvar for active Load. If set, updates PF based on present kW.
         
         Original COM help: https://opendss.epri.com/kvar1.html
         '''

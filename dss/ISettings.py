@@ -34,7 +34,9 @@ class ISettings(Base):
     @property
     def AllowDuplicates(self) -> bool:
         '''
-        {True | False*} Designates whether to allow duplicate names of objects
+        Designates whether to allow duplicate names of objects
+
+        False by default.
         
         **NOTE**: for DSS-Extensions, we are considering removing this option in a future 
         release since it has performance impacts even when not used.
