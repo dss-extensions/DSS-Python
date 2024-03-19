@@ -5,6 +5,12 @@ relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_cap
 
 ## 0.15.x
 
+### 0.15.5
+
+Released on 2024-03-19.
+
+- Upgrade the backend to [**AltDSS/DSS C-API 0.14.4**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.3). No direct DSS-Python changes, but some fixes and new features for [AltDSS-Python](https://github.com/dss-extensions/AltDSS-Python).
+
 ### 0.15.4
 
 Released on 2024-03-13.
