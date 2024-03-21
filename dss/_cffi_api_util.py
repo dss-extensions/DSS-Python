@@ -334,7 +334,8 @@ class CffiApiUtil(object):
     '''
     _ctx_to_util = WeakKeyDictionary()
 
-    def __init__(self, ffi, lib, ctx=None):
+    def __init__(self, ffi, lib, ctx=None, is_odd=False):
+        self._is_odd = is_odd
         self.owns_ctx = True
         self.codec = codec
         self.ctx = ctx
@@ -466,18 +467,26 @@ class CffiApiUtil(object):
 
 
     def register_callbacks(self):
+        if self._is_odd:
+            return
+
         mgr = get_manager_for_ctx(self.ctx)
         # if multiple calls, the extras are ignored
         mgr.register_func(AltDSSEvent.Clear, altdss_python_util_callback)
         mgr.register_func(AltDSSEvent.ReprocessBuses, altdss_python_util_callback)
 
     def unregister_callbacks(self):
+        if self._is_odd:
+            return
         mgr = get_manager_for_ctx(self.ctx)
         mgr.unregister_func(AltDSSEvent.Clear, altdss_python_util_callback)
         mgr.unregister_func(AltDSSEvent.ReprocessBuses, altdss_python_util_callback)
 
     # The context will die, no need to do anything else currently.
     def __del__(self):
+        if self._is_odd:
+            return
+
         self.clear_callback(0)
         self.clear_callback(1)
         self.unregister_callbacks()

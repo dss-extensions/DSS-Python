@@ -206,14 +206,14 @@ class ICircuit(Base):
         self.PVSystems = IPVSystems(api_util)
         self.Vsources = IVsources(api_util)
         self.LineCodes = ILineCodes(api_util)
-        self.LineGeometries = ILineGeometries(api_util)
-        self.LineSpacings = ILineSpacings(api_util)
-        self.WireData = IWireData(api_util)
-        self.CNData = ICNData(api_util)
-        self.TSData = ITSData(api_util)
-        self.Reactors = IReactors(api_util)
+        self.LineGeometries = ILineGeometries(api_util) if not api_util._is_odd else None
+        self.LineSpacings = ILineSpacings(api_util) if not api_util._is_odd else None
+        self.WireData = IWireData(api_util) if not api_util._is_odd else None
+        self.CNData = ICNData(api_util) if not api_util._is_odd else None
+        self.TSData = ITSData(api_util) if not api_util._is_odd else None
+        self.Reactors = IReactors(api_util) if not api_util._is_odd else None
         self.ReduceCkt = IReduceCkt(api_util) #: Circuit Reduction Interface
-        self.Storages = IStorages(api_util)
+        self.Storages = IStorages(api_util) if not api_util._is_odd else None
         self.GICSources = IGICSources(api_util)
 
         if hasattr(api_util.lib, 'Parallel_CreateActor'):

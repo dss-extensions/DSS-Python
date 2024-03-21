@@ -6,9 +6,9 @@ import sys
 import numpy as np
 
 try:
-    from ._settings import BASE_DIR, WIN32
+    from ._settings import BASE_DIR, WIN32, DSS as DSSRef
 except ImportError:
-    from _settings import BASE_DIR, WIN32
+    from _settings import BASE_DIR, WIN32, DSS as DSSRef
 
 
 USE_COM = False # Change to True to test with the COM DLL
@@ -21,7 +21,7 @@ def test_ctrlqueue():
             # When running pytest, the faulthandler seems too eager to grab FPC's exceptions, even when handled
             import faulthandler
             faulthandler.disable()
-            from dss import DSS as DSSobj
+            DSSobj = DSSRef
             faulthandler.enable()
         else:
             from dss import DSS as DSSobj
@@ -33,6 +33,7 @@ def test_ctrlqueue():
         DSSobj = win32com.client.gencache.EnsureDispatch('OpenDSSengine.DSS')
         os.chdir(old_cd)
 
+    DSSobj.AllowForms = False
     DSSText = DSSobj.Text
     DSSCircuit = DSSobj.ActiveCircuit
     DSSSolution = DSSCircuit.Solution

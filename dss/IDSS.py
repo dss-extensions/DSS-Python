@@ -134,14 +134,14 @@ class IDSS(Base):
         self.Executive = IDSS_Executive(api_util)
         
         #: Kept for compatibility.
-        self.Events = IDSSEvents(api_util)
+        self.Events = IDSSEvents(api_util) if not api_util._is_odd else None
         
         #: Kept for compatibility.
         self.Parser = IParser(api_util)
         
         #: Kept for compatibility. Apparently was used for DSSim-PC (now OpenDSS-G), a 
         #: closed-source software developed by EPRI using LabView.
-        self.DSSim_Coms = IDSSimComs(api_util)
+        self.DSSim_Coms = IDSSimComs(api_util) if not api_util._is_odd else None
         
         #: The YMatrix interface provides advanced access to the internals of
         #: the DSS engine. The sparse admittance matrix of the system is also 
@@ -157,7 +157,7 @@ class IDSS(Base):
         #: and run scripts inside the ZIP, without creating extra files on disk.
         #: 
         #: **(API Extension)**
-        self.ZIP = IZIP(api_util)
+        self.ZIP = IZIP(api_util) if not api_util._is_odd else None
 
         Base.__init__(self, api_util)    
 
@@ -444,6 +444,10 @@ class IDSS(Base):
 
         **(API Extension)**
         '''
+
+        if self._api_util._is_odd:
+            raise NotImplementedError("NewContext is not supported for the official OpenDSS engine.")
+
         ffi = self._api_util.ffi
         lib = self._api_util.lib_unpatched
         new_ctx = ffi.gc(lib.ctx_New(), lib.ctx_Dispose)

@@ -1,4 +1,23 @@
+
 import sys, os
+
+import faulthandler
+faulthandler.disable()
+from dss import DSS, IOddieDSS
+faulthandler.enable()
+
+org_dir = os.getcwd()
+
+USE_ODDIE = os.getenv('DSS_PYTHON_ODDIE', None)
+if USE_ODDIE:
+    # print("Using Oddie:", USE_ODDIE)
+    if USE_ODDIE != '1':
+        DSS = IOddieDSS(USE_ODDIE)
+    else:
+        DSS = IOddieDSS()
+
+    os.chdir(org_dir)
+
 
 WIN32 = (sys.platform == 'win32')
 if os.path.exists('../../electricdss-tst/'):
@@ -25,6 +44,21 @@ assert os.path.exists(BASE_DIR)
 #"L!Distrib/IEEETestCases/4wire-Delta/Kersting4wireIndMotor.dss",
 
 test_filenames = '''
+Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-csv-p.dss
+Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-csv-pq.dss
+Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-dbl-p.dss
+Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-sng-p.dss
+Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-txt-p.dss
+Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-txt-pq.dss
+Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-nomm.dss
+Version8/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS
+Version8/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS
+Version8/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS
+Version8/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4bus-OYOD-UnBal.dss
+Version8/Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS
+Version8/Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS
+Version8/Distrib/IEEETestCases/4Bus-YYD/YYD-Master.DSS
+Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss
 Test/CapControlFollow.dss
 Test/CapacitorConfigs.dss
 Test/ReactorConfigs.dss
@@ -47,14 +81,6 @@ L!Test/YgD-Test.dss
 L!Version8/Distrib/IEEETestCases/123Bus/IEEE123Master.dss
 Version8/Distrib/IEEETestCases/37Bus/ieee37.dss
 Version8/Distrib/IEEETestCases/IEEE 30 Bus/Master.dss
-Version8/Distrib/IEEETestCases/4Bus-DY-Bal/4Bus-DY-Bal.DSS
-Version8/Distrib/IEEETestCases/4Bus-GrdYD-Bal/4Bus-GrdYD-Bal.DSS
-Version8/Distrib/IEEETestCases/4Bus-OYOD-Bal/4Bus-OYOD-Bal.DSS
-Version8/Distrib/IEEETestCases/4Bus-OYOD-UnBal/4bus-OYOD-UnBal.dss
-Version8/Distrib/IEEETestCases/4Bus-YD-Bal/4Bus-YD-Bal.DSS
-Version8/Distrib/IEEETestCases/4Bus-YY-Bal/4Bus-YY-Bal.DSS
-Version8/Distrib/IEEETestCases/4Bus-YYD/YYD-Master.DSS
-Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss
 Test/IEEE13_LineSpacing.dss
 Test/IEEE13_LineGeometry.dss
 Test/IEEE13_Assets.dss
@@ -105,6 +131,9 @@ L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500N
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_GFMDailySmallerPV.dss
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_GFMSnap.dss
 L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_IEEE8500/Run_8500Node_Unbal.dss
+L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_AmpsLimit_123/Run_IEEE123Bus_GFMDaily.DSS
+L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_AmpsLimit_123/Run_IEEE123Bus_GFMDailySwapRef.DSS
+L!Version8/Distrib/Examples/Microgrid/GridFormingInverter/GFM_AmpsLimit_123/Run_IEEE123Bus_GFMSnap.DSS
 L!Version8/Distrib/IEEETestCases/123Bus/RevRegTest.dss
 L!Version8/Distrib/Examples/IBRDynamics_Cases/GFM_IEEE123/Run_IEEE123Bus_GFMDaily.DSS
 L!Version8/Distrib/Examples/IBRDynamics_Cases/GFM_IEEE123/Run_IEEE123Bus_GFMDaily_CannotPickUpLoad.DSS

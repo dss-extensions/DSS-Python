@@ -9,30 +9,26 @@ import numpy.testing as npt
 import pytest
 
 try:
-    from ._settings import BASE_DIR, ZIP_FN, WIN32
+    from ._settings import BASE_DIR, ZIP_FN, WIN32, DSS
 except ImportError:
-    from _settings import BASE_DIR, ZIP_FN, WIN32
+    from _settings import BASE_DIR, ZIP_FN, WIN32, DSS
 
-if WIN32:
-    # When running pytest, the faulthandler seems too eager to grab FPC's exceptions, even when handled
-    import faulthandler
-    faulthandler.disable()
-    import dss
-    faulthandler.enable()
-else:
-    import dss
+import dss
 
-from dss import DSS, IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags, LoadModels, DSSPropertyNameStyle
-
+from dss import IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags, LoadModels, DSSPropertyNameStyle, IOddieDSS
 org_dir = os.getcwd()
 
 def setup_function():
     DSS.ClearAll()
-    DSS.AllowEditor = False
-    DSS.AdvancedTypes = False
-    DSS.AllowChangeDir = True
-    DSS.COMErrorResults = True # TODO: change to False
-    DSS.CompatFlags = 0
+
+    if not DSS._api_util._is_odd:
+        DSS.AllowEditor = False
+        DSS.AdvancedTypes = False
+        DSS.AllowChangeDir = True
+        DSS.COMErrorResults = True # TODO: change to False
+        DSS.CompatFlags = 0
+
+    DSS.AllowForms = False
     DSS.Error.UseExceptions = True
     DSS.Text.Command = 'set DefaultBaseFreq=60'
 
@@ -271,13 +267,15 @@ def test_set_mode():
 
 
 def test_pm_threads():
-    DSS.AllowChangeDir = False
+    if not isinstance(DSS, IOddieDSS):
+        DSS.AllowChangeDir = False
 
     Parallel = DSS.ActiveCircuit.Parallel
     if Parallel.NumCPUs < 4:
         return # Cannot run in this machine, e.g. won't run on GitHub Actions
 
-    DSS.AdvancedTypes = True
+    if not isinstance(DSS, IOddieDSS):
+        DSS.AdvancedTypes = True
 
     DSS.Text.Command = 'set parallel=No'
     fn = os.path.abspath(f'{BASE_DIR}/Version8/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss')
@@ -352,31 +350,34 @@ def test_pm_threads():
     assert max(abs(v_pm[3] - v_pm[0])) > 1e-1
     assert dt_pm < dt_seq
 
-    # Let's run with threads, using DSSContexts too
-    v_ctx = [None] * 4
+    if not isinstance(DSS, IOddieDSS):
+        # Let's run with threads, using DSSContexts too
+        v_ctx = [None] * 4
 
-    def _run(ctx, i):
-        ctx.Text.Command = f'compile "{fn}"'
-        ctx.ActiveCircuit.Solution.Solve()
-        ctx.Text.Command = f'set mode=yearly number=144 hour={i * 24} controlmode=off stepsize=600'
-        ctx.ActiveCircuit.Solution.Solve()
-        v_ctx[i] = ctx.ActiveCircuit.AllBusVolts
+        def _run(ctx, i):
+            ctx.Text.Command = f'compile "{fn}"'
+            ctx.ActiveCircuit.Solution.Solve()
+            ctx.Text.Command = f'set mode=yearly number=144 hour={i * 24} controlmode=off stepsize=600'
+            ctx.ActiveCircuit.Solution.Solve()
+            v_ctx[i] = ctx.ActiveCircuit.AllBusVolts
 
-    ctxs = [DSS.NewContext() for _ in range(4)]
-    t0 = perf_counter()
-    threads = []
-    for i, ctx in enumerate(ctxs):
-        t = threading.Thread(target=_run, args=(ctx, i))
-        threads.append(t)
+        ctxs = [DSS.NewContext() for _ in range(4)]
+        t0 = perf_counter()
+        threads = []
+        for i, ctx in enumerate(ctxs):
+            t = threading.Thread(target=_run, args=(ctx, i))
+            threads.append(t)
 
-    for t in threads:
-        t.start()
-        
-    for t in threads:
-        t.join()
-        
-    t1 = perf_counter()
-    dt_ctx = t1 - t0
+        for t in threads:
+            t.start()
+            
+        for t in threads:
+            t.join()
+            
+        t1 = perf_counter()
+        dt_ctx = t1 - t0
+    else:
+        dt_ctx = np.NaN
 
     np.testing.assert_allclose(v_ctx[0], v_seq[0])
     np.testing.assert_allclose(v_ctx[1], v_seq[1])
@@ -472,6 +473,100 @@ def test_threading2():
     # Check if we actually got a lower time
     if len(ctxs) > 2:
         assert dt_thread < dt_seq
+
+
+def test_basic_input_errors():
+    with pytest.raises(DSSException):
+        DSS('redirect this_file_does_not_exist_0293093022.dss')
+        
+    with pytest.raises(DSSException):
+        DSS('redirect ../this_file_does_not_exist_0293093022.dss')
+
+    # LoadShape
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new loadshape.shape1 CSVFile=this_file_does_not_exist_0293093022.csv')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new loadshape.shape1 SngFile=this_file_does_not_exist_0293093022.sng')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new loadshape.shape1 DblFile=this_file_does_not_exist_0293093022.dbl')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new loadshape.shape1 PQCSVFile=this_file_does_not_exist_0293093022pq.csv')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new loadshape.shape1 PMult=(File=this_file_does_not_exist_0293093022.txt)')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new loadshape.shape1 PMult=(SngFile=this_file_does_not_exist_0293093022.sng)')
+
+    # PriceShape
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new priceshape.shape1 CSVFile=this_file_does_not_exist_0293093022.csv')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new priceshape.shape1 SngFile=this_file_does_not_exist_0293093022.sng')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new priceshape.shape1 DblFile=this_file_does_not_exist_0293093022.dbl')
+
+    # TShape
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new tshape.shape1 CSVFile=this_file_does_not_exist_0293093022.csv')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new tshape.shape1 SngFile=this_file_does_not_exist_0293093022.sng')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new tshape.shape1 DblFile=this_file_does_not_exist_0293093022.dbl')
+
+    # XYCurve
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new xycurve.curve1 CSVFile=this_file_does_not_exist_0293093022.csv')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new xycurve.curve1 SngFile=this_file_does_not_exist_0293093022.sng')
+
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new xycurve.curve1 DblFile=this_file_does_not_exist_0293093022.dbl')
+
+    # Spectrum
+    with pytest.raises(DSSException):
+        DSS('clear')
+        DSS('new circuit.test')
+        DSS('new spectrum.spec1 CSVFile=this_file_does_not_exist_0293093022.csv')
+
 
 
 #TODO: finish/fix this for the current framework
@@ -836,7 +931,18 @@ def test_line_parent_compat():
     assert res_compat[3:2:] == res_no_compat[3:2:]
 
 
+def test_path_sideeffects():
+    test_loadshape_save()
+    test_basic_input_errors()
+    test_loadshape_save()
+
+
 if __name__ == '__main__':
+    DSS.AllowForms = False
+    print(DSS.Version)
     # for _ in range(250):
     #     test_pm_threads()
+
+    test_path_sideeffects()
     test_capacitor_reactor()
+    print('DONE!')

@@ -17,8 +17,8 @@ if os.path.exists(_properties_mo):
     lib.DSS_SetPropertiesMO(_properties_mo.encode())
 
 from ._cffi_api_util import CffiApiUtil, DSSException, set_case_insensitive_attributes
-# from .altdss import Edit
 from .IDSS import IDSS
+from .Oddie import IOddieDSS, OddieOptions
 from .enums import *
 
 DssException = DSSException
@@ -44,4 +44,4 @@ try:
 except:
     __version__ = '0.0dev'
 
-__all__ = ['dss', 'DSS', 'DSS_GR', 'prime_api_util', 'api_util', 'DSSException', 'patch_dss_com', 'set_case_insensitive_attributes', 'enums', 'Edit']
+__all__ = ['dss', 'DSS', 'DSS_GR', 'prime_api_util', 'api_util', 'DSSException', 'patch_dss_com', 'set_case_insensitive_attributes', 'enums', 'IOddieDSS', 'OddieOptions']

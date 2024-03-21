@@ -2,19 +2,27 @@ import os, sys, platform, traceback, json, re
 from glob import glob
 from inspect import ismethod
 from math import isfinite
-from time import perf_counter
+from time import perf_counter, sleep
 from tempfile import TemporaryDirectory
 import numpy as np
 from zipfile import ZipFile, ZIP_DEFLATED
 from dss import enums, DSSException
 import dss
+from pathlib import Path
+from hashlib import sha1
+try:
+    from ._settings import test_filenames, cimxml_test_filenames, USE_ODDIE
+except ImportError:
+    from _settings import test_filenames, cimxml_test_filenames, USE_ODDIE
 
 original_working_dir = os.getcwd()
 
 NO_PROPERTIES = os.getenv('DSS_PYTHON_VALIDATE') == 'NOPROP'
 WIN32 = (sys.platform == 'win32')
 COM_VLL_BROKEN = True
-SAVE_DSSX_OUTPUT = ('dss-extensions' in sys.argv) or not WIN32
+SAVE_DSSX_OUTPUT_ODD = ('dss-extensions-odd' in sys.argv) or USE_ODDIE
+SAVE_DSSX_OUTPUT = SAVE_DSSX_OUTPUT_ODD or ('dss-extensions' in sys.argv) or not WIN32
+
 VERBOSE = ('-v' in sys.argv)
 suffix = ''
 
@@ -38,7 +46,7 @@ else:
 def run(dss: dss.IDSS, fn: str, line_by_line: bool):
     os.chdir(original_working_dir)
     dss.Text.Command = f'cd "{original_working_dir}"'
-    dss.Start(0)
+    # dss.Start(0) -- move this outside the run loop
     
     dss.Text.Command = 'Clear'
     dss.Text.Command = 'new circuit.RESET'
@@ -95,6 +103,17 @@ def run(dss: dss.IDSS, fn: str, line_by_line: bool):
     else:
         dss.Text.Command = 'Makebuslist'
 
+    if ('epri_dpv/M1/Master_NoPV.dss' not in fn and 
+        'epri_dpv/K1/Master_NoPV.dss' not in fn and 
+        'epri_dpv/J1/Master_withPV.dss' not in fn and
+        'LVTestCase/Master.dss' not in fn
+        and 'ckt5/Master_ckt5.dss' not in fn
+        and 'IEEE-TIA-LV Model' not in fn
+        and 'GFM_IEEE8500/Run_8500Node_Unbal' not in fn
+        and 'Storage-Quasi-Static-Example/Run_Demo1' not in fn
+        ):
+        dss.Text.Command = 'export profile phases=all'
+
     reliabity_ran = True
     try:
         dss.ActiveCircuit.Meters.DoReliabilityCalc(False)
@@ -107,7 +126,12 @@ def run(dss: dss.IDSS, fn: str, line_by_line: bool):
     return reliabity_ran, has_closedi
 
 
+reported_field_issues = set()
+
 def adjust_to_json(cls, field):
+    if cls.__class__.__name__ in ['ICapControls'] and field in ['idx']:
+        return
+
     try:
         data = getattr(cls, field)
         if ismethod(data):
@@ -122,8 +146,11 @@ def adjust_to_json(cls, field):
         return data
     except StopIteration:
         return
-    except:
-        print(cls, field)
+    except Exception as ex:
+        key = (type(ex).__qualname__, cls, field)
+        if key not in reported_field_issues:
+            print('[FIELD ISSUE]', *key)
+            reported_field_issues.add(key)
         raise
 
 ckt_elem_columns_meta = {'AllPropertyNames'}
@@ -135,8 +162,11 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     has_iter = hasattr(type(dss_cls), '__iter__')
     is_ckt_element = getattr(type(dss_cls), '_is_circuit_element', False)
     ckt_elem = dss.ActiveCircuit.ActiveCktElement
-    ckt_elem_columns = set(type(ckt_elem)._columns) - ckt_elem_columns_meta - pc_elem_columns
+    ckt_elem_columns = set(type(ckt_elem)._columns) - ckt_elem_columns_meta - pc_elem_columns - {'Handle', 'IsIsolated', 'HasOCPDevice'}
     fields = list(type(dss_cls)._columns)
+
+    if 'UserClasses' in fields:
+        fields.remove('UserClasses')
     
     if 'SAIFIKW' in fields:
         meter_section_fields = fields[fields.index('NumSections'):]
@@ -144,18 +174,18 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     else:
         meter_section_fields = None
 
-    if not SAVE_DSSX_OUTPUT:
+    if (not SAVE_DSSX_OUTPUT) or SAVE_DSSX_OUTPUT_ODD:
         if 'TotalPowers' in ckt_elem_columns:
             ckt_elem_columns.remove('TotalPowers')
 
         if 'IsIsolated' in ckt_elem_columns:
             ckt_elem_columns.remove('IsIsolated')
 
-        if COM_VLL_BROKEN and 'Coorddefined' in fields:
-            fields.remove('puVLL')
-            fields.remove('VLL')
-            fields.remove('AllPCEatBus')
-            fields.remove('AllPDEatBus')
+        if COM_VLL_BROKEN:### and 'Coorddefined' in fields:
+            if 'puVLL' in fields: fields.remove('puVLL')
+            if 'VLL' in fields: fields.remove('VLL')
+            if 'AllPCEatBus' in fields: fields.remove('AllPCEatBus')
+            if 'AllPDEatBus' in fields: fields.remove('AllPDEatBus')
 
         # if 'Sensor' in fields: # Both  Loads and PVSystems
         if 'ipvsystems' in type(dss_cls).__name__.lower():
@@ -192,6 +222,12 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
             # printv('>', field)
             try:
                 record[field] = adjust_to_json(dss_cls, field)
+            except DSSException as e:
+                # Check for methods not implemented
+                if 'not implemented' in e.args[1].lower():
+                    #print(e.args)
+                    continue
+                raise
             except StopIteration:
                 # Some fields are functions, skip those
                 continue
@@ -235,7 +271,16 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
 
         for field in ckt_iter_columns_meta:
             # printv('>', field)
-            metadata_record[field] = adjust_to_json(dss_cls, field)
+            try:
+                metadata_record[field] = adjust_to_json(dss_cls, field)
+            except DSSException as e:
+                if 'not implemented' in e.args[1].lower():
+                    # print(e.args)
+                    continue
+
+                raise
+
+
 
         if 'Meters' in type(dss_cls).__name__:
             # This breaks the iteration
@@ -300,6 +345,9 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
         #TODO: machine info?
     }
     for key, dss_api_cls in dss_classes.items():
+        if dss_api_cls is None:
+            printv(f'{key}: Not implemented, skipping.')
+            continue
         # print(key)
         document[key] = export_dss_api_cls(dss, dss_api_cls)
     
@@ -308,12 +356,17 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
     return json.dumps(document)
 
 
-def get_archive_fn(live_fn):
+def get_archive_fn(live_fn, fn_prefix=None):
     actual_fn = os.path.normpath(live_fn)
     common_prefix = os.path.commonprefix([ROOT_DIR, actual_fn])
     archive_fn = actual_fn[len(common_prefix) + 1:]
     if WIN32:
         archive_fn = archive_fn.replace('\\', '/')
+
+    if fn_prefix is not None:
+        archive_fn_parts = archive_fn.split('/')
+        archive_fn_parts[-1] = fn_prefix + '_' + archive_fn_parts[-1]
+        archive_fn = '/'.join(archive_fn_parts)
 
     return archive_fn
             
@@ -322,11 +375,6 @@ if __name__ == '__main__':
         ROOT_DIR = os.path.abspath('../../electricdss-tst/')
     else:
         ROOT_DIR = os.path.abspath('../electricdss-tst/')
-
-    try:
-        from ._settings import test_filenames, cimxml_test_filenames
-    except ImportError:
-        from _settings import test_filenames, cimxml_test_filenames
 
     # test_filenames = []
     # cimxml_test_filenames = []
@@ -337,8 +385,27 @@ if __name__ == '__main__':
     except:
         colorizer = None
 
+    if SAVE_DSSX_OUTPUT_ODD:
+        try:
+            from ._settings import DSS
+        except ImportError:
+            from _settings import DSS
 
-    if SAVE_DSSX_OUTPUT:
+        oddd_ver = DSS.Version.split(' ')[1]
+        print("Using official OpenDSS through ODDIE:", DSS.Version)
+        if USE_ODDIE != '1':
+            print("User-provided library path:", USE_ODDIE)
+            
+        debug_suffix = '-debug' if 'debug' in DSS.Version.lower() else ''
+        suffix = f'-dssx_oddd-{sys.platform}-{platform.machine()}-{oddd_ver}{debug_suffix}'
+        #test_idx = test_filenames.index('L!Version8/Distrib/IEEETestCases/123Bus/RevRegTest.dss') + 50
+        # test_filenames = [fn for fn in test_filenames if 'DOCTechNote' not in fn] # DOC not implemented
+        # test_filenames = ['L!Version8/Distrib/IEEETestCases/123Bus/Run_YearlySim.dss']
+        # test_filenames = ['L!Version8/Distrib/IEEETestCases/123Bus/SolarRamp.DSS']
+        cimxml_test_filenames = [] # Cannot run these now
+        DSS.AllowForms = False
+
+    elif SAVE_DSSX_OUTPUT:
         from dss import DSS, DSSCompatFlags
         DSS.CompatFlags = 0 # DSSCompatFlags.InvControl9611
         print("Using DSS-Extensions:", DSS.Version)
@@ -364,8 +431,14 @@ if __name__ == '__main__':
     try:
         DSS.Text.Command = 'new circuit.dummy'
         check_error()
+        if not WIN32:
+            DSS.Text.Command = 'set Editor=/bin/true'
+        else:
+            DSS.Text.Command = r'set Editor="C:\Program Files\Git\usr\bin\true.exe"'
+
         DSS.Text.Command = 'set ShowExport=NO'
         check_error()
+        sleep(0.1)
         DSS.Text.Command = 'clear'
         check_error()
     except:
@@ -376,6 +449,10 @@ if __name__ == '__main__':
     zip_fn = f'results{suffix}.zip'
     with ZipFile(os.path.join(original_working_dir, zip_fn), mode='a', compression=ZIP_DEFLATED) as zip_out:
         for fn in test_filenames + cimxml_test_filenames:
+            if not fn.strip(): 
+                break
+
+            fn_hash = sha1(fn.encode()).hexdigest()
             org_fn = fn
             fixed_fn = fn if not fn.startswith('L!') else fn[2:]
             line_by_line = fn.startswith('L!')
@@ -390,6 +467,7 @@ if __name__ == '__main__':
             try:
                 has_closedi = False
                 tstart_run = perf_counter()
+                # print(fn)
                 reliabity_ran, has_closedi = run(DSS, fn, line_by_line)
                 runtime = perf_counter() - tstart_run
                 total_runtime += runtime
@@ -418,13 +496,6 @@ if __name__ == '__main__':
                 for xml_live_fn in xml_live_fns:
                     zip_out.write(xml_live_fn, get_archive_fn(xml_live_fn).replace('.XML', '.xml'))
 
-            if has_closedi:
-                DSS.Text.Command = 'get CaseName'
-                res_dir = os.path.join(DSS.DataPath, DSS.Text.Result)
-                for csv_live_fn in glob(f'{res_dir}/*/*.csv'):
-                    print(csv_live_fn)
-                    zip_out.write(csv_live_fn, get_archive_fn(csv_live_fn).replace('.CSV', '.csv'))
-
             with TemporaryDirectory() as tmp_dir:
                 DSS.Text.Command = f'save circuit dir="{tmp_dir}"'
                 base_zip_dir = get_archive_fn(fn) + '.saved/'
@@ -436,6 +507,20 @@ if __name__ == '__main__':
                     # print((json_fn, base_zip_dir, saved_fn, rel_saved_fn.replace('.DSS', '.dss')))
                     zip_out.write(saved_fn, base_zip_dir + rel_saved_fn.replace('.DSS', '.dss'))
                     
+            if True: # has_closedi:
+                # DSS.Text.Command = 'get CaseName'
+                # res_dir = os.path.join(DSS.DataPath, DSS.Text.Result)
+                res_path = Path(DSS.DataPath)
+                
+                for csv_live_fn in res_path.rglob('*.csv', case_sensitive=False):
+                    csv_live_fn = str(csv_live_fn.absolute())
+                    print(csv_live_fn)
+                    try:
+                        zip_out.write(csv_live_fn, get_archive_fn(csv_live_fn, fn_hash).replace('.CSV', '.csv'))
+                    except:
+                        DSS.Text.Command = 'clear'
+                        zip_out.write(csv_live_fn, get_archive_fn(csv_live_fn, fn_hash).replace('.CSV', '.csv'))
+
 
     print(perf_counter() - t0_global, 'seconds')
     print(total_runtime, 'seconds (runtime only)')

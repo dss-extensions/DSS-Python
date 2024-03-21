@@ -7,26 +7,19 @@ import pytest
 import scipy.sparse as sp
 
 try:
-    from ._settings import BASE_DIR, WIN32, ZIP_FN
+    from ._settings import BASE_DIR, WIN32, ZIP_FN, DSS
 except ImportError:
-    from _settings import BASE_DIR, WIN32, ZIP_FN
-
-if WIN32:
-    # When running pytest, the faulthandler seems too eager to grab FPC's exceptions, even when handled
-    import faulthandler
-    faulthandler.disable()
-    import dss
-    faulthandler.enable()
-else:
-    import dss
+    from _settings import BASE_DIR, WIN32, ZIP_FN, DSS
 
 def setup_function():
     DSS.ClearAll()
-    DSS.AllowEditor = False
-    DSS.AdvancedTypes = False
-    DSS.AllowChangeDir = True
-    DSS.COMErrorResults = True # TODO: change to False
-    DSS.CompatFlags = 0
+    DSS.AllowForms = False
+    if not DSS._api_util._is_odd:
+        DSS.AllowEditor = False
+        DSS.AdvancedTypes = False
+        DSS.AllowChangeDir = True
+        DSS.COMErrorResults = True # TODO: change to False
+        DSS.CompatFlags = 0
 
 
 def test_rxmatrix():
