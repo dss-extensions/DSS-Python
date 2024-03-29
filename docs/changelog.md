@@ -5,11 +5,17 @@ relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_cap
 
 ## 0.15.x
 
+### 0.15.6
+
+Released on 2024-03-29.
+
+- Upgrade the backend to [**AltDSS/DSS C-API 0.14.5**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.5). No direct DSS-Python changes, includes a fix to the DSS.LineGeometries API.
+
 ### 0.15.5
 
 Released on 2024-03-19.
 
-- Upgrade the backend to [**AltDSS/DSS C-API 0.14.4**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.3). No direct DSS-Python changes, but some fixes and new features for [AltDSS-Python](https://github.com/dss-extensions/AltDSS-Python).
+- Upgrade the backend to [**AltDSS/DSS C-API 0.14.4**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.4). No direct DSS-Python changes, but some fixes and new features for [AltDSS-Python](https://github.com/dss-extensions/AltDSS-Python).
 
 ### 0.15.4
 
