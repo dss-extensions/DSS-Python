@@ -199,7 +199,7 @@ reproduce most of the plot options from the official OpenDSS.
 
 As a reminder, after activating, this can be used with `OpenDSSDirect.py <https://dss-extensions.org/OpenDSSDirect.py/>` too.
 
-A notebook with an example gallery of various plot commands and how to customized the matplotlib output is available: ()[examples/Plotting].
+A notebook with an example gallery of various plot commands and how to customized the matplotlib output is available: [](examples/Plotting).
 
 
 ## Documentation
