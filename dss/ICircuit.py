@@ -45,6 +45,7 @@ from .IParallel import IParallel
 from .IReduceCkt import IReduceCkt
 from .IStorages import IStorages
 from .IGICSources import IGICSources
+from .IWindGens import IWindGens
 
 from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
 from .enums import DSSJSONFlags, DSSSaveFlags
@@ -95,6 +96,7 @@ class ICircuit(Base):
         'ReduceCkt',
         'Storages',
         'GICSources',
+        'WindGens',
     ]
 
     _columns = [
@@ -165,6 +167,7 @@ class ICircuit(Base):
     Reactors: IReactors
     ReduceCkt: IReduceCkt
     Storages: IStorages
+    WindGens: IWindGens
     GICSources: IGICSources
     Parallel: IParallel
 
@@ -213,8 +216,9 @@ class ICircuit(Base):
         self.TSData = ITSData(api_util) if not api_util._is_odd else None
         self.Reactors = IReactors(api_util) if not api_util._is_odd else None
         self.ReduceCkt = IReduceCkt(api_util) #: Circuit Reduction Interface
-        self.Storages = IStorages(api_util) if not api_util._is_odd else None
+        self.Storages = IStorages(api_util)
         self.GICSources = IGICSources(api_util)
+        self.WindGens = IWindGens(api_util)
 
         if hasattr(api_util.lib, 'Parallel_CreateActor'):
             self.Parallel = IParallel(api_util)
