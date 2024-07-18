@@ -44,6 +44,8 @@ assert os.path.exists(BASE_DIR)
 #"L!Distrib/IEEETestCases/4wire-Delta/Kersting4wireIndMotor.dss",
 
 test_filenames = '''
+Version8/Distrib/Examples/WindGenerator/WindGen_QSTS/Run_IEEE123Bus_GFLDaily.DSS
+Version8/Distrib/Examples/WindGenerator/WindGen_GFL_Dynamics/Run_IEEE123Bus_GFLDaily.DSS
 Version8/Distrib/Examples/NCIM/Xmission_System_Kundur2Area/Master.dss
 Version8/Distrib/IEEETestCases/IEEE118Bus/master_file.dss
 Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-csv-p.dss
