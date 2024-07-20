@@ -8,11 +8,9 @@ class IDSSimComs(Base):
     __slots__ = []
 
     def BusVoltage(self, Index: int) -> Float64Array:
-        self._check_for_error(self._lib.DSSimComs_BusVoltage_GR(Index))
-        return self._get_float64_gr_array()
+        return self._lib.DSSimComs_BusVoltage_GR(Index)
 
     def BusVoltagepu(self, Index: int) -> Float64Array:
-        self._check_for_error(self._lib.DSSimComs_BusVoltagepu_GR(Index))
-        return self._get_float64_gr_array()
+        return self._lib.DSSimComs_BusVoltagepu_GR(Index)
 
 

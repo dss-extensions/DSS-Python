@@ -28,10 +28,7 @@ class IZIP(Base):
         
         **(API Extension)**
         '''
-        if not isinstance(FileName, bytes):
-            FileName = FileName.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.ZIP_Open(FileName))
+        self._lib.ZIP_Open(FileName)
 
     def Close(self):
         '''
@@ -39,7 +36,7 @@ class IZIP(Base):
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.ZIP_Close())
+        self._lib.ZIP_Close()
 
     def Redirect(self, FileInZip: AnyStr):
         '''
@@ -50,10 +47,7 @@ class IZIP(Base):
 
         **(API Extension)**
         '''
-        if not isinstance(FileInZip, bytes):
-            FileInZip = FileInZip.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.ZIP_Redirect(FileInZip))
+        self._lib.ZIP_Redirect(FileInZip)
 
     def Extract(self, FileName: AnyStr) -> bytes:
         '''
@@ -66,11 +60,13 @@ class IZIP(Base):
         if not isinstance(FileName, bytes):
             FileName = FileName.encode(api_util.codec)
 
-        self._check_for_error(self._lib.ZIP_Extract_GR(FileName))
+        api_util.lib_unpatched.ZIP_Extract_GR(FileName)
+        api_util._check_for_error()
         ptr, cnt = api_util.gr_int8_pointers
         return bytes(api_util.ffi.buffer(ptr[0], cnt[0]))
 
-    def List(self, regexp: Optional[AnyStr]=None) -> List[str]:
+
+    def List(self, regexp: AnyStr='') -> List[str]:
         '''
         List of strings consisting of all names match the regular expression provided in regexp.
         If no expression is provided, all names in the current open ZIP are returned.
@@ -81,12 +77,9 @@ class IZIP(Base):
         **(API Extension)**
         '''
         if regexp is None or not regexp:
-            regexp = self._api_util.ffi.NULL
-        else:
-            if not isinstance(regexp, bytes):
-                regexp = regexp.encode(self._api_util.codec)
+            regexp = b''
         
-        return self._check_for_error(self._get_string_array(self._lib.ZIP_List, regexp))
+        return self._lib.ZIP_List(regexp)
 
     def Contains(self, Name: AnyStr) -> bool:
         '''
@@ -94,10 +87,7 @@ class IZIP(Base):
         
         **(API Extension)**
         '''
-        if not isinstance(Name, bytes):
-            Name = Name.encode(self._api_util.codec)
-
-        return self._check_for_error(self._lib.ZIP_Contains(Name)) != 0
+        return self._lib.ZIP_Contains(Name)
 
     def __getitem__(self, FileName) -> bytes:
         return self.Extract(FileName)

@@ -4,7 +4,7 @@
 from __future__ import annotations
 from ._cffi_api_util import Base
 from .enums import DSSJSONFlags
-from typing import AnyStr, List, Iterator
+from typing import AnyStr, List, Iterator, Optional
 
 class IActiveClass(Base):
     __slots__ = []
@@ -23,7 +23,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/ActiveClassName.html
         '''
-        return self._get_string(self._check_for_error(self._lib.ActiveClass_Get_ActiveClassName()))
+        return self._lib.ActiveClass_Get_ActiveClassName()
 
     @property
     def AllNames(self) -> List[str]:
@@ -32,7 +32,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/AllNames.html
         '''
-        return self._check_for_error(self._get_string_array(self._lib.ActiveClass_Get_AllNames))
+        return self._lib.ActiveClass_Get_AllNames()
 
     @property
     def Count(self) -> int:
@@ -41,10 +41,10 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/Count.html
         '''
-        return self._check_for_error(self._lib.ActiveClass_Get_Count())
+        return self._lib.ActiveClass_Get_Count()
 
     def __len__(self) -> int:
-        return self._check_for_error(self._lib.ActiveClass_Get_Count())
+        return self._lib.ActiveClass_Get_Count()
 
     def __iter__(self) -> Iterator[IActiveClass]:
         n = self.First
@@ -62,7 +62,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/First.html
         '''
-        return self._check_for_error(self._lib.ActiveClass_Get_First())
+        return self._lib.ActiveClass_Get_First()
 
     @property
     def Name(self) -> str:
@@ -71,14 +71,11 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/Name.html
         '''
-        return self._get_string(self._check_for_error(self._lib.ActiveClass_Get_Name()))
+        return self._lib.ActiveClass_Get_Name()
 
     @Name.setter
     def Name(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.ActiveClass_Set_Name(Value))
+        self._lib.ActiveClass_Set_Name(Value)
 
     @property
     def Next(self) -> int:
@@ -90,7 +87,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/Next.html
         '''
-        return self._check_for_error(self._lib.ActiveClass_Get_Next())
+        return self._lib.ActiveClass_Get_Next()
 
     @property
     def NumElements(self) -> int:
@@ -99,7 +96,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/NumElements.html
         '''
-        return self._check_for_error(self._lib.ActiveClass_Get_NumElements())
+        return self._lib.ActiveClass_Get_NumElements()
 
     @property
     def ActiveClassParent(self) -> str:
@@ -108,7 +105,7 @@ class IActiveClass(Base):
 
         Original COM help: https://opendss.epri.com/ActiveClassParent.html
         '''
-        return self._get_string(self._check_for_error(self._lib.ActiveClass_Get_ActiveClassParent()))
+        return self._lib.ActiveClass_Get_ActiveClassParent()
 
     def ToJSON(self, options: DSSJSONFlags = 0) -> str:
         '''
@@ -121,4 +118,17 @@ class IActiveClass(Base):
 
         **(API Extension)**
         '''
-        return self._get_string(self._check_for_error(self._lib.ActiveClass_ToJSON(options)))
+        return self._lib.ActiveClass_ToJSON(options)
+
+    def to_altdss(self) -> Optional[DSSObject]:
+        '''
+        Returns a Python object for the current active DSS object in this interface.
+
+        Requires AltDSS-Python.
+
+        *Available only for the AltDSS engine.*
+
+        **(API Extension)**
+        '''
+        ptr = self._lib.ActiveClass_Get_Pointer()
+        return self._api_util.get_dss_obj(ptr)

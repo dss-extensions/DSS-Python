@@ -41,11 +41,11 @@ class ISettings(Base):
         **NOTE**: for DSS-Extensions, we are considering removing this option in a future 
         release since it has performance impacts even when not used.
         '''
-        return self._check_for_error(self._lib.Settings_Get_AllowDuplicates()) != 0
+        return self._lib.Settings_Get_AllowDuplicates()
 
     @AllowDuplicates.setter
     def AllowDuplicates(self, Value: bool):
-        self._check_for_error(self._lib.Settings_Set_AllowDuplicates(Value))
+        self._lib.Settings_Set_AllowDuplicates(Value)
 
     @property
     def AutoBusList(self) -> str:
@@ -54,14 +54,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/AutoBusList.html
         '''
-        return self._get_string(self._check_for_error(self._lib.Settings_Get_AutoBusList()))
+        return self._lib.Settings_Get_AutoBusList()
 
     @AutoBusList.setter
     def AutoBusList(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Settings_Set_AutoBusList(Value))
+        self._lib.Settings_Set_AutoBusList(Value)
 
     @property
     def CktModel(self) -> CktModels:
@@ -70,11 +67,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/CktModel.html
         '''
-        return self._check_for_error(CktModels(self._lib.Settings_Get_CktModel()))
+        return CktModels(self._lib.Settings_Get_CktModel())
 
     @CktModel.setter
     def CktModel(self, Value: Union[int, CktModels]):
-        self._check_for_error(self._lib.Settings_Set_CktModel(Value))
+        self._lib.Settings_Set_CktModel(Value)
 
     @property
     def ControlTrace(self) -> bool:
@@ -83,11 +80,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/ControlTrace.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_ControlTrace()) != 0
+        return self._lib.Settings_Get_ControlTrace()
 
     @ControlTrace.setter
     def ControlTrace(self, Value: bool):
-        self._check_for_error(self._lib.Settings_Set_ControlTrace(Value))
+        self._lib.Settings_Set_ControlTrace(Value)
 
     @property
     def EmergVmaxpu(self) -> float:
@@ -96,11 +93,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/EmergVmaxpu.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_EmergVmaxpu())
+        return self._lib.Settings_Get_EmergVmaxpu()
 
     @EmergVmaxpu.setter
     def EmergVmaxpu(self, Value: float):
-        self._check_for_error(self._lib.Settings_Set_EmergVmaxpu(Value))
+        self._lib.Settings_Set_EmergVmaxpu(Value)
 
     @property
     def EmergVminpu(self) -> float:
@@ -109,11 +106,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/EmergVminpu.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_EmergVminpu())
+        return self._lib.Settings_Get_EmergVminpu()
 
     @EmergVminpu.setter
     def EmergVminpu(self, Value: float):
-        self._check_for_error(self._lib.Settings_Set_EmergVminpu(Value))
+        self._lib.Settings_Set_EmergVminpu(Value)
 
     @property
     def LossRegs(self) -> Int32Array:
@@ -122,13 +119,12 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/LossRegs.html
         '''
-        self._check_for_error(self._lib.Settings_Get_LossRegs_GR())
-        return self._get_int32_gr_array()
+        return self._lib.Settings_Get_LossRegs_GR()
 
     @LossRegs.setter
     def LossRegs(self, Value: Int32Array):
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
-        self._check_for_error(self._lib.Settings_Set_LossRegs(ValuePtr, ValueCount))
+        self._lib.Settings_Set_LossRegs(ValuePtr, ValueCount)
 
     @property
     def LossWeight(self) -> float:
@@ -137,11 +133,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/LossWeight.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_LossWeight())
+        return self._lib.Settings_Get_LossWeight()
 
     @LossWeight.setter
     def LossWeight(self, Value: float):
-        self._check_for_error(self._lib.Settings_Set_LossWeight(Value))
+        self._lib.Settings_Set_LossWeight(Value)
 
     @property
     def NormVmaxpu(self) -> float:
@@ -150,11 +146,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/NormVmaxpu.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_NormVmaxpu())
+        return self._lib.Settings_Get_NormVmaxpu()
 
     @NormVmaxpu.setter
     def NormVmaxpu(self, Value: float):
-        self._check_for_error(self._lib.Settings_Set_NormVmaxpu(Value))
+        self._lib.Settings_Set_NormVmaxpu(Value)
 
     @property
     def NormVminpu(self) -> float:
@@ -163,11 +159,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/NormVminpu.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_NormVminpu())
+        return self._lib.Settings_Get_NormVminpu()
 
     @NormVminpu.setter
     def NormVminpu(self, Value: float):
-        self._check_for_error(self._lib.Settings_Set_NormVminpu(Value))
+        self._lib.Settings_Set_NormVminpu(Value)
 
     @property
     def PriceCurve(self) -> str:
@@ -176,14 +172,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/PriceCurve.html
         '''
-        return self._get_string(self._check_for_error(self._lib.Settings_Get_PriceCurve()))
+        return self._lib.Settings_Get_PriceCurve()
 
     @PriceCurve.setter
     def PriceCurve(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Settings_Set_PriceCurve(Value))
+        self._lib.Settings_Set_PriceCurve(Value)
 
     @property
     def PriceSignal(self) -> float:
@@ -192,11 +185,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/PriceSignal.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_PriceSignal())
+        return self._lib.Settings_Get_PriceSignal()
 
     @PriceSignal.setter
     def PriceSignal(self, Value: float):
-        self._check_for_error(self._lib.Settings_Set_PriceSignal(Value))
+        self._lib.Settings_Set_PriceSignal(Value)
 
     @property
     def Trapezoidal(self) -> bool:
@@ -205,11 +198,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/Trapezoidal.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_Trapezoidal()) != 0
+        return self._lib.Settings_Get_Trapezoidal()
 
     @Trapezoidal.setter
     def Trapezoidal(self, Value: bool):
-        self._check_for_error(self._lib.Settings_Set_Trapezoidal(Value))
+        self._lib.Settings_Set_Trapezoidal(Value)
 
     @property
     def UEregs(self) -> Int32Array:
@@ -218,13 +211,12 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/UEregs.html
         '''
-        self._check_for_error(self._lib.Settings_Get_UEregs_GR())
-        return self._get_int32_gr_array()
+        return self._lib.Settings_Get_UEregs_GR()
 
     @UEregs.setter
     def UEregs(self, Value: Int32Array):
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
-        self._check_for_error(self._lib.Settings_Set_UEregs(ValuePtr, ValueCount))
+        self._lib.Settings_Set_UEregs(ValuePtr, ValueCount)
 
     @property
     def UEweight(self) -> float:
@@ -233,11 +225,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/UEweight.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_UEweight())
+        return self._lib.Settings_Get_UEweight()
 
     @UEweight.setter
     def UEweight(self, Value: float):
-        self._check_for_error(self._lib.Settings_Set_UEweight(Value))
+        self._lib.Settings_Set_UEweight(Value)
 
     @property
     def VoltageBases(self) -> Float64Array:
@@ -246,13 +238,12 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/VoltageBases.html
         '''
-        self._check_for_error(self._lib.Settings_Get_VoltageBases_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Settings_Get_VoltageBases_GR()
 
     @VoltageBases.setter
     def VoltageBases(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self._check_for_error(self._lib.Settings_Set_VoltageBases(ValuePtr, ValueCount))
+        self._lib.Settings_Set_VoltageBases(ValuePtr, ValueCount)
 
     @property
     def ZoneLock(self) -> bool:
@@ -261,11 +252,11 @@ class ISettings(Base):
 
         Original COM help: https://opendss.epri.com/ZoneLock.html
         '''
-        return self._check_for_error(self._lib.Settings_Get_ZoneLock()) != 0
+        return self._lib.Settings_Get_ZoneLock()
 
     @ZoneLock.setter
     def ZoneLock(self, Value: bool):
-        self._check_for_error(self._lib.Settings_Set_ZoneLock(Value))
+        self._lib.Settings_Set_ZoneLock(Value)
 
     @property
     def AllocationFactors(self):
@@ -274,7 +265,7 @@ class ISettings(Base):
 
     @AllocationFactors.setter
     def AllocationFactors(self, Value: float):
-        self._check_for_error(self._lib.Settings_Set_AllocationFactors(Value))
+        self._lib.Settings_Set_AllocationFactors(Value)
 
     @property
     def LoadsTerminalCheck(self) -> bool:
@@ -284,11 +275,11 @@ class ISettings(Base):
         
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.Settings_Get_LoadsTerminalCheck()) != 0
+        return self._lib.Settings_Get_LoadsTerminalCheck()
 
     @LoadsTerminalCheck.setter
     def LoadsTerminalCheck(self, Value: bool):
-        self._check_for_error(self._lib.Settings_Set_LoadsTerminalCheck(Value))
+        self._lib.Settings_Set_LoadsTerminalCheck(Value)
         
     @property
     def IterateDisabled(self) -> int:
@@ -302,11 +293,11 @@ class ISettings(Base):
         
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.Settings_Get_IterateDisabled())
+        return self._lib.Settings_Get_IterateDisabled()
 
     @IterateDisabled.setter
     def IterateDisabled(self, Value: int):
-        self._check_for_error(self._lib.Settings_Set_IterateDisabled(Value))
+        self._lib.Settings_Set_IterateDisabled(Value)
 
     def SetPropertyNameStyle(self, value: DSSPropertyNameStyle):
         '''
@@ -318,4 +309,4 @@ class ISettings(Base):
 
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.Settings_SetPropertyNameStyle(value))
+        self._lib.Settings_SetPropertyNameStyle(value)

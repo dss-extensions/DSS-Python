@@ -8,10 +8,10 @@ class IDSSProgress(Base):
     __slots__ = []
 
     def Close(self):
-        self._check_for_error(self._lib.DSSProgress_Close())
+        self._lib.DSSProgress_Close()
 
     def Show(self):
-        self._check_for_error(self._lib.DSSProgress_Show())
+        self._lib.DSSProgress_Show()
 
     @property
     def Caption(self) -> str:
@@ -24,10 +24,7 @@ class IDSSProgress(Base):
 
     @Caption.setter
     def Caption(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.DSSProgress_Set_Caption(Value))
+        self._lib.DSSProgress_Set_Caption(Value)
 
     @property
     def PctProgress(self) -> int:
@@ -40,6 +37,6 @@ class IDSSProgress(Base):
 
     @PctProgress.setter
     def PctProgress(self, Value: int):
-        self._check_for_error(self._lib.DSSProgress_Set_PctProgress(Value))
+        self._lib.DSSProgress_Set_PctProgress(Value)
 
 

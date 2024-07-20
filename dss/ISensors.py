@@ -27,10 +27,10 @@ class ISensors(Iterable):
     ]
 
     def Reset(self):
-        self._check_for_error(self._lib.Sensors_Reset())
+        self._lib.Sensors_Reset()
 
     def ResetAll(self):
-        self._check_for_error(self._lib.Sensors_ResetAll())
+        self._lib.Sensors_ResetAll()
 
     @property
     def Currents(self) -> Float64Array:
@@ -39,13 +39,12 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/Currents2.html
         '''
-        self._check_for_error(self._lib.Sensors_Get_Currents_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Sensors_Get_Currents_GR()
 
     @Currents.setter
     def Currents(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self._check_for_error(self._lib.Sensors_Set_Currents(ValuePtr, ValueCount))
+        self._lib.Sensors_Set_Currents(ValuePtr, ValueCount)
 
     @property
     def IsDelta(self) -> bool:
@@ -54,11 +53,11 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/IsDelta2.html
         '''
-        return self._check_for_error(self._lib.Sensors_Get_IsDelta()) != 0
+        return self._lib.Sensors_Get_IsDelta()
 
     @IsDelta.setter
     def IsDelta(self, Value: bool):
-        self._check_for_error(self._lib.Sensors_Set_IsDelta(Value))
+        self._lib.Sensors_Set_IsDelta(Value)
 
     @property
     def MeteredElement(self) -> str:
@@ -67,14 +66,11 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/MeteredElement1.html
         '''
-        return self._get_string(self._check_for_error(self._lib.Sensors_Get_MeteredElement()))
+        return self._lib.Sensors_Get_MeteredElement()
 
     @MeteredElement.setter
     def MeteredElement(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Sensors_Set_MeteredElement(Value))
+        self._lib.Sensors_Set_MeteredElement(Value)
 
     @property
     def MeteredTerminal(self) -> int:
@@ -83,11 +79,11 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/MeteredTerminal1.html
         '''
-        return self._check_for_error(self._lib.Sensors_Get_MeteredTerminal())
+        return self._lib.Sensors_Get_MeteredTerminal()
 
     @MeteredTerminal.setter
     def MeteredTerminal(self, Value: int):
-        self._check_for_error(self._lib.Sensors_Set_MeteredTerminal(Value))
+        self._lib.Sensors_Set_MeteredTerminal(Value)
 
     @property
     def PctError(self) -> float:
@@ -96,11 +92,11 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/PctError.html
         '''
-        return self._check_for_error(self._lib.Sensors_Get_PctError())
+        return self._lib.Sensors_Get_PctError()
 
     @PctError.setter
     def PctError(self, Value: float):
-        self._check_for_error(self._lib.Sensors_Set_PctError(Value))
+        self._lib.Sensors_Set_PctError(Value)
 
     @property
     def ReverseDelta(self) -> bool:
@@ -109,11 +105,11 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/ReverseDelta.html
         '''
-        return self._check_for_error(self._lib.Sensors_Get_ReverseDelta()) != 0
+        return self._lib.Sensors_Get_ReverseDelta()
 
     @ReverseDelta.setter
     def ReverseDelta(self, Value: bool):
-        self._check_for_error(self._lib.Sensors_Set_ReverseDelta(Value))
+        self._lib.Sensors_Set_ReverseDelta(Value)
 
     @property
     def Weight(self) -> float:
@@ -122,11 +118,11 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/Weight.html
         '''
-        return self._check_for_error(self._lib.Sensors_Get_Weight())
+        return self._lib.Sensors_Get_Weight()
 
     @Weight.setter
     def Weight(self, Value: float):
-        self._check_for_error(self._lib.Sensors_Set_Weight(Value))
+        self._lib.Sensors_Set_Weight(Value)
 
     @property
     def kVARS(self) -> Float64Array:
@@ -135,13 +131,12 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/kVARS.html
         '''
-        self._check_for_error(self._lib.Sensors_Get_kVARS_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Sensors_Get_kVARS_GR()
 
     @kVARS.setter
     def kVARS(self, Value):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self._check_for_error(self._lib.Sensors_Set_kVARS(ValuePtr, ValueCount))
+        self._lib.Sensors_Set_kVARS(ValuePtr, ValueCount)
 
     @property
     def kVS(self) -> Float64Array:
@@ -150,13 +145,12 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/kVS.html
         '''
-        self._check_for_error(self._lib.Sensors_Get_kVS_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Sensors_Get_kVS_GR()
 
     @kVS.setter
     def kVS(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self._check_for_error(self._lib.Sensors_Set_kVS(ValuePtr, ValueCount))
+        self._lib.Sensors_Set_kVS(ValuePtr, ValueCount)
 
     @property
     def kVbase(self) -> float:
@@ -165,11 +159,11 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/kVBase1.html
         '''
-        return self._check_for_error(self._lib.Sensors_Get_kVbase())
+        return self._lib.Sensors_Get_kVbase()
 
     @kVbase.setter
     def kVbase(self, Value: float):
-        self._check_for_error(self._lib.Sensors_Set_kVbase(Value))
+        self._lib.Sensors_Set_kVbase(Value)
 
     @property
     def kWS(self) -> Float64Array:
@@ -178,13 +172,12 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/kWS.html
         '''
-        self._check_for_error(self._lib.Sensors_Get_kWS_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Sensors_Get_kWS_GR()
 
     @kWS.setter
     def kWS(self, Value: Float64Array):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
-        self._check_for_error(self._lib.Sensors_Set_kWS(ValuePtr, ValueCount))
+        self._lib.Sensors_Set_kWS(ValuePtr, ValueCount)
 
     @property
     def AllocationFactor(self):
@@ -193,5 +186,4 @@ class ISensors(Iterable):
 
         Original COM help: https://opendss.epri.com/AllocationFactor1.html
         '''
-        self._check_for_error(self._lib.Sensors_Get_AllocationFactor_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Sensors_Get_AllocationFactor_GR()

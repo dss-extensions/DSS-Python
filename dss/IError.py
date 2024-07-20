@@ -19,7 +19,7 @@ class IError(Base):
 
         Original COM help: https://opendss.epri.com/Description1.html
         '''
-        return self._get_string(self._lib.Error_Get_Description())
+        return self._lib.Error_Get_Description()
 
     @property
     def Number(self) -> int:
@@ -37,7 +37,7 @@ class IError(Base):
         
         **(API Extension)**
         '''
-        return self._lib.Error_Get_EarlyAbort() != 0
+        return self._lib.Error_Get_EarlyAbort()
         
     @EarlyAbort.setter
     def EarlyAbort(self, Value: bool):
@@ -66,7 +66,7 @@ class IError(Base):
         
         **(API Extension)**
         '''
-        return self._lib.Error_Get_ExtendedErrors() != 0
+        return self._lib.Error_Get_ExtendedErrors()
         
     @ExtendedErrors.setter
     def ExtendedErrors(self, Value: bool):
@@ -97,3 +97,8 @@ class IError(Base):
     @UseExceptions.setter
     def UseExceptions(self, value: bool):
         Base._enable_exceptions(value)
+        _UseExceptions = 1
+        if value:
+            self._api_util.settings_ptr[0] = self._api_util.settings_ptr[0] | _UseExceptions
+        else:
+            self._api_util.settings_ptr[0] = self._api_util.settings_ptr[0] & ~_UseExceptions

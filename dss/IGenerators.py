@@ -42,11 +42,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/ForcedON.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_ForcedON()) != 0
+        return self._lib.Generators_Get_ForcedON()
 
     @ForcedON.setter
     def ForcedON(self, Value: bool):
-        self._check_for_error(self._lib.Generators_Set_ForcedON(Value))
+        self._lib.Generators_Set_ForcedON(Value)
 
     @property
     def Model(self) -> int:
@@ -55,11 +55,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/Model.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_Model()) #TODO: use enum
+        return self._lib.Generators_Get_Model() #TODO: use enum
 
     @Model.setter
     def Model(self, Value: int):
-        self._check_for_error(self._lib.Generators_Set_Model(Value))
+        self._lib.Generators_Set_Model(Value)
 
     @property
     def PF(self) -> float:
@@ -68,11 +68,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/PF.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_PF())
+        return self._lib.Generators_Get_PF()
 
     @PF.setter
     def PF(self, Value: float):
-        self._check_for_error(self._lib.Generators_Set_PF(Value))
+        self._lib.Generators_Set_PF(Value)
 
     @property
     def Phases(self) -> int:
@@ -81,11 +81,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/Phases.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_Phases())
+        return self._lib.Generators_Get_Phases()
 
     @Phases.setter
     def Phases(self, Value: int):
-        self._check_for_error(self._lib.Generators_Set_Phases(Value))
+        self._lib.Generators_Set_Phases(Value)
 
     @property
     def RegisterNames(self) -> List[str]:
@@ -94,7 +94,7 @@ class IGenerators(Iterable):
         
         See also the enum `GeneratorRegisters`.
         '''
-        return self._check_for_error(self._get_string_array(self._lib.Generators_Get_RegisterNames))
+        return self._lib.Generators_Get_RegisterNames()
 
     @property
     def RegisterValues(self) -> Float64Array:
@@ -103,8 +103,7 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/RegisterValues.html
         '''
-        self._check_for_error(self._lib.Generators_Get_RegisterValues_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Generators_Get_RegisterValues_GR()
 
     @property
     def Vmaxpu(self) -> float:
@@ -113,11 +112,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/Vmaxpu.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_Vmaxpu())
+        return self._lib.Generators_Get_Vmaxpu()
 
     @Vmaxpu.setter
     def Vmaxpu(self, Value: float):
-        self._check_for_error(self._lib.Generators_Set_Vmaxpu(Value))
+        self._lib.Generators_Set_Vmaxpu(Value)
 
     @property
     def Vminpu(self) -> float:
@@ -126,11 +125,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/Vminpu.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_Vminpu())
+        return self._lib.Generators_Get_Vminpu()
 
     @Vminpu.setter
     def Vminpu(self, Value: float):
-        self._check_for_error(self._lib.Generators_Set_Vminpu(Value))
+        self._lib.Generators_Set_Vminpu(Value)
 
     @property
     def kV(self) -> float:
@@ -139,11 +138,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/kV1.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_kV())
+        return self._lib.Generators_Get_kV()
 
     @kV.setter
     def kV(self, Value: float):
-        self._check_for_error(self._lib.Generators_Set_kV(Value))
+        self._lib.Generators_Set_kV(Value)
 
     @property
     def kVArated(self) -> float:
@@ -152,11 +151,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/kVArated.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_kVArated())
+        return self._lib.Generators_Get_kVArated()
 
     @kVArated.setter
     def kVArated(self, Value: float):
-        self._check_for_error(self._lib.Generators_Set_kVArated(Value))
+        self._lib.Generators_Set_kVArated(Value)
 
     @property
     def kW(self) -> float:
@@ -165,11 +164,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/kW.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_kW())
+        return self._lib.Generators_Get_kW()
 
     @kW.setter
     def kW(self, Value: float):
-        self._check_for_error(self._lib.Generators_Set_kW(Value))
+        self._lib.Generators_Set_kW(Value)
 
     @property
     def kvar(self) -> float:
@@ -178,11 +177,11 @@ class IGenerators(Iterable):
 
         Original COM help: https://opendss.epri.com/kvar.html
         '''
-        return self._check_for_error(self._lib.Generators_Get_kvar())
+        return self._lib.Generators_Get_kvar()
 
     @kvar.setter
     def kvar(self, Value: float):
-        self._check_for_error(self._lib.Generators_Set_kvar(Value))
+        self._lib.Generators_Set_kvar(Value)
 
     @property
     def daily(self) -> str:
@@ -191,14 +190,11 @@ class IGenerators(Iterable):
 
         **(API Extension)**
         '''
-        return self._get_string(self._check_for_error(self._lib.Generators_Get_daily()))
+        return self._lib.Generators_Get_daily()
 
     @daily.setter
     def daily(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Generators_Set_daily(Value))
+        self._lib.Generators_Set_daily(Value)
 
     @property
     def duty(self) -> str:
@@ -207,14 +203,11 @@ class IGenerators(Iterable):
 
         **(API Extension)**
         '''
-        return self._get_string(self._check_for_error(self._lib.Generators_Get_duty()))
+        return self._lib.Generators_Get_duty()
 
     @duty.setter
     def duty(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Generators_Set_duty(Value))
+        self._lib.Generators_Set_duty(Value)
 
     @property
     def Yearly(self) -> str:
@@ -223,14 +216,11 @@ class IGenerators(Iterable):
 
         **(API Extension)**
         '''
-        return self._get_string(self._check_for_error(self._lib.Generators_Get_Yearly()))
+        return self._lib.Generators_Get_Yearly()
 
     @Yearly.setter
     def Yearly(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Generators_Set_Yearly(Value))
+        self._lib.Generators_Set_Yearly(Value)
 
     @property
     def Status(self) -> GeneratorStatus:
@@ -241,11 +231,11 @@ class IGenerators(Iterable):
 
         **(API Extension)**
         '''
-        return GeneratorStatus(self._check_for_error(self._lib.Generators_Get_Status()))
+        return GeneratorStatus(self._lib.Generators_Get_Status())
 
     @Status.setter
     def Status(self, Value: Union[int, GeneratorStatus]):
-        self._check_for_error(self._lib.Generators_Set_Status(Value))
+        self._lib.Generators_Set_Status(Value)
 
     @property
     def IsDelta(self) -> bool:
@@ -254,11 +244,11 @@ class IGenerators(Iterable):
 
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.Generators_Get_IsDelta()) != 0
+        return self._lib.Generators_Get_IsDelta()
 
     @IsDelta.setter
     def IsDelta(self, Value: bool):
-        self._check_for_error(self._lib.Generators_Set_IsDelta(Value))
+        self._lib.Generators_Set_IsDelta(Value)
 
     @property
     def kva(self) -> float:
@@ -267,11 +257,11 @@ class IGenerators(Iterable):
 
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.Generators_Get_kva())
+        return self._lib.Generators_Get_kva()
 
     @kva.setter
     def kva(self, Value: float):
-        self._check_for_error(self._lib.Generators_Set_kva(Value))
+        self._lib.Generators_Set_kva(Value)
 
     @property
     def Class(self) -> int:
@@ -280,11 +270,11 @@ class IGenerators(Iterable):
 
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.Generators_Get_Class_())
+        return self._lib.Generators_Get_Class_()
 
     @Class.setter
     def Class(self, Value: int):
-        self._check_for_error(self._lib.Generators_Set_Class_(Value))
+        self._lib.Generators_Set_Class_(Value)
 
     @property
     def Bus1(self) -> str:
@@ -293,12 +283,9 @@ class IGenerators(Iterable):
 
         **(API Extension)**
         '''
-        return self._get_string(self._check_for_error(self._lib.Generators_Get_Bus1()))
+        return self._lib.Generators_Get_Bus1()
 
     @Bus1.setter
     def Bus1(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Generators_Set_Bus1(Value))
+        self._lib.Generators_Set_Bus1(Value)
 

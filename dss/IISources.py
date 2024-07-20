@@ -22,11 +22,11 @@ class IISources(Iterable):
 
         Original COM help: https://opendss.epri.com/Amps.html
         '''
-        return self._check_for_error(self._lib.ISources_Get_Amps())
+        return self._lib.ISources_Get_Amps()
 
     @Amps.setter
     def Amps(self, Value: float):
-        self._check_for_error(self._lib.ISources_Set_Amps(Value))
+        self._lib.ISources_Set_Amps(Value)
  
     @property
     def AngleDeg(self) -> float:
@@ -35,11 +35,11 @@ class IISources(Iterable):
 
         Original COM help: https://opendss.epri.com/AngleDeg.html
         '''
-        return self._check_for_error(self._lib.ISources_Get_AngleDeg())
+        return self._lib.ISources_Get_AngleDeg()
 
     @AngleDeg.setter
     def AngleDeg(self, Value: float):
-        self._check_for_error(self._lib.ISources_Set_AngleDeg(Value))
+        self._lib.ISources_Set_AngleDeg(Value)
  
     @property
     def Frequency(self) -> float:
@@ -48,9 +48,9 @@ class IISources(Iterable):
 
         Original COM help: https://opendss.epri.com/Frequency.html
         '''
-        return self._check_for_error(self._lib.ISources_Get_Frequency())
+        return self._lib.ISources_Get_Frequency()
 
     @Frequency.setter
     def Frequency(self, Value: float):
-        self._check_for_error(self._lib.ISources_Set_Frequency(Value))
+        self._lib.ISources_Set_Frequency(Value)
  

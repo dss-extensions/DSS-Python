@@ -1,14 +1,29 @@
 from __future__ import annotations
 import warnings
-from functools import partial
+from functools import partial, wraps
 from weakref import ref, WeakKeyDictionary
 import numpy as np
 from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
-from typing import Any, AnyStr, Callable, List, Union, Iterator
+from typing import Any, AnyStr, Callable, List, Union, Iterator, Optional, TYPE_CHECKING
 from .enums import AltDSSEvent
 from dss_python_backend.events import get_manager_for_ctx
 
-# UTF8 under testing
+if TYPE_CHECKING:
+    try:
+        from altdss import DSSObject, Bus as AltBus, AltDSS
+    except:
+        pass
+
+try:
+    # Try to import the fast backend
+    from dss_python_backend._fastdss import AltDSS_PyContext
+except:
+    import dss_python_backend._func_info as _func_info
+    AltDSS_PyContext = None
+
+
+# Assumed UTF8; unless the fast C extension (dss_python_backend._fast_strs) is not 
+# used, this now has no effect but left to avoid breaking it for downstream users.
 codec = 'UTF8'
 
 interface_classes = set()
@@ -36,8 +51,8 @@ def set_case_insensitive_attributes(use: bool = True, warn: bool = False):
     - AltDSS-Python (`altdss` package): done to allow users to employ the 
       case-insensitive mechanism to address DSS properties in Python code.
 
-    Since there is a small performance overhead, users are recommended to use this
-    mechanism as a transition before adjusting the code.
+    Since there is a small performance overhead, users are recommended to enable this
+    mechanism during a transition period, before adjusting the code.
     '''
     if use:
         global warn_wrong_case
@@ -67,14 +82,142 @@ class DSSException(Exception):
 DssException = DSSException
 use_com_compat = set_case_insensitive_attributes
 
+
 class CtxLib:
     '''
     Exposes a CFFI Lib object pre-binding the DSSContext (`ctx`) object to the
     `ctx_*` functions.
     '''
 
+    def _get_strs_ctx(self, errorPtr, ctx, func: Callable, *args: Any) -> List[str]:
+        ffi = self._ffi
+        codec = self._api_util.codec
+        ptr = ffi.new('char***')
+        cnt = ffi.new('int32_t[4]')
+        func(ctx, ptr, cnt, *args)
+        if errorPtr[0] and Base._use_exceptions:
+            error_num = errorPtr[0]
+            errorPtr[0] = 0
+            self.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
+            raise DSSException(error_num, self.Error_Get_Description())
+
+        if not cnt[0]:
+            res = []
+        else:
+            actual_ptr = ptr[0]
+            if actual_ptr == ffi.NULL:
+                res = []
+            else:
+                str_ptrs = ffi.unpack(actual_ptr, cnt[0])
+                res = [(ffi.string(str_ptr).decode(codec) if (str_ptr) else '') for str_ptr in str_ptrs]
+
+        self.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
+        return res
+
+
+    def _get_str_ctx(self, errorPtr, ctx, func: Callable, *args):
+        codec = self._api_util.codec
+        ffi = self._ffi
+        result = func(ctx, *args)
+        if errorPtr[0] and Base._use_exceptions:
+            error_num = errorPtr[0]
+            errorPtr[0] = 0
+            raise DSSException(error_num, self.Error_Get_Description())
+            
+        if result:
+            return ffi.string(result).decode(codec)
+
+        return ''
+
+
+    def _str_arg_wrapper(self, f: Callable) -> Callable:
+        @wraps(f)
+        def f_wrapper(s, *args):
+            if not isinstance(s, bytes):
+                s = s.encode(self._api_util.codec)
+
+            return f(s, *args)
+
+        return f_wrapper
+
+
+    def _prepare_api_functions_slow(self, done):
+        '''
+        Wrap the C functions with a Python-level function to converter
+        strings and lists of strings from C.
+        (slow in CPython) 
+        '''
+        ctx = self._ctx
+        lib = self._lib
+        errorPtr = self._errorPtr
+        t = _func_info.t
+        api_util = self._api_util
+
+        wrappers = {
+            t.fastdss_types_str: ('', self._get_str_ctx,),
+            t.fastdss_types_strs: ('', self._get_strs_ctx,),
+            t.fastdss_types_gr_f64s: ('_GR', self._error_checked_ctx_gr, api_util.get_float64_gr_array),
+            t.fastdss_types_gr_i32s: ('_GR', self._error_checked_ctx_gr, api_util.get_int32_gr_array),
+            t.fastdss_types_gr_i8s: ('_GR', self._error_checked_ctx_gr, api_util.get_int8_gr_array),
+            t.fastdss_types_gr_z128: ('_GR', self._error_checked_ctx_gr, api_util.get_complex128_gr_simple),
+            t.fastdss_types_gr_z128s: ('_GR', self._error_checked_ctx_gr, api_util.get_complex128_gr_array),
+        }
+
+        arg_no_wrapper = lambda f: f
+        default_wrapper = ('', self._error_checked_ctx, )
+
+        for res_type, arg_type, ctx_names in _func_info.funcs:
+            arg_wrapper = arg_no_wrapper
+            if arg_type == t.fastdss_types_str:
+                arg_wrapper = self._str_arg_wrapper
+
+            suffix, wrapper, *wrapper_args = wrappers.get(res_type, default_wrapper)
+            for ctx_name in ctx_names:
+                if ctx_name in done:
+                    continue
+
+                name = ctx_name[4:]
+                if name in done:
+                    continue
+
+                name += suffix
+                if name in done:
+                    continue
+
+                ctx_name += suffix
+
+                func = getattr(lib, ctx_name)
+                
+                prepared_func = arg_wrapper(partial(wrapper, errorPtr, ctx, func, *wrapper_args))
+                setattr(self, name, prepared_func)
+
+        done.update(vars(self).keys())
+
+
+    def _prepare_api_functions(self, done):
+        if AltDSS_PyContext is None:
+            self._prepare_api_functions_slow(done)
+            return
+
+        ctx = self._ctx
+        ffi = self._ffi
+        ctx_int = int(ffi.cast('uintptr_t', ctx))
+        self._settings_ptr = self._api_util.settings_ptr
+        settings_ptr_int = int(ffi.cast('uintptr_t', self._settings_ptr))
+     
+        if not self._api_util._is_odd:
+            self._fast = AltDSS_PyContext(ctx_int, settings_ptr_int, DSSException, done, self)
+        else:
+            try:
+                from dss_python_backend._fastdss_oddie import AltDSS_PyContext as AltDSS_PyContext_Oddie
+            except:
+                AltDSS_PyContext_Oddie = None
+
+            self._fast = AltDSS_PyContext_Oddie(ctx_int, settings_ptr_int, DSSException, done, self)
+
+
     def _get_string(self, b) -> str:
-        if b != self._ffi.NULL:
+        if b:
             return self._ffi.string(b).decode()
         return ''
 
@@ -87,34 +230,72 @@ class CtxLib:
             
         return result
 
-    def __init__(self, ctx, ffi, lib):
-        self._ctx = ctx
-        self._ffi = ffi
+    def _error_checked_ctx(self, _errorPtr, ctx, f, *args):
+        result = f(ctx, *args)
+        if _errorPtr[0] and Base._use_exceptions:
+            error_num = _errorPtr[0]
+            _errorPtr[0] = 0
+            raise DSSException(error_num, self._get_string(self.Error_Get_Description()))
+            
+        return result
+
+    def _error_checked_ctx_gr(self, _errorPtr, ctx, f, _res_func, *args):
+        f(ctx, *args)
+        if _errorPtr[0] and Base._use_exceptions:
+            error_num = _errorPtr[0]
+            _errorPtr[0] = 0
+            raise DSSException(error_num, self._get_string(self.Error_Get_Description()))
+            
+        return _res_func()
+
+    def __init__(self, api_util):
+        self._api_util = api_util # this is not ready, don't use it yet
+        lib = self._lib =api_util.lib_unpatched
+        ctx = self._ctx = api_util.ctx
+        ffi = self._ffi = api_util.ffi
+        
         self._errorPtr = _errorPtr = lib.ctx_Error_Get_NumberPtr(ctx)
+        #TODO: test if a pointer is better than keeping this
+        self._prepared_funcs = []
 
-        done = set()
+        # Wrap most of the API to provide simpler Python access
+        done = set(('ctx_Error_Get_Description', 'ctx_Error_Get_Number'))
 
+        self._prepare_api_functions(done)
+        self.Error_Get_Description = lambda: lib.ctx_Error_Get_Description(ctx)
+        
+        skip_funcs = {'ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'ctx_Error_Set_Description', 'ctx_Error_Get_NumberPtr', 'ctx_ZIP_Extract_GR'}
         # First, process all `ctx_*`` functions
         for name, value in vars(lib).items():
             is_ctx = name.startswith('ctx_')
-            if not is_ctx and not name.startswith(('Batch_Create', 'Batch_Filter', )):
+            if (not is_ctx and not name.startswith(('Batch_Create', 'Batch_Filter', ))) or (name in done):
                 continue
 
             # Keep the basic management functions alone
-            if name in {'ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'ctx_Error_Set_Description'}:
-                if name == 'ctx_Error_Set_Description':
+            if name in skip_funcs:
+                if name.startswith('ctx_DSSEvents_') or name == 'ctx_Error_Set_Description':
                     name = name[4:]
                     setattr(self, name, partial(value, ctx))
                 else:
                     setattr(self, name, value)
-            elif is_ctx:
-                name = name[4:]
-                setattr(self, name, partial(value, ctx))
-                # setattr(self, name, partial(self._error_checked, _errorPtr, partial(value, ctx)))
-            else:
-                setattr(self, name, partial(value, ctx))
-                # setattr(self, name, partial(self._error_checked, _errorPtr, partial(value, ctx)))
 
+                done.add(name)
+                continue
+
+            if is_ctx:
+                name = name[4:]
+                if name in done:
+                    continue
+
+                if name.endswith('_GR'):
+                    # A few GR functions that don't have dedicated low-level mapping
+                    wrapper_func, res_func = self._error_checked_ctx_gr, api_util.get_float64_gr_array
+                    setattr(self, name, partial(wrapper_func, _errorPtr, ctx, value, res_func))
+                    done.add(name)
+                    continue
+
+            # General functions and array setters are only error checked, no special handling yet
+            setattr(self, name, partial(self._error_checked, _errorPtr, partial(value, ctx)))
             done.add(name)
 
         # Then the new Alt_* family
@@ -218,7 +399,7 @@ class Base:
         self._prepare_float64_array = api_util.prepare_float64_array
         self._prepare_int32_array = api_util.prepare_int32_array
         self._prepare_string_array = api_util.prepare_string_array
-        self._errorPtr = self._lib.Error_Get_NumberPtr()
+        self._errorPtr = self._api_util._errorPtr
 
 
         cls = type(self)
@@ -264,7 +445,7 @@ class Base:
         if self._errorPtr[0] and Base._use_exceptions:
             error_num = self._errorPtr[0]
             self._errorPtr[0] = 0
-            raise DSSException(error_num, self._get_string(self._lib.Error_Get_Description()))
+            raise DSSException(error_num, self._lib.Error_Get_Description())
             
         return result
 
@@ -328,13 +509,18 @@ def altdss_python_util_callback(ctx, event_code, step, ptr):
         return
 
 
-class CffiApiUtil(object):
+class CffiApiUtil:
     '''
     An internal class with various API and DSSContext management functions and structures.
     '''
     _ctx_to_util = WeakKeyDictionary()
 
+    _altdss: AltDSS
+
     def __init__(self, ffi, lib, ctx=None, is_odd=False):
+        self._opendssdirect = None
+        self._dss_python = None
+        self._altdss = None
         self._is_odd = is_odd
         self.owns_ctx = True
         self.codec = codec
@@ -350,14 +536,16 @@ class CffiApiUtil(object):
             self.lib = lib
             ctx = lib.ctx_Get_Prime()
             self.ctx = ctx
-        else:
-            self.lib = CtxLib(ctx, ffi, lib)
+
+        self.init_buffers()
+        self.settings_ptr = ffi.new('int32_t*')
+        self.settings_ptr[0] = 0
+        self.lib = CtxLib(self)
 
         CffiApiUtil._ctx_to_util[ctx] = self
 
         self._allow_complex = False
         self.track_objects = True
-        self.init_buffers()
         self.register_callbacks()
 
 
@@ -405,7 +593,7 @@ class CffiApiUtil(object):
         # Now try to remap the objects; on exception, just invalidate everything
         try:
             ptrs = self.lib.Alt_Bus_GetListPtr()
-            names = self._check_for_error(self.get_string_array(self.lib.Circuit_Get_AllBusNames))
+            names = self.lib.Circuit_Get_AllBusNames()
         except:
             for bus_ref in self._bus_refs:
                 bus_ref()._invalidate_ptr()
@@ -512,6 +700,7 @@ class CffiApiUtil(object):
             self._obj_refs.append(ref(obj))
 
     def init_buffers(self):
+        lib = self.lib_unpatched
         tmp_string_pointers = (self.ffi.new('char****'), self.ffi.new('int32_t**'))
         tmp_float64_pointers = (self.ffi.new('double***'), self.ffi.new('int32_t**'))
         tmp_int32_pointers = (self.ffi.new('int32_t***'), self.ffi.new('int32_t**'))
@@ -523,7 +712,7 @@ class CffiApiUtil(object):
             for ptrs in zip(tmp_string_pointers, tmp_float64_pointers, tmp_int32_pointers, tmp_int8_pointers)
             for ptr in ptrs
         ]
-        self.lib.DSS_GetGRPointers(*ptr_args)
+        lib.ctx_DSS_GetGRPointers(self.ctx, *ptr_args)
 
         # we don't need to keep the extra indirections
         self.gr_string_pointers = (tmp_string_pointers[0][0], tmp_string_pointers[1][0])
@@ -534,7 +723,7 @@ class CffiApiUtil(object):
         # also keep a casted version for complex floats
         self.gr_cfloat64_pointers = (self.ffi.cast('double _Complex**', tmp_float64_pointers[0][0]), tmp_float64_pointers[1][0])
 
-        self._errorPtr = self.lib.Error_Get_NumberPtr()
+        self._errorPtr = lib.ctx_Error_Get_NumberPtr(self.ctx)
 
 
     def clear_buffers(self):
@@ -543,9 +732,9 @@ class CffiApiUtil(object):
         self.init_buffers()
 
     def get_string(self, b) -> str:
-        if b != self.ffi.NULL:
+        if b:
             return self.ffi.string(b).decode(self.codec)
-        return u''
+        return ''
 
     def get_float64_array(self, func, *args) -> Float64Array:
         ptr = self.ffi.new('double**')
@@ -655,7 +844,7 @@ class CffiApiUtil(object):
     def get_float64_gr_array(self) -> Float64Array:
         ptr, cnt = self.gr_float64_pointers
         if self._allow_complex and cnt[3]:
-            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy().reshape((cnt[2], cnt[3]), order='F')
+            return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy().reshape((cnt[2], cnt[3]), order='F')
         
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
 
@@ -940,6 +1129,43 @@ class CffiApiUtil(object):
         return value_enc or value, ptrs, len(ptrs)
 
 
+    def get_dss_obj(self, ptr) -> Optional[DSSObject]:
+        '''
+        Get an AltDSS DSSObj instance. For internal use, but might be useful for advanced users.
+        The user must ensure the pointer is valid.
+        '''
+        if not ptr:
+            return None
+
+        from AltDSS import DSSObj
+        if self._altdss is not None:
+            altdss = self._altdss
+        else:
+            from AltDSS import AltDSS
+            altdss = AltDSS._get_instance(ctx=self.ctx, api_util=self)
+            
+        cls_idx = self._lib.Obj_GetClassIdx(ptr)
+        pycls = DSSObj._idx_to_cls[cls_idx]
+        return pycls(self, ptr)
+
+    def get_bus_obj(self, ptr) -> Optional[AltBus]:
+        '''
+        Get an AltDSS Bus instance. For internal use, but might be useful for advanced users.
+        The user must ensure the pointer is valid.
+        '''
+        from AltDSS import Bus as AltBus
+        if self._altdss is not None:
+            altdss = self._altdss
+        else:
+            from AltDSS import AltDSS
+            altdss = AltDSS._get_instance(ctx=self.ctx, api_util=self)
+
+        return AltBus(self, ptr)            
+
+
+def _oddie_not_impl():
+    raise NotImplementedError("This API requires is not implemented in the official OpenDSS engine or it is available in Oddie.")
+
 class Iterable(Base):
     __slots__ = [
         '_Get_First',
@@ -949,39 +1175,41 @@ class Iterable(Base):
         '_Get_Name',
         '_Set_Name',
         '_Get_idx',
-        '_Set_idx'
+        '_Set_idx',
+        '_Get_Pointer',
     ]
     
     def __init__(self, api_util):
         Base.__init__(self, api_util)
         
         prefix = type(self).__name__[1:]
-        self._Get_First = getattr(self._lib, '{}_Get_First'.format(prefix))
-        self._Get_Next = getattr(self._lib, '{}_Get_Next'.format(prefix))
-        self._Get_Count = getattr(self._lib, '{}_Get_Count'.format(prefix))
-        self._Get_AllNames = getattr(self._lib, '{}_Get_AllNames'.format(prefix))
-        self._Get_Name = getattr(self._lib, '{}_Get_Name'.format(prefix))
-        self._Set_Name = getattr(self._lib, '{}_Set_Name'.format(prefix))
-        self._Get_idx = getattr(self._lib, '{}_Get_idx'.format(prefix))
-        self._Set_idx = getattr(self._lib, '{}_Set_idx'.format(prefix))
+        self._Get_First = getattr(self._lib, '{}_Get_First'.format(prefix), _oddie_not_impl)
+        self._Get_Next = getattr(self._lib, '{}_Get_Next'.format(prefix), _oddie_not_impl)
+        self._Get_Count = getattr(self._lib, '{}_Get_Count'.format(prefix), _oddie_not_impl)
+        self._Get_AllNames = getattr(self._lib, '{}_Get_AllNames'.format(prefix), _oddie_not_impl)
+        self._Get_Name = getattr(self._lib, '{}_Get_Name'.format(prefix), _oddie_not_impl)
+        self._Set_Name = getattr(self._lib, '{}_Set_Name'.format(prefix), _oddie_not_impl)
+        self._Get_idx = getattr(self._lib, '{}_Get_idx'.format(prefix), _oddie_not_impl)
+        self._Set_idx = getattr(self._lib, '{}_Set_idx'.format(prefix), _oddie_not_impl)
+        self._Get_Pointer = getattr(self._lib, '{}_Get_Pointer'.format(prefix), _oddie_not_impl)
 
     @property
     def First(self) -> int:
         '''Sets the first object of this type active. Returns 0 if none.'''
-        return self._check_for_error(self._Get_First())
+        return self._Get_First()
 
     @property
     def Next(self) -> int:
         '''Sets next object of this type active. Returns 0 if no more.'''
-        return self._check_for_error(self._Get_Next())
+        return self._Get_Next()
 
     @property
     def Count(self) -> int:
         '''Number of objects of this type'''
-        return self._check_for_error(self._Get_Count())
+        return self._Get_Count()
 
     def __len__(self) -> int:
-        return self._check_for_error(self._Get_Count())
+        return self._Get_Count()
 
     def __iter__(self) -> Iterator[Iterable]:
         '''
@@ -996,27 +1224,24 @@ class Iterable(Base):
 
         **(API Extension)**
         '''
-        idx = self._check_for_error(self._Get_First())
+        idx = self._Get_First()
         while idx != 0:
             yield self
-            idx = self._check_for_error(self._Get_Next())
+            idx = self._Get_Next()
 
     @property
     def AllNames(self) -> List[str]:
         '''Array of all names of this object type'''
-        return self._check_for_error(self._get_string_array(self._Get_AllNames))
+        return self._Get_AllNames()
 
     @property
     def Name(self) -> str:
         '''Gets the current name or sets the active object of this type by name'''
-        return self._get_string(self._check_for_error(self._Get_Name()))
+        return self._Get_Name()
 
     @Name.setter
     def Name(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._check_for_error(self._Set_Name(Value)))
+        self._Set_Name(Value)
         
     @property
     def idx(self) -> int:
@@ -1043,9 +1268,17 @@ class Iterable(Base):
 
         **(API Extension)** 
         '''
-        return self._check_for_error(self._Get_idx())
+        return self._Get_idx()
 
-    @idx.setter
-    def idx(self, Value: int):
-        self._check_for_error(self._Set_idx(Value))
+    def to_altdss(self) -> DSSObject:
+        '''
+        Returns a Python object for the current active DSS object in this interface.
 
+        Requires AltDSS-Python.
+
+        *Available only for the AltDSS engine.*
+
+        **(API Extension)**
+        '''
+        ptr = self._Get_Pointer()
+        return self._api_util.get_dss_obj(ptr)

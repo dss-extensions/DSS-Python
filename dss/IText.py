@@ -14,14 +14,11 @@ class IText(Base):
 
         Original COM help: https://opendss.epri.com/Command1.html
         '''
-        return self._get_string(self._check_for_error(self._lib.Text_Get_Command()))
+        return self._lib.Text_Get_Command()
 
     @Command.setter
     def Command(self, Value: str):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Text_Set_Command(Value))
+        self._lib.Text_Set_Command(Value)
 
     @property
     def Result(self) -> str:
@@ -30,7 +27,7 @@ class IText(Base):
 
         Original COM help: https://opendss.epri.com/Result.html
         '''
-        return self._get_string(self._check_for_error(self._lib.Text_Get_Result()))
+        return self._lib.Text_Get_Result()
 
     def Commands(self, Value: Union[AnyStr, List[AnyStr]]):
         '''
@@ -42,10 +39,7 @@ class IText(Base):
         **(API Extension)**
         '''
         if isinstance(Value, str) or isinstance(Value, bytes):
-            if not isinstance(Value, bytes):
-                Value = Value.encode(self._api_util.codec)
-            
-            self._check_for_error(self._lib.Text_CommandBlock(Value))
+            self._lib.Text_CommandBlock(Value)
         else:
-            self._check_for_error(self._set_string_array(self._lib.Text_CommandArray, Value))
+            self._set_string_array(self._lib.Text_CommandArray, Value)
 
