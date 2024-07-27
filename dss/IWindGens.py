@@ -4,7 +4,6 @@
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
 from typing import List, Union, AnyStr
-from .enums import StorageStates
 
 class IWindGens(Iterable):
     '''WindGen objects'''
@@ -51,7 +50,7 @@ class IWindGens(Iterable):
     @property
     def RegisterNames(self) -> List[str]:
         '''
-        Array of Storage energy meter register names
+        Array of WindGen energy meter register names
         
         See also the enum `GeneratorRegisters`.
         '''
@@ -59,7 +58,7 @@ class IWindGens(Iterable):
 
     @property
     def RegisterValues(self) -> Float64Array:
-        '''Array of values in Storage registers.'''
+        '''Array of values in WindGen registers.'''
         return self._lib.WindGens_Get_RegisterValues_GR()
 
     @property
@@ -315,11 +314,6 @@ class IWindGens(Iterable):
 
     @Phases.setter
     def Phases(self, Value: int) -> None:
-        '''
-        Number of phases
-
-        (API Extension)
-        '''
         self._lib.WindGens_Set_Phases(Value)
 
     @property
