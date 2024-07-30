@@ -25,7 +25,7 @@ def setup_function():
         DSS.AllowEditor = False
         DSS.AdvancedTypes = False
         DSS.AllowChangeDir = True
-        DSS.COMErrorResults = True # TODO: change to False
+        DSS.COMErrorResults = False
         DSS.CompatFlags = 0
 
     DSS.AllowForms = False

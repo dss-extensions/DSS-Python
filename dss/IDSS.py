@@ -219,7 +219,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/Start.html
         '''
-        return self._lib.DSS_Start(code) != 0
+        return self._lib.DSS_Start(code)
 
     @property
     def Classes(self) -> List[str]:
@@ -415,7 +415,7 @@ class IDSS(Base):
         - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
         be compatible with the return value of the official COM interface.
 
-        Defaults to True/1 (enabled state) in the v0.12.x series. This will change to false in future series.
+        Defaults to False/0 (disabled state), starting DSS-Python v0.16.
 
         This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 0 disables
         the legacy/COM behavior. The value can be toggled through the API at any time.
@@ -446,7 +446,7 @@ class IDSS(Base):
         lib = self._api_util.lib_unpatched
         new_ctx = ffi.gc(lib.ctx_New(), lib.ctx_Dispose)
         new_api_util = CffiApiUtil(ffi, lib, new_ctx)
-        new_api_util._allow_complex = self._api_util._allow_complex
+        new_api_util._advanced_types = self._api_util._advanced_types
         return IDSS(new_api_util)
 
     def __call__(self, cmds: Union[AnyStr, List[AnyStr]]):
@@ -512,20 +512,11 @@ class IDSS(Base):
         
         **(API Extension)**
         '''
-        arr_dim = self._lib.DSS_Get_EnableArrayDimensions()
-        allow_complex = self._api_util._allow_complex
-        return arr_dim and allow_complex
+        return self._api_util._advanced_types
 
     @AdvancedTypes.setter
     def AdvancedTypes(self, Value: bool):
-        self._lib.DSS_Set_EnableArrayDimensions(Value)
-        _AdvancedTypes = 2
-        if Value:
-            self._api_util.settings_ptr[0] = self._api_util.settings_ptr[0] | _AdvancedTypes
-        else:
-            self._api_util.settings_ptr[0] = self._api_util.settings_ptr[0] & ~_AdvancedTypes
-
-        self._api_util._allow_complex = bool(Value)
+        self._api_util._advanced_types = bool(Value)
 
     @property
     def CompatFlags(self) -> int:

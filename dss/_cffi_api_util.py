@@ -30,6 +30,11 @@ interface_classes = set()
 
 warn_wrong_case = False
 
+_AdvancedTypes = 1 << 1
+_ODDPyStrings = 1 << 2 # TODO: check if we still need this with the new defaults
+_UseLists = 1 << 3
+
+
 def set_case_insensitive_attributes(use: bool = True, warn: bool = False):
     '''
     This function is provided to allow easier migration from `win32com.client`.
@@ -194,7 +199,7 @@ class CtxLib:
         done.update(vars(self).keys())
 
 
-    def _prepare_api_functions(self, done):
+    def _prepare_api_functions(self, done, settings_ptr):
         if AltDSS_PyContext is None:
             self._prepare_api_functions_slow(done)
             return
@@ -202,7 +207,7 @@ class CtxLib:
         ctx = self._ctx
         ffi = self._ffi
         ctx_int = int(ffi.cast('uintptr_t', ctx))
-        self._settings_ptr = self._api_util.settings_ptr
+        self._settings_ptr = settings_ptr
         settings_ptr_int = int(ffi.cast('uintptr_t', self._settings_ptr))
      
         if not self._api_util._is_odd:
@@ -248,9 +253,9 @@ class CtxLib:
             
         return _res_func()
 
-    def __init__(self, api_util):
+    def __init__(self, api_util, settings_ptr):
         self._api_util = api_util # this is not ready, don't use it yet
-        lib = self._lib =api_util.lib_unpatched
+        lib = self._lib = api_util.lib_unpatched
         ctx = self._ctx = api_util.ctx
         ffi = self._ffi = api_util.ffi
         
@@ -261,7 +266,7 @@ class CtxLib:
         # Wrap most of the API to provide simpler Python access
         done = set(('ctx_Error_Get_Description', 'ctx_Error_Get_Number'))
 
-        self._prepare_api_functions(done)
+        self._prepare_api_functions(done, settings_ptr)
         self.Error_Get_Description = lambda: lib.ctx_Error_Get_Description(ctx)
         
         skip_funcs = {'ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'ctx_Error_Set_Description', 'ctx_Error_Get_NumberPtr', 'ctx_ZIP_Extract_GR'}
@@ -353,10 +358,10 @@ class Base:
     ]
 
     _use_exceptions = True
+    _oddpy = False
 
     def __init__(self, api_util, prefer_lists=False):
         object.__setattr__(self, '_frozen_attrs', False)
-        self._lib = api_util.lib
         self._api_util = api_util
         self._get_string = api_util.get_string
 
@@ -364,6 +369,9 @@ class Base:
         self._get_fcomplex128_array = api_util.get_fcomplex128_array
         self._get_fcomplex128_simple = api_util.get_fcomplex128_simple
         self._get_fcomplex128_gr_simple = api_util.get_fcomplex128_gr_simple
+
+        self._lib = api_util._get_lib(prefer_lists, self._oddpy)
+
         if not prefer_lists:
             # Use NumPy arrays for most functions
             self._get_float64_array = api_util.get_float64_array
@@ -540,13 +548,59 @@ class CffiApiUtil:
         self.init_buffers()
         self.settings_ptr = ffi.new('int32_t*')
         self.settings_ptr[0] = 0
-        self.lib = CtxLib(self)
+        self.lib = CtxLib(self, self.settings_ptr)
+        if ctx not in CffiApiUtil._ctx_to_util:
+            CffiApiUtil._ctx_to_util[ctx] = self
 
-        CffiApiUtil._ctx_to_util[ctx] = self
-
-        self._allow_complex = False
         self.track_objects = True
         self.register_callbacks()
+        self.lib_odd = None
+
+    @property
+    def _advanced_types(self) -> bool:
+        return (self.settings_ptr[0] & _AdvancedTypes) != 0
+
+    @_advanced_types.setter
+    def _advanced_types(self, value: bool):
+        if value:
+            self.settings_ptr[0] = self.settings_ptr[0] | _AdvancedTypes
+        else:
+            self.settings_ptr[0] = self.settings_ptr[0] & ~_AdvancedTypes
+
+    def _get_lib(self, prefer_lists: bool, oddpy: bool):
+        '''
+        Returns a context prepared for OpenDSSDirect.py
+
+        This should be removed as we unify settings across the modules later.
+        '''
+        if AltDSS_PyContext is None or not oddpy:
+            # If the fast module is not available, nothing to do
+            
+            if prefer_lists:
+                self.settings_ptr[0] = self.settings_ptr[0] | _UseLists
+            else:
+                self.settings_ptr[0] = self.settings_ptr[0] & (~_UseLists)
+
+            return self.lib
+
+        if self.lib_odd is not None:
+            # We already have a prepared object, just ensure the settings are OK
+            
+            if prefer_lists:
+                self.settings_oddpy_ptr[0] = self.settings_oddpy_ptr[0] | _ODDPyStrings | _UseLists
+            else:
+                self.settings_oddpy_ptr[0] = (self.settings_oddpy_ptr[0] | _ODDPyStrings) & (~_UseLists)
+
+            return self.lib_odd
+
+        self.settings_oddpy_ptr = self.ffi.new('int32_t*')
+        if prefer_lists:
+            self.settings_oddpy_ptr[0] = self.settings_ptr[0] | _ODDPyStrings | _UseLists
+        else:
+            self.settings_oddpy_ptr[0] = (self.settings_ptr[0] | _ODDPyStrings) & (~_UseLists)
+
+        self.lib_odd = CtxLib(self, self.settings_oddpy_ptr)
+        return self.lib_odd
 
 
     def _check_for_error(self, result=None):
@@ -743,7 +797,7 @@ class CffiApiUtil:
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
         self.lib.DSS_Dispose_PDouble(ptr)
 
-        if self._allow_complex and cnt[3]:
+        if cnt[3] and self._advanced_types:
             # If the last element is filled, we have a matrix.  Otherwise, the 
             # matrix feature is disabled or the result is indeed a vector
             return res.reshape((cnt[2], cnt[3]), order='F')
@@ -751,7 +805,7 @@ class CffiApiUtil:
         return res
 
     def get_complex128_array(self, func, *args) -> Float64ArrayOrComplexArray:
-        if not self._allow_complex:
+        if not self._advanced_types:
             return self.get_float64_array(func, *args)
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -787,7 +841,7 @@ class CffiApiUtil:
         return res
 
     def get_complex128_array2(self, func, *args) -> Float64ArrayOrComplexArray:
-        if not self._allow_complex:
+        if not self._advanced_types:
             return self.get_float64_array2(func, *args)
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -801,7 +855,7 @@ class CffiApiUtil:
 
 
     def get_complex128_simple(self, func, *args) -> Float64ArrayOrSimpleComplex:
-        if not self._allow_complex:
+        if not self._advanced_types:
             return self.get_float64_array(func, *args)
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -827,7 +881,7 @@ class CffiApiUtil:
 
 
     def get_complex128_simple2(self, func, *args) -> List[Union[complex, float]]:
-        if not self._allow_complex:
+        if not self._advanced_types:
             return self.get_float64_array2(func, *args)
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -843,19 +897,19 @@ class CffiApiUtil:
 
     def get_float64_gr_array(self) -> Float64Array:
         ptr, cnt = self.gr_float64_pointers
-        if self._allow_complex and cnt[3]:
+        if cnt[3] and self._advanced_types:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy().reshape((cnt[2], cnt[3]), order='F')
         
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=np.float64).copy()
 
 
     def get_complex128_gr_array(self) -> ComplexArray:
-        if not self._allow_complex:
+        if not self._advanced_types:
             return self.get_float64_gr_array()
 
         # Currently we use the same as API as get_float64_array, may change later
         ptr, cnt = self.gr_float64_pointers
-        if self._allow_complex and cnt[3]:
+        if cnt[3] and self._advanced_types:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy().reshape((cnt[2], cnt[3]), order='F')
         
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
@@ -864,14 +918,14 @@ class CffiApiUtil:
     def get_fcomplex128_gr_array(self) -> ComplexArray:
         # Currently we use the same as API as get_float64_array, may change later
         ptr, cnt = self.gr_float64_pointers
-        if self._allow_complex and cnt[3]:
+        if cnt[3] and self._advanced_types:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy().reshape((cnt[2], cnt[3]), order='F')
         
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
 
 
     def get_complex128_gr_array2(self) -> List[Union[complex, float]]:
-        if not self._allow_complex:
+        if not self._advanced_types:
             return self.get_float64_gr_array2()
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -881,7 +935,7 @@ class CffiApiUtil:
 
 
     def get_complex128_gr_simple(self) -> Float64ArrayOrSimpleComplex:
-        if not self._allow_complex:
+        if not self._advanced_types:
             return self.get_float64_gr_array()
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -898,7 +952,7 @@ class CffiApiUtil:
 
 
     def get_complex128_gr_simple2(self) -> List[Union[complex, float]]:
-        if not self._allow_complex:
+        if not self._advanced_types:
             return self.get_float64_gr_array2()
 
         # Currently we use the same as API as get_float64_array, may change later
@@ -914,7 +968,7 @@ class CffiApiUtil:
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
         self.lib.DSS_Dispose_PInteger(ptr)
 
-        if self._allow_complex and cnt[3]:
+        if cnt[3] and self._advanced_types:
             # If the last element is filled, we have a matrix.  Otherwise, the 
             # matrix feature is disabled or the result is indeed a vector
             return res.reshape((cnt[2], cnt[3]))
@@ -933,7 +987,7 @@ class CffiApiUtil:
 
     def get_int32_gr_array(self) -> Int32Array:
         ptr, cnt = self.gr_int32_pointers
-        if self._allow_complex and cnt[3]:
+        if cnt[3] and self._advanced_types:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy().reshape((cnt[2], cnt[3]))
 
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
@@ -946,7 +1000,7 @@ class CffiApiUtil:
         res = np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
         self.lib.DSS_Dispose_PByte(ptr)
 
-        if self._allow_complex and cnt[3]:
+        if cnt[3] and self._advanced_types:
             # If the last element is filled, we have a matrix.  Otherwise, the 
             # matrix feature is disabled or the result is indeed a vector
             return res.reshape((cnt[2], cnt[3]))
@@ -956,7 +1010,7 @@ class CffiApiUtil:
 
     def get_int8_gr_array(self) -> Int8Array:
         ptr, cnt = self.gr_int8_pointers
-        if self._allow_complex and cnt[3]:
+        if cnt[3] and self._advanced_types:
             return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy().reshape((cnt[2], cnt[3]), order='F')
 
         return np.frombuffer(self.ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()

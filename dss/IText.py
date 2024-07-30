@@ -38,7 +38,7 @@ class IText(Base):
 
         **(API Extension)**
         '''
-        if isinstance(Value, str) or isinstance(Value, bytes):
+        if isinstance(Value, (str, bytes)):
             self._lib.Text_CommandBlock(Value)
         else:
             self._set_string_array(self._lib.Text_CommandArray, Value)
