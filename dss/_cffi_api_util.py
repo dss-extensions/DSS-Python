@@ -120,6 +120,15 @@ class CtxLib:
         return res
 
 
+    def _get_bool_ctx(self, errorPtr, ctx, func: Callable, *args):
+        result = func(ctx, *args)
+        if errorPtr[0] and Base._use_exceptions:
+            error_num = errorPtr[0]
+            errorPtr[0] = 0
+            raise DSSException(error_num, self.Error_Get_Description())
+            
+        return result != 0
+
     def _get_str_ctx(self, errorPtr, ctx, func: Callable, *args):
         codec = self._api_util.codec
         ffi = self._ffi
@@ -157,8 +166,10 @@ class CtxLib:
         errorPtr = self._errorPtr
         t = _func_info.t
         api_util = self._api_util
+        is_odd = api_util._is_odd
 
         wrappers = {
+            t.fastdss_types_b16: ('', self._get_bool_ctx,),
             t.fastdss_types_str: ('', self._get_str_ctx,),
             t.fastdss_types_strs: ('', self._get_strs_ctx,),
             t.fastdss_types_gr_f64s: ('_GR', self._error_checked_ctx_gr, api_util.get_float64_gr_array),
@@ -191,7 +202,13 @@ class CtxLib:
 
                 ctx_name += suffix
 
-                func = getattr(lib, ctx_name)
+                try:
+                    func = getattr(lib, ctx_name)
+                except AttributeError:
+                    if is_odd:
+                        continue
+                        
+                    raise
                 
                 prepared_func = arg_wrapper(partial(wrapper, errorPtr, ctx, func, *wrapper_args))
                 setattr(self, name, prepared_func)
@@ -213,11 +230,7 @@ class CtxLib:
         if not self._api_util._is_odd:
             self._fast = AltDSS_PyContext(ctx_int, settings_ptr_int, DSSException, done, self)
         else:
-            try:
-                from dss_python_backend._fastdss_oddie import AltDSS_PyContext as AltDSS_PyContext_Oddie
-            except:
-                AltDSS_PyContext_Oddie = None
-
+            from dss_python_backend._fastdss_oddie import AltDSS_PyContext as AltDSS_PyContext_Oddie
             self._fast = AltDSS_PyContext_Oddie(ctx_int, settings_ptr_int, DSSException, done, self)
 
 
