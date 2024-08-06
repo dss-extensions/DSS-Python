@@ -244,7 +244,7 @@ class CtxLib:
         if _errorPtr[0] and Base._use_exceptions:
             error_num = _errorPtr[0]
             _errorPtr[0] = 0
-            raise DSSException(error_num, self._get_string(self.Error_Get_Description()))
+            raise DSSException(error_num, self.Error_Get_Description())
             
         return result
 
@@ -253,7 +253,7 @@ class CtxLib:
         if _errorPtr[0] and Base._use_exceptions:
             error_num = _errorPtr[0]
             _errorPtr[0] = 0
-            raise DSSException(error_num, self._get_string(self.Error_Get_Description()))
+            raise DSSException(error_num, self.Error_Get_Description())
             
         return result
 
@@ -262,7 +262,7 @@ class CtxLib:
         if _errorPtr[0] and Base._use_exceptions:
             error_num = _errorPtr[0]
             _errorPtr[0] = 0
-            raise DSSException(error_num, self._get_string(self.Error_Get_Description()))
+            raise DSSException(error_num, self.Error_Get_Description())
             
         return _res_func()
 
@@ -277,10 +277,10 @@ class CtxLib:
         self._prepared_funcs = []
 
         # Wrap most of the API to provide simpler Python access
-        done = set(('ctx_Error_Get_Description', 'ctx_Error_Get_Number'))
+        done = set(('ctx_Error_Get_Description', 'ctx_Error_Get_Number', 'Error_Get_Description', 'Error_Get_Number'))
 
         self._prepare_api_functions(done, settings_ptr)
-        self.Error_Get_Description = lambda: lib.ctx_Error_Get_Description(ctx)
+        self.Error_Get_Description = lambda: self._get_string(lib.ctx_Error_Get_Description(ctx))
         
         skip_funcs = {'ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'ctx_Error_Set_Description', 'ctx_Error_Get_NumberPtr', 'ctx_ZIP_Extract_GR'}
         # First, process all `ctx_*`` functions
@@ -631,7 +631,7 @@ class CffiApiUtil:
         if self._errorPtr[0] and Base._use_exceptions:
             error_num = self._errorPtr[0]
             self._errorPtr[0] = 0
-            raise DSSException(error_num, self.get_string(self.lib.Error_Get_Description()))
+            raise DSSException(error_num, self.lib.Error_Get_Description())
             
         return result
 
