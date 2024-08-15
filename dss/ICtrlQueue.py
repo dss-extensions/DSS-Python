@@ -31,7 +31,7 @@ class ICtrlQueue(Base):
         '''
         self._lib.CtrlQueue_ClearQueue()
 
-    def Delete(self, ActionHandle):
+    def Delete(self, ActionHandle: int):
         '''
         Delete an Action from the DSS Control Queue by the handle that is returned when the action is added.
         
@@ -94,7 +94,7 @@ class ICtrlQueue(Base):
         '''
         return self._lib.CtrlQueue_Get_NumActions()
 
-    def Push(self, Hour: int, Seconds: float, ActionCode: int, DeviceHandle: int):
+    def Push(self, Hour: int, Seconds: float, ActionCode: int, DeviceHandle: int) -> int:
         '''
         Push a control action onto the DSS control queue by time, action code, and device handle (user defined). Returns Control Queue handle.
 
