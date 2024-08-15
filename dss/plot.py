@@ -5,9 +5,9 @@ using the new features from DSS C-API v0.12+ and common Python modules such as m
 This is not a complete implementation and there are known limitations, but should suffice
 for many use-cases. We'd like to add another backend later.
 """
-import warnings
-from typing import List
-import os
+from __future__ import annotations
+import os, re, json, sys, warnings
+from typing import List, TYPE_CHECKING    
 from . import api_util
 from . import DSS as DSSPrime
 from ._cffi_api_util import CffiApiUtil
@@ -25,7 +25,8 @@ try:
 except:
     raise ImportError("SciPy and matplotlib are required to use this module.")
 
-import re, json, sys, warnings
+if TYPE_CHECKING:
+    from altdss.AltDSS import IAltDSS
 
 try:
     from IPython import get_ipython
@@ -768,8 +769,8 @@ def dss_profile_plot(DSS, params):
 
 
 
-def get_gic_line_data(DSS: IDSS, bus_coords, single_ph_line_style=1, three_ph_line_style=1):
-    branch_objects = DSS.Obj.GICLine    
+def _get_gic_line_data_altdss(altdss: IAltDSS, bus_coords, single_ph_line_style=1, three_ph_line_style=1):
+    branch_objects = altdss.GICLine
     line_count = len(branch_objects)# if not idxs else len(idxs)
     lines = np.empty(shape=(line_count, 2, 2), dtype=np.float64)
     lines.fill(np.nan)
@@ -780,7 +781,7 @@ def get_gic_line_data(DSS: IDSS, bus_coords, single_ph_line_style=1, three_ph_li
     # skip = set()
 
     # GIC lines are not exposed nicely in the classic API, so we'll use the new Obj API
-    for gic_line in DSS.Obj.GICLine:
+    for gic_line in altdss.GICLine:
         if not gic_line.enabled:
             continue
 
@@ -797,7 +798,55 @@ def get_gic_line_data(DSS: IDSS, bus_coords, single_ph_line_style=1, three_ph_li
         lines[offset, 1] = to
 
         lines_styles[offset] = single_ph_line_style if gic_line.phases == 1 else three_ph_line_style
-        max_current = DSS._lib.Obj_CktElement_MaxCurrent(gic_line._ptr, 1)
+        values[offset] = gic_line.MaxCurrent(1)
+        offset += 1
+
+    return lines[:offset], values[:offset], lines_styles[:offset]
+
+
+def get_gic_line_data(DSS: IDSS, bus_coords, single_ph_line_style=1, three_ph_line_style=1):
+    try:
+        return _get_gic_line_data_altdss(
+            DSS.to_altdss(),
+            bus_coords,
+            single_ph_line_style=single_ph_line_style,
+            three_ph_line_style=three_ph_line_style
+        )
+    except:
+        pass
+
+    # Fallback for Oddie and COM
+    DSS.ActiveCircuit.SetActiveClass('GICLine')
+    aclass = DSS.ActiveCircuit.ActiveClass
+    line_count = aclass.Count# if not idxs else len(idxs)
+    lines = np.empty(shape=(line_count, 2, 2), dtype=np.float64)
+    lines.fill(np.nan)
+    values = np.empty(shape=(line_count, ), dtype=np.float64)
+    values.fill(np.nan)
+    lines_styles = np.zeros(shape=(line_count,), dtype=np.int8)
+    offset = 0
+    # skip = set()
+
+    # GIC lines are not exposed nicely in the classic API
+    elem = DSS.ActiveCircuit.ActiveCktElement
+    idx = aclass.First
+    while idx != 0:
+        buses = elem.BusNames
+        b1 = remove_nodes(buses[0])
+        b2 = remove_nodes(buses[1])
+        fr = bus_coords.get(b1)
+        to = bus_coords.get(b2)
+
+        if fr is None or to is None:
+            # skip.add(idx)
+            continue
+            
+        lines[offset, 0] = fr
+        lines[offset, 1] = to
+
+        lines_styles[offset] = single_ph_line_style if gic_line.phases == 1 else three_ph_line_style
+        currents = np.abs(np.asarray(elem.Currents).view(dtype=complex))
+        max_current = np.max(current[:elem.NumConductors])
         values[offset] = max_current
         offset += 1
 
