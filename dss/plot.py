@@ -7,12 +7,15 @@ for many use-cases. We'd like to add another backend later.
 """
 from __future__ import annotations
 import os, re, json, sys, warnings
-from typing import List, TYPE_CHECKING    
+from typing import List, TYPE_CHECKING, Optional, Tuple, Dict
+from typing_extensions import TypedDict, Unpack
 from . import api_util
 from . import DSS as DSSPrime
 from ._cffi_api_util import CffiApiUtil
 from .IDSS import IDSS
 from .IBus import IBus
+from ._cffi_api_util import Iterable as DSSIterable
+from enum import Enum, IntEnum
 try:
     import numpy as np
     from matplotlib import pyplot as plt
@@ -27,6 +30,199 @@ except:
 
 if TYPE_CHECKING:
     from altdss.AltDSS import IAltDSS
+
+
+class DSSPlotType(Enum):
+    AutoAddLog = 'AutoAddLog'
+    Circuit = 'Circuit'
+    Daisy = 'Daisy'
+    Energy = 'Energy'
+    Evolution = 'Evolution'
+    GeneralData = 'GeneralData'
+    LoadShape = 'LoadShape'
+    Matrix = 'Matrix'
+    MeterZones = 'MeterZones'
+    Monitor = 'Monitor'
+    PhaseVoltage = 'PhaseVoltage'
+    PriceShape = 'PriceShape'
+    Profile = 'Profile'
+    Scatter = 'Scatter'
+    TShape = 'TShape'
+
+
+(pqVoltage, pqCurrent, pqPower, pqLosses, pqCapacity, pqNone) = range(6)
+
+class DSSPlotQuantity(Enum):
+    Capacities = 'Capacities'
+    Currents = 'Currents'
+    Losses = 'Losses'
+    Powers = 'Powers'
+    Voltages = 'Voltages'
+    none = 'None'
+
+
+class ProfileScale(Enum):
+    pukm = 'pukm'
+    kft120 = '120kft'
+
+
+class ObjMarkers(TypedDict):
+    NodeMarkerCode: Optional[int]
+    NodeMarkerWidth: Optional[float]
+
+    MarkTransformers: Optional[bool]
+    TransMarkerCode: Optional[int]
+    TransMarkerSize: Optional[float]
+    
+    MarkCapacitors: Optional[bool]
+    CapMarkerCode: Optional[int]
+    CapMarkerSize: Optional[float]
+    
+    MarkPVSystems: Optional[bool]
+    PVMarkerCode: Optional[int]
+    PVMarkerSize: Optional[float]
+    
+    MarkFuses: Optional[bool]
+    FuseMarkerCode: Optional[int]
+    FuseMarkerSize: Optional[float]
+   
+    MarkReclosers: Optional[bool]
+    RecloserMarkerCode: Optional[int]
+    RecloserMarkerSize: Optional[float]
+
+    MarkRegulators: Optional[bool]
+    RegMarkerCode: Optional[int]
+    RegMarkerSize: Optional[float]
+
+    MarkRelays: Optional[bool]
+    RelayMarkerCode: Optional[int]
+    RelayMarkerSize: Optional[float]
+    
+    MarkStorage: Optional[bool]
+    StoreMarkerCode: Optional[int]
+    StoreMarkerSize: Optional[float]
+    
+    MarkSwitches: Optional[bool]
+    SwitchMarkerCode: Optional[int]
+
+
+class BusMarker(TypedDict):
+    Name: str
+    Color: str
+    Code: int
+    Size: float
+
+
+class DSSPlotPhases(IntEnum):
+    PROFILE3PH = -1 # Default
+    PROFILEALL = -2 # All
+    PROFILEALLPRI = -3 # Primary
+    PROFILELL3PH = -4 # LL3Ph
+    PROFILELLALL = -5 # LLAll
+    PROFILELLPRI = -6 # LLPrimary
+
+
+class PlotParams(TypedDict):
+    PlotType: DSSPlotType
+    MatrixType: str
+    MaxScale: float
+    MinScale: float
+    Dots: bool
+    Labels: bool
+    ShowLoops: bool
+    ShowSubs: bool
+    Quantity: str
+    ObjectName: str
+    PlotId: str #TODO
+    ValueIndex: int
+    PhasesToPlot: DSSPlotPhases
+    ProfileScale: str
+    Channels: List[int]
+    Bases: Optional[List[float]]
+    SinglePhLineStyle: int
+    ThreePhLineStyle: int
+    Color1: str
+    Color2: str
+    Color3: str
+    TriColorMax: float
+    TriColorMid: float
+    MaxScaleIsSpecified: bool
+    MinScaleIsSpecified: bool
+    DaisyBusList: List[str]
+    DaisySize: float
+    MaxLineThickness: float
+    MarkerParams: Optional[ObjMarkers]
+    BusMarkers: Optional[List[BusMarker]]
+
+    Registers: List[int]
+    PeakDay: bool
+    MeterName: str
+    CaseName: str
+    CaseYear: int
+
+DEFAULT_MARKER_PARAMS = ObjMarkers(
+    MarkTransformers=False
+    # TransMarkerCode: Optional[int]
+    # TransMarkerSize: Optional[float]
+    
+    # MarkCapacitors: Optional[bool]
+    # CapMarkerCode: Optional[int]
+    # CapMarkerSize: Optional[float]
+    
+    # MarkPVSystems: Optional[bool]
+    # PVMarkerCode: Optional[int]
+    # PVMarkerSize: Optional[float]
+    
+    # MarkStorage: Optional[bool]
+    # StoreMarkerCode: Optional[int]
+    # StoreMarkerSize: Optional[float]
+    
+    # MarkSwitches: Optional[bool]
+    # SwitchMarkerCode: Optional[int]
+    
+    # MarkFuses: Optional[bool]
+    # FuseMarkerCode: Optional[int]
+    # FuseMarkerSize: Optional[float]
+    
+    # MarkRegulators: Optional[bool]
+    # RegMarkerCode: Optional[int]
+    # RegMarkerSize: Optional[float]
+    
+    # MarkRelays: Optional[bool]
+    # RelayMarkerCode: Optional[int]
+    # RelayMarkerSize: Optional[float]
+    
+    # MarkReclosers: Optional[bool]
+    # RecloserMarkerCode: Optional[int]
+    # RecloserMarkerSize: Optional[float]    
+)
+
+DEFAULT_PLOT_PARAMS = PlotParams(
+    PlotType=DSSPlotType.Circuit,
+    Quantity=DSSPlotQuantity.Powers,
+    Channels=[1, 3, 5],
+    MarkerParams=DEFAULT_MARKER_PARAMS,
+    BusMarkers=[],
+    Color1='#0000FF',
+    Color2='#008000',
+    Color3='#FF0000',
+    TriColorMax=0.85,
+    TriColorMid=0.50,
+    ThreePhLineStyle=1,
+    SinglePhLineStyle=1,
+    ProfileScale=ProfileScale.pukm,
+    PhasesToPlot=DSSPlotPhases.PROFILE3PH,
+    DaisyBusList=[],
+    MaxLineThickness=10,
+    Dots=False,
+    Labels=False,
+    ShowLoops=False,
+    ShowSubs=False,
+    MinScaleIsSpecified=False,
+    MaxScaleIsSpecified=False,
+    MinScale=0.0,
+    MaxScale=None,
+)
 
 try:
     from IPython import get_ipython
@@ -72,15 +268,6 @@ except:
 # import IPython.display
 
 include_3d = '2d' # '2d' (default), '3d' (prefer 3d), 'both'
-
-PROFILE3PH = -1 # Default
-PROFILEALL = -2 # All
-PROFILEALLPRI = -3 # Primary
-PROFILELL3PH = -4 # LL3Ph
-PROFILELLALL = -5 # LLAll
-PROFILELLPRI = -6 # LLPrimary
-
-(pqVoltage, pqCurrent, pqPower, pqLosses, pqCapacity, pqNone) = range(6)
 
 str_to_pq = {
     'Voltages': pqVoltage,
@@ -224,20 +411,26 @@ class ToggleAdvancedTypes:
             self._dss.AdvancedTypes = self._previous
 
 
-def dss_monitor_plot(DSS: IDSS, params):
+def dss_monitor_plot(DSS: IDSS, 
+    *,
+    ObjectName: str = None,
+    Channels: List[int] = None, # TODO: allow channel names too
+    Bases: List[float] = None,
+    **kwargs: Unpack[PlotParams]
+):
     monitor = DSS.ActiveCircuit.Monitors
-    monitor.Name = params['ObjectName']
+    monitor.Name = ObjectName
     data = monitor.AsMatrix()
     if data is None or len(data) == 0:
         raise ValueError("There is not data to plot in the monitor. Hint: check the solution mode, solve the circuit and retry.")
     
-    channels = params['Channels']
+    channels = Channels
     num_ch = monitor.NumChannels
     channels = [ch for ch in channels if ch >= 1 and ch <= num_ch]
     if len(channels) == 0:
         raise IndexError("No valid channel numbers were specified.")
 
-    bases = params['Bases']
+    bases = Bases
     header = monitor.Header
     if len(monitor.dblHour) < len(monitor.dblFreq):
         header.insert(0, 'Frequency')
@@ -278,14 +471,18 @@ def dss_monitor_plot(DSS: IDSS, params):
         ax.legend()
         ax.set_ylabel('Mag') # Where "Mag" comes from?
 
-    ax.set_title(params['ObjectName'])
+    ax.set_title(ObjectName)
     ax.set_xlabel(xlabel)
 
 
-
-def dss_tshape_plot(DSS, params):
+def dss_tshape_plot(DSS: IDSS, 
+    *,
+    ObjectName: str = None,
+    Color1: str = None,
+    **kwargs: Unpack[PlotParams]
+):
     # There is no dedicated API yet but we can move to the Obj API
-    name = params['ObjectName']
+    name = ObjectName
     DSS.Text.Command = f'? tshape.{name}.temp'
     p = np.fromstring(DSS.Text.Result[1:-1].strip(), dtype=float, sep=' ')
     try:
@@ -300,7 +497,7 @@ def dss_tshape_plot(DSS, params):
     except:
         interval = 1
 
-    fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"TShape.{params['ObjectName']}")
+    fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"TShape.{ObjectName}")
 
     if not h.size:
         h = interval * np.array(range(len(p)))
@@ -310,9 +507,9 @@ def dss_tshape_plot(DSS, params):
         h *= 3600
         x_unit = 's'
 
-    color1 = params['Color1']
+    color1 = Color1
     ax.plot(h, p, color=color1, label="Price")
-    ax.set_title(f"TShape = {params['ObjectName']}")
+    ax.set_title(f"TShape = {ObjectName}")
     ax.set_xlabel(f'Time ({x_unit})')
     ax.set_ylabel('Temperature')
 
@@ -321,9 +518,14 @@ def dss_tshape_plot(DSS, params):
 
 
 
-def dss_priceshape_plot(DSS, params):
+def dss_priceshape_plot(DSS: IDSS, 
+    *,
+    ObjectName: str = None,
+    Color1: str = None,
+    **kwargs: Unpack[PlotParams]
+):
     # There is no dedicated API yet but we can move to the Obj API
-    name = params['ObjectName']
+    name = ObjectName
     DSS.Text.Command = f'? priceshape.{name}.price'
     p = np.fromstring(DSS.Text.Result[1:-1].strip(), dtype=float, sep=' ')
     try:
@@ -338,7 +540,7 @@ def dss_priceshape_plot(DSS, params):
     except:
         interval = 1
 
-    fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"PriceShape.{params['ObjectName']}")
+    fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"PriceShape.{ObjectName}")
 
     if not h.size:
         h = interval * np.array(range(len(p)))
@@ -348,10 +550,10 @@ def dss_priceshape_plot(DSS, params):
         h *= 3600
         x_unit = 's'
 
-    color1 = params['Color1']
+    color1 = Color1
 
     ax.plot(h, p, color=color1, label="Price")
-    ax.set_title(f"PriceShape = {params['ObjectName']}")
+    ax.set_title(f"PriceShape = {ObjectName}")
     ax.set_xlabel(f'Time ({x_unit})')
     ax.set_ylabel('Price')
 
@@ -359,16 +561,22 @@ def dss_priceshape_plot(DSS, params):
     plt.tight_layout()
 
 
-def dss_loadshape_plot(DSS, params):
-#     pprint(params)
+def dss_loadshape_plot(DSS: IDSS, 
+    *,
+    ObjectName: str = None,
+    Color1: str = None,
+    Color2: str = None,
+    **kwargs: Unpack[PlotParams]
+):
+#     pprint(kwargs)
     
     ls = DSS.ActiveCircuit.LoadShapes
-    ls.Name = params['ObjectName']
+    ls.Name = ObjectName
     h = ls.TimeArray
     p = ls.Pmult
     q = ls.Qmult
     
-    fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"LoadShape.{params['ObjectName']}")
+    fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"LoadShape.{ObjectName}")
 
     if not h.size or h is None or len(h) != len(p):
         h = ls.HrInterval * np.array(range(len(p)))
@@ -378,14 +586,14 @@ def dss_loadshape_plot(DSS, params):
         h *= 3600
         x_unit = 's'
 
-    color1 = params['Color1']
-    color2 = params['Color2']
+    color1 = Color1
+    color2 = Color2
 
     ax.plot(h, p, color=color1, label="Pmult")
     if q.size == p.size:
         ax.plot(h, q, color=color2, label="Qmult")
 
-    ax.set_title(f"LoadShape = {params['ObjectName']}")
+    ax.set_title(f"LoadShape = {ObjectName}")
     ax.set_xlabel(f'Time ({x_unit})')
     if ls.UseActual:
         if q.size == p.size:
@@ -403,7 +611,6 @@ def dss_loadshape_plot(DSS, params):
 
 node_re = re.compile(r'(.*?)(\.[0-9])*$')
 
-
 def remove_nodes(bus):
     match = node_re.match(bus)
     return match.group(1)
@@ -415,7 +622,15 @@ def remove_nodes(bus):
         
     # return bus[:dot_pos]
 
-def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switches=False, idxs=None, single_ph_line_style =1, three_ph_line_style=1):
+def get_branch_data(DSS: IDSS, 
+    branch_objects: DSSIterable, 
+    bus_coords: Dict[str, Tuple[float, float, float]],
+    do_values=pqNone,
+    do_switches=False,
+    idxs=None,
+    single_ph_line_style: int = 1,
+    three_ph_line_style: int = 1
+):
     line_count = branch_objects.Count if not idxs else len(idxs)
     lines = np.empty(shape=(line_count, 2, 2), dtype=np.float64)
     lines.fill(np.nan)
@@ -584,7 +799,11 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
         return [lines[:offset], values[:offset], lines_styles[:offset]] + extra
     
 
-def get_point_data(DSS: IDSS, point_objects, bus_coords, do_values=False):
+def get_point_data(DSS: IDSS,
+    point_objects: Union[str, Iterable],
+    bus_coords: Dict[str, Tuple[float, float, float]],
+    do_values: bool = False
+):
     if isinstance(point_objects, str):
         cls = point_objects
         DSS.SetActiveClass(cls)
@@ -627,12 +846,14 @@ def get_point_data(DSS: IDSS, point_objects, bus_coords, do_values=False):
     return points[:offset], values[:offset]
 
 
-def dss_profile_plot(DSS, params):
+def dss_profile_plot(DSS: IDSS,
+    *,
+    PhasesToPlot: int = None,
+    ProfileScale: float = None,
+    **kwargs: Unpack[PlotParams]
+):
     if len(DSS.ActiveCircuit.Meters) == 0:
         raise RuntimeError(f"An EnergyMeter is required to use 'plot profile'")
-
-    PhasesToPlot = params['PhasesToPlot']
-    ProfileScale = params['ProfileScale']
     
     vmin = DSS.ActiveCircuit.Settings.NormVminpu
     vmax = DSS.ActiveCircuit.Settings.NormVmaxpu
@@ -660,8 +881,8 @@ def dss_profile_plot(DSS, params):
     colors = []
     linestyles = []
     seg_phases = []
-    pri_only = (PhasesToPlot == PROFILEALLPRI)
-    if PhasesToPlot in [PROFILEALL, PROFILEALLPRI, PROFILE3PH]:
+    pri_only = (PhasesToPlot == DSSPlotPhases.PROFILEALLPRI)
+    if PhasesToPlot in [DSSPlotPhases.PROFILEALL, DSSPlotPhases.PROFILEALLPRI, DSSPlotPhases.PROFILE3PH]:
         phases = (1, 2, 3)
     else:
         phases = PhasesToPlot
@@ -682,7 +903,7 @@ def dss_profile_plot(DSS, params):
 
             DSS.ActiveCircuit.Lines.Name = br[len('Line.'):]
 
-            if PROFILE3PH == PhasesToPlot and DSS.ActiveCircuit.Lines.Phases < 3:
+            if DSSPlotPhases.PROFILE3PH == PhasesToPlot and DSS.ActiveCircuit.Lines.Phases < 3:
                 continue
 
             bus1 = nodot(DSS.ActiveCircuit.Lines.Bus1)
@@ -714,7 +935,7 @@ def dss_profile_plot(DSS, params):
         ax = fig.add_subplot(1, 1, 1)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
-        if PhasesToPlot in (PROFILELL3PH, PROFILELLALL, PROFILELLPRI):
+        if PhasesToPlot in (DSSPlotPhases.PROFILELL3PH, DSSPlotPhases.PROFILELLALL, DSSPlotPhases.PROFILELLPRI):
             ax.set_title('L-L Voltage Profile')
         else:
             ax.set_title('L-N Voltage Profile')
@@ -737,7 +958,7 @@ def dss_profile_plot(DSS, params):
         ax2 = fig2.add_subplot(1, 1, 1, projection='3d')
         ax2.set_xlabel(xlabel)
         ax2.set_ylabel(ylabel)
-        if PhasesToPlot in (PROFILELL3PH, PROFILELLALL, PROFILELLPRI):
+        if PhasesToPlot in (DSSPlotPhases.PROFILELL3PH, DSSPlotPhases.PROFILELLALL, DSSPlotPhases.PROFILELLPRI):
             ax2.set_title('L-L Voltage Profile')
         else:
             ax2.set_title('L-N Voltage Profile')
@@ -778,7 +999,12 @@ def dss_profile_plot(DSS, params):
 
 
 
-def _get_gic_line_data_altdss(altdss: IAltDSS, bus_coords, single_ph_line_style=1, three_ph_line_style=1):
+def _get_gic_line_data_altdss(
+    altdss: IAltDSS,
+    bus_coords: Dict[str, Tuple[float, float, float]],
+    single_ph_line_style: int = 1,
+    three_ph_line_style: int = 1
+):
     branch_objects = altdss.GICLine
     line_count = len(branch_objects)# if not idxs else len(idxs)
     lines = np.empty(shape=(line_count, 2, 2), dtype=np.float64)
@@ -813,7 +1039,11 @@ def _get_gic_line_data_altdss(altdss: IAltDSS, bus_coords, single_ph_line_style=
     return lines[:offset], values[:offset], lines_styles[:offset]
 
 
-def get_gic_line_data(DSS: IDSS, bus_coords, single_ph_line_style=1, three_ph_line_style=1):
+def get_gic_line_data(DSS: IDSS, 
+    bus_coords: Dict[str, Tuple[float, float]], 
+    single_ph_line_style: int = 1,
+    three_ph_line_style: int = 1
+):
     try:
         return _get_gic_line_data_altdss(
             DSS.to_altdss(),
@@ -861,18 +1091,40 @@ def get_gic_line_data(DSS: IDSS, bus_coords, single_ph_line_style=1, three_ph_li
 
     return lines[:offset], values[:offset], lines_styles[:offset]
 
-def dss_circuit_plot(DSS: IDSS, params={}, fig=None, ax=None, is3d=False):
-    quantity = str_to_pq.get(params.get('Quantity', None), pqNone)
-    dots = params.get('Dots', False)
-    color1 = params.pop('Color1', Colors[0])
-    color2 = params.pop('Color2', Colors[1])
-    color3 = params.pop('Color3', Colors[2])
-    single_ph_line_style = params.get('SinglePhLineStyle', 1)
-    three_ph_line_style = params.get('ThreePhLineStyle', 1)
-    max_lw = params.get('MaxLineThickness', 5)
-    bus_markers = params.get('BusMarkers', [])
-    do_labels = params.get('Labels', False)
 
+def dss_circuit_plot(DSS: IDSS, 
+    *, 
+    fig=None,
+    ax=None,
+    is3d=False, 
+    Quantity: str = None,
+    Dots: bool = False,
+    Color1: str = None,
+    Color2: str = None,
+    Color3: str = None,
+    SinglePhLineStyle: int = None,
+    ThreePhLineStyle: int = None,
+    MaxLineThickness: float = None,
+    BusMarkers: List[BusMarker] = None,
+    Labels: bool = None,
+    Markers: ObjMarkers = None,
+    MaxScale: float = None,
+    MaxScaleIsSpecified: bool = None,
+    **kwargs: Unpack[PlotParams]
+):
+    if not MaxScaleIsSpecified:
+        MaxScale = None
+
+    quantity = str_to_pq.get(Quantity, pqNone)
+    dots = Dots
+    color1 = Color1
+    color2 = Color2
+    color3 = Color3
+    single_ph_line_style = SinglePhLineStyle
+    three_ph_line_style = ThreePhLineStyle
+    max_lw = MaxLineThickness
+    bus_markers = BusMarkers or []
+    do_labels = Labels
 
     norm_min_volts = DSS.ActiveCircuit.Settings.NormVminpu
     # norm_max_volts = DSS.ActiveCircuit.Settings.NormVmaxpu
@@ -917,10 +1169,7 @@ def dss_circuit_plot(DSS: IDSS, params={}, fig=None, ax=None, is3d=False):
     switch_idxs = set(switch_idxs)
     isolated_idxs = set(isolated_idxs)
     #lc_lines = LineCollection(lines_lines, linewidths=0.5, color=color1)# + 3 * lines_values / np.max(lines_values), linestyle='solid', color=color1)
-    try:
-        quantity_max_value = params.pop('MaxScale')
-    except:
-        quantity_max_value = 0
+    quantity_max_value = MaxScale if MaxScale is not None else 0.0
 
     quantity_suffix = ''
 
@@ -1068,7 +1317,7 @@ def dss_circuit_plot(DSS: IDSS, params={}, fig=None, ax=None, is3d=False):
         ('MarkStorage', 'StoreMarkerCode', 'StoreMarkerSize', 'Storage', None),
     ]
 
-    pmarkers = params.pop('Markers', None)
+    pmarkers = Markers
     if pmarkers is not None:
         for (mark_opt, code_opt, size_opt, objs, idxs) in branch_marker_options:
             # print(mark_opt, pmarkers[mark_opt])
@@ -1153,7 +1402,9 @@ def dss_circuit_plot(DSS: IDSS, params={}, fig=None, ax=None, is3d=False):
 
     
 
-def dss_scatter_plot(DSS, params):
+def dss_scatter_plot(DSS: IDSS, 
+    **kwargs: Unpack[PlotParams]
+):
     x = np.empty(shape=(DSS.ActiveCircuit.NumBuses, ))
     y = np.empty(shape=(DSS.ActiveCircuit.NumBuses, ))
     vcomplex = np.empty(shape=(DSS.ActiveCircuit.NumBuses, 3), dtype=complex)
@@ -1176,7 +1427,7 @@ def dss_scatter_plot(DSS, params):
 
     if include_3d in ('both', '2d'):
         fig, ax = plt.subplots(1, 1, constrained_layout=True)#, figsize=(8, 7))
-        dss_circuit_plot(DSS, fig=fig, ax=ax, params={})
+        dss_circuit_plot(DSS, fig=fig, ax=ax)
         ax.get_xaxis().get_major_formatter().set_scientific(False)
         ax.get_yaxis().get_major_formatter().set_scientific(False)
         sc = ax.scatter(x, y, c=vmean)
@@ -1191,7 +1442,7 @@ def dss_scatter_plot(DSS, params):
 
         fig = plt.figure()#figsize=(7, 7))
         ax = fig.add_subplot(projection='3d')
-        dss_circuit_plot(DSS, fig=fig, ax=ax, params={}, is3d=True)
+        dss_circuit_plot(DSS, fig=fig, ax=ax, is3d=True)
         ax.get_xaxis().get_major_formatter().set_scientific(False)
         ax.get_yaxis().get_major_formatter().set_scientific(False)
 
@@ -1227,10 +1478,16 @@ def dss_scatter_plot(DSS, params):
         ax.set_title('{}:{}'.format(DSS.ActiveCircuit.Name.upper(), 'Voltage magnitude'))
 
 
-def dss_visualize_plot(DSS, params):
+def dss_visualize_plot(DSS: IDSS,
+    *,
+    Quantity: str = None,
+    ElementType: str = None,
+    ElementName: str = None,
+    **kwargs: Unpack[PlotParams]
+):
     XMAX = 300
-    #pprint(params)
-    quantity = params['Quantity']
+    #pprint(kwargs)
+    quantity = Quantity
 
     # Fix for backend v0.13.1
     quantity = {
@@ -1240,13 +1497,13 @@ def dss_visualize_plot(DSS, params):
     }.get(quantity, quantity)
 
     element = DSS.ActiveCircuit.ActiveCktElement
-    etype, ename = params['ElementType'], params['ElementName']
+    etype, ename = ElementType, ElementName
     nconds = element.NumConductors
     # nphases = element.NumPhases
     buses = element.BusNames[:2] # max 2 terminals
     vbases = [max(1, 1000 * DSS.ActiveCircuit.Buses[nodot(b)].kVBase) for b in buses]
 
-    # assert DSS.ActiveCircuit.ActiveCktElement.Name == params['ElementType'] + '.' + params['ElementName']
+    # assert DSS.ActiveCircuit.ActiveCktElement.Name == ElementType + '.' + ElementName
     fig, ax = plt.subplots(1, gridspec_kw=dict(left=0.05, right=0.95, bottom=0.05, top=0.92))#, figsize=(8.6, 7))
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
@@ -1348,14 +1605,33 @@ def dss_visualize_plot(DSS, params):
     ax.set_ylim(-15, y + 5)
 
 
-def dss_general_data_plot(DSS, params):
-    is_general = params['PlotType'] == 'GeneralData'
-    ValueIndex = max(1, params['ValueIndex'] - 1)
-    fn = params['ObjectName']
-    MaxScaleIsSpecified = params['MaxScaleIsSpecified']
-    MinScaleIsSpecified = params['MinScaleIsSpecified']
-    MaxScale = params['MaxScale']
-    MinScale = params['MinScale']
+def dss_general_data_plot(DSS: IDSS, 
+    *,
+    PlotType: str = None,
+    ObjectName: str = None,
+    ValueIndex: int = None,
+    Color1: str = None,
+    Color2: str = None,
+    Labels: bool = None,
+    MinScaleIsSpecified: bool = None,
+    MaxScaleIsSpecified: bool = None,
+    MinScale: float = None,
+    MaxScale: float = None,
+    
+    **kwargs: Unpack[PlotParams]
+):
+    if not MaxScaleIsSpecified:
+        MaxScale = None
+
+    if not MinScaleIsSpecified:
+        MinScale = None
+
+    is_general = PlotType == 'GeneralData'
+    ValueIndex = max(1, ValueIndex - 1)
+    fn = ObjectName
+    do_labels = Labels
+    color1 = Color1
+    color2 = Color2
 
     # Whenever we add Pandas as a dependency, this could be
     # rewritten to avoid all the extra/slow work
@@ -1402,10 +1678,9 @@ def dss_general_data_plot(DSS, params):
     bus: IBus = DSS.ActiveCircuit.ActiveBus
     data = []
     labels = []
-    do_labels = params['Labels']
     colors = []
-    c1 = np.asarray(matplotlib.colors.colorConverter.to_rgb(params['Color1']))
-    c2 = np.asarray(matplotlib.colors.colorConverter.to_rgb(params['Color2']))
+    c1 = np.asarray(matplotlib.colors.colorConverter.to_rgb(color1))
+    c2 = np.asarray(matplotlib.colors.colorConverter.to_rgb(color2))
     for i in sidxs:
         name, val = names[i], vals[i]
         if DSS.ActiveCircuit.SetActiveBus(name) <= 0 or not bus.Coorddefined:
@@ -1426,7 +1701,7 @@ def dss_general_data_plot(DSS, params):
     data = np.asarray(data)
 
 
-    dss_circuit_plot(DSS, params)
+    dss_circuit_plot(DSS, **kwargs)
 
     #fig = plt.figure(figsize=(8, 7))
     plt.title(f'{field}, Max={max_val:.3g}')
@@ -1442,8 +1717,6 @@ def dss_general_data_plot(DSS, params):
     #ax.get_yaxis().get_major_formatter().set_scientific(False)
     #plt.tight_layout()
 
-
-
     # marker_code = MarkerIdx
 
     # NodeMarkerWidth: int
@@ -1456,9 +1729,14 @@ def dss_general_data_plot(DSS, params):
     #MarkSpecialClasses
 
 
-def dss_matrix_plot(DSS, params):
-    # plot_id = params.get('PlotId', None)
-    if params['MatrixType'] == 'IncMatrix':
+def dss_matrix_plot(DSS: IDSS, 
+    *,
+    MatrixType: str = None,
+    Color1: str = None,
+    **kwargs: Unpack[PlotParams]
+):
+    # plot_id = kwargs.get('PlotId', None)
+    if MatrixType == 'IncMatrix':
         title = 'Incidence matrix'
         data = DSS.ActiveCircuit.Solution.IncMatrix[:-1]
     else:
@@ -1473,7 +1751,7 @@ def dss_matrix_plot(DSS, params):
         fig = plt.figure(constrained_layout=True)#, num=plot_id) #, figsize=(8.6, 8.6))
         ax = fig.add_subplot(1, 1, 1)
         ax.grid(True)
-        ax.spy(m, marker='s', markersize=1, color=params['Color1'])
+        ax.spy(m, marker='s', markersize=1, color=Color1)
         ax.set_xlabel('Column')
         ax.set_ylabel('Row')
         ax.set_title(title)
@@ -1487,17 +1765,24 @@ def dss_matrix_plot(DSS, params):
         ax2.set_zlabel('Value')
 
 
-def dss_daisy_plot(DSS, params):
-    dss_circuit_plot(DSS, params)
+def dss_daisy_plot(DSS: IDSS, 
+    *,
+    DaisyBusList: List[str] = None,
+    Quantity: str = None,
+    Labels: bool = None,
+    DaisySize: float = None,
+    **kwargs: Unpack[PlotParams]
+):
+    dss_circuit_plot(DSS, **kwargs)
 
     # print(params['DaisySize'])
 
     ax = plt.gca()
     XMIN, XMAX = ax.get_xlim()
-    quantity = str_to_pq.get(params.get('Quantity', None), pqNone)
-    daisy_bus_list = params['DaisyBusList']
-    do_labels = params['Labels']
-    daisy_size = params['DaisySize']
+    quantity = str_to_pq.get(Quantity, pqNone)
+    daisy_bus_list = DaisyBusList
+    do_labels = Labels
+    daisy_size = DaisySize
 
     ax.set_title(f'Device Locations / {quantity_str[quantity]}')
     element = DSS.ActiveCircuit.ActiveCktElement
@@ -1555,9 +1840,17 @@ def unquote(field: str):
     return field
 
 
-def dss_di_plot(DSS: IDSS, params):
-    caseYear, caseName, meterName = params['CaseYear'], params['CaseName'], params['MeterName']
-    plotRegisters, peakDay = params['Registers'], params['PeakDay']
+def dss_di_plot(DSS: IDSS,
+    *,
+    CaseName: str = None,
+    MeterName: str = None,
+    Registers: List[int] = None,
+    CaseYear: str = None,
+    PeakDay: bool = None,
+    **kwargs: Unpack[PlotParams]
+):
+    caseYear, caseName, meterName = CaseYear, CaseName, MeterName
+    plotRegisters, peakDay = Registers, PeakDay
 
     fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', meterName + '.csv')
 
@@ -1679,14 +1972,19 @@ def _plot_yearly_case(DSS: IDSS, caseName: str, meterName: str, plotRegisters: L
     return icolor
 
 
-def dss_yearly_curve_plot(DSS: IDSS, params):
-    caseNames, meterName, plotRegisters = params['CaseNames'], params['MeterName'], params['Registers']
+def dss_yearly_curve_plot(DSS: IDSS, *, 
+    MeterName: str = None,
+    CaseNames: List[str] = None,
+    Registers: List[str] = None,
+    **kwargs: Unpack[PlotParams]
+):
+    caseNames, meterName, plotRegisters = CaseNames, MeterName, Registers
 
     fig, ax = plt.subplots(1)
     icolor = 0
     registerNames = []
     for caseName in caseNames:
-        icolor = _plot_yearly_case(DSS, caseName, meterName, plotRegisters, icolor, ax, registerNames)
+        icolor = _plot_yearly_case(DSS, caseName, MeterName, plotRegisters, icolor, ax, registerNames)
 
     if icolor == 0:
         plt.close(fig)
@@ -1700,24 +1998,39 @@ def dss_yearly_curve_plot(DSS: IDSS, params):
     ax.grid()
 
 
-def dss_comparecases_plot(DSS: IDSS, params):
-    print('TODO: dss_comparecases_plot', params)
+def dss_comparecases_plot(DSS: IDSS, **kwargs: Unpack[PlotParams]):
+    print('TODO: dss_comparecases_plot', kwargs)
 
-def dss_zone_plot(DSS: IDSS, params):
-    obj_name = params['ObjectName']
-    show_loops = params['ShowLoops']
-    color1 = params['Color1']
-    color3 = params['Color3']
-    single_ph_line_style = LINES_STYLE_CODE.get(params.get('SinglePhLineStyle', 1))
-    three_ph_line_style = LINES_STYLE_CODE.get(params.get('ThreePhLineStyle', 1))
-    dots = params.get('Dots', False)
-    do_labels = params['Labels']
-    quantity = str_to_pq.get(params.get('Quantity', None), pqNone)
-    max_lw = params.get('MaxLineThickness', 5)
 
-    try:
-        quantity_max_value = params.pop('MaxScale')
-    except:
+def dss_zone_plot(DSS: IDSS, 
+    *,
+    ObjectName: str,
+    Quantity: DSSPlotQuantity = DEFAULT_PLOT_PARAMS['Quantity'],
+    ShowLoops: bool = DEFAULT_PLOT_PARAMS['ShowLoops'],
+    Dots: bool = DEFAULT_PLOT_PARAMS['Dots'],
+    Labels: bool = DEFAULT_PLOT_PARAMS['Labels'],
+    Color1: str = DEFAULT_PLOT_PARAMS['Color1'],
+    Color3: str = DEFAULT_PLOT_PARAMS['Color3'],
+    SinglePhLineStyle: int = DEFAULT_PLOT_PARAMS['SinglePhLineStyle'],
+    ThreePhLineStyle: int = DEFAULT_PLOT_PARAMS['ThreePhLineStyle'],
+    MaxLineThickness: float = DEFAULT_PLOT_PARAMS['MaxLineThickness'],
+    MaxScale: float = DEFAULT_PLOT_PARAMS['MaxScale'],
+    **kwargs: Unpack[PlotParams]
+):
+    obj_name = ObjectName
+    show_loops = ShowLoops
+    color1 = Color1
+    color3 = Color3
+    single_ph_line_style = LINES_STYLE_CODE.get(SinglePhLineStyle)
+    three_ph_line_style = LINES_STYLE_CODE.get(ThreePhLineStyle)
+    dots = Dots
+    do_labels = Labels
+    quantity = str_to_pq.get(Quantity, pqNone)
+    max_lw = MaxLineThickness
+
+    if MaxScale is not None:
+        quantity_max_value = MaxScale
+    else:
         quantity_max_value = 0
 
 
@@ -1904,20 +2217,20 @@ dss_plot_funcs = {
     'MeterZones': dss_zone_plot
 }
 
-def dss_plot(DSS, params):
+def dss_plot(DSS: IDSS, **kwargs: Unpack[PlotParams]):
     try:
-        ptype = params['PlotType']
+        ptype = kwargs['PlotType']
         if ptype not in dss_plot_funcs:
             raise NotImplementedError(f'ERROR: not implemented plot type "{ptype}"')
             return -1
 
         with ToggleAdvancedTypes(DSS, False), warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            dss_plot_funcs.get(ptype)(DSS, params)
+            dss_plot_funcs.get(ptype)(DSS, **kwargs)
 
     except Exception as ex:
         from traceback import format_exc
-        # print('DSS: Error while plotting. Parameters:', params, file=sys.stderr)
+        # print('DSS: Error while plotting. Parameters:', kwargs, file=sys.stderr)
         DSS._errorPtr[0] = 777
         DSS._lib.Error_Set_Description(f"Error in the plot backend: {ex}\n{format_exc()}".encode())
         return 777
@@ -2002,7 +2315,7 @@ def dss_python_cb_plot(ctx, paramsStr):
     result = 0
     try:
         DSS = IDSS._get_instance(ctx=ctx)
-        result = dss_plot(DSS, params)
+        result = dss_plot(DSS, **params)
         if _do_show:
             plt.show()
     except:
