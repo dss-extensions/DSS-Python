@@ -428,6 +428,13 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
     if do_switches:
         switch_idxs = []
         isolated_idxs = []
+        try:
+            element.IsIsolated
+            has_is_isolated = True
+        except:
+            has_is_isolated = False
+            isolated_names = set(name.lower() for name in DSS.ActiveCircuit.Topology.AllIsolatedBranches)
+
         extra = [switch_idxs, isolated_idxs]
     else:
         extra = []
@@ -523,8 +530,10 @@ def get_branch_data(DSS, branch_objects, bus_coords, do_values=pqNone, do_switch
                 continue
 
             if do_switches:
-                if element.IsIsolated:
+                if ((has_is_isolated and element.IsIsolated) or 
+                    ((not has_is_isolated) and (element.Name.lower() in isolated_names))):
                     isolated_idxs.append(offset)
+
                 if l.IsSwitch:
                     #skip.add(i)
                     switch_idxs.append(offset)
