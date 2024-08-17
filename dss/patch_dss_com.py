@@ -77,7 +77,7 @@ def patch_dss_com(obj):
     def custom_bus_iter(self):
         for i in range(obj.ActiveCircuit.NumBuses):
             obj.ActiveCircuit.SetActiveBusi(i)
-            yield self
+            yield obj.ActiveCircuit.ActiveBus
 
     def custom_bus_len(self):
         return obj.ActiveCircuit.NumBuses
