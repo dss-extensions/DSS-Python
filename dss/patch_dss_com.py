@@ -92,6 +92,27 @@ def patch_dss_com(obj):
         
         self.Text.Command = cmds
 
+    def Lines_Get_IsSwitch(self):
+        lines = obj.ActiveCircuit.Lines
+        elem = obj.ActiveCircuit.ActiveCktElement
+        name = lines.Name
+        if not name:
+            return False
+
+        obj.ActiveCircuit.SetActiveElement(f'Line.{name}')
+        return elem.Properties['Switch'].Val.lower() in ('y', 't')
+
+    def Lines_Set_IsSwitch(self, Value):
+        lines = obj.ActiveCircuit.Lines
+        elem = obj.ActiveCircuit.ActiveCktElement
+        name = lines.Name
+        if not name:
+            return
+
+        obj.ActiveCircuit.SetActiveElement(f'Line.{name}')
+        elem.Properties['Switch'].Val = 'y' if Value else 'n'
+
+
     # Callable DSS
     type(obj).__call__ = custom_dss_call
 
@@ -100,7 +121,10 @@ def patch_dss_com(obj):
     
     # Load Phases
     type(obj.ActiveCircuit.Loads).Phases = property(Load_Phases, Load_Set_Phases)
-   
+
+    # Line IsSwitch
+    type(obj.ActiveCircuit.Lines).IsSwitch = property(Lines_Get_IsSwitch, Lines_Set_IsSwitch)
+
     # Bus iterator and len
     type(obj.ActiveCircuit.ActiveBus).__iter__ = custom_bus_iter
     type(obj.ActiveCircuit.ActiveBus).__len__ = custom_bus_len
