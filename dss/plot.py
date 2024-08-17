@@ -10,14 +10,17 @@ import os, re, json, sys, warnings
 from typing import List, TYPE_CHECKING, Optional, Tuple, Dict
 from typing_extensions import TypedDict, Unpack
 from . import api_util
-from . import DSS as DSSPrime
+from . import DSS as DSSPlotCtx
 from ._cffi_api_util import CffiApiUtil
 from .IDSS import IDSS
 from .IBus import IBus
 from ._cffi_api_util import Iterable as DSSIterable
 from enum import Enum, IntEnum
+import numpy as np
+from numpy import asarray
+from numpy.testing import suppress_warnings
+from pathlib import Path as FilePath
 try:
-    import numpy as np
     from matplotlib import pyplot as plt
     from matplotlib.path import Path
     from matplotlib.collections import LineCollection
@@ -248,9 +251,17 @@ try:
 
     @register_cell_magic
     def dss(line, cell):
-        DSSPrime.Text.Commands(cell)
+        if isinstance(DSSPlotCtx, IDSS):
+            DSSPlotCtx.Text.Commands(cell)
+        else:
+            for line in cell.split('\n'):
+                DSSPlotCtx(line)
+                res = DSSPlotCtx.Text.Result
+                if res.endswith('.DSV'):
+                    if _enabled and FilePath(res).exists():
+                        plot_dsv(res)
 
-    DSSPrime.AllowChangeDir = False
+    DSSPlotCtx.AllowChangeDir = False
 except:
     def link_file(fn):
         print(f'Output file: "{fn}"')
@@ -431,7 +442,7 @@ def dss_monitor_plot(DSS: IDSS,
         raise IndexError("No valid channel numbers were specified.")
 
     bases = Bases
-    header = monitor.Header
+    header = list(monitor.Header)
     if len(monitor.dblHour) < len(monitor.dblFreq):
         header.insert(0, 'Frequency')
         header.insert(1, 'Harmonic')
@@ -572,9 +583,9 @@ def dss_loadshape_plot(DSS: IDSS,
     
     ls = DSS.ActiveCircuit.LoadShapes
     ls.Name = ObjectName
-    h = ls.TimeArray
-    p = ls.Pmult
-    q = ls.Qmult
+    h = asarray(ls.TimeArray)
+    p = asarray(ls.Pmult)
+    q = asarray(ls.Qmult)
     
     fig, ax = plt.subplots(1)#, figsize=(8.5, 6))#, num=f"LoadShape.{ObjectName}")
 
@@ -648,7 +659,7 @@ def get_branch_data(DSS: IDSS,
             has_is_isolated = True
         except:
             has_is_isolated = False
-            isolated_names = set(name.lower() for name in DSS.ActiveCircuit.Topology.AllIsolatedBranches)
+            isolated_names = set(name.lower() for name in DSS.ActiveCircuit.Topology.AllIsolatedBranches if name)
 
         extra = [switch_idxs, isolated_idxs]
     else:
@@ -667,12 +678,33 @@ def get_branch_data(DSS: IDSS,
     
     vbs = None
     if do_values == pqCurrent:
+        # Currently the same as pqCapacity to match the OpenDSS impl.; the correct would be:
         #max_currents = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllMaxCurrents(True)))
-        max_currents = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllPctNorm(True)))
+        try:
+            max_currents = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllPctNorm(True)))
+        except:
+            max_currents = {}
+            elem = DSS.ActiveCircuit.ActiveCktElement
+            for _ in DSS.ActiveCircuit.PDElements:
+                currents = np.abs(asarray(elem.Currents).view(dtype=complex))
+                max_current = np.max(currents[:elem.NumConductors])
+                norm_amps = elem.NormalAmps
+                max_currents[elem.Name] = (100 * max_current / norm_amps) if norm_amps else 0.0
+            
     elif do_values == pqCapacity:
-        capacities = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllPctNorm(True)))
+        try:
+            capacities = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllPctNorm(True)))
+        except:
+            max_currents = {}
+            elem = DSS.ActiveCircuit.ActiveCktElement
+            for _ in DSS.ActiveCircuit.PDElements:
+                currents = np.abs(asarray(elem.Currents).view(dtype=complex))
+                max_current = np.max(currents[:elem.NumConductors])
+                norm_amps = elem.NormalAmps
+                max_currents[elem.Name] = (100 * max_current / norm_amps) if norm_amps else 0.0
+
     elif do_values == pqVoltage:
-        node_volts = dict(zip(DSS.ActiveCircuit.AllNodeNames, DSS.ActiveCircuit.AllBusVmag * 1e-3))
+        node_volts = dict(zip(DSS.ActiveCircuit.AllNodeNames, asarray(DSS.ActiveCircuit.AllBusVmag) * 1e-3))
         vbs = np.empty(shape=(line_count, ), dtype=np.float64)
         vbs.fill(0)
         extra.append(vbs)
@@ -874,8 +906,8 @@ def dss_profile_plot(DSS: IDSS,
 
     busnode_to_index = {(bn.rsplit('.', 1)[0], int(bn.rsplit('.', 1)[1])): num for (num, bn) in enumerate(DSS.ActiveCircuit.AllNodeNames)}
     bus_to_kvbase = {b.Name: b.kVBase for b in DSS.ActiveCircuit.Buses}
-    puV = DSS.ActiveCircuit.AllBusVmagPu / DenomLN
-    distances = {name: d for (name, d) in zip(DSS.ActiveCircuit.AllBusNames, DSS.ActiveCircuit.AllBusDistances * LenScale)}
+    puV = asarray(DSS.ActiveCircuit.AllBusVmagPu) / DenomLN
+    distances = {name: d for (name, d) in zip(DSS.ActiveCircuit.AllBusNames, asarray(DSS.ActiveCircuit.AllBusDistances) * LenScale)}
     linewidths = []
     segments = []
     colors = []
@@ -1084,8 +1116,8 @@ def get_gic_line_data(DSS: IDSS,
         lines[offset, 1] = to
 
         lines_styles[offset] = single_ph_line_style if gic_line.phases == 1 else three_ph_line_style
-        currents = np.abs(np.asarray(elem.Currents).view(dtype=complex))
-        max_current = np.max(current[:elem.NumConductors])
+        currents = np.abs(asarray(elem.Currents).view(dtype=complex))
+        max_current = np.max(currents[:elem.NumConductors])
         values[offset] = max_current
         offset += 1
 
@@ -1417,17 +1449,18 @@ def dss_scatter_plot(DSS: IDSS,
 
         x[idx] = b.x
         y[idx] = b.y
-        vnodes = b.puVoltages.view(dtype=complex)
+        vnodes = asarray(b.puVoltages).view(dtype=complex)
         nnodes = min(3, len(vnodes))
         vcomplex[idx, :nnodes] = vnodes[:nnodes]
     
     vabs = np.abs(vcomplex)
     del vcomplex
-    vmean = np.mean(vabs, axis=1, where=np.isfinite(vabs))
+    with suppress_warnings():
+        vmean = np.mean(vabs, axis=1, where=np.isfinite(vabs))
 
     if include_3d in ('both', '2d'):
         fig, ax = plt.subplots(1, 1, constrained_layout=True)#, figsize=(8, 7))
-        dss_circuit_plot(DSS, fig=fig, ax=ax)
+        dss_circuit_plot(DSS, fig=fig, ax=ax, Color1='k')
         ax.get_xaxis().get_major_formatter().set_scientific(False)
         ax.get_yaxis().get_major_formatter().set_scientific(False)
         sc = ax.scatter(x, y, c=vmean)
@@ -1442,7 +1475,7 @@ def dss_scatter_plot(DSS: IDSS,
 
         fig = plt.figure()#figsize=(7, 7))
         ax = fig.add_subplot(projection='3d')
-        dss_circuit_plot(DSS, fig=fig, ax=ax, is3d=True)
+        dss_circuit_plot(DSS, fig=fig, ax=ax, is3d=True, Color1='k')
         ax.get_xaxis().get_major_formatter().set_scientific(False)
         ax.get_yaxis().get_major_formatter().set_scientific(False)
 
@@ -1527,13 +1560,13 @@ def dss_visualize_plot(DSS: IDSS,
     voltage = (quantity == 'Voltages')
 
     if quantity == 'Powers':
-        values = 1e-3 * (element.Voltages.view(dtype=complex) * np.conj(element.Currents.view(dtype=complex)))
+        values = 1e-3 * (asarray(element.Voltages).view(dtype=complex) * np.conj(asarray(element.Currents).view(dtype=complex)))
         unit = 'kVA'
     elif voltage:
-        values = element.Voltages.view(dtype=complex)
+        values = asarray(element.Voltages).view(dtype=complex)
         unit = 'pu'
     elif quantity == 'Currents':
-        values = element.Currents.view(dtype=complex)
+        values = asarray(element.Currents).view(dtype=complex)
         unit = 'A'
 
     ax.set_title(f'{etype}.{ename.upper()} {quantity} ({unit})')
@@ -2326,8 +2359,9 @@ def dss_python_cb_plot(ctx, paramsStr):
 
 _original_allow_forms = None
 _do_show = True
+_enabled = False
 
-def enable(plot3d: bool = False, plot2d: bool = True, show: bool = True):
+def enable(plot3d: bool = False, plot2d: bool = True, show: bool = True, ctx: IDSS = None):
     """
     Enables the plotting subsystem from DSS-Extensions.
 
@@ -2344,8 +2378,14 @@ def enable(plot3d: bool = False, plot2d: bool = True, show: bool = True):
     global include_3d
     global _original_allow_forms
     global _do_show
+    global _enabled
+    global DSSPlotCtx
+
+    if ctx is not None:
+        DSSPlotCtx = ctx
 
     _do_show = show
+    _enabled = True
 
     if plot3d and plot2d:
         include_3d = 'both'
@@ -2356,14 +2396,290 @@ def enable(plot3d: bool = False, plot2d: bool = True, show: bool = True):
 
     api_util.lib.DSS_RegisterPlotCallback(api_util.lib.dss_python_cb_plot)
     api_util.lib.DSS_RegisterMessageCallback(api_util.lib.dss_python_cb_write)
-    _original_allow_forms = DSSPrime.AllowForms
-    DSSPrime.AllowForms = True
+    _original_allow_forms = DSSPlotCtx.AllowForms
+    DSSPlotCtx.AllowForms = True
 
 def disable():
+    global _enabled
+    _enabled = False
     api_util.lib.DSS_RegisterPlotCallback(api_util.ffi.NULL)
     api_util.lib.DSS_RegisterMessageCallback(api_util.ffi.NULL)
     if _original_allow_forms is not None:
-        DSSPrime.AllowForms = _original_allow_forms
+        DSSPlotCtx.AllowForms = _original_allow_forms
 
 
-__all__ = ['enable', 'disable']
+
+DSV_LINE_STYLES = {
+    0: 'solid',
+    1: 'dashed',
+    2: 'dotted',
+    3: 'dashdot',
+    4: (0, (3, 5, 1, 5, 1, 5)),
+}
+
+def _int_to_color(v: int):
+    return ((v & 255) / 255.0, (v >> 8 & 255) / 255.0, (v >> 16) / 255.0)
+
+from matplotlib import pyplot as plt
+import matplotlib.patches as patches
+from numpy import asarray
+import numpy as np
+from dss.plot import get_marker_dict
+import re
+
+DSV_LINE_STYLES = {
+    0: 'solid',
+    1: 'dashed',
+    2: 'dotted',
+    3: 'dashdot',
+    4: (0, (3, 5, 1, 5, 1, 5)),
+}
+
+def _int_to_color(v: int):
+    return ((v & 255) / 255.0, (v >> 8 & 255) / 255.0, (v >> 16) / 255.0)
+
+class DSVHandler:
+    def __init__(self):
+        self.fig, self.ax = plt.subplots()
+        self.xy = [0.0, 0.0]
+        self.line_width = 1
+        self.fig_caption = None
+        self.color = 'k'
+        self.key_class = None
+        self.no_scales = False
+        self.bold = True
+        self.txt_align = 'left'
+
+
+    def BoldLabel(self, param_str: str):
+        self.bold = int(param_str.strip()) != 0
+
+
+    def Caption(self, param_str: str):
+        self.fig_caption = param_str.strip().strip('"')
+        self.fig.canvas.manager.set_window_title(self.fig_caption)
+
+
+    def ChartCaption(self, param_str: str):
+        self.ax.set_title(param_str.strip().strip('"'))
+
+
+    def Center(self, param_str: str):
+        *int_params, text = param_str.split(',')
+        x, y, s = [int(v.strip()) for v in int_params]
+        text = text.strip().strip('"')
+        if '/_' in text:
+            text = text.replace('/_', '∠') + '°'
+
+        if '->' in text:
+            text = text.replace('->', '→')
+            s = s * 1.5
+        elif '<-' in text:
+            text = text.replace('<-', '←')
+            s = s * 1.5
+        elif '^' in text:
+            text = text.replace('^', '↑')
+            s = s * 1.5
+
+        self.ax.text(x, y, text, horizontalalignment='center', fontsize=s * 8 / 13.)
+
+
+    def Circle(self, param_str: str):
+        params = param_str.split(',')
+        x, y = int(params[0]), int(params[1])
+        fc = _int_to_color(int(params[4]))
+        ec = _int_to_color(int(params[3]))
+        self.ax.scatter(x, y, marker='o', color=fc, edgecolors=ec, s=50, zorder=10, linewidths=0.5)
+
+
+    def ClickOn(self, param_str: str):
+        #TODO
+        pass
+
+
+    def Curve(self, param_str: str):
+        *int_params, curve_name, rest = param_str.split(',', 7)
+        npts, color, width, style, curve_markers, curve_marker = [int(v.strip()) for v in int_params]
+        if curve_markers:
+            marker_dict = get_marker_dict(curve_marker)
+        else:
+            marker_dict = {}
+        
+        data = np.fromstring(rest, dtype=float, sep=',')
+        self.ax.plot(data[:npts], data[npts:], lw=width/2.0, label=curve_name.strip().strip('"'), color=_int_to_color(color), ls=DSV_LINE_STYLES[style], **marker_dict)
+        # self.ax.minorticks_on()
+
+
+    def DataColor(self, param_str: str):
+        self.color = _int_to_color(int(param_str))
+
+
+    def Draw(self, param_str: str):
+        if not self.no_scales:
+            # Currently not used since Move/Draw is emulated with axhline
+            return
+        
+        x0, y0 = self.xy
+        x1, y1 = [float(v.strip().strip('"')) for v in param_str.split(',')]
+        self.ax.plot([x0, x1], [y0, y1], color=self.color, lw=self.line_width/2.0)
+
+
+    def FStyle(self, param_str: str):
+        fstyle = int(param_str.strip().strip('"'))
+        # if fstyle != 0:
+        #     print('Unhandled font style:', fstyle)
+
+
+    def KeepAspect(self, param_str: str):
+        try:
+            v = int(param_str.strip().strip('"'))
+        except:
+            v = 1
+        
+        if v:
+            self.ax.set_aspect('equal')
+        else:
+            self.ax.set_aspect('auto')
+
+
+    def KeyClass(self, param_str: str):
+        self.key_class = int(param_str.strip())
+
+
+    def Label(self, param_str: str):
+        *int_params, text, _ = param_str.split(',')
+        x, y, color_int = [int(v.strip()) for v in int_params]
+        color = _int_to_color(color_int)
+        text = text.strip().strip('"')
+        self.ax.text(x, y, text, 
+            horizontalalignment='center',
+            fontsize=10 * 8 / 13.,
+            color=color,
+            backgroundcolor='white', 
+            weight='bold' if self.bold else 'normal'
+        )
+
+
+    def Line(self, param_str: str):
+
+        #TODO: use LineCollection
+
+        *str_params, rest = param_str.split(',', 3)
+        line_name, bus1, bus2 = [v.strip().strip('"') for v in str_params]
+        *int_params, rest = rest.split(',', 4)
+        offset, data_count, num_cust, total_cust = [int(v) for v in int_params]
+        *dbl_params, rest = rest.split(',', 6)
+        kv, dist, x1, y1, x2, y2 = [float(v) for v in dbl_params]
+        int_params = rest.split(',')
+        #TODO: markers
+        color, width, style, dots, mark_center, center_marker_code, node_marker_code, node_marker_size = [int(v) for v in int_params]
+
+        if dots:
+            node_marker_dict = get_marker_dict(node_marker_code)
+            node_marker_dict['markersize'] *= max(1, np.sqrt(node_marker_size) - 1) * node_marker_dict['markersize'] / 7.0            
+        else:
+            node_marker_dict = {}
+        
+        self.ax.plot([x1, x2], [y1, y2], color=_int_to_color(color), lw=width / 2.0, ls=DSV_LINE_STYLES[style], solid_capstyle='round', **node_marker_dict)
+        
+        if mark_center:
+            center_marker_dict = get_marker_dict(center_marker_code)
+            self.ax.scatter((x1 + x2) / 2, (y1 + y2) / 2, color=_int_to_color(color), **center_marker_dict)
+
+    def Marker(self, param_str: str):
+        params = param_str.split(',')
+        x, y = float(params[0]), float(params[1])
+        c, symbol, marker_size = [int(v) for v in params[2:]]
+        marker_dict = get_marker_dict(symbol)
+        marker_dict['markersize'] *= max(1, np.sqrt(marker_size) - 1) * marker_dict['markersize'] / 7.0
+        self.ax.plot(x, y, ls=None, color=_int_to_color(c), **marker_dict)
+
+
+    def Move(self, param_str: str):
+        x, y = [float(v.strip().strip('"')) for v in param_str.split(',')]
+        if self.no_scales:
+            self.xy = [x, y]
+        else:
+            self.ax.axhline(y, color=self.color, lw=self.line_width / 2.0)
+
+
+    def NoScales(self, param_str: str):
+        self.no_scales = True
+        self.ax.get_xaxis().set_visible(False)
+        self.ax.get_yaxis().set_visible(False)
+
+
+    def PctRim(self, param_str: str):
+        self.ax.margins(float(param_str) / 100.0)
+
+
+    def Range(self, param_str: str):
+        pass
+
+
+    def Rect(self, param_str: str):
+        left, bottom, right, top = [int(v) for v in param_str.split(',')]
+        r = patches.Rectangle((left, bottom), right - left, top - bottom, fill=True, ec='k', fc='#c0c0c0')
+        self.ax.add_patch(r)
+
+
+    def SetProp(self, param_str: str):
+        if int(param_str.rsplit(',', 1)[-1]) != 0:
+            self.ax.grid(which='both', ls='--')
+        else:
+            self.ax.grid(False)
+
+
+    def Text(self, param_str: str):
+        *int_params, text = param_str.split(',')
+        x, y, c, s = [int(v.strip()) for v in int_params]
+        text = text.strip().strip('"')
+        self.ax.text(x, y, text, ha=self.txt_align, va='center', fontsize=s * 10 / 13.)
+
+
+    def TxtAlign(self, param_str: str):
+        v = int(param_str)
+        if v == 1:
+            self.txt_align = 'left'
+            return
+
+        if v == 2:
+            self.txt_align = 'center'
+            return
+            
+        if v == 3:
+            self.txt_align = 'right'
+            return
+
+    
+    def Width(self, param_str: str):
+        self.line_width = int(param_str.strip().strip('"'))
+
+    
+    def Xlabel(self, param_str: str):
+        self.ax.set_xlabel(param_str.strip().strip('"'))
+
+    
+    def Ylabel(self, param_str: str):
+        self.ax.set_ylabel(param_str.strip().strip('"'))
+        
+
+def plot_dsv(fn: str):
+    handler = DSVHandler()
+    with open(fn, 'r') as f:
+        for l in f:
+            l = l.strip()
+            if not l:
+                continue
+
+            item_name, *rest = l.split(',', 1)
+            item_name = item_name.strip()
+            # print(item, repr(rest)[:100])
+            getattr(handler, item_name)(rest[0] if rest else '') # let the exception propagate on error
+
+    if _do_show:
+        plt.show()
+    else:
+        return handler.fig, handler.ax
+
+__all__ = ['enable', 'disable', 'plot_dsv', ]
