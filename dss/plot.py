@@ -251,7 +251,7 @@ try:
 
     @register_cell_magic
     def dss(line, cell):
-        if isinstance(DSSPlotCtx, IDSS):
+        if isinstance(DSSPlotCtx, IDSS) and not DSSPlotCtx._api_util._is_odd:
             DSSPlotCtx.Text.Commands(cell)
         else:
             for line in cell.split('\n'):
@@ -2441,6 +2441,8 @@ def _int_to_color(v: int):
 class DSVHandler:
     def __init__(self):
         self.fig, self.ax = plt.subplots()
+        self.ax.get_xaxis().get_major_formatter().set_scientific(False)
+        self.ax.get_yaxis().get_major_formatter().set_scientific(False)
         self.xy = [0.0, 0.0]
         self.line_width = 1
         self.fig_caption = None
@@ -2486,7 +2488,7 @@ class DSVHandler:
 
     def Circle(self, param_str: str):
         params = param_str.split(',')
-        x, y = int(params[0]), int(params[1])
+        x, y = float(params[0]), float(params[1])
         fc = _int_to_color(int(params[4]))
         ec = _int_to_color(int(params[3]))
         self.ax.scatter(x, y, marker='o', color=fc, edgecolors=ec, s=50, zorder=10, linewidths=0.5)
@@ -2537,7 +2539,7 @@ class DSVHandler:
             v = 1
         
         if v:
-            self.ax.set_aspect('equal')
+            self.ax.set_aspect('equal', 'datalim')
         else:
             self.ax.set_aspect('auto')
 
