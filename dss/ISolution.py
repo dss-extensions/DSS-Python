@@ -5,6 +5,7 @@ from ._cffi_api_util import Base
 from ._types import Int32Array
 from typing import Union, AnyStr, List
 from .enums import SolveModes, ControlModes, SolutionAlgorithms
+import numpy as np
 
 class ISolution(Base):
     __slots__ = []
@@ -618,7 +619,16 @@ class ISolution(Base):
         Original COM help: https://opendss.epri.com/IncMatrix.html
         '''
         #TODO: expose as sparse matrix
-        return self._lib.Solution_Get_IncMatrix_GR()
+        result = self._lib.Solution_Get_IncMatrix_GR()
+        n = len(result)
+        if n >= 3 and (n % 3) == 0: # Compatibility with COM
+            if isinstance(result, np.ndarray):
+                result = np.resize(result, n + 1)
+                result[-1] = 0
+            else:
+                result.append(0)
+
+        return result
 
     @property
     def IncMatrixCols(self) -> List[str]:
@@ -653,7 +663,16 @@ class ISolution(Base):
         Original COM help: https://opendss.epri.com/Laplacian.html
         '''
         #TODO: expose as sparse matrix
-        return self._lib.Solution_Get_Laplacian_GR()
+        result = self._lib.Solution_Get_Laplacian_GR()
+        n = len(result)
+        if n >= 3 and (n % 3) == 0: # Compatibility with COM
+            if isinstance(result, np.ndarray):
+                result = np.resize(result, n + 1)
+                result[-1] = 0
+            else:
+                result.append(0)
+
+        return result
 
     def SolveAll(self):
         '''
