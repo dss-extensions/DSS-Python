@@ -336,11 +336,24 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
 
     try:
         dss_classes.update({
+            'Storages': dss.ActiveCircuit.Storages,
+        })
+    except AttributeError:
+        pass
+
+    try:
+        dss_classes.update({
+            'WindGens': dss.ActiveCircuit.WindGens,
+        })
+    except AttributeError:
+        pass
+
+    try:
+        dss_classes.update({
             'CNData': dss.ActiveCircuit.CNData,
             'LineGeometries': dss.ActiveCircuit.LineGeometries,
             'LineSpacings': dss.ActiveCircuit.LineSpacings,
             'Reactors': dss.ActiveCircuit.Reactors,
-            'Storages': dss.ActiveCircuit.Storages,
             'TSData': dss.ActiveCircuit.TSData,
             'WireData': dss.ActiveCircuit.WireData,
         })
