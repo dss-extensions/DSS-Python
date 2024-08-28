@@ -100,7 +100,7 @@ def patch_dss_com(obj):
             return False
 
         obj.ActiveCircuit.SetActiveElement(f'Line.{name}')
-        return elem.Properties['Switch'].Val.lower() in ('y', 't')
+        return elem.Properties['Switch'].Val.lower()[:1] in ('y', 't')
 
     def Lines_Set_IsSwitch(self, Value):
         lines = obj.ActiveCircuit.Lines
