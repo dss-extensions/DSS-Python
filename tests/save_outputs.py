@@ -114,6 +114,9 @@ def run(dss: dss.IDSS, fn: str, line_by_line: bool):
         ):
         dss.Text.Command = 'export profile phases=all'
 
+    dss.Text.Command = 'CalcIncMatrix'
+    dss.Text.Command = 'CalcLaplacian'
+
     reliabity_ran = True
     try:
         dss.ActiveCircuit.Meters.DoReliabilityCalc(False)
@@ -159,11 +162,15 @@ pc_elem_columns = {'AllVariableValues', 'AllVariableNames'}
 
 def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     printv(dss_cls)
+    lname = type(dss_cls).__name__.lower()
     has_iter = hasattr(type(dss_cls), '__iter__')
     is_ckt_element = getattr(type(dss_cls), '_is_circuit_element', False)
     ckt_elem = dss.ActiveCircuit.ActiveCktElement
     ckt_elem_columns = set(type(ckt_elem)._columns) - ckt_elem_columns_meta - pc_elem_columns - {'Handle', 'IsIsolated', 'HasOCPDevice'}
     fields = list(type(dss_cls)._columns)
+
+    if lname.endswith('solution'):
+        fields.extend(['IncMatrix', 'Laplacian', 'IncMatrixCols', 'IncMatrixRows', ])
 
     if 'UserClasses' in fields:
         fields.remove('UserClasses')
@@ -188,7 +195,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
             if 'AllPDEatBus' in fields: fields.remove('AllPDEatBus')
 
         # if 'Sensor' in fields: # Both  Loads and PVSystems
-        if 'ipvsystems' in type(dss_cls).__name__.lower():
+        if 'ipvsystems' in lname:
             fields.remove('Sensor')
 
         # if 'IrradianceNow' in fields:
