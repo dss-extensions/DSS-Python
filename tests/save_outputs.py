@@ -405,11 +405,6 @@ if __name__ == '__main__':
             
         debug_suffix = '-debug' if 'debug' in DSS.Version.lower() else ''
         suffix = f'-dssx_oddd-{sys.platform}-{platform.machine()}-{oddd_ver}{debug_suffix}'
-        #test_idx = test_filenames.index('L!Version8/Distrib/IEEETestCases/123Bus/RevRegTest.dss') + 50
-        # test_filenames = [fn for fn in test_filenames if 'DOCTechNote' not in fn] # DOC not implemented
-        # test_filenames = ['L!Version8/Distrib/IEEETestCases/123Bus/Run_YearlySim.dss']
-        # test_filenames = ['L!Version8/Distrib/IEEETestCases/123Bus/SolarRamp.DSS']
-        cimxml_test_filenames = [] # Cannot run these now
         DSS.AllowForms = False
 
     elif SAVE_DSSX_OUTPUT:
@@ -455,7 +450,7 @@ if __name__ == '__main__':
     total_runtime = 0.0
     zip_fn = f'results{suffix}.zip'
     with ZipFile(os.path.join(original_working_dir, zip_fn), mode='a', compression=ZIP_DEFLATED) as zip_out:
-        for fn in test_filenames + cimxml_test_filenames:
+        for fn in cimxml_test_filenames + test_filenames:
             if not fn.strip(): 
                 break
 
