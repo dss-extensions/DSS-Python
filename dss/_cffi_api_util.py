@@ -281,6 +281,7 @@ class CtxLib:
 
         self._prepare_api_functions(done, settings_ptr)
         self.Error_Get_Description = lambda: self._get_string(lib.ctx_Error_Get_Description(ctx))
+        self.Error_Get_Number = lambda: lib.ctx_Error_Get_Number(ctx)
         
         skip_funcs = {'ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'ctx_Error_Set_Description', 'ctx_Error_Get_NumberPtr', 'ctx_ZIP_Extract_GR'}
         # First, process all `ctx_*`` functions
