@@ -31,7 +31,8 @@ from .IVsources import IVsources
 from .ITransformers import ITransformers
 from .IXYCurves import IXYCurves
 from .IGICSources import IGICSources
-# from .IStorages import IStorages
+from .IStorages import IStorages
+from .IWindGens import IWindGens
 
 
 def custom_iter(self):
@@ -161,7 +162,8 @@ def patch_dss_com(obj):
         'Transformers': ITransformers,
         'XYCurves': IXYCurves,
         'GICSources': IGICSources,
-        # 'Storages': IStorages,
+        'Storages': IStorages,
+        'WindGens': IWindGens,
     }
 
     def filter_cols(py_cls):
@@ -194,7 +196,11 @@ def patch_dss_com(obj):
     type(obj.ActiveCircuit.Topology)._columns = filter_cols(ITopology)
 
     for name, py_cls in com_classes_to_dsspy.items():
-        cls = type(getattr(obj.ActiveCircuit, name))
+        instance = getattr(obj.ActiveCircuit, name, None)
+        if instance is None:
+            continue
+
+        cls = type(instance)
         add_dunders(cls)
         cls._py_cls = py_cls
         # Filter columns, removing 
@@ -202,8 +208,6 @@ def patch_dss_com(obj):
 
         if getattr(py_cls, '_is_circuit_element', False):
             cls._is_circuit_element = True
-
-    add_dunders(cls)
 
     return obj
     
