@@ -3,7 +3,13 @@ import sys, os
 
 import faulthandler
 faulthandler.disable()
-from dss import DSS, IOddieDSS
+from dss import DSS
+DSS.COMErrorResults = False
+try:
+    from dss import IOddieDSS
+except:
+    pass
+
 faulthandler.enable()
 
 org_dir = os.getcwd()
