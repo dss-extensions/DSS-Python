@@ -223,6 +223,15 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     else:
         items = [dss_cls]
 
+    if ((not SAVE_DSSX_OUTPUT) or SAVE_DSSX_OUTPUT_ODD) and lname in ('istorages', 'iwindgens'):
+        def iter_cls():
+            for i in range(cls.Count):
+                cls.idx = i
+                yield cls
+
+        items = iter_cls()
+
+
     for _ in items:
         record = {}
         for field in fields:
