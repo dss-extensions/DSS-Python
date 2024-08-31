@@ -542,3 +542,20 @@ class IDSS(Base):
     @CompatFlags.setter
     def CompatFlags(self, Value: int):
         self._lib.DSS_Set_CompatFlags(Value)
+
+
+    def ShareGeneral(self, otherContext: IDSS):
+        '''
+        Share general DSS objects from this AltDSS context to another.
+
+        **WARNING:** currently, the pointers are not tracked! The user must ensure this context
+        and its objects are kept alive while other contexts require it.
+
+        ***EXPERIMENTAL***
+
+        **(API Extension)**
+        '''
+        if self._api_util._is_odd or otherContext._api_util._is_odd:
+            raise ValueError("Only AltDSS engine contexts can share data.")
+
+        self._lib.ShareGeneral(otherContext._api_util.ctx)
