@@ -931,6 +931,38 @@ def test_line_parent_compat():
     assert res_compat[3:2:] == res_no_compat[3:2:]
 
 
+def test_skip_commands():
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    DSS.ActiveCircuit.Settings.SkipCommands = ['clear']
+    # Since we are skipping the clear command, an exception should be raised
+    with pytest.raises(DSSException):
+        DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    
+    DSS.ActiveCircuit.Settings.SkipCommands = []
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+
+
+def test_skip_files():
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    DSS.ActiveCircuit.Settings.SkipFileRegExp = r'.*LineCodes\.DSS'
+    print(repr(DSS.ActiveCircuit.Settings.SkipFileRegExp))
+
+    # This should fail since we won't have the LineCodes
+    with pytest.raises(DSSException):
+        DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/34Bus/ieee34Mod1.dss"'
+    
+    DSS.ActiveCircuit.Settings.SkipFileRegExp = ''
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/34Bus/ieee34Mod1.dss"'
+
+    DSS.ActiveCircuit.Settings.SkipFileRegExp = None
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/34Bus/ieee34Mod1.dss"'
+
+    DSS.ActiveCircuit.Settings.SkipFileRegExp = 'some random string just to test'
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/34Bus/ieee34Mod1.dss"'
+
+    DSS.ActiveCircuit.Settings.SkipFileRegExp = None
+
+
 def test_path_sideeffects():
     test_loadshape_save()
     test_basic_input_errors()

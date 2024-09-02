@@ -3,7 +3,7 @@
 # Copyright (c) 2018-2024 DSS-Extensions contributors
 from ._cffi_api_util import Base
 from ._types import Float64Array, Int32Array
-from typing import AnyStr, Union
+from typing import AnyStr, Union, List
 from .enums import DSSPropertyNameStyle, CktModels
 
 class ISettings(Base):
@@ -310,3 +310,59 @@ class ISettings(Base):
         **(API Extension)**
         '''
         self._lib.Settings_SetPropertyNameStyle(value)
+
+    @property
+    def SkipFileRegExp(self) -> str:
+        '''
+        Regular expression pattern to skip files
+
+        If a file name as provided in the input for the `Redirect` and `Compile` commands
+        matches the regular expression pattern, it is skipped (the file is not read nor
+        commands from it are executed).
+
+        Set to an empty string to reset/disable the filter.
+
+        Case-insensitive.
+        See https://regex.sorokin.engineer/en/latest/regular_expressions.html for information on 
+        the expression syntax and options.
+
+
+        **(API Extension)**
+        '''
+        return self._lib.Settings_Get_SkipFileRegExp()
+
+    @SkipFileRegExp.setter
+    def SkipFileRegExp(self, Value: Union[AnyStr, None]):
+        self._lib.Settings_Set_SkipFileRegExp(Value or '')
+    
+    @property
+    def SkipCommands(self) -> List[str]:
+        '''
+        List of commands to skip
+
+        List of strings representing the command names to skip when processing DSS text commands or files.
+
+        **(API Extension)**
+        '''
+        
+        return [
+            self._lib.DSS_Executive_Get_Command(i)
+            for i in self._lib.Settings_Get_SkipCommands_GR()
+        ]
+
+    @SkipCommands.setter
+    def SkipCommands(self, Value: List[str]):
+        if len(Value) != 0 and isinstance(Value[0], str):
+            # map command names to integer codes
+            num_commands = self._lib.DSS_Executive_Get_NumCommands()
+            command_dict = {
+                self._lib.DSS_Executive_Get_Command(i).lower(): i
+                for i in range(1, num_commands + 1)
+            }
+            Value = [command_dict[cmd_name] for cmd_name in Value]
+
+        Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
+
+        self._lib.Settings_Set_SkipCommands(ValuePtr, ValueCount)
+
+
