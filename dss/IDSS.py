@@ -544,12 +544,18 @@ class IDSS(Base):
         self._lib.DSS_Set_CompatFlags(Value)
 
 
-    def ShareGeneral(self, otherContext: IDSS):
+    def ShareGeneral(self, otherContext: IDSS, skip_cmds: Optional[List[str]] = None, skip_file_regexp: str = None):
         '''
         Share general DSS objects from this AltDSS context to another.
 
         **WARNING:** currently, the pointers are not tracked! The user must ensure this context
         and its objects are kept alive while other contexts require it.
+
+        Optionally, as a shortcut, the user can provide `skip_cmds` to be passed to the `Settings.SkipCommands` 
+        and  `skip_file_regexp` to be passed to `Settings.SkipFileRegExp`, in the second DSS context. 
+        
+        *Note*: If the `clear` command is included in `Settings.SkipCommands`, the `DSS.ClearAll()` method can still be called
+        and it will reset both skip settings.
 
         ***EXPERIMENTAL***
 
@@ -559,3 +565,9 @@ class IDSS(Base):
             raise ValueError("Only AltDSS engine contexts can share data.")
 
         self._lib.ShareGeneral(otherContext._api_util.ctx)
+        if skip_cmds is not None:
+            otherContext.ActiveCircuit.Settings.SkipCommands = skip_cmds
+
+        if skip_file_regexp is not None:
+            otherContext.ActiveCircuit.Settings.SkipFileRegExp = skip_file_regexp
+

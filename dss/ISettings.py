@@ -7,7 +7,9 @@ from typing import AnyStr, Union, List
 from .enums import DSSPropertyNameStyle, CktModels
 
 class ISettings(Base):
-    __slots__ = []
+    __slots__ = [
+        '_command_dict'
+    ]
 
     _columns = [
         'Trapezoidal',
@@ -30,6 +32,14 @@ class ISettings(Base):
         'LoadsTerminalCheck',
         'IterateDisabled',
     ]
+
+    def __init__(self, api_util):
+        Base.__init__(self, api_util)
+        num_commands = self._lib.DSS_Executive_Get_NumCommands()
+        self._command_dict = {
+            self._lib.DSS_Executive_Get_Command(i).lower(): i
+            for i in range(1, num_commands + 1)
+        }
 
     @property
     def AllowDuplicates(self) -> bool:
@@ -314,11 +324,11 @@ class ISettings(Base):
     @property
     def SkipFileRegExp(self) -> str:
         '''
-        Regular expression pattern to skip files
+        Regular expression pattern to skip files.
 
         If a file name as provided in the input for the `Redirect` and `Compile` commands
         matches the regular expression pattern, it is skipped (the file is not read nor
-        commands from it are executed).
+        commands contained in the file are executed).
 
         Set to an empty string to reset/disable the filter.
 
@@ -326,6 +336,8 @@ class ISettings(Base):
         See https://regex.sorokin.engineer/en/latest/regular_expressions.html for information on 
         the expression syntax and options.
 
+        Even if the `clear` command is included in `Settings.SkipCommands`, the `DSS.ClearAll()` method can 
+        still be called. It resets both skip settings, `SkipCommands` and `SkipFileRegExp`.
 
         **(API Extension)**
         '''
@@ -342,6 +354,9 @@ class ISettings(Base):
 
         List of strings representing the command names to skip when processing DSS text commands or files.
 
+        If the `clear` command is included in `Settings.SkipCommands`, the `DSS.ClearAll()` method can 
+        still be called and it will reset both skip settings, `SkipCommands` and `SkipFileRegExp`.
+
         **(API Extension)**
         '''
         
@@ -354,12 +369,7 @@ class ISettings(Base):
     def SkipCommands(self, Value: List[str]):
         if len(Value) != 0 and isinstance(Value[0], str):
             # map command names to integer codes
-            num_commands = self._lib.DSS_Executive_Get_NumCommands()
-            command_dict = {
-                self._lib.DSS_Executive_Get_Command(i).lower(): i
-                for i in range(1, num_commands + 1)
-            }
-            Value = [command_dict[cmd_name] for cmd_name in Value]
+            Value = [self._command_dict[cmd_name] for cmd_name in Value]
 
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
 
