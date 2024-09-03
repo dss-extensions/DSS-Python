@@ -288,19 +288,19 @@ def test_pm_threads():
     # Let's run 4 days in 4 actors
     Parallel.ActiveParallel = 1
     DSS.Text.Command = 'set activeActor=*'
-    DSS.Text.Command = 'set mode=yearly number=144 hour=0 controlmode=off stepsize=600'
+    DSS.Text.Command = 'set mode=yearly number=432 hour=0 controlmode=off stepsize=600'
 
     DSS.Text.Command = 'set activeActor=1'
     DSS.Text.Command = 'set hour=0'
 
     DSS.Text.Command = 'set activeActor=2'
-    DSS.Text.Command = 'set hour=24'
+    DSS.Text.Command = 'set hour=72'
 
     DSS.Text.Command = 'set activeActor=3'
-    DSS.Text.Command = 'set hour=48'
+    DSS.Text.Command = 'set hour=144'
 
     DSS.Text.Command = 'set activeActor=4'
-    DSS.Text.Command = 'set hour=72'
+    DSS.Text.Command = 'set hour=216'
 
     DSS.ActiveCircuit.Solution.SolveAll()
     DSS.Text.Command = 'wait'
@@ -328,7 +328,7 @@ def test_pm_threads():
     t0 = perf_counter()
     DSS.Text.Command = f'compile "{fn}"'
     DSS.ActiveCircuit.Solution.Solve()
-    DSS.Text.Command = 'set mode=yearly number=144 hour=0 controlmode=off stepsize=600'
+    DSS.Text.Command = 'set mode=yearly number=432 hour=0 controlmode=off stepsize=600'
     DSS.ActiveCircuit.Solution.Solve()
     v_seq.append(DSS.ActiveCircuit.AllBusVolts)
 
@@ -357,7 +357,7 @@ def test_pm_threads():
         def _run(ctx, i):
             ctx.Text.Command = f'compile "{fn}"'
             ctx.ActiveCircuit.Solution.Solve()
-            ctx.Text.Command = f'set mode=yearly number=144 hour={i * 24} controlmode=off stepsize=600'
+            ctx.Text.Command = f'set mode=yearly number=432 hour={i * 24 * 3} controlmode=off stepsize=600'
             ctx.ActiveCircuit.Solution.Solve()
             v_ctx[i] = ctx.ActiveCircuit.AllBusVolts
 
@@ -376,14 +376,13 @@ def test_pm_threads():
             
         t1 = perf_counter()
         dt_ctx = t1 - t0
+
+        np.testing.assert_allclose(v_ctx[0], v_seq[0])
+        np.testing.assert_allclose(v_ctx[1], v_seq[1])
+        np.testing.assert_allclose(v_ctx[2], v_seq[2])
+        np.testing.assert_allclose(v_ctx[3], v_seq[3])
     else:
         dt_ctx = np.NaN
-
-    np.testing.assert_allclose(v_ctx[0], v_seq[0])
-    np.testing.assert_allclose(v_ctx[1], v_seq[1])
-    np.testing.assert_allclose(v_ctx[2], v_seq[2])
-    np.testing.assert_allclose(v_ctx[3], v_seq[3])
-    
     print(f"PM: {dt_pm:.3g} s; Python threads: {dt_ctx:.3g} s; Sequential: {dt_seq:.3g} s")
 
 
@@ -914,6 +913,57 @@ def test_loadshape_save():
     npt.assert_allclose(pmult, pmult_sng)
 
 
+def test_loadshape_extended():
+
+    # Added for OpenDSSC
+
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    LS = DSS.ActiveCircuit.LoadShapes
+    LS.Name = "default"
+    assert LS.Npts == 24
+    ref_p = np.asarray([.677, .6256, .6087, .5833, .58028, .6025, .657, .7477, .832, .88, .94, .989, .985, .98, .9898, .999, 1, .958, .936, .913, .876, .876, .828, .756])
+    npt.assert_allclose(LS.Pmult, ref_p)
+    ref_t = range(len(ref_p))
+    LS.TimeArray = ref_t
+    npt.assert_allclose(LS.TimeArray, ref_t)
+    ref_q = LS.TimeArray + ref_p
+    LS.Qmult = ref_q
+    npt.assert_allclose(LS.Qmult, ref_q)
+
+    DSS.Text.Command = 'new loadshape.test npts=3 pmult=[1.1, 2.2, 3.3] qmult=[4.5, 4.6, 4.7] hour=[1, 2, 7]'
+    LS.Name = 'test'
+    assert LS.Npts == 3
+    npt.assert_allclose(LS.Pmult, [1.1, 2.2, 3.3])
+    npt.assert_allclose(LS.Qmult, [4.5, 4.6, 4.7])
+    npt.assert_allclose(LS.TimeArray, [1, 2, 7])
+    LS.Pmult *= 2
+    npt.assert_allclose(LS.Pmult, [2.2, 4.4, 6.6])
+    LS.Qmult /= 2.5
+    npt.assert_allclose(LS.Qmult * 2.5, [4.5, 4.6, 4.7])
+    LS.TimeArray *= 12
+    npt.assert_allclose(LS.TimeArray / 12, [1, 2, 7])
+
+
+def test_xycurve_extended():
+
+    # Added for OpenDSSC
+
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    LS = DSS.ActiveCircuit.XYCurves
+    
+    DSS.Text.Command = 'New XYCurve.test npts=4 xarray=[.1  .2  .4  1.0]  yarray=[.86  .9  .93  .97]'
+    LS.Name = "test"
+    assert LS.Npts == 4
+    ref_x = np.asarray([.1, .2, .4, 1.0])
+    ref_y = np.asarray([.86, .9, .93, .97])
+    npt.assert_allclose(LS.Xarray, ref_x)
+    npt.assert_allclose(LS.Yarray, ref_y)
+    LS.Xarray *= 2
+    npt.assert_allclose(LS.Xarray, ref_x  * 2)
+    LS.Yarray /= 2.5
+    npt.assert_allclose(LS.Yarray, ref_y / 2.5)
+
+
 def test_line_parent_compat():
     from dss import DSSCompatFlags
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
@@ -983,6 +1033,8 @@ if __name__ == '__main__':
     # for _ in range(250):
     #     test_pm_threads()
 
-    test_path_sideeffects()
-    test_capacitor_reactor()
+    # test_path_sideeffects()
+    # test_capacitor_reactor()
+    test_loadshape_extended()
+    test_xycurve_extended()
     print('DONE!')
