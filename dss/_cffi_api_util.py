@@ -520,7 +520,7 @@ class Base:
 
 def altdss_python_util_callback(ctx, event_code, step, ptr):
     # print(ctx_util.ctx, AltDSSEvent(event_code), step, ptr)
-    ctx_util = CffiApiUtil._ctx_to_util[ctx]
+    ctx_util = AltDSSAPIUtil._ctx_to_util[ctx]
 
     if event_code == AltDSSEvent.ReprocessBuses:
         ctx_util.reprocess_buses_callback(step)
@@ -531,7 +531,7 @@ def altdss_python_util_callback(ctx, event_code, step, ptr):
         return
 
 
-class CffiApiUtil:
+class AltDSSAPIUtil:
     '''
     An internal class with various API and DSSContext management functions and structures.
     '''
@@ -554,6 +554,7 @@ class CffiApiUtil:
         self._obj_refs = []
         self._bus_ref_to_name = None
         self._is_clearing = False
+        self._map_objs = True
         if ctx is None:
             self.lib = lib
             ctx = lib.ctx_Get_Prime()
@@ -563,8 +564,8 @@ class CffiApiUtil:
         self.settings_ptr = ffi.new('int32_t*')
         self.settings_ptr[0] = 0
         self.lib = CtxLib(self, self.settings_ptr)
-        if ctx not in CffiApiUtil._ctx_to_util:
-            CffiApiUtil._ctx_to_util[ctx] = self
+        if ctx not in AltDSSAPIUtil._ctx_to_util:
+            AltDSSAPIUtil._ctx_to_util[ctx] = self
 
         self.track_objects = True
         self.register_callbacks()
@@ -1348,3 +1349,7 @@ class Iterable(Base):
         '''
         ptr = self._Get_Pointer()
         return self._api_util.get_dss_obj(ptr)
+
+
+# For backwards compat
+CffiApiUtil = AltDSSAPIUtil
