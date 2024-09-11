@@ -1027,6 +1027,20 @@ def test_path_sideeffects():
     test_loadshape_save()
 
 
+def test_busnames_ext():
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    CE = DSS.ActiveCircuit.ActiveCktElement
+
+    DSS.ActiveCircuit.SetActiveElement('Line.632633')
+    assert tuple(CE.BusNames) == ('632.1.2.3', '633.1.2.3')
+    assert tuple(CE._get_BusNames(True)) == ('632', '633')
+
+    DSS.ActiveCircuit.SetActiveElement('Transformer.Sub')
+    assert tuple(CE.BusNames) == ('sourcebus', '650')
+    assert tuple(CE._get_BusNames(True)) == ('sourcebus', '650')
+
+
+
 if __name__ == '__main__':
     DSS.AllowForms = False
     print(DSS.Version)

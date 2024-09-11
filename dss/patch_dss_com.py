@@ -113,13 +113,18 @@ def patch_dss_com(obj):
         obj.ActiveCircuit.SetActiveElement(f'Line.{name}')
         elem.Properties['Switch'].Val = 'y' if Value else 'n'
 
+    def _get_BusNames(self, removeNodes=False):
+        return [x.split('.', 1)[0] for x in self.BusNames]
 
     # Callable DSS
     type(obj).__call__ = custom_dss_call
 
     # Monitors AsMatrix
     type(obj.ActiveCircuit.Monitors).AsMatrix = Monitors_AsMatrix
-    
+
+    # Extended getter for CktElement.BusNames
+    type(obj.ActiveCircuit.ActiveCktElement)._get_BusNames = _get_BusNames
+
     # Load Phases
     type(obj.ActiveCircuit.Loads).Phases = property(Load_Phases, Load_Set_Phases)
 

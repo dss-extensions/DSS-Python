@@ -160,18 +160,29 @@ class ICktElement(Base):
         '''
         return self._lib.CktElement_Get_AllVariableValues_GR()
 
-    @property
-    def BusNames(self) -> List[str]:
+    def _get_BusNames(self, removeNodes: bool = False) -> List[str]:
         '''
         Bus definitions to which each terminal is connected.
 
+        The `removeNodes` argument is an **API Extension**. Use it to get only the bus names, 
+        without the connection/node specification, if present.
+
         Original COM help: https://opendss.epri.com/BusNames.html
         '''
-        return self._lib.CktElement_Get_BusNames()
+        return self._lib.CktElement_Get_BusNames(removeNodes)
 
-    @BusNames.setter
-    def BusNames(self, Value: List[AnyStr]):
+    def _set_BusNames(self, Value: List[AnyStr]):
         self._set_string_array(self._lib.CktElement_Set_BusNames, Value)
+
+    BusNames = property(_get_BusNames, _set_BusNames) # type: List[str]
+    '''
+    Bus definitions to which each terminal is connected.
+
+    In the getter function (`_get_BusNames`), the `removeNodes` argument is an **API Extension**.
+    Use it to get only the bus names, without the connection/node specification, if present.
+
+    Original COM help: https://opendss.epri.com/BusNames.html
+    '''
 
     @property
     def CplxSeqCurrents(self) -> Float64ArrayOrComplexArray:
