@@ -18,7 +18,7 @@ class IYMatrix(Base):
     
     __slots__ = []
 
-    def GetCompressedYMatrix(self, factor: bool = True) -> Tuple[ComplexArray, Int32Array, Int32Array]:
+    def GetCompressedYMatrix(self) -> Tuple[ComplexArray, Int32Array, Int32Array]:
         '''Return as (data, indices, indptr) that can fed into `scipy.sparse.csc_matrix`'''
         
         ffi = self._api_util.ffi
@@ -33,7 +33,7 @@ class IYMatrix(Base):
         cValsPtr = ffi.new('double**')
 
         lib = self._api_util.lib_unpatched # use the raw CFFI version
-        lib.YMatrix_GetCompressedYMatrix(factor, nBus, nNz, ColPtr, RowIdxPtr, cValsPtr)
+        lib.YMatrix_GetCompressedYMatrix(True, nBus, nNz, ColPtr, RowIdxPtr, cValsPtr)
 
         if not nBus[0] or not nNz[0]:
             res = None
