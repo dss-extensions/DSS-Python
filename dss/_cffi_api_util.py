@@ -15,6 +15,7 @@ if TYPE_CHECKING:
         pass
 
 try:
+    xxxx
     # Try to import the fast backend
     from dss_python_backend._fastdss import AltDSS_PyContext
 except:
@@ -1336,6 +1337,10 @@ class Iterable(Base):
         **(API Extension)** 
         '''
         return self._Get_idx()
+
+    @idx.setter
+    def idx(self, Value: int):
+        self._Set_idx(Value)
 
     def to_altdss(self) -> DSSObject:
         '''

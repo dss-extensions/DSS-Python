@@ -9,7 +9,7 @@ class IReactors(Iterable):
     '''
     Reactor objects
     
-    (API Extension)
+    API Status: **(API Extension)** before 2024-10-04. Since then, functions partially marked as extensions (see each property/function documentation).
     '''
     
     __slots__ = []
@@ -44,12 +44,18 @@ class IReactors(Iterable):
         '''
         How the reactor data was provided: 1=kvar, 2=R+jX, 3=R and X matrices, 4=sym components.
         Depending on this value, only some properties are filled or make sense in the context.
+
+        **(API Extension)**
         '''
         return self._lib.Reactors_Get_SpecType() #TODO: use enum
 
     @property
     def IsDelta(self) -> bool:
-        '''Delta connection or wye?'''
+        '''
+        Delta connection or wye?
+        
+        **(API Extension)**
+        '''
         return self._lib.Reactors_Get_IsDelta()
 
     @IsDelta.setter
@@ -74,6 +80,8 @@ class IReactors(Iterable):
     def LmH(self, Value: float):
         self._lib.Reactors_Set_LmH(Value)
 
+    lmH = LmH # Compatibility for the new 
+
     @property
     def kV(self) -> float:
         '''For 2, 3-phase, kV phase-phase. Otherwise specify actual coil rating.'''
@@ -94,7 +102,11 @@ class IReactors(Iterable):
 
     @property
     def Phases(self) -> int:
-        '''Number of phases.'''
+        '''
+        Number of phases.
+        
+        **(API Extension)**
+        '''
         return self._lib.Reactors_Get_Phases()
 
     @Phases.setter
@@ -107,6 +119,8 @@ class IReactors(Iterable):
         Name of first bus.
         Bus2 property will default to this bus, node 0, unless previously specified.
         Only Bus1 need be specified for a Yg shunt reactor.
+
+        **(API Extension)**
         '''
         return self._lib.Reactors_Get_Bus1()
 
@@ -119,6 +133,8 @@ class IReactors(Iterable):
         '''
         Name of 2nd bus. Defaults to all phases connected to first bus, node 0, (Shunt Wye Connection) except when Bus2 is specifically defined.
         Not necessary to specify for delta (LL) connection
+
+        **(API Extension)**
         '''
         return self._lib.Reactors_Get_Bus2()
 
