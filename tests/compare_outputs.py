@@ -293,6 +293,21 @@ class ComparisonHandler:
                     
                     continue
 
+                if isinstance(va[0], int):
+                    va = np.asarray(va)
+                    vb = np.asarray(vb)
+
+                    if len(vb) != len(va):
+                        self.printe('ERROR (int, vector, shapes):', path, f'a: {len(va)}, b: {len(vb)}')
+                        continue
+
+                    if not all(va == vb):
+                        self.printe('ERROR (int. vector):', path, f'a: {va}, b: {vb}')
+
+                    continue
+
+
+
                 if isinstance(va[0], float) or va[0] is None:
                     if None in va:
                         va = [x if x is not None else np.NaN for x in va]
