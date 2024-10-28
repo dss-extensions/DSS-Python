@@ -1,4 +1,5 @@
 from __future__ import annotations
+import sys, platform, ctypes, os
 from typing import Optional
 from ._cffi_api_util import CffiApiUtil
 from .IDSS import IDSS
@@ -19,7 +20,7 @@ class IOddieDSS(IDSS):
     the `dss_python_backend` package. If it is not available, an import 
     error should occur when trying to use this.
 
-    AltDSS Oddie wraps OpenDSSDirect.DLL, providing a minimal compatiliby layer
+    AltDSS Oddie wraps OpenDSSDirect.DLL, providing a minimal compatibility layer
     to expose it with the same API as AltDSS/DSS C-API. With it, we can
     just reuse most of the tools from the other projects on DSS-Extensions
     without too much extra work.
@@ -31,7 +32,7 @@ class IOddieDSS(IDSS):
     more information.
 
     :param library_path: The name or full path of the target dynamic library to
-    load. Defaults to trying to load "OpenDSSDirect" from `c:\Program Files\OpenDSS\x64`,
+    load. Defaults to trying to load "OpenDSSDirect" from `C:\Program Files\OpenDSS\x64`,
     followed by trying to load it from the current path.
 
     :param load_flags: Optional, flags to feed the [`LoadLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexa) 
@@ -41,7 +42,42 @@ class IOddieDSS(IDSS):
     the default settings (recommended) will be used. For advanced users.
     '''
 
+    def _handle_load_lib_error(self):
+        '''
+        This function is used to try to provide a more helpful message when the
+        library cannot be loaded.
+        '''
+        try:
+            if sys.platform == 'win32':
+                error = ctypes.GetLastError()
+                if error:
+                    raise ctypes.WinError(error)
+
+                return
+
+            if sys.platform == 'linux':
+                # ld = ctypes.cdll.LoadLibrary("ld-linux-x86-64.so.2")
+                # ld.dlerror.argtypes = []
+                # ld.dlerror.restype = ctypes.c_char_p
+                # error = ld.dlerror()
+                # if error:
+                #     raise RuntimeError(error.decode())
+                return
+        except:
+            # We can ignore if something fails since the generic 
+            # check will still work outside.
+            pass
+
     def __init__(self, library_path: str = '', load_flags: Optional[int] = None, oddie_options: Optional[OddieOptions] = None):
+        if sys.platform == 'cygwin':
+            raise NotImplementedError("Cygwin support is not implemented")
+        elif sys.platform == 'wasi':
+            raise NotImplementedError("WASI support is not implemented")
+        elif sys.platform == 'win32':
+            not64bits = (platform.architecture()[0] != '64bit')
+            if not64bits:
+                raise NotImplementedError("On Windows, only 64-bit (x64) environments are supported. If you need support, please open an issue at https://github.com/dss-extensions/")
+
         from dss_python_backend import _altdss_oddie_capi
         lib = _altdss_oddie_capi.lib
         ffi = _altdss_oddie_capi.ffi
@@ -52,19 +88,34 @@ class IOddieDSS(IDSS):
             c_load_flags = ffi.new('uint32_t*', load_flags)
 
         if library_path:
-            library_path = library_path.encode()
-            lib.Oddie_SetLibOptions(library_path, c_load_flags)
-            ctx = lib.ctx_New()
-        else:
-            # Try the default install folder
-            library_path = rb'C:\Program Files\OpenDSS\x64\OpenDSSDirect.dll'
+            if not isinstance(library_path, bytes):
+                library_path = str(library_path).encode()
+
             lib.Oddie_SetLibOptions(library_path, c_load_flags)
             ctx = lib.ctx_New()
             if ctx == NULL:
-                # Try from the general path, let the system resolve it
-                library_path = rb'OpenDSSDirect.dll'
+                self._handle_load_lib_error()
+
+        elif sys.platform == 'win32':
+            _win32_lib_paths = [
+                rb'C:\Program Files\OpenDSS\x64\OpenDSSDirect.dll', # Try the default install folder
+                rb'OpenDSSDirect.dll', # Try from the general path, let the system resolve it
+            ]
+
+            for library_path in _lib_paths:
                 lib.Oddie_SetLibOptions(library_path, c_load_flags)
                 ctx = lib.ctx_New()
+                if ctx != NULL:
+                    break
+            else:
+                self._handle_load_lib_error()
+
+        elif sys.platform == 'linux':
+            library_path = b'libOpenDSSC.so' #TODO: add proper version extensions (e.g. libOpenDSSC.so.10)
+            lib.Oddie_SetLibOptions(library_path, c_load_flags)
+            ctx = lib.ctx_New()
+            if ctx == NULL:
+                self._handle_load_lib_error()
 
         if ctx == NULL:
             raise RuntimeError("Could not load the target library.")
