@@ -25,7 +25,7 @@ try:
     from matplotlib.path import Path
     from matplotlib.collections import LineCollection
     from mpl_toolkits.mplot3d.art3d import Line3DCollection
-    from matplotlib.patches import Rectangle
+    import matplotlib.patches as patches
     import matplotlib.colors
     import scipy.sparse.coo as coo
 except:
@@ -33,7 +33,6 @@ except:
 
 if TYPE_CHECKING:
     from altdss.AltDSS import IAltDSS
-
 
 class DSSPlotType(Enum):
     AutoAddLog = 'AutoAddLog'
@@ -1546,7 +1545,7 @@ def dss_visualize_plot(DSS: IDSS,
     box_xy0 = np.array([100, 10])
     box_xy1 = np.array([XMAX - 100, y])
     box_wh = box_xy1 - box_xy0
-    middle_box = Rectangle(box_xy0, *box_wh, facecolor='lightgray', edgecolor='k')
+    middle_box = patches.Rectangle(box_xy0, *box_wh, facecolor='lightgray', edgecolor='k')
     ax.text(XMAX / 2, 10 + (y - 10) / 2, f'{etype}.{ename.upper()}', ha='center', va='center', fontweight='bold', rotation='vertical')
     ax.add_patch(middle_box)
     ax.plot([0, 300], [0, 0], color='gray', lw=7)
@@ -2420,26 +2419,43 @@ DSV_LINE_STYLES = {
 def _int_to_color(v: int):
     return ((v & 255) / 255.0, (v >> 8 & 255) / 255.0, (v >> 16) / 255.0)
 
-from matplotlib import pyplot as plt
-import matplotlib.patches as patches
-from numpy import asarray
-import numpy as np
-from dss.plot import get_marker_dict
-import re
-
-DSV_LINE_STYLES = {
-    0: 'solid',
-    1: 'dashed',
-    2: 'dotted',
-    3: 'dashdot',
-    4: (0, (3, 5, 1, 5, 1, 5)),
+DSS_ITEMS = {
+    'BoldLabel',
+    'Caption',
+    'Center',
+    'ChartCaption',
+    'Circle',
+    'ClickOn',
+    'Curve',
+    'DataColor',
+    'Draw',
+    'FStyle',
+    'KeepAspect',
+    'KeyClass',
+    'Label',
+    'Line',
+    'Marker',
+    'Move',
+    'NoScales',
+    'PctRim',
+    'Range',
+    'Rect',
+    'SetProp',
+    'Text',
+    'TxtAlign',
+    'Width',
+    'Xlabel',
+    'Ylabel',
 }
 
-def _int_to_color(v: int):
-    return ((v & 255) / 255.0, (v >> 8 & 255) / 255.0, (v >> 16) / 255.0)
+class IPlotting:
+    def __init__(self, dss: IDSS):
+        self.dss = dss
+
 
 class DSVHandler:
-    def __init__(self):
+    def __init__(self, fn: str):
+        self.fn = fn
         self.fig, self.ax = plt.subplots()
         self.ax.get_xaxis().get_major_formatter().set_scientific(False)
         self.ax.get_yaxis().get_major_formatter().set_scientific(False)
@@ -2563,7 +2579,6 @@ class DSVHandler:
 
 
     def Line(self, param_str: str):
-
         #TODO: use LineCollection
 
         *str_params, rest = param_str.split(',', 3)
@@ -2661,27 +2676,32 @@ class DSVHandler:
     def Xlabel(self, param_str: str):
         self.ax.set_xlabel(param_str.strip().strip('"'))
 
-    
+   
     def Ylabel(self, param_str: str):
         self.ax.set_ylabel(param_str.strip().strip('"'))
         
+    def parse(self):
+        with open(self.fn, 'r') as f:
+            for l in f:
+                l = l.strip()
+                if not l:
+                    continue
+
+                item_name, *rest = l.split(',', 1)
+                item_name = item_name.strip()
+                if item_name not in DSS_ITEMS:
+                    raise NotImplemented(f'"{item_name}" DSV item is not implemented')
+
+                # print(item, repr(rest)[:100])
+                getattr(self, item_name)(rest[0] if rest else '') # let the exception propagate on error
+
+        if _do_show:
+            plt.show()
+        else:
+            return self.fig, self.ax
+
 
 def plot_dsv(fn: str):
-    handler = DSVHandler()
-    with open(fn, 'r') as f:
-        for l in f:
-            l = l.strip()
-            if not l:
-                continue
-
-            item_name, *rest = l.split(',', 1)
-            item_name = item_name.strip()
-            # print(item, repr(rest)[:100])
-            getattr(handler, item_name)(rest[0] if rest else '') # let the exception propagate on error
-
-    if _do_show:
-        plt.show()
-    else:
-        return handler.fig, handler.ax
+    return DSVHandler(fn).parse()
 
 __all__ = ['enable', 'disable', 'plot_dsv', ]
