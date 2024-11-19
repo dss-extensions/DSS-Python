@@ -13,13 +13,18 @@ except ImportError:
 
 def setup_function():
     DSS.ClearAll()
+
     DSS.AllowForms = False
-    if not DSS._api_util._is_odd:
+    DSS.AdvancedTypes = False
+    DSS.CompatFlags = 0
+
+    if not DSS._api_util._is_oddie:
         DSS.AllowEditor = False
-        DSS.AdvancedTypes = False
         DSS.AllowChangeDir = True
-        DSS.COMErrorResults = True # TODO: change to False
-        DSS.CompatFlags = 0
+        DSS.COMErrorResults = False
+
+    DSS.Error.UseExceptions = True
+    DSS.Text.Command = 'set DefaultBaseFreq=60'
 
 
 def test_rxmatrix():
@@ -69,7 +74,7 @@ def test_create_with_circuit():
     for cls in DSS.Classes:
         DSS.ClearAll()
         DSS.NewCircuit(f'test_{cls}')
-        if cls in ('CapControl', 'RegControl', 'GenDispatcher', 'StorageController', 'Relay', 'Fuse', 'SwtControl', 'ESPVLControl', 'GICsource'):
+        if cls in ('CapControl', 'RegControl', 'GenDispatcher', 'StorageController', 'Relay', 'Fuse', 'SwtControl', 'ESPVLControl', 'GICsource', 'FMonitor'):
             with pytest.raises(DSSException):
                 DSS.Text.Command = f'new {cls}.test{cls}'
 
@@ -80,6 +85,8 @@ def test_create_with_circuit():
             elif cls == 'CapControl':
                 DSS.Text.Command = f'new {cls}.test{cls}2 element=transformer.testtr capacitor=testcap'
             elif cls == 'GenDispatcher':
+                DSS.Text.Command = f'new {cls}.test{cls}2 element=transformer.testtr'
+            elif cls == 'FMonitor':
                 DSS.Text.Command = f'new {cls}.test{cls}2 element=transformer.testtr'
 
         else:

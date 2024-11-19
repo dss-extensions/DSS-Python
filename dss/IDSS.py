@@ -14,7 +14,6 @@ from .IActiveClass import IActiveClass
 from .IDSS_Executive import IDSS_Executive
 from .IDSSEvents import IDSSEvents
 from .IParser import IParser
-from .IDSSimComs import IDSSimComs
 from .IYMatrix import IYMatrix
 from .IZIP import IZIP
 
@@ -46,7 +45,6 @@ class IDSS(Base):
         'Executive',
         'Events',
         'Parser',
-        'DSSim_Coms',
         'YMatrix',
         'ZIP',
         '_version',
@@ -75,7 +73,6 @@ class IDSS(Base):
     Executive: IDSS_Executive
     Events: IDSSEvents
     Parser: IParser
-    DSSim_Coms: IDSSimComs
     YMatrix: IYMatrix
     ZIP: IZIP
 
@@ -137,14 +134,10 @@ class IDSS(Base):
         self.Executive = IDSS_Executive(api_util)
         
         #: Kept for compatibility.
-        self.Events = IDSSEvents(api_util) if not api_util._is_odd else None
+        self.Events = IDSSEvents(api_util) if not api_util._is_oddie else None
         
         #: Kept for compatibility.
         self.Parser = IParser(api_util)
-        
-        #: Kept for compatibility. Apparently was used for DSSim-PC (now OpenDSS-G), a 
-        #: closed-source software developed by EPRI using LabView.
-        self.DSSim_Coms = IDSSimComs(api_util) if not api_util._is_odd else None
         
         #: The YMatrix interface provides advanced access to the internals of
         #: the DSS engine. The sparse admittance matrix of the system is also 
@@ -160,7 +153,7 @@ class IDSS(Base):
         #: and run scripts inside the ZIP, without creating extra files on disk.
         #: 
         #: **(API Extension)**
-        self.ZIP = IZIP(api_util) if not api_util._is_odd else None
+        self.ZIP = IZIP(api_util) if not api_util._is_oddie else None
 
         Base.__init__(self, api_util)    
 
@@ -192,6 +185,16 @@ class IDSS(Base):
         from opendssdirect.OpenDSSDirect import OpenDSSDirect
         return OpenDSSDirect._get_instance(ctx=self._api_util.ctx, api_util=self._api_util)
 
+    def is_oddie(self) -> bool:
+        """
+        Returns True if this instance is based on the Oddie compatibility layer for
+        the official OpenDSS Direct API (a.k.a. DCSL).
+        
+        Note that the default engine in DSS-Python has been based on AltDSS since
+        2018, even though it was not called AltDSS then.
+        """
+        return self._api_util._is_oddie
+
     def ClearAll(self):
         self._lib.DSS_ClearAll()
 
@@ -214,8 +217,9 @@ class IDSS(Base):
         handled automatically, so the users do not need to call it manually,
         unless using AltDSS/DSS C-API directly without further tools.
 
-        On the official OpenDSS, `Start` also does nothing at all in the current 
-        versions.
+        On the official OpenDSS, `Start` also does nothing at all in the current
+        Delphi versions. It is required for OpenDSS-C, but also handled behind
+        the scenes on DSS-Extensions.
 
         Original COM help: https://opendss.epri.com/Start.html
         '''
@@ -439,7 +443,7 @@ class IDSS(Base):
         **(API Extension)**
         '''
 
-        if self._api_util._is_odd:
+        if self._api_util._is_oddie:
             raise NotImplementedError("NewContext is not supported for the official OpenDSS engine.")
 
         ffi = self._api_util.ffi
@@ -552,7 +556,7 @@ class IDSS(Base):
         and its objects are kept alive while other contexts require it.
 
         Optionally, as a shortcut, the user can provide `skip_cmds` to be passed to the `Settings.SkipCommands` 
-        and  `skip_file_regexp` to be passed to `Settings.SkipFileRegExp`, in the second DSS context. 
+        and `skip_file_regexp` to be passed to `Settings.SkipFileRegExp`, in the second DSS context. 
         
         *Note*: If the `clear` command is included in `Settings.SkipCommands`, the `DSS.ClearAll()` method can still be called
         and it will reset both skip settings.
@@ -561,10 +565,10 @@ class IDSS(Base):
 
         **(API Extension)**
         '''
-        if self._api_util._is_odd or otherContext._api_util._is_odd:
+        if self._api_util._is_oddie or otherContext._api_util._is_oddie:
             raise ValueError("Only AltDSS engine contexts can share data.")
 
-        self._lib.ShareGeneral(otherContext._api_util.ctx)
+        self._lib.ctx_ShareGeneral(otherContext._api_util.ctx)
         if skip_cmds is not None:
             otherContext.ActiveCircuit.Settings.SkipCommands = skip_cmds
 

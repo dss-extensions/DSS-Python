@@ -141,7 +141,6 @@ For a quick overview of DSS-Python, the main DSS class is organized as follows. 
    - {class}`DSS.ActiveCircuit.CapControls <dss.ICapControls.ICapControls>`
    - {class}`DSS.ActiveCircuit.CNData <dss.ICNData.ICNData>` **(API Extension)**
    - {class}`DSS.ActiveCircuit.CtrlQueue <dss.ICtrlQueue.ICtrlQueue>`
-   - {class}`DSS.ActiveCircuit.DSSim_Coms <dss.IDSSimComs.IDSSimComs>`
    - {class}`DSS.ActiveCircuit.Fuses <dss.IFuses.IFuses>`
    - {class}`DSS.ActiveCircuit.Generators <dss.IGenerators.IGenerators>`
    - {class}`DSS.ActiveCircuit.GICSources <dss.IGICSources.IGICSources>`
@@ -172,6 +171,7 @@ For a quick overview of DSS-Python, the main DSS class is organized as follows. 
    - {class}`DSS.ActiveCircuit.TSData <dss.ITSData.ITSData>` **(API Extension)**
    - {class}`DSS.ActiveCircuit.Vsources <dss.IVsources.IVsources>`
    - {class}`DSS.ActiveCircuit.WireData <dss.IWireData.IWireData>` **(API Extension)**
+   - {class}`DSS.ActiveCircuit.WindGens <dss.IWindGens.IWindGens>`
    - {class}`DSS.ActiveCircuit.XYCurves <dss.IXYCurves.IXYCurves>`
 
 

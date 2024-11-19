@@ -451,7 +451,7 @@ class IBus(Base):
         return self.__getitem__(index)
 
     def __iter__(self) -> Iterator[IBus]:
-        if self._api_util._is_odd:
+        if self._api_util._is_oddie:
             for i in range(self._lib.Circuit_Get_NumBuses()):
                 self._lib.Circuit_SetActiveBusi(i)
                 yield self

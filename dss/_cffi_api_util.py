@@ -1,5 +1,5 @@
 from __future__ import annotations
-import warnings
+import os, warnings
 from functools import partial, wraps
 from weakref import ref, WeakKeyDictionary
 import numpy as np
@@ -7,6 +7,7 @@ from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64Ar
 from typing import Any, AnyStr, Callable, List, Union, Iterator, Optional, TYPE_CHECKING
 from .enums import AltDSSEvent
 from dss_python_backend.events import get_manager_for_ctx
+from .error import DSSException
 
 if TYPE_CHECKING:
     try:
@@ -14,13 +15,22 @@ if TYPE_CHECKING:
     except:
         pass
 
+AltDSS_PyContext = None
 try:
-    xxxx
-    # Try to import the fast backend
-    from dss_python_backend._fastdss import AltDSS_PyContext
+    if os.environ.get('DSS_EXTENSIONS_FASTDSS', '') != '0':
+        # Try to import the fast backend
+        from dss_python_backend._fastdss import AltDSS_PyContext
+    else:
+        warnings.warn("DSS-Extensions: DSS_EXTENSIONS_FASTDSS environment variable is set to 0; using the legacy full CFFI backend.")
 except:
+    warnings.warn("DSS-Extensions: Could not import the FastDSS backend; using the legacy full CFFI backend.")
+    pass
+
+if AltDSS_PyContext is None:
+    # Import the prepared function info if the fast implementation from 
+    # AltDSS_PyContext is not available.
     import dss_python_backend._func_info as _func_info
-    AltDSS_PyContext = None
+    
 
 
 # Assumed UTF8; unless the fast C extension (dss_python_backend._fast_strs) is not 
@@ -79,11 +89,6 @@ def _is_case_insensitive() -> bool:
     return (getattr(Base, '__getattr__', None) == Base._getattr or getattr(Base, '__getattr__', None) == Base._getattr_case_check)
 
 
-class DSSException(Exception):
-    def __str__(self):
-        return f'(#{self.args[0]}) {self.args[1]}'
-
-
 # For backwards compatibility, will be removed for version 1.0
 DssException = DSSException
 use_com_compat = set_case_insensitive_attributes
@@ -122,7 +127,7 @@ class CtxLib:
 
 
     def _get_bool_ctx(self, errorPtr, ctx, func: Callable, *args):
-        result = func(ctx, *args)
+        result = bool(func(ctx, *args))
         if errorPtr[0] and Base._use_exceptions:
             error_num = errorPtr[0]
             errorPtr[0] = 0
@@ -167,7 +172,7 @@ class CtxLib:
         errorPtr = self._errorPtr
         t = _func_info.t
         api_util = self._api_util
-        is_odd = api_util._is_odd
+        is_oddie = api_util._is_oddie
 
         wrappers = {
             t.fastdss_types_b16: ('', self._get_bool_ctx,),
@@ -189,11 +194,7 @@ class CtxLib:
                 arg_wrapper = self._str_arg_wrapper
 
             suffix, wrapper, *wrapper_args = wrappers.get(res_type, default_wrapper)
-            for ctx_name in ctx_names:
-                if ctx_name in done:
-                    continue
-
-                name = ctx_name[4:]
+            for name in ctx_names:
                 if name in done:
                     continue
 
@@ -201,12 +202,10 @@ class CtxLib:
                 if name in done:
                     continue
 
-                ctx_name += suffix
-
                 try:
-                    func = getattr(lib, ctx_name)
+                    func = getattr(lib, name)
                 except AttributeError:
-                    if is_odd:
+                    if is_oddie:
                         continue
                         
                     raise
@@ -225,15 +224,10 @@ class CtxLib:
         ctx = self._ctx
         ffi = self._ffi
         ctx_int = int(ffi.cast('uintptr_t', ctx))
+        lib_int = int(ffi.cast('uintptr_t', self._api_util.lib_unpatched))
         self._settings_ptr = settings_ptr
         settings_ptr_int = int(ffi.cast('uintptr_t', self._settings_ptr))
-     
-        if not self._api_util._is_odd:
-            self._fast = AltDSS_PyContext(ctx_int, settings_ptr_int, DSSException, done, self)
-        else:
-            from dss_python_backend._fastdss_oddie import AltDSS_PyContext as AltDSS_PyContext_Oddie
-            self._fast = AltDSS_PyContext_Oddie(ctx_int, settings_ptr_int, DSSException, done, self)
-
+        self._fast = AltDSS_PyContext(ctx_int, lib_int, settings_ptr_int, DSSException, done, self)
 
     def _get_string(self, b) -> str:
         if b:
@@ -272,29 +266,48 @@ class CtxLib:
         lib = self._lib = api_util.lib_unpatched
         ctx = self._ctx = api_util.ctx
         ffi = self._ffi = api_util.ffi
+        self.settings_ptr = settings_ptr
         
-        self._errorPtr = _errorPtr = lib.ctx_Error_Get_NumberPtr(ctx)
+        self._errorPtr = _errorPtr = lib.Error_Get_NumberPtr(ctx)
         #TODO: test if a pointer is better than keeping this
         self._prepared_funcs = []
 
         # Wrap most of the API to provide simpler Python access
-        done = set(('ctx_Error_Get_Description', 'ctx_Error_Get_Number', 'Error_Get_Description', 'Error_Get_Number'))
+        done = set(('Error_Get_Description', 'Error_Get_Number',))
 
         self._prepare_api_functions(done, settings_ptr)
-        self.Error_Get_Description = lambda: self._get_string(lib.ctx_Error_Get_Description(ctx))
-        self.Error_Get_Number = lambda: lib.ctx_Error_Get_Number(ctx)
+        self.Error_Get_Description = lambda: self._get_string(lib.Error_Get_Description(ctx))
+        self.Error_Get_Number = lambda: lib.Error_Get_Number(ctx)
         
-        skip_funcs = {'ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'ctx_Error_Set_Description', 'ctx_Error_Get_NumberPtr', 'ctx_ZIP_Extract_GR'}
+        skip_funcs = {
+            'ctx_New', 'ctx_Dispose', 'ctx_Get_Prime', 'ctx_Set_Prime', 'Error_Set_Description', 'Error_Get_NumberPtr', 'ctx_ZIP_Extract_GR',
+            'DSS_BeginPascalThread', 'DSS_WaitPascalThread', 'DSS_SetPropertiesMO', 'DSS_SetMessagesMO',
+            'engineName', 'isAltDSS', 'libHandle', 'versionSignature',
+        }
+
+        skip_prefixes = (
+            'Oddie_', 'DSS_Dispose_', 'CmathLib_', 'DSSimComs_', 'Alt_', 'Obj_', 'Batch_',
+        )
+
+        force_include_prefixes = (
+            'Batch_Create', 'Batch_Filter',
+        )
+
         # First, process all `ctx_*`` functions
-        for name, value in vars(lib).items():
-            is_ctx = name.startswith('ctx_')
-            if (not is_ctx and not name.startswith(('Batch_Create', 'Batch_Filter', ))) or (name in done):
+
+        for name in dir(lib):
+            if name in done:
                 continue
+            
+            if name.startswith(skip_prefixes) and not name.startswith(force_include_prefixes):
+                continue
+
+            value = getattr(lib, name)
+            # print('>>>', name)
 
             # Keep the basic management functions alone
             if name in skip_funcs:
-                if name.startswith('ctx_DSSEvents_') or name == 'ctx_Error_Set_Description':
-                    name = name[4:]
+                if name.startswith('DSSEvents_') or name == 'Error_Set_Description':
                     setattr(self, name, partial(value, ctx))
                 else:
                     setattr(self, name, value)
@@ -302,26 +315,23 @@ class CtxLib:
                 done.add(name)
                 continue
 
-            if is_ctx:
-                name = name[4:]
-                if name in done:
-                    continue
-
-                if name.endswith('_GR'):
-                    # A few GR functions that don't have dedicated low-level mapping
-                    wrapper_func, res_func = self._error_checked_ctx_gr, api_util.get_float64_gr_array
-                    setattr(self, name, partial(wrapper_func, _errorPtr, ctx, value, res_func))
-                    done.add(name)
-                    continue
+            if name.endswith('_GR'):
+                # A few GR functions that don't have dedicated low-level mapping
+                wrapper_func, res_func = self._error_checked_ctx_gr, api_util.get_float64_gr_array
+                setattr(self, name, partial(wrapper_func, _errorPtr, ctx, value, res_func))
+                done.add(name)
+                continue
 
             # General functions and array setters are only error checked, no special handling yet
             setattr(self, name, partial(self._error_checked, _errorPtr, partial(value, ctx)))
             done.add(name)
 
         # Then the new Alt_* family
-        for name, value in vars(lib).items():
-            if (not name.startswith('Alt_')) or name in done:
+        for name in dir(lib):
+            if (not name.startswith('Alt_')) or name in done: #TODO: What about Obj_ and Batch_?
                 continue
+
+            value = getattr(lib, name)
 
             if name.startswith('Alt_Bus'):
                 setattr(self, name, partial(self._error_checked, _errorPtr, partial(value, ctx)))
@@ -331,11 +341,11 @@ class CtxLib:
             done.add(name)
 
         # Finally the remaining fields
-        for name, value in vars(lib).items():
+        for name in dir(lib):
             if name.startswith('ctx_') or name in done:
                 continue
 
-            setattr(self, name, value)
+            setattr(self, name, getattr(lib, name))
             # if isinstance(value, int):
             #     setattr(self, name, value)
             # else:
@@ -540,11 +550,11 @@ class AltDSSAPIUtil:
 
     _altdss: AltDSS
 
-    def __init__(self, ffi, lib, ctx=None, is_odd=False):
+    def __init__(self, ffi, lib, ctx=None, is_oddie=False):
         self._opendssdirect = None
         self._dss_python = None
         self._altdss = None
-        self._is_odd = is_odd
+        self._is_oddie = is_oddie
         self.owns_ctx = True
         self.codec = codec
         self.ctx = ctx
@@ -562,9 +572,9 @@ class AltDSSAPIUtil:
             self.ctx = ctx
 
         self.init_buffers()
-        self.settings_ptr = ffi.new('int32_t*')
-        self.settings_ptr[0] = 0
-        self.lib = CtxLib(self, self.settings_ptr)
+        self.settings_ptr = settings_ptr_dsspy = ffi.new('int32_t*')
+        settings_ptr_dsspy[0] = 0
+        self.lib = CtxLib(self, settings_ptr_dsspy)
         if ctx not in AltDSSAPIUtil._ctx_to_util:
             AltDSSAPIUtil._ctx_to_util[ctx] = self
 
@@ -603,19 +613,20 @@ class AltDSSAPIUtil:
             # We already have a prepared object, just ensure the settings are OK
             
             if prefer_lists:
-                self.settings_oddpy_ptr[0] = self.settings_oddpy_ptr[0] | _ODDPyStrings | _UseLists
+                settings_oddpy_ptr = self.lib_odd.settings_ptr
+                settings_oddpy_ptr[0] = settings_oddpy_ptr[0] | _ODDPyStrings | _UseLists
             else:
-                self.settings_oddpy_ptr[0] = (self.settings_oddpy_ptr[0] | _ODDPyStrings) & (~_UseLists)
+                settings_oddpy_ptr[0] = (settings_oddpy_ptr[0] | _ODDPyStrings) & (~_UseLists)
 
             return self.lib_odd
 
-        self.settings_oddpy_ptr = self.ffi.new('int32_t*')
+        settings_oddpy_ptr = self.ffi.new('int32_t*')
         if prefer_lists:
-            self.settings_oddpy_ptr[0] = self.settings_ptr[0] | _ODDPyStrings | _UseLists
+            settings_oddpy_ptr[0] = self.settings_ptr[0] | _ODDPyStrings | _UseLists
         else:
-            self.settings_oddpy_ptr[0] = (self.settings_ptr[0] | _ODDPyStrings) & (~_UseLists)
+            settings_oddpy_ptr[0] = (self.settings_ptr[0] | _ODDPyStrings) & (~_UseLists)
 
-        self.lib_odd = CtxLib(self, self.settings_oddpy_ptr)
+        self.lib_odd = CtxLib(self, settings_oddpy_ptr)
         return self.lib_odd
 
 
@@ -725,7 +736,7 @@ class AltDSSAPIUtil:
 
 
     def register_callbacks(self):
-        if self._is_odd:
+        if self._is_oddie:
             return
 
         mgr = get_manager_for_ctx(self.ctx)
@@ -734,7 +745,7 @@ class AltDSSAPIUtil:
         mgr.register_func(AltDSSEvent.ReprocessBuses, altdss_python_util_callback)
 
     def unregister_callbacks(self):
-        if self._is_odd:
+        if self._is_oddie:
             return
         mgr = get_manager_for_ctx(self.ctx)
         mgr.unregister_func(AltDSSEvent.Clear, altdss_python_util_callback)
@@ -742,7 +753,7 @@ class AltDSSAPIUtil:
 
     # The context will die, no need to do anything else currently.
     def __del__(self):
-        if self._is_odd:
+        if self._is_oddie:
             return
 
         self.clear_callback(0)
@@ -781,7 +792,7 @@ class AltDSSAPIUtil:
             for ptrs in zip(tmp_float64_pointers, tmp_int32_pointers, tmp_int8_pointers)
             for ptr in ptrs
         ]
-        lib.ctx_DSS_GetGRPointers(self.ctx, *ptr_args)
+        lib.DSS_GetGRPointers(self.ctx, *ptr_args)
 
         # we don't need to keep the extra indirections
         self.gr_float64_pointers = (tmp_float64_pointers[0][0], tmp_float64_pointers[1][0])
@@ -791,7 +802,7 @@ class AltDSSAPIUtil:
         # also keep a casted version for complex floats
         self.gr_cfloat64_pointers = (self.ffi.cast('double _Complex**', tmp_float64_pointers[0][0]), tmp_float64_pointers[1][0])
 
-        self._errorPtr = lib.ctx_Error_Get_NumberPtr(self.ctx)
+        self._errorPtr = lib.Error_Get_NumberPtr(self.ctx)
 
 
     def clear_buffers(self):
@@ -1232,7 +1243,7 @@ class AltDSSAPIUtil:
 
 
 def _oddie_not_impl():
-    raise NotImplementedError("This API requires is not implemented in the official OpenDSS engine or it is available in Oddie.")
+    raise NotImplementedError("This API requires a function that is not implemented in the official OpenDSS engine.")
 
 class Iterable(Base):
     __slots__ = [

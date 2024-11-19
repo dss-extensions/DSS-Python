@@ -31,7 +31,6 @@ from .IRelays import IRelays
 from .ILoadShapes import ILoadShapes
 from .IFuses import IFuses
 from .IISources import IISources
-from .IDSSimComs import IDSSimComs
 from .IPVSystems import IPVSystems
 from .IVsources import IVsources
 from .ILineCodes import ILineCodes
@@ -82,7 +81,6 @@ class ICircuit(Base):
         'Fuses',
         'Isources',
         'ISources',
-        'DSSim_Coms',
         'PVSystems',
         'Vsources',
         'LineCodes',
@@ -155,7 +153,6 @@ class ICircuit(Base):
     Fuses: IFuses
     Isources: IISources
     ISources: IISources
-    DSSim_Coms: IDSSimComs
     PVSystems: IPVSystems
     Vsources: IVsources
     LineCodes: ILineCodes
@@ -205,15 +202,14 @@ class ICircuit(Base):
         object.__setattr__(self, 'Isources', Isources)
         object.__setattr__(self, 'ISources', Isources)
 
-        self.DSSim_Coms = IDSSimComs(api_util)
         self.PVSystems = IPVSystems(api_util)
         self.Vsources = IVsources(api_util)
         self.LineCodes = ILineCodes(api_util)
-        self.LineGeometries = ILineGeometries(api_util) if not api_util._is_odd else None
-        self.LineSpacings = ILineSpacings(api_util) if not api_util._is_odd else None
-        self.WireData = IWireData(api_util) if not api_util._is_odd else None
-        self.CNData = ICNData(api_util) if not api_util._is_odd else None
-        self.TSData = ITSData(api_util) if not api_util._is_odd else None
+        self.LineGeometries = ILineGeometries(api_util) if not api_util._is_oddie else None
+        self.LineSpacings = ILineSpacings(api_util) if not api_util._is_oddie else None
+        self.WireData = IWireData(api_util) if not api_util._is_oddie else None
+        self.CNData = ICNData(api_util) if not api_util._is_oddie else None
+        self.TSData = ITSData(api_util) if not api_util._is_oddie else None
         self.Reactors = IReactors(api_util)
         self.ReduceCkt = IReduceCkt(api_util) #: Circuit Reduction Interface
         self.Storages = IStorages(api_util)

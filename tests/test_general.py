@@ -21,14 +21,15 @@ org_dir = os.getcwd()
 def setup_function():
     DSS.ClearAll()
 
-    if not DSS._api_util._is_odd:
+    DSS.AllowForms = False
+    DSS.AdvancedTypes = False
+    DSS.CompatFlags = 0
+
+    if not DSS._api_util._is_oddie:
         DSS.AllowEditor = False
-        DSS.AdvancedTypes = False
         DSS.AllowChangeDir = True
         DSS.COMErrorResults = False
-        DSS.CompatFlags = 0
 
-    DSS.AllowForms = False
     DSS.Error.UseExceptions = True
     DSS.Text.Command = 'set DefaultBaseFreq=60'
 
@@ -1002,21 +1003,30 @@ def test_skip_commands():
 
 def test_skip_files():
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    DSS.Text.Command = 'clear'
+    
+    DSS.ActiveCircuit.Settings.SkipCommands = ['clear'] # We need to skip clear since it resets SkipFileRegExp
     DSS.ActiveCircuit.Settings.SkipFileRegExp = r'.*LineCodes\.DSS'
-    print(repr(DSS.ActiveCircuit.Settings.SkipFileRegExp))
 
     # This should fail since we won't have the LineCodes
     with pytest.raises(DSSException):
         DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/34Bus/ieee34Mod1.dss"'
     
+    DSS.ActiveCircuit.Settings.SkipCommands = []
     DSS.ActiveCircuit.Settings.SkipFileRegExp = ''
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/34Bus/ieee34Mod1.dss"'
 
+    DSS.Text.Command = 'clear'
+    DSS.ActiveCircuit.Settings.SkipCommands = ['clear']
     DSS.ActiveCircuit.Settings.SkipFileRegExp = None
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/34Bus/ieee34Mod1.dss"'
+    DSS.ActiveCircuit.Settings.SkipCommands = []
 
+    DSS.Text.Command = 'clear'
+    DSS.ActiveCircuit.Settings.SkipCommands = ['clear']
     DSS.ActiveCircuit.Settings.SkipFileRegExp = 'some random string just to test'
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/34Bus/ieee34Mod1.dss"'
+    DSS.ActiveCircuit.Settings.SkipCommands = []
 
     DSS.ActiveCircuit.Settings.SkipFileRegExp = None
 

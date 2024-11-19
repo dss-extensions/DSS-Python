@@ -7,7 +7,7 @@ for many use-cases. We'd like to add another backend later.
 """
 from __future__ import annotations
 import os, re, json, sys, warnings
-from typing import List, TYPE_CHECKING, Optional, Tuple, Dict, Union, Iterable
+from typing import List, TYPE_CHECKING, Optional, Tuple, Dict
 from typing_extensions import TypedDict, Unpack
 from . import api_util
 from . import DSS as DSSPlotCtx
@@ -30,8 +30,6 @@ try:
     import scipy.sparse.coo as coo
 except:
     raise ImportError("SciPy and matplotlib are required to use this module.")
-
-from .notebook import *
 
 if TYPE_CHECKING:
     from altdss.AltDSS import IAltDSS
@@ -228,6 +226,57 @@ DEFAULT_PLOT_PARAMS = PlotParams(
     MinScale=0.0,
     MaxScale=None,
 )
+
+try:
+    from IPython import get_ipython
+    from IPython.display import FileLink, display, display_html, HTML
+    from IPython.core.magic import register_cell_magic
+    ipython = get_ipython()
+    if ipython is None:
+        raise ImportError
+
+    import html
+
+    def link_file(fn):
+        relfn = os.path.relpath(fn, os.getcwd())
+        if relfn.startswith('..'):
+            # cannot show in the notebook :(
+            display(HTML(f'<p><b>File output</b> ("{html.escape(relfn)}") outside current workspace.<p>'))
+        else:    
+            display(FileLink(relfn, result_html_prefix=f'<b>File output</b> ("{html.escape(fn)}"):&nbsp;'))
+
+    def show(text):
+        display(text)
+
+
+    @register_cell_magic
+    def dss(line, cell):
+        if isinstance(DSSPlotCtx, IDSS) and not DSSPlotCtx._api_util._is_odd:
+            DSSPlotCtx.Text.Commands(cell)
+        else:
+            for line in cell.split('\n'):
+                DSSPlotCtx(line)
+                res = DSSPlotCtx.Text.Result
+                if res.endswith('.DSV'):
+                    if _enabled and FilePath(res).exists():
+                        plot_dsv(res)
+
+    DSSPlotCtx.AllowChangeDir = False
+except:
+    def link_file(fn):
+        print(f'Output file: "{fn}"')
+
+    def show(text):
+        print(text)
+
+
+    #FileLink('path_to_file/filename.extension')
+
+# import os
+# import html
+# import tqdm
+# from tqdm.notebook import tqdm
+# import IPython.display
 
 include_3d = '2d' # '2d' (default), '3d' (prefer 3d), 'both'
 
@@ -744,7 +793,7 @@ class DSSMPLPlotter:
         ax.set_xlabel(xlabel)
 
 
-    def dss_tshape_plot(self,
+    def dss_tshape_plot(DSS: IDSS, 
         *,
         ObjectName: str = None,
         Color1: str = None,
@@ -752,7 +801,6 @@ class DSSMPLPlotter:
     ):
         # There is no dedicated API yet but we can move to the Obj API
         name = ObjectName
-        DSS = self.DSS
         DSS.Text.Command = f'? tshape.{name}.temp'
         p = np.fromstring(DSS.Text.Result[1:-1].strip(), dtype=float, sep=' ')
         try:
@@ -784,11 +832,11 @@ class DSSMPLPlotter:
         ax.set_ylabel('Temperature')
 
         ax.grid(ls='--')
-        fig.set_layout_engine(layout='tight')
+        plt.tight_layout()
 
 
 
-    def dss_priceshape_plot(self,
+    def dss_priceshape_plot(DSS: IDSS, 
         *,
         ObjectName: str = None,
         Color1: str = None,
@@ -796,8 +844,6 @@ class DSSMPLPlotter:
     ):
         # There is no dedicated API yet but we can move to the Obj API
         name = ObjectName
-        DSS = self.DSS
-
         DSS.Text.Command = f'? priceshape.{name}.price'
         p = np.fromstring(DSS.Text.Result[1:-1].strip(), dtype=float, sep=' ')
         try:
@@ -830,10 +876,10 @@ class DSSMPLPlotter:
         ax.set_ylabel('Price')
 
         ax.grid(ls='--')
-        fig.set_layout_engine(layout='tight')
+        plt.tight_layout()
 
 
-    def dss_loadshape_plot(self,
+    def dss_loadshape_plot(DSS: IDSS, 
         *,
         ObjectName: str = None,
         Color1: str = None,
@@ -841,8 +887,7 @@ class DSSMPLPlotter:
         **kwargs: Unpack[PlotParams]
     ):
     #     pprint(kwargs)
-        DSS = self.DSS
-
+        
         ls = DSS.ActiveCircuit.LoadShapes
         ls.Name = ObjectName
         h = asarray(ls.TimeArray)
@@ -879,10 +924,10 @@ class DSSMPLPlotter:
         ax.grid(ls='--')
         if q.size == p.size:
             ax.legend()
-        fig.set_layout_engine(layout='tight')
+        plt.tight_layout()
 
 
-    def _get_branch_data(self,
+    def _get_branch_data(DSS: IDSS, 
         branch_objects: DSSIterable, 
         bus_coords: Dict[str, Tuple[float, float, float]],
         do_values=pqNone,
@@ -891,8 +936,6 @@ class DSSMPLPlotter:
         single_ph_line_style: int = 1,
         three_ph_line_style: int = 1
     ):
-        DSS = self.DSS
-
         line_count = branch_objects.Count if not idxs else len(idxs)
         lines = np.empty(shape=(line_count, 2, 2), dtype=np.float64)
         lines.fill(np.nan)
@@ -1082,12 +1125,11 @@ class DSSMPLPlotter:
             return [lines[:offset], values[:offset], lines_styles[:offset]] + extra
         
 
-    def _get_point_data(self,
+    def _get_point_data(DSS: IDSS,
         point_objects: Union[str, Iterable],
         bus_coords: Dict[str, Tuple[float, float, float]],
         do_values: bool = False
     ):
-        DSS = self.DSS
         if isinstance(point_objects, str):
             cls = point_objects
             DSS.SetActiveClass(cls)
@@ -1130,14 +1172,12 @@ class DSSMPLPlotter:
         return points[:offset], values[:offset]
 
 
-    def dss_profile_plot(self,
+    def dss_profile_plot(DSS: IDSS,
         *,
         PhasesToPlot: int = None,
         ProfileScale: float = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
-
         if len(DSS.ActiveCircuit.Meters) == 0:
             raise RuntimeError(f"An EnergyMeter is required to use 'plot profile'")
         
@@ -1237,7 +1277,7 @@ class DSSMPLPlotter:
             ax.axhline(vmin, color='darkred', ls='-', lw=3)
             ax.axhline(vmax, color='darkred', ls='-', lw=3)
             ax.grid(ls='--')
-            fig.set_layout_engine(layout='tight')
+            plt.tight_layout()
         
         if include_3d in ('both', '3d'):
             fig2 = plt.figure()#figsize=(7, 7))
@@ -1285,7 +1325,6 @@ class DSSMPLPlotter:
 
 
     def _get_gic_line_data_altdss(
-        self,
         altdss: IAltDSS,
         bus_coords: Dict[str, Tuple[float, float, float]],
         single_ph_line_style: int = 1,
@@ -1325,14 +1364,13 @@ class DSSMPLPlotter:
         return lines[:offset], values[:offset], lines_styles[:offset]
 
 
-    def _get_gic_line_data(self,
+    def _get_gic_line_data(DSS: IDSS, 
         bus_coords: Dict[str, Tuple[float, float]], 
         single_ph_line_style: int = 1,
         three_ph_line_style: int = 1
     ):
-        DSS = self.DSS    
         try:
-            return self._get_gic_line_data_altdss(
+            return _get_gic_line_data_altdss(
                 DSS.to_altdss(),
                 bus_coords,
                 single_ph_line_style=single_ph_line_style,
@@ -1379,7 +1417,7 @@ class DSSMPLPlotter:
         return lines[:offset], values[:offset], lines_styles[:offset]
 
 
-    def dss_circuit_plot(self,
+    def dss_circuit_plot(DSS: IDSS, 
         *, 
         fig=None,
         ax=None,
@@ -1399,8 +1437,6 @@ class DSSMPLPlotter:
         MaxScaleIsSpecified: bool = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
-
         if not MaxScaleIsSpecified:
             MaxScale = None
 
@@ -1573,7 +1609,7 @@ class DSSMPLPlotter:
             lc_transformers = LineCollection(transformers_lines, linewidth=3, linestyle='solid', color='gray')
             ax.add_collection(lc_transformers)
 
-        lines_lines, lines_values, lines_styles, *_ = self._get_gic_line_data(bus_coords, single_ph_line_style=single_ph_line_style, three_ph_line_style=three_ph_line_style)
+        lines_lines, lines_values, lines_styles, *_ = self._get_gic_line_data(DSS, bus_coords, single_ph_line_style=single_ph_line_style, three_ph_line_style=three_ph_line_style)
         if len(lines_lines) != 0:
             if quantity_max_value == 0:
                 quantity_max_value = max(lines_values)
@@ -1603,7 +1639,7 @@ class DSSMPLPlotter:
             ('MarkTransformers', 'TransMarkerCode', 'TransMarkerSize', DSS.ActiveCircuit.Transformers, None),
             ('MarkCapacitors', 'CapMarkerCode', 'CapMarkerSize', DSS.ActiveCircuit.Capacitors, None),
             ('MarkPVSystems', 'PVMarkerCode', 'PVMarkerSize', DSS.ActiveCircuit.PVSystems, None),
-            ('MarkStorage', 'StoreMarkerCode', 'StoreMarkerSize', DSS.ActiveCircuit.Storages, None),
+            ('MarkStorage', 'StoreMarkerCode', 'StoreMarkerSize', 'Storage', None),
         ]
 
         pmarkers = Markers
@@ -1675,7 +1711,7 @@ class DSSMPLPlotter:
             ax.autoscale_view()
             ax.get_xaxis().get_major_formatter().set_scientific(False)
             ax.get_yaxis().get_major_formatter().set_scientific(False)
-            fig.set_layout_engine(layout='tight')
+            plt.tight_layout()
 
             if do_labels:
                 coords_to_names = {}
@@ -1690,10 +1726,9 @@ class DSSMPLPlotter:
                     ax.text(*coords, name, zorder=11, fontsize='xx-small', va='center', clip_on=True)
 
 
-    def dss_scatter_plot(self,
+    def dss_scatter_plot(DSS: IDSS, 
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
         x = np.empty(shape=(DSS.ActiveCircuit.NumBuses, ))
         y = np.empty(shape=(DSS.ActiveCircuit.NumBuses, ))
         vcomplex = np.empty(shape=(DSS.ActiveCircuit.NumBuses, 3), dtype=complex)
@@ -1715,7 +1750,6 @@ class DSSMPLPlotter:
         with suppress_warnings():
             vmean = np.mean(vabs, axis=1, where=np.isfinite(vabs))
 
-        title = '{}:{}'.format(DSS.ActiveCircuit.Name.upper(), 'Voltage magnitude')
         if include_3d in ('both', '2d'):
             fig, ax = plt.subplots(1, 1, constrained_layout=True)#, figsize=(8, 7))
             dss_circuit_plot(DSS, fig=fig, ax=ax, Color1='k')
@@ -1723,7 +1757,7 @@ class DSSMPLPlotter:
             ax.get_yaxis().get_major_formatter().set_scientific(False)
             sc = ax.scatter(x, y, c=vmean)
             fig.colorbar(sc, label='V1 (pu)')
-            ax.set_title(title)
+            ax.set_title('{}:{}'.format(DSS.ActiveCircuit.Name.upper(), 'Voltage magnitude'))
         
         if include_3d in ('both', '3d'):
             bus_coords = {}
@@ -1762,23 +1796,20 @@ class DSSMPLPlotter:
 
             segs = np.array(segs, dtype=float)
             seg_v = (segs[:, 0, 2] + segs[:, 1, 2]) / 2
-
             lc3d = Line3DCollection(segs)
             ax.add_collection(lc3d)
             lc3d.set_array(seg_v)
             #fig.colorbar(sc, label='V1 (pu)')
-            ax.set_title(title)
+            ax.set_title('{}:{}'.format(DSS.ActiveCircuit.Name.upper(), 'Voltage magnitude'))
 
 
-    def dss_visualize_plot(self,
+    def dss_visualize_plot(DSS: IDSS,
         *,
         Quantity: str = None,
         ElementType: str = None,
         ElementName: str = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
-
         XMAX = 300
         #pprint(kwargs)
         quantity = Quantity
@@ -1899,7 +1930,7 @@ class DSSMPLPlotter:
         ax.set_ylim(-15, y + 5)
 
 
-    def dss_general_data_plot(self,
+    def dss_general_data_plot(DSS: IDSS, 
         *,
         PlotType: str = None,
         ObjectName: str = None,
@@ -1914,8 +1945,6 @@ class DSSMPLPlotter:
         
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
-
         if not MaxScaleIsSpecified:
             MaxScale = None
 
@@ -2011,7 +2040,7 @@ class DSSMPLPlotter:
         #ax.autoscale_view()
         #ax.get_xaxis().get_major_formatter().set_scientific(False)
         #ax.get_yaxis().get_major_formatter().set_scientific(False)
-        #fig.set_layout_engine(layout='tight')
+        #plt.tight_layout()
 
         # marker_code = MarkerIdx
 
@@ -2025,14 +2054,12 @@ class DSSMPLPlotter:
         #MarkSpecialClasses
 
 
-    def dss_matrix_plot(self,
+    def dss_matrix_plot(DSS: IDSS, 
         *,
         MatrixType: str = None,
         Color1: str = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
-
         # plot_id = kwargs.get('PlotId', None)
         if MatrixType == 'IncMatrix':
             title = 'Incidence matrix'
@@ -2062,7 +2089,8 @@ class DSSMPLPlotter:
             ax2.set_ylabel('Row')
             ax2.set_zlabel('Value')
 
-    def dss_daisy_plot(self,
+
+    def dss_daisy_plot(DSS: IDSS, 
         *,
         DaisyBusList: List[str] = None,
         Quantity: str = None,
@@ -2070,8 +2098,6 @@ class DSSMPLPlotter:
         DaisySize: float = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
-
         dss_circuit_plot(DSS, **kwargs)
 
         # print(params['DaisySize'])
@@ -2131,399 +2157,393 @@ class DSSMPLPlotter:
             ax.text(bus.x, bus.y, bus.Name, zorder=11, fontsize='xx-small', va='center', clip_on=True)
 
 
-    def dss_di_plot(self,
-        *,
-        CaseName: str = None,
-        MeterName: str = None,
-        Registers: List[int] = None,
-        CaseYear: str = None,
-        PeakDay: bool = None,
-        **kwargs: Unpack[PlotParams]
-    ):
-        DSS = self.DSS    
-        caseYear, caseName, meterName = CaseYear, CaseName, MeterName
-        plotRegisters, peakDay = Registers, PeakDay
+def dss_di_plot(DSS: IDSS,
+    *,
+    CaseName: str = None,
+    MeterName: str = None,
+    Registers: List[int] = None,
+    CaseYear: str = None,
+    PeakDay: bool = None,
+    **kwargs: Unpack[PlotParams]
+):
+    caseYear, caseName, meterName = CaseYear, CaseName, MeterName
+    plotRegisters, peakDay = Registers, PeakDay
 
-        fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', meterName + '.csv')
+    fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', meterName + '.csv')
 
-        if len(plotRegisters) == 0:
-            raise RuntimeError("No register indices were provided for DI_Plot")
+    if len(plotRegisters) == 0:
+        raise RuntimeError("No register indices were provided for DI_Plot")
+
+    if not os.path.exists(fn):
+        fn = fn[:-4] + '_1.csv'
+
+    # Whenever we add Pandas as a dependency, this could be
+    # rewritten to avoid all the extra/slow work
+    selected_data = []
+    day_data = []
+    mult = 1 if peakDay else 0.001
+
+    # If the file doesn't exist, let the exception raise
+    with open(fn, 'r') as f:
+        header = f.readline().rstrip()
+        allRegisterNames = [unquote(field) for field in header.strip().strip(' \t,').split(',')]
+        registerNames = [allRegisterNames[i] for i in plotRegisters]
+
+        if not len(registerNames):
+            raise RuntimeError("Could not find any register name in the file")
+
+        for line in f:
+            if not line:
+                continue
+
+            rawValues = line.split(',')
+            selValues = [float(rawValues[0]), *(float(rawValues[i]) for i in plotRegisters)]
+            if not peakDay:
+                selected_data.append(selValues)
+            else:
+                day_data.append(selValues)
+                if len(day_data) == 24:
+                    max_vals = [max(x) for x in zip(*day_data)]
+                    max_vals[0] = day_data[0][0]
+                    day_data = []
+                    selected_data.append(max_vals)
+
+    if day_data:
+        max_vals = [max(x) for x in zip(*day_data)]
+        max_vals[0] = day_data[0][0]
+        day_data = []
+        selected_data.append(max_vals)
+
+    vals = np.asarray(selected_data, dtype=float)
+    fig, ax = plt.subplots(1)
+    icolor = -1
+    for idx, name in enumerate(registerNames, start=1):
+        icolor += 1
+        ax.plot(vals[:, 0], vals[:, idx] * mult, label=name, color=Colors[icolor % len(Colors)])
+
+    ax.set_title(f'{caseName}, Yr={caseYear}')
+    ax.set_xlabel('Hour')
+    ax.set_ylabel('MW, MWh or MVA')
+    ax.legend()
+    ax.grid()
+
+
+def _plot_yearly_case(DSS: IDSS, caseName: str, meterName: str, plotRegisters: List[int], icolor: int, ax, registerNames: List[str]):
+    anyData = True
+    xvalues = []
+    all_yvalues = [[] for _ in plotRegisters]
+    for caseYear in range(0, 21):
+        fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', 'Totals_1.csv')
+        if not os.path.exists(fn):
+            continue
+
+        with open(fn, 'r') as f:
+            f.readline() # Skip the header
+            # Get started - initialize Registers 1
+            registerVals = [float(x) * 0.001 for x in f.readline().split(',')]
+            if len(registerVals):
+                xvalues.append(registerVals[7])
+
+    if len(xvalues) == 0:
+        raise RuntimeError('No data to plot')                
+
+    for caseYear in range(0, 21):
+        if meterName.lower() in ('totals', 'systemmeter', 'totals_1', 'systemmeter_1'):
+            suffix = '' if meterName.endswith('_1') else '_1'
+            meterName = meterName.lower().replace('totals', 'Totals').replace('systemmeter', 'SystemMeter')
+            fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', f'{meterName}{suffix}.csv')
+            searchForMeterLine = False
+        else:
+            fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', 'EnergyMeterTotals_1.csv')
+            searchForMeterLine = True
 
         if not os.path.exists(fn):
-            fn = fn[:-4] + '_1.csv'
+            continue
 
-        # Whenever we add Pandas as a dependency, this could be
-        # rewritten to avoid all the extra/slow work
-        selected_data = []
-        day_data = []
-        mult = 1 if peakDay else 0.001
-
-        # If the file doesn't exist, let the exception raise
         with open(fn, 'r') as f:
-            header = f.readline().rstrip()
-            allRegisterNames = [unquote(field) for field in header.strip().strip(' \t,').split(',')]
-            registerNames = [allRegisterNames[i] for i in plotRegisters]
+            header = f.readline()
+            if len(registerNames) == 0:
+                allRegisterNames = [unquote(field) for field in header.strip(' \t,').split(',')]
+                registerNames.extend(allRegisterNames[i] for i in plotRegisters)
 
-            if not len(registerNames):
-                raise RuntimeError("Could not find any register name in the file")
-
-            for line in f:
-                if not line:
-                    continue
-
-                rawValues = line.split(',')
-                selValues = [float(rawValues[0]), *(float(rawValues[i]) for i in plotRegisters)]
-                if not peakDay:
-                    selected_data.append(selValues)
-                else:
-                    day_data.append(selValues)
-                    if len(day_data) == 24:
-                        max_vals = [max(x) for x in zip(*day_data)]
-                        max_vals[0] = day_data[0][0]
-                        day_data = []
-                        selected_data.append(max_vals)
-
-        if day_data:
-            max_vals = [max(x) for x in zip(*day_data)]
-            max_vals[0] = day_data[0][0]
-            day_data = []
-            selected_data.append(max_vals)
-
-        vals = np.asarray(selected_data, dtype=float)
-        fig, ax = plt.subplots(1)
-        icolor = -1
-        for idx, name in enumerate(registerNames, start=1):
-            icolor += 1
-            ax.plot(vals[:, 0], vals[:, idx] * mult, label=name, color=Colors[icolor % len(Colors)])
-
-        ax.set_title(f'{caseName}, Yr={caseYear}')
-        ax.set_xlabel('Hour')
-        ax.set_ylabel('MW, MWh or MVA')
-        ax.legend()
-        ax.grid()
-
-
-    def _plot_yearly_case(self, caseName: str, meterName: str, plotRegisters: List[int], icolor: int, ax, registerNames: List[str]):
-        DSS = self.DSS
-        anyData = True
-        xvalues = []
-        all_yvalues = [[] for _ in plotRegisters]
-        for caseYear in range(0, 21):
-            fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', 'Totals_1.csv')
-            if not os.path.exists(fn):
-                continue
-
-            with open(fn, 'r') as f:
-                f.readline() # Skip the header
-                # Get started - initialize Registers 1
-                registerVals = [float(x) * 0.001 for x in f.readline().split(',')]
-                if len(registerVals):
-                    xvalues.append(registerVals[7])
-
-        if len(xvalues) == 0:
-            raise RuntimeError('No data to plot')                
-
-        for caseYear in range(0, 21):
-            if meterName.lower() in ('totals', 'systemmeter', 'totals_1', 'systemmeter_1'):
-                suffix = '' if meterName.endswith('_1') else '_1'
-                meterName = meterName.lower().replace('totals', 'Totals').replace('systemmeter', 'SystemMeter')
-                fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', f'{meterName}{suffix}.csv')
-                searchForMeterLine = False
+            if not searchForMeterLine:
+                line = f.readline()
             else:
-                fn = os.path.join(DSS.DataPath, caseName, f'DI_yr_{caseYear}', 'EnergyMeterTotals_1.csv')
-                searchForMeterLine = True
-
-            if not os.path.exists(fn):
-                continue
-
-            with open(fn, 'r') as f:
-                header = f.readline()
-                if len(registerNames) == 0:
-                    allRegisterNames = [unquote(field) for field in header.strip(' \t,').split(',')]
-                    registerNames.extend(allRegisterNames[i] for i in plotRegisters)
-
-                if not searchForMeterLine:
-                    line = f.readline()
+                for line in f:
+                    label, rest = line.split(',', 1)
+                    if label.strip().lower() == meterName.lower():
+                        line = f'{caseYear},{rest}'
                 else:
-                    for line in f:
-                        label, rest = line.split(',', 1)
-                        if label.strip().lower() == meterName.lower():
-                            line = f'{caseYear},{rest}'
-                    else:
-                        raise RuntimeError("Meter not found")
+                    raise RuntimeError("Meter not found")
 
-                registerVals = [float(x) * 0.001 for x in line.strip(' \t,').split(',')]
-                if len(registerVals):
-                    for yvalues, idx in zip(all_yvalues, plotRegisters):
-                        yvalues.append(registerVals[idx])
+            registerVals = [float(x) * 0.001 for x in line.strip(' \t,').split(',')]
+            if len(registerVals):
+                for yvalues, idx in zip(all_yvalues, plotRegisters):
+                    yvalues.append(registerVals[idx])
+    
+    for yvalues, idx, regName in zip(all_yvalues, plotRegisters, registerNames):
+        marker_code = MARKER_SEQ[icolor % len(MARKER_SEQ)]
+        ax.plot(xvalues, yvalues, label=f'{caseName}:{meterName}:{regName}', color=Colors[icolor % len(Colors)], **get_marker_dict(marker_code))
+        icolor += 1
+
+    return icolor
+
+
+def dss_yearly_curve_plot(DSS: IDSS, *, 
+    MeterName: str = None,
+    CaseNames: List[str] = None,
+    Registers: List[str] = None,
+    **kwargs: Unpack[PlotParams]
+):
+    caseNames, meterName, plotRegisters = CaseNames, MeterName, Registers
+
+    fig, ax = plt.subplots(1)
+    icolor = 0
+    registerNames = []
+    for caseName in caseNames:
+        icolor = _plot_yearly_case(DSS, caseName, MeterName, plotRegisters, icolor, ax, registerNames)
+
+    if icolor == 0:
+        plt.close(fig)
+        raise RuntimeError('No files found')
+    
+    fig.suptitle(f"Yearly Curves for case(s): {', '.join(caseNames)}")
+    ax.set_title(f"Meter: {meterName}; Registers: {', '.join(registerNames)}", fontsize='small')
+    ax.set_xlabel('Total Area MW')
+    ax.set_ylabel('MW, MWh or MVA')
+    ax.legend()
+    ax.grid()
+
+
+def dss_comparecases_plot(DSS: IDSS, **kwargs: Unpack[PlotParams]):
+    print('TODO: dss_comparecases_plot', kwargs)
+
+
+def dss_zone_plot(DSS: IDSS, 
+    *,
+    ObjectName: str,
+    Quantity: DSSPlotQuantity = DEFAULT_PLOT_PARAMS['Quantity'],
+    ShowLoops: bool = DEFAULT_PLOT_PARAMS['ShowLoops'],
+    Dots: bool = DEFAULT_PLOT_PARAMS['Dots'],
+    Labels: bool = DEFAULT_PLOT_PARAMS['Labels'],
+    Color1: str = DEFAULT_PLOT_PARAMS['Color1'],
+    Color3: str = DEFAULT_PLOT_PARAMS['Color3'],
+    SinglePhLineStyle: int = DEFAULT_PLOT_PARAMS['SinglePhLineStyle'],
+    ThreePhLineStyle: int = DEFAULT_PLOT_PARAMS['ThreePhLineStyle'],
+    MaxLineThickness: float = DEFAULT_PLOT_PARAMS['MaxLineThickness'],
+    MaxScale: float = DEFAULT_PLOT_PARAMS['MaxScale'],
+    **kwargs: Unpack[PlotParams]
+):
+    obj_name = ObjectName
+    show_loops = ShowLoops
+    color1 = Color1
+    color3 = Color3
+    single_ph_line_style = LINES_STYLE_CODE.get(SinglePhLineStyle)
+    three_ph_line_style = LINES_STYLE_CODE.get(ThreePhLineStyle)
+    dots = Dots
+    do_labels = Labels
+    quantity = str_to_pq.get(Quantity, pqNone)
+    max_lw = MaxLineThickness
+
+    if MaxScale is not None:
+        quantity_max_value = MaxScale
+    else:
+        quantity_max_value = 0
+
+
+    ActiveCircuit = DSS.ActiveCircuit
+
+    if obj_name:
+        ActiveCircuit.Meters.Name = obj_name
+        meters = [ActiveCircuit.Meters]
+    else:
+        meters = ActiveCircuit.Meters
+
+    elem = ActiveCircuit.ActiveCktElement
+    line = ActiveCircuit.Lines
+    topo = ActiveCircuit.Topology
+
+    icolor = 0
+
+    #TODO: check if/where we need to transform to lowercase.
+    bus_coords = dict((b.Name.lower(), (b.x, b.y)) for b in ActiveCircuit.Buses if b.Coorddefined)
+
+    meter_marker_dict = get_marker_dict(24)
+    meter_marker_dict['markersize'] *= (3 / 3.5)**2
+
+    lines1, lines1_colors, labels1 = [], [], []
+    lines3, lines3_colors, labels3 = [], [], []
+
+    # lw1, lw3 will initially hold the values, later transformed to actual widths
+    lw1, lw3 = [], []
+
+    if quantity in (pqCurrent, pqCapacity):
+        capacities = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllPctNorm(True)))
+
+    coords_to_names = {}
+
+    def _name_coords(c, name):
+        prev = coords_to_names.get(c)
+        if prev is None:
+            coords_to_names[c] = name
+            return
+        elif prev == name:
+            return
         
-        for yvalues, idx, regName in zip(all_yvalues, plotRegisters, registerNames):
-            marker_code = MARKER_SEQ[icolor % len(MARKER_SEQ)]
-            ax.plot(xvalues, yvalues, label=f'{caseName}:{meterName}:{regName}', color=Colors[icolor % len(Colors)], **get_marker_dict(marker_code))
-            icolor += 1
+        if prev.endswith(',' + name) or prev.startswith(name + ',') or (',' + name + ',') in prev:
+            return
 
-        return icolor
+        coords_to_names[c] = prev + ',' + name
 
 
-    def dss_yearly_curve_plot(self, *, 
-        MeterName: str = None,
-        CaseNames: List[str] = None,
-        Registers: List[str] = None,
-        **kwargs: Unpack[PlotParams]
-    ):
-        DSS = self.DSS
-        caseNames, meterName, plotRegisters = CaseNames, MeterName, Registers
+    def _add_line(element, color):
+        br_name = element.Name
+        bus1, bus2 = element.BusNames[:2]
+        bus1, bus2 = nodot(bus1).lower(), nodot(bus2).lower()
+        c1 = bus_coords.get(bus1)
+        c2 = bus_coords.get(bus2)
+        lw = 1
+        if not c1 or not c2:
+            return None, None
 
-        fig, ax = plt.subplots(1)
-        icolor = 0
-        registerNames = []
-        for caseName in caseNames:
-            icolor = _plot_yearly_case(DSS, caseName, MeterName, plotRegisters, icolor, ax, registerNames)
+        if do_labels:
+            _name_coords(c1, f'{bus1}({feeder_name})')
+            _name_coords(c2, f'{bus2}({feeder_name})')
 
-        if icolor == 0:
-            plt.close(fig)
-            raise RuntimeError('No files found')
-        
-        fig.suptitle(f"Yearly Curves for case(s): {', '.join(caseNames)}")
-        ax.set_title(f"Meter: {meterName}; Registers: {', '.join(registerNames)}", fontsize='small')
-        ax.set_xlabel('Total Area MW')
-        ax.set_ylabel('MW, MWh or MVA')
-        ax.legend()
-        ax.grid()
-
-
-    def dss_comparecases_plot(self, **kwargs: Unpack[PlotParams]):
-        DSS = self.DSS        
-        print('TODO: dss_comparecases_plot', kwargs)
-
-
-    def dss_zone_plot(self,
-        *,
-        ObjectName: str,
-        Quantity: DSSPlotQuantity = DEFAULT_PLOT_PARAMS['Quantity'],
-        ShowLoops: bool = DEFAULT_PLOT_PARAMS['ShowLoops'],
-        Dots: bool = DEFAULT_PLOT_PARAMS['Dots'],
-        Labels: bool = DEFAULT_PLOT_PARAMS['Labels'],
-        Color1: str = DEFAULT_PLOT_PARAMS['Color1'],
-        Color3: str = DEFAULT_PLOT_PARAMS['Color3'],
-        SinglePhLineStyle: int = DEFAULT_PLOT_PARAMS['SinglePhLineStyle'],
-        ThreePhLineStyle: int = DEFAULT_PLOT_PARAMS['ThreePhLineStyle'],
-        MaxLineThickness: float = DEFAULT_PLOT_PARAMS['MaxLineThickness'],
-        MaxScale: float = DEFAULT_PLOT_PARAMS['MaxScale'],
-        **kwargs: Unpack[PlotParams]
-    ):
-        DSS = self.DSS
-        obj_name = ObjectName
-        show_loops = ShowLoops
-        color1 = Color1
-        color3 = Color3
-        single_ph_line_style = LINES_STYLE_CODE.get(SinglePhLineStyle)
-        three_ph_line_style = LINES_STYLE_CODE.get(ThreePhLineStyle)
-        dots = Dots
-        do_labels = Labels
-        quantity = str_to_pq.get(Quantity, pqNone)
-        max_lw = MaxLineThickness
-
-        if MaxScale is not None:
-            quantity_max_value = MaxScale
-        else:
-            quantity_max_value = 0
-
-
-        ActiveCircuit = DSS.ActiveCircuit
-
-        if obj_name:
-            ActiveCircuit.Meters.Name = obj_name
-            meters = [ActiveCircuit.Meters]
-        else:
-            meters = ActiveCircuit.Meters
-
-        elem = ActiveCircuit.ActiveCktElement
-        line = ActiveCircuit.Lines
-        topo = ActiveCircuit.Topology
-
-        icolor = 0
-
-        #TODO: check if/where we need to transform to lowercase.
-        bus_coords = dict((b.Name.lower(), (b.x, b.y)) for b in ActiveCircuit.Buses if b.Coorddefined)
-
-        meter_marker_dict = get_marker_dict(24)
-        meter_marker_dict['markersize'] *= (3 / 3.5)**2
-
-        lines1, lines1_colors, labels1 = [], [], []
-        lines3, lines3_colors, labels3 = [], [], []
-
-        # lw1, lw3 will initially hold the values, later transformed to actual widths
-        lw1, lw3 = [], []
-
-        if quantity in (pqCurrent, pqCapacity):
-            capacities = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllPctNorm(True)))
-
-        coords_to_names = {}
-
-        def _name_coords(c, name):
-            prev = coords_to_names.get(c)
-            if prev is None:
-                coords_to_names[c] = name
-                return
-            elif prev == name:
-                return
-            
-            if prev.endswith(',' + name) or prev.startswith(name + ',') or (',' + name + ',') in prev:
-                return
-
-            coords_to_names[c] = prev + ',' + name
-
-
-        def _add_line(element, color):
-            br_name = element.Name
-            bus1, bus2 = element.BusNames[:2]
-            bus1, bus2 = nodot(bus1).lower(), nodot(bus2).lower()
-            c1 = bus_coords.get(bus1)
-            c2 = bus_coords.get(bus2)
+        if quantity == pqPower:
+            lw = element.TotalPowers[0]
+        elif quantity == pqVoltage:
             lw = 1
-            if not c1 or not c2:
-                return None, None
+        elif quantity == pqLosses:
+            lw = 0
+            try:
+                if element.Name.startswith('Line.'):
+                    lw = 1e-3 * abs(element.Losses[0] / line.Length)
+            except:
+                pass
+        elif quantity in (pqCurrent, pqCapacity):
+            lw = capacities.get(element.Name, np.NaN)
 
-            if do_labels:
-                _name_coords(c1, f'{bus1}({feeder_name})')
-                _name_coords(c2, f'{bus2}({feeder_name})')
-
-            if quantity == pqPower:
-                lw = element.TotalPowers[0]
-            elif quantity == pqVoltage:
-                lw = 1
-            elif quantity == pqLosses:
-                lw = 0
-                try:
-                    if element.Name.startswith('Line.'):
-                        lw = 1e-3 * abs(element.Losses[0] / line.Length)
-                except:
-                    pass
-            elif quantity in (pqCurrent, pqCapacity):
-                lw = capacities.get(element.Name, np.NaN)
-
-            if (element.NumPhases == 1):
-                lines1.append([c1, c2])
-                lines1_colors.append(color)
-                labels1.append(br_name)
-                lw1.append(lw)
-                return lines1_colors, len(lines1_colors) - 1
-            else:
-                lines3.append([c1, c2])
-                lines3_colors.append(color)
-                labels3.append(br_name)
-                lw3.append(lw)
-                return lines3_colors, len(lines3_colors) - 1
+        if (element.NumPhases == 1):
+            lines1.append([c1, c2])
+            lines1_colors.append(color)
+            labels1.append(br_name)
+            lw1.append(lw)
+            return lines1_colors, len(lines1_colors) - 1
+        else:
+            lines3.append([c1, c2])
+            lines3_colors.append(color)
+            labels3.append(br_name)
+            lw3.append(lw)
+            return lines3_colors, len(lines3_colors) - 1
 
 
-        fig, ax = plt.subplots(1)
-        for meter in meters:
+    fig, ax = plt.subplots(1)
+    for meter in meters:
+        if not elem.Enabled:
+            continue
+
+        feeder_name = meter.Name
+        branches = meter.AllBranchesInZone
+        if not branches:
+            continue
+    
+        # Meter marker
+        _ = topo.First
+        coords = bus_coords.get(elem.BusNames[meter.MeteredTerminal - 1])
+        if coords:
+            plt.plot(*coords, color='red', **meter_marker_dict)
+
+        feeder_color = color1 if show_loops else Colors[icolor % len(Colors)]
+        icolor += 1
+
+        br_idx = topo.First
+        while br_idx != 0:
             if not elem.Enabled:
                 continue
 
-            feeder_name = meter.Name
-            branches = meter.AllBranchesInZone
-            if not branches:
-                continue
+            lcs, lidx = _add_line(elem, feeder_color)
+            if show_loops:
+                looped = (topo.LoopedBranch != 0)
+                if looped:
+                    # The looped PDE is set as active by LoopedBranch
+                    _add_line(elem, color3)
+                    # Adjust the original to color3
+                    if lidx is not None:
+                        lcs[lidx] = color3
+         
+            br_idx = topo.Next
+
+
+    lw1 = np.asarray(lw1)
+    lw3 = np.asarray(lw3)
+
+    if quantity_max_value == 0:
+        lw1_max_value = 0
+        lw3_max_value = 0
+        if len(lw1):
+            lw1_max_value = np.nanmax(lw1)
+            if np.isfinite(lw1_max_value):
+                quantity_max_value = max(quantity_max_value, lw1_max_value)
+        if len(lw3):
+            lw3_max_value = np.nanmax(lw3)
+            if np.isfinite(lw3_max_value):
+                quantity_max_value = max(quantity_max_value, lw3_max_value)
+
+    if quantity_max_value == 0:
+        quantity_max_value = 1
+
+    lw1 = np.clip(3 * lw1 / quantity_max_value, 0.5, max_lw)
+    lw3 = np.clip(3 * lw3 / quantity_max_value, 0.5, max_lw)
+    lines1 = np.asarray(lines1)
+    lines3 = np.asarray(lines3)
+    lc1 = LineCollection(lines1, linewidth=lw1, colors=lines1_colors, linestyle=single_ph_line_style)
+    lc3 = LineCollection(lines3, linewidth=lw3, colors=lines3_colors, linestyle=three_ph_line_style)
+    ax.add_collection(lc1)
+    ax.add_collection(lc3)
+    if dots:
+        for lines, lc in ((lines1, lc1), (lines3, lc3)):
+            ax.scatter(lines[:, 0, 0].ravel(), lines[:, 0, 1].ravel(), marker='o', facecolors='none', edgecolors=lc, s=9, lw=1)
+            ax.scatter(lines[:, 1, 0].ravel(), lines[:, 1, 1].ravel(), marker='o', facecolors='none', edgecolors=lc, s=9, lw=1)
         
-            # Meter marker
-            _ = topo.First
-            coords = bus_coords.get(elem.BusNames[meter.MeteredTerminal - 1])
-            if coords:
-                plt.plot(*coords, color='red', **meter_marker_dict)
+    ax.set_title(f'Meter Zone: {obj_name}' if obj_name else 'All Meter Zones')
 
-            feeder_color = color1 if show_loops else Colors[icolor % len(Colors)]
-            icolor += 1
+    for coords, name in coords_to_names.items():
+        ax.text(*coords, name, zorder=11, fontsize='xx-small', va='center', clip_on=True)
 
-            br_idx = topo.First
-            while br_idx != 0:
-                if not elem.Enabled:
-                    continue
-
-                lcs, lidx = _add_line(elem, feeder_color)
-                if show_loops:
-                    looped = (topo.LoopedBranch != 0)
-                    if looped:
-                        # The looped PDE is set as active by LoopedBranch
-                        _add_line(elem, color3)
-                        # Adjust the original to color3
-                        if lidx is not None:
-                            lcs[lidx] = color3
-            
-                br_idx = topo.Next
-
-
-        lw1 = np.asarray(lw1)
-        lw3 = np.asarray(lw3)
-
-        if quantity_max_value == 0:
-            lw1_max_value = 0
-            lw3_max_value = 0
-            if len(lw1):
-                lw1_max_value = np.nanmax(lw1)
-                if np.isfinite(lw1_max_value):
-                    quantity_max_value = max(quantity_max_value, lw1_max_value)
-            if len(lw3):
-                lw3_max_value = np.nanmax(lw3)
-                if np.isfinite(lw3_max_value):
-                    quantity_max_value = max(quantity_max_value, lw3_max_value)
-
-        if quantity_max_value == 0:
-            quantity_max_value = 1
-
-        lw1 = np.clip(3 * lw1 / quantity_max_value, 0.5, max_lw)
-        lw3 = np.clip(3 * lw3 / quantity_max_value, 0.5, max_lw)
-        lines1 = np.asarray(lines1)
-        lines3 = np.asarray(lines3)
-        lc1 = LineCollection(lines1, linewidth=lw1, colors=lines1_colors, linestyle=single_ph_line_style)
-        lc3 = LineCollection(lines3, linewidth=lw3, colors=lines3_colors, linestyle=three_ph_line_style)
-        ax.add_collection(lc1)
-        ax.add_collection(lc3)
-        if dots:
-            for lines, lc in ((lines1, lc1), (lines3, lc3)):
-                ax.scatter(lines[:, 0, 0].ravel(), lines[:, 0, 1].ravel(), marker='o', facecolors='none', edgecolors=lc, s=9, lw=1)
-                ax.scatter(lines[:, 1, 0].ravel(), lines[:, 1, 1].ravel(), marker='o', facecolors='none', edgecolors=lc, s=9, lw=1)
-            
-        ax.set_title(f'Meter Zone: {obj_name}' if obj_name else 'All Meter Zones')
-
-        for coords, name in coords_to_names.items():
-            ax.text(*coords, name, zorder=11, fontsize='xx-small', va='center', clip_on=True)
-
-        ax.set_aspect('equal', 'datalim')
-        ax.autoscale()
+    ax.set_aspect('equal', 'datalim')
+    ax.autoscale()
 
 
 
-dss_plot_methods = {
-    'Scatter': 'dss_scatter_plot',
-    'Daisy': 'dss_daisy_plot',
-    'TShape': 'dss_tshape_plot',
-    'PriceShape': 'dss_priceshape_plot',
-    'LoadShape': 'dss_loadshape_plot',
-    'Monitor': 'dss_monitor_plot',
-    'Circuit': 'dss_circuit_plot',
-    'Profile': 'dss_profile_plot',
-    'Visualize': 'dss_visualize_plot',
-    'YearlyCurve': 'dss_yearly_curve_plot',
-    'Matrix': 'dss_matrix_plot',
-    'GeneralData': 'dss_general_data_plot',
-    'DI': 'dss_di_plot',
-#    'CompareCases': 'dss_comparecases_plot',
-    'MeterZones': 'dss_zone_plot'
+dss_plot_funcs = {
+    'Scatter': dss_scatter_plot,
+    'Daisy': dss_daisy_plot,
+    'TShape': dss_tshape_plot,
+    'PriceShape': dss_priceshape_plot,
+    'LoadShape': dss_loadshape_plot,
+    'Monitor': dss_monitor_plot,
+    'Circuit': dss_circuit_plot,
+    'Profile': dss_profile_plot,
+    'Visualize': dss_visualize_plot,
+    'YearlyCurve': dss_yearly_curve_plot,
+    'Matrix': dss_matrix_plot,
+    'GeneralData': dss_general_data_plot,
+    'DI': dss_di_plot,
+#    'CompareCases': dss_comparecases_plot,
+    'MeterZones': dss_zone_plot
 }
 
 def dss_plot(DSS: IDSS, **kwargs: Unpack[PlotParams]):
     try:
         ptype = kwargs['PlotType']
-        if ptype not in dss_plot_methods:
+        if ptype not in dss_plot_funcs:
             raise NotImplementedError(f'ERROR: not implemented plot type "{ptype}"')
             return -1
 
         with ToggleAdvancedTypes(DSS, False), warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            func = getattr(plotter, dss_plot_methods.get(ptype))
-            return 0, (DSS, **kwargs)
+            return 0, dss_plot_funcs.get(ptype)(DSS, **kwargs)
 
     except Exception as ex:
         from traceback import format_exc
@@ -2534,6 +2554,76 @@ def dss_plot(DSS: IDSS, **kwargs: Unpack[PlotParams]):
     
     return 0, None
         
+
+# dss_progress_bar = None
+# dss_progress_desc = ''
+
+
+@api_util.ffi.def_extern()
+def dss_python_cb_write(ctx, message_str, message_type: int, message_size: int, message_subtype: int):
+    global dss_progress_bar
+    global dss_progress_desc
+
+    # DSS = _ctx2dss(ctx)
+    
+    message_str = api_util.ffi.string(message_str).decode(api_util.codec)
+    if message_type == api_util.lib.DSSMessageType_Error:
+        #print('DSS Error:', message_str, file=sys.stderr)
+        pass
+    elif message_type in (api_util.lib.DSSMessageType_ProgressCaption, api_util.lib.DSSMessageType_ProgressFormCaption):
+        #dss_progress_desc = message_str
+        # print('Progress Caption:', message_str, file=sys.stderr)
+        pass
+    elif message_type == api_util.lib.DSSMessageType_Progress:
+        #print('DSS Progress:', message_str, file=sys.stderr)
+        pass
+    elif message_type == api_util.lib.DSSMessageType_FireOffEditor:
+        link_file(message_str)
+        # try:
+        #     # print('DSSMessageType_FireOffEditor')
+        #     with open(message_str, 'r') as f:
+        #         text = f.read()
+            
+        #     IPython.display.display({'text/plain': text}, raw=True)
+        # except:
+        #     print(f'Could not display file "{message_str}"')
+        #     return 1
+
+    elif message_type == api_util.lib.DSSMessageType_ProgressPercent:
+        try:
+            pass
+            # n = int(message_str)
+            # desc = ''
+            # if n == 0 and dss_progress_bar is not None:
+            #     dss_progress_bar = None
+                
+            # if dss_progress_bar is None:
+            #     dss_progress_bar = tqdm(total=100, desc=dss_progress_desc)
+                
+            # if n < 0:
+            #     del dss_progress_bar
+            #     dss_progress_bar = None
+            #     return 0
+                
+                
+            # dss_progress_bar.n = n
+            # dss_progress_bar.refresh()
+#             if n == 100:
+#                 dss_progress_bar.close()
+        except:
+            import traceback
+            traceback.print_exc()
+            print('DSS Progress:', message_str)
+
+    # else:
+    #     # print(message_type)
+    #     # print(message_str)
+    #     IPython.display.display({'text/plain': message_str}, raw=True)
+    else:
+        # do nothing for now...
+        pass
+        
+    return 0
 
 
 @api_util.ffi.def_extern()

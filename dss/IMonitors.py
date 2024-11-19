@@ -44,7 +44,7 @@ class IMonitors(Iterable):
         
         ffi = self._api_util.ffi
         api_util = self._api_util
-        api_util.lib_unpatched.ctx_Monitors_Get_ByteStream_GR(api_util.ctx)
+        api_util.lib_unpatched.Monitors_Get_ByteStream_GR(api_util.ctx)
         api_util._check_for_error()
         ptr, cnt = api_util.gr_int8_pointers
         cnt = cnt[0]
@@ -67,7 +67,7 @@ class IMonitors(Iterable):
         
         ffi = self._api_util.ffi
         api_util = self._api_util
-        api_util.lib_unpatched.ctx_Monitors_Get_ByteStream_GR(api_util.ctx)
+        api_util.lib_unpatched.Monitors_Get_ByteStream_GR(api_util.ctx)
         api_util._check_for_error()
         ptr, cnt = api_util.gr_int8_pointers
         cnt = cnt[0]

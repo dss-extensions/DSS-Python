@@ -68,6 +68,16 @@ class IOddieDSS(IDSS):
             # check will still work outside.
             pass
 
+
+    def is_oddie(self) -> bool:
+        """
+        Returns True if this instance is based on the Oddie compatibility layer for
+        the official OpenDSS Direct API (a.k.a. DCSL).
+        
+        Note that the default instance in OpenDSSDirect.py is based on AltDSS since 2018.
+        """
+        return True
+
     def __init__(self, library_path: str = '', load_flags: Optional[int] = None, oddie_options: Optional[OddieOptions] = None):
         if sys.platform == 'cygwin':
             raise NotImplementedError("Cygwin support is not implemented")
@@ -76,11 +86,11 @@ class IOddieDSS(IDSS):
         elif sys.platform == 'win32':
             not64bits = (platform.architecture()[0] != '64bit')
             if not64bits:
-                raise NotImplementedError("On Windows, only 64-bit (x64) environments are supported. If you need support, please open an issue at https://github.com/dss-extensions/")
+                raise NotImplementedError("On Windows, only 64-bit (x64) environments are supported with Oddie. If you need support for further architectures, please open an issue at https://github.com/dss-extensions/")
 
-        from dss_python_backend import _altdss_oddie_capi
-        lib = _altdss_oddie_capi.lib
-        ffi = _altdss_oddie_capi.ffi
+        from dss_python_backend import oddie as oddie_capi
+        lib = oddie_capi.lib
+        ffi = oddie_capi.ffi
         NULL = ffi.NULL
         
         c_load_flags = NULL
@@ -120,14 +130,14 @@ class IOddieDSS(IDSS):
         if ctx == NULL:
             raise RuntimeError("Could not load the target library.")
 
-        if lib.ctx_DSS_Start(ctx, 0) != 1:
+        if lib.DSS_Start(ctx, 0) == 0:
             raise RuntimeError("DSS_Start call was not successful.")
 
         if oddie_options is not None:
             lib.Oddie_SetOptions(oddie_options)
 
         ctx = ffi.gc(ctx, lib.ctx_Dispose)
-        api_util = CffiApiUtil(ffi, lib, ctx, is_odd=True)
+        api_util = CffiApiUtil(ffi, lib, ctx, is_oddie=True)
         api_util._library_path = library_path
         IDSS.__init__(self, api_util)
 

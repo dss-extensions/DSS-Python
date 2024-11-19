@@ -33,7 +33,7 @@ class IYMatrix(Base):
         cValsPtr = ffi.new('double**')
 
         lib = self._api_util.lib_unpatched # use the raw CFFI version
-        lib.YMatrix_GetCompressedYMatrix(True, nBus, nNz, ColPtr, RowIdxPtr, cValsPtr)
+        lib.YMatrix_GetCompressedYMatrix(self._api_util.ctx, True, nBus, nNz, ColPtr, RowIdxPtr, cValsPtr)
 
         if not nBus[0] or not nNz[0]:
             res = None
