@@ -587,6 +587,15 @@ class DSVHandler:
         self.ax.plot(x, y, ls=None, color=_int_to_color(c), **marker_dict)
 
 
+    def MarkAt(self, param_str: str):
+        params = param_str.split(',')
+        x, y = float(params[0]), float(params[1])
+        symbol, marker_size = [int(v) for v in params[2:]]
+        marker_dict = get_marker_dict(symbol)
+        marker_dict['markersize'] *= max(1, np.sqrt(marker_size) - 1) * marker_dict['markersize'] / 7.0
+        self.ax.plot(x, y, ls=None, color=self.color, **marker_dict)
+
+
     def Move(self, param_str: str):
         x, y = [float(v.strip().strip('"')) for v in param_str.split(',')]
         if self.no_scales:
@@ -1792,32 +1801,22 @@ class DSSMPLPlotter:
 
         element = DSS.ActiveCircuit.ActiveCktElement
         etype, ename = ElementType, ElementName
+        full_name = f'{ElementType}.{ElementName}'.lower()
+
+        # Check it the target element is currently selected
+        if element.Name.lower() != full_name:
+            DSS.ActiveCircuit.SetActiveElement(full_name)
+
         nconds = element.NumConductors
         # nphases = element.NumPhases
         buses = element.BusNames[:2] # max 2 terminals
         vbases = [max(1, 1000 * DSS.ActiveCircuit.Buses[nodot(b)].kVBase) for b in buses]
 
-        # assert DSS.ActiveCircuit.ActiveCktElement.Name == ElementType + '.' + ElementName
-        fig, ax = plt.subplots(1, gridspec_kw=dict(left=0.05, right=0.95, bottom=0.05, top=0.92))#, figsize=(8.6, 7))
-        ax.get_xaxis().set_visible(False)
-        ax.get_yaxis().set_visible(False)
-        ax.grid(False)
-
         y = 20 + 10 * nconds
         box_xy0 = np.array([100, 10])
         box_xy1 = np.array([XMAX - 100, y])
         box_wh = box_xy1 - box_xy0
-        middle_box = patches.Rectangle(box_xy0, *box_wh, facecolor='lightgray', edgecolor='k')
-        ax.text(XMAX / 2, 10 + (y - 10) / 2, f'{etype}.{ename.upper()}', ha='center', va='center', fontweight='bold', rotation='vertical')
-        ax.add_patch(middle_box)
-        ax.plot([0, 300], [0, 0], color='gray', lw=7)
-        
-        ax.plot([-5] * 2, [5, y - 5], color='k', lw=7)
-        ax.text(25, y, buses[0].upper(), ha='left')
-        if len(buses) > 1:
-            ax.plot([XMAX + 5] * 2, [5, y - 5], color='k', lw=7)
-            ax.text(XMAX - 25, y, buses[1].upper(), ha='right')
-        
+
         voltage = (quantity == 'Voltages')
 
         if quantity == 'Powers':
@@ -1830,7 +1829,6 @@ class DSSMPLPlotter:
             values = asarray(element.Currents).view(dtype=complex)
             unit = 'A'
 
-        ax.set_title(f'{etype}.{ename.upper()} {quantity} ({unit})')
         size = 'x-small'
 
         def _get_text():
@@ -1843,6 +1841,23 @@ class DSSMPLPlotter:
                 arrow_text = f"{np.abs(v):-.6g} {unit} ∠ {np.angle(v, deg=True):.2f}°"
 
             return arrow_text
+
+
+        fig, ax = plt.subplots(1, gridspec_kw=dict(left=0.05, right=0.95, bottom=0.05, top=0.92))#, figsize=(8.6, 7))
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
+        ax.grid(False)
+        middle_box = patches.Rectangle(box_xy0, *box_wh, facecolor='lightgray', edgecolor='k')
+        ax.text(XMAX / 2, 10 + (y - 10) / 2, f'{etype}.{ename.upper()}', ha='center', va='center', fontweight='bold', rotation='vertical')
+        ax.add_patch(middle_box)
+        ax.plot([0, 300], [0, 0], color='gray', lw=7)
+        
+        ax.plot([-5] * 2, [5, y - 5], color='k', lw=7)
+        ax.text(25, y, buses[0].upper(), ha='left')
+        if len(buses) > 1:
+            ax.plot([XMAX + 5] * 2, [5, y - 5], color='k', lw=7)
+            ax.text(XMAX - 25, y, buses[1].upper(), ha='right')
+        ax.set_title(f'{etype}.{ename.upper()} {quantity} ({unit})')
 
         for bus_idx, vbase in enumerate(vbases):
             for cond in range(nconds):
