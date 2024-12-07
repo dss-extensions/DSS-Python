@@ -198,7 +198,7 @@ class ComparisonHandler:
                 continue
 
             # print(path)
-            va, vb = a.get(k), b.get(k, MISSING)
+            va, vb = a.get(k), (b or {}).get(k, MISSING)
 
             if vb is MISSING:
                 continue
