@@ -223,13 +223,25 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     else:
         items = [dss_cls]
 
-    if ((not SAVE_DSSX_OUTPUT) or SAVE_DSSX_OUTPUT_ODD) and lname in ('istorages', 'iwindgens'):
-        def iter_cls():
-            for i in range(dss_cls.Count):
-                dss_cls.idx = i
-                yield dss_cls
+    try:
+        if dss_cls.Count == 0:
+           return
+           
+        _ = dss_cls.First
+        name1 = dss_cls.Name
+        nxt = dss_cls.Next
+        name2 = dss_cls.Name
+        if nxt != 0 and name1 == name2:
+            print("Replacing iterator for", lname, (name1, name2))
+            def iter_cls():
+                for i in range(dss_cls.Count):
+                    dss_cls.idx = i
+                    yield dss_cls
 
-        items = iter_cls()
+            items = iter_cls()
+        
+    except:
+        pass
 
 
     for _ in items:
