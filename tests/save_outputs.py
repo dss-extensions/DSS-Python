@@ -247,7 +247,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     for _ in items:
         record = {}
         for field in fields:
-            # printv('>', field)
+            # printv('>', getattr(_, 'Name', '---'), field)
             try:
                 record[field] = adjust_to_json(dss_cls, field)
             except DSSException as e:
@@ -492,7 +492,7 @@ if __name__ == '__main__':
             org_fn = fn
             fixed_fn = fn if not fn.startswith('L!') else fn[2:]
             line_by_line = fn.startswith('L!')
-            fn = os.path.join(ROOT_DIR, fixed_fn)
+            fn = os.path.join(ROOT_DIR, fixed_fn) if not fixed_fn.startswith('/') else fixed_fn
             json_fn = get_archive_fn(fn) + '.json'
             try:
                 zip_out.getinfo(json_fn)

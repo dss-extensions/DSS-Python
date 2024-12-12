@@ -262,3 +262,29 @@ cimxml_test_filenames = '''
 Version8/Distrib/Examples/CIM/IEEE13_Assets.dss
 Version8/Distrib/Examples/CIM/IEEE13_CDPSM.dss
 '''.strip().split('\n')
+
+json_test_fns = os.environ.get('DSS_EXTENSIONS_TEST_SYSTEMS', '')
+if json_test_fns:
+    import json
+    with open(json_test_fns, 'r') as f_test_fns:
+        config = json.load(f_test_fns)
+
+    extra = config.get('extraTestSystems')
+    replacements = config.get('testSystems')
+
+    if replacements:
+        test_filenames = replacements
+    
+    if extra:
+        extra.extend(test_filenames)
+        test_filenames = extra
+    
+    cim_replacements = config.get('cimTestSystems')
+    cim_extra = config.get('cimExtraTestSystems')
+    if cim_replacements is not None:
+        cimxml_test_filenames = cim_replacements
+
+    if cim_extra:
+        cim_extra.extend(cimxml_test_filenames)
+        cimxml_test_filenames = cim_extra
+
