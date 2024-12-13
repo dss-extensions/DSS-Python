@@ -4,7 +4,7 @@ import sys, os
 import faulthandler
 faulthandler.disable()
 from dss import DSS
-DSS.COMErrorResults = False
+DSS.ActiveCircuit.Settings.COMErrorResults = False
 try:
     from dss import IOddieDSS
 except:

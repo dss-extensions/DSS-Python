@@ -6,9 +6,82 @@ from ._types import Float64Array, Int32Array
 from typing import AnyStr, Union, List
 from .enums import DSSPropertyNameStyle, CktModels
 
+
+class SettingsContext:
+    def __init__(self, settings):
+        self._settings = settings
+    
+    def __enter__(self):
+        # Using try...except since the official engine doesn't implement these.
+        # Only a few are (and can be) implemented through Oddie.
+        try:
+            self._AdvancedTypes = self._settings.AdvancedTypes
+        except:
+            pass
+
+        try:
+            self._CompatFlags = self._settings.CompatFlags
+        except:
+            pass
+
+        try:
+            self._IterateDisabled = self._settings.IterateDisabled
+        except:
+            pass
+        
+        try:
+            self._PreferLists = self._settings.PreferLists
+        except:
+            pass
+
+        try:
+            self._SkipCommands = self._settings.SkipCommands
+        except:
+            pass
+
+        try:
+            self._SkipFileRegExp = self._settings.SkipFileRegExp
+        except:
+            pass
+
+        return self._settings
+        
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        try:
+            self._settings.AdvancedTypes = self._AdvancedTypes
+        except:
+            pass
+
+        try:
+            self._settings.CompatFlags = self._CompatFlags
+        except:
+            pass
+
+        try:
+            self._settings.IterateDisabled = self._IterateDisabled
+        except:
+            pass
+
+        try:
+            self._settings.PreferLists = self._PreferLists
+        except:
+            pass
+
+        try:
+            self._settings.SkipCommands = self._SkipCommands
+        except:
+            pass
+
+        try:
+            self._settings.SkipFileRegExp = self._SkipFileRegExp
+        except:
+            pass
+
+
+
 class ISettings(Base):
     __slots__ = [
-        '_command_dict'
+        '_command_dict',
     ]
 
     _columns = [
@@ -29,9 +102,16 @@ class ISettings(Base):
         'NormVmaxpu',
         'AllowDuplicates',
         'ControlTrace',
-        'LoadsTerminalCheck',
-        'IterateDisabled',
+
+        # Commented since we don't have these on Oddie with the official engine
+        # 'LoadsTerminalCheck',
+        # 'IterateDisabled',
+        # 'SkipCommands',
+        # 'PreferLists',
+        # 'SkipFileRegExp',
+        # 'CompatFlags',
     ]
+
 
     def __init__(self, api_util):
         Base.__init__(self, api_util)
@@ -40,6 +120,27 @@ class ISettings(Base):
             self._lib.DSS_Executive_Get_Command(i).lower(): i
             for i in range(1, num_commands + 1)
         }
+
+
+    def Context(self) -> SettingsContext:
+        '''
+        Returns a Settings context manager. 
+        The context manager saves the values of the tracker settings on enter, 
+        restoring them on exit. This allows code to change the settings within 
+        the context block and they are restored to the initial values automatically.
+
+        Note: this context manager target DSS-Python settings. Use the equivalent for OpenDSSDirect.py.
+        A few settings are shared at engine level.
+
+        Settings tracked:
+        - AdvancedTypes
+        - CompatFlags
+        - IterateDisabled
+        - PreferLists
+        - SkipCommands
+        - SkipFileRegExp
+        '''
+        return SettingsContext(self)
 
     @property
     def AllowDuplicates(self) -> bool:
@@ -372,7 +473,101 @@ class ISettings(Base):
             Value = [self._command_dict[cmd_name] for cmd_name in Value]
 
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
-
         self._lib.Settings_Set_SkipCommands(ValuePtr, ValueCount)
 
 
+    @property
+    def AdvancedTypes(self) -> bool:
+        '''
+        When enabled, there are **two side-effects**:
+        
+        - **Per DSS Context:** Complex arrays and complex numbers can be returned and consumed by the Python API.
+        - **Global effect:** The low-level API provides matrix dimensions when available (`EnableArrayDimensions` is enabled).
+        
+        As a result, for example, `DSS.ActiveCircuit.ActiveCktElement.Yprim` is returned as a complex matrix instead
+        of a plain array.
+        
+        When disabled, the legacy plain arrays are used and complex numbers cannot be consumed by the Python API.
+
+        *Defaults to **False** for backwards compatibility.*
+        
+        **(API Extension)**
+        '''
+        return self._lib.advanced_types
+
+    @AdvancedTypes.setter
+    def AdvancedTypes(self, Value: bool):
+        self._lib.advanced_types = bool(Value)
+
+
+    @property
+    def CompatFlags(self) -> int:
+        '''
+        Controls some compatibility flags introduced to toggle some behavior from the official OpenDSS.
+
+        **THE FLAGS ARE GLOBAL, affecting all AltDSS engines in the process.**  
+        CompatFlags for Oddie-loaded instances (OpenDSS and OpenDSS-C engines) are handled by the Oddie code itself,
+        so it is global for each Oddie library.
+
+        These flags may change for each version of DSS C-API, but the same value will not be reused. That is,
+        when we remove a compatibility flag, it will have no effect but will also not affect anything else
+        besides raising an error if the user tries to toggle a flag that was available in a previous version.
+
+        We expect to keep a very limited number of flags. Since the flags are more transient than the other
+        options/flags, it was preferred to add this generic function instead of a separate function per
+        flag.
+
+        See the enumeration `DSSCompatFlags` for available flags, including description.
+
+        **(API Extension)**
+        '''
+        return self._lib.DSS_Get_CompatFlags()
+
+    @CompatFlags.setter
+    def CompatFlags(self, Value: int):
+        self._lib.DSS_Set_CompatFlags(Value)
+
+
+    @property
+    def PreferLists(self) -> bool:
+        '''
+        Enable this setting to use lists instead of NumPy arrays, where it makes sense.
+
+        This was added for better for compatibility with the COM packages (`comtypes` and  `win32com` use lists
+        and tuples by default) and the original OpenDSSDirect.py releases.
+
+        Current releases of OpenDSSDirect.py, DSS-Python, and AltDSS(-Python) all use NumPy arrays by default.
+        Users can also activate the related `AdvancedTypes` for a richer experience.
+
+        **(API Extension)**
+        '''
+        return self._lib.prefer_lists
+
+    @PreferLists.setter
+    def PreferLists(self, value: bool):
+        self._lib.prefer_lists = value
+
+    @property
+    def COMErrorResults(self) -> bool:
+        '''
+        If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the 
+        official OpenDSS COM interface. 
+
+        For example, consider the function `Loads_Get_ZIPV`. If there is no active circuit or active load element:
+
+        - In the disabled state (COMErrorResults=False), the function will return "[]", an array with 0 elements.
+        - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
+        be compatible with the return value of the official COM interface.
+
+        Defaults to False/0 (disabled state), starting DSS-Python v0.16.
+
+        This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 0 disables
+        the legacy/COM behavior. The value can be toggled through the API at any time.
+
+        **(API Extension)**
+        '''
+        return self._lib.DSS_Get_COMErrorResults()
+
+    @COMErrorResults.setter
+    def COMErrorResults(self, Value: bool):
+        self._lib.DSS_Set_COMErrorResults(Value)

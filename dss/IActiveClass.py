@@ -56,7 +56,7 @@ class IActiveClass(Base):
     def First(self) -> int:
         '''
         Sets first element in the active class to be the active DSS object. 
-        If the object is a CktElement, ActiveCktELement also points to this element. 
+        If the object is a CktElement, ActiveCktElement also points to this element. 
         
         Returns 0 if none.
 

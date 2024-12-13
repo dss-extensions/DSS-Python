@@ -98,6 +98,9 @@ class IDSS(Base):
         Wrap a new DSS context with the DSS-Python API.
         This is not typically used directly. Refer to `IDSS.NewContext` or
         `IDSS._get_instance`.
+
+        For Oddie-wrapped libraries (EPRI's OpenDSS and OpenDSS-C), prefer the dedicated constructors and classes
+        (e.g. `IOddieDSS`, `EPRIOpenDSSC`, `EPRIOpenDSS`).
         '''
 
         if api_util.ctx not in IDSS._ctx_to_dss:
@@ -424,12 +427,16 @@ class IDSS(Base):
         This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 0 disables
         the legacy/COM behavior. The value can be toggled through the API at any time.
 
+        **Deprecated:** Use `Settings.COMErrorResults` instead (same behavior, the setting was just moved there for better organization).
+
         **(API Extension)**
         '''
+        warnings.warn('"COMErrorResults" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.COMErrorResults` instead.', DeprecationWarning, stacklevel=2)
         return self._lib.DSS_Get_COMErrorResults()
 
     @COMErrorResults.setter
     def COMErrorResults(self, Value: bool):
+        warnings.warn('"COMErrorResults" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.COMErrorResults` instead.', DeprecationWarning, stacklevel=2)
         self._lib.DSS_Set_COMErrorResults(Value)
 
     def NewContext(self) -> IDSS:
@@ -449,8 +456,7 @@ class IDSS(Base):
         ffi = self._api_util.ffi
         lib = self._api_util.lib_unpatched
         new_ctx = ffi.gc(lib.ctx_New(), lib.ctx_Dispose)
-        new_api_util = CffiApiUtil(ffi, lib, new_ctx)
-        new_api_util._advanced_types = self._api_util._advanced_types
+        new_api_util = CffiApiUtil(ffi, lib, new_ctx, parent=self._api_util)
         return IDSS(new_api_util)
 
     def __call__(self, cmds: Union[AnyStr, List[AnyStr]]):
@@ -513,21 +519,26 @@ class IDSS(Base):
         When disabled, the legacy plain arrays are used and complex numbers cannot be consumed by the Python API.
 
         *Defaults to **False** for backwards compatibility.*
+
+        **Deprecated:** Use `Settings.AdvancedTypes` instead (same behavior, the setting was just moved there for better organization).
         
         **(API Extension)**
         '''
-        return self._api_util._advanced_types
+        return self._lib.advanced_types
 
     @AdvancedTypes.setter
     def AdvancedTypes(self, Value: bool):
-        self._api_util._advanced_types = bool(Value)
+        warnings.warn('"AdvancedTypes" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.AdvancedTypes` instead.', DeprecationWarning, stacklevel=2)
+        self._lib.advanced_types = bool(Value)
 
     @property
     def CompatFlags(self) -> int:
         '''
         Controls some compatibility flags introduced to toggle some behavior from the official OpenDSS.
 
-        **THE FLAGS ARE GLOBAL, affecting all DSS engines in the process.**
+        **THE FLAGS ARE GLOBAL, affecting all AltDSS engines in the process.**  
+        CompatFlags for Oddie-loaded instances (OpenDSS and OpenDSS-C engines) are handled by the Oddie code itself,
+        so it is global for each Oddie library.
 
         These flags may change for each version of DSS C-API, but the same value will not be reused. That is,
         when we remove a compatibility flag, it will have no effect but will also not affect anything else
@@ -539,12 +550,15 @@ class IDSS(Base):
 
         See the enumeration `DSSCompatFlags` for available flags, including description.
 
+        **Deprecated:** Use `Settings.CompatFlags` instead (same behavior, the setting was just moved there for better organization).
+
         **(API Extension)**
         '''
         return self._lib.DSS_Get_CompatFlags()
 
     @CompatFlags.setter
     def CompatFlags(self, Value: int):
+        warnings.warn('"CompatFlags" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.CompatFlags` instead.', DeprecationWarning, stacklevel=2)
         self._lib.DSS_Set_CompatFlags(Value)
 
 

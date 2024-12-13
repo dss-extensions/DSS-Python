@@ -3,6 +3,44 @@
 Remember that changes in our alternative OpenDSS engine, currently known as DSS C-API, are always
 relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_capi/) for more information.
 
+## 0.16.x
+
+### 0.16.0
+
+Released on 2024-12-1x.
+
+- See the extensive backend changes in the next subsection.
+- `UseExceptions` and `AdvancedTypes` now only affect the local bindings. That is, a second instance for the same or different DSS engine context can use different settings. This also decouples the option between DSS-Python and OpenDSSDirect.py. It should make it easier to mix and match our Python packages without having to worry too much about this settings.
+
+#### Backend changes and support for EPRI's distribution
+
+- DSS-Python-Backend now provides a custom backend which integrates directly with NumPy, called internally "FastDSS", besides the legacy CFFI backend. The CFFI backend is now lighter and faster to compile.
+    - Since the new FastDSS is tighly integrated with CPython and NumPy, we added the option to disable it using the environment variable `DSS_EXTENSIONS_FASTDSS`. Set it to 0 to disable the backend, using only the CFFI backend.
+    - As the name implies, FastDSS is fast, even compared to CFFI. If removes most of the overhead of running a few interpreted lines of Python code, interacting directly with the CPython C-API and the NumPy C-API. That is, we do not expect to change it a lot in the future.
+        - Reading numeric arrays and strings from the API with FastDSS gets a speed boost compared to the old backend.
+        - Note that the original CFFI backend was already faster for many functions vs. the alternatives.
+        - The performance of each function varies across all the engines now supported (AltDSS, OpenDSS, OpenDSS-C). AltDSS and its DSS C-API implementation have specific optimizations implemented throughout the years.
+    - For PyPy and other Python implementations, the CFFI backend is still preferred. We would like to experiment with a backend based on [HPy](https://hpyproject.org/) in the future, if time permits.
+
+- Although we do not expect users to explore this, the backend now allows loading external DSS C-API libraries in the new struct-style initialization.
+
+- DSS-Extensions, including DSS-Python and OpenDSSDirect.py, now have good support for EPRI's official OpenDSS binaries, including the Delphi version (mainline) and the new OpenDSS-C. 
+    - The integration started in 2023, after EPRI's Direct DLL API was updated to migrate from Delphi variants, moving closer to our own DSS C-API in some aspects.
+    - Contributors from DSS-Extensions have collaborated with EPRI on the maintainance and general development of OpenDSS-C in 2024. A few extras from our AltDSS engine have been integrated into OpenDSS-C, still under testing by the time this document was updated.
+    - The integration is done by wrapping EPRI's binaries with a very thin layer that exposes it with the DSS-Extensions API. Our compatibility layer is called Oddie (originally for OpenDSSDirect.DLL Interface Extender). Functions that are not or cannot be implemented return errors.
+    - The Delphi version of EPRI's OpenDSS, in OpenDSSDirect.DLL, is copied from the https://github.com/dss-extensions/opendss-svn-mirror -- the OpenDSS versions tracked on Git tags.
+    - Initially, since EPRI does not distribute OpenDSS-C binaries yet, DSS-Extensions builds shared libraries/DLLs combining Oddie and OpenDSS-C. With the new-style initialization, Oddie adds a single function to the public API.
+    - Users can build their own binaries for OpenDSS-C (or the Delphi OpenDSS) and use that through the Oddie interface. That is, if a new OpenDSS version is released, users can install EPRI's distribution and load the binaries installed with that. Breaking API/ABI changes may crash though.
+    **DSS-Extensions will not patch the official EPRI's OpenDSS(-C) beyond build scripts.** That is, if a bug is not in our code, we cannot fix it on EPRI's distribution. We can adjust things in our engine, AltDSS (the main code in DSS C-API's repository).
+    - On Windows, users will have three alternatives of engine: AltDSS, EPRI's mainline OpenDSS written in Delphi, and EPRI's new OpenDSS-C written in C++.
+
+- We are open to suggestions on if and how to adjust DSS-Python and OpenDSSDirect.py to better signal that certain functions and objects are not available with EPRI's engine and vice-versa.
+
+To clear any potential confusion, our custom engine and API will continue to be developed since it has extra features and we are free to experiment and improve it without requiring external approval.
+
+When using DSS-Extensions or OpenDSS in general, please try to cite the engine version. It will make it much easier to reproduce your work.
+
+
 ## 0.15.x
 
 ### 0.15.6

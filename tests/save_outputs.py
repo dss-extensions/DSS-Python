@@ -443,7 +443,7 @@ if __name__ == '__main__':
 
     elif SAVE_DSSX_OUTPUT:
         from dss import DSS, DSSCompatFlags
-        DSS.CompatFlags = 0 # DSSCompatFlags.InvControl9611
+        DSS.ActiveCircuit.Settings.CompatFlags = 0 # DSSCompatFlags.InvControl9611
         print("Using DSS-Extensions:", DSS.Version)
         match = re.match('DSS C-API Library version ([^ ]+) revision.* ([0-9]+);.*', DSS.Version)
         dssx_ver, dssx_timestamp = match.groups()

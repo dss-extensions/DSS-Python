@@ -15,13 +15,13 @@ def setup_function():
     DSS.ClearAll()
 
     DSS.AllowForms = False
-    DSS.AdvancedTypes = False
-    DSS.CompatFlags = 0
+    DSS.ActiveCircuit.Settings.AdvancedTypes = False
+    DSS.ActiveCircuit.Settings.CompatFlags = 0
 
     if not DSS._api_util._is_oddie:
         DSS.AllowEditor = False
         DSS.AllowChangeDir = True
-        DSS.COMErrorResults = False
+        DSS.ActiveCircuit.Settings.COMErrorResults = False
 
     DSS.Error.UseExceptions = True
     DSS.Text.Command = 'set DefaultBaseFreq=60'
@@ -99,5 +99,5 @@ def test_ymatrix_csc():
 
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
     DSS.ActiveCircuit.Solution.Solve()
-    DSS.AdvancedTypes = True
+    DSS.ActiveCircuit.Settings.AdvancedTypes = True
     assert np.all(DSS.ActiveCircuit.SystemY == sp.csc_matrix(DSS.YMatrix.GetCompressedYMatrix()))

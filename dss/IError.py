@@ -77,28 +77,28 @@ class IError(Base):
         """
         Controls whether the automatic error checking mechanism is enable, i.e., if
         the DSS engine errors (from the `Error` interface) are mapped exception when
-        detected. 
-        
+        detected.
+
         **When disabled, the user takes responsibility for checking for errors.**
         This can be done through the `Error` interface. When `Error.Number` is not
         zero, there should be an error message in `Error.Description`. This is compatible
-        with the behavior on the official OpenDSS (Windows-only COM implementation) when 
+        with the behavior on the official OpenDSS (Windows-only COM implementation) when
         `AllowForms` is disabled.
 
         Users can also use the DSS command `Export ErrorLog` to inspect for errors.
 
-        **WARNING:** This is a global setting, affects all DSS instances from DSS-Python,
-        OpenDSSDirect.py and AltDSS.
+        With EPRI's OpenDSS engines, in contrast to our main AltDSS engine, users are 
+        also required to set `AllowForms` to `False`, otherwise the engine does not
+        populate the Error.Number API and the error is consumed by the popup form or
+        terminal message.
+
+        **NOTE:** this used to be a global settings. Since DSS-Python v0.16.0,
+        it only affects the target instance.
 
         **(API Extension)**
         """
-        return Base._use_exceptions
-    
+        return self._lib.using_exceptions
+
     @UseExceptions.setter
     def UseExceptions(self, value: bool):
-        Base._enable_exceptions(value)
-        _UseExceptions = 1
-        if value:
-            self._api_util.settings_ptr[0] = self._api_util.settings_ptr[0] | _UseExceptions
-        else:
-            self._api_util.settings_ptr[0] = self._api_util.settings_ptr[0] & ~_UseExceptions
+        self._lib.using_exceptions = value

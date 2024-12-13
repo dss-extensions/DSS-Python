@@ -16,7 +16,7 @@ _properties_mo = os.path.join(os.path.dirname(__file__), 'messages', 'properties
 if os.path.exists(_properties_mo):
     lib.DSS_SetPropertiesMO(_properties_mo.encode())
 
-from ._cffi_api_util import CffiApiUtil, DSSException, set_case_insensitive_attributes
+from ._cffi_api_util import CffiApiUtil, AltDSSAPIUtil, DSSException, set_case_insensitive_attributes
 from .IDSS import IDSS
 from .Oddie import IOddieDSS, OddieOptions
 from .enums import *

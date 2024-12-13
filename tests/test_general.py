@@ -22,13 +22,13 @@ def setup_function():
     DSS.ClearAll()
 
     DSS.AllowForms = False
-    DSS.AdvancedTypes = False
-    DSS.CompatFlags = 0
+    DSS.ActiveCircuit.Settings.AdvancedTypes = False
+    DSS.ActiveCircuit.Settings.CompatFlags = 0
 
     if not DSS._api_util._is_oddie:
         DSS.AllowEditor = False
         DSS.AllowChangeDir = True
-        DSS.COMErrorResults = False
+        DSS.ActiveCircuit.Settings.COMErrorResults = False
 
     DSS.Error.UseExceptions = True
     DSS.Text.Command = 'set DefaultBaseFreq=60'
@@ -192,7 +192,7 @@ def test_compat_precision():
 
     DSS.ActiveCircuit.Vsources.First
     good = DSS.ActiveCircuit.ActiveCktElement.SeqVoltages.view(dtype=complex)
-    DSS.CompatFlags = DSSCompatFlags.BadPrecision
+    DSS.ActiveCircuit.Settings.CompatFlags = DSSCompatFlags.BadPrecision
     bad = DSS.ActiveCircuit.ActiveCktElement.SeqVoltages.view(dtype=complex)
     assert max(abs(good - bad)) > 1e-6
 
@@ -210,7 +210,7 @@ def test_compat_activeline():
     
     assert name == Lines.Name
 
-    DSS.CompatFlags = DSSCompatFlags.ActiveLine
+    DSS.ActiveCircuit.Settings.CompatFlags = DSSCompatFlags.ActiveLine
     with pytest.raises(DSSException):
         assert name == Lines.Name
 
@@ -275,8 +275,7 @@ def test_pm_threads():
     if Parallel.NumCPUs < 4:
         return # Cannot run in this machine, e.g. won't run on GitHub Actions
 
-    if not isinstance(DSS, IOddieDSS):
-        DSS.AdvancedTypes = True
+    DSS.ActiveCircuit.Settings.AdvancedTypes = True
 
     DSS.Text.Command = 'set parallel=No'
     fn = os.path.abspath(f'{BASE_DIR}/Version8/Distrib/EPRITestCircuits/ckt5/Master_ckt5.dss')
@@ -760,7 +759,7 @@ def test_capacitor_reactor(DSS: IDSS = DSS):
     from itertools import product
     kVA = 1329.53
     kV = 2.222
-    DSS.AdvancedTypes = True
+    DSS.ActiveCircuit.Settings.AdvancedTypes = True
 
     for component, f in product(('Capacitor', 'Reactor'), (50, 60)):
         bus = 1
@@ -970,10 +969,10 @@ def test_line_parent_compat():
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
     DSS.Text.Command = 'new energymeter.m1 element=transformer.sub'
     DSS.Text.Command = 'solve mode=snap'
-    DSS.CompatFlags = DSSCompatFlags.ActiveLine
+    DSS.ActiveCircuit.Settings.CompatFlags = DSSCompatFlags.ActiveLine
     Lines = DSS.ActiveCircuit.Lines
     res_compat = Lines.First, Lines.Next, Lines.Name, Lines.Next, Lines.Name, Lines.Parent, Lines.Name, Lines.Parent, Lines.Name
-    DSS.CompatFlags = 0
+    DSS.ActiveCircuit.Settings.CompatFlags = 0
     res_no_compat = Lines.First, Lines.Next, Lines.Name, Lines.Next, Lines.Name, Lines.Parent, Lines.Name, Lines.Parent, Lines.Name
 
     assert res_no_compat == (1, 2, '632670', 3, '670671', 2, '632670', 1, '650632')
@@ -1050,6 +1049,22 @@ def test_busnames_ext():
     assert tuple(CE._get_BusNames(True)) == ('sourcebus', '650')
 
 
+def test_settings_context():
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    
+    with DSS.ActiveCircuit.Settings.Context() as settings:
+        settings.AdvancedTypes = True
+        settings.PreferLists = True
+        assert isinstance(DSS.ActiveCircuit.LineLosses, complex)
+        assert isinstance(DSS.ActiveCircuit.AllBusVmag, list)
+
+    assert not settings.AdvancedTypes
+    assert not settings.PreferLists
+    assert isinstance(DSS.ActiveCircuit.LineLosses, np.ndarray)
+    assert isinstance(DSS.ActiveCircuit.AllBusVmag, np.ndarray)
+
+
+
 
 if __name__ == '__main__':
     DSS.AllowForms = False
@@ -1062,3 +1077,4 @@ if __name__ == '__main__':
     test_loadshape_extended()
     test_xycurve_extended()
     print('DONE!')
+

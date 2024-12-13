@@ -644,7 +644,7 @@ class ICircuit(Base):
         self._lib.Circuit_FromJSON(data, options)
 
 
-    def Save(self, dirOrFilePath: AnyStr, saveFlags: DSSSaveFlags) -> str:
+    def Save(self, dirOrFilePath: AnyStr, saveFlags: Union[DSSSaveFlags, List[DSSSaveFlags]]) -> str:
         '''
         Equivalent of the "save circuit" DSS command, but allows customization
         through the `saveFlags` argument, which is a set of bit flags. 
@@ -668,6 +668,14 @@ class ICircuit(Base):
         '''
         if not isinstance(dirOrFilePath, bytes):
             dirOrFilePath = dirOrFilePath.encode()
-        return self._get_string(self._lib.Circuit_Save(dirOrFilePath, saveFlags))
+
+        if isinstance(saveFlags, (list, tuple)):
+            mask = 0
+            for v in saveFlags:
+                mask = mask | v
+
+            saveFlags = mask
+
+        return self._api_util.get_string(self._lib.Circuit_Save(dirOrFilePath, saveFlags))
 
 
