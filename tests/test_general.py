@@ -943,6 +943,35 @@ def test_loadshape_extended():
     LS.TimeArray *= 12
     npt.assert_allclose(LS.TimeArray / 12, [1, 2, 7])
 
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    DSS.Text.Command = 'new loadshape.test npts=3 pmult=[1.1, 2.2, 3.3] qmult=[4.5, 4.6, 4.7] hour=[1, 2, 7]'
+    DSS.Text.Command = 'BatchEdit Load..* Daily=test'
+    DSS.ActiveCircuit.Solution.Mode = SolveModes.Daily
+    DSS.ActiveCircuit.Solution.StepSize = 3600
+    DSS.ActiveCircuit.Solution.Number = 1
+    
+    avg_results_ref = [-3850.602050692013, -6933.281474723415, -7515.891810916165, -8086.495438035473, -8645.055975533884, -9190.98268197323, -9725.069704090525, -3850.634926011579]
+    avg_results = []
+    for _ in range(8):
+        DSS.ActiveCircuit.Solution.Solve()
+        avg_results.append(DSS.ActiveCircuit.TotalPower[0])
+
+    DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    DSS.Text.Command = 'new loadshape.test npts=3 pmult=[1.1, 2.2, 3.3] qmult=[4.5, 4.6, 4.7] hour=[1, 2, 7] interpolation=edge'
+    DSS.Text.Command = 'BatchEdit Load..* Daily=test'
+    DSS.ActiveCircuit.Solution.Mode = SolveModes.Daily
+    DSS.ActiveCircuit.Solution.StepSize = 3600
+    DSS.ActiveCircuit.Solution.Number = 1
+
+    edge_results_ref = [-3850.602050692013, -6933.281474723415, -6933.300378973458, -6933.299600116585, -6933.2996080286175, -6933.29960833009, -9724.825136610381, -3850.6349396192672]
+    edge_results = []
+    for _ in range(8):
+        DSS.ActiveCircuit.Solution.Solve()
+        edge_results.append(DSS.ActiveCircuit.TotalPower[0])
+
+    npt.assert_allclose(avg_results, avg_results_ref)
+    npt.assert_allclose(edge_results, edge_results_ref)
+
 
 def test_xycurve_extended():
 
