@@ -149,18 +149,18 @@ class CtxLib:
 
         return res
 
-    def get_complex128_array2(self, func, *args) -> Float64ArrayOrComplexArray:
-        if not self.advanced_types:
-            return self.get_float64_array2(func, *args)
+    # def get_complex128_array2(self, func, *args) -> Float64ArrayOrComplexArray:
+    #     if not (self.settings_ptr[0] & (1 << 1)): # self.advanced_types:
+    #         return self.get_float64_array2(func, *args)
 
-        # Currently we use the same as API as get_float64_array, may change later
-        ptr = self._ffi.new('double**')
-        cnt = self._ffi.new('int32_t[4]')
-        func(ptr, cnt, *args)
-        ptr = self._ffi.cast('double _Complex **', ptr)
-        res = self._ffi.unpack(ptr[0], cnt[0] >> 1)
-        self.DSS_Dispose_PDouble(ptr)
-        return res
+    #     # Currently we use the same as API as get_float64_array, may change later
+    #     ptr = self._ffi.new('double**')
+    #     cnt = self._ffi.new('int32_t[4]')
+    #     func(ptr, cnt, *args)
+    #     ptr = self._ffi.cast('double _Complex **', ptr)
+    #     res = self._unpack(ptr[0], cnt[0] >> 1)
+    #     self.DSS_Dispose_PDouble(ptr)
+    #     return res
 
 
     def get_complex128_simple(self, func, *args) -> Float64ArrayOrSimpleComplex:
@@ -189,19 +189,19 @@ class CtxLib:
             self.DSS_Dispose_PDouble(ptr)
 
 
-    def get_complex128_simple2(self, func, *args) -> List[Union[complex, float]]:
-        if not self.advanced_types:
-            return self.get_float64_array2(func, *args)
+    # def get_complex128_simple2(self, func, *args) -> List[Union[complex, float]]:
+    #     if not (self.settings_ptr[0] & (1 << 1)): # self.advanced_types:
+    #         return self.get_float64_array2(func, *args)
 
-        # Currently we use the same as API as get_float64_array, may change later
-        ptr = self._ffi.new('double**')
-        cnt = self._ffi.new('int32_t[4]')
-        func(ptr, cnt, *args)
-        try:
-            assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
-            return self._ffi.cast('double _Complex**', ptr)[0][0]
-        finally:
-            self.DSS_Dispose_PDouble(ptr)
+    #     # Currently we use the same as API as get_float64_array, may change later
+    #     ptr = self._ffi.new('double**')
+    #     cnt = self._ffi.new('int32_t[4]')
+    #     func(ptr, cnt, *args)
+    #     try:
+    #         assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
+    #         return self._ffi.cast('double _Complex**', ptr)[0][0]
+    #     finally:
+    #         self.DSS_Dispose_PDouble(ptr)
 
 
     def get_float64_gr_array(self) -> Float64Array:
@@ -259,16 +259,6 @@ class CtxLib:
         return ptr[0][0]
 
 
-    def get_complex128_gr_simple2(self) -> List[Union[complex, float]]:
-        if not self.advanced_types:
-            return self.get_float64_gr_array2()
-
-        # Currently we use the same as API as get_float64_array, may change later
-        ptr, cnt = self.gr_cfloat64_pointers
-        assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
-        return ptr[0][0]
-
-
     def get_int32_array(self, func: Callable, *args) -> Int32Array:
         ptr = self._ffi.new('int32_t**')
         cnt = self._ffi.new('int32_t[4]')
@@ -295,19 +285,19 @@ class CtxLib:
         return np.frombuffer(self._ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
 
 
-    def get_int8_array(self, func: Callable, *args: Any) -> Int8Array:
-        ptr = self._ffi.new('int8_t**')
-        cnt = self._ffi.new('int32_t[4]')
-        func(ptr, cnt, *args)
-        res = np.frombuffer(self._ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
-        self.DSS_Dispose_PByte(ptr)
+    # def get_int8_array(self, func: Callable, *args: Any) -> Int8Array:
+    #     ptr = self._ffi.new('int8_t**')
+    #     cnt = self._ffi.new('int32_t[4]')
+    #     func(ptr, cnt, *args)
+    #     res = np.frombuffer(self._ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
+    #     self.DSS_Dispose_PByte(ptr)
 
-        if cnt[3] and self.advanced_types:
-            # If the last element is filled, we have a matrix.  Otherwise, the 
-            # matrix feature is disabled or the result is indeed a vector
-            return res.reshape((cnt[2], cnt[3]))
+    #     if cnt[3] and (self.settings_ptr[0] & (1 << 1)): # self.advanced_types:
+    #         # If the last element is filled, we have a matrix.  Otherwise, the 
+    #         # matrix feature is disabled or the result is indeed a vector
+    #         return res.reshape((cnt[2], cnt[3]))
 
-        return res
+    #     return res
 
 
     def get_int8_gr_array(self) -> Int8Array:
@@ -321,100 +311,87 @@ class CtxLib:
         return np.frombuffer(self._ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
 
 
-    def get_string_array(self, func: Callable, *args: Any) -> List[str]:
-        ptr = self._ffi.new('char***')
-        cnt = self._ffi.new('int32_t[4]')
-        func(ptr, cnt, *args)
-        if not cnt[0]:
-            res = []
-        else:
-            actual_ptr = ptr[0]
-            if actual_ptr == self._ffi.NULL:
-                res = []
-            else:
-                codec = self.codec
-                str_ptrs = self._unpack(actual_ptr, cnt[0])
-                #res = [(str(self._ffi.string(str_ptr).decode(codec)) if (str_ptr != self._ffi.NULL) else None) for str_ptr in str_ptrs]
-                res = [(self._ffi.string(str_ptr).decode(codec) if (str_ptr != self._ffi.NULL) else u'') for str_ptr in str_ptrs]
+    # def get_string_array(self, func: Callable, *args: Any) -> List[str]:
+    #     ptr = self._ffi.new('char***')
+    #     cnt = self._ffi.new('int32_t[4]')
+    #     func(ptr, cnt, *args)
+    #     if not cnt[0]:
+    #         res = []
+    #     else:
+    #         actual_ptr = ptr[0]
+    #         if actual_ptr == self._ffi.NULL:
+    #             res = []
+    #         else:
+    #             codec = self.codec
+    #             str_ptrs = self._unpack(actual_ptr, cnt[0])
+    #             #res = [(str(self._ffi.string(str_ptr).decode(codec)) if (str_ptr != self._ffi.NULL) else None) for str_ptr in str_ptrs]
+    #             res = [(self._ffi.string(str_ptr).decode(codec) if (str_ptr != self._ffi.NULL) else u'') for str_ptr in str_ptrs]
 
-        self.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
-        return res
-
-
-    def get_string_array2(self, func, *args): # for compatibility with OpenDSSDirect.py
-        ptr = self._ffi.new('char***')
-        cnt = self._ffi.new('int32_t[4]')
-        func(ptr, cnt, *args)
-
-        if not cnt[0]:
-            res = []
-        else:
-            actual_ptr = ptr[0]
-            if actual_ptr == self._ffi.NULL:
-                res = []
-            else:
-                codec = self.codec
-                res = [(str(self._ffi.string(actual_ptr[i]).decode(codec)) if (actual_ptr[i] != self._ffi.NULL) else '') for i in range(cnt[0])]
-                if res == [u'']:
-                    # most COM methods return an empty array as an
-                    # array with an empty string
-                    res = []
-
-            if len(res) == 1 and res[0].lower() == 'none':
-                res = []
-
-        self.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
-        return res
+    #     self.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
+    #     return res
 
 
-    def get_float64_array2(self, func, *args):
-        ptr = self._ffi.new('double**')
-        cnt = self._ffi.new('int32_t[4]')
-        func(ptr, cnt, *args)
-        if not cnt[0]:
-            res = []
-        else:
-            res = self._ffi.unpack(ptr[0], cnt[0])
+    # def get_string_array2(self, func, *args): # for compatibility with OpenDSSDirect.py
+    #     ptr = self._ffi.new('char***')
+    #     cnt = self._ffi.new('int32_t[4]')
+    #     func(ptr, cnt, *args)
 
-        self.DSS_Dispose_PDouble(ptr)
-        return res
+    #     if not cnt[0]:
+    #         res = []
+    #     else:
+    #         actual_ptr = ptr[0]
+    #         if actual_ptr == self._ffi.NULL:
+    #             res = []
+    #         else:
+    #             codec = self.codec
+    #             res = [(str(self._ffi.string(actual_ptr[i]).decode(codec)) if (actual_ptr[i] != self._ffi.NULL) else '') for i in range(cnt[0])]
+    #             if res == [u'']:
+    #                 # most COM methods return an empty array as an
+    #                 # array with an empty string
+    #                 res = []
 
-    def get_float64_gr_array2(self):
-        ptr, cnt = self.gr_float64_pointers
-        return self._ffi.unpack(ptr[0], cnt[0])
+    #         if len(res) == 1 and res[0].lower() == 'none':
+    #             res = []
 
-    def get_int32_array2(self, func, *args):
-        ptr = self._ffi.new('int32_t**')
-        cnt = self._ffi.new('int32_t[4]')
-        func(ptr, cnt, *args)
-        if not cnt[0]:
-            res = None
-        else:
-            res = self._ffi.unpack(ptr[0], cnt[0])
+    #     self.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
+    #     return res
 
-        self.DSS_Dispose_PInteger(ptr)
-        return res
 
-    def get_int32_gr_array2(self):
-        ptr, cnt = self.gr_int32_pointers
-        return self._ffi.unpack(ptr[0], cnt[0])
+    # def get_float64_array2(self, func, *args):
+    #     ptr = self._ffi.new('double**')
+    #     cnt = self._ffi.new('int32_t[4]')
+    #     func(ptr, cnt, *args)
+    #     if not cnt[0]:
+    #         res = []
+    #     else:
+    #         res = self._unpack(ptr[0], cnt[0])
 
-    def get_int8_array2(self, func, *args):
-        ptr = self._ffi.new('int8_t**')
-        cnt = self._ffi.new('int32_t[4]')
-        func(ptr, cnt, *args)
-        if not cnt[0]:
-            res = None
-        else:
-            res = self._ffi.unpack(ptr[0], cnt[0])
+    #     self.DSS_Dispose_PDouble(ptr)
+    #     return res
 
-        self.DSS_Dispose_PByte(ptr)
-        return res
+    # def get_int32_array2(self, func, *args):
+    #     ptr = self._ffi.new('int32_t**')
+    #     cnt = self._ffi.new('int32_t[4]')
+    #     func(ptr, cnt, *args)
+    #     if not cnt[0]:
+    #         res = None
+    #     else:
+    #         res = self._unpack(ptr[0], cnt[0])
 
-    def get_int8_gr_array2(self):
-        ptr, cnt = self.gr_int8_pointers
-        return self._ffi.unpack(ptr[0], cnt[0])
+    #     self.DSS_Dispose_PInteger(ptr)
+    #     return res
 
+    # def get_int8_array2(self, func, *args):
+    #     ptr = self._ffi.new('int8_t**')
+    #     cnt = self._ffi.new('int32_t[4]')
+    #     func(ptr, cnt, *args)
+    #     if not cnt[0]:
+    #         res = None
+    #     else:
+    #         res = self._unpack(ptr[0], cnt[0])
+
+    #     self.DSS_Dispose_PByte(ptr)
+    #     return res
 
     def _get_strs_ctx(self, errorPtr, ctx, func: Callable, *args: Any) -> List[str]:
         ffi = self._ffi
@@ -735,26 +712,10 @@ class Base:
     __slots__ = [
         '_lib',
         '_api_util',
-        '_get_string',
-        '_get_float64_array',
-        '_get_float64_gr_array',
-        '_get_int32_array',
-        '_get_int32_gr_array',
-        '_get_int8_array',
-        '_get_int8_gr_array',
-        '_get_string_array',
         '_set_string_array',
         '_prepare_float64_array',
         '_prepare_int32_array',
         '_prepare_string_array',
-        '_get_complex128_array',
-        '_get_complex128_simple',
-        '_get_fcomplex128_simple',
-        '_get_complex128_gr_array',
-        '_get_complex128_gr_simple',
-        '_get_fcomplex128_gr_array',
-        '_get_fcomplex128_array',
-        '_get_fcomplex128_gr_simple',
         '_prepare_complex128_array',
         '_prepare_complex128_simple',
         '_errorPtr',
@@ -764,48 +725,10 @@ class Base:
     using_exceptions = True
     _oddpy = False
 
-    def __init__(self, api_util, prefer_lists=False):
+    def __init__(self, api_util):
         object.__setattr__(self, '_frozen_attrs', False)
         self._api_util = api_util
-        self._get_string = api_util.get_string
-
-        self._lib = api_util._get_lib(prefer_lists, self._oddpy)
-        lib = self._lib
-
-        #TODO: remove all _get_* after AltDSS is fully migrated
-        self._get_fcomplex128_gr_array = lib.get_fcomplex128_gr_array
-        self._get_fcomplex128_array = lib.get_fcomplex128_array
-        self._get_fcomplex128_simple = lib.get_fcomplex128_simple
-        self._get_fcomplex128_gr_simple = lib.get_fcomplex128_gr_simple
-
-        if not prefer_lists:
-            # Use NumPy arrays for most functions
-            self._get_float64_array = lib.get_float64_array
-            self._get_float64_gr_array = lib.get_float64_gr_array
-            self._get_int32_array = lib.get_int32_array
-            self._get_int32_gr_array = lib.get_int32_gr_array
-            self._get_int8_array = lib.get_int8_array
-            self._get_int8_gr_array = lib.get_int8_gr_array
-            self._get_string_array = lib.get_string_array
-            
-            self._get_complex128_array = lib.get_complex128_array
-            self._get_complex128_simple = lib.get_complex128_simple
-            self._get_complex128_gr_array = lib.get_complex128_gr_array
-            self._get_complex128_gr_simple = lib.get_complex128_gr_simple
-        else:
-            # Classic OpenDSSDirect.py style, using mostly lists
-            self._get_float64_array = lib.get_float64_array2
-            self._get_float64_gr_array = lib.get_float64_gr_array2
-            self._get_int32_array = lib.get_int32_array2
-            self._get_int32_gr_array = lib.get_int32_gr_array2
-            self._get_int8_array = lib.get_int8_array2
-            self._get_int8_gr_array = lib.get_int8_gr_array2
-            self._get_string_array = lib.get_string_array2
-            
-            self._get_complex128_array = lib.get_complex128_array2
-            self._get_complex128_simple = lib.get_complex128_simple2
-            self._get_complex128_gr_array = lib.get_complex128_gr_array2
-            self._get_complex128_gr_simple = lib.get_complex128_gr_simple2
+        self._lib = api_util._get_lib(self._oddpy)
 
         self._prepare_complex128_array = api_util.prepare_complex128_array
         self._prepare_complex128_simple = api_util.prepare_complex128_simple
