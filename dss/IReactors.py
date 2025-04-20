@@ -132,7 +132,7 @@ class IReactors(Iterable):
     def Bus2(self) -> str:
         '''
         Name of 2nd bus. Defaults to all phases connected to first bus, node 0, (Shunt Wye Connection) except when Bus2 is specifically defined.
-        Not necessary to specify for delta (LL) connection
+        Not necessary to specify for delta (LL) connection.
 
         **(API Extension)**
         '''

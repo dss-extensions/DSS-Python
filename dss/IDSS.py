@@ -331,8 +331,11 @@ class IDSS(Base):
         If you set to 0 (false), the editor is not executed. Note that other side effects,
         such as the creation of files, are not affected.
 
+        **Deprecated:** Use `Settings.AllowEditor` instead (same behavior, the setting was just moved there for better organization).
+
         **(API Extension)**
         '''
+        warnings.warn('"AllowEditor" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.AllowEditor` instead.', DeprecationWarning, stacklevel=2)
         return self._lib.DSS_Get_AllowEditor()
 
     @AllowEditor.setter
@@ -340,7 +343,8 @@ class IDSS(Base):
         self._lib.DSS_Set_AllowEditor(value)
 
     def ShowPanel(self):
-        pass
+        if api_util._is_oddie:
+            self._lib.Text_Set_Command('panel')
 
     def NewCircuit(self, name) -> ICircuit:
         '''
@@ -384,8 +388,11 @@ class IDSS(Base):
         This can also be set through the environment variable DSS_CAPI_ALLOW_CHANGE_DIR. Set it to 0 to
         disallow changing the active working directory.
         
+        **Deprecated:** Use `Settings.AllowChangeDir` instead (same behavior, the setting was just moved there for better organization).
+
         **(API Extension)**
         '''
+        warnings.warn('"AllowChangeDir" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.AllowChangeDir` instead.', DeprecationWarning, stacklevel=2)
         return self._lib.DSS_Get_AllowChangeDir()
 
     @AllowChangeDir.setter
@@ -402,8 +409,11 @@ class IDSS(Base):
         This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
         the command.
 
+        **Deprecated:** Use `Settings.AllowDOScmd` instead (same behavior, the setting was just moved there for better organization).
+
         **(API Extension)**
         '''
+        warnings.warn('"AllowDOScmd" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.AllowDOScmd` instead.', DeprecationWarning, stacklevel=2)
         return self._lib.DSS_Get_AllowDOScmd()
 
     @AllowDOScmd.setter

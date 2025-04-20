@@ -267,6 +267,7 @@ class IGenerators(Iterable):
     def Class(self) -> int:
         '''
         An arbitrary integer number representing the class of Generator so that Generator values may be segregated by class.
+        No effect on the solution.
 
         **(API Extension)**
         '''

@@ -44,6 +44,11 @@ class SettingsContext:
         except:
             pass
 
+        try:
+            self._AllowDOScmd = self._settings.AllowDOScmd
+        except:
+            pass
+
         return self._settings
         
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -77,6 +82,10 @@ class SettingsContext:
         except:
             pass
 
+        try:
+            self._settings.AllowDOScmd = self._AllowDOScmd
+        except:
+            pass
 
 
 class ISettings(Base):
@@ -553,7 +562,7 @@ class ISettings(Base):
         If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the 
         official OpenDSS COM interface. 
 
-        For example, consider the function `Loads_Get_ZIPV`. If there is no active circuit or active load element:
+        For example, consider the property `Loads.ZIPV`. If there is no active circuit or active load element:
 
         - In the disabled state (COMErrorResults=False), the function will return "[]", an array with 0 elements.
         - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
@@ -571,3 +580,60 @@ class ISettings(Base):
     @COMErrorResults.setter
     def COMErrorResults(self, Value: bool):
         self._lib.DSS_Set_COMErrorResults(Value)
+
+    @property
+    def AllowDOScmd(self) -> bool:
+        '''
+        If enabled, the `DOScmd` command is allowed. Otherwise, an error is reported if the user tries to use it.
+
+        Defaults to False/0 (disabled state). Users should consider DOScmd deprecated on DSS-Extensions.
+
+        This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
+        the command.
+
+        **(API Extension)**
+        '''
+        return self._lib.DSS_Get_AllowDOScmd()
+
+    @AllowDOScmd.setter
+    def AllowDOScmd(self, Value: bool):
+        self._lib.DSS_Set_AllowDOScmd(Value)
+
+    @property
+    def AllowChangeDir(self) -> bool:
+        '''
+        If disabled, the engine will not change the active working directory during execution. E.g. a "compile"
+        command will not "chdir" to the file path.
+        
+        If you have issues with long paths, enabling this might help in some scenarios.
+        
+        Defaults to True (allow changes, backwards compatible) in the 0.10.x versions of DSS C-API. 
+        This might change to False in future versions.
+        
+        This can also be set through the environment variable DSS_CAPI_ALLOW_CHANGE_DIR. Set it to 0 to
+        disallow changing the active working directory.
+        
+        **(API Extension)**
+        '''
+        return self._lib.DSS_Get_AllowChangeDir()
+
+    @AllowChangeDir.setter
+    def AllowChangeDir(self, Value: bool):
+        self._lib.DSS_Set_AllowChangeDir(Value)
+
+    @property
+    def AllowEditor(self) -> bool:
+        '''
+        Gets/sets whether running the external editor for "Show" is allowed
+        
+        AllowEditor controls whether the external editor is used in commands like "Show".
+        If you set to 0 (false), the editor is not executed. Note that other side effects,
+        such as the creation of files, are not affected.
+
+        **(API Extension)**
+        '''
+        return self._lib.DSS_Get_AllowEditor()
+
+    @AllowEditor.setter
+    def AllowEditor(self, value: bool):
+        self._lib.DSS_Set_AllowEditor(value)
