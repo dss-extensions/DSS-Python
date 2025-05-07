@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from __future__ import annotations
 import warnings
 from weakref import WeakKeyDictionary
@@ -191,7 +191,7 @@ class IDSS(Base):
     def is_oddie(self) -> bool:
         """
         Returns True if this instance is based on the Oddie compatibility layer for
-        the official OpenDSS Direct API (a.k.a. DCSL).
+        EPRI's OpenDSS Direct API (a.k.a. DCSL).
         
         Note that the default engine in DSS-Python has been based on AltDSS since
         2018, even though it was not called AltDSS then.
@@ -220,7 +220,7 @@ class IDSS(Base):
         handled automatically, so the users do not need to call it manually,
         unless using AltDSS/DSS C-API directly without further tools.
 
-        On the official OpenDSS, `Start` also does nothing at all in the current
+        On EPRI's OpenDSS, `Start` also does nothing at all in the current
         Delphi versions. It is required for OpenDSS-C, but also handled behind
         the scenes on DSS-Extensions.
 
@@ -312,7 +312,9 @@ class IDSS(Base):
     @property
     def AllowForms(self) -> bool:
         '''
-        Gets/sets whether text output is allowed (DSS-Extensions) or general forms/windows are shown (official OpenDSS).
+        Indicates whether text output is allowed or forms are used. Disable to silence most output.
+
+        Currently, forms/windows are only used for EPRI's OpenDSS distribution on Windows.
 
         Original COM help: https://opendss.epri.com/AllowForms.html
         '''
@@ -361,7 +363,7 @@ class IDSS(Base):
         '''
         LegacyModels was a flag used to toggle legacy (pre-2019) models for PVSystem, InvControl, Storage and
         StorageControl.
-        In the official OpenDSS version 9.0, the old models were removed. They were temporarily present here
+        In EPRI's OpenDSS version 9.0, the old models were removed. They were temporarily present here
         but were also removed in DSS C-API v0.13.0.
             
         **NOTE**: this property will be removed for v1.0. It is left to avoid breaking the current API too soon.
@@ -423,8 +425,8 @@ class IDSS(Base):
     @property
     def COMErrorResults(self) -> bool:
         '''
-        If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the 
-        official OpenDSS COM interface. 
+        If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with 
+        EPRI's OpenDSS COM interface. 
 
         For example, consider the function `Loads_Get_ZIPV`. If there is no active circuit or active load element:
 
@@ -432,9 +434,11 @@ class IDSS(Base):
         - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
         be compatible with the return value of the official COM interface.
 
-        Defaults to False/0 (disabled state), starting DSS-Python v0.16.
+        Defaults to false (disabled state) in AltDSS since the v0.15.x series.
 
-        This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 0 disables
+        This does not affect the results when using EPRI's OpenDSS distribution through Oddie.
+
+        This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 1 enables
         the legacy/COM behavior. The value can be toggled through the API at any time.
 
         **Deprecated:** Use `Settings.COMErrorResults` instead (same behavior, the setting was just moved there for better organization).
@@ -461,7 +465,7 @@ class IDSS(Base):
         '''
 
         if self._api_util._is_oddie:
-            raise NotImplementedError("NewContext is not supported for the official OpenDSS engine.")
+            raise NotImplementedError("NewContext is not supported for the EPRI's OpenDSS engines.")
 
         ffi = self._api_util.ffi
         lib = self._api_util.lib_unpatched
@@ -544,7 +548,7 @@ class IDSS(Base):
     @property
     def CompatFlags(self) -> int:
         '''
-        Controls some compatibility flags introduced to toggle some behavior from the official OpenDSS.
+        Controls some compatibility flags introduced to toggle some behavior from EPRI's OpenDSS.
 
         **THE FLAGS ARE GLOBAL, affecting all AltDSS engines in the process.**  
         CompatFlags for Oddie-loaded instances (OpenDSS and OpenDSS-C engines) are handled by the Oddie code itself,

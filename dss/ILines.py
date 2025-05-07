@@ -1,8 +1,8 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
-from ._types import Float64Array, Float64ArrayOrComplexArray
+from ._types import Float64Matrix, ComplexMatrix
 from typing import AnyStr, Union
 from .enums import LineUnits
 
@@ -42,7 +42,8 @@ class ILines(Iterable):
         'Units', 
     ]
 
-    def New(self, Name):
+    def New(self, Name: str):
+        '''Create new Line object with the given `Name`'''
         return self._lib.Lines_New(Name)
 
     @property
@@ -98,11 +99,11 @@ class ILines(Iterable):
         self._lib.Lines_Set_C1(Value)
 
     @property
-    def Cmatrix(self) -> Float64Array:
+    def Cmatrix(self) -> Float64Matrix:
         return self._lib.Lines_Get_Cmatrix_GR()
 
     @Cmatrix.setter
-    def Cmatrix(self, Value: Float64Array):
+    def Cmatrix(self, Value: Float64Matrix):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Lines_Set_Cmatrix(ValuePtr, ValueCount)
 
@@ -135,7 +136,7 @@ class ILines(Iterable):
     @property
     def Length(self) -> float:
         '''
-        Length of line section in units compatible with the LineCode definition.
+        Length of line in units compatible with the LineCode definition.
 
         Original COM help: https://opendss.epri.com/Length.html
         '''
@@ -174,7 +175,7 @@ class ILines(Iterable):
     @property
     def NumCust(self) -> int:
         '''
-        Number of customers on this line section.
+        Number of customers on this line.
 
         *Requires an energy meter with an updated zone.*
 
@@ -259,7 +260,7 @@ class ILines(Iterable):
         self._lib.Lines_Set_Rho(Value)
 
     @property
-    def Rmatrix(self) -> Float64Array:
+    def Rmatrix(self) -> Float64Matrix:
         '''
         Resistance matrix (full), ohms per unit length. Array of doubles.
 
@@ -268,7 +269,7 @@ class ILines(Iterable):
         return self._lib.Lines_Get_Rmatrix_GR()
 
     @Rmatrix.setter
-    def Rmatrix(self, Value: Float64Array):
+    def Rmatrix(self, Value: Float64Matrix):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Lines_Set_Rmatrix(ValuePtr, ValueCount)
 
@@ -288,7 +289,7 @@ class ILines(Iterable):
     @property
     def TotalCust(self) -> int:
         '''
-        Total Number of customers served from this line section.
+        Total Number of customers served from this line.
 
         Original COM help: https://opendss.epri.com/TotalCust.html
         '''
@@ -296,6 +297,11 @@ class ILines(Iterable):
 
     @property
     def Units(self) -> LineUnits:
+        '''
+        Length units for the active line.
+
+        Original COM help: https://opendss.epri.com/Units.html
+        '''
         return LineUnits(self._lib.Lines_Get_Units())
 
     @Units.setter
@@ -342,7 +348,7 @@ class ILines(Iterable):
         self._lib.Lines_Set_Xg(Value)
 
     @property
-    def Xmatrix(self) -> Float64Array:
+    def Xmatrix(self) -> Float64Matrix:
         '''
         Reactance matrix (full), ohms per unit length. Array of doubles.
 
@@ -351,12 +357,12 @@ class ILines(Iterable):
         return self._lib.Lines_Get_Xmatrix_GR()
 
     @Xmatrix.setter
-    def Xmatrix(self, Value: Float64Array):
+    def Xmatrix(self, Value: Float64Matrix):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Lines_Set_Xmatrix(ValuePtr, ValueCount)
 
     @property
-    def Yprim(self) -> Float64ArrayOrComplexArray:
+    def Yprim(self) -> ComplexMatrix:
         '''
         Yprimitive for the active line object (complex array).
 
@@ -365,7 +371,7 @@ class ILines(Iterable):
         return self._lib.Lines_Get_Yprim_GR()
 
     @Yprim.setter
-    def Yprim(self, Value: Float64ArrayOrComplexArray):
+    def Yprim(self, Value: ComplexMatrix):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Lines_Set_Yprim(ValuePtr, ValueCount)
 
@@ -381,7 +387,7 @@ class ILines(Iterable):
     @property
     def IsSwitch(self) -> bool:
         '''
-        Sets/gets the Line element switch status. Setting it has side-effects to the line parameters.
+        Line element switch status. Setting it has side-effects to the line parameters.
 
         **(API Extension)**
         '''

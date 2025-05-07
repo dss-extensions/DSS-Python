@@ -1,5 +1,5 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2021-2024 Paulo Meira
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2021-2025 Paulo Meira
 from ._cffi_api_util import Base
 from typing import AnyStr, Optional, List
 
@@ -11,6 +11,8 @@ class IZIP(Base):
     
     The implementation provides a specialization which allows more efficient access if the ZIP file is open and reused for many circuits. 
     Doing so reduces the overhead of the initial opening and indexing of the file contents.
+
+    *Not available when using EPRI's OpenDSS distribution.*
 
     (**API Extension**)
     '''

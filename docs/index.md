@@ -48,7 +48,7 @@ In this documentation, since many features from DSS-Python are not available in 
 
 Independent of which OpenDSS implementation you use, it is good practice to list the specific implementation begin used (e.g. from EPRI or from DSS-Extensions). At the moment we do not generate DOIs for our packages, but users can always cite a specific version on PyPI, e.g. https://pypi.org/project/dss-python/0.12.1/
 
-Check http://dss-extensions.org and https://github.com/dss-extensions/dss-extensions for links to more documentation and examples. Besides our own documentation, the official OpenDSS documentation is extensive and covers various topics.
+Check http://dss-extensions.org and https://github.com/dss-extensions/dss-extensions for links to more documentation and examples. Besides our own documentation, EPRI's OpenDSS documentation is extensive and covers various topics.
 
 We recommend looking especially in the following resources:
 
@@ -83,7 +83,7 @@ While OpenDSS relies on windows/forms to report errors, or require the user to c
 Although there are many classes and modules in DSS-Python, the main usage is typically
 through the default DSS instance, and that is the most interest aspect for most users.
 
-DSS-Python tries to be a drop-in replacement for the official OpenDSS COM implementation, within reasonable limits.
+DSS-Python tries to be a drop-in replacement for EPRI's OpenDSS COM implementation, within reasonable limits.
 There are two main Python packages that allow instantiating COM objects, `win32com` and `comtypes`. 
 
 For a quick look into some Python APIs (COM, DSS-Python, OpenDSSDirect.py) for the OpenDSS (official or our alternative 
@@ -110,7 +110,7 @@ or with `comtypes`:
    DSS = comtypes.client.CreateObject("OpenDSSEngine.DSS")
 ```
 
-Either way, to use DSS-Python and effectively migrate from the official OpenDSS COM interface, you can replace that fragment with:
+Either way, to use DSS-Python and effectively migrate from EPRI's OpenDSS COM interface, you can replace that fragment with:
 
 ```python
    from dss import DSS
@@ -189,7 +189,7 @@ To enable:
 ```
 
 After that, running the plot commands from the text interface or compile/redirect scripts will try to use matplotlib to
-reproduce most of the plot options from the official OpenDSS.
+reproduce most of the plot options from EPRI's OpenDSS.
 
 ```python
    dss.Text.Command = 'compile some_circuit/Master.dss'

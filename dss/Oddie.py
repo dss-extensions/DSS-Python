@@ -72,7 +72,7 @@ class IOddieDSS(IDSS):
     def is_oddie(self) -> bool:
         """
         Returns True if this instance is based on the Oddie compatibility layer for
-        the official OpenDSS Direct API (a.k.a. DCSL).
+        EPRI's OpenDSS Direct API (a.k.a. DCSL).
         
         Note that the default instance in OpenDSSDirect.py is based on AltDSS since 2018.
         """

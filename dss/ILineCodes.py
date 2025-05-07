@@ -1,8 +1,8 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
-from ._types import Float64Array
+from ._types import Float64Matrix
 from typing import Union
 from .enums import LineUnits
 
@@ -55,7 +55,7 @@ class ILineCodes(Iterable):
         self._lib.LineCodes_Set_C1(Value)
 
     @property
-    def Cmatrix(self) -> Float64Array:
+    def Cmatrix(self) -> Float64Matrix:
         '''
         Capacitance matrix, nF per unit length
 
@@ -64,7 +64,7 @@ class ILineCodes(Iterable):
         return self._lib.LineCodes_Get_Cmatrix_GR()
 
     @Cmatrix.setter
-    def Cmatrix(self, Value: Float64Array):
+    def Cmatrix(self, Value: Float64Matrix):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineCodes_Set_Cmatrix(ValuePtr, ValueCount)
 
@@ -143,7 +143,7 @@ class ILineCodes(Iterable):
         self._lib.LineCodes_Set_R1(Value)
 
     @property
-    def Rmatrix(self) -> Float64Array:
+    def Rmatrix(self) -> Float64Matrix:
         '''
         Resistance matrix, ohms per unit length
 
@@ -152,7 +152,7 @@ class ILineCodes(Iterable):
         return self._lib.LineCodes_Get_Rmatrix_GR()
 
     @Rmatrix.setter
-    def Rmatrix(self, Value: Float64Array):
+    def Rmatrix(self, Value: Float64Matrix):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineCodes_Set_Rmatrix(ValuePtr, ValueCount)
 
@@ -191,7 +191,7 @@ class ILineCodes(Iterable):
         self._lib.LineCodes_Set_X1(Value)
 
     @property
-    def Xmatrix(self) -> Float64Array:
+    def Xmatrix(self) -> Float64Matrix:
         '''
         Reactance matrix, ohms per unit length
 
@@ -200,6 +200,6 @@ class ILineCodes(Iterable):
         return self._lib.LineCodes_Get_Xmatrix_GR()
 
     @Xmatrix.setter
-    def Xmatrix(self, Value: Float64Array):
+    def Xmatrix(self, Value: Float64Matrix):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.LineCodes_Set_Xmatrix(ValuePtr, ValueCount)

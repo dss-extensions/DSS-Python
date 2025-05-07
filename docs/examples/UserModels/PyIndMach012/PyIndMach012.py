@@ -1,7 +1,7 @@
 '''
 A `dss_python` User-Model implementation of the IndMach012 Generator model from OpenDSS.
 
-Based on the following files from the official OpenDSS source code:
+Based on the following files from EPRI's OpenDSS source code:
 - Source/PCElements/IndMach012.pas
 - Source/IndMach012a/IndMach012Model.pas
 
@@ -9,7 +9,7 @@ This Python version was written by Paulo Meira.
 Original code by EPRI, licensed under the 3-clause BSD. See OPENDSS_LICENSE.
 
 This sample code doesn't interact with the main OpenDSS interface directly,
-it only uses the user-model interface. Thus, it is compatible with the official OpenDSS
+it only uses the user-model interface. Thus, it is compatible with EPRI's OpenDSS
 distribution as well as DSS-Python. Note that OpenDSS version 7 has a bug on 64-bit 
 systems and user-models most likely won't run via COM.
 

@@ -11,7 +11,7 @@ from common_conf import *
 import dss
 
 project = 'DSS-Python'
-copyright = '2018-2024 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors'
+copyright = '2018-2025 Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors'
 author = 'Paulo Meira, Dheepak Krishnamurthy, DSS-Extensions contributors'
 version = dss.__version__
 release = dss.__version__

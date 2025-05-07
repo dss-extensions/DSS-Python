@@ -1,12 +1,26 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from __future__ import annotations
 from ._cffi_api_util import Base
 from typing import List, AnyStr, Iterator
-from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray
+from ._types import Float64Array, Int32Array, ComplexArray
 
 class IPDElements(Base):
+    '''
+    The PDElements interface allows accessing some common properties and 
+    methods shared across power delivery elements in the DSS engine.
+
+    Users can iterate on all PD elements directly through this interface, 
+    or enable a PD element through a dedicated interface (e.g. use `Lines.Name`, `Transformers.First/Next`)
+    and access the properties here.
+
+    If you are new to OpenDSS/AltDSS and this classic interface, please read the following document
+    for an overview of the "active element" paradigm used by COM and the classic APIs:
+        
+    https://dss-extensions.org/classic_api.html#the-active-paradigm
+    '''
+
     __slots__ = []
 
     _columns = [
@@ -262,7 +276,7 @@ class IPDElements(Base):
         return self._lib.PDElements_Get_AllPctEmerg_GR(AllNodes)
 
     @property
-    def AllCurrents(self) -> Float64ArrayOrComplexArray:
+    def AllCurrents(self) -> ComplexArray:
         '''
         Complex array of currents for all conductors, all terminals, for each PD element.
         
@@ -280,7 +294,7 @@ class IPDElements(Base):
         return self._lib.PDElements_Get_AllCurrentsMagAng_GR()
 
     @property
-    def AllCplxSeqCurrents(self) -> Float64ArrayOrComplexArray:
+    def AllCplxSeqCurrents(self) -> ComplexArray:
         '''
         Complex double array of Sequence Currents for all conductors of all terminals, for each PD elements.
 
@@ -298,7 +312,7 @@ class IPDElements(Base):
         return self._lib.PDElements_Get_AllSeqCurrents_GR()
 
     @property
-    def AllPowers(self) -> Float64ArrayOrComplexArray:
+    def AllPowers(self) -> ComplexArray:
         '''
         Complex array of powers into each conductor of each terminal, for each PD element.
         
@@ -307,7 +321,7 @@ class IPDElements(Base):
         return self._lib.PDElements_Get_AllPowers_GR()
 
     @property
-    def AllSeqPowers(self) -> Float64ArrayOrComplexArray:
+    def AllSeqPowers(self) -> ComplexArray:
         '''
         Complex array of sequence powers into each 3-phase terminal, for each PD element
         

@@ -1,8 +1,8 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from typing import AnyStr
-from ._types import Float64Array, Float64ArrayOrSimpleComplex
+from ._types import Float64Matrix, Complex
 from ._cffi_api_util import Iterable
 
 class IReactors(Iterable):
@@ -188,37 +188,37 @@ class IReactors(Iterable):
         self._lib.Reactors_Set_Rp(Value)
 
     @property
-    def Rmatrix(self) -> Float64Array:
+    def Rmatrix(self) -> Float64Matrix:
         '''Resistance matrix, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.'''
         return self._lib.Reactors_Get_Rmatrix_GR()
 
     @Rmatrix.setter
-    def Rmatrix(self, Value: Float64Array):
+    def Rmatrix(self, Value: Float64Matrix):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Reactors_Set_Rmatrix(ValuePtr, ValueCount)
 
     @property
-    def Xmatrix(self) -> Float64Array:
+    def Xmatrix(self) -> Float64Matrix:
         '''Reactance matrix, ohms at base frequency. Order of the matrix is the number of phases. Mutually exclusive to specifying parameters by kvar or X.'''
         return self._lib.Reactors_Get_Xmatrix_GR()
 
     @Xmatrix.setter
-    def Xmatrix(self, Value: Float64Array):
+    def Xmatrix(self, Value: Float64Matrix):
         Value, ValuePtr, ValueCount = self._prepare_float64_array(Value)
         self._lib.Reactors_Set_Xmatrix(ValuePtr, ValueCount)
 
     @property
-    def Z(self) -> Float64ArrayOrSimpleComplex:
+    def Z(self) -> Complex:
         '''Alternative way of defining R and X properties. Enter a 2-element array representing R +jX in ohms.'''
         return self._lib.Reactors_Get_Z_GR()
 
     @Z.setter
-    def Z(self, Value: Float64ArrayOrSimpleComplex):
+    def Z(self, Value: Complex):
         Value, ValuePtr, ValueCount = self._prepare_complex128_simple(Value)
         self._lib.Reactors_Set_Z(ValuePtr, ValueCount)
 
     @property
-    def Z1(self) -> Float64ArrayOrSimpleComplex:
+    def Z1(self) -> Complex:
         '''
         Positive-sequence impedance, ohms, as a 2-element array representing a complex number.
 
@@ -231,12 +231,12 @@ class IReactors(Iterable):
         return self._lib.Reactors_Get_Z1_GR()
 
     @Z1.setter
-    def Z1(self, Value: Float64ArrayOrSimpleComplex):
+    def Z1(self, Value: Complex):
         Value, ValuePtr, ValueCount = self._prepare_complex128_simple(Value)
         self._lib.Reactors_Set_Z1(ValuePtr, ValueCount)
 
     @property
-    def Z2(self) -> Float64ArrayOrSimpleComplex:
+    def Z2(self) -> Complex:
         '''
         Negative-sequence impedance, ohms, as a 2-element array representing a complex number.
 
@@ -247,12 +247,12 @@ class IReactors(Iterable):
         return self._lib.Reactors_Get_Z2_GR()
 
     @Z2.setter
-    def Z2(self, Value: Float64ArrayOrSimpleComplex):
+    def Z2(self, Value: Complex):
         Value, ValuePtr, ValueCount = self._prepare_complex128_simple(Value)
         self._lib.Reactors_Set_Z2(ValuePtr, ValueCount)
 
     @property
-    def Z0(self) -> Float64ArrayOrSimpleComplex:
+    def Z0(self) -> Complex:
         '''
         Zero-sequence impedance, ohms, as a 2-element array representing a complex number.
 
@@ -263,7 +263,7 @@ class IReactors(Iterable):
         return self._lib.Reactors_Get_Z0_GR()
 
     @Z0.setter
-    def Z0(self, Value: Float64ArrayOrSimpleComplex):
+    def Z0(self, Value: Complex):
         Value, ValuePtr, ValueCount = self._prepare_complex128_simple(Value)
         self._lib.Reactors_Set_Z0(ValuePtr, ValueCount)
 

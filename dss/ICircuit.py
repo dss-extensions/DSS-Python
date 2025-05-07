@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from typing import List, AnyStr, Union
 import json
 from ._cffi_api_util import Base
@@ -46,7 +46,7 @@ from .IStorages import IStorages
 from .IGICSources import IGICSources
 from .IWindGens import IWindGens
 
-from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
+from ._types import Float64Array, Int32Array, ComplexArray, ComplexMatrix, Complex
 from .enums import DSSJSONFlags, DSSSaveFlags
 
 class ICircuit(Base):
@@ -440,7 +440,7 @@ class ICircuit(Base):
         return self._lib.Circuit_Get_AllBusVmagPu_GR()
 
     @property
-    def AllBusVolts(self) -> Float64ArrayOrComplexArray:
+    def AllBusVolts(self) -> ComplexArray:
         '''
         Complex array of all bus, node voltages from most recent solution
 
@@ -449,7 +449,7 @@ class ICircuit(Base):
         return self._lib.Circuit_Get_AllBusVolts_GR()
 
     @property
-    def AllElementLosses(self) -> Float64ArrayOrComplexArray:
+    def AllElementLosses(self) -> ComplexArray:
         '''
         Array of total losses (complex) in each circuit element
 
@@ -485,7 +485,7 @@ class ICircuit(Base):
         return self._lib.Circuit_Get_AllNodeNames()
 
     @property
-    def LineLosses(self) -> Float64ArrayOrSimpleComplex:
+    def LineLosses(self) -> Complex:
         '''
         Complex total line losses in the circuit
 
@@ -494,7 +494,7 @@ class ICircuit(Base):
         return self._lib.Circuit_Get_LineLosses_GR()
 
     @property
-    def Losses(self) -> Float64ArrayOrSimpleComplex:
+    def Losses(self) -> Complex:
         '''
         Total losses in active circuit, complex number (two-element array of double).
 
@@ -544,7 +544,7 @@ class ICircuit(Base):
         return self._lib.Circuit_Get_ParentPDElement()
 
     @property
-    def SubstationLosses(self) -> Float64ArrayOrSimpleComplex:
+    def SubstationLosses(self) -> Complex:
         '''
         Complex losses in all transformers designated to substations.
 
@@ -553,7 +553,7 @@ class ICircuit(Base):
         return self._lib.Circuit_Get_SubstationLosses_GR()
 
     @property
-    def SystemY(self) -> Float64ArrayOrComplexArray:
+    def SystemY(self) -> ComplexMatrix:
         '''
         (read-only) System Y matrix (after a solution has been performed). 
         This is deprecated as it returns a dense matrix. Only use it for small systems.
@@ -564,7 +564,7 @@ class ICircuit(Base):
         return self._lib.Circuit_Get_SystemY_GR()
 
     @property
-    def TotalPower(self) -> Float64ArrayOrSimpleComplex:
+    def TotalPower(self) -> Complex:
         '''
         Total power (complex), kVA delivered to the circuit
 
@@ -573,7 +573,7 @@ class ICircuit(Base):
         return self._lib.Circuit_Get_TotalPower_GR()
 
     @property
-    def YCurrents(self) -> Float64ArrayOrComplexArray:
+    def YCurrents(self) -> ComplexArray:
         '''
         Array of doubles containing complex injection currents for the present solution. It is the "I" vector of I=YV
 
@@ -591,7 +591,7 @@ class ICircuit(Base):
         return self._lib.Circuit_Get_YNodeOrder()
 
     @property
-    def YNodeVarray(self) -> Float64ArrayOrComplexArray:
+    def YNodeVarray(self) -> ComplexArray:
         '''
         Complex array of actual node voltages in same order as SystemY matrix.
 
@@ -599,7 +599,7 @@ class ICircuit(Base):
         '''
         return self._lib.Circuit_Get_YNodeVarray_GR()
 
-    def ElementLosses(self, Value: Int32Array) -> Float64ArrayOrComplexArray:
+    def ElementLosses(self, Value: Int32Array) -> ComplexArray:
         '''
         Array of total losses (complex) in a selection of elements.
         Use the element indices (starting at 1) as parameter.
@@ -661,7 +661,7 @@ class ICircuit(Base):
         - `IsOpen`: Export commands to open terminals of elements.
         - `ToString`: to the result string. Requires "SingleFile" flag.
 
-        If `SingleFile` is enabled, the first argument (`dirOrFilePath`) is the file path,
+        If `SingleFile` is enabled, the path argument (`dirOrFilePath`) is the file path,
         otherwise it is the folder path. For string output, the argument is not used.
 
         **(API Extension)**

@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
 from typing import AnyStr, Union
@@ -106,7 +106,7 @@ class ILoads(Iterable):
     @property
     def Cfactor(self) -> float:
         '''
-        Factor relates average to peak kw.  Used for allocation with kwh and kwhdays
+        CFactor relates average to peak kw.  Used for allocation with kwh and kwhdays
 
         Original COM help: https://opendss.epri.com/Cfactor.html
         '''
@@ -223,7 +223,9 @@ class ILoads(Iterable):
     @property
     def RelWeight(self) -> float:
         '''
-        Relative Weighting factor for the active LOAD
+        Relative Weighting factor for the active load.
+
+        This value is used in reliability methods.
 
         Original COM help: https://opendss.epri.com/RelWeight.html
         '''

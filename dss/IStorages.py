@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2023-2024 Paulo Meira
-# Copyright (c) 2023-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2023-2025 Paulo Meira
+# Copyright (c) 2023-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
 from typing import List, Union
@@ -193,6 +193,8 @@ class IStorages(Iterable):
     def kvar(self) -> float:
         '''
         Get/set the requested kvar value. Final kvar is subjected to the inverter ratings. Sets inverter to operate in constant kvar mode.
+
+        **Note:** reading the DSS property `kvar` returns the adjusted value, while this returns the original input value.
         '''
         return self._lib.Storages_Get_kvar()
 

@@ -1,9 +1,9 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from __future__ import annotations
 from ._cffi_api_util import Base
-from ._types import Float64Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex, Int32Array
+from ._types import Float64Array, ComplexArray, Complex, Int32Array
 from typing import List, Union, Iterator, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -79,7 +79,7 @@ class IBus(Base):
         return self._lib.Bus_Get_Coorddefined()
 
     @property
-    def CplxSeqVoltages(self) -> Float64ArrayOrComplexArray:
+    def CplxSeqVoltages(self) -> ComplexArray:
         '''
         Complex array of Sequence Voltages (0, 1, 2) at this Bus.
 
@@ -132,7 +132,7 @@ class IBus(Base):
         return self._lib.Bus_Get_Int_Duration()
 
     @property
-    def Isc(self) -> Float64ArrayOrComplexArray:
+    def Isc(self) -> ComplexArray:
         '''
         Short circuit currents at bus; Complex Array.
 
@@ -178,7 +178,7 @@ class IBus(Base):
     @property
     def Name(self) -> str:
         '''
-        Name of Bus
+        Name of the active Bus
 
         Original COM help: https://opendss.epri.com/Name1.html
         '''
@@ -234,7 +234,7 @@ class IBus(Base):
         return self._lib.Bus_Get_TotalMiles()
 
     @property
-    def VLL(self) -> Float64ArrayOrComplexArray:
+    def VLL(self) -> ComplexArray:
         '''
         For 2- and 3-phase buses, returns array of complex numbers representing L-L voltages in volts. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only first 3.
 
@@ -252,7 +252,7 @@ class IBus(Base):
         return self._lib.Bus_Get_VMagAngle_GR()
 
     @property
-    def Voc(self) -> Float64ArrayOrComplexArray:
+    def Voc(self) -> ComplexArray:
         '''
         Open circuit voltage; Complex array.
 
@@ -263,7 +263,7 @@ class IBus(Base):
         return self._lib.Bus_Get_Voc_GR()
 
     @property
-    def Voltages(self) -> Float64ArrayOrComplexArray:
+    def Voltages(self) -> ComplexArray:
         '''
         Complex array of voltages at this bus.
 
@@ -272,7 +272,7 @@ class IBus(Base):
         return self._lib.Bus_Get_Voltages_GR()
 
     @property
-    def YscMatrix(self) -> Float64ArrayOrComplexArray:
+    def YscMatrix(self) -> ComplexArray:
         '''
         Complex array of Ysc matrix at bus. Column by column.
 
@@ -283,7 +283,7 @@ class IBus(Base):
         return self._lib.Bus_Get_YscMatrix_GR()
 
     @property
-    def Zsc0(self) -> Float64ArrayOrSimpleComplex:
+    def Zsc0(self) -> Complex:
         '''
         Complex Zero-Sequence short circuit impedance at bus.
 
@@ -294,7 +294,7 @@ class IBus(Base):
         return self._lib.Bus_Get_Zsc0_GR()
 
     @property
-    def Zsc1(self) -> Float64ArrayOrSimpleComplex:
+    def Zsc1(self) -> Complex:
         '''
         Complex Positive-Sequence short circuit impedance at bus.
 
@@ -305,7 +305,7 @@ class IBus(Base):
         return self._lib.Bus_Get_Zsc1_GR()
 
     @property
-    def ZscMatrix(self) -> Float64ArrayOrComplexArray:
+    def ZscMatrix(self) -> ComplexArray:
         '''
         Complex array of Zsc matrix at bus. Column by column.
 
@@ -325,7 +325,7 @@ class IBus(Base):
         return self._lib.Bus_Get_kVBase()
 
     @property
-    def puVLL(self) -> Float64ArrayOrComplexArray:
+    def puVLL(self) -> ComplexArray:
         '''
         Returns Complex array of pu L-L voltages for 2- and 3-phase buses. Returns -1.0 for 1-phase bus. If more than 3 phases, returns only 3 phases.
 
@@ -343,7 +343,7 @@ class IBus(Base):
         return self._lib.Bus_Get_puVmagAngle_GR()
 
     @property
-    def puVoltages(self) -> Float64ArrayOrComplexArray:
+    def puVoltages(self) -> ComplexArray:
         '''
         Complex Array of pu voltages at the bus.
 
@@ -352,9 +352,9 @@ class IBus(Base):
         return self._lib.Bus_Get_puVoltages_GR()
 
     @property
-    def ZSC012Matrix(self) -> Float64ArrayOrComplexArray:
+    def ZSC012Matrix(self) -> ComplexArray:
         '''
-        Array of doubles (complex) containing the complete 012 Zsc matrix. 
+        Complex array containing the complete 012 Zsc matrix. 
         Only available after Zsc is computed, either through the "ZscRefresh" command, or running a "FaultStudy" solution.
         Only available for buses with 3 nodes.
 
@@ -413,6 +413,8 @@ class IBus(Base):
         '''
         Returns an array with the names of all PCE connected to the active bus
 
+        This also includes shunt Capacitors/Reactors.
+
         Original COM help: https://opendss.epri.com/AllPCEatBus.html
         '''
         result = self._lib.Bus_Get_AllPCEatBus()
@@ -427,6 +429,8 @@ class IBus(Base):
     def AllPDEatBus(self) -> List[str]:
         '''
         Returns an array with the names of all PDE connected to the active bus
+
+        This excludes shunt Capacitors/Reactors.
 
         Original COM help: https://opendss.epri.com/AllPDEatBus1.html
         '''

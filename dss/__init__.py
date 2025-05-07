@@ -1,4 +1,4 @@
-'''``dss`` is the main package for DSS-Python. DSS-Python is a compatibility layer for the DSS C-API library that mimics the official OpenDSS COM interface, with many extensions and a few limitations.
+'''``dss`` is the main package for DSS-Python. DSS-Python is a compatibility layer for the DSS C-API library that mimics EPRI's OpenDSS COM interface, with many extensions and a few limitations.
 
 This module used to provide instances for the OpenDSS Version 7 implementation. 
 As of 2022, most of the parallel-machine functions of EPRI's OpenDSS have been reimplemented using a different approach. Therefore the PM functions are available in the instances of this module too.

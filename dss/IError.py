@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Base
 
 class IError(Base):
@@ -82,7 +82,7 @@ class IError(Base):
         **When disabled, the user takes responsibility for checking for errors.**
         This can be done through the `Error` interface. When `Error.Number` is not
         zero, there should be an error message in `Error.Description`. This is compatible
-        with the behavior on the official OpenDSS (Windows-only COM implementation) when
+        with the behavior on EPRI's OpenDSS (Windows-only COM implementation) when
         `AllowForms` is disabled.
 
         Users can also use the DSS command `Export ErrorLog` to inspect for errors.

@@ -1,14 +1,27 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from __future__ import annotations
 from ._cffi_api_util import Base
 from .IDSSProperty import IDSSProperty
-from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
+from ._types import Float64Array, Int32Array, Int32Matrix, ComplexArray, Complex
 from typing import List, AnyStr, Tuple, Iterator
 from .enums import OCPDevType as OCPDevTypeEnum
 
 class ICktElement(Base):
+    '''
+    The (Active)CktElement interface allows accessing some common properties and 
+    methods shared across circuit elements in the DSS engine.
+
+    Users can enable specific elements by name or use the dedicated interface 
+    (e.g. use `Loads.Name`, `Transformers.First/Next`) and access the properties here.
+
+    If you are new to OpenDSS/AltDSS and this classic interface, please read the following document
+    for an overview of the "active element" paradigm used by COM and the classic APIs:
+        
+    https://dss-extensions.org/classic_api.html#the-active-paradigm
+    '''
+
     __slots__ = [
         'Properties'
     ]
@@ -120,7 +133,16 @@ class ICktElement(Base):
         #     raise DSSException('Invalid variable index or not a PCelement')
         return Code[0]
 
-    def IsOpen(self, Term: int, Phs: int) -> bool:
+    def IsOpen(self, Term: int, Phs: int = 0) -> bool:
+        '''
+        Indicates if the specified terminal and, optionally, a specific phase conductor is open.
+
+        Provide zero in the `Phs` argument to check if any conductor of the terminal `Term` is open.
+
+        Provide a non-zero phase number in `Phs` to check if a specific phase conductor is open.
+
+        Original COM help: https://opendss.epri.com/IsOpen.html
+        '''
         return self._lib.CktElement_IsOpen(Term, Phs)
 
     def Open(self, Term: int, Phs: int):
@@ -185,7 +207,7 @@ class ICktElement(Base):
     '''
 
     @property
-    def CplxSeqCurrents(self) -> Float64ArrayOrComplexArray:
+    def CplxSeqCurrents(self) -> ComplexMatrix:
         '''
         Complex double array of Sequence Currents for all conductors of all terminals of active circuit element.
 
@@ -194,7 +216,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_CplxSeqCurrents_GR()
 
     @property
-    def CplxSeqVoltages(self) -> Float64ArrayOrComplexArray:
+    def CplxSeqVoltages(self) -> ComplexMatrix:
         '''
         Complex double array of Sequence Voltage for all terminals of active circuit element.
 
@@ -203,7 +225,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_CplxSeqVoltages_GR()
 
     @property
-    def Currents(self) -> Float64ArrayOrComplexArray:
+    def Currents(self) -> ComplexMatrix:
         '''
         Complex array of currents into each conductor of each terminal
 
@@ -212,9 +234,9 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_Currents_GR()
 
     @property
-    def CurrentsMagAng(self) -> Float64Array:
+    def CurrentsMagAng(self) -> Float64Matrix:
         '''
-        Currents in magnitude, angle (degrees) format as a array of doubles.
+        Currents in magnitude, angle (degrees) format as an array of doubles.
 
         Original COM help: https://opendss.epri.com/CurrentsMagAng.html
         '''
@@ -316,13 +338,22 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_HasVoltControl()
 
     @property
-    def Losses(self) -> Float64ArrayOrSimpleComplex:
+    def Losses(self) -> Complex:
         '''
         Total losses in the element: two-element double array (complex), in VA (watts, vars)
 
         Original COM help: https://opendss.epri.com/Losses1.html
         '''
         return self._lib.CktElement_Get_Losses_GR()
+
+    @property
+    def AllLosses(self) -> Complex:
+        '''
+        Complex array with the losses by type (total losses, load losses, no-load losses), in VA, for the active circuit element.
+
+        Added in May 2025. Same as `LossesByType` introduced for Transformers in AltDSS/DSS C-API in May 2019.
+        '''
+        return self._lib.CktElement_Get_AllLosses_GR()
 
     @property
     def Name(self) -> str:
@@ -334,7 +365,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_Name()
 
     @property
-    def NodeOrder(self) -> Int32Array:
+    def NodeOrder(self) -> Int32Matrix:
         '''
         Array of integer containing the node numbers (representing phases, for example) for each conductor of each terminal. 
 
@@ -422,7 +453,7 @@ class ICktElement(Base):
         return OCPDevTypeEnum(self._lib.CktElement_Get_OCPDevType())
 
     @property
-    def PhaseLosses(self) -> Float64ArrayOrComplexArray:
+    def PhaseLosses(self) -> ComplexArray:
         '''
         Complex array of losses (kVA) by phase
 
@@ -431,7 +462,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_PhaseLosses_GR()
 
     @property
-    def Powers(self) -> Float64ArrayOrComplexArray:
+    def Powers(self) -> ComplexArray:
         '''
         Complex array of powers (kVA) into each conductor of each terminal
 
@@ -440,7 +471,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_Powers_GR()
 
     @property
-    def Residuals(self) -> Float64Array:
+    def Residuals(self) -> Float64Matrix:
         '''
         Residual currents for each terminal: (magnitude, angle in degrees)
 
@@ -449,7 +480,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_Residuals_GR()
 
     @property
-    def SeqCurrents(self) -> Float64Array:
+    def SeqCurrents(self) -> Float64Matrix:
         '''
         Double array of symmetrical component currents (magnitudes only) into each 3-phase terminal
 
@@ -458,7 +489,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_SeqCurrents_GR()
 
     @property
-    def SeqPowers(self) -> Float64ArrayOrComplexArray:
+    def SeqPowers(self) -> ComplexMatrix:
         '''
         Complex array of sequence powers (kW, kvar) into each 3-phase terminal
 
@@ -467,7 +498,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_SeqPowers_GR()
 
     @property
-    def SeqVoltages(self) -> Float64Array:
+    def SeqVoltages(self) -> Float64Matrix:
         '''
         Double array of symmetrical component voltages (magnitudes only) at each 3-phase terminal
 
@@ -476,7 +507,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_SeqVoltages_GR()
 
     @property
-    def Voltages(self) -> Float64ArrayOrComplexArray:
+    def Voltages(self) -> ComplexMatrix:
         '''
         Complex array of voltages at terminals
 
@@ -485,7 +516,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_Voltages_GR()
 
     @property
-    def VoltagesMagAng(self) -> Float64Array:
+    def VoltagesMagAng(self) -> Float64Matrix:
         '''
         Voltages at each conductor in magnitude, angle form as array of doubles.
 
@@ -494,13 +525,22 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_VoltagesMagAng_GR()
 
     @property
-    def Yprim(self) -> Float64ArrayOrComplexArray:
+    def Yprim(self) -> ComplexMatrix:
         '''
         YPrim matrix, column order, complex numbers
 
         Original COM help: https://opendss.epri.com/Yprim.html
         '''
         return self._lib.CktElement_Get_Yprim_GR()
+
+    @property
+    def YprimOrder(self) -> int:
+        '''
+        Order (size) of the active circuit element's primite Y matrix (Yprim), typically `NumConductors * NumTerminals`
+
+        **(API Extension)**
+        '''
+        return self._lib.CktElement_Get_YprimOrder()
 
     @property
     def IsIsolated(self) -> bool:
@@ -513,7 +553,7 @@ class ICktElement(Base):
         return self._lib.CktElement_Get_IsIsolated()
 
     @property
-    def TotalPowers(self) -> Float64ArrayOrComplexArray:
+    def TotalPowers(self) -> ComplexArray:
         '''
         Returns an array with the total powers (complex, kVA) at ALL terminals of the active circuit element.
 

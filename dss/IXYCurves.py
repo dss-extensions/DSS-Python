@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
 
@@ -37,7 +37,7 @@ class IXYCurves(Iterable):
     @property
     def Xarray(self) -> Float64Array:
         '''
-        Get/set X values as a Array of doubles. Set Npts to max number expected if setting
+        Get/set X values as an array of doubles. When setting, remember to set Npts to max number expected values.
 
         Original COM help: https://opendss.epri.com/Xarray.html
         '''
@@ -77,7 +77,7 @@ class IXYCurves(Iterable):
     @property
     def Yarray(self) -> Float64Array:
         '''
-        Get/Set Y values in curve; Set Npts to max number expected if setting
+        Get/set Y values as an array of doubles. When setting, remember to set Npts to max number expected values.
 
         Original COM help: https://opendss.epri.com/Yarray.html
         '''

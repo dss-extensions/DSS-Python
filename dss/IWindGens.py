@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2024 Paulo Meira
-# Copyright (c) 2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2024-2025 Paulo Meira
+# Copyright (c) 2024-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from ._types import Float64Array
 from typing import List, Union, AnyStr

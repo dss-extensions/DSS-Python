@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from typing import List, AnyStr
 from ._types import Float64Array
@@ -119,7 +119,7 @@ class IMeters(Iterable):
     @property
     def AllBranchesInZone(self) -> List[str]:
         '''
-        Wide string list of all branches in zone of the active EnergyMeter object.
+        List (strings) of all branches in zone of the active EnergyMeter object.
 
         Original COM help: https://opendss.epri.com/AllBranchesInZone.html
         '''

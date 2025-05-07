@@ -1,8 +1,8 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
-from ._types import Float64ArrayOrComplexArray
+from ._types import ComplexArray, ComplexMatrix
 from typing import AnyStr, Union
 from .enums import CoreType as TransformerCoreType
 
@@ -247,7 +247,7 @@ class ITransformers(Iterable):
     kva = kVA
 
     @property
-    def WdgVoltages(self) -> Float64ArrayOrComplexArray:
+    def WdgVoltages(self) -> ComplexArray:
         '''
         Complex array of voltages for active winding
         
@@ -259,7 +259,7 @@ class ITransformers(Iterable):
         return self._lib.Transformers_Get_WdgVoltages_GR()
 
     @property
-    def WdgCurrents(self) -> Float64ArrayOrComplexArray:
+    def WdgCurrents(self) -> ComplexArray:
         '''
         All Winding currents (ph1, wdg1, wdg2,... ph2, wdg1, wdg2 ...)
 
@@ -307,7 +307,7 @@ class ITransformers(Iterable):
         self._lib.Transformers_Set_RdcOhms(Value)
 
     @property
-    def LossesByType(self) -> Float64ArrayOrComplexArray:
+    def LossesByType(self) -> ComplexArray:
         '''
         Complex array with the losses by type (total losses, load losses, no-load losses), in VA, for the current active transformer
         
@@ -316,7 +316,7 @@ class ITransformers(Iterable):
         return self._lib.Transformers_Get_LossesByType_GR()
 
     @property
-    def AllLossesByType(self) -> Float64ArrayOrComplexArray:
+    def AllLossesByType(self) -> ComplexMatrix:
         '''
         Complex array with the losses by type (total losses, load losses, no-load losses), in VA, concatenated for ALL transformers
         

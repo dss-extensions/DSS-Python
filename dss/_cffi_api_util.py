@@ -3,7 +3,7 @@ import os, warnings
 from functools import partial, wraps
 from weakref import ref, WeakKeyDictionary
 import numpy as np
-from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
+from ._types import Float64Array, Int32Array, Int8Array, ComplexArray, ComplexArray, Complex
 from typing import Any, AnyStr, Callable, List, Union, Iterator, Optional, TYPE_CHECKING
 from .enums import AltDSSEvent
 from dss_python_backend.events import get_manager_for_ctx
@@ -113,7 +113,7 @@ class CtxLib:
 
         return res
 
-    def get_complex128_array(self, func, *args) -> Float64ArrayOrComplexArray:
+    def get_complex128_array(self, func, *args) -> ComplexArray:
         if not (self.settings_ptr[0] & (1 << 1)): # self.advanced_types:
             return self.get_float64_array(func, *args)
 
@@ -149,7 +149,7 @@ class CtxLib:
 
         return res
 
-    # def get_complex128_array2(self, func, *args) -> Float64ArrayOrComplexArray:
+    # def get_complex128_array2(self, func, *args) -> ComplexArray:
     #     if not (self.settings_ptr[0] & (1 << 1)): # self.advanced_types:
     #         return self.get_float64_array2(func, *args)
 
@@ -163,7 +163,7 @@ class CtxLib:
     #     return res
 
 
-    def get_complex128_simple(self, func, *args) -> Float64ArrayOrSimpleComplex:
+    def get_complex128_simple(self, func, *args) -> Complex:
         if not (self.settings_ptr[0] & (1 << 1)): # self.advanced_types:
             return self.get_float64_array(func, *args)
 
@@ -177,7 +177,7 @@ class CtxLib:
         finally:
             self.DSS_Dispose_PDouble(ptr)
 
-    def get_fcomplex128_simple(self, func, *args) -> Float64ArrayOrSimpleComplex:
+    def get_fcomplex128_simple(self, func, *args) -> Complex:
         # Currently we use the same as API as get_float64_array, may change later
         ptr = self._ffi.new('double**')
         cnt = self._ffi.new('int32_t[4]')
@@ -242,7 +242,7 @@ class CtxLib:
         return np.frombuffer(self._ffi.buffer(ptr[0], cnt[0] * 8), dtype=complex).copy()
 
 
-    def get_complex128_gr_simple(self) -> Float64ArrayOrSimpleComplex:
+    def get_complex128_gr_simple(self) -> Complex:
         if not (self.settings_ptr[0] & (1 << 1)): # self.advanced_types:
             return self.get_float64_gr_array()
 
@@ -252,7 +252,7 @@ class CtxLib:
         return ptr[0][0]
 
 
-    def get_fcomplex128_gr_simple(self) -> complex:
+    def get_fcomplex128_gr_simple(self) -> Complex:
         # Currently we use the same as API as get_float64_array, may change later
         ptr, cnt = self.gr_cfloat64_pointers
         assert cnt[0] == 2, ('Unexpected number of elements returned by API', cnt[0])
@@ -755,7 +755,7 @@ class Base:
         If the user disabled exceptions, any error is simply ignored. Note that, in this case, manually
         calling this function would have no purpose/effects.
 
-        Note that, **in the future**, we may try showing a popup form like the official OpenDSS does on Windows
+        Note that, **in the future**, we may try showing a popup form like EPRI's OpenDSS does on Windows
         if AllowForms is True. This behavior is not very portable though and not adequate for automated scripts.
         """
         if self._errorPtr[0] and Base.using_exceptions:
@@ -921,7 +921,7 @@ class AltDSSAPIUtil:
         If the user disabled exceptions, any error is simply ignored. Note that, in this case, manually
         calling this function would have no purpose/effects.
 
-        Note that, **in the future**, we may try showing a popup form like the official OpenDSS does on Windows
+        Note that, **in the future**, we may try showing a popup form like EPRI's OpenDSS does on Windows
         if AllowForms is True. This behavior is not very portable though and not adequate for automated scripts.
         """
         if self._errorPtr[0] and Base.using_exceptions:
@@ -1130,7 +1130,7 @@ class AltDSSAPIUtil:
         return value, ptr, cnt
 
 
-    def prepare_complex128_simple(self, value: complex):
+    def prepare_complex128_simple(self, value: Complex):
         if isinstance(value, (np.complex128, complex)):
             value = np.asarray([value], dtype=np.complex128).view(dtype=np.float64)
         elif (isinstance(value, np.array) and value.dtype in (np.complex128, np.complex64)):
@@ -1212,7 +1212,7 @@ class AltDSSAPIUtil:
 
 
 def _oddie_not_impl():
-    raise NotImplementedError("This API requires a function that is not implemented in the official OpenDSS engine.")
+    raise NotImplementedError("This API requires a function that is not implemented in EPRI's OpenDSS engine.")
 
 class Iterable(Base):
     __slots__ = [

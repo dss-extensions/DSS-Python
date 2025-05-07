@@ -1,9 +1,9 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from typing import List, Union
-from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray
+from ._types import Float64Array, Float64Matrix, Int32Array, ComplexMatrix 
 from .enums import LineUnits
 
 class ILineGeometries(Iterable):
@@ -81,15 +81,15 @@ class ILineGeometries(Iterable):
     def Phases(self, Value: int):
         self._lib.LineGeometries_Set_Phases(Value)
 
-    def Rmatrix(self, Frequency: float, Length: float, Units: int) -> Float64Array:
+    def Rmatrix(self, Frequency: float, Length: float, Units: int) -> Float64Matrix:
         '''Resistance matrix, ohms'''
         return self._lib.LineGeometries_Get_Rmatrix_GR(Frequency, Length, Units)
 
-    def Xmatrix(self, Frequency: float, Length: float, Units: int) -> Float64Array:
+    def Xmatrix(self, Frequency: float, Length: float, Units: int) -> Float64Matrix:
         '''Reactance matrix, ohms'''
         return self._lib.LineGeometries_Get_Xmatrix_GR(Frequency, Length, Units)
 
-    def Zmatrix(self, Frequency: float, Length: float, Units: int) -> Float64ArrayOrComplexArray:
+    def Zmatrix(self, Frequency: float, Length: float, Units: int) -> ComplexMatrix:
         '''Complex impedance matrix, ohms'''
         return self._lib.LineGeometries_Get_Zmatrix_GR(Frequency, Length, Units)
 

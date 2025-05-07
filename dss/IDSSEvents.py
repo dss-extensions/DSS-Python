@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Base, DSSException
 from .enums import AltDSSEvent
 from dss_python_backend.events import get_manager_for_ctx
@@ -63,7 +63,7 @@ class DSSEventsConnection:
 class IDSSEvents(Base):
     """
     This interface provides connection to classic the OpenDSS Events
-    API. For official OpenDSS documentation about this feature, see
+    API. For EPRI's OpenDSS documentation about this feature, see
     the document titled "Evaluation of Distribution Reconfiguration Functions in
     Advanced Distribution Management Systems, Example Assessments of Distribution
     Automation Using Open Distribution Systems Simulator" (2011), which is available from
@@ -73,7 +73,7 @@ class IDSSEvents(Base):
     VBA/Excel examples of the classic COM usage are found in the folder
     ["Examples/civinlar model/"](https://sourceforge.net/p/electricdss/code/HEAD/tree/trunk/Version8/Distrib/Examples/civinlar%20model/)
     ([mirrored here](https://github.com/dss-extensions/electricdss-tst/tree/master/Version8/Distrib/Examples/civinlar%20model),
-    with minor changes), which is distributed along with the official OpenDSS.
+    with minor changes), which is distributed along with the EPRI's OpenDSS distribution.
 
     For a quick intro, this interface allows connecting an object (event handler)
     that runs custom actions are three points of the solution process

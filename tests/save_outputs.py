@@ -433,7 +433,7 @@ if __name__ == '__main__':
             from _settings import DSS
 
         oddd_ver = DSS.Version.split(' ')[1]
-        print("Using official OpenDSS through ODDIE:", DSS.Version)
+        print("Using EPRI's OpenDSS (or API-compatible) through Oddie:", DSS.Version)
         if USE_ODDIE != '1':
             print("User-provided library path:", USE_ODDIE)
             
@@ -458,7 +458,7 @@ if __name__ == '__main__':
         DSS = comtypes.client.CreateObject("OpenDSSEngine.DSS")
         DSS = dss.patch_dss_com(DSS)
         #DSS.Text.Command = r'set editor=ignore_me_invalid_executable' -- need to let it open for some reports :|
-        print("Using official OpenDSS COM:", DSS.Version)
+        print("Using EPRI's OpenDSS COM engine:", DSS.Version)
         com_ver = DSS.Version.split(' ')[1]
         suffix = f'-COM-{platform.machine()}-{com_ver}'
 

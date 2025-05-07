@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Base
 from ._types import Float64Array, Int32Array
 from typing import AnyStr, Union, List
@@ -512,7 +512,7 @@ class ISettings(Base):
     @property
     def CompatFlags(self) -> int:
         '''
-        Controls some compatibility flags introduced to toggle some behavior from the official OpenDSS.
+        Controls some compatibility flags introduced to toggle some behavior from EPRI's OpenDSS.
 
         **THE FLAGS ARE GLOBAL, affecting all AltDSS engines in the process.**  
         CompatFlags for Oddie-loaded instances (OpenDSS and OpenDSS-C engines) are handled by the Oddie code itself,
@@ -559,8 +559,8 @@ class ISettings(Base):
     @property
     def COMErrorResults(self) -> bool:
         '''
-        If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the 
-        official OpenDSS COM interface. 
+        If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with 
+        EPRI's OpenDSS COM interface. 
 
         For example, consider the property `Loads.ZIPV`. If there is no active circuit or active load element:
 
@@ -568,9 +568,11 @@ class ISettings(Base):
         - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
         be compatible with the return value of the official COM interface.
 
-        Defaults to False/0 (disabled state), starting DSS-Python v0.16.
+        Defaults to false (disabled state) in AltDSS since the v0.15.x series.
 
-        This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 0 disables
+        This does not affect the results when using EPRI's OpenDSS distribution through Oddie.
+
+        This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 1 enables
         the legacy/COM behavior. The value can be toggled through the API at any time.
 
         **(API Extension)**
