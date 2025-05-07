@@ -678,4 +678,30 @@ class ICircuit(Base):
 
         return self._api_util.get_string(self._lib.Circuit_Save(dirOrFilePath, saveFlags))
 
+    def Flatten(self) -> None:
+        '''
+        Flatten the circuit
+
+        Flatten the circuit structures, removing any object of the following types:
+
+        - XfmrCode
+        - LineCode
+        - LineSpacing
+        - LineGeometry
+        - WireData
+        - CNData
+        - TSData
+
+        The general data from those objects is propagated to the referencing Line and Transformer objects,
+        and the properties on the latter are updated to remove any references to the removed objects.
+
+        This is useful for some converting the DSS circuit to another format, without requiring the user to handle all 
+        the types listed above. This, of course, results in some limitations since a lot of detail is removed. Numerically,
+        a normal snapshot or daily solution should be the same before and after the flatten operation.
+
+        Available only on AltDSS.
+
+        **(API Extension)**
+        '''
+        self._lib.Circuit_Flatten()
 
