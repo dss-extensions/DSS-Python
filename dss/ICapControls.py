@@ -7,6 +7,7 @@ from .enums import CapControlModes
 
 class ICapControls(Iterable):
     __slots__ = []
+    _is_circuit_element = True
 
     _columns = [
         'Name',
