@@ -119,6 +119,7 @@ class ISettings(Base):
         # 'PreferLists',
         # 'SkipFileRegExp',
         # 'CompatFlags',
+        # 'PreserveCase',
     ]
 
 
@@ -639,3 +640,22 @@ class ISettings(Base):
     @AllowEditor.setter
     def AllowEditor(self, value: bool):
         self._lib.DSS_Set_AllowEditor(value)
+
+    @property
+    def PreserveCase(self) -> bool:
+        '''
+        Gets/sets whether running the engine try to preserve original names
+        
+        When enabled, bus and element names in many of the API functions, reports and
+        exports are kept as provided by the user, without applying lower or upper case
+        transformations.
+
+        Note that, even when enabled, the engine is still case-insensitive.
+
+        **(API Extension)**
+        '''
+        return self._lib.Settings_Get_Flag(1)
+
+    @PreserveCase.setter
+    def PreserveCase(self, value: bool):
+        self._lib.Settings_Set_Flag(1, value)
