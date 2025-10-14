@@ -2520,8 +2520,10 @@ def dss_plot(DSS: IDSS, **kwargs: Unpack[PlotParams]):
             raise NotImplementedError(f'ERROR: not implemented plot type "{ptype}"')
             return -1
 
-        with ToggleAdvancedTypes(DSS, False), warnings.catch_warnings():
+        with DSS.ActiveCircuit.Settings.Context() as settings, warnings.catch_warnings():
             warnings.simplefilter("ignore")
+            settings.AdvancedTypes = False
+            settings.PreferLists = False
             func = getattr(plotter, dss_plot_methods.get(ptype))
             return 0, (DSS, **kwargs)
 

@@ -251,7 +251,7 @@ try:
 
     @register_cell_magic
     def dss(line, cell):
-        if isinstance(DSSPlotCtx, IDSS) and not DSSPlotCtx._api_util._is_odd:
+        if isinstance(DSSPlotCtx, IDSS) and not DSSPlotCtx._api_util._is_oddie:
             DSSPlotCtx.Text.Commands(cell)
         else:
             for line in cell.split('\n'):
