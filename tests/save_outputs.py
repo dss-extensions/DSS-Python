@@ -526,7 +526,7 @@ if __name__ == '__main__':
 
             if org_fn in cimxml_test_filenames:
                 DSS.Text.Command = 'export cim100'
-                xml_live_fns = [DSS.Text.Result]
+                xml_live_fns = [DSS.Text.Result.strip()]
                 DSS.Text.Command = 'export cim100fragments'
                 xml_live_fns.extend(glob(DSS.Text.Result + '_*.xml'))
                 for xml_live_fn in xml_live_fns:
