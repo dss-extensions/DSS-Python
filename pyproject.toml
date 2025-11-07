@@ -25,10 +25,10 @@ name = "dss-python"
 dynamic = ["version"]
 dependencies = [
     "dss_python_backend==0.14.6a1",
-    "numpy>=1.21.0",
+    "numpy>=2,<3",
     "typing_extensions>=4.5,<5",
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.11" # Following NumPy's requirements
 authors = [
   {name = "Paulo Meira", email = "pmeira@ieee.org"},
   {name = "Dheepak Krishnamurthy", email = "me@kdheepak.com"},
@@ -37,7 +37,7 @@ maintainers = [
     {name = "Paulo Meira", email = "pmeira@ieee.org"},
 ]
 description = "Python interface (bindings and tools) for OpenDSS. Based on the AltDSS/DSS C-API project, the alternative OpenDSS implementation from DSS-Extensions.org. Multiplatform, API-compatible/drop-in replacement for the COM version of OpenDSS."
-readme = "README.md"
+readme = {file = "README.md", content-type = "text/markdown"}
 license = {file = "LICENSE"}
 keywords = ["opendss", "altdss", "electric power systems", "opendssdirect", "powerflow", "short-circuit", ]
 classifiers = [
@@ -50,7 +50,6 @@ classifiers = [
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: Implementation :: CPython',
-    'Programming Language :: Python :: Implementation :: PyPy',
     'Development Status :: 5 - Production/Stable',
     'Topic :: Scientific/Engineering',
     'License :: OSI Approved :: BSD License'
