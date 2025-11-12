@@ -14,6 +14,7 @@ from .IActiveClass import IActiveClass
 from .IDSS_Executive import IDSS_Executive
 from .IDSSEvents import IDSSEvents
 from .IParser import IParser
+from .ISettings import ISettings
 from .IYMatrix import IYMatrix
 from .IZIP import IZIP
 
@@ -33,7 +34,8 @@ class IDSS(Base):
     Main OpenDSS interface. Organizes the subclasses trying to mimic the `OpenDSSengine.DSS` object
     as seen from `win32com.client` or `comtypes.client`.
 
-    This main class also includes some global settings. See more settings in `ActiveCircuit.Settings`.
+    This main class also includes some global settings. Most settings at being moved to the dediced 
+    `Settings` interface, exposed in the shortcut `Settings` of this object, or `ActiveCircuit.Settings`.
     '''
     __slots__ = [
         'ActiveCircuit',
@@ -603,3 +605,9 @@ class IDSS(Base):
         if skip_file_regexp is not None:
             otherContext.ActiveCircuit.Settings.SkipFileRegExp = skip_file_regexp
 
+    @property
+    def Settings(self):
+        '''
+        For convenience, a shortcut to `ActiveCircuit.Settings`.
+        '''
+        return self.ActiveCircuit.Settings
