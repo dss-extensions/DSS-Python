@@ -644,7 +644,7 @@ class ISettings(Base):
     @property
     def PreserveCase(self) -> bool:
         '''
-        Gets/sets whether running the engine try to preserve original names
+        Gets/sets whether the engine tries to preserve original names
         
         When enabled, bus and element names in many of the API functions, reports and
         exports are kept as provided by the user, without applying lower or upper case
