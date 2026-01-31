@@ -946,6 +946,8 @@ class DSSMPLPlotter:
                 max_currents = {}
                 elem = DSS.ActiveCircuit.ActiveCktElement
                 for _ in DSS.ActiveCircuit.PDElements:
+                    if not elem.Enabled:
+                        continue
                     currents = np.abs(asarray(elem.Currents).view(dtype=complex))
                     max_current = np.max(currents[:elem.NumConductors])
                     norm_amps = elem.NormalAmps
@@ -958,6 +960,9 @@ class DSSMPLPlotter:
                 max_currents = {}
                 elem = DSS.ActiveCircuit.ActiveCktElement
                 for _ in DSS.ActiveCircuit.PDElements:
+                    if not elem.Enabled:
+                        max_currents[elem.Name] = np.nan
+                        continue
                     currents = np.abs(asarray(elem.Currents).view(dtype=complex))
                     max_current = np.max(currents[:elem.NumConductors])
                     norm_amps = elem.NormalAmps
@@ -1059,7 +1064,14 @@ class DSSMPLPlotter:
             for i, l in enumerate(branch_objects):
                 if i in skip:
                     continue
-                    
+
+                lines_styles[offset] = single_ph_line_style if l.Phases == 1 else three_ph_line_style
+
+                if not elem.Enabled:
+                    lines_styles[offset] = single_ph_line_style if l.Phases == 1 else three_ph_line_style
+                    offset += 1                    
+                    continue
+
                 if do_values == pqPower:
                     values[offset] = np.abs(element.TotalPowers[0])
                 elif do_values == pqLosses:
@@ -1083,9 +1095,7 @@ class DSSMPLPlotter:
                 elif do_values == pqCurrent:
                     values[offset] = max_currents.get(element.Name, np.NaN)
                 elif do_values == pqCapacity:
-                    values[offset] = capacities.get(element.Name, np.NaN)
-                
-                lines_styles[offset] = single_ph_line_style if l.Phases == 1 else three_ph_line_style
+                    values[offset] = capacities.get(element.Name, np.NaN)                
                 offset += 1
             
             return [lines[:offset], values[:offset], lines_styles[:offset]] + extra
@@ -1132,8 +1142,12 @@ class DSSMPLPlotter:
         for i, _ in enumerate(point_objects):
             if i in skip:
                 continue
-                
-            values[offset] = np.abs(element.TotalPowers[0])
+
+            if elem.Enabled:
+                values[offset] = np.abs(element.TotalPowers[0])
+            else:
+                values[offset] = np.nan
+
             offset += 1
         
         return points[:offset], values[:offset]
@@ -1187,6 +1201,9 @@ class DSSMPLPlotter:
                 phases = [phases]
             
         for em in DSS.ActiveCircuit.Meters:
+            if not DSS.ActiveCircuit.ActiveCktElement.Enabled:
+                continue
+
             branch_names = em.AllBranchesInZone
             br: str
             for br in branch_names:
@@ -1312,6 +1329,7 @@ class DSSMPLPlotter:
 
         # GIC lines are not exposed nicely in the classic API, so we'll use the new Obj API
         for gic_line in altdss.GICLine:
+            TODO
             if not gic_line.enabled:
                 continue
 
