@@ -229,7 +229,7 @@ Released on 2023-03-28.
     - `Bus_Get_ZSC012Matrix`: check for nulls
     - `Bus_Get_AllPCEatBus`, `Bus_Get_AllPDEatBus`: faster implementations
     - `Meters_Get_CountBranches`: reimplemented
-    - `Monitors_Get_dblHour`: For harmonics solution, return empty array. Previously, it was returning a large array instead of a single element (`[0]`) array. A small issue adjusted for compatibility with the official COM API results.
+    - `Monitors_Get_dblHour`: For harmonics solution, return empty array. Previously, it was returning a large array instead of a single element (`[0]`) array. A small issue adjusted for compatibility with EPRI's OpenDSS COM API results.
     - `Reactors_Set_Bus1`: Match the side-effects of the property API for two-terminal reactors. 
     - New `DSS_Set_CompatFlags`/`DSS_Get_CompatFlags` function pair: introduced to address some current and potential future concerns about compatibility of results with EPRI's OpenDSS. See the API docs for more info.
     - New `DSS_Set_EnableArrayDimensions`/`DSS_Get_EnableArrayDimensions`: for Array results in the API, implement optional matrix sizes; when setting `DSS_Set_EnableArrayDimensions(true)`, the array size pointer will be filled with two extra elements to represent the matrix size (if the data is a matrix instead of a plain vector). For complex number, the dimensions are filled in relation to complex elements instead of double/float64 elements even though we currently reuse the double/float64 array interface. Issue: https://github.com/dss-extensions/dss_capi/issues/113
@@ -295,7 +295,7 @@ This version still maintains basic compatibility with the 0.10.x series of relea
     
     For example, consider the function Loads_Get_ZIPV. If there is no active circuit or active load element:
     - In the disabled state (COMErrorResults=False), the function will return "[]", an array with 0 elements.
-    - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should be compatible with the return value of the official COM interface.
+    - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should be compatible with the return value of EPRI's OpenDSS COM interface.
     
     Defaults to True/1 (enabled state) in the v0.12.x series. This will change to false in future series.
     
@@ -325,7 +325,7 @@ Released on 2020-12-29.
 - Maintenance release. 
 - Updated to DSS C-API 0.10.7, which includes most changes up to OpenDSS v9.1.3.4.
 - Includes an important bug fix related to the `CapRadius` DSS property. If your DSS scripts included the pattern `GMRac=... rad=...` or `GMRac=... diam=...` (in this order and without specifying `CapRadius`), you should upgrade and re-evaluate the results. 
-- New API properties ported from the official COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, `CktElement.TotalPowers`, `Meters.ZonePCE`
+- New API properties ported from EPRI's OpenDSS COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, `CktElement.TotalPowers`, `Meters.ZonePCE`
 
 DSS C-API 0.10.7 changes:
 
@@ -362,7 +362,7 @@ DSS C-API 0.10.6 changes:
 - The releases now include both the optimized/default binary and a non-optimized/debug version. See the [Debugging](https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/debug.md) document for more.
 - Extended API validation and **Extended Errors** mechanism: 
     - The whole API was reviewed to add basic checks for active circuit and element access. 
-    - By default, invalid accesses now result in errors reported through the Error interface. This can be disabled to achieve the previous behavior, more compatible with the official COM implementation — that is, ignore the error, just return a default/invalid value and assume the user has handled it.
+    - By default, invalid accesses now result in errors reported through the Error interface. This can be disabled to achieve the previous behavior, more compatible with EPRI's OpenDSS COM implementation — that is, ignore the error, just return a default/invalid value and assume the user has handled it.
     - The mechanism can be toggled by API functions `DSS_Set_ExtendedErrors` and `DSS_Get_ExtendedErrors`, or environment variable `DSS_CAPI_EXTENDED_ERRORS=0` to disable (defaults to enabled state).
 - New **Legacy Models** mechanism:
     - OpenDSS 9.0+ dropped the old `PVsystem`, `Storage`, `InvControl`, and `StorageController` models, replacing with the new versions previously known as `PVsystem2`, `Storage2`, `InvControl2` and `StorageController2`.

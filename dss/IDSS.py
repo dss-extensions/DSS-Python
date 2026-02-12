@@ -432,9 +432,9 @@ class IDSS(Base):
 
         For example, consider the function `Loads_Get_ZIPV`. If there is no active circuit or active load element:
 
-        - In the disabled state (COMErrorResults=False), the function will return "[]", an array with 0 elements.
-        - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
-        be compatible with the return value of the official COM interface.
+        - In the disabled state (`COMErrorResults`=False), the function will return "[]", an array with 0 elements.
+        - In the enabled state (`COMErrorResults`=True), the function will return "[0.0]" instead. This should
+        be compatible with the return value of EPRI's OpenDSS COM interface.
 
         Defaults to false (disabled state) in AltDSS since the v0.15.x series.
 

@@ -30,7 +30,7 @@ ENABLE_CSV = True
 ENABLE_JSON = True
 
 KNOWN_COM_DIFF = set([
-    # On official COM, uninitialized values for CalcCurrent, AllocFactors
+    # On EPRI's OpenDSS COM, uninitialized values for CalcCurrent, AllocFactors
     # Note that this could be a bug on the upstream version, but debugging without Delphi gets tricky
     *[('Version8/Distrib/Examples/DOCTechNote/1_2.dss.json', 'Meters', 'records', x, 'CalcCurrent') for x in range(77)],
     *[('Version8/Distrib/Examples/DOCTechNote/2_1.dss.json', 'Meters', 'records', x, 'CalcCurrent') for x in range(77)],

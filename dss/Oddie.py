@@ -13,7 +13,7 @@ class IOddieDSS(IDSS):
     r'''
     The OddieDSS class exposes the official OpenDSSDirect.DLL binary,
     as distributed by EPRI, with the same API as the DSS-Python and
-    the official COM interface object on Windows. It uses AltDSS Oddie
+    EPRI's OpenDSS COM interface object on Windows. It uses AltDSS Oddie
     to achieve this.
 
     **Note:** This class requires the backend for Oddie to be included in

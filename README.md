@@ -5,7 +5,7 @@
 
 # DSS-Python: Extended bindings for an alternative implementation of EPRI's OpenDSS
 
-Python bindings and misc tools for using our to [our customized/alternative implementation](https://github.com/dss-extensions/dss_capi) of [OpenDSS](http://smartgrid.epri.com/SimulationTool.aspx), AltDSS/DSS C-API library. OpenDSS is an open-source electric power distribution system simulator [distributed by EPRI](https://sourceforge.net/p/electricdss/). Based on DSS C-API, CFFI and NumPy, aiming for enhanced performance and full compatibility with the official COM object API on Windows, Linux and macOS. Support includes Intel-based (x86 and x64) processors, as well as ARM processors for Linux (including Raspberry Pi devices) and macOS (including Apple M1 and later).
+Python bindings and misc tools for using our to [our customized/alternative implementation](https://github.com/dss-extensions/dss_capi) of [OpenDSS](http://smartgrid.epri.com/SimulationTool.aspx), AltDSS/DSS C-API library. OpenDSS is an open-source electric power distribution system simulator [distributed by EPRI](https://sourceforge.net/p/electricdss/). Based on DSS C-API, CFFI and NumPy, aiming for enhanced performance and full compatibility with EPRI's OpenDSS COM object API on Windows, Linux and macOS. Support includes Intel-based (x86 and x64) processors, as well as ARM processors for Linux (including Raspberry Pi devices) and macOS (including Apple M1 and later).
 
 More context about this project and its components (including alternatives in [Julia](https://dss-extensions.org/OpenDSSDirect.jl/latest/), [MATLAB](https://github.com/dss-extensions/dss_matlab/), C++, [C#/.NET](https://github.com/dss-extensions/dss_sharp/), [Go](https://github.com/dss-extensions/AltDSS-Go/), and [Rust](https://github.com/dss-extensions/AltDSS-Rust/)), please check [https://dss-extensions.org/](https://dss-extensions.org/) and our hub repository at [dss-extensions/dss-extensions](https://github.com/dss-extensions/dss-extensions) for more documentation, discussions and the [FAQ](https://dss-extensions.org/faq.html).
 
@@ -136,7 +136,7 @@ Since the DLL is built using the Free Pascal compiler, which is not officially s
 
 The validation scripts is `tests/validation.py` and requires the same folder structure as the building process. You need `win32com` to run it on Windows.
 
-As of version 0.11, the full validation suite can be run on the three supported platforms. This is possible by saving the official COM DLL output and loading it on macOS and Linux. We hope to fully automate this validation in the future.
+As of version 0.11, the full validation suite can be run on the three supported platforms. This is possible by saving EPRI's OpenDSS COM DLL output and loading it on macOS and Linux. We hope to fully automate this validation in the future.
 
 ## Roadmap: docs and interactive features
 
