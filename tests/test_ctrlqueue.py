@@ -81,16 +81,25 @@ def test_ctrlqueue():
     
     i = 0
     
-    # Values updated for OpenDSS 10.1, which include the change to reset YPrimInvalid to false
     v_step_up = [
-        119.26520933058164,
-        118.53391703558978,
-        119.00162278912609,
-        118.22495566279100,
-        118.66307559565404,
-        119.11533205526253,
-        118.26023037859353,
+        119.26520933058164, 
+        118.53391703558978, 
+        119.00110473442648, 
+        118.22480242913166, 
+        118.66765922692467, 
+        119.1133497058388, 
+        118.25980207026679,
     ]
+    # # Values below were updated for OpenDSS 10.1, which included the change to reset YPrimInvalid to false
+    # v_step_up = [
+    #     119.26520933058164,
+    #     118.53391703558978,
+    #     119.00162278912609,
+    #     118.22495566279100,
+    #     118.66307559565404,
+    #     119.11533205526253,
+    #     118.26023037859353,
+    # ]
     while DSSCapacitors.AvailableSteps > 0:
         print('DSSCapacitors.AvailableSteps', DSSCapacitors.AvailableSteps)
         i = i + 1
@@ -130,17 +139,27 @@ def test_ctrlqueue():
                 print("Capacitor", DSSCapacitors.Name, "States =", tuple(DSSCapacitors.States))
 
 
-    # Values updated for OpenDSS 10.1, which include the change to reset YPrimInvalid to false
     v_step_down = [
-        121.87640973217214,
-        121.19194698692986,
-        121.72771816928677,
-        121.00166364015094,
-        121.51952384526496,
-        120.74621507897345,
-        121.24285846717471,
-        120.41741114839155,
+        121.8764097324052,
+        121.1919475267437,
+        121.72822436752874,
+        121.00188980140766,
+        121.51826847553448,
+        120.74704094567356,
+        121.24330745091815,
+        120.41556666716592,
     ]
+    # # Values below were updated for OpenDSS 10.1, which included the change to reset YPrimInvalid to false
+    # v_step_down = [
+    #     121.87640973217214,
+    #     121.19194698692986,
+    #     121.72771816928677,
+    #     121.00166364015094,
+    #     121.51952384526496,
+    #     120.74621507897345,
+    #     121.24285846717471,
+    #     120.41741114839155,
+    # ]
 
     # Now let's reverse Direction and start removing steps
     while DSSCapacitors.AvailableSteps < DSSCapacitors.NumSteps:

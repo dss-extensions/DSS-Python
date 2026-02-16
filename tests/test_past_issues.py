@@ -74,7 +74,7 @@ def test_create_with_circuit():
     for cls in DSS.Classes:
         DSS.ClearAll()
         DSS.NewCircuit(f'test_{cls}')
-        if cls in ('CapControl', 'RegControl', 'GenDispatcher', 'StorageController', 'Relay', 'Fuse', 'SwtControl', 'ESPVLControl', 'GICsource', 'FMonitor'):
+        if cls in ('CapControl', 'RegControl', 'GenDispatcher', 'StorageController', 'Relay', 'Fuse', 'SwtControl', 'ESPVLControl', 'GICsource', 'FMonitor', 'Generic5'):
             with pytest.raises(DSSException):
                 DSS.Text.Command = f'new {cls}.test{cls}'
 
@@ -86,8 +86,10 @@ def test_create_with_circuit():
                 DSS.Text.Command = f'new {cls}.test{cls}2 element=transformer.testtr capacitor=testcap'
             elif cls == 'GenDispatcher':
                 DSS.Text.Command = f'new {cls}.test{cls}2 element=transformer.testtr'
-            elif cls == 'FMonitor':
-                DSS.Text.Command = f'new {cls}.test{cls}2 element=transformer.testtr'
+            elif cls in ('FMonitor', 'Generic5'):
+                # Skip these for now... they are disabled by default
+                # DSS.Text.Command = f'new {cls}.test{cls}2 element=transformer.testtr'
+                pass
 
         else:
             DSS.Text.Command = f'new {cls}.test{cls}'
@@ -101,3 +103,4 @@ def test_ymatrix_csc():
     DSS.ActiveCircuit.Solution.Solve()
     DSS.ActiveCircuit.Settings.AdvancedTypes = True
     assert np.all(DSS.ActiveCircuit.SystemY == sp.csc_matrix(DSS.YMatrix.GetCompressedYMatrix()))
+

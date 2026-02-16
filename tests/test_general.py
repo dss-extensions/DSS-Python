@@ -303,8 +303,11 @@ def test_pm_threads():
     DSS.Text.Command = 'set hour=216'
 
     DSS.ActiveCircuit.Solution.SolveAll()
-    DSS.Text.Command = 'wait'
-    
+    Parallel.Wait()
+
+    # DSS.Text.Command = 'solve all'
+    # DSS.Text.Command = 'wait'
+
     assert tuple(Parallel.ActorStatus) == (1, 1, 1, 1)
     assert tuple(Parallel.ActorProgress) == (100, 100, 100, 100)
     t1 = perf_counter()
@@ -388,6 +391,9 @@ def test_pm_threads():
 
 def test_threading2():
     DSS.AllowChangeDir = False
+    
+    # EPRITestCircuits/epri_dpv/M1 has loads with zero power
+    DSS.ActiveCircuit.Settings.CompatFlags |= DSSCompatFlags.PermissiveProperties
 
     fns = [
         f"{BASE_DIR}/Version8/Distrib/EPRITestCircuits/epri_dpv/M1/Master_NoPV.dss",
@@ -1093,6 +1099,23 @@ def test_settings_context():
     assert isinstance(DSS.ActiveCircuit.AllBusVmag, np.ndarray)
 
 
+def test_share_general():
+    DSS2 = DSS.NewContext()
+    DSS('new loadshape.sharedloadshape npts=4 pmult=[1, 2, 3, 4]')
+    DSS.ShareGeneral(DSS2)
+    DSS.NewCircuit('test1')
+    DSS2.NewCircuit('test2')
+
+    assert 'sharedloadshape' in DSS.ActiveCircuit.LoadShapes.AllNames
+    assert 'sharedloadshape' in DSS2.ActiveCircuit.LoadShapes.AllNames
+
+    LS = DSS.ActiveCircuit.LoadShapes
+    LS.Name = 'sharedloadshape'
+
+    LS2 = DSS2.ActiveCircuit.LoadShapes
+    LS2.Name = 'sharedloadshape'
+    assert list(LS2.Pmult) == list(LS.Pmult)
+    assert list(LS2.Pmult) == [1., 2., 3., 4.]
 
 
 if __name__ == '__main__':
