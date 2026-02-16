@@ -16,7 +16,7 @@ _properties_mo = os.path.join(os.path.dirname(__file__), 'messages', 'properties
 if os.path.exists(_properties_mo):
     lib.DSS_SetPropertiesMO(_properties_mo.encode())
 
-from ._cffi_api_util import CffiApiUtil, AltDSSAPIUtil, DSSException, set_case_insensitive_attributes
+from ._cffi_api_util import AltDSSAPIUtil, DSSException, set_case_insensitive_attributes
 from .IDSS import IDSS
 from .Oddie import IOddieDSS, OddieOptions
 from .enums import *
@@ -25,11 +25,11 @@ DssException = DSSException
 
 if not hasattr(lib, 'ctx_New'):
     # Module was built without the context API
-    api_util: CffiApiUtil = CffiApiUtil(ffi, lib) #: API utility functions and low-level access to the classic API
+    api_util: AltDSSAPIUtil = AltDSSAPIUtil(ffi, lib) #: API utility functions and low-level access to the classic API
     prime_api_util = None
     DSS_GR: IDSS = IDSS(api_util) #: GR (Global Result) interface
 else:
-    api_util = prime_api_util = CffiApiUtil(ffi, lib, lib.ctx_Get_Prime()) #: API utility functions and low-level access for DSSContext API
+    api_util = prime_api_util = AltDSSAPIUtil(ffi, lib, lib.ctx_Get_Prime()) #: API utility functions and low-level access for DSSContext API
     DSS_GR: IDSS = IDSS(prime_api_util) #: GR (Global Result) interface using the new DSSContext API
     
 DSS_IR: IDSS = DSS_GR #: IR was removed in DSS-Python v0.13.x, we'll keep mapping it to DSS_GR for this version

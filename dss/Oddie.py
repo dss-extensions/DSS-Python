@@ -1,7 +1,7 @@
 from __future__ import annotations
 import sys, platform, ctypes, os
 from typing import Optional
-from ._cffi_api_util import CffiApiUtil
+from ._cffi_api_util import AltDSSAPIUtil
 from .IDSS import IDSS
 from enum import Flag
 
@@ -137,7 +137,7 @@ class IOddieDSS(IDSS):
             lib.Oddie_SetOptions(oddie_options)
 
         ctx = ffi.gc(ctx, lib.ctx_Dispose)
-        api_util = CffiApiUtil(ffi, lib, ctx, is_oddie=True)
+        api_util = AltDSSAPIUtil(ffi, lib, ctx, is_oddie=True)
         api_util._library_path = library_path
         IDSS.__init__(self, api_util)
 

@@ -11,7 +11,7 @@ from typing import List, TYPE_CHECKING, Optional, Tuple, Dict, Union, Iterable
 from typing_extensions import TypedDict, Unpack
 from . import api_util
 from . import DSS as DSSPlotCtx
-from ._cffi_api_util import CffiApiUtil
+from ._cffi_api_util import AltDSSAPIUtil
 from .IDSS import IDSS
 from .IBus import IBus
 from ._cffi_api_util import Iterable as DSSIterable

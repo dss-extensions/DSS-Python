@@ -5,7 +5,7 @@ from __future__ import annotations
 import warnings
 from weakref import WeakKeyDictionary
 from typing import Any, List, Union, AnyStr, TYPE_CHECKING
-from ._cffi_api_util import Base, CffiApiUtil, DSSException
+from ._cffi_api_util import Base, AltDSSAPIUtil, DSSException
 from .ICircuit import ICircuit
 from .IError import IError
 from .IText import IText
@@ -79,7 +79,7 @@ class IDSS(Base):
     ZIP: IZIP
 
     @classmethod
-    def _get_instance(cls: IDSS, api_util: CffiApiUtil = None, ctx=None) -> IDSS:
+    def _get_instance(cls: IDSS, api_util: AltDSSAPIUtil = None, ctx=None) -> IDSS:
         '''
         If there is an existing instance for a DSSContext, returns it.
         Otherwise, tries to wrap the context into a new DSS-Python API instance.
@@ -87,7 +87,7 @@ class IDSS(Base):
         if api_util is None:
             # If none exists, something is probably wrong elsewhere,
             # so let's allow the IndexError to propagate
-            api_util = CffiApiUtil._ctx_to_util[ctx]
+            api_util = AltDSSAPIUtil._ctx_to_util[ctx]
 
         dss = cls._ctx_to_dss.get(api_util.ctx)
         if dss is None:
@@ -410,7 +410,7 @@ class IDSS(Base):
 
         Defaults to False/0 (disabled state). Users should consider DOScmd deprecated on DSS-Extensions.
 
-        This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
+        This can also be set through the environment variable `DSS_CAPI_ALLOW_DOSCMD`. Setting it to 1 enables
         the command.
 
         **Deprecated:** Use `Settings.AllowDOScmd` instead (same behavior, the setting was just moved there for better organization).
@@ -472,7 +472,7 @@ class IDSS(Base):
         ffi = self._api_util.ffi
         lib = self._api_util.lib_unpatched
         new_ctx = ffi.gc(lib.ctx_New(), lib.ctx_Dispose)
-        new_api_util = CffiApiUtil(ffi, lib, new_ctx, parent=self._api_util)
+        new_api_util = AltDSSAPIUtil(ffi, lib, new_ctx, parent=self._api_util)
         return IDSS(new_api_util)
 
     def __call__(self, cmds: Union[AnyStr, List[AnyStr]]):

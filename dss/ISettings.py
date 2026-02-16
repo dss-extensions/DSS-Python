@@ -591,7 +591,7 @@ class ISettings(Base):
 
         Defaults to False/0 (disabled state). Users should consider DOScmd deprecated on DSS-Extensions.
 
-        This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
+        This can also be set through the environment variable `DSS_CAPI_ALLOW_DOSCMD`. Setting it to 1 enables
         the command.
 
         **(API Extension)**
@@ -613,7 +613,7 @@ class ISettings(Base):
         Defaults to True (allow changes, backwards compatible) in the 0.10.x versions of DSS C-API. 
         This might change to False in future versions.
         
-        This can also be set through the environment variable DSS_CAPI_ALLOW_CHANGE_DIR. Set it to 0 to
+        This can also be set through the environment variable `DSS_CAPI_ALLOW_CHANGE_DIR`. Set it to 0 to
         disallow changing the active working directory.
         
         **(API Extension)**

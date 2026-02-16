@@ -285,19 +285,19 @@ class CtxLib:
         return np.frombuffer(self._ffi.buffer(ptr[0], cnt[0] * 4), dtype=np.int32).copy()
 
 
-    # def get_int8_array(self, func: Callable, *args: Any) -> Int8Array:
-    #     ptr = self._ffi.new('int8_t**')
-    #     cnt = self._ffi.new('int32_t[4]')
-    #     func(ptr, cnt, *args)
-    #     res = np.frombuffer(self._ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
-    #     self.DSS_Dispose_PByte(ptr)
+    def get_int8_array(self, func: Callable, *args: Any) -> Int8Array:
+        ptr = self._ffi.new('int8_t**')
+        cnt = self._ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        res = np.frombuffer(self._ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
+        self.DSS_Dispose_PByte(ptr)
 
-    #     if cnt[3] and (self.settings_ptr[0] & (1 << 1)): # self.advanced_types:
-    #         # If the last element is filled, we have a matrix.  Otherwise, the 
-    #         # matrix feature is disabled or the result is indeed a vector
-    #         return res.reshape((cnt[2], cnt[3]))
+        if cnt[3] and (self.settings_ptr[0] & (1 << 1)): # self.advanced_types:
+            # If the last element is filled, we have a matrix.  Otherwise, the 
+            # matrix feature is disabled or the result is indeed a vector
+            return res.reshape((cnt[2], cnt[3]))
 
-    #     return res
+        return res
 
 
     def get_int8_gr_array(self) -> Int8Array:
@@ -311,24 +311,24 @@ class CtxLib:
         return np.frombuffer(self._ffi.buffer(ptr[0], cnt[0] * 1), dtype=np.int8).copy()
 
 
-    # def get_string_array(self, func: Callable, *args: Any) -> List[str]:
-    #     ptr = self._ffi.new('char***')
-    #     cnt = self._ffi.new('int32_t[4]')
-    #     func(ptr, cnt, *args)
-    #     if not cnt[0]:
-    #         res = []
-    #     else:
-    #         actual_ptr = ptr[0]
-    #         if actual_ptr == self._ffi.NULL:
-    #             res = []
-    #         else:
-    #             codec = self.codec
-    #             str_ptrs = self._unpack(actual_ptr, cnt[0])
-    #             #res = [(str(self._ffi.string(str_ptr).decode(codec)) if (str_ptr != self._ffi.NULL) else None) for str_ptr in str_ptrs]
-    #             res = [(self._ffi.string(str_ptr).decode(codec) if (str_ptr != self._ffi.NULL) else u'') for str_ptr in str_ptrs]
+    def get_string_array(self, func: Callable, *args: Any) -> List[str]:
+        ptr = self._ffi.new('char***')
+        cnt = self._ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        if not cnt[0]:
+            res = []
+        else:
+            actual_ptr = ptr[0]
+            if actual_ptr == self._ffi.NULL:
+                res = []
+            else:
+                codec = self._api_util.codec
+                str_ptrs = self._unpack(actual_ptr, cnt[0])
+                #res = [(str(self._ffi.string(str_ptr).decode(codec)) if (str_ptr != self._ffi.NULL) else None) for str_ptr in str_ptrs]
+                res = [(self._ffi.string(str_ptr).decode(codec) if (str_ptr != self._ffi.NULL) else u'') for str_ptr in str_ptrs]
 
-    #     self.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
-    #     return res
+        self.DSS_Dispose_PPAnsiChar(ptr, cnt[1])
+        return res
 
 
     # def get_string_array2(self, func, *args): # for compatibility with OpenDSSDirect.py
@@ -343,7 +343,7 @@ class CtxLib:
     #         if actual_ptr == self._ffi.NULL:
     #             res = []
     #         else:
-    #             codec = self.codec
+    #             codec = self._api_util.codec
     #             res = [(str(self._ffi.string(actual_ptr[i]).decode(codec)) if (actual_ptr[i] != self._ffi.NULL) else '') for i in range(cnt[0])]
     #             if res == [u'']:
     #                 # most COM methods return an empty array as an
@@ -357,29 +357,29 @@ class CtxLib:
     #     return res
 
 
-    # def get_float64_array2(self, func, *args):
-    #     ptr = self._ffi.new('double**')
-    #     cnt = self._ffi.new('int32_t[4]')
-    #     func(ptr, cnt, *args)
-    #     if not cnt[0]:
-    #         res = []
-    #     else:
-    #         res = self._unpack(ptr[0], cnt[0])
+    def get_float64_array2(self, func, *args):
+        ptr = self._ffi.new('double**')
+        cnt = self._ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        if not cnt[0]:
+            res = []
+        else:
+            res = self._unpack(ptr[0], cnt[0])
 
-    #     self.DSS_Dispose_PDouble(ptr)
-    #     return res
+        self.DSS_Dispose_PDouble(ptr)
+        return res
 
-    # def get_int32_array2(self, func, *args):
-    #     ptr = self._ffi.new('int32_t**')
-    #     cnt = self._ffi.new('int32_t[4]')
-    #     func(ptr, cnt, *args)
-    #     if not cnt[0]:
-    #         res = None
-    #     else:
-    #         res = self._unpack(ptr[0], cnt[0])
+    def get_int32_array2(self, func, *args):
+        ptr = self._ffi.new('int32_t**')
+        cnt = self._ffi.new('int32_t[4]')
+        func(ptr, cnt, *args)
+        if not cnt[0]:
+            res = None
+        else:
+            res = self._unpack(ptr[0], cnt[0])
 
-    #     self.DSS_Dispose_PInteger(ptr)
-    #     return res
+        self.DSS_Dispose_PInteger(ptr)
+        return res
 
     # def get_int8_array2(self, func, *args):
     #     ptr = self._ffi.new('int8_t**')
