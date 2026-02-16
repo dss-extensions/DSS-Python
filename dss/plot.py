@@ -1020,9 +1020,9 @@ class DSSMPLPlotter:
                                 
                     values[offset] = value
                 elif do_values == pqCurrent:
-                    values[offset] = max_currents.get(element.Name, np.NaN)
+                    values[offset] = max_currents.get(element.Name, np.nan)
                 elif do_values == pqCapacity:
-                    values[offset] = capacities.get(element.Name, np.NaN)
+                    values[offset] = capacities.get(element.Name, np.nan)
                             
                 offset += 1
             
@@ -1093,9 +1093,9 @@ class DSSMPLPlotter:
                                 
                     values[offset] = value
                 elif do_values == pqCurrent:
-                    values[offset] = max_currents.get(element.Name, np.NaN)
+                    values[offset] = max_currents.get(element.Name, np.nan)
                 elif do_values == pqCapacity:
-                    values[offset] = capacities.get(element.Name, np.NaN)                
+                    values[offset] = capacities.get(element.Name, np.nan)                
                 offset += 1
             
             return [lines[:offset], values[:offset], lines_styles[:offset]] + extra
@@ -2434,7 +2434,7 @@ class DSSMPLPlotter:
                 except:
                     pass
             elif quantity in (pqCurrent, pqCapacity):
-                lw = capacities.get(element.Name, np.NaN)
+                lw = capacities.get(element.Name, np.nan)
 
             if (element.NumPhases == 1):
                 lines1.append([c1, c2])

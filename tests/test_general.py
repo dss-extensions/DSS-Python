@@ -385,7 +385,7 @@ def test_pm_threads():
         np.testing.assert_allclose(v_ctx[2], v_seq[2])
         np.testing.assert_allclose(v_ctx[3], v_seq[3])
     else:
-        dt_ctx = np.NaN
+        dt_ctx = np.nan
     print(f"PM: {dt_pm:.3g} s; Python threads: {dt_ctx:.3g} s; Sequential: {dt_seq:.3g} s")
 
 

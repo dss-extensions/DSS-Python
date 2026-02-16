@@ -310,10 +310,10 @@ class ComparisonHandler:
 
                 if isinstance(va[0], float) or va[0] is None:
                     if None in va:
-                        va = [x if x is not None else np.NaN for x in va]
+                        va = [x if x is not None else np.nan for x in va]
 
                     if None in vb:
-                        vb = [x if x is not None else np.NaN for x in vb]
+                        vb = [x if x is not None else np.nan for x in vb]
 
                     atol = tol
                     rtol = tol
