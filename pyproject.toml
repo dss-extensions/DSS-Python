@@ -24,7 +24,7 @@ packages = ["dss"]
 name = "dss-python"
 dynamic = ["version"]
 dependencies = [
-    "dss_python_backend==0.14.6a1",
+    "dss_python_backend==0.15.0b1",
     "numpy>=2,<3",
     "typing_extensions>=4.5,<5",
 ]
@@ -43,12 +43,10 @@ keywords = ["opendss", "altdss", "electric power systems", "opendssdirect", "pow
 classifiers = [
     'Intended Audience :: Science/Research',
     'Intended Audience :: Education',
-    'Programming Language :: Python :: 3.7',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
     'Programming Language :: Python :: Implementation :: CPython',
     'Development Status :: 5 - Production/Stable',
     'Topic :: Scientific/Engineering',
