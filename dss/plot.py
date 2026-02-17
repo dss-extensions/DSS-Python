@@ -4,22 +4,29 @@ using the new features from DSS C-API v0.12+ and common Python modules such as m
 
 This is not a complete implementation and there are known limitations, but should suffice
 for many use-cases. We'd like to add another backend later.
+
+For DSS-Python v0.16, this module was refactored and improved to also allow using EPRI's 
+OpenDSS distributions (original Delphi OpenDSS, and OpenDSS-C), although more limited
+since they do not provide the same API as the AltDSS engine.
 """
 from __future__ import annotations
 import os, re, json, sys, warnings
+from weakref import WeakKeyDictionary
 from typing import List, TYPE_CHECKING, Optional, Tuple, Dict, Union, Iterable
-from typing_extensions import TypedDict, Unpack
-from . import api_util
-from . import DSS as DSSPlotCtx
-from ._cffi_api_util import AltDSSAPIUtil
-from .IDSS import IDSS
-from .IBus import IBus
-from ._cffi_api_util import Iterable as DSSIterable
 from enum import Enum, IntEnum
+from pathlib import Path as FilePath
+from typing_extensions import TypedDict, Unpack
+
 import numpy as np
 from numpy import asarray
 from numpy.testing import suppress_warnings
-from pathlib import Path as FilePath
+
+from dss_python_backend import loader_lib
+from . import api_util
+from . import DSS as DSSPlotCtx
+from ._cffi_api_util import AltDSSAPIUtil, Iterable as DSSIterable
+from .IDSS import IDSS
+from .IBus import IBus
 try:
     from matplotlib import pyplot as plt
     from matplotlib.path import Path
@@ -229,8 +236,6 @@ DEFAULT_PLOT_PARAMS = PlotParams(
     MaxScale=None,
 )
 
-include_3d = '2d' # '2d' (default), '3d' (prefer 3d), 'both'
-
 str_to_pq = {
     'Voltages': pqVoltage,
     'Currents': pqCurrent,
@@ -410,25 +415,10 @@ def remove_nodes(bus):
 def _int_to_color(v: int):
     return ((v & 255) / 255.0, (v >> 8 & 255) / 255.0, (v >> 16) / 255.0)
 
-class ToggleAdvancedTypes:
-    def __init__(self, dss: IDSS, value: bool):
-        self._value = value
-        self._dss = dss
-        self._previous = self._dss.AdvancedTypes
-    
-    def __enter__(self):
-        if self._value != self._previous:
-            self._dss.AdvancedTypes = self._value
-
-        return self
-        
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self._value != self._previous:
-            self._dss.AdvancedTypes = self._previous
-
 
 class DSVHandler:
-    def __init__(self, fn: Union[str, FilePath]):
+
+    def __init__(self, fn: Union[str, FilePath], show=True):
         self.fn = fn
         self.fig, self.ax = plt.subplots()
         self.ax.get_xaxis().get_major_formatter().set_scientific(False)
@@ -441,7 +431,7 @@ class DSVHandler:
         self.no_scales = False
         self.bold = True
         self.txt_align = 'left'
-
+        self._do_show = show
 
     def BoldLabel(self, param_str: str):
         self.bold = int(param_str.strip()) != 0
@@ -664,7 +654,7 @@ class DSVHandler:
     def Ylabel(self, param_str: str):
         self.ax.set_ylabel(param_str.strip().strip('"'))
         
-    def parse(self):
+    def parse_and_plot(self):
         with open(self.fn, 'r') as f:
             for l in f:
                 l = l.strip()
@@ -679,23 +669,32 @@ class DSVHandler:
                 # print(item, repr(rest)[:100])
                 getattr(self, item_name)(rest[0] if rest else '') # let the exception propagate on error
 
-        if _do_show:
+        if self._do_show:
             self.fig.show()
         else:
             return self.fig, self.ax
 
 
 class DSSMPLPlotter:
-    def __init__(self, dss: IDSS):
-        self.dss = dss
+    _ctx_to_plotter = WeakKeyDictionary()
 
-    def dss_monitor_plot(DSS: IDSS, 
+    def __init__(self, dss: IDSS):
+        if dss._api_util.ctx not in DSSMPLPlotter._ctx_to_plotter:
+            DSSMPLPlotter._ctx_to_plotter[dss._api_util.ctx] = self
+
+        self.dss = dss
+        self._original_allow_forms = None
+        self._do_show = True
+        self._enabled = False
+
+    def monitor(self, 
         *,
         ObjectName: str = None,
         Channels: List[int] = None, # TODO: allow channel names too
         Bases: List[float] = None,
         **kwargs: Unpack[PlotParams]
     ):
+        DSS = self.dss
         monitor = DSS.ActiveCircuit.Monitors
         monitor.Name = ObjectName
         data = monitor.AsMatrix()
@@ -753,7 +752,7 @@ class DSSMPLPlotter:
         ax.set_xlabel(xlabel)
 
 
-    def dss_tshape_plot(self,
+    def tshape(self,
         *,
         ObjectName: str = None,
         Color1: str = None,
@@ -761,7 +760,7 @@ class DSSMPLPlotter:
     ):
         # There is no dedicated API yet but we can move to the Obj API
         name = ObjectName
-        DSS = self.DSS
+        DSS = self.dss
         DSS.Text.Command = f'? tshape.{name}.temp'
         p = np.fromstring(DSS.Text.Result[1:-1].strip(), dtype=float, sep=' ')
         try:
@@ -797,7 +796,7 @@ class DSSMPLPlotter:
 
 
 
-    def dss_priceshape_plot(self,
+    def priceshape(self,
         *,
         ObjectName: str = None,
         Color1: str = None,
@@ -805,7 +804,7 @@ class DSSMPLPlotter:
     ):
         # There is no dedicated API yet but we can move to the Obj API
         name = ObjectName
-        DSS = self.DSS
+        DSS = self.dss
 
         DSS.Text.Command = f'? priceshape.{name}.price'
         p = np.fromstring(DSS.Text.Result[1:-1].strip(), dtype=float, sep=' ')
@@ -842,7 +841,7 @@ class DSSMPLPlotter:
         fig.set_layout_engine(layout='tight')
 
 
-    def dss_loadshape_plot(self,
+    def loadshape(self,
         *,
         ObjectName: str = None,
         Color1: str = None,
@@ -850,7 +849,7 @@ class DSSMPLPlotter:
         **kwargs: Unpack[PlotParams]
     ):
     #     pprint(kwargs)
-        DSS = self.DSS
+        DSS = self.dss
 
         ls = DSS.ActiveCircuit.LoadShapes
         ls.Name = ObjectName
@@ -900,7 +899,7 @@ class DSSMPLPlotter:
         single_ph_line_style: int = 1,
         three_ph_line_style: int = 1
     ):
-        DSS = self.DSS
+        DSS = self.dss
 
         line_count = branch_objects.Count if not idxs else len(idxs)
         lines = np.empty(shape=(line_count, 2, 2), dtype=np.float64)
@@ -944,29 +943,29 @@ class DSSMPLPlotter:
                 max_currents = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllPctNorm(True)))
             except:
                 max_currents = {}
-                elem = DSS.ActiveCircuit.ActiveCktElement
+                element = DSS.ActiveCircuit.ActiveCktElement
                 for _ in DSS.ActiveCircuit.PDElements:
-                    if not elem.Enabled:
+                    if not element.Enabled:
                         continue
-                    currents = np.abs(asarray(elem.Currents).view(dtype=complex))
-                    max_current = np.max(currents[:elem.NumConductors])
-                    norm_amps = elem.NormalAmps
-                    max_currents[elem.Name] = (100 * max_current / norm_amps) if norm_amps else 0.0
+                    currents = np.abs(asarray(element.Currents).view(dtype=complex))
+                    max_current = np.max(currents[:element.NumConductors])
+                    norm_amps = element.NormalAmps
+                    max_currents[element.Name] = (100 * max_current / norm_amps) if norm_amps else 0.0
                 
         elif do_values == pqCapacity:
             try:
                 capacities = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllPctNorm(True)))
             except:
                 max_currents = {}
-                elem = DSS.ActiveCircuit.ActiveCktElement
+                element = DSS.ActiveCircuit.ActiveCktElement
                 for _ in DSS.ActiveCircuit.PDElements:
-                    if not elem.Enabled:
-                        max_currents[elem.Name] = np.nan
+                    if not element.Enabled:
+                        max_currents[element.Name] = np.nan
                         continue
-                    currents = np.abs(asarray(elem.Currents).view(dtype=complex))
-                    max_current = np.max(currents[:elem.NumConductors])
-                    norm_amps = elem.NormalAmps
-                    max_currents[elem.Name] = (100 * max_current / norm_amps) if norm_amps else 0.0
+                    currents = np.abs(asarray(element.Currents).view(dtype=complex))
+                    max_current = np.max(currents[:element.NumConductors])
+                    norm_amps = element.NormalAmps
+                    max_currents[element.Name] = (100 * max_current / norm_amps) if norm_amps else 0.0
 
         elif do_values == pqVoltage:
             node_volts = dict(zip(DSS.ActiveCircuit.AllNodeNames, asarray(DSS.ActiveCircuit.AllBusVmag) * 1e-3))
@@ -1067,7 +1066,7 @@ class DSSMPLPlotter:
 
                 lines_styles[offset] = single_ph_line_style if l.Phases == 1 else three_ph_line_style
 
-                if not elem.Enabled:
+                if not element.Enabled:
                     lines_styles[offset] = single_ph_line_style if l.Phases == 1 else three_ph_line_style
                     offset += 1                    
                     continue
@@ -1106,7 +1105,7 @@ class DSSMPLPlotter:
         bus_coords: Dict[str, Tuple[float, float, float]],
         do_values: bool = False
     ):
-        DSS = self.DSS
+        DSS = self.dss
         if isinstance(point_objects, str):
             cls = point_objects
             DSS.SetActiveClass(cls)
@@ -1143,7 +1142,7 @@ class DSSMPLPlotter:
             if i in skip:
                 continue
 
-            if elem.Enabled:
+            if element.Enabled:
                 values[offset] = np.abs(element.TotalPowers[0])
             else:
                 values[offset] = np.nan
@@ -1153,13 +1152,13 @@ class DSSMPLPlotter:
         return points[:offset], values[:offset]
 
 
-    def dss_profile_plot(self,
+    def profile(self,
         *,
         PhasesToPlot: int = None,
         ProfileScale: float = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
+        DSS = self.dss
 
         if len(DSS.ActiveCircuit.Meters) == 0:
             raise RuntimeError(f"An EnergyMeter is required to use 'plot profile'")
@@ -1242,7 +1241,7 @@ class DSSMPLPlotter:
                     linewidths.append(lw)
                     #TODO: NodeMarkerCode, NodeMarkerWidth
 
-        if include_3d in ('both', '2d'):
+        if self._include_3d in ('both', '2d'):
             fig = plt.figure()#figsize=(9, 5))
             ax = fig.add_subplot(1, 1, 1)
             ax.set_xlabel(xlabel)
@@ -1265,7 +1264,7 @@ class DSSMPLPlotter:
             ax.grid(ls='--')
             fig.set_layout_engine(layout='tight')
         
-        if include_3d in ('both', '3d'):
+        if self._include_3d in ('both', '3d'):
             fig2 = plt.figure()#figsize=(7, 7))
             ax2 = fig2.add_subplot(1, 1, 1, projection='3d')
             ax2.set_xlabel(xlabel)
@@ -1329,7 +1328,6 @@ class DSSMPLPlotter:
 
         # GIC lines are not exposed nicely in the classic API, so we'll use the new Obj API
         for gic_line in altdss.GICLine:
-            TODO
             if not gic_line.enabled:
                 continue
 
@@ -1357,7 +1355,7 @@ class DSSMPLPlotter:
         single_ph_line_style: int = 1,
         three_ph_line_style: int = 1
     ):
-        DSS = self.DSS    
+        DSS = self.dss    
         try:
             return self._get_gic_line_data_altdss(
                 DSS.to_altdss(),
@@ -1381,10 +1379,10 @@ class DSSMPLPlotter:
         # skip = set()
 
         # GIC lines are not exposed nicely in the classic API
-        elem = DSS.ActiveCircuit.ActiveCktElement
+        element = DSS.ActiveCircuit.ActiveCktElement
         idx = aclass.First
         while idx != 0:
-            buses = elem.BusNames
+            buses = element.BusNames
             b1 = remove_nodes(buses[0])
             b2 = remove_nodes(buses[1])
             fr = bus_coords.get(b1)
@@ -1398,15 +1396,15 @@ class DSSMPLPlotter:
             lines[offset, 1] = to
 
             lines_styles[offset] = single_ph_line_style if gic_line.phases == 1 else three_ph_line_style
-            currents = np.abs(asarray(elem.Currents).view(dtype=complex))
-            max_current = np.max(currents[:elem.NumConductors])
+            currents = np.abs(asarray(element.Currents).view(dtype=complex))
+            max_current = np.max(currents[:element.NumConductors])
             values[offset] = max_current
             offset += 1
 
         return lines[:offset], values[:offset], lines_styles[:offset]
 
 
-    def dss_circuit_plot(self,
+    def circuit(self,
         *, 
         fig=None,
         ax=None,
@@ -1426,7 +1424,7 @@ class DSSMPLPlotter:
         MaxScaleIsSpecified: bool = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
+        DSS = self.dss
 
         if not MaxScaleIsSpecified:
             MaxScale = None
@@ -1463,7 +1461,6 @@ class DSSMPLPlotter:
             ax.set_aspect('equal', 'datalim')
 
         lines_lines, lines_values, lines_styles, switch_idxs, isolated_idxs, *extra = self._get_branch_data(
-            DSS, 
             DSS.ActiveCircuit.Lines, 
             bus_coords, 
             do_values=quantity, 
@@ -1594,7 +1591,7 @@ class DSSMPLPlotter:
                 #     ax.set_xlim(np.min(lines_lines[:, :, 0]), np.max(lines_lines[:, :, 0]))
                 #     ax.set_ylim(np.min(lines_lines[:, :, 1]), np.max(lines_lines[:, :, 1]))
 
-        transformers_lines, *_ = self._get_branch_data(DSS, DSS.ActiveCircuit.Transformers, bus_coords)
+        transformers_lines, *_ = self._get_branch_data(DSS.ActiveCircuit.Transformers, bus_coords)
 
         if not is3d:
             lc_transformers = LineCollection(transformers_lines, linewidth=3, linestyle='solid', color='gray')
@@ -1654,7 +1651,7 @@ class DSSMPLPlotter:
                         ax.plot(*coords, color='red', **marker_dict)
                 
                 else:
-                    #TODO? branch_lines = self._get_branch_data(DSS, objs, bus_coords, idxs=idxs)
+                    #TODO? branch_lines = self._get_branch_data(objs, bus_coords, idxs=idxs)
                     pass
                 
                 
@@ -1665,7 +1662,7 @@ class DSSMPLPlotter:
                 marker_code = pmarkers[code_opt]
                 marker_size = pmarkers[size_opt]
                 
-                points = self._get_point_data(DSS, objs, bus_coords)
+                points = self._get_point_data(objs, bus_coords)
                 
         #        if marker_code not in MARKER_MAP:
                     #marker_code = 25
@@ -1717,10 +1714,10 @@ class DSSMPLPlotter:
                     ax.text(*coords, name, zorder=11, fontsize='xx-small', va='center', clip_on=True)
 
 
-    def dss_scatter_plot(self,
+    def scatter(self,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
+        DSS = self.dss
         x = np.empty(shape=(DSS.ActiveCircuit.NumBuses, ))
         y = np.empty(shape=(DSS.ActiveCircuit.NumBuses, ))
         vcomplex = np.empty(shape=(DSS.ActiveCircuit.NumBuses, 3), dtype=complex)
@@ -1743,16 +1740,16 @@ class DSSMPLPlotter:
             vmean = np.mean(vabs, axis=1, where=np.isfinite(vabs))
 
         title = '{}:{}'.format(DSS.ActiveCircuit.Name.upper(), 'Voltage magnitude')
-        if include_3d in ('both', '2d'):
+        if self._include_3d in ('both', '2d'):
             fig, ax = plt.subplots(1, 1, constrained_layout=True)#, figsize=(8, 7))
-            dss_circuit_plot(DSS, fig=fig, ax=ax, Color1='k')
+            self.circuit(fig=fig, ax=ax, Color1='k')
             ax.get_xaxis().get_major_formatter().set_scientific(False)
             ax.get_yaxis().get_major_formatter().set_scientific(False)
             sc = ax.scatter(x, y, c=vmean)
             fig.colorbar(sc, label='V1 (pu)')
             ax.set_title(title)
         
-        if include_3d in ('both', '3d'):
+        if self._include_3d in ('both', '3d'):
             bus_coords = {}
             for idx, b in enumerate(DSS.ActiveCircuit.Buses):
                 if b.Coorddefined:
@@ -1760,7 +1757,7 @@ class DSSMPLPlotter:
 
             fig = plt.figure()#figsize=(7, 7))
             ax = fig.add_subplot(projection='3d')
-            dss_circuit_plot(DSS, fig=fig, ax=ax, is3d=True, Color1='k')
+            self.circuit(fig=fig, ax=ax, is3d=True, Color1='k')
             ax.get_xaxis().get_major_formatter().set_scientific(False)
             ax.get_yaxis().get_major_formatter().set_scientific(False)
 
@@ -1797,14 +1794,14 @@ class DSSMPLPlotter:
             ax.set_title(title)
 
 
-    def dss_visualize_plot(self,
+    def visualize(self,
         *,
         Quantity: str = None,
         ElementType: str = None,
         ElementName: str = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
+        DSS = self.dss
 
         XMAX = 300
         #pprint(kwargs)
@@ -1932,7 +1929,7 @@ class DSSMPLPlotter:
         ax.set_ylim(-15, y + 5)
 
 
-    def dss_general_data_plot(self,
+    def general_data(self,
         *,
         PlotType: str = None,
         ObjectName: str = None,
@@ -1947,7 +1944,7 @@ class DSSMPLPlotter:
         
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
+        DSS = self.dss
 
         if not MaxScaleIsSpecified:
             MaxScale = None
@@ -2030,7 +2027,7 @@ class DSSMPLPlotter:
         data = np.asarray(data)
 
 
-        dss_circuit_plot(DSS, **kwargs)
+        self.circuit(**kwargs)
 
         #fig = plt.figure(figsize=(8, 7))
         plt.title(f'{field}, Max={max_val:.3g}')
@@ -2058,13 +2055,13 @@ class DSSMPLPlotter:
         #MarkSpecialClasses
 
 
-    def dss_matrix_plot(self,
+    def matrix(self,
         *,
         MatrixType: str = None,
         Color1: str = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
+        DSS = self.dss
 
         # plot_id = kwargs.get('PlotId', None)
         if MatrixType == 'IncMatrix':
@@ -2078,7 +2075,7 @@ class DSSMPLPlotter:
         m = coo.coo_matrix((v, (x, y)))
         #fig, [ax, ax2] = plt.subplots(1, 2, figsize=(8.6 * 2, 8.6), constrained_layout=True, num=title)
         
-        if include_3d in ('both', '2d'):
+        if self._include_3d in ('both', '2d'):
             fig = plt.figure(constrained_layout=True)#, num=plot_id) #, figsize=(8.6, 8.6))
             ax = fig.add_subplot(1, 1, 1)
             ax.grid(True)
@@ -2087,7 +2084,7 @@ class DSSMPLPlotter:
             ax.set_ylabel('Row')
             ax.set_title(title)
 
-        if include_3d in ('both', '3d'):
+        if self._include_3d in ('both', '3d'):
             fig = plt.figure()#figsize=(8.6, 8.6), num=plot_id + '_3D')
             ax2 = fig.add_subplot(1, 1, 1, projection='3d')
             ax2.scatter(x, y, v, c=v, marker='s')
@@ -2095,7 +2092,7 @@ class DSSMPLPlotter:
             ax2.set_ylabel('Row')
             ax2.set_zlabel('Value')
 
-    def dss_daisy_plot(self,
+    def daisy(self,
         *,
         DaisyBusList: List[str] = None,
         Quantity: str = None,
@@ -2103,9 +2100,9 @@ class DSSMPLPlotter:
         DaisySize: float = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
+        DSS = self.dss
 
-        dss_circuit_plot(DSS, **kwargs)
+        self.circuit(**kwargs)
 
         # print(params['DaisySize'])
 
@@ -2164,7 +2161,7 @@ class DSSMPLPlotter:
             ax.text(bus.x, bus.y, bus.Name, zorder=11, fontsize='xx-small', va='center', clip_on=True)
 
 
-    def dss_di_plot(self,
+    def di(self,
         *,
         CaseName: str = None,
         MeterName: str = None,
@@ -2173,7 +2170,7 @@ class DSSMPLPlotter:
         PeakDay: bool = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS    
+        DSS = self.dss    
         caseYear, caseName, meterName = CaseYear, CaseName, MeterName
         plotRegisters, peakDay = Registers, PeakDay
 
@@ -2237,7 +2234,7 @@ class DSSMPLPlotter:
 
 
     def _plot_yearly_case(self, caseName: str, meterName: str, plotRegisters: List[int], icolor: int, ax, registerNames: List[str]):
-        DSS = self.DSS
+        DSS = self.dss
         anyData = True
         xvalues = []
         all_yvalues = [[] for _ in plotRegisters]
@@ -2298,20 +2295,20 @@ class DSSMPLPlotter:
         return icolor
 
 
-    def dss_yearly_curve_plot(self, *, 
+    def yearly_curve(self, *, 
         MeterName: str = None,
         CaseNames: List[str] = None,
         Registers: List[str] = None,
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
+        DSS = self.dss
         caseNames, meterName, plotRegisters = CaseNames, MeterName, Registers
 
         fig, ax = plt.subplots(1)
         icolor = 0
         registerNames = []
         for caseName in caseNames:
-            icolor = _plot_yearly_case(DSS, caseName, MeterName, plotRegisters, icolor, ax, registerNames)
+            icolor = self._plot_yearly_case(caseName, MeterName, plotRegisters, icolor, ax, registerNames)
 
         if icolor == 0:
             plt.close(fig)
@@ -2325,12 +2322,12 @@ class DSSMPLPlotter:
         ax.grid()
 
 
-    def dss_comparecases_plot(self, **kwargs: Unpack[PlotParams]):
-        DSS = self.DSS        
-        print('TODO: dss_comparecases_plot', kwargs)
+    def compare_cases(self, **kwargs: Unpack[PlotParams]):
+        DSS = self.dss        
+        print('TODO: compare_cases', kwargs)
 
 
-    def dss_zone_plot(self,
+    def zone(self,
         *,
         ObjectName: str,
         Quantity: DSSPlotQuantity = DEFAULT_PLOT_PARAMS['Quantity'],
@@ -2345,7 +2342,7 @@ class DSSMPLPlotter:
         MaxScale: float = DEFAULT_PLOT_PARAMS['MaxScale'],
         **kwargs: Unpack[PlotParams]
     ):
-        DSS = self.DSS
+        DSS = self.dss
         obj_name = ObjectName
         show_loops = ShowLoops
         color1 = Color1
@@ -2371,7 +2368,7 @@ class DSSMPLPlotter:
         else:
             meters = ActiveCircuit.Meters
 
-        elem = ActiveCircuit.ActiveCktElement
+        element = ActiveCircuit.ActiveCktElement
         line = ActiveCircuit.Lines
         topo = ActiveCircuit.Topology
 
@@ -2393,6 +2390,8 @@ class DSSMPLPlotter:
             capacities = dict(zip(DSS.ActiveCircuit.PDElements.AllNames, DSS.ActiveCircuit.PDElements.AllPctNorm(True)))
 
         coords_to_names = {}
+
+        element = DSS.ActiveCircuit.ActiveCktElement
 
         def _name_coords(c, name):
             prev = coords_to_names.get(c)
@@ -2452,7 +2451,7 @@ class DSSMPLPlotter:
 
         fig, ax = plt.subplots(1)
         for meter in meters:
-            if not elem.Enabled:
+            if not element.Enabled:
                 continue
 
             feeder_name = meter.Name
@@ -2462,7 +2461,7 @@ class DSSMPLPlotter:
         
             # Meter marker
             _ = topo.First
-            coords = bus_coords.get(elem.BusNames[meter.MeteredTerminal - 1])
+            coords = bus_coords.get(element.BusNames[meter.MeteredTerminal - 1])
             if coords:
                 plt.plot(*coords, color='red', **meter_marker_dict)
 
@@ -2471,15 +2470,15 @@ class DSSMPLPlotter:
 
             br_idx = topo.First
             while br_idx != 0:
-                if not elem.Enabled:
+                if not element.Enabled:
                     continue
 
-                lcs, lidx = _add_line(elem, feeder_color)
+                lcs, lidx = _add_line(element, feeder_color)
                 if show_loops:
                     looped = (topo.LoopedBranch != 0)
                     if looped:
                         # The looped PDE is set as active by LoopedBranch
-                        _add_line(elem, color3)
+                        _add_line(element, color3)
                         # Adjust the original to color3
                         if lidx is not None:
                             lcs[lidx] = color3
@@ -2526,118 +2525,151 @@ class DSSMPLPlotter:
         ax.set_aspect('equal', 'datalim')
         ax.autoscale()
 
+    def enable(self, plot3d: bool = False, plot2d: bool = True, show: bool = True, dss: Optional[IDSS] = None):
+        """
+        Enables the plotting subsystem from DSS-Extensions.
 
+        Set plot3d to `True` to try to reproduce some of the plots from the
+        alternative OpenDSS Visualization Tool / OpenDSS Viewer addition 
+        to OpenDSS.
+
+        Use `show` to control whether this backend should call `pyplot.show()`
+        or leave that to the system or the user. If the user plans to customize
+        the figure, it is better to set `show=False` in order to preserve the 
+        figures, since `pyplot.show()` discards them.
+        """
+
+        if dss is not None:
+            get_plotter(dss).enable(plot3d=plot3d, plot2d=plot2d, show=show)
+            return
+
+        self._do_show = show
+        was_enabled = self._enabled
+        self._enabled = True
+
+        if plot3d and plot2d:
+            self._include_3d = 'both'
+        elif plot3d and not plot2d:
+            self._include_3d = '3d'
+        elif plot2d and not plot3d:
+            self._include_3d = '2d'
+
+        dss = self.dss
+        if not was_enabled:
+            api_util.lib_unpatched.DSS_RegisterPlotCallback(dss._api_util.ctx, loader_lib.dss_python_cb_plot)
+            api_util.lib_unpatched.DSS_RegisterMessageCallback(dss._api_util.ctx, loader_lib.dss_python_cb_write)
+            self._original_allow_forms = dss.AllowForms
+
+        dss.AllowForms = True
+
+    def disable(self, dss: Optional[IDSS] = None):
+        if dss is not None:
+            get_plotter(dss).enable(plot3d=plot3d, plot2d=plot2d, show=show)
+            return
+        
+        dss = self.dss
+        self._enabled = False
+        api_util.lib_unpatched.DSS_RegisterPlotCallback(dss._api_util.ctx, dss._api_util.ffi.NULL)
+        api_util.lib_unpatched.DSS_RegisterMessageCallback(dss._api_util.ctx, dss._api_util.ffi.NULL)
+        if self._original_allow_forms is not None:
+            self.dss.AllowForms = self._original_allow_forms
+
+DSSPlotter = DSSMPLPlotter
 
 dss_plot_methods = {
-    'Scatter': 'dss_scatter_plot',
-    'Daisy': 'dss_daisy_plot',
-    'TShape': 'dss_tshape_plot',
-    'PriceShape': 'dss_priceshape_plot',
-    'LoadShape': 'dss_loadshape_plot',
-    'Monitor': 'dss_monitor_plot',
-    'Circuit': 'dss_circuit_plot',
-    'Profile': 'dss_profile_plot',
-    'Visualize': 'dss_visualize_plot',
-    'YearlyCurve': 'dss_yearly_curve_plot',
-    'Matrix': 'dss_matrix_plot',
-    'GeneralData': 'dss_general_data_plot',
-    'DI': 'dss_di_plot',
-#    'CompareCases': 'dss_comparecases_plot',
-    'MeterZones': 'dss_zone_plot'
+    'Scatter': 'scatter',
+    'Daisy': 'daisy',
+    'TShape': 'tshape',
+    'PriceShape': 'priceshape',
+    'LoadShape': 'loadshape',
+    'Monitor': 'monitor',
+    'Circuit': 'circuit',
+    'Profile': 'profile',
+    'Visualize': 'visualize',
+    'YearlyCurve': 'yearly_curve',
+    'Matrix': 'matrix',
+    'GeneralData': 'general_data',
+    'DI': 'di',
+#    'CompareCases': 'compare_cases',
+    'MeterZones': 'zone'
 }
 
-def dss_plot(DSS: IDSS, **kwargs: Unpack[PlotParams]):
+def _dss_plot(DSS: IDSS, **kwargs: Unpack[PlotParams]):
     try:
         ptype = kwargs['PlotType']
         if ptype not in dss_plot_methods:
             raise NotImplementedError(f'ERROR: not implemented plot type "{ptype}"')
             return -1
 
+        plotter = get_plotter(DSS._api_util.ctx, create=False)
+        if plotter is None:
+            # plotter = DSSPlotter(DSS)
+            return 0
+
         with DSS.ActiveCircuit.Settings.Context() as settings, warnings.catch_warnings():
             warnings.simplefilter("ignore")
             settings.AdvancedTypes = False
             settings.PreferLists = False
             func = getattr(plotter, dss_plot_methods.get(ptype))
-            return 0, (DSS, **kwargs)
+            fig = func(**kwargs)
+            if plotter._do_show and fig is not None:
+                fig.show()
+
+            return 0
 
     except Exception as ex:
         from traceback import format_exc
         # print('DSS: Error while plotting. Parameters:', kwargs, file=sys.stderr)
         DSS._errorPtr[0] = 777
         DSS._lib.Error_Set_Description(f"Error in the plot backend: {ex}\n{format_exc()}".encode())
-        return 777, None
+        return 777
     
-    return 0, None
+    return 0
         
 
 
-@api_util.ffi.def_extern()
-def dss_python_cb_plot(ctx, paramsStr):
+@api_util.ffi.def_extern(name="dss_python_cb_plot")
+def _dss_python_cb_plot(ctx, paramsStr):
     params = json.loads(api_util.ffi.string(paramsStr))
     result = 0
     try:
         DSS = IDSS._get_instance(ctx=ctx)
-        result, fig = dss_plot(DSS, **params)
-        if _do_show:
-            fig.show()
+        result = _dss_plot(DSS, **params)
+
     except:
         from traceback import print_exc
         print('DSS: Error while plotting. Parameters:', params, file=sys.stderr)
         print_exc()
     return 0 if result is None else result
 
-_original_allow_forms = None
-_do_show = True
-_enabled = False
 
-def enable(plot3d: bool = False, plot2d: bool = True, show: bool = True, ctx: IDSS = None):
+def plot_dsv(fn: Union[str, FilePath], show=True):
     """
-    Enables the plotting subsystem from DSS-Extensions.
+    Plot an OpenDSS DSV file.
 
-    Set plot3d to `True` to try to reproduce some of the plots from the
-    alternative OpenDSS Visualization Tool / OpenDSS Viewer addition 
-    to OpenDSS.
-
-    Use `show` to control whether this backend should call `pyplot.show()`
-    or leave that to the system or the user. If the user plans to customize
-    the figure, it is better to set `show=False` in order to preserve the 
-    figures, since `pyplot.show()` discards them.
+    When passing `show=False`, the user can modify the figure before showing it,
+    using Matplotlib's API. In that case, the function returns a tuple `(figure, ax)`.
     """
+    return DSVHandler(fn, show=show).parse_and_plot()
 
-    global include_3d
-    global _original_allow_forms
-    global _do_show
-    global _enabled
-    global DSSPlotCtx
+def get_plotter(ctx: IDSS, create=True):
+    """
+    Returns the DSS plotter associated with the context `ctx`, if any.
+    If none exists and `create=True` (default), as new plotter is created
+    and returned.
+    """
+    if hasattr(ctx, '_api_util'):
+        ctx = ctx._api_util.ctx
 
-    if ctx is not None:
-        DSSPlotCtx = ctx
+    plotter = DSSPlotter._ctx_to_plotter.get(ctx)
+    if create and plotter is None:
+        DSS = IDSS._get_instance(ctx=ctx)
+        plotter = DSSPlotter(DSS)
 
-    _do_show = show
-    _enabled = True
+    return plotter
 
-    if plot3d and plot2d:
-        include_3d = 'both'
-    elif plot3d and not plot2d:
-        include_3d = '3d'
-    elif plot2d and not plot3d:
-        include_3d = '2d'
+plot = DSSPlotter(DSSPlotCtx) # Main plotter instance (default DSS context)
+enable = plot.enable
+disable = plot.disable
 
-    api_util.lib.DSS_RegisterPlotCallback(api_util.lib.dss_python_cb_plot)
-    api_util.lib.DSS_RegisterMessageCallback(api_util.lib.dss_python_cb_write)
-    _original_allow_forms = DSSPlotCtx.AllowForms
-    DSSPlotCtx.AllowForms = True
-
-def disable():
-    global _enabled
-    _enabled = False
-    api_util.lib.DSS_RegisterPlotCallback(api_util.ffi.NULL)
-    api_util.lib.DSS_RegisterMessageCallback(api_util.ffi.NULL)
-    if _original_allow_forms is not None:
-        DSSPlotCtx.AllowForms = _original_allow_forms
-
-
-def plot_dsv(fn: Union[str, FilePath]):
-    return DSVHandler(fn).parse()
-
-__all__ = ['enable', 'disable', 'plot_dsv', ]
+__all__ = ['enable', 'disable', 'plot_dsv', 'plot', 'get_plotter']

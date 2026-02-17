@@ -1,4 +1,24 @@
+import os
+from enum import IntEnum
 from .IDSS import IDSS
+from . import api_util
+from . import plot
+
+class DSSMessageType(IntEnum):
+    Error = -1
+    General = 0
+    Info = 1
+    Help = 2
+    Progress = 3
+    ProgressCaption = 4
+    ProgressFormCaption = 5
+    ProgressPercent = 6
+    FireOffEditor = 7
+    ProgressSummary = 8
+    ReportOutput = 9
+    ShowOutput = 10
+    ShowTreeView = 11
+
 
 try:
     from IPython import get_ipython
@@ -24,17 +44,19 @@ try:
 
     @register_cell_magic
     def dss(line, cell):
-        if isinstance(DSSPlotCtx, IDSS) and not DSSPlotCtx._api_util._is_oddie:
-            DSSPlotCtx.Text.Commands(cell)
+        if isinstance(plot.DSSPlotCtx, IDSS) and not plot.DSSPlotCtx._api_util._is_oddie:
+            plot.DSSPlotCtx.Text.Commands(cell)
         else:
             for line in cell.split('\n'):
-                DSSPlotCtx(line)
-                res = DSSPlotCtx.Text.Result
+                plot.DSSPlotCtx(line)
+                res = plot.DSSPlotCtx.Text.Result
                 if res.endswith('.DSV'):
                     if _enabled and FilePath(res).exists():
                         plot_dsv(res)
 
-    DSSPlotCtx.AllowChangeDir = False
+    if isinstance(plot.DSSPlotCtx, IDSS) and not plot.DSSPlotCtx._api_util._is_oddie:
+        #TODO: save original state?
+        plot.DSSPlotCtx.AllowChangeDir = False
 except:
     def link_file(fn):
         print(f'Output file: "{fn}"')
@@ -64,17 +86,17 @@ def dss_python_cb_write(ctx, message_str, message_type: int, message_size: int, 
     # DSS = _ctx2dss(ctx)
     
     message_str = api_util.ffi.string(message_str).decode(api_util.codec)
-    if message_type == api_util.lib.DSSMessageType_Error:
+    if message_type == DSSMessageType.Error:
         #print('DSS Error:', message_str, file=sys.stderr)
         pass
-    elif message_type in (api_util.lib.DSSMessageType_ProgressCaption, api_util.lib.DSSMessageType_ProgressFormCaption):
+    elif message_type in (DSSMessageType.ProgressCaption, DSSMessageType.ProgressFormCaption):
         #dss_progress_desc = message_str
         # print('Progress Caption:', message_str, file=sys.stderr)
         pass
-    elif message_type == api_util.lib.DSSMessageType_Progress:
+    elif message_type == DSSMessageType.Progress:
         #print('DSS Progress:', message_str, file=sys.stderr)
         pass
-    elif message_type == api_util.lib.DSSMessageType_FireOffEditor:
+    elif message_type == DSSMessageType.FireOffEditor:
         link_file(message_str)
         # try:
         #     # print('DSSMessageType_FireOffEditor')
@@ -86,7 +108,7 @@ def dss_python_cb_write(ctx, message_str, message_type: int, message_size: int, 
         #     print(f'Could not display file "{message_str}"')
         #     return 1
 
-    elif message_type == api_util.lib.DSSMessageType_ProgressPercent:
+    elif message_type == DSSMessageType.ProgressPercent:
         try:
             pass
             # n = int(message_str)
