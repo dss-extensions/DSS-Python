@@ -51,6 +51,7 @@ class IDSS(Base):
         'ZIP',
         '_version',
         '_altdss',
+        '_plotter',
     ]
     
     _columns = [
@@ -112,6 +113,7 @@ class IDSS(Base):
             api_util._dss_python = self
 
         self._version = None
+        self._plotter = None
 
         #: Provides access to the circuit attributes and objects in general.
         self.ActiveCircuit = ICircuit(api_util)
@@ -505,21 +507,26 @@ class IDSS(Base):
     @property
     def Plotting(self):
         '''
-        Shortcut for the plotting module. This property is equivalent to:
+        Shortcut for the plotting tools for the current DSS engine.
 
-        ```
-        from dss import plot
-        return plot
-        ```
+        *Previously, this was just a shortcut to the plotting module. Since
+        the plotting tools were extended and refactored, an instance 
+        of the DSS plotter is return, allowing the user to plot from 
+        multiple instances and different engines.*
 
-        Gives access to the `enable()` and `disable()` functions.
-        Requires matplotlib and SciPy to be installed, hence it is an
-        optional feature.
+        Gives access to the `enable()`/`disable()` functions, and the new
+        experimental plotting API in Python.
+
+        Requires matplotlib and SciPy to be installed, hence it is an optional 
+        feature, lazily imported.
 
         **(API Extension)**
         '''
-        from dss import plot
-        return plot
+        if self._plotter is None:
+            from dss.plot import get_plotter
+            self._plotter = get_plotter(self)
+
+        return self._plotter
 
     @property
     def AdvancedTypes(self) -> bool:

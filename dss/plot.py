@@ -23,7 +23,7 @@ from numpy.testing import suppress_warnings
 
 from dss_python_backend import loader_lib
 from . import api_util
-from . import DSS as DSSPlotCtx
+from . import DSS as dss_nb_ctx
 from ._cffi_api_util import AltDSSAPIUtil, Iterable as DSSIterable
 from .IDSS import IDSS
 from .IBus import IBus
@@ -670,7 +670,7 @@ class DSVHandler:
                 getattr(self, item_name)(rest[0] if rest else '') # let the exception propagate on error
 
         if self._do_show:
-            self.fig.show()
+            plt.show(self.fig)
         else:
             return self.fig, self.ax
 
@@ -686,6 +686,23 @@ class DSSMPLPlotter:
         self._original_allow_forms = None
         self._do_show = True
         self._enabled = False
+
+
+    def dsv(self, fn: Union[str, FilePath], show: Optional[bool] = None):
+        """
+        Plot a .DSV file from OpenDSS. This is the format that the classic `DSSView.exe` uses.
+
+        `DSSView.exe` is the default plotting utility distributed with OpenDSS. As such, one
+        can use the OpenDSS GUI for some analysis, plot some results, and then replot then
+        using DSS-Python to further manipulate the resulting figures.
+
+        *The new OpenDSS Viewer, a separate download, does not use the .DSV format.*
+
+        If `show` is `None`, the "show" setting from the default plotter will be used as default.
+        Users can provide `show=True` or `show=False` directly to override the behavior. Useful
+        especially when only plotting DSVs, without further features from the DSS plotter.
+        """
+        return DSVHandler(fn, show=self._do_show if show is None else show).parse_and_plot()
 
     def monitor(self, 
         *,
@@ -2613,7 +2630,7 @@ def _dss_plot(DSS: IDSS, **kwargs: Unpack[PlotParams]):
             func = getattr(plotter, dss_plot_methods.get(ptype))
             fig = func(**kwargs)
             if plotter._do_show and fig is not None:
-                fig.show()
+                plt.show(fig)
 
             return 0
 
@@ -2643,15 +2660,6 @@ def _dss_python_cb_plot(ctx, paramsStr):
     return 0 if result is None else result
 
 
-def plot_dsv(fn: Union[str, FilePath], show=True):
-    """
-    Plot an OpenDSS DSV file.
-
-    When passing `show=False`, the user can modify the figure before showing it,
-    using Matplotlib's API. In that case, the function returns a tuple `(figure, ax)`.
-    """
-    return DSVHandler(fn, show=show).parse_and_plot()
-
 def get_plotter(ctx: IDSS, create=True):
     """
     Returns the DSS plotter associated with the context `ctx`, if any.
@@ -2668,8 +2676,9 @@ def get_plotter(ctx: IDSS, create=True):
 
     return plotter
 
-plot = DSSPlotter(DSSPlotCtx) # Main plotter instance (default DSS context)
-enable = plot.enable
-disable = plot.disable
+plotter = DSSPlotter(dss_nb_ctx) # Main plotter instance (default DSS context)
+enable = plotter.enable
+disable = plotter.disable
+dsv = plotter.dsv
 
-__all__ = ['enable', 'disable', 'plot_dsv', 'plot', 'get_plotter']
+__all__ = ['enable', 'disable', 'plotter', 'get_plotter', 'dsv']

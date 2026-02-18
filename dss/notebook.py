@@ -20,6 +20,16 @@ class DSSMessageType(IntEnum):
     ShowTreeView = 11
 
 
+
+def set_nb_target(dss: IDSS):
+    if not hasattr(dss, '_api_util'):
+        raise ValueError("A DSS engine context compatible with DSS-Python was expected.")
+
+    plot.dss_nb_ctx = dss
+    if hasattr(dss, '_api_util') and not dss._api_util._is_oddie:
+        #TODO: save original state?
+        dss.AllowChangeDir = False
+
 try:
     from IPython import get_ipython
     from IPython.display import FileLink, display, display_html, HTML
@@ -44,19 +54,23 @@ try:
 
     @register_cell_magic
     def dss(line, cell):
-        if isinstance(plot.DSSPlotCtx, IDSS) and not plot.DSSPlotCtx._api_util._is_oddie:
-            plot.DSSPlotCtx.Text.Commands(cell)
+        dss_ctx = plot.dss_nb_ctx
+        if dss_ctx is None:
+            raise ValueError("Invalid DSS-Python instance registered.")
+            return
+
+        plotter = plot.get_plotter(dss_ctx)
+        if isinstance(dss_ctx, IDSS) and not dss_ctx._api_util._is_oddie:
+            dss_ctx.Text.Commands(cell)
         else:
             for line in cell.split('\n'):
-                plot.DSSPlotCtx(line)
-                res = plot.DSSPlotCtx.Text.Result
-                if res.endswith('.DSV'):
-                    if _enabled and FilePath(res).exists():
-                        plot_dsv(res)
+                dss_ctx(line)
+                res = dss_ctx.Text.Result
+                if res.lower().endswith('.dsv'):
+                    plotter.dsv(res)
 
-    if isinstance(plot.DSSPlotCtx, IDSS) and not plot.DSSPlotCtx._api_util._is_oddie:
-        #TODO: save original state?
-        plot.DSSPlotCtx.AllowChangeDir = False
+    set_nb_target(plot.dss_nb_ctx)
+
 except:
     def link_file(fn):
         print(f'Output file: "{fn}"')
@@ -143,3 +157,6 @@ def dss_python_cb_write(ctx, message_str, message_type: int, message_size: int, 
         pass
         
     return 0
+
+
+__all__ = ['set_nb_target', ]
