@@ -34,6 +34,25 @@ from .IGICSources import IGICSources
 from .IStorages import IStorages
 from .IWindGens import IWindGens
 
+class IBusesWrapper:
+    def __init__(self, DSS, Buses):
+        self.DSS = DSS
+        self.Buses = Buses
+    
+    def __call__(self, *args, **kwargs):
+        return self.Buses(*args, **kwargs)
+
+    def __call__(self, *args, **kwargs):
+        return self.Buses(*args, **kwargs)
+
+    def __iter__(self):
+        circ = self.DSS.ActiveCircuit
+        for i in range(circ.NumBuses):
+            circ.SetActiveBusi(i)
+            yield circ.ActiveBus
+
+    def __len__(self):
+        return self.DSS.ActiveCircuit.NumBuses
 
 def custom_iter(self):
     idx = self.First
@@ -135,9 +154,14 @@ def patch_dss_com(obj):
     type(obj.ActiveCircuit.ActiveBus).__iter__ = custom_bus_iter
     type(obj.ActiveCircuit.ActiveBus).__len__ = custom_bus_len
     type(obj.ActiveCircuit.ActiveBus)._columns = IBus._columns
-    type(obj.ActiveCircuit.Buses).__iter__ = custom_bus_iter
-    type(obj.ActiveCircuit.Buses).__len__ = custom_bus_len
-    type(obj.ActiveCircuit.Buses)._columns = IBus._columns
+    Buses = obj.ActiveCircuit.Buses
+    try:
+        type(Buses).__iter__ = custom_bus_iter
+        type(Buses).__len__ = custom_bus_len
+        type(Buses)._columns = IBus._columns
+    except:
+        type(obj.ActiveCircuit).Buses = IBusesWrapper(obj, Buses)
+
 
     def add_dunders(cls):
         cls.__iter__ = custom_iter

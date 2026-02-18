@@ -112,7 +112,7 @@ class IOddieDSS(IDSS):
                 rb'OpenDSSDirect.dll', # Try from the general path, let the system resolve it
             ]
 
-            for library_path in _lib_paths:
+            for library_path in _win32_lib_paths:
                 lib.Oddie_SetLibOptions(library_path, c_load_flags)
                 ctx = lib.ctx_New()
                 if ctx != NULL:

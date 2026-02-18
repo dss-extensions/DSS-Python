@@ -1,10 +1,10 @@
 import pytest
-from dss import DSS, DSSException
+from dss import DSSException
 
 try:
-    from ._settings import BASE_DIR
+    from ._settings import BASE_DIR, DSS
 except ImportError:
-    from _settings import BASE_DIR
+    from _settings import BASE_DIR, DSS
 
 class EventHandler:
     # Note: for real usage, prefer to generate local classes bound to some
@@ -23,6 +23,10 @@ class EventHandler:
 
 
 def test_events_style_win32com():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support the DSSEvents interface through the DirectDLL API.")
+        return
+
     EventHandler.event_sequence.clear()
     evt_conn = DSS.Events.WithEvents(EventHandler)
 
@@ -38,6 +42,10 @@ def test_events_style_win32com():
 
 
 def test_events_style_comtypes():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support the DSSEvents interface through the DirectDLL API.")
+        return
+
     EventHandler.event_sequence.clear()
     evt_conn = DSS.Events.GetEvents(EventHandler())
 

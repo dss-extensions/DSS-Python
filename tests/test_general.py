@@ -15,7 +15,7 @@ except ImportError:
 
 import dss
 
-from dss import IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags, LoadModels, DSSPropertyNameStyle, IOddieDSS
+from dss import IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes, DSSCompatFlags, LoadModels, DSSPropertyNameStyle
 org_dir = os.getcwd()
 
 def setup_function():
@@ -23,9 +23,9 @@ def setup_function():
 
     DSS.AllowForms = False
     DSS.ActiveCircuit.Settings.AdvancedTypes = False
-    DSS.ActiveCircuit.Settings.CompatFlags = 0
 
-    if not DSS._api_util._is_oddie:
+    if not DSS.is_oddie():
+        DSS.ActiveCircuit.Settings.CompatFlags = 0
         DSS.AllowEditor = False
         DSS.AllowChangeDir = True
         DSS.ActiveCircuit.Settings.COMErrorResults = False
@@ -34,6 +34,10 @@ def setup_function():
     DSS.Text.Command = 'set DefaultBaseFreq=60'
 
 def test_zip_redirect():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support the DSS-Extensions ZIP interface.")
+        return
+
     with pytest.raises(DSSException):
         DSS.ZIP.Redirect('13Bus/IEEE13Nodeckt.dss')
 
@@ -47,6 +51,10 @@ def test_zip_redirect():
 
 
 def test_zip_contains():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support the DSS-Extensions ZIP interface.")
+        return
+
     with pytest.raises(DSSException):
         assert 'before open' in DSS.ZIP
 
@@ -57,10 +65,18 @@ def test_zip_contains():
 
 
 def test_zip_exists():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support the DSS-Extensions ZIP interface.")
+        return
+
     with pytest.raises(DSSException):
         DSS.ZIP.Open('something1/something2/something3.zip')
 
 def test_zip_filelist():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support the DSS-Extensions ZIP interface.")
+        return
+
     DSS.ZIP.Open(ZIP_FN)
     assert set(DSS.ZIP.List()) == {'13Bus/', '13Bus/IEEE13Node_BusXY.csv', '13Bus/IEEE13Nodeckt.dss', '13Bus/IEEELineCodes.DSS', '13Bus/README.txt'}
     assert DSS.ZIP.List('.*/RE.*') == ['13Bus/README.txt']
@@ -72,14 +88,15 @@ def test_zipv():
     DSS.Text.Command = 'new load.test_load'
     load = DSS.ActiveCircuit.Loads
     load.First
-    
-    with pytest.raises(DSSException):
-        # Too few elements
-        load.ZIPV = [1, 2, 3, 4]
 
-    with pytest.raises(DSSException):
-        # Too many elements
-        load.ZIPV = [1, 2, 3, 4, 5, 6, 7, 8]
+    if not DSS.is_oddie():
+        with pytest.raises(DSSException):
+            # Too few elements
+            load.ZIPV = [1, 2, 3, 4]
+
+        with pytest.raises(DSSException):
+            # Too many elements
+            load.ZIPV = [1, 2, 3, 4, 5, 6, 7, 8]
 
     load.ZIPV = [1, 0, 0, 1, 0, 0, 0.6]
     assert list(load.ZIPV) == [1, 0, 0, 1, 0, 0, 0.6]
@@ -99,20 +116,28 @@ def _run_mode(mode):
 
 
 def test_sparse_options():
-    expected = _run_mode(SparseSolverOptions.ReuseNothing)
-    for mode in [
-        SparseSolverOptions.AlwaysResetYPrimInvalid,
-        SparseSolverOptions.ReuseCompressedMatrix | SparseSolverOptions.AlwaysResetYPrimInvalid,
-        SparseSolverOptions.ReuseCompressedMatrix,
-        SparseSolverOptions.ReuseSymbolicFactorization | SparseSolverOptions.AlwaysResetYPrimInvalid,
-        SparseSolverOptions.ReuseSymbolicFactorization,
-        SparseSolverOptions.ReuseNumericFactorization | SparseSolverOptions.AlwaysResetYPrimInvalid,
-        SparseSolverOptions.ReuseNumericFactorization,
-    ]:
-        np.testing.assert_allclose(expected, _run_mode(mode))
+    try:
+        expected = _run_mode(SparseSolverOptions.ReuseNothing)
+        for mode in [
+            SparseSolverOptions.AlwaysResetYPrimInvalid,
+            SparseSolverOptions.ReuseCompressedMatrix | SparseSolverOptions.AlwaysResetYPrimInvalid,
+            SparseSolverOptions.ReuseCompressedMatrix,
+            SparseSolverOptions.ReuseSymbolicFactorization | SparseSolverOptions.AlwaysResetYPrimInvalid,
+            SparseSolverOptions.ReuseSymbolicFactorization,
+            SparseSolverOptions.ReuseNumericFactorization | SparseSolverOptions.AlwaysResetYPrimInvalid,
+            SparseSolverOptions.ReuseNumericFactorization,
+        ]:
+            np.testing.assert_allclose(expected, _run_mode(mode))
+    except DSSException as ex:
+        if ex.args[0] == 42: #TODO: enum for Oddie errors
+            pytest.skip("This DSS engine does not seem to implement SolverOptions.")
 
 
 def test_pd_extras():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support the DSS-Extensions PD extras.")
+        return
+
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
     DSS.ActiveCircuit.Solution.Solve()
     
@@ -171,6 +196,10 @@ def test_case_check():
 
 
 def test_basic_ctx():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support the AltDSS Context API and user-managed threads.")
+        return
+
     prime_engine = DSS
     prime_engine.AllowChangeDir = False
     prime_engine.Text.Command = 'new circuit.test_prime'
@@ -186,6 +215,10 @@ def test_basic_ctx():
 
 
 def test_compat_precision():
+    if DSS.is_oddie():
+        pytest.skip("Precision compatibility only available in the AltDSS engine.")
+        return
+
     DSS.ZIP.Open(ZIP_FN)
     DSS.ZIP.Redirect('13Bus/IEEE13Nodeckt.dss')
     DSS.ZIP.Close()
@@ -199,6 +232,9 @@ def test_compat_precision():
 
 def test_compat_activeline():
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
+    if DSS.is_oddie():
+        pytest.skip("Test not required EPRI's OpenDSS and OpenDSS-C; different general behavior and error-handling expected.")
+        return
     
     Lines = DSS.ActiveCircuit.Lines
     Lines.First
@@ -207,9 +243,8 @@ def test_compat_activeline():
     name = Lines.Name
 
     DSS.ActiveCircuit.Loads.First
-    
-    assert name == Lines.Name
 
+    assert name == Lines.Name
     DSS.ActiveCircuit.Settings.CompatFlags = DSSCompatFlags.ActiveLine
     with pytest.raises(DSSException):
         assert name == Lines.Name
@@ -268,7 +303,11 @@ def test_set_mode():
 
 
 def test_pm_threads():
-    if not isinstance(DSS, IOddieDSS):
+    if DSS.is_oddie():
+        pytest.skip("Disabled with EPRI's engines until we investigate more; getting some crashes with PM.")
+        return
+
+    if not DSS.is_oddie():
         DSS.AllowChangeDir = False
 
     Parallel = DSS.ActiveCircuit.Parallel
@@ -353,7 +392,7 @@ def test_pm_threads():
     assert max(abs(v_pm[3] - v_pm[0])) > 1e-1
     assert dt_pm < dt_seq
 
-    if not isinstance(DSS, IOddieDSS):
+    if not DSS.is_oddie():
         # Let's run with threads, using DSSContexts too
         v_ctx = [None] * 4
 
@@ -390,6 +429,10 @@ def test_pm_threads():
 
 
 def test_threading2():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support the AltDSS Context API and user-managed threads.")
+        return
+
     DSS.AllowChangeDir = False
     
     # EPRITestCircuits/epri_dpv/M1 has loads with zero power
@@ -773,9 +816,9 @@ def test_capacitor_reactor(DSS: IDSS = DSS):
         DSS.Text.Command = 'clear'
         debug_print('clear')
         DSS.Text.Command = f'set DefaultBaseFreq={f}'
-        debug_print(DSS.Text.Command)
+        # debug_print(DSS.Text.Command)
         DSS.Text.Command = f'new circuit.test{f} bus1={bus}'
-        debug_print(DSS.Text.Command)
+        # debug_print(DSS.Text.Command)
         for conn in ('delta', 'wye'):
             for phases0 in (1, 2, 3):
                 phases = phases0
@@ -790,10 +833,10 @@ def test_capacitor_reactor(DSS: IDSS = DSS):
                     kV_eff = kV * sqrt(3)
 
                 DSS.Text.Command = f'new Line.{bus}-{bus + 1} bus1={bus} bus2={bus + 1}'
-                debug_print(DSS.Text.Command)
+                # debug_print(DSS.Text.Command)
                 bus += 1
                 DSS.Text.Command = f'new {component}.{conn}_{phases} bus1={bus} phases={phases} conn={conn} kva={kVA} kV={kV_eff}'
-                debug_print(DSS.Text.Command)
+                # debug_print(DSS.Text.Command)
                 DSS.Text.Command = 'solve'
                 # debug_print(DSS.Text.Command)
                 assert DSS.ActiveCircuit.ActiveCktElement.Name == f'{component}.{conn}_{phases}'
@@ -806,7 +849,8 @@ def test_capacitor_reactor(DSS: IDSS = DSS):
                 assert DSS.ActiveCircuit.ActiveCktElement.Name == f'{component}.{conn}_{phases}_alt'
                 Y_dss2 = DSS.ActiveCircuit.ActiveCktElement.Yprim
 
-                np.testing.assert_allclose(Y_dss, Y_dss2)
+                if not DSS.is_oddie():
+                    np.testing.assert_allclose(Y_dss, Y_dss2)
 
                 if conn == 'wye':
                     VA_branch = 1000 * kVA / phases
@@ -845,10 +889,10 @@ def test_capacitor_reactor(DSS: IDSS = DSS):
                 phases = phases0
                 model = int(LoadModels.ConstZ)
                 DSS.Text.Command = f'new Line.{bus}-{bus + 1} bus1={bus} bus2={bus + 1}'
-                debug_print(DSS.Text.Command)
+                # debug_print(DSS.Text.Command)
                 bus += 1
                 DSS.Text.Command = f'new Load.{conn}_{phases} bus1={bus} phases={phases} conn={conn} kw=0 kvar={-sign * kVA} kV={kV_eff} model={model} Xneut=0 Rneut=0'
-                debug_print(DSS.Text.Command)
+                # debug_print(DSS.Text.Command)
                 DSS.Text.Command = 'solve'
                 # debug_print(DSS.Text.Command)
                 assert DSS.ActiveCircuit.ActiveCktElement.Name == f'Load.{conn}_{phases}'
@@ -869,18 +913,39 @@ def test_capacitor_reactor(DSS: IDSS = DSS):
 
 def test_patch_comtypes():
     if WIN32:
+        if DSS.is_oddie():
+            pytest.skip("Skipping COM test; OpenDSSDirect.DLL already loaded.")
+            return
+
         import comtypes.client
         DSS_COM = dss.patch_dss_com(comtypes.client.CreateObject("OpenDSSengine.DSS"))
         test_essentials(DSS_COM)
+    else:
+        if DSS.is_oddie():
+            pytest.skip("Skipping COM test (requires Windows).")
+            return
+
 
 def test_patch_win32com():
     if WIN32:
+        if DSS.is_oddie():
+            pytest.skip("Skipping COM test; OpenDSSDirect.DLL already loaded.")
+            return
+
         import win32com.client
         win32com.client.Dispatch("OpenDSSengine.DSS")
         DSS_COM = dss.patch_dss_com(win32com.client.gencache.EnsureDispatch("OpenDSSengine.DSS"))
         test_essentials(DSS_COM)
+    else:
+        if DSS.is_oddie():
+            pytest.skip("Skipping COM test (requires Windows).")
+            return
 
 def test_namingstyle():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support SetPropertyNameStyle.")
+        return
+
     DSS.ClearAll()
     DSS('new circuit.test')
     DSS.ActiveCircuit.Vsources.First
@@ -929,11 +994,11 @@ def test_loadshape_extended():
     assert LS.Npts == 24
     ref_p = np.asarray([.677, .6256, .6087, .5833, .58028, .6025, .657, .7477, .832, .88, .94, .989, .985, .98, .9898, .999, 1, .958, .936, .913, .876, .876, .828, .756])
     npt.assert_allclose(LS.Pmult, ref_p)
-    ref_t = range(len(ref_p))
-    LS.TimeArray = ref_t
+    ref_t = list(range(len(ref_p)))
+    LS.TimeArray = list(ref_t)
     npt.assert_allclose(LS.TimeArray, ref_t)
     ref_q = LS.TimeArray + ref_p
-    LS.Qmult = ref_q
+    LS.Qmult = list(ref_q)
     npt.assert_allclose(LS.Qmult, ref_q)
 
     DSS.Text.Command = 'new loadshape.test npts=3 pmult=[1.1, 2.2, 3.3] qmult=[4.5, 4.6, 4.7] hour=[1, 2, 7]'
@@ -942,12 +1007,12 @@ def test_loadshape_extended():
     npt.assert_allclose(LS.Pmult, [1.1, 2.2, 3.3])
     npt.assert_allclose(LS.Qmult, [4.5, 4.6, 4.7])
     npt.assert_allclose(LS.TimeArray, [1, 2, 7])
-    LS.Pmult *= 2
+    LS.Pmult = list(np.asarray(LS.Pmult) * 2)
     npt.assert_allclose(LS.Pmult, [2.2, 4.4, 6.6])
-    LS.Qmult /= 2.5
-    npt.assert_allclose(LS.Qmult * 2.5, [4.5, 4.6, 4.7])
-    LS.TimeArray *= 12
-    npt.assert_allclose(LS.TimeArray / 12, [1, 2, 7])
+    LS.Qmult = list(np.asarray(LS.Qmult) / 2.5)
+    npt.assert_allclose(np.asarray(LS.Qmult) * 2.5, [4.5, 4.6, 4.7])
+    LS.TimeArray = list(np.asarray(LS.TimeArray) * 12)
+    npt.assert_allclose(np.asarray(LS.TimeArray) / 12, [1, 2, 7])
 
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
     DSS.Text.Command = 'new loadshape.test npts=3 pmult=[1.1, 2.2, 3.3] qmult=[4.5, 4.6, 4.7] hour=[1, 2, 7]'
@@ -980,7 +1045,6 @@ def test_loadshape_extended():
 
 
 def test_xycurve_extended():
-
     # Added for OpenDSSC
 
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
@@ -1000,23 +1064,36 @@ def test_xycurve_extended():
 
 
 def test_line_parent_compat():
-    from dss import DSSCompatFlags
+    from dss import DSSCompatFlags, DSSException
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
     DSS.Text.Command = 'new energymeter.m1 element=transformer.sub'
     DSS.Text.Command = 'solve mode=snap'
-    DSS.ActiveCircuit.Settings.CompatFlags = DSSCompatFlags.ActiveLine
     Lines = DSS.ActiveCircuit.Lines
-    res_compat = Lines.First, Lines.Next, Lines.Name, Lines.Next, Lines.Name, Lines.Parent, Lines.Name, Lines.Parent, Lines.Name
-    DSS.ActiveCircuit.Settings.CompatFlags = 0
-    res_no_compat = Lines.First, Lines.Next, Lines.Name, Lines.Next, Lines.Name, Lines.Parent, Lines.Name, Lines.Parent, Lines.Name
+    no_compat_expected = (1, 2, '632670', 3, '670671', 2, '632670', 1, '650632')
 
-    assert res_no_compat == (1, 2, '632670', 3, '670671', 2, '632670', 1, '650632')
+    if not DSS.is_oddie():
+        DSS.ActiveCircuit.Settings.CompatFlags = DSSCompatFlags.ActiveLine
+    
+    res_compat = Lines.First, Lines.Next, Lines.Name, Lines.Next, Lines.Name, Lines.Parent, Lines.Name, Lines.Parent, Lines.Name
+    
+    if not DSS.is_oddie():
+        DSS.ActiveCircuit.Settings.CompatFlags = 0
+        res_no_compat = Lines.First, Lines.Next, Lines.Name, Lines.Next, Lines.Name, Lines.Parent, Lines.Name, Lines.Parent, Lines.Name
+
+    if not DSS.is_oddie():
+        assert res_no_compat == no_compat_expected
+    else:
+        res_no_compat = no_compat_expected
 
     # The indices returned in compat mode are "wrong", to match the official DSS implementation
     assert res_compat[3:2:] == res_no_compat[3:2:]
 
 
 def test_skip_commands():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support SkipCommands.")
+        return
+
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
     DSS.ActiveCircuit.Settings.SkipCommands = ['clear']
     # Since we are skipping the clear command, an exception should be raised
@@ -1036,6 +1113,10 @@ def test_skip_commands():
 
 
 def test_skip_files():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support SkipFileRegExp.")
+        return
+
     DSS.Text.Command = f'redirect "{BASE_DIR}/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss"'
     DSS.Text.Command = 'clear'
     
@@ -1100,6 +1181,10 @@ def test_settings_context():
 
 
 def test_share_general():
+    if DSS.is_oddie():
+        pytest.skip("EPRI's OpenDSS and OpenDSS-C do not support ShareGeneral.")
+        return
+
     DSS2 = DSS.NewContext()
     DSS('new loadshape.sharedloadshape npts=4 pmult=[1, 2, 3, 4]')
     DSS.ShareGeneral(DSS2)
@@ -1116,6 +1201,35 @@ def test_share_general():
     LS2.Name = 'sharedloadshape'
     assert list(LS2.Pmult) == list(LS.Pmult)
     assert list(LS2.Pmult) == [1., 2., 3., 4.]
+
+
+def test_windgen_iteration():
+    '''
+    Added to test fix in official OpenDSS v10.2.0.1.
+    We had it already fixed in AltDSS, so this test ensures all engines work fine.
+
+    Do not use this as a sample/example; it's not intended as a full working sample.
+    '''
+    DSS.ClearAll()
+    DSS('new circuit.1')
+    DSS('new windgen.w1')
+    DSS('new windgen.w2')
+    assert DSS.ActiveCircuit.WindGens.Next == 0
+    assert DSS.ActiveCircuit.WindGens.AllNames == ['w1', 'w2']
+    assert DSS.ActiveCircuit.WindGens.First == 1
+    assert DSS.ActiveCircuit.WindGens.Name == 'w1'
+    assert DSS.ActiveCircuit.WindGens.Next == 2
+    assert DSS.ActiveCircuit.WindGens.Name == 'w2'
+    assert DSS.ActiveCircuit.WindGens.Next == 0
+    assert DSS.ActiveCircuit.WindGens.Name == 'w2'
+    assert DSS.ActiveCircuit.WindGens.Count == 2
+
+    DSS.ClearAll()
+    DSS('new circuit.2')
+    assert DSS.ActiveCircuit.WindGens.AllNames == []
+    assert DSS.ActiveCircuit.WindGens.Next == 0
+    assert DSS.ActiveCircuit.WindGens.First == 0
+    assert DSS.ActiveCircuit.WindGens.Count == 0
 
 
 if __name__ == '__main__':

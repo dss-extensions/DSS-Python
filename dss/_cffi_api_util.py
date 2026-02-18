@@ -31,8 +31,8 @@ if AltDSS_PyContext is None:
     # AltDSS_PyContext is not available.
     import dss_python_backend._func_info as _func_info
 
-# Assumed UTF8; unless the fast C extension (dss_python_backend._fast_strs) is not 
-# used, this now has no effect but left to avoid breaking it for downstream users.
+# Assumed UTF8; unless the fast C extension is not used, this now has no effect,
+# but was left to avoid breaking it for downstream users.
 codec = 'UTF8'
 
 interface_classes = set()
@@ -1033,8 +1033,8 @@ class AltDSSAPIUtil:
         mgr.unregister_func(AltDSSEvent.Clear, altdss_python_util_callback)
         mgr.unregister_func(AltDSSEvent.ReprocessBuses, altdss_python_util_callback)
 
-    # The context will die, no need to do anything else currently.
     def __del__(self):
+        # The base context itself will die, no need to do anything else currently. Callbacks for AltDSS need to be cleared.
         if self._is_oddie:
             return
 

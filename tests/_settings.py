@@ -4,18 +4,16 @@ import sys, os
 import faulthandler
 faulthandler.disable()
 from dss import DSS
-DSS.ActiveCircuit.Settings.COMErrorResults = False
+# DSS.ActiveCircuit.Settings.COMErrorResults = False
 try:
     from dss import IOddieDSS
 except:
     pass
 
-faulthandler.enable()
-
 org_dir = os.getcwd()
 
-USE_ODDIE = os.getenv('DSS_PYTHON_ODDIE', None)
-if USE_ODDIE:
+USE_ODDIE = os.getenv('DSS_EXTENSIONS_TEST_ODDIE', None)
+if USE_ODDIE is not None and USE_ODDIE.upper() not in ('0', 'FALSE', 'F', 'OFF', 'NO'):
     # print("Using Oddie:", USE_ODDIE)
     if USE_ODDIE != '1':
         DSS = IOddieDSS(USE_ODDIE)
@@ -24,6 +22,8 @@ if USE_ODDIE:
 
     os.chdir(org_dir)
 
+DSS.ClearAll()
+faulthandler.enable()
 
 WIN32 = (sys.platform == 'win32')
 if os.path.exists('../../electricdss-tst/'):
