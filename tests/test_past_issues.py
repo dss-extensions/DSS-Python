@@ -1,13 +1,18 @@
 import faulthandler
 faulthandler.disable()
 
-import sys, os
+import sys, os, warnings
 from time import perf_counter
 import dss
 from dss import IDSS, DSSException, SparseSolverOptions, SolveModes, set_case_insensitive_attributes
 import numpy as np
 import pytest
-import scipy.sparse as sp
+try:
+    import scipy.sparse as sp
+except:
+    sp = None
+    
+
 
 try:
     from ._settings import BASE_DIR, WIN32, ZIP_FN, DSS
@@ -126,4 +131,7 @@ def test_ymatrix_csc():
     DSS.ActiveCircuit.Solution.Solve()
     DSS.ActiveCircuit.Settings.AdvancedTypes = True
     ydense = DSS.ActiveCircuit.SystemY
-    assert np.all(ydense == sp.csc_matrix(DSS.YMatrix.GetCompressedYMatrix()))
+    if sp is not None:
+        assert np.all(ydense == sp.csc_matrix(DSS.YMatrix.GetCompressedYMatrix()))
+    else:
+        pytest.skip("SciPy is not installed, skipping sparse-dense comparison.")
