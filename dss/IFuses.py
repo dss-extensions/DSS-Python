@@ -3,7 +3,6 @@
 # Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from typing import List, AnyStr
-import warnings
 
 class IFuses(Iterable):
     __slots__ = []
@@ -110,11 +109,9 @@ class IFuses(Iterable):
     @property
     def RatedCurrent(self) -> float:
         '''
-        Fuse continuous rated current in Amps. Defaults to 0. 
-        
-        Not used internally for either power flow or reporting.
+        Multiplier or actual amps for the TCCcurve object. Defaults to 1.0. 
 
-        **NOTE:** *previous* to OpenDSS v11, or AltDSS engine/DSS C-API v0.15, this used to be the multiplier for the TCC curve.
+        Multiply current values of TCC curve by this to get actual amps.
 
         Original COM help: https://opendss.epri.com/RatedCurrent.html
         '''
@@ -122,8 +119,6 @@ class IFuses(Iterable):
 
     @RatedCurrent.setter
     def RatedCurrent(self, Value: float):
-        #TODO: suppress warning on older engines?
-        warnings.warn("RatedCurrent is not used internally by the DSS engine anymore since OpenDSS v11 and AltDSS engine v0.15. Please see `CurveMultiplier`.", UserWarning, stacklevel=2)
         self._lib.Fuses_Set_RatedCurrent(Value)
 
     @property
@@ -191,34 +186,3 @@ class IFuses(Iterable):
     @NormalState.setter
     def NormalState(self, Value: List[AnyStr]):
         self._set_string_array(self._lib.Fuses_Set_NormalState, Value)
-
-    @property
-    def CurveMultiplier(self) -> float:
-        '''
-        Multiplier or actual amps for the TCCcurve object. Defaults to 1.0. 
-
-        Multiply current values of TCC curve by this to get actual amps.
-
-        *New in OpenDSS engine v11, AltDSS engine v0.15.*
-        '''
-        return self._lib.Fuses_Get_CurveMultiplier()
-
-    @CurveMultiplier.setter
-    def CurveMultiplier(self, Value: float):
-        self._lib.Fuses_Set_CurveMultiplier(Value)
-
-    @property
-    def InterruptingRating(self) -> float:
-        '''
-        Fuse rated interrupting current in Amps. Defaults to 0. 
-        
-        Not used internally for either power flow or reporting.
-
-        *New in OpenDSS engine v11, AltDSS engine v0.15.*
-        '''
-        return self._lib.Fuses_Get_InterruptingRating()
-
-    @InterruptingRating.setter
-    def InterruptingRating(self, Value: float):
-        self._lib.Fuses_Set_InterruptingRating(Value)
-
