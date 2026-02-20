@@ -917,7 +917,12 @@ def test_patch_comtypes():
             pytest.skip("Skipping COM test; OpenDSSDirect.DLL already loaded.")
             return
 
-        import comtypes.client
+        try:
+            import comtypes.client
+        except:
+            pytest.skip("Skipping COM test; comtypes is not installed")
+            return
+
         DSS_COM = dss.patch_dss_com(comtypes.client.CreateObject("OpenDSSengine.DSS"))
         test_essentials(DSS_COM)
     else:
@@ -932,7 +937,12 @@ def test_patch_win32com():
             pytest.skip("Skipping COM test; OpenDSSDirect.DLL already loaded.")
             return
 
-        import win32com.client
+        try:
+            import win32com.client
+        except:
+            pytest.skip("Skipping COM test; win32com is not installed")
+            return
+        
         win32com.client.Dispatch("OpenDSSengine.DSS")
         DSS_COM = dss.patch_dss_com(win32com.client.gencache.EnsureDispatch("OpenDSSengine.DSS"))
         test_essentials(DSS_COM)
