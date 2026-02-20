@@ -21,8 +21,8 @@ jobs:
         include:
           - container_image: 'quay.io/pypa/manylinux_2_28_x86_64'
             SKIP_SCIPY: 0
-          - container_image: 'quay.io/pypa/manylinux2014_x86_64'
-            SKIP_SCIPY: 1
+          # - container_image: 'quay.io/pypa/manylinux2014_x86_64'
+          #   SKIP_SCIPY: 1
     container:
       image: ${{ matrix.container_image }}
     env:
