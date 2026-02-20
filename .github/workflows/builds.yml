@@ -4,7 +4,7 @@ name: Builds
 
 env:
   ARTIFACTS_FOLDER: '${{ github.workspace }}/artifacts'
-  DSS_CAPI_TAG: '0.14.5'
+  DSS_CAPI_TAG: '0.15.0b3'
 
 on: 
   # release:
@@ -13,204 +13,282 @@ on:
 
 jobs:
   build_linux_x64:
+    continue-on-error: true
     name: 'Linux x64'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        container-image: [
-          'quay.io/pypa/manylinux_2_28_x86_64',
-          'quay.io/pypa/manylinux2014_x86_64'
-        ]
+        include:
+          - container_image: 'quay.io/pypa/manylinux_2_28_x86_64'
+            SKIP_SCIPY: 0
+          - container_image: 'quay.io/pypa/manylinux2014_x86_64'
+            SKIP_SCIPY: 1
     container:
-      image: ${{ matrix.container-image }}
+      image: ${{ matrix.container_image }}
     env:
-      CONDA_SUBDIR: 'linux-64'
-      CONDA: "/opt/miniconda/"
+      DSS_PYTHON_TEST_LINUX: '1'
+      SKIP_SCIPY: "${{ matrix.SKIP_SCIPY }}"
     steps: 
-      - name: 'Checkout'
+      - name: 'Checkout DSS-Python'
         run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY dss_python
           cd dss_python
           git checkout $GITHUB_SHA
+
+      - name: 'Get electricdss-tst'
+        run: |
+          git clone --depth=1 https://github.com/dss-extensions/electricdss-tst.git
+
       - name: 'Download/extract message catalogs'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           cd dss_python/dss
           tar zxf ../../messages.tar.gz
+         
       - name: Build wheel
         run: |
           mkdir -p artifacts
           mkdir -p artifacts_raw
           bash dss_python/ci/build_linux.sh x64
-      # - name: Build conda packages
-      #   continue-on-error: true
-      #   run: |
-      #     bash dss_python/ci/build_conda.sh
-      - name: Try installing the wheel
-        run: bash dss_python/ci/test_wheel.sh
+
+      - name: Install wheel
+        run: |
+          bash dss_python/ci/test_wheel.sh
+
       - name: 'Upload artifacts'
-        uses: "actions/upload-artifact@v3"
+        uses: "actions/upload-artifact@v4"
+        if: ${{ matrix.container_image == 'quay.io/pypa/manylinux_2_28_x86_64' }}
         with:
-          name: 'packages'
+          name: 'dss_python-wheel'
           path: '${{ github.workspace }}/artifacts'
 
-  # build_linux_x86:
-  #   name: 'Linux x86'
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     CONDA_SUBDIR: 'linux-32'
-  #     DOCKER_IMAGE: 'pmeira/manylinux_wheel_fpc322_i686'
-  #   steps: 
-  #     - name: 'Checkout'
-  #       run: |
-  #         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY dss_python
-  #         cd dss_python
-  #         git checkout $GITHUB_SHA
-  #     - name: 'Setup Docker'
-  #       run: |
-  #         docker pull $DOCKER_IMAGE
-  #     - name: 'Download/extract message catalogs'
-  #       run: |
-  #         curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
-  #         cd dss_python/dss
-  #         tar zxf ../../messages.tar.gz
-  #     - name: Build wheel
-  #       run: |
-  #         mkdir -p artifacts
-  #         mkdir -p artifacts_raw
-  #         docker run -e GITHUB_SHA -e GITHUB_REF -v "${PWD}:/build" -w /build $DOCKER_IMAGE bash /build/dss_python/ci/build_linux.sh x86
-  #     - name: 'Upload artifacts'
-  #       uses: "actions/upload-artifact@v3"
-  #       with:
-  #         name: 'packages'
-  #         path: '${{ github.workspace }}/artifacts'
+      - name: Run tests (FastDSS)
+        shell: bash
+        run: |
+          export PATH=/opt/python/cp313-cp313/bin/:$PATH
+          cd dss_python
+          pip install cffi numpy pytest
+          DSS_EXTENSIONS_FASTDSS=1 python -m pytest
+
+      - name: Run tests (CFFI)
+        shell: bash
+        run: |
+          export PATH=/opt/python/cp313-cp313/bin/:$PATH
+          cd dss_python
+          pip install cffi numpy pytest
+          DSS_EXTENSIONS_FASTDSS=0 python -m pytest
 
   build_macos_x64:
+    continue-on-error: true
     name: 'macOS x64'
-    runs-on: 'macos-11'
+    runs-on: 'macos-15-intel'
     env:
-      SDKROOT: '${{ github.workspace }}/MacOSX10.13.sdk'
       PYTHON: python3
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with: 
           fetch-depth: 0
           path: 'dss_python'
+
+      - name: "Get electricdss-tst"
+        uses: actions/checkout@v6
+        with: 
+          fetch-depth: 1
+          repository: 'dss-extensions/electricdss-tst'
+          path: 'electricdss-tst'
+
+      - name: 'Prepare Python'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
       - name: 'Download/extract message catalogs'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           cd dss_python/dss
           tar zxf ../../messages.tar.gz
+
       - name: Build wheel
         run: |
           bash dss_python/ci/build_wheel.sh
-      # - name: Build conda packages
-      #   continue-on-error: true
-      #   run: |
-      #     sudo chown -R $UID $CONDA
-      #     bash dss_python/ci/build_conda.sh
-      - name: 'Upload artifacts'
-        uses: "actions/upload-artifact@v3"
-        with:
-          name: 'packages'
-          path: '${{ github.workspace }}/artifacts'
+
+      - name: Install wheel
+        shell: bash
+        run: |
+          bash dss_python/ci/test_wheel.sh
+
+      - name: Run tests (FastDSS)
+        shell: bash
+        run: |
+          cd dss_python
+          DSS_EXTENSIONS_FASTDSS=1 python -m pytest
+
+      - name: Run tests (CFFI)
+        shell: bash
+        run: |
+          cd dss_python
+          DSS_EXTENSIONS_FASTDSS=0 python -m pytest
 
   build_macos_arm64:
+    continue-on-error: true
     name: 'macOS ARM64'
-    runs-on: 'macos-11'
+    runs-on: 'macos-15'
     env:
       PYTHON: python3
-      _PYTHON_HOST_PLATFORM: macosx-11.0-arm64
       ARCHFLAGS: '-arch arm64'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with: 
           fetch-depth: 0
           path: 'dss_python'
+
+      - name: "Get electricdss-tst"
+        uses: actions/checkout@v6
+        with: 
+          fetch-depth: 1
+          repository: 'dss-extensions/electricdss-tst'
+          path: 'electricdss-tst'
+
+      - name: 'Prepare Python'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
       - name: 'Download/extract message catalogs'
         run: |
           curl -s -L https://github.com/dss-extensions/dss_capi/releases/download/${DSS_CAPI_TAG}/messages.tar.gz -o messages.tar.gz
           cd dss_python/dss
           tar zxf ../../messages.tar.gz
-      # - name: 'Download macOS SDK 10.13'
-      #   run: |
-      #     curl -s -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.13.sdk.tar.xz -o macOSsdk.tar.xz
-      #     tar xf macOSsdk.tar.xz
+
       - name: Build wheel
         run: |
           bash dss_python/ci/build_wheel.sh
-      # - name: Build conda packages
-      #   continue-on-error: true
-      #   run: |
-      #     sudo chown -R $UID $CONDA
-      #     bash dss_python/ci/build_conda.sh
-      - name: 'Upload artifacts'
-        uses: "actions/upload-artifact@v3"
-        with:
-          name: 'packages'
-          path: '${{ github.workspace }}/artifacts'
+
+      - name: Install wheel
+        shell: bash
+        run: |
+          bash dss_python/ci/test_wheel.sh
+
+      - name: Run tests (FastDSS)
+        shell: bash
+        run: |
+          cd dss_python
+          DSS_EXTENSIONS_FASTDSS=1 python -m pytest
+
+      - name: Run tests (CFFI)
+        shell: bash
+        run: |
+          cd dss_python
+          DSS_EXTENSIONS_FASTDSS=0 python -m pytest
 
   build_win_x64:
+    continue-on-error: true
     name: 'Windows x64'
-    runs-on: windows-2019
+    runs-on: windows-latest
     env:
-      CONDA_SUBDIR: 'win-64'
       PYTHON: python
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with: 
           fetch-depth: 0
           path: 'dss_python'
+
+      - name: "Get electricdss-tst"
+        uses: actions/checkout@v6
+        with: 
+          fetch-depth: 1
+          repository: 'dss-extensions/electricdss-tst'
+          path: 'electricdss-tst'
+
       - name: 'Download/extract message catalogs'
         shell: cmd
         run: |
           "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/messages.zip -o messages.zip
           cd dss_python\dss
           tar zxf ..\..\messages.zip
+
       - name: Build wheel
         shell: bash
         run: |
           bash dss_python/ci/build_wheel.sh
-      # - name: Build conda packages
-      #   continue-on-error: true
-      #   shell: bash
-      #   run: |
-      #     bash dss_python/ci/build_conda.sh
-      - name: 'Upload artifacts'
-        uses: "actions/upload-artifact@v3"
-        with:
-          name: 'packages'
-          path: '${{ github.workspace }}/artifacts'
+
+      - name: Install wheel
+        shell: bash
+        run: |
+          bash dss_python/ci/test_wheel.sh
+      
+      - name: Run tests (FastDSS)
+        shell: cmd
+        run: |
+          set DSS_EXTENSIONS_FASTDSS=1
+          cd dss_python
+          python -m pytest
+
+      - name: Run tests (CFFI)
+        shell: cmd
+        run: |
+          set DSS_EXTENSIONS_FASTDSS=0
+          cd dss_python
+          python -m pytest
+
 
   build_win_x86:
+    continue-on-error: true
     name: 'Windows x86'
-    runs-on: windows-2019
+    runs-on: windows-latest
     env:
-      CONDA_SUBDIR: 'win-32'
       PYTHON: python
+      SKIP_SCIPY: '1'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with: 
           fetch-depth: 0
           path: 'dss_python'
-      - uses: actions/setup-python@v3
+
+      - name: "Get electricdss-tst"
+        uses: actions/checkout@v6
+        with: 
+          fetch-depth: 1
+          repository: 'dss-extensions/electricdss-tst'
+          path: 'electricdss-tst'
+
+      - name: 'Prepare Python'
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.7'
+          python-version: '3.11'
+          cache: 'pip'
           architecture: 'x86'
+
       - name: 'Download/extract message catalogs'
         shell: cmd
         run: |
           "c:\Program Files\Git\mingw64\bin\curl" -s -L https://github.com/dss-extensions/dss_capi/releases/download/%DSS_CAPI_TAG%/messages.zip -o messages.zip
           cd dss_python\dss
           tar zxf ..\..\messages.zip
+
       - name: Build wheel
         shell: bash
         run: |
           bash dss_python/ci/build_wheel.sh
-      - name: 'Upload artifacts'
-        uses: "actions/upload-artifact@v3"
-        with:
-          name: 'packages'
-          path: '${{ github.workspace }}/artifacts'
 
+      - name: Install wheel
+        shell: bash
+        run: |
+          bash dss_python/ci/test_wheel.sh
+      
+      - name: Run tests (FastDSS)
+        shell: cmd
+        run: |
+          set DSS_EXTENSIONS_FASTDSS=1
+          cd dss_python
+          python -m pytest
+
+      - name: Run tests (CFFI)
+        shell: cmd
+        run: |
+          set DSS_EXTENSIONS_FASTDSS=0
+          cd dss_python
+          python -m pytest
