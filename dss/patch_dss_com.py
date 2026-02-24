@@ -22,6 +22,7 @@ from .ILoads import ILoads
 from .IMonitors import IMonitors
 from .IPDElements import IPDElements
 from .IPVSystems import IPVSystems
+from .IReactors import IReactors
 from .IRelays import IRelays
 from .IReclosers import IReclosers
 from .ISensors import ISensors
@@ -182,10 +183,12 @@ def patch_dss_com(obj):
         'Monitors': IMonitors,
         'PDElements': IPDElements,
         'PVSystems': IPVSystems,
+        'Reactors': IReactors,
         'Relays': IRelays,
         'Reclosers': IReclosers,
         'Sensors': ISensors,
         'RegControls': IRegControls,
+        'Storages': IStorages,
         'SwtControls': ISwtControls,
         'Vsources': IVsources,
         'Transformers': ITransformers,

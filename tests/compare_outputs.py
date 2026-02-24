@@ -236,6 +236,11 @@ class ComparisonHandler:
                 continue
 
             if isinstance(va, list):
+                if not isinstance(vb, list):
+                    if (path[-4], path[-1]) in (('Relays', 'State'), ('Relays', 'NormalState')):
+                        continue
+
+
                 if ((va == ['none'] or va == ['NONE']) and vb == []) or (va == [] and (vb == ['none'] or vb == ['NONE'])):
                     continue
 
@@ -430,8 +435,8 @@ class ComparisonHandler:
                         print('Skipping, not converged in A:', fn)
                         continue
 
-                    self.A_IS_COM = 'C-API' not in dataA['DSS']['Version']
-                    self.B_IS_COM = 'C-API' not in dataB['DSS']['Version']
+                    self.A_IS_COM = 'C-API' not in dataA['DSS']['Version'].split('\n')[0]
+                    self.B_IS_COM = 'C-API' not in dataB['DSS']['Version'].split('\n')[0]
                     try:
                         self.compare(dataA, dataB, [fn])
                         if not self.per_file[fn]:
@@ -487,8 +492,10 @@ class ComparisonHandler:
                             df_a = pd.read_csv(sfA)
                         except pd.errors.EmptyDataError:
                             continue
-
-                        df_b = pd.read_csv(sfB)
+                        try:
+                            df_b = pd.read_csv(sfB)
+                        except pd.errors.EmptyDataError:
+                            continue
 
                         df_a.columns = [x.strip() for x in df_a.columns]
                         df_b.columns = [x.strip() for x in df_b.columns]
