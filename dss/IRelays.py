@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from typing import AnyStr
 
@@ -26,14 +26,11 @@ class IRelays(Iterable):
 
         Original COM help: https://opendss.epri.com/MonitoredObj3.html
         '''
-        return self._get_string(self._check_for_error(self._lib.Relays_Get_MonitoredObj()))
+        return self._lib.Relays_Get_MonitoredObj()
 
     @MonitoredObj.setter
     def MonitoredObj(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Relays_Set_MonitoredObj(Value))
+        self._lib.Relays_Set_MonitoredObj(Value)
 
     @property
     def MonitoredTerm(self) -> int:
@@ -42,11 +39,11 @@ class IRelays(Iterable):
 
         Original COM help: https://opendss.epri.com/MonitoredTerm3.html
         '''
-        return self._check_for_error(self._lib.Relays_Get_MonitoredTerm())
+        return self._lib.Relays_Get_MonitoredTerm()
 
     @MonitoredTerm.setter
     def MonitoredTerm(self, Value: int):
-        self._check_for_error(self._lib.Relays_Set_MonitoredTerm(Value))
+        self._lib.Relays_Set_MonitoredTerm(Value)
 
     @property
     def SwitchedObj(self) -> str:
@@ -55,14 +52,11 @@ class IRelays(Iterable):
 
         Original COM help: https://opendss.epri.com/SwitchedObj2.html
         '''
-        return self._get_string(self._check_for_error(self._lib.Relays_Get_SwitchedObj()))
+        return self._lib.Relays_Get_SwitchedObj()
 
     @SwitchedObj.setter
     def SwitchedObj(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Relays_Set_SwitchedObj(Value))
+        self._lib.Relays_Set_SwitchedObj(Value)
 
     @property
     def SwitchedTerm(self) -> int:
@@ -71,11 +65,11 @@ class IRelays(Iterable):
 
         Original COM help: https://opendss.epri.com/SwitchedTerm2.html
         '''
-        return self._check_for_error(self._lib.Relays_Get_SwitchedTerm())
+        return self._lib.Relays_Get_SwitchedTerm()
 
     @SwitchedTerm.setter
     def SwitchedTerm(self, Value: int):
-        self._check_for_error(self._lib.Relays_Set_SwitchedTerm(Value))
+        self._lib.Relays_Set_SwitchedTerm(Value)
 
     def Open(self):
         '''
@@ -83,7 +77,7 @@ class IRelays(Iterable):
 
         Original COM help: https://opendss.epri.com/Open4.html
         '''
-        self._check_for_error(self._lib.Relays_Open())
+        self._lib.Relays_Open()
 
     def Close(self):
         '''
@@ -91,7 +85,7 @@ class IRelays(Iterable):
 
         Original COM help: https://opendss.epri.com/Close5.html
         '''
-        self._check_for_error(self._lib.Relays_Close())
+        self._lib.Relays_Close()
 
     def Reset(self):
         '''
@@ -99,20 +93,20 @@ class IRelays(Iterable):
         If open, lock out the relay. 
         If closed, resets relay to first operation.
         '''
-        self._check_for_error(self._lib.Relays_Reset())
+        self._lib.Relays_Reset()
 
     @property
     def State(self) -> int:
         '''
-        Get/Set present state of relay. 
+        Present state of relay. 
         If set to open, open relay's controlled element and lock out the relay. 
         If set to close, close relay's controlled element and resets relay to first operation.
         '''
-        return self._check_for_error(self._lib.Relays_Get_State())
+        return self._lib.Relays_Get_State()
 
     @State.setter
     def State(self, Value: int):
-        self._check_for_error(self._lib.Relays_Set_State(Value))
+        self._lib.Relays_Set_State(Value)
 
     @property
     def NormalState(self) -> int:
@@ -121,8 +115,8 @@ class IRelays(Iterable):
 
         Original COM help: https://opendss.epri.com/NormalState3.html
         '''
-        return self._check_for_error(self._lib.Relays_Get_NormalState())
+        return self._lib.Relays_Get_NormalState()
 
     @NormalState.setter
     def NormalState(self, Value: int):
-        self._check_for_error(self._lib.Relays_Set_NormalState(Value))
+        self._lib.Relays_Set_NormalState(Value)

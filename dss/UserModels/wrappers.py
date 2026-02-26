@@ -1,7 +1,10 @@
 import re
 from dss_python_backend import (
     # _dss_CapUserControl, 
-    _dss_GenUserModel, 
+    _dss_GenUserModel_AltDSS,
+    _dss_GenUserModel_OpenDSS_v7,
+    _dss_GenUserModel_OpenDSS_v8v9,
+    _dss_GenUserModel_OpenDSS_v10,
     # _dss_PVSystemUserModel, 
     # _dss_StoreDynaModel, 
     # _dss_StoreUserModel
@@ -17,7 +20,7 @@ class CommonWrapper(object):
         self.ffi = self.cffi_module.ffi
         self.lib = self.cffi_module.lib
         self.models = []
-        self.model_classes = {}
+        # self.model_classes = {} -- this is now initialized in the subclasses
 
         prefix = self.function_prefix
         for fname in self.function_names:
@@ -26,10 +29,10 @@ class CommonWrapper(object):
         if self.Base is not None:
             self.Base.ffi = self.ffi
             
-        
-    def register(self, cls):
-        self.model_classes[cls.__name__.lower()] = cls
-        return cls
+    @classmethod
+    def register(this_class, model_cls):
+        this_class.model_classes[model_cls.__name__.lower()] = model_cls
+        return model_cls
         
     def Delete(self, ID):
         ID = ID[0]
@@ -167,6 +170,7 @@ class SaveRestoreMixin(object):
 
 # class CapUserControlWrapper(CommonWrapper):
 #     Base = bases.CapUserControlBase
+#     model_classes = {}
 #     cffi_module = _dss_CapUserControl
 #     function_prefix = 'pyCapUserControl'
 #     function_names = (
@@ -190,7 +194,8 @@ class SaveRestoreMixin(object):
 
 class GenUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
     Base = bases.GenUserModelBase
-    cffi_module = _dss_GenUserModel
+    model_classes = {}
+    
     function_prefix = 'pyGenUserModel'
     function_names = (
         'New',
@@ -210,6 +215,10 @@ class GenUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
         'Restore'
     )
 
+    def __init__(self, cffi_module):
+        self.cffi_module = cffi_module
+        CommonWrapper.__init__(self)
+
     def New(self, GenData, DynaData, CallBacks):
         # Create a base instance to be replaced in Edit
         self.active_instance = self.Base(GenData, DynaData, CallBacks)
@@ -219,6 +228,7 @@ class GenUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
         
 # class PVSystemUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
 #     Base = bases.PVSystemUserModelBase
+#     model_classes = {}
 #     cffi_module = _dss_PVSystemUserModel
 #     function_prefix = 'pyPVSystemUserModel'
 #     function_names = (
@@ -248,6 +258,7 @@ class GenUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
 
 # class StoreUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
 #     Base = bases.StoreUserModelBase
+#     model_classes = {}
 #     cffi_module = _dss_StoreUserModel
 #     function_prefix = 'pyStoreUserModel'
 #     function_names = (
@@ -277,6 +288,7 @@ class GenUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
 
 # class StoreDynaModelWrapper(DynamicsWrapper):
 #     Base = bases.StoreDynaModelBase
+#     model_classes = {}
 #     cffi_module = _dss_StoreDynaModel
 #     function_prefix = 'pyStoreDynaModel'
 #     function_names = (
@@ -304,7 +316,34 @@ class GenUserModelWrapper(DynamicsWrapper, SaveRestoreMixin):
 
 # Instantiate the wrappers to link the DLLs to the the Python code
 # CapUserControl = CapUserControlWrapper()
-GenUserModel = GenUserModelWrapper()
+GenUserModels = {
+    'AltDSS': GenUserModelWrapper(_dss_GenUserModel_AltDSS),
+    'OpenDSS_v7': GenUserModelWrapper(_dss_GenUserModel_OpenDSS_v7),
+    'OpenDSS_v8v9': GenUserModelWrapper(_dss_GenUserModel_OpenDSS_v8v9),
+    'OpenDSS_v10': GenUserModelWrapper(_dss_GenUserModel_OpenDSS_v10),
+}
+
+def GenUserModel(DSS):
+    '''
+    Select the approapriate GenUserModel instance according to the DSS engine provided.
+
+    If the version is not recognized, defaults to OpenDSS v10.0.
+    '''
+    ver = DSS.Version
+    if 'DSS C-API Library' in ver:
+        return GenUserModels['AltDSS']
+    elif ver.startswith('Version 9.') or ver.startswith('Version 8.'):
+        return GenUserModels['OpenDSS_v8v9']
+    elif ver.startswith('Version 7.'):
+        return GenUserModels['OpenDSS_v7']
+    else:
+        # Assuming compatibility with OpenDSS v10.0
+        return GenUserModels['OpenDSS_v10']
+
+# To keep backwards compatibility, add `Base` and register` to GenUserModel
+GenUserModel.Base = GenUserModelWrapper.Base
+GenUserModel.register = GenUserModelWrapper.register
+
 # PVSystemUserModel = PVSystemUserModelWrapper()
 # StoreDynaModel = StoreDynaModelWrapper()
 # StoreUserModel = StoreUserModelWrapper()

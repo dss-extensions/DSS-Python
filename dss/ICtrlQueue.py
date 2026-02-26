@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Base
 from typing import List
 
@@ -21,7 +21,7 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/ClearActions.html
         '''
-        self._check_for_error(self._lib.CtrlQueue_ClearActions())
+        self._lib.CtrlQueue_ClearActions()
 
     def ClearQueue(self):
         '''
@@ -29,9 +29,9 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/ClearQueue.html
         '''
-        self._check_for_error(self._lib.CtrlQueue_ClearQueue())
+        self._lib.CtrlQueue_ClearQueue()
 
-    def Delete(self, ActionHandle):
+    def Delete(self, ActionHandle: int):
         '''
         Delete an Action from the DSS Control Queue by the handle that is returned when the action is added.
         
@@ -39,7 +39,7 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/Delete.html
         '''
-        self._check_for_error(self._lib.CtrlQueue_Delete(ActionHandle))
+        self._lib.CtrlQueue_Delete(ActionHandle)
 
     def DoAllQueue(self):
         '''
@@ -49,7 +49,7 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/DoAllQueue.html
         '''
-        self._check_for_error(self._lib.CtrlQueue_DoAllQueue())
+        self._lib.CtrlQueue_DoAllQueue()
 
     def Show(self):
         '''
@@ -57,7 +57,7 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/Show.html
         '''
-        self._check_for_error(self._lib.CtrlQueue_Show())
+        self._lib.CtrlQueue_Show()
 
     @property
     def ActionCode(self) -> int:
@@ -69,7 +69,7 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/ActionCode.html
         '''
-        return self._check_for_error(self._lib.CtrlQueue_Get_ActionCode())
+        return self._lib.CtrlQueue_Get_ActionCode()
 
     @property
     def DeviceHandle(self) -> int:
@@ -83,7 +83,7 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/DeviceHandle.html   
         '''
-        return self._check_for_error(self._lib.CtrlQueue_Get_DeviceHandle())
+        return self._lib.CtrlQueue_Get_DeviceHandle()
 
     @property
     def NumActions(self) -> int:
@@ -92,15 +92,15 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/NumActions.html
         '''
-        return self._check_for_error(self._lib.CtrlQueue_Get_NumActions())
+        return self._lib.CtrlQueue_Get_NumActions()
 
-    def Push(self, Hour: int, Seconds: float, ActionCode: int, DeviceHandle: int):
+    def Push(self, Hour: int, Seconds: float, ActionCode: int, DeviceHandle: int) -> int:
         '''
         Push a control action onto the DSS control queue by time, action code, and device handle (user defined). Returns Control Queue handle.
 
         Original COM help: https://opendss.epri.com/Push.html
         '''
-        return self._check_for_error(self._lib.CtrlQueue_Push(Hour, Seconds, ActionCode, DeviceHandle))
+        return self._lib.CtrlQueue_Push(Hour, Seconds, ActionCode, DeviceHandle)
 
     @property
     def PopAction(self) -> int:
@@ -109,7 +109,7 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/PopAction.html
         '''
-        return self._check_for_error(self._lib.CtrlQueue_Get_PopAction())
+        return self._lib.CtrlQueue_Get_PopAction()
 
     @property
     def Queue(self) -> List[str]:
@@ -118,7 +118,7 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/Queue.html
         '''
-        return self._check_for_error(self._get_string_array(self._lib.CtrlQueue_Get_Queue))
+        return self._lib.CtrlQueue_Get_Queue()
 
     @property
     def QueueSize(self) -> int:
@@ -127,7 +127,7 @@ class ICtrlQueue(Base):
 
         Original COM help: https://opendss.epri.com/QueueSize.html
         '''
-        return self._check_for_error(self._lib.CtrlQueue_Get_QueueSize())
+        return self._lib.CtrlQueue_Get_QueueSize()
 
     @property
     def Action(self) -> int:
@@ -140,5 +140,5 @@ class ICtrlQueue(Base):
 
     @Action.setter
     def Action(self, Param1: int):
-        self._check_for_error(self._lib.CtrlQueue_Set_Action(Param1))
+        self._lib.CtrlQueue_Set_Action(Param1)
 

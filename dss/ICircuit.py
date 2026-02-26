@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from typing import List, AnyStr, Union
 import json
 from ._cffi_api_util import Base
@@ -31,7 +31,6 @@ from .IRelays import IRelays
 from .ILoadShapes import ILoadShapes
 from .IFuses import IFuses
 from .IISources import IISources
-from .IDSSimComs import IDSSimComs
 from .IPVSystems import IPVSystems
 from .IVsources import IVsources
 from .ILineCodes import ILineCodes
@@ -45,8 +44,9 @@ from .IParallel import IParallel
 from .IReduceCkt import IReduceCkt
 from .IStorages import IStorages
 from .IGICSources import IGICSources
+from .IWindGens import IWindGens
 
-from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray, Float64ArrayOrSimpleComplex
+from ._types import Float64Array, Int32Array, ComplexArray, ComplexMatrix, Complex
 from .enums import DSSJSONFlags, DSSSaveFlags
 
 class ICircuit(Base):
@@ -81,7 +81,6 @@ class ICircuit(Base):
         'Fuses',
         'Isources',
         'ISources',
-        'DSSim_Coms',
         'PVSystems',
         'Vsources',
         'LineCodes',
@@ -95,6 +94,7 @@ class ICircuit(Base):
         'ReduceCkt',
         'Storages',
         'GICSources',
+        'WindGens',
     ]
 
     _columns = [
@@ -153,7 +153,6 @@ class ICircuit(Base):
     Fuses: IFuses
     Isources: IISources
     ISources: IISources
-    DSSim_Coms: IDSSimComs
     PVSystems: IPVSystems
     Vsources: IVsources
     LineCodes: ILineCodes
@@ -165,6 +164,7 @@ class ICircuit(Base):
     Reactors: IReactors
     ReduceCkt: IReduceCkt
     Storages: IStorages
+    WindGens: IWindGens
     GICSources: IGICSources
     Parallel: IParallel
 
@@ -202,19 +202,19 @@ class ICircuit(Base):
         object.__setattr__(self, 'Isources', Isources)
         object.__setattr__(self, 'ISources', Isources)
 
-        self.DSSim_Coms = IDSSimComs(api_util)
         self.PVSystems = IPVSystems(api_util)
         self.Vsources = IVsources(api_util)
         self.LineCodes = ILineCodes(api_util)
-        self.LineGeometries = ILineGeometries(api_util) if not api_util._is_odd else None
-        self.LineSpacings = ILineSpacings(api_util) if not api_util._is_odd else None
-        self.WireData = IWireData(api_util) if not api_util._is_odd else None
-        self.CNData = ICNData(api_util) if not api_util._is_odd else None
-        self.TSData = ITSData(api_util) if not api_util._is_odd else None
-        self.Reactors = IReactors(api_util) if not api_util._is_odd else None
+        self.LineGeometries = ILineGeometries(api_util) if not api_util._is_oddie else None
+        self.LineSpacings = ILineSpacings(api_util) if not api_util._is_oddie else None
+        self.WireData = IWireData(api_util) if not api_util._is_oddie else None
+        self.CNData = ICNData(api_util) if not api_util._is_oddie else None
+        self.TSData = ITSData(api_util) if not api_util._is_oddie else None
+        self.Reactors = IReactors(api_util)
         self.ReduceCkt = IReduceCkt(api_util) #: Circuit Reduction Interface
-        self.Storages = IStorages(api_util) if not api_util._is_odd else None
+        self.Storages = IStorages(api_util)
         self.GICSources = IGICSources(api_util)
+        self.WindGens = IWindGens(api_util)
 
         if hasattr(api_util.lib, 'Parallel_CreateActor'):
             self.Parallel = IParallel(api_util)
@@ -239,7 +239,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/Capacity1.html
         '''
-        return self._check_for_error(self._lib.Circuit_Capacity(Start, Increment))
+        return self._lib.Circuit_Capacity(Start, Increment)
 
     def Disable(self, Name: AnyStr):
         '''
@@ -247,10 +247,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/Disable.html
         '''
-        if not isinstance(Name, bytes):
-            Name = Name.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Circuit_Disable(Name))
+        self._lib.Circuit_Disable(Name)
 
     def Enable(self, Name: AnyStr):
         '''
@@ -258,10 +255,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/Enable.html
         '''
-        if not isinstance(Name, bytes):
-            Name = Name.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.Circuit_Enable(Name))
+        self._lib.Circuit_Enable(Name)
 
     def EndOfTimeStepUpdate(self):
         '''
@@ -269,7 +263,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/EndOfTimeStepUpdate.html
         '''
-        self._check_for_error(self._lib.Circuit_EndOfTimeStepUpdate())
+        self._lib.Circuit_EndOfTimeStepUpdate()
 
     def FirstElement(self) -> int:
         '''
@@ -279,7 +273,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/FirstElement.html
         '''
-        return self._check_for_error(self._lib.Circuit_FirstElement())
+        return self._lib.Circuit_FirstElement()
 
     def FirstPCElement(self) -> int:
         '''
@@ -289,7 +283,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/FirstPCElement.html
         '''
-        return self._check_for_error(self._lib.Circuit_FirstPCElement())
+        return self._lib.Circuit_FirstPCElement()
 
     def FirstPDElement(self) -> int:
         '''
@@ -299,26 +293,23 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/FirstPDElement.html
         '''
-        return self._check_for_error(self._lib.Circuit_FirstPDElement())
+        return self._lib.Circuit_FirstPDElement()
 
     def AllNodeDistancesByPhase(self, Phase: int) -> Float64Array:
         '''Returns an array of doubles representing the distances to parent EnergyMeter. Sequence of array corresponds to other node ByPhase properties.'''
-        self._check_for_error(self._lib.Circuit_Get_AllNodeDistancesByPhase_GR(Phase))
-        return self._get_float64_gr_array()
+        return self._lib.Circuit_Get_AllNodeDistancesByPhase_GR(Phase)
 
     def AllNodeNamesByPhase(self, Phase: int) -> List[str]:
         '''Return array of strings of the node names for the By Phase criteria. Sequence corresponds to other ByPhase properties.'''
-        return self._check_for_error(self._get_string_array(self._lib.Circuit_Get_AllNodeNamesByPhase, Phase))
+        return self._lib.Circuit_Get_AllNodeNamesByPhase(Phase)
 
     def AllNodeVmagByPhase(self, Phase: int) -> Float64Array:
         '''Returns Array of doubles represent voltage magnitudes for nodes on the specified phase.'''
-        self._check_for_error(self._lib.Circuit_Get_AllNodeVmagByPhase_GR(Phase))
-        return self._get_float64_gr_array()
+        return self._lib.Circuit_Get_AllNodeVmagByPhase_GR(Phase)
 
     def AllNodeVmagPUByPhase(self, Phase: int) -> Float64Array:
         '''Returns array of per unit voltage magnitudes for each node by phase'''
-        self._check_for_error(self._lib.Circuit_Get_AllNodeVmagPUByPhase_GR(Phase))
-        return self._get_float64_gr_array()
+        return self._lib.Circuit_Get_AllNodeVmagPUByPhase_GR(Phase)
 
     def NextElement(self) -> int:
         '''
@@ -327,7 +318,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/NextElement.html
         '''
-        return self._check_for_error(self._lib.Circuit_NextElement())
+        return self._lib.Circuit_NextElement()
 
     def NextPCElement(self) -> int:
         '''
@@ -335,7 +326,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/NextPCElement.html
         '''
-        return self._check_for_error(self._lib.Circuit_NextPCElement())
+        return self._lib.Circuit_NextPCElement()
 
     def NextPDElement(self) -> int:
         '''
@@ -343,7 +334,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/NextPDElement.html
         '''
-        return self._check_for_error(self._lib.Circuit_NextPDElement())
+        return self._lib.Circuit_NextPDElement()
 
     def Sample(self):
         '''
@@ -351,7 +342,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/Sample.html
         '''
-        self._check_for_error(self._lib.Circuit_Sample())
+        self._lib.Circuit_Sample()
 
     def SaveSample(self):
         '''
@@ -359,7 +350,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/SaveSample.html
         '''
-        self._check_for_error(self._lib.Circuit_SaveSample())
+        self._lib.Circuit_SaveSample()
 
     def SetActiveBus(self, BusName: AnyStr) -> int:
         '''
@@ -369,10 +360,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/SetActiveBus.html
         '''
-        if not isinstance(BusName, bytes):
-            BusName = BusName.encode(self._api_util.codec)
-
-        return self._check_for_error(self._lib.Circuit_SetActiveBus(BusName))
+        return self._lib.Circuit_SetActiveBus(BusName)
 
     def SetActiveBusi(self, BusIndex: int) -> int:
         '''
@@ -383,7 +371,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/SetActiveBusi.html
         '''
-        return self._check_for_error(self._lib.Circuit_SetActiveBusi(BusIndex))
+        return self._lib.Circuit_SetActiveBusi(BusIndex)
 
     def SetActiveClass(self, ClassName: AnyStr) -> int:
         '''
@@ -393,10 +381,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/SetActiveClass.html
         '''
-        if not isinstance(ClassName, bytes):
-            ClassName = ClassName.encode(self._api_util.codec)
-
-        return self._check_for_error(self._lib.Circuit_SetActiveClass(ClassName))
+        return self._lib.Circuit_SetActiveClass(ClassName)
 
     def SetActiveElement(self, FullName: AnyStr) -> int:
         '''
@@ -406,10 +391,7 @@ class ICircuit(Base):
         
         Original COM help: https://opendss.epri.com/SetActiveElement.html
         '''
-        if not isinstance(FullName, bytes):
-            FullName = FullName.encode(self._api_util.codec)
-
-        return self._check_for_error(self._lib.Circuit_SetActiveElement(FullName))
+        return self._lib.Circuit_SetActiveElement(FullName)
 
     def UpdateStorage(self):
         '''
@@ -419,7 +401,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/UpdateStorage.html
         '''
-        self._check_for_error(self._lib.Circuit_UpdateStorage())
+        self._lib.Circuit_UpdateStorage()
 
     @property
     def AllBusDistances(self) -> Float64Array:
@@ -428,8 +410,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/AllBusDistances.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_AllBusDistances_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Circuit_Get_AllBusDistances_GR()
 
     @property
     def AllBusNames(self) -> List[str]:
@@ -438,7 +419,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/AllBusNames.html
         '''
-        return self._check_for_error(self._get_string_array(self._lib.Circuit_Get_AllBusNames))
+        return self._lib.Circuit_Get_AllBusNames()
 
     @property
     def AllBusVmag(self) -> Float64Array:
@@ -447,38 +428,34 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/AllBusVmag.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_AllBusVmag_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Circuit_Get_AllBusVmag_GR()
 
     @property
     def AllBusVmagPu(self) -> Float64Array:
         '''
-        Double Array of all bus voltages (each node) magnitudes in Per unit
+        Array of all bus voltages (each node) magnitudes in Per unit
 
         Original COM help: https://opendss.epri.com/AllBusVmagPu.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_AllBusVmagPu_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Circuit_Get_AllBusVmagPu_GR()
 
     @property
-    def AllBusVolts(self) -> Float64ArrayOrComplexArray:
+    def AllBusVolts(self) -> ComplexArray:
         '''
         Complex array of all bus, node voltages from most recent solution
 
         Original COM help: https://opendss.epri.com/AllBusVolts.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_AllBusVolts_GR())
-        return self._get_complex128_gr_array()
+        return self._lib.Circuit_Get_AllBusVolts_GR()
 
     @property
-    def AllElementLosses(self) -> Float64ArrayOrComplexArray:
+    def AllElementLosses(self) -> ComplexArray:
         '''
         Array of total losses (complex) in each circuit element
 
         Original COM help: https://opendss.epri.com/AllElementLosses.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_AllElementLosses_GR())
-        return self._get_complex128_gr_array()
+        return self._lib.Circuit_Get_AllElementLosses_GR()
 
     @property
     def AllElementNames(self) -> List[str]:
@@ -487,7 +464,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/AllElementNames.html
         '''
-        return self._check_for_error(self._get_string_array(self._lib.Circuit_Get_AllElementNames))
+        return self._lib.Circuit_Get_AllElementNames()
 
     @property
     def AllNodeDistances(self) -> Float64Array:
@@ -496,8 +473,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/AllNodeDistances.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_AllNodeDistances_GR())
-        return self._get_float64_gr_array()
+        return self._lib.Circuit_Get_AllNodeDistances_GR()
 
     @property
     def AllNodeNames(self) -> List[str]:
@@ -506,32 +482,30 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/AllNodeNames.html
         '''
-        return self._check_for_error(self._get_string_array(self._lib.Circuit_Get_AllNodeNames))
+        return self._lib.Circuit_Get_AllNodeNames()
 
     @property
-    def LineLosses(self) -> Float64ArrayOrSimpleComplex:
+    def LineLosses(self) -> Complex:
         '''
         Complex total line losses in the circuit
 
         Original COM help: https://opendss.epri.com/LineLosses.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_LineLosses_GR())
-        return self._get_complex128_gr_simple()
+        return self._lib.Circuit_Get_LineLosses_GR()
 
     @property
-    def Losses(self) -> Float64ArrayOrSimpleComplex:
+    def Losses(self) -> Complex:
         '''
         Total losses in active circuit, complex number (two-element array of double).
 
         Original COM help: https://opendss.epri.com/Losses.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_Losses_GR())
-        return self._get_complex128_gr_simple()
+        return self._lib.Circuit_Get_Losses_GR()
 
     @property
     def Name(self) -> str:
         '''Name of the active circuit.'''
-        return self._get_string(self._check_for_error(self._lib.Circuit_Get_Name()))
+        return self._lib.Circuit_Get_Name()
 
     @property
     def NumBuses(self) -> int:
@@ -540,7 +514,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/NumBuses.html
         '''
-        return self._check_for_error(self._lib.Circuit_Get_NumBuses())
+        return self._lib.Circuit_Get_NumBuses()
 
     @property
     def NumCktElements(self) -> int:
@@ -549,7 +523,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/NumCktElements.html
         '''
-        return self._check_for_error(self._lib.Circuit_Get_NumCktElements())
+        return self._lib.Circuit_Get_NumCktElements()
 
     @property
     def NumNodes(self) -> int:
@@ -558,7 +532,7 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/NumNodes1.html
         '''
-        return self._check_for_error(self._lib.Circuit_Get_NumNodes())
+        return self._lib.Circuit_Get_NumNodes()
 
     @property
     def ParentPDElement(self) -> int:
@@ -567,20 +541,19 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/ParentPDElement.html
         '''
-        return self._check_for_error(self._lib.Circuit_Get_ParentPDElement())
+        return self._lib.Circuit_Get_ParentPDElement()
 
     @property
-    def SubstationLosses(self) -> Float64ArrayOrSimpleComplex:
+    def SubstationLosses(self) -> Complex:
         '''
         Complex losses in all transformers designated to substations.
 
         Original COM help: https://opendss.epri.com/SubstationLosses.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_SubstationLosses_GR())
-        return self._get_complex128_gr_simple()
+        return self._lib.Circuit_Get_SubstationLosses_GR()
 
     @property
-    def SystemY(self) -> Float64ArrayOrComplexArray:
+    def SystemY(self) -> ComplexMatrix:
         '''
         (read-only) System Y matrix (after a solution has been performed). 
         This is deprecated as it returns a dense matrix. Only use it for small systems.
@@ -588,28 +561,25 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/SystemY.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_SystemY_GR())
-        return self._get_complex128_gr_array()
+        return self._lib.Circuit_Get_SystemY_GR()
 
     @property
-    def TotalPower(self) -> Float64ArrayOrSimpleComplex:
+    def TotalPower(self) -> Complex:
         '''
         Total power (complex), kVA delivered to the circuit
 
         Original COM help: https://opendss.epri.com/TotalPower.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_TotalPower_GR())
-        return self._get_complex128_gr_simple()
+        return self._lib.Circuit_Get_TotalPower_GR()
 
     @property
-    def YCurrents(self) -> Float64ArrayOrComplexArray:
+    def YCurrents(self) -> ComplexArray:
         '''
         Array of doubles containing complex injection currents for the present solution. It is the "I" vector of I=YV
 
         Original COM help: https://opendss.epri.com/YCurrents.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_YCurrents_GR())
-        return self._get_complex128_gr_array()
+        return self._lib.Circuit_Get_YCurrents_GR()
 
     @property
     def YNodeOrder(self) -> List[str]:
@@ -618,19 +588,18 @@ class ICircuit(Base):
 
         Original COM help: https://opendss.epri.com/YNodeOrder.html
         '''
-        return self._check_for_error(self._get_string_array(self._lib.Circuit_Get_YNodeOrder))
+        return self._lib.Circuit_Get_YNodeOrder()
 
     @property
-    def YNodeVarray(self) -> Float64ArrayOrComplexArray:
+    def YNodeVarray(self) -> ComplexArray:
         '''
         Complex array of actual node voltages in same order as SystemY matrix.
 
         Original COM help: https://opendss.epri.com/YNodeVarray.html
         '''
-        self._check_for_error(self._lib.Circuit_Get_YNodeVarray_GR())
-        return self._get_complex128_gr_array()
+        return self._lib.Circuit_Get_YNodeVarray_GR()
 
-    def ElementLosses(self, Value: Int32Array) -> Float64ArrayOrComplexArray:
+    def ElementLosses(self, Value: Int32Array) -> ComplexArray:
         '''
         Array of total losses (complex) in a selection of elements.
         Use the element indices (starting at 1) as parameter.
@@ -638,8 +607,7 @@ class ICircuit(Base):
         **(API Extension)**
         '''
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
-        self._check_for_error(self._lib.Circuit_Get_ElementLosses_GR(ValuePtr, ValueCount))        
-        return self._get_complex128_gr_array()
+        return self._lib.Circuit_Get_ElementLosses_GR(ValuePtr, ValueCount)
 
     def ToJSON(self, options: DSSJSONFlags = 0) -> str:
         '''
@@ -653,7 +621,7 @@ class ICircuit(Base):
 
         **(API Extension)**
         '''
-        return self._get_string(self._check_for_error(self._lib.Circuit_ToJSON(options)))
+        return self._lib.Circuit_ToJSON(options)
 
     def FromJSON(self, data: Union[AnyStr, dict], options: DSSJSONFlags = 0):
         '''
@@ -675,9 +643,8 @@ class ICircuit(Base):
 
         self._lib.Circuit_FromJSON(data, options)
 
-        self._check_for_error()
 
-    def Save(self, dirOrFilePath: AnyStr, options: DSSSaveFlags) -> str:
+    def Save(self, dirOrFilePath: AnyStr, saveFlags: Union[DSSSaveFlags, List[DSSSaveFlags]]) -> str:
         '''
         Equivalent of the "save circuit" DSS command, but allows customization
         through the `saveFlags` argument, which is a set of bit flags. 
@@ -694,7 +661,7 @@ class ICircuit(Base):
         - `IsOpen`: Export commands to open terminals of elements.
         - `ToString`: to the result string. Requires "SingleFile" flag.
 
-        If `SingleFile` is enabled, the first argument (`dirOrFilePath`) is the file path,
+        If `SingleFile` is enabled, the path argument (`dirOrFilePath`) is the file path,
         otherwise it is the folder path. For string output, the argument is not used.
 
         **(API Extension)**
@@ -702,6 +669,39 @@ class ICircuit(Base):
         if not isinstance(dirOrFilePath, bytes):
             dirOrFilePath = dirOrFilePath.encode()
 
-        return self._check_for_error(self._get_string(self._lib.Circuit_Save(dirOrFilePath, options)))
+        if isinstance(saveFlags, (list, tuple)):
+            mask = 0
+            for v in saveFlags:
+                mask = mask | v
 
+            saveFlags = mask
+
+        return self._api_util.get_string(self._lib.Circuit_Save(dirOrFilePath, saveFlags))
+
+    def Flatten(self) -> None:
+        '''
+        Flatten the circuit
+
+        Flatten the circuit structures, removing any object of the following types:
+
+        - XfmrCode
+        - LineCode
+        - LineSpacing
+        - LineGeometry
+        - WireData
+        - CNData
+        - TSData
+
+        The general data from those objects is propagated to the referencing Line and Transformer objects,
+        and the properties on the latter are updated to remove any references to the removed objects.
+
+        This is useful for some converting the DSS circuit to another format, without requiring the user to handle all 
+        the types listed above. This, of course, results in some limitations since a lot of detail is removed. Numerically,
+        a normal snapshot or daily solution should be the same before and after the flatten operation.
+
+        Available only on AltDSS.
+
+        **(API Extension)**
+        '''
+        self._lib.Circuit_Flatten()
 

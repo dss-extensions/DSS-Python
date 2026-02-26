@@ -3,6 +3,44 @@
 Remember that changes in our alternative OpenDSS engine, currently known as DSS C-API, are always
 relevant. See [DSS C-API's repository](https://github.com/dss-extensions/dss_capi/) for more information.
 
+## 0.16.x
+
+### 0.16.0
+
+Released on 2024-12-1x.
+
+- See the extensive backend changes in the next subsection.
+- `UseExceptions` and `AdvancedTypes` now only affect the local bindings. That is, a second instance for the same or different DSS engine context can use different settings. This also decouples the option between DSS-Python and OpenDSSDirect.py. It should make it easier to mix and match our Python packages without having to worry too much about this settings.
+
+#### Backend changes and support for EPRI's distribution
+
+- DSS-Python-Backend now provides a custom backend which integrates directly with NumPy, called internally "FastDSS", besides the legacy CFFI backend. The CFFI backend is now lighter and faster to compile.
+    - Since the new FastDSS is tighly integrated with CPython and NumPy, we added the option to disable it using the environment variable `DSS_EXTENSIONS_FASTDSS`. Set it to 0 to disable the backend, using only the CFFI backend.
+    - As the name implies, FastDSS is fast, even compared to CFFI. If removes most of the overhead of running a few interpreted lines of Python code, interacting directly with the CPython C-API and the NumPy C-API. That is, we do not expect to change it a lot in the future.
+        - Reading numeric arrays and strings from the API with FastDSS gets a speed boost compared to the old backend.
+        - Note that the original CFFI backend was already faster for many functions vs. the alternatives.
+        - The performance of each function varies across all the engines now supported (AltDSS, OpenDSS, OpenDSS-C). AltDSS and its DSS C-API implementation have specific optimizations implemented throughout the years.
+    - For PyPy and other Python implementations, the CFFI backend is still preferred. We would like to experiment with a backend based on [HPy](https://hpyproject.org/) in the future, if time permits.
+
+- Although we do not expect users to explore this, the backend now allows loading external DSS C-API libraries in the new struct-style initialization.
+
+- DSS-Extensions, including DSS-Python and OpenDSSDirect.py, now have good support for EPRI's OpenDSS binaries, including the Delphi version (mainline) and the new OpenDSS-C. 
+    - The integration started in 2023, after EPRI's Direct DLL API was updated to migrate from Delphi variants, moving closer to our own DSS C-API in some aspects.
+    - Contributors from DSS-Extensions have collaborated with EPRI on the maintainance and general development of OpenDSS-C in 2024. A few extras from our AltDSS engine have been integrated into OpenDSS-C, still under testing by the time this document was updated.
+    - The integration is done by wrapping EPRI's binaries with a very thin layer that exposes it with the DSS-Extensions API. Our compatibility layer is called Oddie (originally for OpenDSSDirect.DLL Interface Extender). Functions that are not or cannot be implemented return errors.
+    - The Delphi version of EPRI's OpenDSS, in OpenDSSDirect.DLL, is copied from the https://github.com/dss-extensions/opendss-svn-mirror -- the OpenDSS versions tracked on Git tags.
+    - Initially, since EPRI does not distribute OpenDSS-C binaries yet, DSS-Extensions builds shared libraries/DLLs combining Oddie and OpenDSS-C. With the new-style initialization, Oddie adds a single function to the public API.
+    - Users can build their own binaries for OpenDSS-C (or the Delphi OpenDSS) and use that through the Oddie interface. That is, if a new OpenDSS version is released, users can install EPRI's distribution and load the binaries installed with that. Breaking API/ABI changes may crash though.
+    **DSS-Extensions will not patch the official EPRI's OpenDSS(-C) beyond build scripts.** That is, if a bug is not in our code, we cannot fix it on EPRI's distribution. We can adjust things in our engine, AltDSS (the main code in DSS C-API's repository).
+    - On Windows, users will have three alternatives of engine: AltDSS, EPRI's mainline OpenDSS written in Delphi, and EPRI's new OpenDSS-C written in C++.
+
+- We are open to suggestions on if and how to adjust DSS-Python and OpenDSSDirect.py to better signal that certain functions and objects are not available with EPRI's engine and vice-versa.
+
+To clear any potential confusion, our custom engine and API will continue to be developed since it has extra features and we are free to experiment and improve it without requiring external approval.
+
+When using DSS-Extensions or OpenDSS in general, please try to cite the engine version. It will make it much easier to reproduce your work.
+
+
 ## 0.15.x
 
 ### 0.15.6
@@ -47,7 +85,7 @@ Released on 2024-02-12.
 
 Released on 2024-02-09.
 
-- Upgrade the backend to [**AltDSS/DSS C-API 0.14.0**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.0). **A lot** of changes there, please check the changelog. Includes many small bugfixes, improvements, and ports of a few changes from the official OpenDSS codebase, matching OpenDSS v9.8.0.1.
+- Upgrade the backend to [**AltDSS/DSS C-API 0.14.0**](https://github.com/dss-extensions/dss_capi/releases/tag/0.14.0). **A lot** of changes there, please check the changelog. Includes many small bugfixes, improvements, and ports of a few changes from EPRI's OpenDSS codebase, matching OpenDSS v9.8.0.1.
 
 - Enums:
     - Move to DSS-Python-Backend to allow easier sharing among all Python packages from DSS-Extensions.
@@ -134,7 +172,7 @@ Released on 2023-03-28.
 - Engine updated to [**DSS C-API 0.13.0**](https://github.com/dss-extensions/dss_capi/releases/tag/0.13.0), which is very compatible with OpenDSS 9.6.1.1 (plus some official SVN commits up to rev 3595, plus our own changes.
 - **New test suite,** which runs many more files and validates more of the API. We now use `pytest` for some more complex tests, while the numeric validation is done with the new `compare_outputs.py`.
 - **New `DSS.AdvancedTypes`:** toggle matrix shapes and complex numbers in many of the properties and functions of the API. This is disabled by default.
-- **New `DSS.CompatFlags`:** to address some concerns about compatibility, we added a few toggles to toggle behavior that matches the official OpenDSS more closely. This flags will be refined in later releases.
+- **New `DSS.CompatFlags`:** to address some concerns about compatibility, we added a few toggles to toggle behavior that matches EPRI's OpenDSS more closely. This flags will be refined in later releases.
 - Drop deprecated IR classes and a few undocumented functions.
 - Use **more enums** throughout the code, which helps both readability and documentation. Some enums were complemented.
 - **`DSS.AdvancedTypes`** toggle: enabling `AdvancedTypes` allows using **array/matrix shapes and complex numbers** as results from properties/functions in the API.
@@ -155,25 +193,25 @@ Released on 2023-03-28.
 
 - Clean-up several files to ease the transition from Pascal to C++; more enum usage, remove redundant internal properties, rename some class members, etc. Some final steps still remain (that work is done in private branches).
 - Fixes a couple of minor memory leaks.
-- Removed our old *Legacy Models* mechanism. Right now, the API functions still exist, but will have no effect when setting and will throw an error. For a future version, the functions will be removed. This toggle was introduced in 2020, some time after the removal of the legacy models in the official OpenDSS. We believe users had enough time to fully migrate and the extra maintenance burden is not justified anymore.
+- Removed our old *Legacy Models* mechanism. Right now, the API functions still exist, but will have no effect when setting and will throw an error. For a future version, the functions will be removed. This toggle was introduced in 2020, some time after the removal of the legacy models in EPRI's OpenDSS. We believe users had enough time to fully migrate and the extra maintenance burden is not justified anymore.
 - Transition some deprecated and buggy properties to throw specific errors, instead of generic messages. Issue: https://github.com/dss-extensions/dss_capi/issues/118
 - `Export` command: When the user provides a filename, use it as-is, otherwise could be an invalid path in case-sensitive file systems (e.g. Linux, most likely).
 - `Dump` and `Save` commands: in some cases, our internal "hybrid enums" were not being converted correctly for dumps. A few classes had incomplete dump implementations since v0.12.0; some strings needed to be escaped for correct output.
 - CtrlQueue: adjust string formatting of items; although this doesn't affect the numeric results, the strings from the queue had some truncated numbers.
 - Property system: For compatibility with the official version, allow autoresizing some arrays when given conflicting number of elements through the text interface or scripts.
-- `Like` property: Although not recommended and [deprecated in the official OpenDSS](https://sourceforge.net/p/electricdss/discussion/861977/thread/8b59d21eb6/?limit=25#b57c/f668), the sequence of properties filled in the original copy is also copied. If you use `Like`, remember to check if the copy actually worked since some classes are known to not copy every property correctly.
+- `Like` property: Although not recommended and [deprecated in EPRI's OpenDSS](https://sourceforge.net/p/electricdss/discussion/861977/thread/8b59d21eb6/?limit=25#b57c/f668), the sequence of properties filled in the original copy is also copied. If you use `Like`, remember to check if the copy actually worked since some classes are known to not copy every property correctly.
 - Plotting and UI: The engine side plotting callback system is now complete. There are fixes for `DaisyPlot` and `GeneralDataPlot`, especially multi-platform handling. Changed how some properties are exposed in the JSON interchange to the callbacks. Implement argument handling and callback dispatch for `DI_Plot`, `CompareCases` and `YearlyCurves`.
 - `New` commands: Fix potential issue with null pointers and duplicate names when `DuplicatesAllowed=False`.
 - EnergyMeter: Fix error message when the metered element is not a PDElement.
 - CIMXML export: Fix issues present since v0.12.0; reported in https://github.com/dss-extensions/OpenDSSDirect.py/issues/121
 - Parser: properly error out when given excessive number of elements for matrices; implemented due to the report in https://github.com/dss-extensions/OpenDSSDirect.py/issues/122
-- Port most changes from the official OpenDSS up to SVN revision 3595 (OpenDSS v9.6.1.1 + a couple of CIMXML updates); check [OpenDSS v9.6.1.1 README.txt](https://sourceforge.net/p/electricdss/code/3595/tree/trunk/Version8/README.txt) for some complementary info to the list below.
+- Port most changes from EPRI's OpenDSS up to SVN revision 3595 (OpenDSS v9.6.1.1 + a couple of CIMXML updates); check [OpenDSS v9.6.1.1 README.txt](https://sourceforge.net/p/electricdss/code/3595/tree/trunk/Version8/README.txt) for some complementary info to the list below.
     - Relay, UPFC, UPFCControl changes ported.
     - CIMXML exports: Various updates.
     - RegControl: More log and debug trace entries.
     - LoadMult: Set `SystemYChanged` when changing `LoadMult` **through a DSS script or DSS command** (doesn't affect `Solution_Set_LoadMult`)
     - Port PVSystem, Storage, InvControl, and StorageController changes, including the new grid-forming mode (GFM). For DSS-Extensions, we added a new class InvBasedPCE to avoid some redundancy and make things clearer.
-    - Port DynamicExp and related functionality. In our implementation, we also add a new class DynEqPCE to avoid some redundant code (could still be improved). the Generator and the new InvBasePCE derive from this new DynEqPCE. **Note**: the `DynamicEq` functionality from the upstream still seems incomplete and some things are not fully implemented or maybe buggy, so we only ported now to remove the burden of porting this down the line. If you find issues, feel free to report here on DSS-Extensions, but we recommended checking first with the official OpenDSS — if the issue is also found in the official version, prefer to report in the official OpenDSS forum first so everyone gets the fixes and our implementation doesn't diverge too much.
+    - Port DynamicExp and related functionality. In our implementation, we also add a new class DynEqPCE to avoid some redundant code (could still be improved). the Generator and the new InvBasePCE derive from this new DynEqPCE. **Note**: the `DynamicEq` functionality from the upstream still seems incomplete and some things are not fully implemented or maybe buggy, so we only ported now to remove the burden of porting this down the line. If you find issues, feel free to report here on DSS-Extensions, but we recommended checking first with EPRI's OpenDSS — if the issue is also found in the official version, prefer to report in EPRI's OpenDSS forum first so everyone gets the fixes and our implementation doesn't diverge too much.
     - CktElement/API: add a few new functions related to state variables.
     - Circuit, Line: port the `LongLineCorrection` flag now that it seems to be fixed upstream. Note that we didn't publish releases with the previous buggy version from the upstream OpenDSS (that applied the long-line correction for everything).
     - LineSpacing: port side-effect from upstream; changing `nconds` now reallocates and doesn't leak previously allocated memory. Not a common operation, so it's not very relevant.
@@ -191,9 +229,9 @@ Released on 2023-03-28.
     - `Bus_Get_ZSC012Matrix`: check for nulls
     - `Bus_Get_AllPCEatBus`, `Bus_Get_AllPDEatBus`: faster implementations
     - `Meters_Get_CountBranches`: reimplemented
-    - `Monitors_Get_dblHour`: For harmonics solution, return empty array. Previously, it was returning a large array instead of a single element (`[0]`) array. A small issue adjusted for compatibility with the official COM API results.
+    - `Monitors_Get_dblHour`: For harmonics solution, return empty array. Previously, it was returning a large array instead of a single element (`[0]`) array. A small issue adjusted for compatibility with EPRI's OpenDSS COM API results.
     - `Reactors_Set_Bus1`: Match the side-effects of the property API for two-terminal reactors. 
-    - New `DSS_Set_CompatFlags`/`DSS_Get_CompatFlags` function pair: introduced to address some current and potential future concerns about compatibility of results with the official OpenDSS. See the API docs for more info.
+    - New `DSS_Set_CompatFlags`/`DSS_Get_CompatFlags` function pair: introduced to address some current and potential future concerns about compatibility of results with EPRI's OpenDSS. See the API docs for more info.
     - New `DSS_Set_EnableArrayDimensions`/`DSS_Get_EnableArrayDimensions`: for Array results in the API, implement optional matrix sizes; when setting `DSS_Set_EnableArrayDimensions(true)`, the array size pointer will be filled with two extra elements to represent the matrix size (if the data is a matrix instead of a plain vector). For complex number, the dimensions are filled in relation to complex elements instead of double/float64 elements even though we currently reuse the double/float64 array interface. Issue: https://github.com/dss-extensions/dss_capi/issues/113
 
 Note that a couple of SVN changes were ignored on purpose since they introduced potential issues, while many other changes and bug-fixes did not affect the DSS C-API version since our implementation is quite different in some places.
@@ -219,12 +257,12 @@ Released on 2022-07-14.
 - New `ToJSON` functions to dump object properties (power flow state is not included at the moment)
 - Initial implementation of the new `DSS.Obj` API for direct DSS object and uniform batch manipulation, covering all DSS classes implemented in DSS C-API. The shape of this API may change for the next releases. At the moment it is intended for advanced users. For example, if you get an object handle from the engine and load a new circuit, the handle is invalid and you should not access it anymore (otherwise, crashes are expected).
 - Initial (work-in-progress) implementation of plotting functions. This will also be finished and polished in following releases.
-- Due to some changes ported from the official OpenDSS since 0.10.7, some results may change, especially for circuits that used miles as length units. The same is observed across the official OpenDSS releases.
+- Due to some changes ported from EPRI's OpenDSS since 0.10.7, some results may change, especially for circuits that used miles as length units. The same is observed across EPRI's OpenDSS releases.
 
 
 #### DSS C-API 0.12.0 changes
 
-**Includes porting of most official OpenDSS features up to revision 3460.** Check the OpenDSS SVN commits for details.
+**Includes porting of most features from EPRI's OpenDSS up to revision 3460.** Check the OpenDSS SVN commits for details.
 
 Since version 0.11 accumulated too many changes for too long (nearly 2 years), making it hard to keep two parallel but increasingly distinct codebases, version 0.12 is a stepping stone to the next big version (planned as 0.13) that will contain all of the 0.11 changes. As such, only some of the 0.11 features are included. The previous 0.10.8 changes are also included here.
 
@@ -239,13 +277,13 @@ This version still maintains basic compatibility with the 0.10.x series of relea
 - Experimental callbacks for plotting and message output. Expect initial support in Python soon after DSS C-API v0.12 is released.
 - Introduce `AllowChangeDir` mechanism: defaults to enabled state for backwards compatibility. When disabled, the engine will not change the current working directory in any situation. This is exposed through a new pair of functions `DSS_Set_AllowChangeDir` and `DSS_Get_AllowChangeDir`, besides the environment variable `DSS_CAPI_ALLOW_CHANGE_DIR`.
 - New setting to toggle `DOScmd` command. Can be controlled through the environment variable `DSS_CAPI_ALLOW_DOSCMD` or functions `DSS_Get_AllowDOScmd`/`DSS_Set_AllowDOScmd`.
-- Use `OutputDirectory` more. `OutputDirectory` is set to the current `DataPath` if `DataPath` is writable. If not, it's set to a general location (`%LOCALAPPDATA%/dss-extensions` and `/tmp/dss-extensions` since this release). This should make life easier for a user running files from a read-only location. Note that this is only an issue when running a `compile` command. If the user only uses `redirect` commands, the `DataPath` and `OutputDirectory` are left empty, meaning the files are written to the current working directory (CWD), which the user can control through the programming language driving DSS C-API. Note that the official OpenDSS COM behavior is different, since it loads the `DataPath` saved in the registry and modifies the CWD accordingly when OpenDSS is initialized.
+- Use `OutputDirectory` more. `OutputDirectory` is set to the current `DataPath` if `DataPath` is writable. If not, it's set to a general location (`%LOCALAPPDATA%/dss-extensions` and `/tmp/dss-extensions` since this release). This should make life easier for a user running files from a read-only location. Note that this is only an issue when running a `compile` command. If the user only uses `redirect` commands, the `DataPath` and `OutputDirectory` are left empty, meaning the files are written to the current working directory (CWD), which the user can control through the programming language driving DSS C-API. Note that EPRI's OpenDSS COM behavior is different, since it loads the `DataPath` saved in the registry and modifies the CWD accordingly when OpenDSS is initialized.
 - File IO rewritten to drop deprecated Pascal functions and features. This removes some limitations related to long paths due to the legacy implementation being limited to 255 chars.
 - Reworked `TPowerTerminal` to achieve better memory layout. This makes simulations running `LoadsTerminalCheck=false` and `LoadsTerminalCheck=true` closer in performance, yet disabling the check is still faster.
 - Use `TFPHashList` where possible (replacing the custom, original THashList implementation from OpenDSS).
 - New LoadShape functions and internals: 
 
-    - Port memory-mapped files from the official OpenDSS, used when `MemoryMapping=Yes` from a DSS script while creating a LoadShape object.
+    - Port memory-mapped files from EPRI's OpenDSS, used when `MemoryMapping=Yes` from a DSS script while creating a LoadShape object.
     - Release the `LoadShape_Set_Points` function, which can be used for faster LoadShape input, memory-mapping externally, shared memory, chunked input, etc.
 
 - Some new functions: 
@@ -253,11 +291,11 @@ This version still maintains basic compatibility with the 0.10.x series of relea
     - `Circuit_Get_ElementLosses`
     - `CktElement_Get_NodeRef`
 
-- `DSS_Get_COMErrorResults`/`DSS_Set_COMErrorResults`: New compatibility setting for error/empty result. If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the official OpenDSS COM interface. 
+- `DSS_Get_COMErrorResults`/`DSS_Set_COMErrorResults`: New compatibility setting for error/empty result. If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with EPRI's OpenDSS COM interface. 
     
     For example, consider the function Loads_Get_ZIPV. If there is no active circuit or active load element:
     - In the disabled state (COMErrorResults=False), the function will return "[]", an array with 0 elements.
-    - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should be compatible with the return value of the official COM interface.
+    - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should be compatible with the return value of EPRI's OpenDSS COM interface.
     
     Defaults to True/1 (enabled state) in the v0.12.x series. This will change to false in future series.
     
@@ -265,7 +303,7 @@ This version still maintains basic compatibility with the 0.10.x series of relea
     the legacy/COM behavior. The value can be toggled through the API at any time.
 
 - Drop function aliases: previously deprecated function aliases (`LoadShapes_Set_Sinterval` and `LoadShapes_Get_sInterval`) were removed to simplify the build process. Use `LoadShapes_Set_SInterval` and `LoadShapes_Get_SInterval` instead.
-- Monitor headers: From the official OpenDSS, since May 2021, the monitor binary stream doesn't include the header anymore. When porting the change to DSS-Extensions, we took the opportunity to rewrite the related code, simplifying it. As such, the implementation in DSS-Extensions deviates from the official one. Extra blank chars are not included, and fields should be more consistent. As a recommendation, if your code needs to be compatible with both implementations, trimming the fields should be enough.
+- Monitor headers: From EPRI's OpenDSS, since May 2021, the monitor binary stream doesn't include the header anymore. When porting the change to DSS-Extensions, we took the opportunity to rewrite the related code, simplifying it. As such, the implementation in DSS-Extensions deviates from the official one. Extra blank chars are not included, and fields should be more consistent. As a recommendation, if your code needs to be compatible with both implementations, trimming the fields should be enough.
 - Error messages: most messages are now more specific and, if running a DSS script from files, include the file names and line numbers.
 - Spectrum: To reduce overhead during object edits, now required to exist before the object that uses it. This is consistent with most of the other types in OpenDSS.
 - New object and batch APIs for direct manipulation of DSS objects and batches of objects
@@ -287,7 +325,7 @@ Released on 2020-12-29.
 - Maintenance release. 
 - Updated to DSS C-API 0.10.7, which includes most changes up to OpenDSS v9.1.3.4.
 - Includes an important bug fix related to the `CapRadius` DSS property. If your DSS scripts included the pattern `GMRac=... rad=...` or `GMRac=... diam=...` (in this order and without specifying `CapRadius`), you should upgrade and re-evaluate the results. 
-- New API properties ported from the official COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, `CktElement.TotalPowers`, `Meters.ZonePCE`
+- New API properties ported from EPRI's OpenDSS COM interface: `Bus.AllPCEatBus`, `Bus.AllPDEatBus`, `CktElement.TotalPowers`, `Meters.ZonePCE`
 
 DSS C-API 0.10.7 changes:
 
@@ -295,8 +333,8 @@ DSS C-API 0.10.7 changes:
 - Includes an important bug fix related to the `CapRadius` DSS property. If your DSS scripts included the pattern `GMRac=... rad=...` or `GMRac=... diam=...` (in this order and without specifying `CapRadius`), you should upgrade and re-evaluate the results. 
 - This version should be fully API compatible with 0.10.3+.
 - A reference document listing the DSS commands and properties for all DSS elements is now available at https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/dss_properties.md
-- New functions API ported from the official OpenDSS include: `Bus_Get_AllPCEatBus`, `Bus_Get_AllPDEatBus`, `CktElement_Get_TotalPowers`, `Meters_Get_ZonePCE`.
-- The changes ported from the official OpenDSS include the following (check the repository for more details):
+- New functions API ported from EPRI's OpenDSS include: `Bus_Get_AllPCEatBus`, `Bus_Get_AllPDEatBus`, `CktElement_Get_TotalPowers`, `Meters_Get_ZonePCE`.
+- The changes ported from EPRI's OpenDSS include the following (check the repository for more details):
     - "Adds LineType property to LineCode and LineGeometry objects."
     - "Correcting bug found in storage device when operating in idling mode. It was preventing the solution of other test feeders (IEEE 9500)"
     - "Enabling fuel option for generator, fixing bug found in TotalPower command."
@@ -320,15 +358,15 @@ Released on 2020-08-01.
 DSS C-API 0.10.6 changes:
 
 - This version should be fully API compatible with 0.10.3+. The behavior of some functions changed with the new extensions. Especially, empty strings are explicitly return as nulls instead of "\0". This conforms to the behavior already seen in arrays of strings.
-- The binary releases now use Free Pascal 3.2.0. We observed the solution process is around 6% faster, and results are even closer to the official OpenDSS.
+- The binary releases now use Free Pascal 3.2.0. We observed the solution process is around 6% faster, and results are even closer to EPRI's OpenDSS.
 - The releases now include both the optimized/default binary and a non-optimized/debug version. See the [Debugging](https://github.com/dss-extensions/dss_capi/blob/0.10.x/docs/debug.md) document for more.
 - Extended API validation and **Extended Errors** mechanism: 
     - The whole API was reviewed to add basic checks for active circuit and element access. 
-    - By default, invalid accesses now result in errors reported through the Error interface. This can be disabled to achieve the previous behavior, more compatible with the official COM implementation — that is, ignore the error, just return a default/invalid value and assume the user has handled it.
+    - By default, invalid accesses now result in errors reported through the Error interface. This can be disabled to achieve the previous behavior, more compatible with EPRI's OpenDSS COM implementation — that is, ignore the error, just return a default/invalid value and assume the user has handled it.
     - The mechanism can be toggled by API functions `DSS_Set_ExtendedErrors` and `DSS_Get_ExtendedErrors`, or environment variable `DSS_CAPI_EXTENDED_ERRORS=0` to disable (defaults to enabled state).
 - New **Legacy Models** mechanism:
     - OpenDSS 9.0+ dropped the old `PVsystem`, `Storage`, `InvControl`, and `StorageController` models, replacing with the new versions previously known as `PVsystem2`, `Storage2`, `InvControl2` and `StorageController2`.
-    - The behavior and parameters from the new models are different — they are better, more complete and versatile models. Check the official OpenDSS docs and examples for further information. 
+    - The behavior and parameters from the new models are different — they are better, more complete and versatile models. Check EPRI's OpenDSS docs and examples for further information. 
     - The implementation of the new models in DSS C-API was validated successfully with all test cases available. As such, we mirror the decision to make them the default models.
     - As an extension, we implemented the Legacy Models option. By toggling it, a `clear` command will be issued and the alternative models will be loaded. This should allow users to migrate to the new version but, if something that used to work with the old models stopped working somehow, the user can toggle the old models. The idea is to keep reproducibility of results while we keep updating the engine and the API.
     - Since EPRI dropped/deprecated the old models, we might drop them too, in a future release. Please open an issue on GitHub or send a message if those old models are important to you.
@@ -340,7 +378,7 @@ DSS C-API 0.10.6 changes:
 - Some bugs found in DSS C-API and also reported upstream (already fixed in SVN):
     - `CapRadius` DSS property: if the radius was initialized using `GMRac`, `CapRadius` was left uninitialized, resulting in invalid/NaN values.
     - `Sensors` API: some functions edited capacitors instead of sensors.
-- Updated to the official OpenDSS revision 2903, corresponding to versions 9.0.0+. Changes include:
+- Updated to EPRI's OpenDSS revision 2903, corresponding to versions 9.0.0+. Changes include:
     - ExportCIMXML: updated.
     - Relay: Fix in `GetPropertyValue`.
     - Line: In `DumpProperties` and `MakePosSequence`, the length is handled differently for lines with `LineGeometry` or `LineSpacing`.
@@ -363,7 +401,7 @@ DSS C-API 0.10.5 changes:
 - Disable builds and distribution of v8-only variation — the extra/missing parallel-machine will be completely merged in a mixed (v7+v8) codebase in the coming months.
 - This version should be fully API compatible with 0.10.3+.
 - `Bus` and `CktElement` API functions reworked with some more checks.
-- Updated up to revision 2837 of the official OpenDSS code:
+- Updated up to revision 2837 of EPRI's OpenDSS code:
     - Ported changes from SVN (v7 and v8) into DSS C-API v7 variation (v8 was left untouched).
     - 4 new API level functions (`ActiveClass_Get_ActiveClassParent`, `PVSystems_Get_Pmpp`, `PVSystems_Set_Pmpp`, `PVSystems_Get_IrradianceNow`)
     - 4 new components: `PVsystem2`, `Storage2`, `InvControl2`, `StorageController2` — *added for early testing, no dedicated API functions yet*. At the moment, please consider them experimental features subject to change.
@@ -385,7 +423,7 @@ Released on 2019-11-16. This is a maintenance release.
 
 DSS C-API 0.10.4 changes include:
 
-- Updated up to revision 2761 of the official OpenDSS code. The changes affect at least the following components: CIMXML export, `Capacitor`, `InvControl`, `LineGeometry`, `PVsystem`, `StorageController`, `Storage`, `Vsource`, `VCCS`.
+- Updated up to revision 2761 of EPRI's OpenDSS code. The changes affect at least the following components: CIMXML export, `Capacitor`, `InvControl`, `LineGeometry`, `PVsystem`, `StorageController`, `Storage`, `Vsource`, `VCCS`.
 - This version should be fully compatible with 0.10.3.
 - Fixes issue with long paths on Linux, potentially other platforms too.
 
@@ -424,7 +462,7 @@ Released on 2019-02-28.
 
 Released on 2019-02-17.
 
-This is a minor DSS-Python release that contains lots of changes from DSS C-API. See also the [changes from DSS C-API](https://github.com/dss-extensions/dss_capi/blob/ed2a6b322a5e102ba61c6565e5e0eb23247b9221/docs/changelog.md#version-0101) for details, including changes from the official OpenDSS code since 0.10.0.
+This is a minor DSS-Python release that contains lots of changes from DSS C-API. See also the [changes from DSS C-API](https://github.com/dss-extensions/dss_capi/blob/ed2a6b322a5e102ba61c6565e5e0eb23247b9221/docs/changelog.md#version-0101) for details, including changes from EPRI's OpenDSS code since 0.10.0.
 
 DSS-Python has recently moved from https://github.com/PMeira/dss_python/ to the new https://dss-extensions.org/ and https://github.com/dss-extensions/dss_python/
 

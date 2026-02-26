@@ -1,9 +1,10 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
+from __future__ import annotations
 from ._cffi_api_util import Base
 from .IDSSProperty import IDSSProperty
-from typing import List
+from typing import List, Optional
 from .enums import DSSJSONFlags
 
 class IDSSElement(Base):
@@ -28,7 +29,7 @@ class IDSSElement(Base):
 
         Original COM help: https://opendss.epri.com/AllPropertyNames1.html
         '''
-        return self._check_for_error(self._get_string_array(self._lib.DSSElement_Get_AllPropertyNames))
+        return self._lib.DSSElement_Get_AllPropertyNames()
 
     @property
     def Name(self) -> str:
@@ -37,7 +38,7 @@ class IDSSElement(Base):
 
         Original COM help: https://opendss.epri.com/Name5.html
         '''
-        return self._get_string(self._check_for_error(self._lib.DSSElement_Get_Name()))
+        return self._lib.DSSElement_Get_Name()
 
     @property
     def NumProperties(self) -> int:
@@ -46,7 +47,7 @@ class IDSSElement(Base):
 
         Original COM help: https://opendss.epri.com/NumProperties1.html
         '''
-        return self._check_for_error(self._lib.DSSElement_Get_NumProperties())
+        return self._lib.DSSElement_Get_NumProperties()
 
     def ToJSON(self, options: DSSJSONFlags = 0) -> str:
         '''
@@ -57,4 +58,18 @@ class IDSSElement(Base):
 
         **(API Extension)**
         '''
-        return self._get_string(self._check_for_error(self._lib.DSSElement_ToJSON(options)))
+        return self._lib.DSSElement_ToJSON(options)
+
+
+    def to_altdss(self) -> Optional[DSSObject]:
+        '''
+        Returns a Python object for the current active DSS object in this interface.
+
+        Requires AltDSS-Python.
+
+        *Available only for the AltDSS engine.*
+
+        **(API Extension)**
+        '''
+        ptr = self._api_util._lib.DSSElement_Get_Pointer()
+        return self._api_util.get_dss_obj(ptr)

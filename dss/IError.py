@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Base
 
 class IError(Base):
@@ -19,7 +19,7 @@ class IError(Base):
 
         Original COM help: https://opendss.epri.com/Description1.html
         '''
-        return self._get_string(self._lib.Error_Get_Description())
+        return self._lib.Error_Get_Description()
 
     @property
     def Number(self) -> int:
@@ -37,7 +37,7 @@ class IError(Base):
         
         **(API Extension)**
         '''
-        return self._lib.Error_Get_EarlyAbort() != 0
+        return self._lib.Error_Get_EarlyAbort()
         
     @EarlyAbort.setter
     def EarlyAbort(self, Value: bool):
@@ -50,7 +50,7 @@ class IError(Base):
         
         Extended errors are errors derived from checks across the API to ensure
         a valid state. Although many of these checks are already present in the 
-        original/official COM interface, the checks do not produce any error 
+        original/EPRI's COM interface, the checks do not produce any error 
         message. An error value can be returned by a function but this value
         can, for many of the functions, be a valid value. As such, the user
         has no means to detect an invalid API call. 
@@ -66,7 +66,7 @@ class IError(Base):
         
         **(API Extension)**
         '''
-        return self._lib.Error_Get_ExtendedErrors() != 0
+        return self._lib.Error_Get_ExtendedErrors()
         
     @ExtendedErrors.setter
     def ExtendedErrors(self, Value: bool):
@@ -77,23 +77,28 @@ class IError(Base):
         """
         Controls whether the automatic error checking mechanism is enable, i.e., if
         the DSS engine errors (from the `Error` interface) are mapped exception when
-        detected. 
-        
+        detected.
+
         **When disabled, the user takes responsibility for checking for errors.**
         This can be done through the `Error` interface. When `Error.Number` is not
         zero, there should be an error message in `Error.Description`. This is compatible
-        with the behavior on the official OpenDSS (Windows-only COM implementation) when 
+        with the behavior on EPRI's OpenDSS (Windows-only COM implementation) when
         `AllowForms` is disabled.
 
         Users can also use the DSS command `Export ErrorLog` to inspect for errors.
 
-        **WARNING:** This is a global setting, affects all DSS instances from DSS-Python,
-        OpenDSSDirect.py and AltDSS.
+        With EPRI's OpenDSS engines, in contrast to our main AltDSS engine, users are 
+        also required to set `AllowForms` to `False`, otherwise the engine does not
+        populate the Error.Number API and the error is consumed by the popup form or
+        terminal message.
+
+        **NOTE:** this used to be a global settings. Since DSS-Python v0.16.0,
+        it only affects the target instance.
 
         **(API Extension)**
         """
-        return Base._use_exceptions
-    
+        return self._lib.using_exceptions
+
     @UseExceptions.setter
     def UseExceptions(self, value: bool):
-        Base._enable_exceptions(value)
+        self._lib.using_exceptions = value

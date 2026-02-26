@@ -1,12 +1,26 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from __future__ import annotations
 from ._cffi_api_util import Base
 from typing import List, AnyStr, Iterator
-from ._types import Float64Array, Int32Array, Float64ArrayOrComplexArray
+from ._types import Float64Array, Int32Array, ComplexArray
 
 class IPDElements(Base):
+    '''
+    The PDElements interface allows accessing some common properties and 
+    methods shared across power delivery elements in the DSS engine.
+
+    Users can iterate on all PD elements directly through this interface, 
+    or enable a PD element through a dedicated interface (e.g. use `Lines.Name`, `Transformers.First/Next`)
+    and access the properties here.
+
+    If you are new to OpenDSS/AltDSS and this classic interface, please read the following document
+    for an overview of the "active element" paradigm used by COM and the classic APIs:
+        
+    https://dss-extensions.org/classic_api.html#the-active-paradigm
+    '''
+
     __slots__ = []
 
     _columns = [
@@ -34,7 +48,7 @@ class IPDElements(Base):
 
         Original COM help: https://opendss.epri.com/AccumulatedL.html
         '''
-        return self._check_for_error(self._lib.PDElements_Get_AccumulatedL())
+        return self._lib.PDElements_Get_AccumulatedL()
 
     @property
     def Count(self) -> int:
@@ -43,10 +57,10 @@ class IPDElements(Base):
 
         Original COM help: https://opendss.epri.com/Count12.html
         '''
-        return self._check_for_error(self._lib.PDElements_Get_Count())
+        return self._lib.PDElements_Get_Count()
 
     def __len__(self) -> int:
-        return self._check_for_error(self._lib.PDElements_Get_Count())
+        return self._lib.PDElements_Get_Count()
 
     @property
     def FaultRate(self) -> float:
@@ -54,11 +68,11 @@ class IPDElements(Base):
         Get/Set Number of failures per year. 
         For LINE elements: Number of failures per unit length per year.
         '''
-        return self._check_for_error(self._lib.PDElements_Get_FaultRate())
+        return self._lib.PDElements_Get_FaultRate()
 
     @FaultRate.setter
     def FaultRate(self, Value: float):
-        self._check_for_error(self._lib.PDElements_Set_FaultRate(Value))
+        self._lib.PDElements_Set_FaultRate(Value)
 
     @property
     def First(self) -> int:
@@ -66,7 +80,7 @@ class IPDElements(Base):
         (read-only) Set the first enabled PD element to be the active element.
         Returns 0 if none found.
         '''
-        return self._check_for_error(self._lib.PDElements_Get_First())
+        return self._lib.PDElements_Get_First()
 
     @property
     def FromTerminal(self) -> int:
@@ -76,7 +90,7 @@ class IPDElements(Base):
 
         *Requires an energy meter with an updated zone.*
         '''
-        return self._check_for_error(self._lib.PDElements_Get_FromTerminal())
+        return self._lib.PDElements_Get_FromTerminal()
 
     @property
     def IsShunt(self) -> bool:
@@ -85,7 +99,7 @@ class IPDElements(Base):
         element rather than a series element. Applies to Capacitor and Reactor 
         elements in particular.
         '''
-        return self._check_for_error(self._lib.PDElements_Get_IsShunt()) != 0
+        return self._lib.PDElements_Get_IsShunt()
 
     @property
     def Lambda(self) -> float:
@@ -96,7 +110,7 @@ class IPDElements(Base):
 
         Original COM help: https://opendss.epri.com/Lambda1.html
         '''
-        return self._check_for_error(self._lib.PDElements_Get_Lambda())
+        return self._lib.PDElements_Get_Lambda()
 
     @property
     def Name(self) -> str:
@@ -104,14 +118,11 @@ class IPDElements(Base):
         Get/Set name of active PD Element. Returns null string if active element 
         is not PDElement type.
         '''
-        return self._get_string(self._check_for_error(self._lib.PDElements_Get_Name()))
+        return self._lib.PDElements_Get_Name()
 
     @Name.setter
     def Name(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.PDElements_Set_Name(Value))
+        self._lib.PDElements_Set_Name(Value)
 
     @property
     def Next(self) -> int:
@@ -119,7 +130,7 @@ class IPDElements(Base):
         (read-only) Advance to the next PD element in the circuit. Enabled elements 
         only. Returns 0 when no more elements.
         '''
-        return self._check_for_error(self._lib.PDElements_Get_Next())
+        return self._lib.PDElements_Get_Next()
 
     @property
     def Numcustomers(self) -> int:
@@ -130,7 +141,7 @@ class IPDElements(Base):
 
         Original COM help: https://opendss.epri.com/Numcustomers.html
         '''
-        return self._check_for_error(self._lib.PDElements_Get_Numcustomers())
+        return self._lib.PDElements_Get_Numcustomers()
 
     @property
     def ParentPDElement(self) -> int:
@@ -140,7 +151,7 @@ class IPDElements(Base):
 
         *Requires an energy meter with an updated zone.*
         '''
-        return self._check_for_error(self._lib.PDElements_Get_ParentPDElement())
+        return self._lib.PDElements_Get_ParentPDElement()
 
     @property
     def RepairTime(self) -> float:
@@ -149,11 +160,11 @@ class IPDElements(Base):
 
         Original COM help: https://opendss.epri.com/RepairTime.html
         '''
-        return self._check_for_error(self._lib.PDElements_Get_RepairTime())
+        return self._lib.PDElements_Get_RepairTime()
 
     @RepairTime.setter
     def RepairTime(self, Value: float):
-        self._check_for_error(self._lib.PDElements_Set_RepairTime(Value))
+        self._lib.PDElements_Set_RepairTime(Value)
 
     @property
     def SectionID(self) -> int:
@@ -164,7 +175,7 @@ class IPDElements(Base):
 
         Original COM help: https://opendss.epri.com/SectionID1.html
         '''
-        return self._check_for_error(self._lib.PDElements_Get_SectionID())
+        return self._lib.PDElements_Get_SectionID()
 
     @property
     def TotalMiles(self) -> float:
@@ -175,7 +186,7 @@ class IPDElements(Base):
 
         Original COM help: https://opendss.epri.com/TotalMiles1.html
         '''
-        return self._check_for_error(self._lib.PDElements_Get_TotalMiles())
+        return self._lib.PDElements_Get_TotalMiles()
 
     @property
     def Totalcustomers(self) -> int:
@@ -186,7 +197,7 @@ class IPDElements(Base):
 
         Original COM help: https://opendss.epri.com/TotalCustomers1.html
         '''
-        return self._check_for_error(self._lib.PDElements_Get_Totalcustomers())
+        return self._lib.PDElements_Get_Totalcustomers()
 
     @property
     def pctPermanent(self) -> float:
@@ -195,11 +206,11 @@ class IPDElements(Base):
 
         Original COM help: https://opendss.epri.com/pctPermanent.html
         '''
-        return self._check_for_error(self._lib.PDElements_Get_pctPermanent())
+        return self._lib.PDElements_Get_pctPermanent()
 
     @pctPermanent.setter
     def pctPermanent(self, Value: float):
-        self._check_for_error(self._lib.PDElements_Set_pctPermanent(Value))
+        self._lib.PDElements_Set_pctPermanent(Value)
 
     def __iter__(self) -> Iterator[IPDElements]:
         idx = self.First
@@ -214,7 +225,7 @@ class IPDElements(Base):
         
         **(API Extension)**
         '''
-        return self._check_for_error(self._get_string_array(self._lib.PDElements_Get_AllNames))
+        return self._lib.PDElements_Get_AllNames()
 
     def AllMaxCurrents(self, AllNodes: bool = False) -> Float64Array:
         '''
@@ -230,8 +241,7 @@ class IPDElements(Base):
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllMaxCurrents_GR(AllNodes))
-        return self._get_float64_gr_array()
+        return self._lib.PDElements_Get_AllMaxCurrents_GR(AllNodes)
 
     def AllPctNorm(self, AllNodes: bool = False) -> Float64Array:
         '''
@@ -247,9 +257,8 @@ class IPDElements(Base):
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllPctNorm_GR(AllNodes))
-        return self._get_float64_gr_array()
-
+        return self._lib.PDElements_Get_AllPctNorm_GR(AllNodes)
+        
     def AllPctEmerg(self, AllNodes: bool = False) -> Float64Array:
         '''
         Array of doubles with the maximum current across the conductors as a percentage
@@ -264,18 +273,16 @@ class IPDElements(Base):
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllPctEmerg_GR(AllNodes))
-        return self._get_float64_gr_array()
+        return self._lib.PDElements_Get_AllPctEmerg_GR(AllNodes)
 
     @property
-    def AllCurrents(self) -> Float64ArrayOrComplexArray:
+    def AllCurrents(self) -> ComplexArray:
         '''
         Complex array of currents for all conductors, all terminals, for each PD element.
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllCurrents_GR())
-        return self._get_complex128_gr_array()
+        return self._lib.PDElements_Get_AllCurrents_GR()
 
     @property
     def AllCurrentsMagAng(self) -> Float64Array:
@@ -284,18 +291,16 @@ class IPDElements(Base):
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllCurrentsMagAng_GR())
-        return self._get_float64_gr_array()
+        return self._lib.PDElements_Get_AllCurrentsMagAng_GR()
 
     @property
-    def AllCplxSeqCurrents(self) -> Float64ArrayOrComplexArray:
+    def AllCplxSeqCurrents(self) -> ComplexArray:
         '''
         Complex double array of Sequence Currents for all conductors of all terminals, for each PD elements.
 
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllCplxSeqCurrents_GR())
-        return self._get_complex128_gr_array()
+        return self._lib.PDElements_Get_AllCplxSeqCurrents_GR()
 
     @property
     def AllSeqCurrents(self) -> Float64Array:
@@ -304,28 +309,25 @@ class IPDElements(Base):
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllSeqCurrents_GR())
-        return self._get_float64_gr_array()
+        return self._lib.PDElements_Get_AllSeqCurrents_GR()
 
     @property
-    def AllPowers(self) -> Float64ArrayOrComplexArray:
+    def AllPowers(self) -> ComplexArray:
         '''
         Complex array of powers into each conductor of each terminal, for each PD element.
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllPowers_GR())
-        return self._get_complex128_gr_array()
+        return self._lib.PDElements_Get_AllPowers_GR()
 
     @property
-    def AllSeqPowers(self) -> Float64ArrayOrComplexArray:
+    def AllSeqPowers(self) -> ComplexArray:
         '''
         Complex array of sequence powers into each 3-phase terminal, for each PD element
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllSeqPowers_GR())
-        return self._get_complex128_gr_array()
+        return self._lib.PDElements_Get_AllSeqPowers_GR()
 
     @property
     def AllNumPhases(self) -> Int32Array:
@@ -334,8 +336,7 @@ class IPDElements(Base):
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllNumPhases_GR())
-        return self._get_int32_gr_array()
+        return self._lib.PDElements_Get_AllNumPhases_GR()
 
     @property
     def AllNumConductors(self) -> Int32Array:
@@ -344,9 +345,7 @@ class IPDElements(Base):
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllNumConductors_GR())
-        return self._get_int32_gr_array()
-
+        return self._lib.PDElements_Get_AllNumConductors_GR()
 
     @property
     def AllNumTerminals(self) -> Int32Array:
@@ -355,7 +354,6 @@ class IPDElements(Base):
         
         **(API Extension)**
         '''
-        self._check_for_error(self._lib.PDElements_Get_AllNumTerminals_GR())
-        return self._get_int32_gr_array()
+        return self._lib.PDElements_Get_AllNumTerminals_GR()
 
 

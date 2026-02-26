@@ -30,7 +30,7 @@ ENABLE_CSV = True
 ENABLE_JSON = True
 
 KNOWN_COM_DIFF = set([
-    # On official COM, uninitialized values for CalcCurrent, AllocFactors
+    # On EPRI's OpenDSS COM, uninitialized values for CalcCurrent, AllocFactors
     # Note that this could be a bug on the upstream version, but debugging without Delphi gets tricky
     *[('Version8/Distrib/Examples/DOCTechNote/1_2.dss.json', 'Meters', 'records', x, 'CalcCurrent') for x in range(77)],
     *[('Version8/Distrib/Examples/DOCTechNote/2_1.dss.json', 'Meters', 'records', x, 'CalcCurrent') for x in range(77)],
@@ -198,7 +198,7 @@ class ComparisonHandler:
                 continue
 
             # print(path)
-            va, vb = a.get(k), b.get(k, MISSING)
+            va, vb = a.get(k), (b or {}).get(k, MISSING)
 
             if vb is MISSING:
                 continue
@@ -236,6 +236,11 @@ class ComparisonHandler:
                 continue
 
             if isinstance(va, list):
+                if not isinstance(vb, list):
+                    if (path[-4], path[-1]) in (('Relays', 'State'), ('Relays', 'NormalState')):
+                        continue
+
+
                 if ((va == ['none'] or va == ['NONE']) and vb == []) or (va == [] and (vb == ['none'] or vb == ['NONE'])):
                     continue
 
@@ -293,12 +298,27 @@ class ComparisonHandler:
                     
                     continue
 
+                if isinstance(va[0], int):
+                    va = np.asarray(va)
+                    vb = np.asarray(vb)
+
+                    if len(vb) != len(va):
+                        self.printe('ERROR (int, vector, shapes):', path, f'a: {len(va)}, b: {len(vb)}')
+                        continue
+
+                    if not all(va == vb):
+                        self.printe('ERROR (int. vector):', path, f'a: {va}, b: {vb}')
+
+                    continue
+
+
+
                 if isinstance(va[0], float) or va[0] is None:
                     if None in va:
-                        va = [x if x is not None else np.NaN for x in va]
+                        va = [x if x is not None else np.nan for x in va]
 
                     if None in vb:
-                        vb = [x if x is not None else np.NaN for x in vb]
+                        vb = [x if x is not None else np.nan for x in vb]
 
                     atol = tol
                     rtol = tol
@@ -415,8 +435,8 @@ class ComparisonHandler:
                         print('Skipping, not converged in A:', fn)
                         continue
 
-                    self.A_IS_COM = 'C-API' not in dataA['DSS']['Version']
-                    self.B_IS_COM = 'C-API' not in dataB['DSS']['Version']
+                    self.A_IS_COM = 'C-API' not in dataA['DSS']['Version'].split('\n')[0]
+                    self.B_IS_COM = 'C-API' not in dataB['DSS']['Version'].split('\n')[0]
                     try:
                         self.compare(dataA, dataB, [fn])
                         if not self.per_file[fn]:
@@ -472,8 +492,10 @@ class ComparisonHandler:
                             df_a = pd.read_csv(sfA)
                         except pd.errors.EmptyDataError:
                             continue
-
-                        df_b = pd.read_csv(sfB)
+                        try:
+                            df_b = pd.read_csv(sfB)
+                        except pd.errors.EmptyDataError:
+                            continue
 
                         df_a.columns = [x.strip() for x in df_a.columns]
                         df_b.columns = [x.strip() for x in df_b.columns]

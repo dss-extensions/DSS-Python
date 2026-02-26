@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Base
 from typing import AnyStr
 
@@ -8,15 +8,27 @@ class IDSSProgress(Base):
     __slots__ = []
 
     def Close(self):
-        self._check_for_error(self._lib.DSSProgress_Close())
+        '''
+        Close progress form
+
+        Typically used with EPRI's OpenDSS, on Windows. Otherwise, it could be a no-op.
+        '''
+        self._lib.DSSProgress_Close()
 
     def Show(self):
-        self._check_for_error(self._lib.DSSProgress_Show())
+        '''
+        Show progress form
+
+        Typically used with EPRI's OpenDSS, on Windows. Otherwise, it could be a no-op.
+        '''
+        self._lib.DSSProgress_Show()
 
     @property
     def Caption(self) -> str:
         '''
-        (write-only) Caption to appear on the bottom of the DSS Progress form.
+        Set the caption to appear on the bottom of the DSS Progress form.
+
+        Typically used with EPRI's OpenDSS, on Windows. Otherwise, it could be a no-op.
 
         Original COM help: https://opendss.epri.com/Caption.html
         '''
@@ -24,15 +36,14 @@ class IDSSProgress(Base):
 
     @Caption.setter
     def Caption(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.DSSProgress_Set_Caption(Value))
+        self._lib.DSSProgress_Set_Caption(Value)
 
     @property
     def PctProgress(self) -> int:
         '''
-        (write-only) Percent progress to indicate [0..100]
+        Set the percent progress to indicate [0..100] on the progress form.
+
+        Typically used with EPRI's OpenDSS, on Windows. Otherwise, it could be a no-op.
 
         Original COM help: https://opendss.epri.com/PctProgress.html
         '''
@@ -40,6 +51,6 @@ class IDSSProgress(Base):
 
     @PctProgress.setter
     def PctProgress(self, Value: int):
-        self._check_for_error(self._lib.DSSProgress_Set_PctProgress(Value))
+        self._lib.DSSProgress_Set_PctProgress(Value)
 
 

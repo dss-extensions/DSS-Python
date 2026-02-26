@@ -1,11 +1,11 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from __future__ import annotations
 import warnings
 from weakref import WeakKeyDictionary
 from typing import Any, List, Union, AnyStr, TYPE_CHECKING
-from ._cffi_api_util import Base, CffiApiUtil, DSSException
+from ._cffi_api_util import Base, AltDSSAPIUtil, DSSException
 from .ICircuit import ICircuit
 from .IError import IError
 from .IText import IText
@@ -14,7 +14,7 @@ from .IActiveClass import IActiveClass
 from .IDSS_Executive import IDSS_Executive
 from .IDSSEvents import IDSSEvents
 from .IParser import IParser
-from .IDSSimComs import IDSSimComs
+from .ISettings import ISettings
 from .IYMatrix import IYMatrix
 from .IZIP import IZIP
 
@@ -22,19 +22,20 @@ if TYPE_CHECKING:
     try:
         from altdss import AltDSS
     except:
-        AltDSS = None
+        pass
 
     try:
         from opendssdirect.OpenDSSDirect import OpenDSSDirect
     except:
-        OpenDSSDirect = None
+        pass
 
 class IDSS(Base):
     '''
     Main OpenDSS interface. Organizes the subclasses trying to mimic the `OpenDSSengine.DSS` object
     as seen from `win32com.client` or `comtypes.client`.
 
-    This main class also includes some global settings. See more settings in `ActiveCircuit.Settings`.
+    This main class also includes some global settings. Most settings at being moved to the dediced 
+    `Settings` interface, exposed in the shortcut `Settings` of this object, or `ActiveCircuit.Settings`.
     '''
     __slots__ = [
         'ActiveCircuit',
@@ -46,11 +47,11 @@ class IDSS(Base):
         'Executive',
         'Events',
         'Parser',
-        'DSSim_Coms',
         'YMatrix',
         'ZIP',
         '_version',
         '_altdss',
+        '_plotter',
     ]
     
     _columns = [
@@ -75,12 +76,11 @@ class IDSS(Base):
     Executive: IDSS_Executive
     Events: IDSSEvents
     Parser: IParser
-    DSSim_Coms: IDSSimComs
     YMatrix: IYMatrix
     ZIP: IZIP
 
     @classmethod
-    def _get_instance(cls: IDSS, api_util: CffiApiUtil = None, ctx=None) -> IDSS:
+    def _get_instance(cls: IDSS, api_util: AltDSSAPIUtil = None, ctx=None) -> IDSS:
         '''
         If there is an existing instance for a DSSContext, returns it.
         Otherwise, tries to wrap the context into a new DSS-Python API instance.
@@ -88,7 +88,7 @@ class IDSS(Base):
         if api_util is None:
             # If none exists, something is probably wrong elsewhere,
             # so let's allow the IndexError to propagate
-            api_util = CffiApiUtil._ctx_to_util[ctx]
+            api_util = AltDSSAPIUtil._ctx_to_util[ctx]
 
         dss = cls._ctx_to_dss.get(api_util.ctx)
         if dss is None:
@@ -101,12 +101,19 @@ class IDSS(Base):
         Wrap a new DSS context with the DSS-Python API.
         This is not typically used directly. Refer to `IDSS.NewContext` or
         `IDSS._get_instance`.
+
+        For Oddie-wrapped libraries (EPRI's OpenDSS and OpenDSS-C), prefer the dedicated constructors and classes
+        (e.g. `IOddieDSS`, `EPRIOpenDSSC`, `EPRIOpenDSS`).
         '''
 
         if api_util.ctx not in IDSS._ctx_to_dss:
             IDSS._ctx_to_dss[api_util.ctx] = self
 
+        if api_util._dss_python is None:
+            api_util._dss_python = self
+
         self._version = None
+        self._plotter = None
 
         #: Provides access to the circuit attributes and objects in general.
         self.ActiveCircuit = ICircuit(api_util)
@@ -134,14 +141,10 @@ class IDSS(Base):
         self.Executive = IDSS_Executive(api_util)
         
         #: Kept for compatibility.
-        self.Events = IDSSEvents(api_util) if not api_util._is_odd else None
+        self.Events = IDSSEvents(api_util) if not api_util._is_oddie else None
         
         #: Kept for compatibility.
         self.Parser = IParser(api_util)
-        
-        #: Kept for compatibility. Apparently was used for DSSim-PC (now OpenDSS-G), a 
-        #: closed-source software developed by EPRI using LabView.
-        self.DSSim_Coms = IDSSimComs(api_util) if not api_util._is_odd else None
         
         #: The YMatrix interface provides advanced access to the internals of
         #: the DSS engine. The sparse admittance matrix of the system is also 
@@ -157,7 +160,7 @@ class IDSS(Base):
         #: and run scripts inside the ZIP, without creating extra files on disk.
         #: 
         #: **(API Extension)**
-        self.ZIP = IZIP(api_util) if not api_util._is_odd else None
+        self.ZIP = IZIP(api_util) if not api_util._is_oddie else None
 
         Base.__init__(self, api_util)    
 
@@ -189,8 +192,18 @@ class IDSS(Base):
         from opendssdirect.OpenDSSDirect import OpenDSSDirect
         return OpenDSSDirect._get_instance(ctx=self._api_util.ctx, api_util=self._api_util)
 
+    def is_oddie(self) -> bool:
+        """
+        Returns True if this instance is based on the Oddie compatibility layer for
+        EPRI's OpenDSS Direct API (a.k.a. DCSL).
+        
+        Note that the default engine in DSS-Python has been based on AltDSS since
+        2018, even though it was not called AltDSS then.
+        """
+        return self._api_util._is_oddie
+
     def ClearAll(self):
-        self._check_for_error(self._lib.DSS_ClearAll())
+        self._lib.DSS_ClearAll()
 
     def Reset(self):
         '''
@@ -198,13 +211,10 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/Reset1.html
         '''
-        self._check_for_error(self._lib.DSS_Reset())
+        self._lib.DSS_Reset()
 
     def SetActiveClass(self, ClassName: AnyStr) -> int:
-        if not isinstance(ClassName, bytes):
-            ClassName = ClassName.encode(self._api_util.codec)
-
-        return self._check_for_error(self._lib.DSS_SetActiveClass(ClassName))
+        return self._lib.DSS_SetActiveClass(ClassName)
 
     def Start(self, code: int) -> bool:
         '''
@@ -214,12 +224,13 @@ class IDSS(Base):
         handled automatically, so the users do not need to call it manually,
         unless using AltDSS/DSS C-API directly without further tools.
 
-        On the official OpenDSS, `Start` also does nothing at all in the current 
-        versions.
+        On EPRI's OpenDSS, `Start` also does nothing at all in the current
+        Delphi versions. It is required for OpenDSS-C, but also handled behind
+        the scenes on DSS-Extensions.
 
         Original COM help: https://opendss.epri.com/Start.html
         '''
-        return self._check_for_error(self._lib.DSS_Start(code)) != 0
+        return self._lib.DSS_Start(code)
 
     @property
     def Classes(self) -> List[str]:
@@ -228,7 +239,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/Classes1.html
         '''
-        return self._check_for_error(self._get_string_array(self._lib.DSS_Get_Classes))
+        return self._lib.DSS_Get_Classes()
 
     @property
     def DataPath(self) -> str:
@@ -237,14 +248,11 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/DataPath.html
         '''
-        return self._get_string(self._check_for_error(self._lib.DSS_Get_DataPath()))
+        return self._lib.DSS_Get_DataPath()
 
     @DataPath.setter
     def DataPath(self, Value: AnyStr):
-        if not isinstance(Value, bytes):
-            Value = Value.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.DSS_Set_DataPath(Value))
+        self._lib.DSS_Set_DataPath(Value)
 
     @property
     def DefaultEditor(self) -> str:
@@ -253,7 +261,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/DefaultEditor.html
         '''
-        return self._get_string(self._check_for_error(self._lib.DSS_Get_DefaultEditor()))
+        return self._lib.DSS_Get_DefaultEditor()
 
     @property
     def NumCircuits(self) -> int:
@@ -262,7 +270,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/NumCircuits.html
         '''
-        return self._check_for_error(self._lib.DSS_Get_NumCircuits())
+        return self._lib.DSS_Get_NumCircuits()
 
     @property
     def NumClasses(self) -> int:
@@ -271,7 +279,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/NumClasses.html
         '''
-        return self._check_for_error(self._lib.DSS_Get_NumClasses())
+        return self._lib.DSS_Get_NumClasses()
 
     @property
     def NumUserClasses(self) -> int:
@@ -280,7 +288,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/NumUserClasses.html
         '''
-        return self._check_for_error(self._lib.DSS_Get_NumUserClasses())
+        return self._lib.DSS_Get_NumUserClasses()
 
     @property
     def UserClasses(self) -> List[str]:
@@ -289,7 +297,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/UserClasses.html
         '''
-        return self._check_for_error(self._get_string_array(self._lib.DSS_Get_UserClasses))
+        return self._lib.DSS_Get_UserClasses()
 
     @property
     def Version(self) -> str:
@@ -303,20 +311,22 @@ class IDSS(Base):
             from . import __version__ as dss_python_version
             self._version = dss_python_version
 
-        return self._get_string(self._check_for_error(self._lib.DSS_Get_Version())) + f'\nDSS-Python version: {self._version}'
+        return self._lib.DSS_Get_Version() + f'\nDSS-Python version: {self._version}'
 
     @property
     def AllowForms(self) -> bool:
         '''
-        Gets/sets whether text output is allowed (DSS-Extensions) or general forms/windows are shown (official OpenDSS).
+        Indicates whether text output is allowed or forms are used. Disable to silence most output.
+
+        Currently, forms/windows are only used for EPRI's OpenDSS distribution on Windows.
 
         Original COM help: https://opendss.epri.com/AllowForms.html
         '''
-        return self._check_for_error(self._lib.DSS_Get_AllowForms()) != 0
+        return self._lib.DSS_Get_AllowForms()
 
     @AllowForms.setter
     def AllowForms(self, value: bool):
-        self._check_for_error(self._lib.DSS_Set_AllowForms(value))
+        self._lib.DSS_Set_AllowForms(value)
 
     @property
     def AllowEditor(self) -> bool:
@@ -327,16 +337,20 @@ class IDSS(Base):
         If you set to 0 (false), the editor is not executed. Note that other side effects,
         such as the creation of files, are not affected.
 
+        **Deprecated:** Use `Settings.AllowEditor` instead (same behavior, the setting was just moved there for better organization).
+
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.DSS_Get_AllowEditor()) != 0
+        warnings.warn('"AllowEditor" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.AllowEditor` instead.', DeprecationWarning, stacklevel=2)
+        return self._lib.DSS_Get_AllowEditor()
 
     @AllowEditor.setter
     def AllowEditor(self, value: bool):
-        self._check_for_error(self._lib.DSS_Set_AllowEditor(value))
+        self._lib.DSS_Set_AllowEditor(value)
 
     def ShowPanel(self):
-        pass
+        if api_util._is_oddie:
+            self._lib.Text_Set_Command('panel')
 
     def NewCircuit(self, name) -> ICircuit:
         '''
@@ -344,10 +358,7 @@ class IDSS(Base):
 
         Original COM help: https://opendss.epri.com/NewCircuit.html
         '''
-        if not isinstance(name, bytes):
-            name = name.encode(self._api_util.codec)
-
-        self._check_for_error(self._lib.DSS_NewCircuit(name))
+        self._lib.DSS_NewCircuit(name)
 
         return self.ActiveCircuit
 
@@ -356,18 +367,18 @@ class IDSS(Base):
         '''
         LegacyModels was a flag used to toggle legacy (pre-2019) models for PVSystem, InvControl, Storage and
         StorageControl.
-        In the official OpenDSS version 9.0, the old models were removed. They were temporarily present here
+        In EPRI's OpenDSS version 9.0, the old models were removed. They were temporarily present here
         but were also removed in DSS C-API v0.13.0.
             
         **NOTE**: this property will be removed for v1.0. It is left to avoid breaking the current API too soon.
         
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.DSS_Get_LegacyModels()) != 0
+        return self._lib.DSS_Get_LegacyModels()
 
     @LegacyModels.setter
     def LegacyModels(self, Value: bool):
-        self._check_for_error(self._lib.DSS_Set_LegacyModels(Value))
+        self._lib.DSS_Set_LegacyModels(Value)
 
     @property
     def AllowChangeDir(self) -> bool:
@@ -383,13 +394,16 @@ class IDSS(Base):
         This can also be set through the environment variable DSS_CAPI_ALLOW_CHANGE_DIR. Set it to 0 to
         disallow changing the active working directory.
         
+        **Deprecated:** Use `Settings.AllowChangeDir` instead (same behavior, the setting was just moved there for better organization).
+
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.DSS_Get_AllowChangeDir()) != 0
+        warnings.warn('"AllowChangeDir" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.AllowChangeDir` instead.', DeprecationWarning, stacklevel=2)
+        return self._lib.DSS_Get_AllowChangeDir()
 
     @AllowChangeDir.setter
     def AllowChangeDir(self, Value: bool):
-        self._check_for_error(self._lib.DSS_Set_AllowChangeDir(Value))
+        self._lib.DSS_Set_AllowChangeDir(Value)
 
     @property
     def AllowDOScmd(self) -> bool:
@@ -398,41 +412,50 @@ class IDSS(Base):
 
         Defaults to False/0 (disabled state). Users should consider DOScmd deprecated on DSS-Extensions.
 
-        This can also be set through the environment variable DSS_CAPI_ALLOW_DOSCMD. Setting it to 1 enables
+        This can also be set through the environment variable `DSS_CAPI_ALLOW_DOSCMD`. Setting it to 1 enables
         the command.
+
+        **Deprecated:** Use `Settings.AllowDOScmd` instead (same behavior, the setting was just moved there for better organization).
 
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.DSS_Get_AllowDOScmd()) != 0
+        warnings.warn('"AllowDOScmd" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.AllowDOScmd` instead.', DeprecationWarning, stacklevel=2)
+        return self._lib.DSS_Get_AllowDOScmd()
 
     @AllowDOScmd.setter
     def AllowDOScmd(self, Value: bool):
-        self._check_for_error(self._lib.DSS_Set_AllowDOScmd(Value))
+        self._lib.DSS_Set_AllowDOScmd(Value)
 
     @property
     def COMErrorResults(self) -> bool:
         '''
-        If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with the 
-        official OpenDSS COM interface. 
+        If enabled, in case of errors or empty arrays, the API returns arrays with values compatible with 
+        EPRI's OpenDSS COM interface. 
 
         For example, consider the function `Loads_Get_ZIPV`. If there is no active circuit or active load element:
 
-        - In the disabled state (COMErrorResults=False), the function will return "[]", an array with 0 elements.
-        - In the enabled state (COMErrorResults=True), the function will return "[0.0]" instead. This should
-        be compatible with the return value of the official COM interface.
+        - In the disabled state (`COMErrorResults`=False), the function will return "[]", an array with 0 elements.
+        - In the enabled state (`COMErrorResults`=True), the function will return "[0.0]" instead. This should
+        be compatible with the return value of EPRI's OpenDSS COM interface.
 
-        Defaults to True/1 (enabled state) in the v0.12.x series. This will change to false in future series.
+        Defaults to false (disabled state) in AltDSS since the v0.15.x series.
 
-        This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 0 disables
+        This does not affect the results when using EPRI's OpenDSS distribution through Oddie.
+
+        This can also be set through the environment variable `DSS_CAPI_COM_DEFAULTS`. Setting it to 1 enables
         the legacy/COM behavior. The value can be toggled through the API at any time.
+
+        **Deprecated:** Use `Settings.COMErrorResults` instead (same behavior, the setting was just moved there for better organization).
 
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.DSS_Get_COMErrorResults()) != 0
+        warnings.warn('"COMErrorResults" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.COMErrorResults` instead.', DeprecationWarning, stacklevel=2)
+        return self._lib.DSS_Get_COMErrorResults()
 
     @COMErrorResults.setter
     def COMErrorResults(self, Value: bool):
-        self._check_for_error(self._lib.DSS_Set_COMErrorResults(Value))
+        warnings.warn('"COMErrorResults" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.COMErrorResults` instead.', DeprecationWarning, stacklevel=2)
+        self._lib.DSS_Set_COMErrorResults(Value)
 
     def NewContext(self) -> IDSS:
         '''
@@ -445,14 +468,13 @@ class IDSS(Base):
         **(API Extension)**
         '''
 
-        if self._api_util._is_odd:
-            raise NotImplementedError("NewContext is not supported for the official OpenDSS engine.")
+        if self._api_util._is_oddie:
+            raise NotImplementedError("NewContext is not supported for the EPRI's OpenDSS engines.")
 
         ffi = self._api_util.ffi
         lib = self._api_util.lib_unpatched
         new_ctx = ffi.gc(lib.ctx_New(), lib.ctx_Dispose)
-        new_api_util = CffiApiUtil(ffi, lib, new_ctx)
-        new_api_util._allow_complex = self._api_util._allow_complex
+        new_api_util = AltDSSAPIUtil(ffi, lib, new_ctx, parent=self._api_util)
         return IDSS(new_api_util)
 
     def __call__(self, cmds: Union[AnyStr, List[AnyStr]]):
@@ -485,21 +507,26 @@ class IDSS(Base):
     @property
     def Plotting(self):
         '''
-        Shortcut for the plotting module. This property is equivalent to:
+        Shortcut for the plotting tools for the current DSS engine.
 
-        ```
-        from dss import plot
-        return plot
-        ```
+        *Previously, this was just a shortcut to the plotting module. Since
+        the plotting tools were extended and refactored, an instance 
+        of the DSS plotter is return, allowing the user to plot from 
+        multiple instances and different engines.*
 
-        Gives access to the `enable()` and `disable()` functions.
-        Requires matplotlib and SciPy to be installed, hence it is an
-        optional feature.
+        Gives access to the `enable()`/`disable()` functions, and the new
+        experimental plotting API in Python.
+
+        Requires matplotlib and SciPy to be installed, hence it is an optional 
+        feature, lazily imported.
 
         **(API Extension)**
         '''
-        from dss import plot
-        return plot
+        if self._plotter is None:
+            from dss.plot import get_plotter
+            self._plotter = get_plotter(self)
+
+        return self._plotter
 
     @property
     def AdvancedTypes(self) -> bool:
@@ -515,24 +542,26 @@ class IDSS(Base):
         When disabled, the legacy plain arrays are used and complex numbers cannot be consumed by the Python API.
 
         *Defaults to **False** for backwards compatibility.*
+
+        **Deprecated:** Use `Settings.AdvancedTypes` instead (same behavior, the setting was just moved there for better organization).
         
         **(API Extension)**
         '''
-        arr_dim = self._check_for_error(self._lib.DSS_Get_EnableArrayDimensions()) != 0
-        allow_complex = self._api_util._allow_complex
-        return arr_dim and allow_complex
+        return self._lib.advanced_types
 
     @AdvancedTypes.setter
     def AdvancedTypes(self, Value: bool):
-        self._check_for_error(self._lib.DSS_Set_EnableArrayDimensions(Value))
-        self._api_util._allow_complex = bool(Value)
+        warnings.warn('"AdvancedTypes" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.AdvancedTypes` instead.', DeprecationWarning, stacklevel=2)
+        self._lib.advanced_types = bool(Value)
 
     @property
     def CompatFlags(self) -> int:
         '''
-        Controls some compatibility flags introduced to toggle some behavior from the official OpenDSS.
+        Controls some compatibility flags introduced to toggle some behavior from EPRI's OpenDSS.
 
-        **THE FLAGS ARE GLOBAL, affecting all DSS engines in the process.**
+        **THE FLAGS ARE GLOBAL, affecting all AltDSS engines in the process.**  
+        CompatFlags for Oddie-loaded instances (OpenDSS and OpenDSS-C engines) are handled by the Oddie code itself,
+        so it is global for each Oddie library.
 
         These flags may change for each version of DSS C-API, but the same value will not be reused. That is,
         when we remove a compatibility flag, it will have no effect but will also not affect anything else
@@ -544,10 +573,48 @@ class IDSS(Base):
 
         See the enumeration `DSSCompatFlags` for available flags, including description.
 
+        **Deprecated:** Use `Settings.CompatFlags` instead (same behavior, the setting was just moved there for better organization).
+
         **(API Extension)**
         '''
-        return self._check_for_error(self._lib.DSS_Get_CompatFlags())
+        return self._lib.DSS_Get_CompatFlags()
 
     @CompatFlags.setter
     def CompatFlags(self, Value: int):
-        self._check_for_error(self._lib.DSS_Set_CompatFlags(Value))
+        warnings.warn('"CompatFlags" was moved to the Settings interface. This property still works, but will be removed in a future release. Please use `...Settings.CompatFlags` instead.', DeprecationWarning, stacklevel=2)
+        self._lib.DSS_Set_CompatFlags(Value)
+
+
+    def ShareGeneral(self, otherContext: IDSS, skip_cmds: Optional[List[str]] = None, skip_file_regexp: str = None):
+        '''
+        Share general DSS objects from this AltDSS context to another.
+
+        **WARNING:** currently, the pointers are not tracked! The user must ensure this context
+        and its objects are kept alive while other contexts require it.
+
+        Optionally, as a shortcut, the user can provide `skip_cmds` to be passed to the `Settings.SkipCommands` 
+        and `skip_file_regexp` to be passed to `Settings.SkipFileRegExp`, in the second DSS context. 
+        
+        *Note*: If the `clear` command is included in `Settings.SkipCommands`, the `DSS.ClearAll()` method can still be called
+        and it will reset both skip settings.
+
+        ***EXPERIMENTAL***
+
+        **(API Extension)**
+        '''
+        if self._api_util._is_oddie or otherContext._api_util._is_oddie:
+            raise ValueError("Only AltDSS engine contexts can share data.")
+
+        self._lib.ctx_ShareGeneral(otherContext._api_util.ctx)
+        if skip_cmds is not None:
+            otherContext.ActiveCircuit.Settings.SkipCommands = skip_cmds
+
+        if skip_file_regexp is not None:
+            otherContext.ActiveCircuit.Settings.SkipFileRegExp = skip_file_regexp
+
+    @property
+    def Settings(self):
+        '''
+        For convenience, a shortcut to `ActiveCircuit.Settings`.
+        '''
+        return self.ActiveCircuit.Settings

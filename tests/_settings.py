@@ -3,13 +3,17 @@ import sys, os
 
 import faulthandler
 faulthandler.disable()
-from dss import DSS, IOddieDSS
-faulthandler.enable()
+from dss import DSS
+# DSS.ActiveCircuit.Settings.COMErrorResults = False
+try:
+    from dss import IOddieDSS
+except:
+    pass
 
 org_dir = os.getcwd()
 
-USE_ODDIE = os.getenv('DSS_PYTHON_ODDIE', None)
-if USE_ODDIE:
+USE_ODDIE = os.getenv('DSS_EXTENSIONS_TEST_ODDIE', None)
+if USE_ODDIE is not None and USE_ODDIE.upper() not in ('0', 'FALSE', 'F', 'OFF', 'NO'):
     # print("Using Oddie:", USE_ODDIE)
     if USE_ODDIE != '1':
         DSS = IOddieDSS(USE_ODDIE)
@@ -18,6 +22,8 @@ if USE_ODDIE:
 
     os.chdir(org_dir)
 
+DSS.ClearAll()
+faulthandler.enable()
 
 WIN32 = (sys.platform == 'win32')
 if os.path.exists('../../electricdss-tst/'):
@@ -44,6 +50,10 @@ assert os.path.exists(BASE_DIR)
 #"L!Distrib/IEEETestCases/4wire-Delta/Kersting4wireIndMotor.dss",
 
 test_filenames = '''
+Version8/Distrib/Examples/WindGenerator/WindGen_QSTS/Run_IEEE123Bus_GFLDaily.DSS
+Version8/Distrib/Examples/WindGenerator/WindGen_GFL_Dynamics/Run_IEEE123Bus_GFLDaily.DSS
+Version8/Distrib/Examples/NCIM/Xmission_System_Kundur2Area/Master.dss
+Version8/Distrib/IEEETestCases/IEEE118Bus/master_file.dss
 Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-csv-p.dss
 Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-csv-pq.dss
 Version8/Distrib/Examples/MemoryMappingLoadShapes/ckt24/master_ckt24-mm-dbl-p.dss
@@ -252,3 +262,29 @@ cimxml_test_filenames = '''
 Version8/Distrib/Examples/CIM/IEEE13_Assets.dss
 Version8/Distrib/Examples/CIM/IEEE13_CDPSM.dss
 '''.strip().split('\n')
+
+json_test_fns = os.environ.get('DSS_EXTENSIONS_TEST_SYSTEMS', '')
+if json_test_fns:
+    import json
+    with open(json_test_fns, 'r') as f_test_fns:
+        config = json.load(f_test_fns)
+
+    extra = config.get('extraTestSystems')
+    replacements = config.get('testSystems')
+
+    if replacements:
+        test_filenames = replacements
+    
+    if extra:
+        extra.extend(test_filenames)
+        test_filenames = extra
+    
+    cim_replacements = config.get('cimTestSystems')
+    cim_extra = config.get('cimExtraTestSystems')
+    if cim_replacements is not None:
+        cimxml_test_filenames = cim_replacements
+
+    if cim_extra:
+        cim_extra.extend(cimxml_test_filenames)
+        cimxml_test_filenames = cim_extra
+

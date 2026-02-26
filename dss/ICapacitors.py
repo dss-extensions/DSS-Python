@@ -1,6 +1,6 @@
-# A compatibility layer for DSS C-API that mimics the official OpenDSS COM interface.
-# Copyright (c) 2016-2024 Paulo Meira
-# Copyright (c) 2018-2024 DSS-Extensions contributors
+# A compatibility layer for DSS C-API that mimics EPRI's OpenDSS COM interface.
+# Copyright (c) 2016-2025 Paulo Meira
+# Copyright (c) 2018-2025 DSS-Extensions contributors
 from ._cffi_api_util import Iterable
 from ._types import Int32Array
 
@@ -20,16 +20,16 @@ class ICapacitors(Iterable):
     ]
 
     def AddStep(self) -> bool:
-        return self._check_for_error(self._lib.Capacitors_AddStep()) != 0
+        return self._lib.Capacitors_AddStep()
 
     def Close(self):
-        self._check_for_error(self._lib.Capacitors_Close())
+        self._lib.Capacitors_Close()
 
     def Open(self):
-        self._check_for_error(self._lib.Capacitors_Open())
+        self._lib.Capacitors_Open()
 
     def SubtractStep(self) -> bool:
-        return self._check_for_error(self._lib.Capacitors_SubtractStep()) != 0
+        return self._lib.Capacitors_SubtractStep()
 
     @property
     def AvailableSteps(self) -> int:
@@ -38,7 +38,7 @@ class ICapacitors(Iterable):
 
         Original COM help: https://opendss.epri.com/AvailableSteps.html
         '''
-        return self._check_for_error(self._lib.Capacitors_Get_AvailableSteps())
+        return self._lib.Capacitors_Get_AvailableSteps()
 
     @property
     def IsDelta(self) -> bool:
@@ -47,11 +47,11 @@ class ICapacitors(Iterable):
 
         Original COM help: https://opendss.epri.com/IsDelta.html
         '''
-        return self._check_for_error(self._lib.Capacitors_Get_IsDelta()) != 0
+        return self._lib.Capacitors_Get_IsDelta()
 
     @IsDelta.setter
     def IsDelta(self, Value: bool):
-        self._check_for_error(self._lib.Capacitors_Set_IsDelta(Value))
+        self._lib.Capacitors_Set_IsDelta(Value)
 
     @property
     def NumSteps(self) -> int:
@@ -60,11 +60,11 @@ class ICapacitors(Iterable):
 
         Original COM help: https://opendss.epri.com/NumSteps.html
         '''
-        return self._check_for_error(self._lib.Capacitors_Get_NumSteps())
+        return self._lib.Capacitors_Get_NumSteps()
 
     @NumSteps.setter
     def NumSteps(self, Value: int):
-        self._check_for_error(self._lib.Capacitors_Set_NumSteps(Value))
+        self._lib.Capacitors_Set_NumSteps(Value)
 
     @property
     def States(self) -> Int32Array:
@@ -73,13 +73,12 @@ class ICapacitors(Iterable):
 
         Original COM help: https://opendss.epri.com/States.html
         '''
-        self._check_for_error(self._lib.Capacitors_Get_States_GR())
-        return self._get_int32_gr_array()
+        return self._lib.Capacitors_Get_States_GR()
 
     @States.setter
     def States(self, Value: Int32Array):
         Value, ValuePtr, ValueCount = self._prepare_int32_array(Value)
-        self._check_for_error(self._lib.Capacitors_Set_States(ValuePtr, ValueCount))
+        self._lib.Capacitors_Set_States(ValuePtr, ValueCount)
 
     @property
     def kV(self) -> float:
@@ -88,17 +87,17 @@ class ICapacitors(Iterable):
 
         Original COM help: https://opendss.epri.com/kV.html
         '''
-        return self._check_for_error(self._lib.Capacitors_Get_kV())
+        return self._lib.Capacitors_Get_kV()
 
     @kV.setter
     def kV(self, Value):
-        self._check_for_error(self._lib.Capacitors_Set_kV(Value))
+        self._lib.Capacitors_Set_kV(Value)
 
     @property
     def kvar(self) -> float:
         '''Total bank KVAR, distributed equally among phases and steps.'''
-        return self._check_for_error(self._lib.Capacitors_Get_kvar())
+        return self._lib.Capacitors_Get_kvar()
 
     @kvar.setter
     def kvar(self, Value: float):
-        self._check_for_error(self._lib.Capacitors_Set_kvar(Value))
+        self._lib.Capacitors_Set_kvar(Value)

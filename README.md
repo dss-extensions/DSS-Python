@@ -5,7 +5,7 @@
 
 # DSS-Python: Extended bindings for an alternative implementation of EPRI's OpenDSS
 
-Python bindings and misc tools for using our to [our customized/alternative implementation](https://github.com/dss-extensions/dss_capi) of [OpenDSS](http://smartgrid.epri.com/SimulationTool.aspx), AltDSS/DSS C-API library. OpenDSS is an open-source electric power distribution system simulator [distributed by EPRI](https://sourceforge.net/p/electricdss/). Based on DSS C-API, CFFI and NumPy, aiming for enhanced performance and full compatibility with the official COM object API on Windows, Linux and macOS. Support includes Intel-based (x86 and x64) processors, as well as ARM processors for Linux (including Raspberry Pi devices) and macOS (including Apple M1 and later).
+Python bindings and misc tools for using our to [our customized/alternative implementation](https://github.com/dss-extensions/dss_capi) of [OpenDSS](http://smartgrid.epri.com/SimulationTool.aspx), AltDSS/DSS C-API library. OpenDSS is an open-source electric power distribution system simulator [distributed by EPRI](https://sourceforge.net/p/electricdss/). Based on DSS C-API, CFFI and NumPy, aiming for enhanced performance and full compatibility with EPRI's OpenDSS COM object API on Windows, Linux and macOS. Support includes Intel-based (x86 and x64) processors, as well as ARM processors for Linux (including Raspberry Pi devices) and macOS (including Apple M1 and later).
 
 More context about this project and its components (including alternatives in [Julia](https://dss-extensions.org/OpenDSSDirect.jl/latest/), [MATLAB](https://github.com/dss-extensions/dss_matlab/), C++, [C#/.NET](https://github.com/dss-extensions/dss_sharp/), [Go](https://github.com/dss-extensions/AltDSS-Go/), and [Rust](https://github.com/dss-extensions/AltDSS-Rust/)), please check [https://dss-extensions.org/](https://dss-extensions.org/) and our hub repository at [dss-extensions/dss-extensions](https://github.com/dss-extensions/dss-extensions) for more documentation, discussions and the [FAQ](https://dss-extensions.org/faq.html).
 
@@ -13,7 +13,7 @@ This package can be used as a companion to [OpenDSSDirect.py](http://github.com/
 
 While we plan to add a lot more functionality into DSS-Python, the main goal of creating a COM-compatible API has been reached in 2018. If you find an unexpected missing feature, please report it! Currently missing features that will be implemented eventually are interactive features and diakoptics (planned for a future version).
 
-This module mimics the COM structure (as exposed via `win32com` or `comtypes`) — see [The DSS instance](https://dss-extensions.org/DSS-Python/#the-dss-instance) as well as [OpenDSS COM/classic APIs](https://dss-extensions.org/classic_api.html) for some docs — effectively enabling multi-platform compatibility at Python level. Compared to other options, it provides easier migration from code that uses the official OpenDSS through COM. See also [OpenDSS: Python APIs](https://dss-extensions.org/python_apis.html).
+This module mimics the COM structure (as exposed via `win32com` or `comtypes`) — see [The DSS instance](https://dss-extensions.org/DSS-Python/#the-dss-instance) as well as [OpenDSS COM/classic APIs](https://dss-extensions.org/classic_api.html) for some docs — effectively enabling multi-platform compatibility at Python level. Compared to other options, it provides easier migration from code that uses EPRI's OpenDSS through COM. See also [OpenDSS: Python APIs](https://dss-extensions.org/python_apis.html).
 Most of the COM documentation can be used as-is, but instead of returning tuples or lists, this module returns/accepts NumPy arrays for numeric data exchange, which is usually preferred by the users. By toggle `DSS.AdvancedTypes`, complex numbers and matrices (shaped arrays) are also used to provide a more modern experience.
 
 The module depends mostly on CFFI, NumPy, typing_extensions and, optionally, SciPy.Sparse for reading the sparse system admittance matrix. Pandas and matplotlib are optional dependencies [to enable plotting](https://github.com/dss-extensions/dss_python/blob/master/docs/examples/Plotting.ipynb) and other features.
@@ -103,7 +103,7 @@ import win32com.client
 dss_engine = win32com.client.gencache.EnsureDispatch("OpenDSSEngine.DSS")
 ```
 
-or `comtypes` (incidentally, `comtypes` is usually faster than `win32com`, so we recommend it if you need the official OpenDSS COM module):
+or `comtypes` (incidentally, `comtypes` is usually faster than `win32com`, so we recommend it if you need EPRI's OpenDSS COM module):
 
 ```python
 import comtypes.client
@@ -132,18 +132,18 @@ for i in range(len(voltages) // 2):
 
 ## Testing
 
-Since the DLL is built using the Free Pascal compiler, which is not officially supported by EPRI, the results are validated running sample networks provided in the official OpenDSS distribution. The only modifications are done directly by the script, removing interactive features and some other minor issues. Most of the sample files from the official OpenDSS repository are used for validation.
+Since the DLL is built using the Free Pascal compiler, which is not officially supported by EPRI, the results are validated running sample networks provided in EPRI's OpenDSS distribution. The only modifications are done directly by the script, removing interactive features and some other minor issues. Most of the sample files from EPRI's OpenDSS repository are used for validation.
 
 The validation scripts is `tests/validation.py` and requires the same folder structure as the building process. You need `win32com` to run it on Windows.
 
-As of version 0.11, the full validation suite can be run on the three supported platforms. This is possible by saving the official COM DLL output and loading it on macOS and Linux. We hope to fully automate this validation in the future.
+As of version 0.11, the full validation suite can be run on the three supported platforms. This is possible by saving EPRI's OpenDSS COM DLL output and loading it on macOS and Linux. We hope to fully automate this validation in the future.
 
 ## Roadmap: docs and interactive features
 
 Besides bug fixes, the main functionality of this library is mostly done. Notable desirable features that may be implemented are:
 
 - More examples, especially for the extra features. There is a growing documentation hosted at [https://dss-extensions.org/Python/](https://dss-extensions.org/DSS-Python/) and [https://dss-extensions.org/docs.html](https://dss-extensions.org/docs.html); watch also https://github.com/dss-extensions/dss-extensions for more.
-- Reports integrated in Python and interactive features on plots. Since most of the plot types from the official OpenDSS are optionally available since DSS-Python 0.14.2, advanced integration and interactive features are planned for a future feature.
+- Reports integrated in Python and interactive features on plots. Since most of the plot types from EPRI's OpenDSS are optionally available since DSS-Python 0.14.2, advanced integration and interactive features are planned for a future feature.
 
 Expect news about these items by version 1.0. 
 

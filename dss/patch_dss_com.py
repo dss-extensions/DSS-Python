@@ -22,6 +22,7 @@ from .ILoads import ILoads
 from .IMonitors import IMonitors
 from .IPDElements import IPDElements
 from .IPVSystems import IPVSystems
+from .IReactors import IReactors
 from .IRelays import IRelays
 from .IReclosers import IReclosers
 from .ISensors import ISensors
@@ -31,8 +32,28 @@ from .IVsources import IVsources
 from .ITransformers import ITransformers
 from .IXYCurves import IXYCurves
 from .IGICSources import IGICSources
-# from .IStorages import IStorages
+from .IStorages import IStorages
+from .IWindGens import IWindGens
 
+class IBusesWrapper:
+    def __init__(self, DSS, Buses):
+        self.DSS = DSS
+        self.Buses = Buses
+    
+    def __call__(self, *args, **kwargs):
+        return self.Buses(*args, **kwargs)
+
+    def __call__(self, *args, **kwargs):
+        return self.Buses(*args, **kwargs)
+
+    def __iter__(self):
+        circ = self.DSS.ActiveCircuit
+        for i in range(circ.NumBuses):
+            circ.SetActiveBusi(i)
+            yield circ.ActiveBus
+
+    def __len__(self):
+        return self.DSS.ActiveCircuit.NumBuses
 
 def custom_iter(self):
     idx = self.First
@@ -77,7 +98,7 @@ def patch_dss_com(obj):
     def custom_bus_iter(self):
         for i in range(obj.ActiveCircuit.NumBuses):
             obj.ActiveCircuit.SetActiveBusi(i)
-            yield self
+            yield obj.ActiveCircuit.ActiveBus
 
     def custom_bus_len(self):
         return obj.ActiveCircuit.NumBuses
@@ -92,22 +113,56 @@ def patch_dss_com(obj):
         
         self.Text.Command = cmds
 
+    def Lines_Get_IsSwitch(self):
+        lines = obj.ActiveCircuit.Lines
+        elem = obj.ActiveCircuit.ActiveCktElement
+        name = lines.Name
+        if not name:
+            return False
+
+        obj.ActiveCircuit.SetActiveElement(f'Line.{name}')
+        return elem.Properties['Switch'].Val.lower()[:1] in ('y', 't')
+
+    def Lines_Set_IsSwitch(self, Value):
+        lines = obj.ActiveCircuit.Lines
+        elem = obj.ActiveCircuit.ActiveCktElement
+        name = lines.Name
+        if not name:
+            return
+
+        obj.ActiveCircuit.SetActiveElement(f'Line.{name}')
+        elem.Properties['Switch'].Val = 'y' if Value else 'n'
+
+    def _get_BusNames(self, removeNodes=False):
+        return [x.split('.', 1)[0] for x in self.BusNames]
+
     # Callable DSS
     type(obj).__call__ = custom_dss_call
 
     # Monitors AsMatrix
     type(obj.ActiveCircuit.Monitors).AsMatrix = Monitors_AsMatrix
-    
+
+    # Extended getter for CktElement.BusNames
+    type(obj.ActiveCircuit.ActiveCktElement)._get_BusNames = _get_BusNames
+
     # Load Phases
     type(obj.ActiveCircuit.Loads).Phases = property(Load_Phases, Load_Set_Phases)
-   
+
+    # Line IsSwitch
+    type(obj.ActiveCircuit.Lines).IsSwitch = property(Lines_Get_IsSwitch, Lines_Set_IsSwitch)
+
     # Bus iterator and len
     type(obj.ActiveCircuit.ActiveBus).__iter__ = custom_bus_iter
     type(obj.ActiveCircuit.ActiveBus).__len__ = custom_bus_len
     type(obj.ActiveCircuit.ActiveBus)._columns = IBus._columns
-    type(obj.ActiveCircuit.Buses).__iter__ = custom_bus_iter
-    type(obj.ActiveCircuit.Buses).__len__ = custom_bus_len
-    type(obj.ActiveCircuit.Buses)._columns = IBus._columns
+    Buses = obj.ActiveCircuit.Buses
+    try:
+        type(Buses).__iter__ = custom_bus_iter
+        type(Buses).__len__ = custom_bus_len
+        type(Buses)._columns = IBus._columns
+    except:
+        type(obj.ActiveCircuit).Buses = IBusesWrapper(obj, Buses)
+
 
     def add_dunders(cls):
         cls.__iter__ = custom_iter
@@ -128,16 +183,19 @@ def patch_dss_com(obj):
         'Monitors': IMonitors,
         'PDElements': IPDElements,
         'PVSystems': IPVSystems,
+        'Reactors': IReactors,
         'Relays': IRelays,
         'Reclosers': IReclosers,
         'Sensors': ISensors,
         'RegControls': IRegControls,
+        'Storages': IStorages,
         'SwtControls': ISwtControls,
         'Vsources': IVsources,
         'Transformers': ITransformers,
         'XYCurves': IXYCurves,
         'GICSources': IGICSources,
-        # 'Storages': IStorages,
+        'Storages': IStorages,
+        'WindGens': IWindGens,
     }
 
     def filter_cols(py_cls):
@@ -170,7 +228,11 @@ def patch_dss_com(obj):
     type(obj.ActiveCircuit.Topology)._columns = filter_cols(ITopology)
 
     for name, py_cls in com_classes_to_dsspy.items():
-        cls = type(getattr(obj.ActiveCircuit, name))
+        instance = getattr(obj.ActiveCircuit, name, None)
+        if instance is None:
+            continue
+
+        cls = type(instance)
         add_dunders(cls)
         cls._py_cls = py_cls
         # Filter columns, removing 
@@ -178,8 +240,6 @@ def patch_dss_com(obj):
 
         if getattr(py_cls, '_is_circuit_element', False):
             cls._is_circuit_element = True
-
-    add_dunders(cls)
 
     return obj
     

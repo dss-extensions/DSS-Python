@@ -114,6 +114,9 @@ def run(dss: dss.IDSS, fn: str, line_by_line: bool):
         ):
         dss.Text.Command = 'export profile phases=all'
 
+    dss.Text.Command = 'CalcIncMatrix'
+    dss.Text.Command = 'CalcLaplacian'
+
     reliabity_ran = True
     try:
         dss.ActiveCircuit.Meters.DoReliabilityCalc(False)
@@ -159,11 +162,29 @@ pc_elem_columns = {'AllVariableValues', 'AllVariableNames'}
 
 def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     printv(dss_cls)
+    lname = type(dss_cls).__name__.lower()
     has_iter = hasattr(type(dss_cls), '__iter__')
     is_ckt_element = getattr(type(dss_cls), '_is_circuit_element', False)
     ckt_elem = dss.ActiveCircuit.ActiveCktElement
     ckt_elem_columns = set(type(ckt_elem)._columns) - ckt_elem_columns_meta - pc_elem_columns - {'Handle', 'IsIsolated', 'HasOCPDevice'}
-    fields = list(type(dss_cls)._columns)
+    try:
+        fields = list(type(dss_cls)._columns)
+    except:
+        print(dss_cls, '_columns not found, skipping...')
+        return
+
+    if lname.endswith('fuses') and IS_V11:
+        for f in ['CurveMultiplier', 'InterruptingRating']:
+            if f in fields:
+                fields.remove(f)
+
+    # if lname.endswith('swtcontrols') and IS_V11:
+    #     for f in ['Action', 'NormalState', 'State', 'RatedCurrent', 'Open', 'Close', ]:
+    #         if f in fields:
+    #             fields.remove(f)
+
+    if lname.endswith('solution'):
+        fields.extend(['IncMatrix', 'Laplacian', 'IncMatrixCols', 'IncMatrixRows', ])
 
     if 'UserClasses' in fields:
         fields.remove('UserClasses')
@@ -188,7 +209,7 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
             if 'AllPDEatBus' in fields: fields.remove('AllPDEatBus')
 
         # if 'Sensor' in fields: # Both  Loads and PVSystems
-        if 'ipvsystems' in type(dss_cls).__name__.lower():
+        if 'ipvsystems' in lname:
             fields.remove('Sensor')
 
         # if 'IrradianceNow' in fields:
@@ -216,79 +237,108 @@ def export_dss_api_cls(dss: dss.IDSS, dss_cls):
     else:
         items = [dss_cls]
 
-    for _ in items:
-        record = {}
-        for field in fields:
-            # printv('>', field)
-            try:
-                record[field] = adjust_to_json(dss_cls, field)
-            except DSSException as e:
-                # Check for methods not implemented
-                if 'not implemented' in e.args[1].lower():
-                    #print(e.args)
-                    continue
-                raise
-            except StopIteration:
-                # Some fields are functions, skip those
-                continue
-            except AttributeError:
-                # Depending on the version, a field doesn't exist
-                continue
+    try:
+        if dss_cls.Count == 0:
+           return
+           
+        _ = dss_cls.First
+        name1 = dss_cls.Name
+        nxt = dss_cls.Next
+        name2 = dss_cls.Name
+        if nxt != 0 and name1 == name2:
+            print("Replacing iterator for", lname, (name1, name2))
+            def iter_cls():
+                for i in range(dss_cls.Count):
+                    dss_cls.idx = i
+                    yield dss_cls
 
-        if meter_section_fields:
-            if dss_cls.NumSections > 0:
-                dss_cls.SetActiveSection(1)
-                for field in meter_section_fields:
+            items = iter_cls()
+        
+    except:
+        pass
+
+    if 'loadshapes' in lname:
+        dss('//!AltDSS PushCompatFlags')
+        dss('//!AltDSS SetCompatFlag PermissiveProperties')
+
+    try:
+        for _ in items:
+            record = {}
+            for field in fields:
+                # printv('>', getattr(_, 'Name', '---'), field)
+                try:
+                    record[field] = adjust_to_json(dss_cls, field)
+                except DSSException as e:
+                    # Check for methods not implemented
+                    if 'not implemented' in e.args[1].lower():
+                        #print(e.args)
+                        continue
+                    raise
+                except StopIteration:
+                    # Some fields are functions, skip those
+                    continue
+                except AttributeError:
+                    # Depending on the version, a field doesn't exist
+                    continue
+
+            if meter_section_fields:
+                if dss_cls.NumSections > 0:
+                    dss_cls.SetActiveSection(1)
+                    for field in meter_section_fields:
+                        # printv('>', field)
+                        try:
+                            record[field] = adjust_to_json(dss_cls, field)
+                        except StopIteration:
+                            # Some fields are functions, skip those
+                            continue
+
+            if is_ckt_element:
+                # also dump the circuit element info
+                ckt_record = {}
+                for field in ckt_elem_columns:
                     # printv('>', field)
-                    try:
-                        record[field] = adjust_to_json(dss_cls, field)
-                    except StopIteration:
-                        # Some fields are functions, skip those
+                    ckt_record[field] = adjust_to_json(ckt_elem, field)
+
+                record['ActiveCktElement'] = ckt_record
+
+
+            if not has_iter:
+                # simple record
+                return record
+
+            # accumulate records
+            records.append(record)
+
+        if is_ckt_element and not metadata_record:
+            if records:
+                for field in ckt_elem_columns_meta:
+                    # printv('>', field)
+                    metadata_record[field] = adjust_to_json(ckt_elem, field)
+
+            for field in ckt_iter_columns_meta:
+                # printv('>', field)
+                try:
+                    metadata_record[field] = adjust_to_json(dss_cls, field)
+                except DSSException as e:
+                    if 'not implemented' in e.args[1].lower():
+                        # print(e.args)
                         continue
 
-        if is_ckt_element:
-            # also dump the circuit element info
-            ckt_record = {}
-            for field in ckt_elem_columns:
-                # printv('>', field)
-                ckt_record[field] = adjust_to_json(ckt_elem, field)
-
-            record['ActiveCktElement'] = ckt_record
-
-
-        if not has_iter:
-            # simple record
-            return record
-
-        # accumulate records
-        records.append(record)
-
-    if is_ckt_element and not metadata_record:
-        if records:
-            for field in ckt_elem_columns_meta:
-                # printv('>', field)
-                metadata_record[field] = adjust_to_json(ckt_elem, field)
-
-        for field in ckt_iter_columns_meta:
-            # printv('>', field)
-            try:
-                metadata_record[field] = adjust_to_json(dss_cls, field)
-            except DSSException as e:
-                if 'not implemented' in e.args[1].lower():
-                    # print(e.args)
-                    continue
-
-                raise
+                    raise
 
 
 
-        if 'Meters' in type(dss_cls).__name__:
-            # This breaks the iteration
-            extra = {'Totals': adjust_to_json(dss_cls, 'Totals')}
+            if 'Meters' in type(dss_cls).__name__:
+                # This breaks the iteration
+                extra = {'Totals': adjust_to_json(dss_cls, 'Totals')}
 
-    # elif has_iter and not metadata_record:
-    #     for field in iter_columns_meta:
-    #         metadata_record[field] = adjust_to_json(dss_cls, field)
+        # elif has_iter and not metadata_record:
+        #     for field in iter_columns_meta:
+        #         metadata_record[field] = adjust_to_json(dss_cls, field)
+
+    finally:
+        if 'loadshapes' in lname:
+            dss('//!AltDSS PopCompatFlags')
 
     return {'records': records, 'metadata': metadata_record, **extra}
 
@@ -314,26 +364,49 @@ def save_state(dss: dss.IDSS, runtime: float = 0.0) -> str:
         'Monitors': dss.ActiveCircuit.Monitors,
         'PDElements': dss.ActiveCircuit.PDElements,
         'PVSystems': dss.ActiveCircuit.PVSystems,
-        'Reclosers': dss.ActiveCircuit.Reclosers,
         'RegControls': dss.ActiveCircuit.RegControls,
         'Relays': dss.ActiveCircuit.Relays,
         'Sensors': dss.ActiveCircuit.Sensors,
         'Settings': dss.ActiveCircuit.Settings,
         'Solution': dss.ActiveCircuit.Solution,
-        'SwtControls': dss.ActiveCircuit.SwtControls,
         'Topology': dss.ActiveCircuit.Topology,
         'Transformers': dss.ActiveCircuit.Transformers,
         'Vsources': dss.ActiveCircuit.Vsources,
         'XYCurves': dss.ActiveCircuit.XYCurves,
     }
 
+    if not IS_V11:
+        dss_classes.update({
+            'Reclosers': dss.ActiveCircuit.Reclosers,
+            'SwtControls': dss.ActiveCircuit.SwtControls,
+        })
+
+    try:
+        dss_classes.update({
+            'Storages': dss.ActiveCircuit.Storages,
+        })
+    except AttributeError:
+        pass
+
+    try:
+        dss_classes.update({
+            'WindGens': dss.ActiveCircuit.WindGens,
+        })
+    except AttributeError:
+        pass
+
+    try:
+        dss_classes.update({
+            'Reactors': dss.ActiveCircuit.Reactors,
+        })
+    except AttributeError:
+        pass
+
     try:
         dss_classes.update({
             'CNData': dss.ActiveCircuit.CNData,
             'LineGeometries': dss.ActiveCircuit.LineGeometries,
             'LineSpacings': dss.ActiveCircuit.LineSpacings,
-            'Reactors': dss.ActiveCircuit.Reactors,
-            'Storages': dss.ActiveCircuit.Storages,
             'TSData': dss.ActiveCircuit.TSData,
             'WireData': dss.ActiveCircuit.WireData,
         })
@@ -371,6 +444,8 @@ def get_archive_fn(live_fn, fn_prefix=None):
     return archive_fn
             
 if __name__ == '__main__':
+    IS_V11 = False
+
     if os.path.exists('../../electricdss-tst/'):
         ROOT_DIR = os.path.abspath('../../electricdss-tst/')
     else:
@@ -392,29 +467,28 @@ if __name__ == '__main__':
             from _settings import DSS
 
         oddd_ver = DSS.Version.split(' ')[1]
-        print("Using official OpenDSS through ODDIE:", DSS.Version)
+        print("Using EPRI's OpenDSS (or API-compatible) through Oddie:", DSS.Version)
         if USE_ODDIE != '1':
             print("User-provided library path:", USE_ODDIE)
             
         debug_suffix = '-debug' if 'debug' in DSS.Version.lower() else ''
         suffix = f'-dssx_oddd-{sys.platform}-{platform.machine()}-{oddd_ver}{debug_suffix}'
-        #test_idx = test_filenames.index('L!Version8/Distrib/IEEETestCases/123Bus/RevRegTest.dss') + 50
-        # test_filenames = [fn for fn in test_filenames if 'DOCTechNote' not in fn] # DOC not implemented
-        # test_filenames = ['L!Version8/Distrib/IEEETestCases/123Bus/Run_YearlySim.dss']
-        # test_filenames = ['L!Version8/Distrib/IEEETestCases/123Bus/SolarRamp.DSS']
-        cimxml_test_filenames = [] # Cannot run these now
         DSS.AllowForms = False
 
     elif SAVE_DSSX_OUTPUT:
         from dss import DSS, DSSCompatFlags
-        DSS.CompatFlags = 0 # DSSCompatFlags.InvControl9611
+        extrasuffix = ''
+        if DSS.ActiveCircuit.Settings.COMErrorResults:
+            extrasuffix += '_CER'
+
+        DSS.ActiveCircuit.Settings.CompatFlags = 0 # DSSCompatFlags.InvControl9611
         print("Using DSS-Extensions:", DSS.Version)
         match = re.match('DSS C-API Library version ([^ ]+) revision.* ([0-9]+);.*', DSS.Version)
         dssx_ver, dssx_timestamp = match.groups()
         if (DSSCompatFlags.InvControl9611 & DSS.CompatFlags):
-            suffix = f'-dssx_InvControl9611-{sys.platform}-{platform.machine()}-{dssx_ver}-{dssx_timestamp}'
-        else:
-            suffix = f'-dssx-{sys.platform}-{platform.machine()}-{dssx_ver}-{dssx_timestamp}'
+            extrasuffix += '_InvControl9611'
+
+        suffix = f'-dssx{extrasuffix}-{sys.platform}-{platform.machine()}-{dssx_ver}-{dssx_timestamp}'
 
         DSS.AllowEditor = False
     else:
@@ -422,10 +496,11 @@ if __name__ == '__main__':
         DSS = comtypes.client.CreateObject("OpenDSSEngine.DSS")
         DSS = dss.patch_dss_com(DSS)
         #DSS.Text.Command = r'set editor=ignore_me_invalid_executable' -- need to let it open for some reports :|
-        print("Using official OpenDSS COM:", DSS.Version)
+        print("Using EPRI's OpenDSS COM engine:", DSS.Version)
         com_ver = DSS.Version.split(' ')[1]
         suffix = f'-COM-{platform.machine()}-{com_ver}'
 
+    IS_V11 = hasattr(DSS.ActiveCircuit.Fuses, 'InterruptingRating')
     DSS.AllowForms = False
 
     try:
@@ -436,7 +511,16 @@ if __name__ == '__main__':
         else:
             DSS.Text.Command = r'set Editor="C:\Program Files\Git\usr\bin\true.exe"'
 
-        DSS.Text.Command = 'set ShowExport=NO'
+        try:
+            DSS.Text.Command = 'set ShowExport=NO'
+        except:
+            pass
+
+        try:
+            DSS.Text.Command = 'set ShowReports=NO'
+        except:
+            pass
+
         check_error()
         sleep(0.1)
         DSS.Text.Command = 'clear'
@@ -448,7 +532,7 @@ if __name__ == '__main__':
     total_runtime = 0.0
     zip_fn = f'results{suffix}.zip'
     with ZipFile(os.path.join(original_working_dir, zip_fn), mode='a', compression=ZIP_DEFLATED) as zip_out:
-        for fn in test_filenames + cimxml_test_filenames:
+        for fn in cimxml_test_filenames + test_filenames:
             if not fn.strip(): 
                 break
 
@@ -456,7 +540,7 @@ if __name__ == '__main__':
             org_fn = fn
             fixed_fn = fn if not fn.startswith('L!') else fn[2:]
             line_by_line = fn.startswith('L!')
-            fn = os.path.join(ROOT_DIR, fixed_fn)
+            fn = os.path.join(ROOT_DIR, fixed_fn) if not fixed_fn.startswith('/') else fixed_fn
             json_fn = get_archive_fn(fn) + '.json'
             try:
                 zip_out.getinfo(json_fn)
@@ -478,8 +562,11 @@ if __name__ == '__main__':
                 exit()
             except OSError:
                 traceback.print_exc()
+                print('Last file was:')
+                print(fn)
                 exit()
             except:
+                print('=' * 60)
                 print('ERROR:', fn)
                 if colorizer:
                     colorizer.colorize_traceback(*sys.exc_info())
@@ -490,7 +577,7 @@ if __name__ == '__main__':
 
             if org_fn in cimxml_test_filenames:
                 DSS.Text.Command = 'export cim100'
-                xml_live_fns = [DSS.Text.Result]
+                xml_live_fns = [DSS.Text.Result.strip()]
                 DSS.Text.Command = 'export cim100fragments'
                 xml_live_fns.extend(glob(DSS.Text.Result + '_*.xml'))
                 for xml_live_fn in xml_live_fns:

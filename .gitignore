@@ -131,3 +131,4 @@ dss/messages/*
 docs/apidocs
 tests/result*.zip
 tmp/
+electricdss-tst
