@@ -4,7 +4,7 @@ name: Builds
 
 env:
   ARTIFACTS_FOLDER: '${{ github.workspace }}/artifacts'
-  DSS_CAPI_TAG: '0.15.0b3'
+  DSS_CAPI_TAG: '0.15.0b4'
 
 on: 
   # release:

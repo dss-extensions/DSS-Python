@@ -24,7 +24,7 @@ packages = ["dss"]
 name = "dss-python"
 dynamic = ["version"]
 dependencies = [
-    "dss_python_backend==0.15.0b3",
+    "dss_python_backend==0.15.0b4",
     "numpy>=2,<3",
     "typing_extensions>=4.5,<5",
 ]
